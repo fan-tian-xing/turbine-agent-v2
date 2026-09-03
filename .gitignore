@@ -12,6 +12,8 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.uv-cache/
+.uv-python/
 .coverage
 htmlcov/
 
@@ -26,6 +28,7 @@ env/
 /data/staging/
 /data/private_evaluation/
 /tests/private_evaluation/
+/ontology/generated/
 *.log
 
 # Source documents and large local artifacts

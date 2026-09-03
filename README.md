@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-当前仅建立独立工程和资料接入边界，尚未开始 Source Registry、文档解析、OCR、本体、图谱或问答实现。
+独立工程、配置边界和本地运行基础已经建立，尚未开始 Source Registry、文档解析、OCR、本体、图谱或问答实现。
 
 ## 项目边界
 
@@ -15,14 +15,27 @@
 - 原始资料、数据库目录、密钥、缓存、模型运行记录和大体积发布产物不进入 Git。
 - 磁盘上的 Registry、Evidence、Engineering Statement、审核记录和 Release 产物是可重建的数据权威；Neo4j 仅作为运行投影。
 
-总体建设计划保留在本地项目根目录的 `总计划.md`，不纳入本仓库版本控制。
+总体建设计划见 `总计划.md`，该文件只记录各阶段目标、任务、交付物和验收要求。
 
-## 下一步
+## 本地配置
 
-设计并实现全库 Source Registry，对白名单中的 45 份 PDF 建立身份、完整性、适用性和准入状态记录。
+复制 `.env.example` 为 `.env` 后填写本机参数。程序只从统一配置读取原始资料目录和 Neo4j 连接信息，不在模块中写死本机绝对路径。
+
+Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和启动。数据库只是磁盘权威产物的运行投影，正式知识不得直接在 Neo4j Browser 中修改。
+
+- Neo4j Browser：`http://localhost:7475`
+- Neo4j Bolt：`neo4j://localhost:7688`
+
+## 当前检查
 
 资料处理前可运行以下只读检查，确认白名单路径、文件大小和 SHA-256 均与当前资料一致：
 
 ```powershell
 python scripts/check_source_allowlist.py
+```
+
+工程测试：
+
+```powershell
+python -m pytest
 ```

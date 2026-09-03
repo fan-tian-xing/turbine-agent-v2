@@ -1,0 +1,45 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Runtime and generated data
+/var/
+/docker-data/
+/data/staging/
+/data/private_evaluation/
+/tests/private_evaluation/
+*.log
+
+# Source documents and large local artifacts
+*.pdf
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.tif
+*.tiff
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini

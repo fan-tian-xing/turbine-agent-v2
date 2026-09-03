@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "source_root": "../Original materials",
+  "physical_asset_count": 45,
+  "logical_document_count": 44,
+  "independent_extractable_source_count": 1,
+  "duplicate_relation_count": 1,
+  "review_queue_count": 120,
+  "manual_finding_count": 6,
+  "admission_status_counts": {
+    "quarantined": 3,
+    "excluded_private_evaluation": 0,
+    "reference_only": 1,
+    "admitted": 1,
+    "metadata_review_required": 39,
+    "duplicate_or_derivative": 1
+  },
+  "text_layer_status_counts": {
+    "scan_only": 24,
+    "native_text": 20,
+    "mixed_or_low_quality": 1
+  },
+  "source_role_counts": {
+    "book": 18,
+    "derived_ocr_asset": 1,
+    "manufacturer_manual": 1,
+    "standard_or_regulation": 24,
+    "standards_catalog": 1
+  },
+  "processing_note": "Metadata and fingerprints only; no source text copied and no Neo4j write performed."
+}

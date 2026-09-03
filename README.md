@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-独立工程、配置边界和本地运行基础已经建立，尚未开始 Source Registry、文档解析、OCR、本体、图谱或问答实现。
+独立工程、配置边界和本地运行基础已经建立。阶段 2 已完成首轮只读 Source Registry：登记 45 个物理 PDF、归并逻辑文档、记录重复/派生关系，并将需人工确认的身份、完整性和适用范围放入审核队列。文档语义解析、OCR、本体、图谱和问答尚未开始。
 
 ## 项目边界
 
@@ -39,3 +39,11 @@ python scripts/check_source_allowlist.py
 ```cmd
 python -m pytest
 ```
+
+构建或更新 Source Registry（只读取白名单 PDF，不写入 Neo4j）：
+
+```cmd
+python scripts/build_source_registry.py
+```
+
+Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。

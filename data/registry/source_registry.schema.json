@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://turbine-agent-v2.local/schema/source-registry.json",
+  "title": "Source Registry asset record",
+  "type": "object",
+  "required": [
+    "asset_id",
+    "document_logical_id",
+    "revision_id",
+    "relative_path",
+    "sha256",
+    "size_bytes",
+    "page_count",
+    "source_role",
+    "text_layer_status",
+    "identity_status",
+    "completeness_status",
+    "external_processing_status",
+    "admission_status",
+    "applicability_status"
+  ],
+  "properties": {
+    "asset_id": {"type": "string", "pattern": "^asset-[0-9a-f]{20}$"},
+    "document_logical_id": {"type": "string", "pattern": "^doc-[0-9a-f]{20}$"},
+    "revision_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "relative_path": {"type": "string", "pattern": "^[^/].*\\.pdf$"},
+    "file_name": {"type": "string"},
+    "size_bytes": {"type": "integer", "minimum": 1},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "page_count": {"type": "integer", "minimum": 1},
+    "source_role": {"type": "string"},
+    "title_candidate": {"type": "string"},
+    "title_source": {"type": "string"},
+    "identifier_candidates": {"type": "array", "items": {"type": "string"}},
+    "year_candidates": {"type": "array", "items": {"type": "string", "pattern": "^(19|20)[0-9]{2}$"}},
+    "text_layer_status": {"enum": ["native_text", "mixed_or_low_quality", "scan_only"]},
+    "identity_status": {"enum": ["review_required", "confirmed"]},
+    "completeness_status": {"enum": ["review_required", "complete", "incomplete"]},
+    "external_processing_status": {"enum": ["not_assessed", "allowed", "not_allowed"]},
+    "admission_status": {
+      "enum": [
+        "admitted",
+        "quarantined",
+        "metadata_review_required",
+        "duplicate_or_derivative",
+        "reference_only",
+        "excluded_private_evaluation"
+      ]
+    },
+    "applicability_status": {"enum": ["review_required", "confirmed"]},
+    "review_flags": {"type": "array", "items": {"type": "string"}},
+    "manual_findings": {"type": "array", "items": {"type": "string"}},
+    "manual_notes": {"type": "array", "items": {"type": "string"}},
+    "manual_follow_up": {"type": "string"}
+  },
+  "additionalProperties": true
+}

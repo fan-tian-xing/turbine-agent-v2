@@ -10,11 +10,18 @@ services:
       - "7688:7687"
     environment:
       NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}"
+      KG_NEO4J_PASSWORD: "${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}"
       NEO4J_server_memory_heap_initial__size: 512m
       NEO4J_server_memory_heap_max__size: 1G
     volumes:
       - ./docker-data/neo4j-data:/data
       - ./docker-data/neo4j-logs:/logs
+    healthcheck:
+      test: ["CMD-SHELL", "cypher-shell -a neo4j://localhost:7687 -u neo4j -p \"$${KG_NEO4J_PASSWORD}\" \"RETURN 1\" >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
     networks:
       - turbine-neo4j-v2
 

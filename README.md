@@ -19,7 +19,7 @@
 
 ## 本地配置
 
-复制 `.env.example` 为 `.env` 后填写本机参数。程序只从统一配置读取原始资料目录和 Neo4j 连接信息，不在模块中写死本机绝对路径。
+复制 `.env.example` 为 `.env` 后填写本机参数。程序启动时从项目根目录 `.env` 读取配置，已有环境变量优先；模块中不写死本机绝对路径。
 
 Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和启动。数据库只是磁盘权威产物的运行投影，正式知识不得直接在 Neo4j Browser 中修改。
 
@@ -30,12 +30,12 @@ Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和�
 
 资料处理前可运行以下只读检查，确认白名单路径、文件大小和 SHA-256 均与当前资料一致：
 
-```powershell
+```cmd
 python scripts/check_source_allowlist.py
 ```
 
 工程测试：
 
-```powershell
+```cmd
 python -m pytest
 ```

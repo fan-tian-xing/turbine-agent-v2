@@ -21,5 +21,7 @@ def test_compose_uses_isolated_names_ports_and_mounts():
         '"7688:7687"',
         "./docker-data/neo4j-data:/data",
         "./docker-data/neo4j-logs:/logs",
+        "healthcheck:",
+        "cypher-shell",
     ):
         assert expected in compose

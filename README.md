@@ -37,6 +37,7 @@ python scripts/check_source_allowlist.py
 工程测试：
 
 ```cmd
+set PYTHONPATH=src
 python -m pytest
 ```
 

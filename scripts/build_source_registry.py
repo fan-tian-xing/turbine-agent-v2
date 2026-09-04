@@ -6,6 +6,7 @@ renames source files, writes to the source tree, or connects to Neo4j.
 
 from __future__ import annotations
 
+import csv
 import hashlib
 import json
 import os
@@ -26,6 +27,17 @@ DEFAULT_SOURCE_ROOT = PROJECT_ROOT.parent / "Original materials"
 ALLOWLIST_PATH = PROJECT_ROOT / "config" / "source_allowlist.tsv"
 REGISTRY_ROOT = PROJECT_ROOT / "data" / "registry"
 MANUAL_FINDINGS_PATH = REGISTRY_ROOT / "source_manual_findings.jsonl"
+DOCUMENT_IDENTITY_PATH = PROJECT_ROOT / "config" / "document_identity.tsv"
+ASSET_ID_PATTERN = re.compile(r"^asset-[0-9a-f]{20}$")
+DOCUMENT_ID_PATTERN = re.compile(r"^doc-[0-9a-f]{20}$")
+TEXT_ADAPTER_STATUSES = {
+    "not_assessed",
+    "native_text_available",
+    "ocr_required",
+    "ocr_pending_validation",
+    "ocr_validated",
+    "text_review_required",
+}
 IDENTIFIER_PATTERN = re.compile(
     r"\b(?:DL\s*[／/]\s*T|DLT|NB\s*[／/]\s*T|NBT|HAF|HAD)\s*[A-Z0-9０-９./／—–\-]*",
     flags=re.IGNORECASE,
@@ -35,6 +47,11 @@ YEAR_PATTERN = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
 def digest(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def asset_id_for_path(relative_path: str) -> str:
+    """Return a stable registration ID for one allowlisted asset path."""
+    return f"asset-{digest(relative_path)[:20]}"
 
 
 def normalize_text(value: str) -> str:
@@ -65,6 +82,38 @@ def load_manual_findings() -> dict[str, dict[str, Any]]:
     return findings
 
 
+def load_document_identity_map(path: Path = DOCUMENT_IDENTITY_PATH) -> dict[str, str]:
+    """Load controlled path-to-logical-document assignments.
+
+    Fingerprints are evidence for duplicate/derivative detection only. Logical
+    document identity must come from this reviewed, versioned map so adding a
+    revision or derivative cannot silently rename an existing document.
+    """
+    if not path.is_file():
+        raise FileNotFoundError(f"controlled document identity map is missing: {path}")
+    data_lines = [
+        line
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    reader = csv.DictReader(data_lines, delimiter="\t")
+    expected_fields = ["relative_path", "document_logical_id"]
+    if reader.fieldnames != expected_fields:
+        raise ValueError(
+            f"document identity fields must be {expected_fields}, got {reader.fieldnames}"
+        )
+    assignments: dict[str, str] = {}
+    for row in reader:
+        relative_path = row["relative_path"]
+        document_id = row["document_logical_id"]
+        if not relative_path or relative_path in assignments:
+            raise ValueError(f"document identity map has duplicate or empty path: {relative_path!r}")
+        if not DOCUMENT_ID_PATTERN.fullmatch(document_id):
+            raise ValueError(f"invalid document logical ID for {relative_path}: {document_id}")
+        assignments[relative_path] = document_id
+    return assignments
+
+
 def source_role(relative_path: str) -> str:
     if relative_path.startswith("OCR/"):
         return "derived_ocr_asset"
@@ -77,6 +126,16 @@ def source_role(relative_path: str) -> str:
     if relative_path.startswith("2.书籍/"):
         return "book"
     return "unclassified_source"
+
+
+def default_text_adapter_status(source_role_value: str, text_layer_status: str) -> str:
+    if source_role_value == "derived_ocr_asset":
+        return "ocr_pending_validation"
+    if text_layer_status == "native_text":
+        return "native_text_available"
+    if text_layer_status == "mixed_or_low_quality":
+        return "text_review_required"
+    return "ocr_required"
 
 
 def page_fingerprint(page: pymupdf.Page) -> dict[str, Any]:
@@ -280,6 +339,18 @@ def build_registry(source_root: Path) -> dict[str, int]:
     metadata, entries = load_allowlist(ALLOWLIST_PATH)
     if int(metadata.get("expected_count", "-1")) != len(entries):
         raise ValueError("allowlist expected_count does not match its rows")
+    document_identity = load_document_identity_map()
+    allowlisted_paths = {entry["path"] for entry in entries}
+    mapped_paths = set(document_identity)
+    if mapped_paths != allowlisted_paths:
+        missing = sorted(allowlisted_paths - mapped_paths)
+        extra = sorted(mapped_paths - allowlisted_paths)
+        details = []
+        if missing:
+            details.append(f"missing paths: {missing}")
+        if extra:
+            details.append(f"unallowlisted paths: {extra}")
+        raise ValueError("document identity map does not match source allowlist (" + "; ".join(details) + ")")
     source_root = source_root.resolve()
     if not source_root.is_dir():
         raise FileNotFoundError(f"SOURCE_ROOT does not exist: {source_root}")
@@ -292,23 +363,12 @@ def build_registry(source_root: Path) -> dict[str, int]:
             raise FileNotFoundError(f"allowlisted source is not a file inside SOURCE_ROOT: {relative_path}")
         inspected.append(inspect_pdf(path, relative_path, int(entry["size_bytes"]), entry["sha256"]))
 
-    groups, relations = duplicate_relations(inspected)
+    _groups, relations = duplicate_relations(inspected)
     manual_findings = load_manual_findings()
     relation_paths: dict[str, list[str]] = defaultdict(list)
     for relation in relations:
         for relation_path in relation["asset_paths"]:
             relation_paths[relation_path].append(relation["relation_type"])
-
-    grouped_members: dict[int, list[int]] = defaultdict(list)
-    for number in range(len(inspected)):
-        grouped_members[groups.find(number)].append(number)
-
-    logical_id_by_number: dict[int, str] = {}
-    for members in grouped_members.values():
-        basis = "|".join(sorted(inspected[number]["visual_content_fingerprint"] for number in members))
-        logical_id = f"doc-{digest(basis)[:20]}"
-        for number in members:
-            logical_id_by_number[number] = logical_id
 
     asset_records: list[dict[str, Any]] = []
     review_records: list[dict[str, Any]] = []
@@ -332,11 +392,31 @@ def build_registry(source_root: Path) -> dict[str, int]:
         identity_status = manual.get("identity_status", inspected_asset["identity_status"])
         completeness_status = manual.get("completeness_status", inspected_asset["completeness_status"])
         applicability_status = manual.get("applicability_status", "review_required")
+        text_adapter_status = manual.get(
+            "text_adapter_status",
+            default_text_adapter_status(role, inspected_asset["text_layer_status"]),
+        )
+        if text_adapter_status not in TEXT_ADAPTER_STATUSES:
+            raise ValueError(f"invalid text_adapter_status for {path}: {text_adapter_status}")
+        authority_level = manual.get("authority_level", "unknown")
+        normative_modality = manual.get("normative_modality", "unknown")
+        project_adoption_status = manual.get("project_adoption_status", "unknown")
+        manufacturer_approval_status = manual.get("manufacturer_approval_status", "unknown")
+        validity_status = manual.get("validity_status", "unknown")
+        supersedes = manual.get("supersedes", [])
+        exception_basis = manual.get("exception_basis", [])
+        if not isinstance(supersedes, list) or not isinstance(exception_basis, list):
+            raise ValueError(f"supersedes and exception_basis must be arrays for {path}")
         flags = sorted(
             set(inspected_asset["review_flags"] + relation_types + manual.get("review_flags", []))
         )
-        asset_id = f"asset-{inspected_asset['sha256'][:20]}"
-        document_id = logical_id_by_number[number]
+        # Asset identity is path registration identity; revision identity is the
+        # content hash. This keeps same-content files distinct while preserving
+        # the logical document assignment from the controlled identity map.
+        asset_id = asset_id_for_path(path)
+        if not ASSET_ID_PATTERN.fullmatch(asset_id):
+            raise AssertionError(f"generated invalid asset ID for {path}: {asset_id}")
+        document_id = document_identity[path]
         document_members[document_id].append(asset_id)
         asset_records.append(
             {
@@ -350,6 +430,7 @@ def build_registry(source_root: Path) -> dict[str, int]:
                 "page_count": inspected_asset["page_count"],
                 "source_role": role,
                 "text_layer_status": inspected_asset["text_layer_status"],
+                "text_adapter_status": text_adapter_status,
                 "text_character_count": inspected_asset["total_text_characters"],
                 "rotated_page_count": inspected_asset["rotated_page_count"],
                 "title_candidate": inspected_asset["title_candidate"],
@@ -359,6 +440,13 @@ def build_registry(source_root: Path) -> dict[str, int]:
                 "identity_status": identity_status,
                 "completeness_status": completeness_status,
                 "external_processing_status": inspected_asset["external_processing_status"],
+                "authority_level": authority_level,
+                "normative_modality": normative_modality,
+                "project_adoption_status": project_adoption_status,
+                "manufacturer_approval_status": manufacturer_approval_status,
+                "validity_status": validity_status,
+                "supersedes": supersedes,
+                "exception_basis": exception_basis,
                 "visual_content_fingerprint": inspected_asset["visual_content_fingerprint"],
                 "text_content_fingerprint": inspected_asset["text_content_fingerprint"],
                 "pdf_metadata": inspected_asset["pdf_metadata"],
@@ -448,8 +536,22 @@ def build_registry(source_root: Path) -> dict[str, int]:
         "source_root": "../Original materials",
         "physical_asset_count": len(asset_records),
         "logical_document_count": len(document_records),
-        "independent_extractable_source_count": sum(
-            record["admission_status"] == "admitted" for record in asset_records
+        "admitted_source_count": sum(record["admission_status"] == "admitted" for record in asset_records),
+        "independent_extractable_source_count": len(
+            {
+                document_id
+                for document_id, member_assets in document_members.items()
+                if any(
+                    record["admission_status"] == "admitted"
+                    for record in asset_records
+                    if record["asset_id"] in member_assets
+                )
+                and any(
+                    record["text_adapter_status"] in {"native_text_available", "ocr_validated"}
+                    for record in asset_records
+                    if record["asset_id"] in member_assets
+                )
+            }
         ),
         "duplicate_relation_count": len(duplicate_records),
         "review_queue_count": len(review_records),
@@ -468,6 +570,10 @@ def build_registry(source_root: Path) -> dict[str, int]:
         "text_layer_status_counts": {
             status: sum(record["text_layer_status"] == status for record in asset_records)
             for status in {"native_text", "mixed_or_low_quality", "scan_only"}
+        },
+        "text_adapter_status_counts": {
+            status: sum(record["text_adapter_status"] == status for record in asset_records)
+            for status in sorted(TEXT_ADAPTER_STATUSES)
         },
         "source_role_counts": {
             role: sum(record["source_role"] == role for record in asset_records)

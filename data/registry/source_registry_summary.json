@@ -3,22 +3,31 @@
   "source_root": "../Original materials",
   "physical_asset_count": 45,
   "logical_document_count": 44,
-  "independent_extractable_source_count": 1,
+  "admitted_source_count": 1,
+  "independent_extractable_source_count": 0,
   "duplicate_relation_count": 1,
   "review_queue_count": 120,
   "manual_finding_count": 6,
   "admission_status_counts": {
-    "quarantined": 3,
-    "excluded_private_evaluation": 0,
-    "reference_only": 1,
-    "admitted": 1,
     "metadata_review_required": 39,
-    "duplicate_or_derivative": 1
+    "quarantined": 3,
+    "admitted": 1,
+    "reference_only": 1,
+    "duplicate_or_derivative": 1,
+    "excluded_private_evaluation": 0
   },
   "text_layer_status_counts": {
-    "scan_only": 24,
+    "mixed_or_low_quality": 1,
     "native_text": 20,
-    "mixed_or_low_quality": 1
+    "scan_only": 24
+  },
+  "text_adapter_status_counts": {
+    "native_text_available": 19,
+    "not_assessed": 0,
+    "ocr_pending_validation": 1,
+    "ocr_required": 24,
+    "ocr_validated": 0,
+    "text_review_required": 1
   },
   "source_role_counts": {
     "book": 18,

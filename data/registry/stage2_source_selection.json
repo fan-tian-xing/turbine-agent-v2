@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
-  "stage": "2C",
+  "stage": "2B",
   "stage_status": "complete",
-  "completion_scope": "first_batch_selected_sources_only",
+  "completion_scope": "stage3_trial_source_selection",
   "selected_sources": [
     {
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "asset_id": "asset-29ca16b111846e39aabf",
       "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
-      "revision_id": "sha256:36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
       "text_adapter_status": "native_text_available",
       "selection_reason": "Native text is available and the source directly covers steam-turbine-generator erection and acceptance topics needed for the first vertical-slice validation.",
       "applicability_scope": [

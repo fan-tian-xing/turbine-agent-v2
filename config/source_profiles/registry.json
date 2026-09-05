@@ -4,26 +4,32 @@
   "profiles": {
     "book": {
       "source_role": "book",
+      "asset_kind": "original",
       "default_text_adapter": "auto"
     },
     "standard_or_regulation": {
       "source_role": "standard_or_regulation",
+      "asset_kind": "original",
       "default_text_adapter": "auto"
     },
     "standards_catalog": {
       "source_role": "standards_catalog",
+      "asset_kind": "original",
       "default_text_adapter": "auto"
     },
     "manufacturer_manual": {
       "source_role": "manufacturer_manual",
+      "asset_kind": "original",
       "default_text_adapter": "auto"
     },
     "derived_ocr_asset": {
-      "source_role": "derived_ocr_asset",
+      "source_role": null,
+      "asset_kind": "derived_ocr",
       "default_text_adapter": "ocr_pending_validation"
     },
     "unclassified_source": {
       "source_role": "unclassified_source",
+      "asset_kind": "original",
       "default_text_adapter": "auto"
     }
   },

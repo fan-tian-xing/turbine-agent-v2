@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
-  "source_root": "../Original materials",
+  "source_root_config_key": "SOURCE_ROOT",
+  "ocr_derived_root_config_key": "OCR_DERIVED_ROOT",
   "physical_asset_count": 48,
   "logical_document_count": 44,
   "admitted_source_count": 5,
@@ -10,17 +11,17 @@
   "review_queue_count": 358,
   "manual_finding_count": 13,
   "admission_status_counts": {
-    "metadata_review_required": 35,
-    "duplicate_or_derivative": 4,
+    "quarantined": 3,
     "admitted": 5,
-    "excluded_private_evaluation": 0,
+    "duplicate_or_derivative": 4,
     "reference_only": 1,
-    "quarantined": 3
+    "excluded_private_evaluation": 0,
+    "metadata_review_required": 35
   },
   "text_layer_status_counts": {
-    "mixed_or_low_quality": 1,
+    "native_text": 23,
     "scan_only": 24,
-    "native_text": 23
+    "mixed_or_low_quality": 1
   },
   "text_adapter_status_counts": {
     "native_text_available": 18,
@@ -31,10 +32,9 @@
     "text_review_required": 1
   },
   "source_role_counts": {
-    "book": 18,
-    "derived_ocr_asset": 4,
-    "manufacturer_manual": 1,
-    "standard_or_regulation": 24,
+    "book": 19,
+    "manufacturer_manual": 2,
+    "standard_or_regulation": 26,
     "standards_catalog": 1
   },
   "processing_note": "Metadata and fingerprints only; no source text copied and no Neo4j write performed."

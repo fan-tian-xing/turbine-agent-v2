@@ -4,12 +4,13 @@ from turbine_kg.settings import PROJECT_ROOT, Settings
 
 
 def test_defaults_keep_source_and_database_outside_module_code(monkeypatch):
-    for name in ("SOURCE_ROOT", "NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD"):
+    for name in ("SOURCE_ROOT", "OCR_DERIVED_ROOT", "NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD"):
         monkeypatch.delenv(name, raising=False)
 
     settings = Settings.from_environment(dotenv_path=PROJECT_ROOT / ".env.test-not-used")
 
     assert settings.source_root == (PROJECT_ROOT / "../Original materials").resolve()
+    assert settings.ocr_derived_root == (PROJECT_ROOT / "var/derived/ocr").resolve()
     assert settings.neo4j_uri == "neo4j://localhost:7688"
     assert settings.neo4j_user == "neo4j"
     assert settings.neo4j_password is None
@@ -17,19 +18,21 @@ def test_defaults_keep_source_and_database_outside_module_code(monkeypatch):
 
 def test_relative_source_root_is_resolved_from_project_root(monkeypatch):
     monkeypatch.setenv("SOURCE_ROOT", "fixtures/source")
+    monkeypatch.setenv("OCR_DERIVED_ROOT", "fixtures/ocr")
 
     settings = Settings.from_environment(dotenv_path=PROJECT_ROOT / ".env.test-not-used")
 
     assert settings.source_root == (PROJECT_ROOT / Path("fixtures/source")).resolve()
+    assert settings.ocr_derived_root == (PROJECT_ROOT / Path("fixtures/ocr")).resolve()
 
 
 def test_dotenv_values_are_loaded_but_environment_values_win(tmp_path, monkeypatch):
     dotenv = tmp_path / ".env"
     dotenv.write_text(
-        "SOURCE_ROOT=from-dotenv\nNEO4J_URI=neo4j://dotenv:7687\nNEO4J_PASSWORD='dotenv-secret'\n",
+        "SOURCE_ROOT=from-dotenv\nOCR_DERIVED_ROOT=from-dotenv-ocr\nNEO4J_URI=neo4j://dotenv:7687\nNEO4J_PASSWORD='dotenv-secret'\n",
         encoding="utf-8",
     )
-    for name in ("SOURCE_ROOT", "NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD"):
+    for name in ("SOURCE_ROOT", "OCR_DERIVED_ROOT", "NEO4J_URI", "NEO4J_USER", "NEO4J_PASSWORD"):
         monkeypatch.delenv(name, raising=False)
 
     loaded = Settings.from_environment(dotenv_path=dotenv)

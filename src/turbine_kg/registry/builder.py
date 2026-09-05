@@ -8,7 +8,12 @@ from pathlib import Path
 from typing import Any
 
 from .duplicates import duplicate_relations, materialize_duplicate_groups
-from .identity import asset_id_for_path, load_document_identity_map
+from .identity import (
+    asset_id_for_path,
+    load_derived_asset_links,
+    load_document_identity_map,
+    revision_id_for_source_path,
+)
 from .inspection import inspect_pdf
 from .io import jsonl_write, load_manual_findings
 from .profiles import default_text_adapter_status, load_source_profiles, profile_for_path
@@ -19,23 +24,30 @@ from .schema import (
     validate_asset_record,
     validate_document_record,
 )
-from .source_inputs import load_allowlist
+from .source_inputs import (
+    asset_root_id,
+    load_allowlist,
+    resolve_allowlisted_path,
+    validate_source_allowlist,
+)
+from turbine_kg.settings import Settings
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_SOURCE_ROOT = PROJECT_ROOT.parent / "Original materials"
 ALLOWLIST_PATH = PROJECT_ROOT / "config" / "source_allowlist.tsv"
 REGISTRY_ROOT = PROJECT_ROOT / "data" / "registry"
 MANUAL_FINDINGS_PATH = REGISTRY_ROOT / "source_manual_findings.jsonl"
 DOCUMENT_IDENTITY_PATH = PROJECT_ROOT / "config" / "document_identity.tsv"
+DERIVED_ASSET_LINKS_PATH = PROJECT_ROOT / "config" / "derived_asset_links.tsv"
 
 
-def build_registry(source_root: Path) -> dict[str, int]:
+def build_registry(settings: Settings) -> dict[str, int]:
     metadata, entries = load_allowlist(ALLOWLIST_PATH)
     if int(metadata.get("expected_count", "-1")) != len(entries):
         raise ValueError("allowlist expected_count does not match its rows")
     profiles, profile_assignments, default_profile_id = load_source_profiles()
     document_identity = load_document_identity_map(DOCUMENT_IDENTITY_PATH)
+    derived_asset_links = load_derived_asset_links(DERIVED_ASSET_LINKS_PATH)
     allowlisted_paths = {entry["path"] for entry in entries}
     if set(document_identity) != allowlisted_paths:
         missing = sorted(allowlisted_paths - set(document_identity))
@@ -46,54 +58,52 @@ def build_registry(source_root: Path) -> dict[str, int]:
         if extra:
             details.append(f"unallowlisted paths: {extra}")
         raise ValueError("document identity map does not match source allowlist (" + "; ".join(details) + ")")
-    source_root = source_root.resolve()
-    if not source_root.is_dir():
-        raise FileNotFoundError(f"SOURCE_ROOT does not exist: {source_root}")
+    input_errors = validate_source_allowlist(
+        source_root=settings.source_root,
+        ocr_derived_root=settings.ocr_derived_root,
+        allowlist_path=ALLOWLIST_PATH,
+    )
+    if input_errors:
+        raise ValueError("source allowlist validation failed:\n" + "\n".join(input_errors))
 
     inspected: list[dict[str, Any]] = []
     for entry in entries:
         relative_path = entry["path"]
-        path = (source_root / Path(*relative_path.split("/"))).resolve()
-        if not path.is_file() or not path.is_relative_to(source_root):
-            raise FileNotFoundError(f"allowlisted source is not a file inside SOURCE_ROOT: {relative_path}")
+        path = resolve_allowlisted_path(relative_path, settings.source_root, settings.ocr_derived_root)
         profile = profile_for_path(relative_path, profiles, profile_assignments, default_profile_id)
         if profile.profile_id == default_profile_id:
             raise ValueError(f"allowlisted source has no explicit source profile: {relative_path}")
-        inspected.append(
-            inspect_pdf(
+        inspection = inspect_pdf(
                 path,
                 relative_path,
                 int(entry["size_bytes"]),
                 entry["sha256"],
-            )
         )
+        inspection["source_root_id"] = asset_root_id(relative_path)
+        inspected.append(inspection)
 
     groups, relations = duplicate_relations(inspected)
     path_to_index = {asset["relative_path"]: index for index, asset in enumerate(inspected)}
-    by_document: dict[str, list[str]] = defaultdict(list)
-    for relative_path, document_id in document_identity.items():
-        by_document[document_id].append(relative_path)
-    for document_paths in by_document.values():
-        originals = [
-            path for path in document_paths
-            if profile_for_path(path, profiles, profile_assignments, default_profile_id).source_role != "derived_ocr_asset"
-        ]
-        derivatives = [
-            path for path in document_paths
-            if profile_for_path(path, profiles, profile_assignments, default_profile_id).source_role == "derived_ocr_asset"
-        ]
-        if not originals:
-            continue
-        for derivative in derivatives:
-            source = originals[0]
-            groups.union(path_to_index[source], path_to_index[derivative])
-            relations.append(
-                {
-                    "relation_type": "ocr_derivative_of",
-                    "asset_paths": [source, derivative],
-                    "comparison_basis": "controlled logical-document identity map and derived_ocr_asset profile",
-                }
-            )
+    derived_paths = {
+        path
+        for path in allowlisted_paths
+        if profile_for_path(path, profiles, profile_assignments, default_profile_id).asset_kind == "derived_ocr"
+    }
+    if set(derived_asset_links) != derived_paths:
+        raise ValueError("derived asset links must list every and only the declared OCR derivatives")
+    for derivative, source in derived_asset_links.items():
+        if source not in allowlisted_paths:
+            raise ValueError(f"OCR derivative source is not allowlisted: {source}")
+        if document_identity[derivative] != document_identity[source]:
+            raise ValueError(f"OCR derivative and source must share a logical document: {derivative}")
+        groups.union(path_to_index[source], path_to_index[derivative])
+        relations.append(
+            {
+                "relation_type": "ocr_derivative_of",
+                "asset_paths": [source, derivative],
+                "comparison_basis": "controlled derivative-to-source link",
+            }
+        )
 
     manual_findings = load_manual_findings(MANUAL_FINDINGS_PATH)
     relation_paths: dict[str, list[str]] = defaultdict(list)
@@ -108,10 +118,14 @@ def build_registry(source_root: Path) -> dict[str, int]:
         path = inspected_asset["relative_path"]
         profile = profile_for_path(path, profiles, profile_assignments, default_profile_id)
         relation_types = sorted(set(relation_paths.get(path, [])))
-        role = profile.source_role
+        canonical_source_path = derived_asset_links.get(path, path)
+        source_profile = profile_for_path(canonical_source_path, profiles, profile_assignments, default_profile_id)
+        role = profile.source_role or source_profile.source_role
+        if role is None:
+            raise ValueError(f"asset has no semantic source role: {path}")
         admission_status = (
             "reference_only" if role == "standards_catalog"
-            else "duplicate_or_derivative" if role == "derived_ocr_asset"
+            else "duplicate_or_derivative" if profile.asset_kind == "derived_ocr"
             else "metadata_review_required"
         )
         manual = manual_findings.get(path, {})
@@ -159,7 +173,9 @@ def build_registry(source_root: Path) -> dict[str, int]:
         asset_record = {
             "asset_id": asset_id,
             "document_logical_id": document_id,
-            "revision_id": f"sha256:{inspected_asset['sha256']}",
+            "revision_id": revision_id_for_source_path(document_id, canonical_source_path),
+            "source_root_id": inspected_asset["source_root_id"],
+            "asset_kind": profile.asset_kind,
             "source_profile_id": profile.profile_id,
             "relative_path": path,
             "file_name": inspected_asset["file_name"],
@@ -258,6 +274,7 @@ def build_registry(source_root: Path) -> dict[str, int]:
         adapter = next((record["text_adapter_status"] for record in member_records if record["text_adapter_status"] in {"native_text_available", "ocr_validated"}), "text_review_required")
         document_record = {
             "document_logical_id": document_id,
+            "revision_ids": sorted({record["revision_id"] for record in member_records}),
             "asset_ids": member_assets,
             "canonical_asset_id": canonical["asset_id"],
             "title_candidates": sorted({record["title_candidate"] for record in member_records}),
@@ -294,7 +311,8 @@ def build_registry(source_root: Path) -> dict[str, int]:
     jsonl_write(REGISTRY_ROOT / "source_review_queue.jsonl", review_records)
     summary = {
         "schema_version": 1,
-        "source_root": "../Original materials",
+        "source_root_config_key": "SOURCE_ROOT",
+        "ocr_derived_root_config_key": "OCR_DERIVED_ROOT",
         "physical_asset_count": len(asset_records),
         "logical_document_count": len(document_records),
         "admitted_source_count": sum(record["admission_status"] == "admitted" for record in asset_records),

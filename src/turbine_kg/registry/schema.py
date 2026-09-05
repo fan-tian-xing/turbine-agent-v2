@@ -9,15 +9,15 @@ from typing import Any
 ASSET_ID_PATTERN = re.compile(r"^asset-[0-9a-f]{20}$")
 DOCUMENT_ID_PATTERN = re.compile(r"^doc-[0-9a-f]{20}$")
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
-REVISION_ID_PATTERN = re.compile(r"^sha256:[0-9a-f]{64}$")
+REVISION_ID_PATTERN = re.compile(r"^rev-[0-9a-f]{20}$")
 SOURCE_ROLES = {
     "book",
-    "derived_ocr_asset",
     "manufacturer_manual",
     "standard_or_regulation",
     "standards_catalog",
     "unclassified_source",
 }
+ASSET_KINDS = {"original", "derived_ocr"}
 
 TEXT_ADAPTER_STATUSES = {
     "not_assessed",
@@ -82,6 +82,8 @@ ASSET_RECORD_FIELDS = {
     "asset_id",
     "document_logical_id",
     "revision_id",
+    "source_root_id",
+    "asset_kind",
     "source_profile_id",
     "relative_path",
     "file_name",
@@ -123,6 +125,7 @@ ASSET_RECORD_FIELDS = {
 
 DOCUMENT_RECORD_FIELDS = {
     "document_logical_id",
+    "revision_ids",
     "asset_ids",
     "canonical_asset_id",
     "title_candidates",
@@ -152,6 +155,8 @@ def validate_asset_record(record: dict[str, Any]) -> None:
         "asset_id",
         "document_logical_id",
         "revision_id",
+        "source_root_id",
+        "asset_kind",
         "source_profile_id",
         "relative_path",
         "sha256",
@@ -194,8 +199,8 @@ def validate_asset_record(record: dict[str, Any]) -> None:
         raise ValueError("relative_path must be a relative PDF path")
     if not isinstance(record["sha256"], str) or not SHA256_PATTERN.fullmatch(record["sha256"]):
         raise ValueError("asset sha256 must be a 64-character lowercase hex string")
-    if record["revision_id"] != f"sha256:{record['sha256']}":
-        raise ValueError("revision_id must be derived from sha256")
+    if record["source_root_id"] not in {"source", "ocr_derived"}:
+        raise ValueError(f"invalid source_root_id: {record['source_root_id']!r}")
     if isinstance(record["size_bytes"], bool) or not isinstance(record["size_bytes"], int) or record["size_bytes"] < 1:
         raise ValueError("size_bytes must be a positive integer")
     if isinstance(record["page_count"], bool) or not isinstance(record["page_count"], int) or record["page_count"] < 1:
@@ -204,6 +209,7 @@ def validate_asset_record(record: dict[str, Any]) -> None:
         "text_layer_status": {"native_text", "mixed_or_low_quality", "scan_only"},
         "text_adapter_status": TEXT_ADAPTER_STATUSES,
         "source_role": SOURCE_ROLES,
+        "asset_kind": ASSET_KINDS,
         "identity_status": {"review_required", "confirmed"},
         "completeness_status": {"review_required", "complete", "incomplete"},
         "external_processing_status": EXTERNAL_PROCESSING_STATUSES,
@@ -266,6 +272,10 @@ def validate_document_record(record: dict[str, Any]) -> None:
         isinstance(item, str) and ASSET_ID_PATTERN.fullmatch(item) for item in record["asset_ids"]
     ):
         raise ValueError("asset_ids must be an array of controlled asset IDs")
+    if not isinstance(record["revision_ids"], list) or not record["revision_ids"] or not all(
+        isinstance(item, str) and REVISION_ID_PATTERN.fullmatch(item) for item in record["revision_ids"]
+    ):
+        raise ValueError("revision_ids must be a non-empty array of controlled revision IDs")
     if record["canonical_asset_id"] not in record["asset_ids"]:
         raise ValueError("canonical_asset_id must be a member of asset_ids")
     if record["document_status"] not in DOCUMENT_STATUSES:

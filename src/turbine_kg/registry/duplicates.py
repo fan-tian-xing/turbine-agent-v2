@@ -45,7 +45,9 @@ def duplicate_relations(assets: list[dict[str, Any]]) -> tuple[UnionFind, list[d
     def index_by(field: str) -> dict[str, list[int]]:
         index: dict[str, list[int]] = defaultdict(list)
         for asset_index, asset in enumerate(assets):
-            index[asset[field]].append(asset_index)
+            value = asset[field]
+            if value is not None:
+                index[value].append(asset_index)
         return index
 
     for field, relation_type in (
@@ -169,7 +171,7 @@ def _relation_status(
         ocr_paths = [
             path
             for path in relation["asset_paths"]
-            if asset_records_by_path[path]["source_role"] == "derived_ocr_asset"
+            if asset_records_by_path[path]["asset_kind"] == "derived_ocr"
         ]
         if all(path in manual_findings for path in relation["asset_paths"]) and any(
             manual_findings[path].get("text_adapter_status") == "ocr_validated" for path in ocr_paths

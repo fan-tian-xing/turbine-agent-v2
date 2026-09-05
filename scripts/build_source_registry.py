@@ -2,20 +2,20 @@
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from turbine_kg.registry.builder import DEFAULT_SOURCE_ROOT, build_registry
+from turbine_kg.registry.builder import build_registry
+from turbine_kg.settings import Settings
 
 
 def main() -> int:
-    source_root = Path(os.environ.get("SOURCE_ROOT", DEFAULT_SOURCE_ROOT))
+    settings = Settings.from_environment()
     try:
-        summary = build_registry(source_root)
+        summary = build_registry(settings)
     except Exception as error:  # pragma: no cover - command-line diagnostics
         print(f"ERROR: {error}")
         return 1

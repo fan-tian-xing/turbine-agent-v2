@@ -22,6 +22,11 @@ def asset_id_for_path(relative_path: str) -> str:
     return f"asset-{digest(relative_path)[:20]}"
 
 
+def revision_id_for_source_path(document_logical_id: str, source_relative_path: str) -> str:
+    """Return a controlled document-revision ID independent of an asset byte hash."""
+    return f"rev-{digest(document_logical_id + '|' + source_relative_path)[:20]}"
+
+
 def load_document_identity_map(path: Path = DEFAULT_DOCUMENT_IDENTITY_PATH) -> dict[str, str]:
     """Load reviewed path-to-logical-document assignments."""
     if not path.is_file():
@@ -45,3 +50,15 @@ def load_document_identity_map(path: Path = DEFAULT_DOCUMENT_IDENTITY_PATH) -> d
             raise ValueError(f"invalid document logical ID for {relative_path}: {document_id}")
         assignments[relative_path] = document_id
     return assignments
+
+
+def load_derived_asset_links(path: Path) -> dict[str, str]:
+    """Load reviewed OCR-derivative to source-asset links."""
+    data_lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip() and not line.startswith("#")]
+    reader = csv.DictReader(data_lines, delimiter="\t")
+    if reader.fieldnames != ["derived_relative_path", "source_relative_path"]:
+        raise ValueError(f"derived asset link fields are invalid: {reader.fieldnames}")
+    links = {row["derived_relative_path"]: row["source_relative_path"] for row in reader}
+    if len(links) != len(data_lines) - 1 or any(not derived or not source for derived, source in links.items()):
+        raise ValueError("derived asset links must be unique and non-empty")
+    return links

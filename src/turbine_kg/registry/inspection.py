@@ -117,7 +117,7 @@ def inspect_pdf(
         "page_visual_fingerprints": [page["visual_fingerprint"] for page in pages],
         "page_text_fingerprints": [page["text_fingerprint"] for page in pages],
         "visual_content_fingerprint": digest(visual_sequence),
-        "text_content_fingerprint": digest(text_sequence),
+        "text_content_fingerprint": None if text_layer_status == "scan_only" else digest(text_sequence),
         "pdf_metadata": {
             key: value
             for key, value in metadata.items()

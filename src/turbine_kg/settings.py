@@ -34,6 +34,7 @@ class Settings:
     """Runtime settings loaded from environment variables."""
 
     source_root: Path
+    ocr_derived_root: Path
     neo4j_uri: str = "neo4j://localhost:7688"
     neo4j_user: str = "neo4j"
     neo4j_password: str | None = None
@@ -47,9 +48,14 @@ class Settings:
         source_root = Path(source_value)
         if not source_root.is_absolute():
             source_root = PROJECT_ROOT / source_root
+        ocr_value = environment.get("OCR_DERIVED_ROOT", "var/derived/ocr")
+        ocr_derived_root = Path(ocr_value)
+        if not ocr_derived_root.is_absolute():
+            ocr_derived_root = PROJECT_ROOT / ocr_derived_root
 
         return cls(
             source_root=source_root.resolve(),
+            ocr_derived_root=ocr_derived_root.resolve(),
             neo4j_uri=environment.get("NEO4J_URI", "neo4j://localhost:7688"),
             neo4j_user=environment.get("NEO4J_USER", "neo4j"),
             neo4j_password=environment.get("NEO4J_PASSWORD"),

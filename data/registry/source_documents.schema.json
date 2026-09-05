@@ -6,6 +6,7 @@
   "additionalProperties": false,
   "required": [
     "document_logical_id",
+    "revision_ids",
     "asset_ids",
     "canonical_asset_id",
     "title_candidates",
@@ -30,6 +31,7 @@
   ],
   "properties": {
     "document_logical_id": {"type": "string", "pattern": "^doc-[0-9a-f]{20}$"},
+    "revision_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^rev-[0-9a-f]{20}$"}},
     "asset_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^asset-[0-9a-f]{20}$"}},
     "canonical_asset_id": {"type": "string", "pattern": "^asset-[0-9a-f]{20}$"},
     "title_candidates": {"type": "array", "items": {"type": "string"}},

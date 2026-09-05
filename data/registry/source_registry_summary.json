@@ -5,16 +5,17 @@
   "logical_document_count": 44,
   "admitted_source_count": 5,
   "independent_extractable_source_count": 5,
+  "duplicate_group_count": 4,
   "duplicate_relation_count": 4,
   "review_queue_count": 358,
   "manual_finding_count": 13,
   "admission_status_counts": {
-    "excluded_private_evaluation": 0,
-    "quarantined": 3,
+    "metadata_review_required": 35,
     "duplicate_or_derivative": 4,
-    "reference_only": 1,
     "admitted": 5,
-    "metadata_review_required": 35
+    "excluded_private_evaluation": 0,
+    "reference_only": 1,
+    "quarantined": 3
   },
   "text_layer_status_counts": {
     "mixed_or_low_quality": 1,

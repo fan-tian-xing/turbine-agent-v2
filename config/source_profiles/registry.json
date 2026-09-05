@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "default_profile_id": "unclassified_source",
+  "profiles": {
+    "book": {
+      "source_role": "book",
+      "default_text_adapter": "auto"
+    },
+    "standard_or_regulation": {
+      "source_role": "standard_or_regulation",
+      "default_text_adapter": "auto"
+    },
+    "standards_catalog": {
+      "source_role": "standards_catalog",
+      "default_text_adapter": "auto"
+    },
+    "manufacturer_manual": {
+      "source_role": "manufacturer_manual",
+      "default_text_adapter": "auto"
+    },
+    "derived_ocr_asset": {
+      "source_role": "derived_ocr_asset",
+      "default_text_adapter": "ocr_pending_validation"
+    },
+    "unclassified_source": {
+      "source_role": "unclassified_source",
+      "default_text_adapter": "auto"
+    }
+  },
+  "assignments": [
+    {"path_prefix": "OCR/", "profile_id": "derived_ocr_asset"},
+    {"path_prefix": "汽轮机说明书/", "profile_id": "manufacturer_manual"},
+    {"path_prefix": "标准法规/行业标准目录", "profile_id": "standards_catalog"},
+    {"path_prefix": "标准法规/", "profile_id": "standard_or_regulation"},
+    {"path_prefix": "2.书籍/", "profile_id": "book"}
+  ]
+}

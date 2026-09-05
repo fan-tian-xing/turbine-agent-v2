@@ -11,10 +11,9 @@ REGISTRY_ROOT = PROJECT_ROOT / "data" / "registry"
 SOURCE_ROOT = (PROJECT_ROOT / "../Original materials").resolve()
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
-from build_source_registry import (
+from turbine_kg.registry.identity import asset_id_for_path, load_document_identity_map
+from turbine_kg.registry.schema import (
     aggregate_document_status,
-    asset_id_for_path,
-    load_document_identity_map,
     validate_asset_record,
     validate_document_record,
 )
@@ -32,7 +31,8 @@ def load_jsonl(name: str) -> list[dict]:
 def test_registry_counts_and_identity_contract():
     assets = load_jsonl("source_assets.jsonl")
     documents = load_jsonl("source_documents.jsonl")
-    duplicates = load_jsonl("source_duplicate_groups.jsonl")
+    duplicate_groups = load_jsonl("source_duplicate_groups.jsonl")
+    duplicates = load_jsonl("source_duplicate_relations.jsonl")
     review_queue = load_jsonl("source_review_queue.jsonl")
     manual_findings = load_jsonl("source_manual_findings.jsonl")
     summary = json.loads((REGISTRY_ROOT / "source_registry_summary.json").read_text(encoding="utf-8"))
@@ -69,6 +69,7 @@ def test_registry_counts_and_identity_contract():
         validate_document_record(document)
     assert all(
         all(field in asset for field in (
+            "source_profile_id",
             "authority_level",
             "normative_modality",
             "project_adoption_status",
@@ -95,6 +96,10 @@ def test_registry_counts_and_identity_contract():
         and asset["admission_status"] == "duplicate_or_derivative"
         for asset in assets
     )
+    assert duplicate_groups
+    assert all(group["duplicate_group_id"].startswith("dup-") for group in duplicate_groups)
+    assert summary["duplicate_group_count"] == len(duplicate_groups)
+    assert all(group["asset_ids"] for group in duplicate_groups)
     assert any(
         "NB／T+10933" in asset["relative_path"]
         and asset["completeness_status"] == "incomplete"
@@ -185,6 +190,7 @@ def test_stage2_audit_outputs_exist():
     assert (REGISTRY_ROOT / "project_source_gaps.json").is_file()
     assert (REGISTRY_ROOT / "stage2_source_selection.json").is_file()
     assert (REGISTRY_ROOT / "ocr_validation_report.json").is_file()
+    assert (REGISTRY_ROOT / "source_duplicate_relations.jsonl").is_file()
 
     selection = json.loads((REGISTRY_ROOT / "stage2_source_selection.json").read_text(encoding="utf-8"))
     assert selection["stage"] == "2C"
@@ -245,7 +251,7 @@ def test_selected_ocr_derivatives_exist_have_unicode_text_and_pass_validation_ga
 
 
 def test_controlled_ocr_derivative_relations_and_haf_excerpt_boundary():
-    relations = load_jsonl("source_duplicate_groups.jsonl")
+    relations = load_jsonl("source_duplicate_relations.jsonl")
     expected_pairs = {
         (
             "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
@@ -303,6 +309,7 @@ def test_asset_validation_rejects_contract_drift():
         "asset_id": "asset-00000000000000000000",
         "document_logical_id": "doc-00000000000000000000",
         "revision_id": "sha256:" + "0" * 64,
+        "source_profile_id": "book",
         "relative_path": "x.pdf",
         "sha256": "0" * 64,
         "size_bytes": 1,
@@ -330,6 +337,15 @@ def test_asset_validation_rejects_contract_drift():
     import pytest
 
     with pytest.raises(ValueError, match="unexpected fields"):
+        validate_asset_record(asset)
+
+
+def test_asset_validation_rejects_unknown_source_role():
+    import pytest
+
+    asset = load_jsonl("source_assets.jsonl")[0].copy()
+    asset["source_role"] = "bogus_role"
+    with pytest.raises(ValueError, match="invalid source_role"):
         validate_asset_record(asset)
 
 

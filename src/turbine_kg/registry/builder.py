@@ -65,7 +65,6 @@ def build_registry(source_root: Path) -> dict[str, int]:
                 relative_path,
                 int(entry["size_bytes"]),
                 entry["sha256"],
-                profile.source_role,
             )
         )
 

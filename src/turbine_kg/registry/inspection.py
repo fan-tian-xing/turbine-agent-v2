@@ -48,7 +48,6 @@ def inspect_pdf(
     relative_path: str,
     expected_size: int,
     expected_sha256: str,
-    source_role_value: str,
 ) -> dict[str, Any]:
     actual_size = path.stat().st_size
     actual_sha256 = sha256_file(path)
@@ -131,6 +130,5 @@ def inspect_pdf(
         "identity_status": "review_required",
         "completeness_status": "review_required",
         "external_processing_status": "not_assessed",
-        "source_role": source_role_value,
         "review_flags": flags,
     }

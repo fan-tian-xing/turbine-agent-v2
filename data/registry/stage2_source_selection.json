@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "stage": "2C",
+  "stage_status": "complete",
+  "completion_scope": "first_batch_selected_sources_only",
+  "selected_sources": [
+    {
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "asset_id": "asset-29ca16b111846e39aabf",
+      "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "revision_id": "sha256:36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "text_adapter_status": "native_text_available",
+      "selection_reason": "Native text is available and the source directly covers steam-turbine-generator erection and acceptance topics needed for the first vertical-slice validation.",
+      "applicability_scope": [
+        "汽轮发电机组安装施工及验收",
+        "火力发电机组",
+        "燃气—蒸汽联合循环机组",
+        "简单循环燃气轮机发电机组",
+        "本项目核电适用性需以项目已批准标准清单和机组资料确认"
+      ],
+      "applicability_boundary": "Industry standard for thermal-power, gas-steam combined-cycle and simple-cycle gas turbine-generator erection; candidate/conditional reference for a nuclear project until project adoption and unit applicability are confirmed.",
+      "review_method": "Page-by-page visual and native-text review of all 141 PDF pages; key pages independently sampled after review.",
+      "review_status": "completed_by_agent_and_user_confirmed_scope_conditions",
+      "user_confirmations": [
+        "Use the Chinese contents as the sole location index; do not use the English contents.",
+        "Save the source usage scope and retain the source as a candidate/conditional reference; do not assume it is an adopted nuclear-project standard.",
+        "Record this source as the 2019 edition only; do not retain the superseded-edition note as project metadata."
+      ],
+      "blocking_open_reviews": 0,
+      "stage2_registration_status": "complete",
+      "formal_extraction_status": "ready_for_stage3"
+    },
+    {
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "asset_id": "asset-ffc1d592a5b4e204578c",
+      "relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+      "selection_reason": "The supplied manufacturer manual is a visually complete reconstructed D300N/N-300 source with a clear model and document identifier; use it as a bounded candidate source for the matching unit while keeping the OCR derivative for later text extraction.",
+      "selected_scope": "D300N-000105ASM, N-300-16.7/537/537-8 型（合缸）汽轮机本体安装及维护, PDF pages 1-94",
+      "applicability_scope": [
+        "东方汽轮机厂N-300-16.7/537/537-8型（合缸）汽轮机本体安装及维护",
+        "D300N-000105ASM说明书范围",
+        "不适用于其他机型或未确认的设备配置"
+      ],
+      "text_adapter_status": "ocr_validated",
+      "ocr_relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+      "review_method": "Page-by-page visual review of all 94 PDF pages plus OCR derivative page-image comparison and key-page text check.",
+      "review_status": "manufacturer_scope_confirmed_ocr_page_comparison_passed_ocr_page_comparison_and_subagent_spot_check_passed",
+      "blocking_open_reviews": 0,
+      "stage2_registration_status": "complete",
+      "formal_extraction_status": "ready_for_stage3"
+    },
+    {
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "asset_id": "asset-d146688100212c0aa1fe",
+      "relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+      "selection_reason": "The supplied scan is a complete 28-page PDF covering the printed body and appendices of DL/T 863—2016; use its generic thermal-power commissioning scope as a conditional reference and retain the local OCR derivative for later extraction.",
+      "selected_scope": "DL/T 863—2016 汽轮机启动调试导则, PDF pages 1-28, printed body pages 1-39",
+      "applicability_scope": [
+        "火力发电建设工程新建、扩建、改建机组",
+        "汽轮机及其辅助设备分系统试运和整套启动试运",
+        "300MW及以上汽轮发电机组",
+        "300MW以下汽轮发电机组可参照执行"
+      ],
+      "text_adapter_status": "ocr_validated",
+      "ocr_relative_path": "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf",
+      "review_method": "Page-by-page visual review of all 28 PDF pages plus local OCR generation and key-page text check.",
+      "review_status": "scope_confirmed_ocr_page_comparison_passed_ocr_page_comparison_and_subagent_spot_check_passed",
+      "blocking_open_reviews": 0,
+      "stage2_registration_status": "complete",
+      "formal_extraction_status": "ready_for_stage3"
+    },
+    {
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "asset_id": "asset-115e242947e0a4b46ea5",
+      "relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+      "selection_reason": "The complete supplied book is retained as a full source unit for auxiliary-equipment installation training, skill modules, assessment tables and later extraction.",
+      "selected_scope": "《汽轮机辅机安装（第二版）》全书, PDF pages 1-480",
+      "applicability_scope": [
+        "电力行业汽轮机安装专业职业技能培训",
+        "汽轮机辅机安装职业技能模块和培训要求",
+        "技能鉴定相关表格和培训内容"
+      ],
+      "text_adapter_status": "ocr_validated",
+      "ocr_relative_path": "OCR/汽轮机辅机安装（第二版）(OCR).pdf",
+      "review_status": "full_book_ocr_page_comparison_and_post_correction_spot_check_passed",
+      "blocking_open_reviews": 0,
+      "stage2_registration_status": "complete",
+      "formal_extraction_status": "ready_for_stage3",
+      "user_confirmations": [
+        "The complete supplied book is retained as the source unit.",
+        "The full 480-page OCR was compared page by page with the original and passed independent spot checks.",
+        "When the source does not state a project-specific range, use its generic scope and do not invent project facts."
+      ],
+      "review_method": "Full-book page-by-page visual review of all 480 PDF pages plus full OCR page-image comparison and independent subagent spot check.",
+      "rotation_handling": "OCR rotation metadata normalized; retain original PDF coordinates and page images for formal Evidence."
+    },
+    {
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "asset_id": "asset-2e27a3f10284708e2d10",
+      "relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
+      "selection_reason": "The supplied file is a continuous and visually legible HAF103 source unit covering printed pages 3-34, including the introduction and scope clause; retain it as a complete supplied source unit with the stated generic scope.",
+      "selected_scope": "Supplied complete source unit, printed pages 3-34, PDF pages 1-32",
+      "applicability_scope": [
+        "陆上固定式核动力厂管理、调试和运行中的核安全方面",
+        "退役准备相关核安全方面",
+        "不涉及不影响核安全的工业安全",
+        "不涉及核动力厂运行引起的非放射性影响",
+        "其他类型核动力厂可参照执行"
+      ],
+      "text_adapter_status": "ocr_validated",
+      "ocr_relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+      "review_status": "complete_supplied_source_unit_ocr_page_comparison_passed_ocr_page_comparison_and_subagent_spot_check_passed",
+      "blocking_open_reviews": 0,
+      "stage2_registration_status": "complete",
+      "formal_extraction_status": "ready_for_stage3",
+      "user_confirmation_needed": "No project-specific facts are available; use the source's stated generic scope. This is the complete supplied source unit, whose physical boundary is printed pages 3-34; page-level OCR comparison has passed."
+    }
+  ]
+}

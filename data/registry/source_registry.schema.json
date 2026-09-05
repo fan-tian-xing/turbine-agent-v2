@@ -23,9 +23,12 @@
     "manufacturer_approval_status",
     "validity_status",
     "supersedes",
+    "supersedes_status",
     "exception_basis",
+    "exception_basis_status",
     "admission_status",
-    "applicability_status"
+    "applicability_status",
+    "applicability_scope"
   ],
   "properties": {
     "asset_id": {"type": "string", "pattern": "^asset-[0-9a-f]{20}$"},
@@ -36,23 +39,29 @@
     "size_bytes": {"type": "integer", "minimum": 1},
     "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "page_count": {"type": "integer", "minimum": 1},
-    "source_role": {"type": "string"},
+    "source_role": {"enum": ["book", "derived_ocr_asset", "manufacturer_manual", "standard_or_regulation", "standards_catalog", "unclassified_source"]},
     "title_candidate": {"type": "string"},
     "title_source": {"type": "string"},
     "identifier_candidates": {"type": "array", "items": {"type": "string"}},
     "year_candidates": {"type": "array", "items": {"type": "string", "pattern": "^(19|20)[0-9]{2}$"}},
     "text_layer_status": {"enum": ["native_text", "mixed_or_low_quality", "scan_only"]},
     "text_adapter_status": {"enum": ["not_assessed", "native_text_available", "ocr_required", "ocr_pending_validation", "ocr_validated", "text_review_required"]},
+    "text_character_count": {"type": "integer", "minimum": 0},
+    "rotated_page_count": {"type": "integer", "minimum": 0},
+    "visual_content_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "text_content_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "identity_status": {"enum": ["review_required", "confirmed"]},
     "completeness_status": {"enum": ["review_required", "complete", "incomplete"]},
-    "external_processing_status": {"enum": ["not_assessed", "allowed", "not_allowed"]},
-    "authority_level": {"type": "string", "minLength": 1},
-    "normative_modality": {"type": "string", "minLength": 1},
-    "project_adoption_status": {"type": "string", "minLength": 1},
-    "manufacturer_approval_status": {"type": "string", "minLength": 1},
-    "validity_status": {"type": "string", "minLength": 1},
-    "supersedes": {"type": "array", "items": {"type": "string"}},
-    "exception_basis": {"type": "array", "items": {"type": "string"}},
+    "external_processing_status": {"enum": ["not_assessed", "allowed", "not_allowed", "local_only"]},
+    "authority_level": {"enum": ["regulatory", "national_standard", "industry_standard", "manufacturer", "project_document", "textbook", "reference", "unknown"]},
+    "normative_modality": {"enum": ["mandatory", "should", "recommended", "permitted", "prohibited", "informational", "mixed", "not_applicable", "unknown"]},
+    "project_adoption_status": {"enum": ["adopted", "not_adopted", "candidate", "not_applicable", "unknown"]},
+    "manufacturer_approval_status": {"enum": ["approved", "not_approved", "not_applicable", "unknown"]},
+    "validity_status": {"enum": ["current", "superseded", "expired", "draft", "unknown"]},
+    "supersedes": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "supersedes_status": {"enum": ["identified", "confirmed_none", "review_required", "unknown"]},
+    "exception_basis": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "exception_basis_status": {"enum": ["identified", "confirmed_none", "review_required", "unknown"]},
     "admission_status": {
       "enum": [
         "admitted",
@@ -64,10 +73,12 @@
       ]
     },
     "applicability_status": {"enum": ["review_required", "confirmed"]},
+    "applicability_scope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
     "review_flags": {"type": "array", "items": {"type": "string"}},
     "manual_findings": {"type": "array", "items": {"type": "string"}},
     "manual_notes": {"type": "array", "items": {"type": "string"}},
-    "manual_follow_up": {"type": "string"}
+    "manual_follow_up": {"type": "string"},
+    "pdf_metadata": {"type": "object", "additionalProperties": {"type": "string"}}
   },
-  "additionalProperties": true
+  "additionalProperties": false
 }

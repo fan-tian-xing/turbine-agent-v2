@@ -29,6 +29,7 @@ env/
 /data/private_evaluation/
 /tests/private_evaluation/
 /ontology/generated/
+/tmp/
 *.log
 
 # Source documents and large local artifacts

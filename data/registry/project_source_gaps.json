@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "scope": "Current 48-file source boundary; this is a planning and answer-strength constraint, not a startup blocker.",
+  "gaps": [
+    {
+      "gap_id": "gap-project-unit-and-model",
+      "description": "Project-specific turbine model, unit capacity, system boundary and equipment tag mapping are not present in the current source set.",
+      "impact": "Generic or conditional evidence must not be presented as direct evidence for an unidentified nuclear unit.",
+      "required_input": "Approved project equipment list, unit design basis and tag dictionary.",
+      "status": "open"
+    },
+    {
+      "gap_id": "gap-project-adoption",
+      "description": "The project-approved list of applicable standards, procedures and technical agreements is not present.",
+      "impact": "Registry records may identify candidate or conditional applicability but cannot assert project adoption.",
+      "required_input": "Project standards register and approved procedure list.",
+      "status": "open"
+    },
+    {
+      "gap_id": "gap-manufacturer-approval",
+      "description": "Project-specific manufacturer drawings, technical agreements, deviation approvals and repair limits are not present.",
+      "impact": "Physical actions, numerical adjustments and deviations require additional manufacturer or design evidence.",
+      "required_input": "Approved manufacturer documentation and deviation/exception records.",
+      "status": "open"
+    },
+    {
+      "gap_id": "gap-site-verification",
+      "description": "No current field measurements, inspection records, test results or acceptance records are included.",
+      "impact": "The system can state requirements and verification steps but cannot conclude current field conformity.",
+      "required_input": "Traceable site data with measurement time, instrument, unit and responsible organization.",
+      "status": "open"
+    }
+  ]
+}

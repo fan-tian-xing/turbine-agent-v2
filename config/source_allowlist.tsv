@@ -1,5 +1,5 @@
 # schema_version=1
-# expected_count=45
+# expected_count=48
 # status=candidate_for_registry
 sha256	size_bytes	path
 785f33cd6841aa5d9fc57690dc122beb24f833fbfd4514aaa53761d3d5cf08c6	14870951	2.书籍/260824 扫描文件/大型汽轮发电机组典型故障案例分析.pdf
@@ -46,4 +46,7 @@ d69388ba5bd1122967014b3c78b8375aafdfaa331dd7b576e121784732bae35f	880228	标准�
 24cd1d7059789a3539861f062af998593e486543552774c4a62b791cc0d5e783	15585388	标准法规/NBT 10604.2—2021 核电厂常规岛及辅助配套设施建设施工质量验收规程+第2部分：汽轮发电机组.pdf
 fdddd7a8dc1469fae36610e67c60e47c67601a13f951cb15a4752a6f0d4ab592	684405	标准法规/NBT+25103—2019压水堆核电厂发电机冷却系统调试导则_1_1_钱兴根.pdf
 00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9	35040795	汽轮机说明书/汽轮机本体安装及维护说明书.pdf
-013778fc7e1c4cc3a579c1850d15bf14175d8a259f877c96b3fb5139d7f74a75	35161484	OCR/汽轮机本体安装及维护说明书(OCR).pdf
+4710a8ecf189c75158e87a3e88e97a8943d8854e1b556c5d1d6448ee45d7431f	34167138	OCR/汽轮机本体安装及维护说明书(OCR).pdf
+c15ec262ad488f21a3c8170224a3f529b401543e395e582327c6019f48b12e93	113761805	OCR/汽轮机辅机安装（第二版）(OCR).pdf
+fc255bb60ffaeef51109f395853d36b04be2922ed1e1e2dbba5081ef6aeeec65	27050772	OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf
+24933cf948ee1a77fceb8819a4a5aaa3dcf3da6ec05f5cdcbd473a60e4e1ea22	16652662	OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf

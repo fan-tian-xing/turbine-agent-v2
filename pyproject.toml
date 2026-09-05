@@ -5,7 +5,9 @@ description = "Evidence-grounded turbine installation and commissioning assistan
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "numpy>=2.4,<3",
     "pymupdf>=1.28,<2",
+    "rapidocr-onnxruntime>=1.4,<2",
 ]
 
 [dependency-groups]
@@ -16,6 +18,7 @@ dev = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+pythonpath = ["src", "scripts"]
 
 [tool.ruff]
 target-version = "py312"

@@ -75,6 +75,7 @@ def parse_pdf(
     profile: LayoutProfile = LayoutProfile(),
     parser_version: str = "pymupdf-page-inspector-v1",
     page_indices: tuple[int, ...] | None = None,
+    additional_assets: tuple[AssetRef, ...] = (),
 ) -> DocumentIR:
     """Inspect and normalize PDF pages.
 
@@ -106,7 +107,7 @@ def parse_pdf(
     return parse_page_inputs(
         document,
         revision,
-        (asset,),
+        (asset, *additional_assets),
         tuple(inputs),
         profile=profile,
         parser_version=parser_version,
@@ -133,17 +134,23 @@ def parse_registered_pdf(
 
     asset_identity = catalog.asset_for_path(relative_path)
     revision_record = catalog.revision_for_id(asset_identity.revision_id)
-    asset = AssetRef(
-        asset_id=asset_identity.asset_id,
-        document_logical_id=asset_identity.document_logical_id,
-        revision_id=asset_identity.revision_id,
-        asset_kind=asset_identity.asset_kind,
-        relative_path=asset_identity.relative_path,
-        sha256=asset_identity.sha256,
-        source_root_id=asset_identity.source_root_id,
-        derived_from_asset_id=asset_identity.derived_from_asset_id,
-        derivation_type=asset_identity.derivation_type,
-    )
+    def to_asset_ref(identity):
+        return AssetRef(
+            asset_id=identity.asset_id,
+            document_logical_id=identity.document_logical_id,
+            revision_id=identity.revision_id,
+            asset_kind=identity.asset_kind,
+            relative_path=identity.relative_path,
+            sha256=identity.sha256,
+            source_root_id=identity.source_root_id,
+            derived_from_asset_id=identity.derived_from_asset_id,
+            derivation_type=identity.derivation_type,
+        )
+
+    asset = to_asset_ref(asset_identity)
+    additional_assets = ()
+    if asset_identity.derived_from_asset_id:
+        additional_assets = (to_asset_ref(catalog.asset_for_id(asset_identity.derived_from_asset_id)),)
     document = Document(
         document_logical_id=asset_identity.document_logical_id,
         title=title,
@@ -164,4 +171,5 @@ def parse_registered_pdf(
         profile=profile,
         parser_version=parser_version,
         page_indices=page_indices,
+        additional_assets=additional_assets,
     )

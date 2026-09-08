@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "registered_pdf_smoke",
+  "executed_at": "2026-09-08",
+  "status": "pass",
+  "input_manifest": "data/stage3/initial_batch_manifest.json",
+  "manifest_kind": "research_trial_sampling",
+  "sample_page_count": 15,
+  "registered_asset_count": 5,
+  "chain": [
+    "Registry IdentityCatalog",
+    "parse_registered_pdf",
+    "DocumentIR",
+    "stage3.project_registered_pdf"
+  ],
+  "rows": [
+    {
+      "asset_id": "asset-29ca16b111846e39aabf",
+      "asset_kind": "original",
+      "pages": 3,
+      "blocks": 34,
+      "source_spans": 28,
+      "figures": 6,
+      "text_origins": ["native_text"],
+      "stage3_pages": 3,
+      "stage3_source_spans": 28
+    },
+    {
+      "asset_id": "asset-dfd1ea84bc8622cede86",
+      "asset_kind": "derived_ocr",
+      "pages": 3,
+      "blocks": 6,
+      "source_spans": 3,
+      "figures": 3,
+      "text_origins": ["ocr_text"],
+      "original_asset_in_ir": true,
+      "stage3_pages": 3,
+      "stage3_source_spans": 3
+    },
+    {
+      "asset_id": "asset-e82eacef4b82e06cf31c",
+      "asset_kind": "derived_ocr",
+      "pages": 3,
+      "blocks": 6,
+      "source_spans": 3,
+      "figures": 3,
+      "text_origins": ["ocr_text"],
+      "original_asset_in_ir": true,
+      "stage3_pages": 3,
+      "stage3_source_spans": 3
+    },
+    {
+      "asset_id": "asset-6be125e4aa900f01e21b",
+      "asset_kind": "derived_ocr",
+      "pages": 3,
+      "blocks": 6,
+      "source_spans": 3,
+      "figures": 3,
+      "text_origins": ["ocr_text"],
+      "original_asset_in_ir": true,
+      "stage3_pages": 3,
+      "stage3_source_spans": 3
+    },
+    {
+      "asset_id": "asset-e4d060422e62fd656770",
+      "asset_kind": "derived_ocr",
+      "pages": 3,
+      "blocks": 6,
+      "source_spans": 3,
+      "figures": 3,
+      "text_origins": ["ocr_text"],
+      "original_asset_in_ir": true,
+      "stage3_pages": 3,
+      "stage3_source_spans": 3
+    }
+  ],
+  "known_boundaries": [
+    "scan_only pages do not fabricate OCR text",
+    "table row/column extraction is deferred to Stage 5",
+    "this is a structural smoke test, not an OCR quality benchmark",
+    "formal_release remains false"
+  ]
+}

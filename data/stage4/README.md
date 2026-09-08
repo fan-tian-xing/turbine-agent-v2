@@ -15,6 +15,7 @@
 - `stage3.document_compat.project_document_ir`：仅投影 Page/SourceSpan，不生成阶段 3 的业务适用范围、Evidence 或 Statement；
 - `parse_registered_pdf`：Registry IdentityCatalog → 真实 PyMuPDF → Document IR → 阶段 3 结构投影的最小只读端到端链路；
 - 真实 PyMuPDF 原生文字页的图片会进入 `image` Block/Figure，并保留页面 bbox；扫描页仍只进入 `scan_only`，不伪造 OCR 文本，表格行列恢复留到阶段 5；
+- `stage4_smoke_2026-09-08.json`：15 页、5 个已登记资产的真实链路冒烟记录；`stage4_exit_audit.json`：当前仍为 `in_progress`，明确阶段 4尚未关闭的边界和下一道门；
 - 当前文档层回归测试共 23 项，项目全量测试共 77 项。
 - 阶段 3 兼容层目前是只读的结构投影桥接，仅提供 Revision/Page/SourceSpan，不替代 Stage 3 的语义 Fixture、Evidence 或 Statement；人工更正已作为不覆盖原始解析结果的 Overlay 记录，表格 SourceSpan 定位已纳入校验。
 

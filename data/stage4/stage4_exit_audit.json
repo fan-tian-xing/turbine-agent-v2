@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "status": "in_progress",
+  "closure_status": "not_closed",
+  "audited_at": "2026-09-08",
+  "formal_release": false,
+  "checks": {
+    "document_ir_contract": {"status": "pass", "evidence": "config/document_ir_contract.json and runtime validation"},
+    "identity_catalog": {"status": "pass", "evidence": "48 assets, 44 logical documents, 44 controlled Revisions, 4 derived OCR relations"},
+    "page_routing": {"status": "pass", "evidence": "native_text, scan_only, mixed and review_required routes have regression coverage"},
+    "registered_pdf_smoke": {"status": "pass", "evidence": "data/stage4/stage4_smoke_2026-09-08.json: 15 pages across 5 registered assets"},
+    "figure_location": {"status": "pass", "evidence": "real native PDF image blocks produce Figure objects with bounded page bboxes"},
+    "manual_correction_overlay": {"status": "pass", "evidence": "overlay records retain parser output and validate original_text against BlockVersion"},
+    "stage3_structural_bridge": {"status": "pass", "evidence": "Registry → PDF → DocumentIR → Stage3 Page/SourceSpan smoke chain"},
+    "test_suite": {"status": "pass", "evidence": "77 pytest tests passed on this implementation"},
+    "table_cell_extraction": {"status": "deferred", "evidence": "Table/TableCell contracts and negative validation exist; real row/column extraction is Stage 5 work"},
+    "ocr_benchmark": {"status": "deferred", "evidence": "30-page Golden Sample and engine comparison belong to Stage 5"}
+  },
+  "remaining_stage4_gate": [
+    "freeze and record a real table/page sample contract without claiming Stage 5 quality",
+    "finalize Stage 4 input/output/exception count reconciliation",
+    "run one final exit audit after the table boundary is documented"
+  ],
+  "next_allowed_work": [
+    "prepare Stage 5 stratified sample matrix and evaluation protocol in parallel",
+    "do not start formal OCR benchmark or close Stage 4 yet"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "scopes": {
+    "汽轮机说明书/汽轮机本体安装及维护说明书.pdf": {"model": "N-300-16.7/537/537-8"},
+    "OCR/汽轮机本体安装及维护说明书(OCR).pdf": {"model": "N-300-16.7/537/537-8"},
+    "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf": {"lifecycle_stage": "installation"},
+    "标准法规/DLT 863-2016汽轮机启动调试导则.pdf": {"lifecycle_stage": "commissioning"},
+    "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf": {"lifecycle_stage": "commissioning"},
+    "标准法规/HAF103核动力厂调试和运行安全规定.pdf": {"equipment": "land_based_fixed_nuclear_power_plant", "lifecycle_stage": "commissioning_and_operation"},
+    "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf": {"equipment": "land_based_fixed_nuclear_power_plant", "lifecycle_stage": "commissioning_and_operation"},
+    "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf": {"lifecycle_stage": "installation"},
+    "OCR/汽轮机辅机安装（第二版）(OCR).pdf": {"lifecycle_stage": "installation"}
+  }
+}

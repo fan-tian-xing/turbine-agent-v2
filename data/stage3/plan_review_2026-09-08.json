@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "review_date": "2026-09-08",
+  "scope": "总计划.md 阶段0-3退出条件、阶段4-22依赖顺序与当前实现的一致性复盘",
+  "overall_conclusion": "总体路线合理，阶段0-2可关闭；阶段3核心研发闭环、Registry结构化适用范围链和Claim组装边界已完成。实时LLM记录仍需一次可重放的独立验证后才能关闭严格外部调用门禁；阶段4设计可开始，但不代表阶段3已无条件完全关闭。",
+  "non_blocking_maintenance_items": [
+    {
+      "item": "术语统一",
+      "detail": "阶段3的LogicalDocument/Revision与后续阶段的SourceDocument/DocumentRevision需要在阶段4/14统一映射。"
+    },
+    {
+      "item": "向量检索可选性",
+      "detail": "阶段16正文将向量检索定义为可选能力，流程图也应保持可选标识。"
+    },
+    {
+      "item": "资料供给单元措辞",
+      "detail": "阶段7的全文里程碑应继续明确HAF103当前是印刷页3-34的完整供给单元，不等同于整本书。"
+    }
+  ],
+  "formal_release": false
+}

@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "pages": [
+    {
+      "page_id": "real-page-24b258-086",
+      "span_id": "real-span-24b258-086",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "asset_id": "asset-29ca16b111846e39aabf",
+      "pdf_page_number": 86,
+      "span_preview": "用0.05mm 塞尺检查应不入；接触面积应大于结合面面积的75％且分布均匀"
+    },
+    {
+      "page_id": "real-page-af7fa1-073",
+      "span_id": "real-span-af7fa1-073",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "asset_id": "asset-dfd1ea84bc8622cede86",
+      "pdf_page_number": 73,
+      "span_preview": "下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开"
+    },
+    {
+      "page_id": "real-page-a1f2fb-001",
+      "span_id": "real-span-a1f2fb-001",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "asset_id": "asset-e4d060422e62fd656770",
+      "pdf_page_number": 1,
+      "span_preview": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面"
+    }
+  ]
+}

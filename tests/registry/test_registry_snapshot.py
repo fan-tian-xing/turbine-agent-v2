@@ -1,9 +1,11 @@
 import json
+import os
 import re
 import sys
 from pathlib import Path
 
 import fitz
+import pytest
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -209,6 +211,15 @@ def test_selected_ocr_derivatives_exist_have_unicode_text_and_pass_validation_ga
         "OCR/汽轮机辅机安装（第二版）(OCR).pdf": (480, "汽轮机辅机安装"),
         "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf": (32, "核动力厂调试和运行安全规定"),
     }
+    missing = [
+        relative_path
+        for relative_path in expected
+        if not (OCR_DERIVED_ROOT / Path(*relative_path.removeprefix("OCR/").split("/"))).is_file()
+    ]
+    if missing:
+        if os.environ.get("TURBINE_REQUIRE_SOURCE_SNAPSHOT") == "1":
+            pytest.fail(f"source snapshot inputs are missing: {missing}")
+        pytest.skip("source snapshot inputs are local-only; set TURBINE_REQUIRE_SOURCE_SNAPSHOT=1 to require them")
     for relative_path, (page_count, marker) in expected.items():
         path = OCR_DERIVED_ROOT / Path(*relative_path.removeprefix("OCR/").split("/"))
         assert path.is_file()
@@ -252,6 +263,7 @@ def test_selected_ocr_derivatives_exist_have_unicode_text_and_pass_validation_ga
         assert asset["completeness_status"] == "complete"
         assert asset["applicability_status"] == "confirmed"
         assert asset["external_processing_status"] != "not_assessed"
+        assert asset["applicability_scope_structured"]
 
 
 def test_controlled_ocr_derivative_relations_and_haf_excerpt_boundary():

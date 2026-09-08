@@ -38,9 +38,27 @@ class Settings:
     neo4j_uri: str = "neo4j://localhost:7688"
     neo4j_user: str = "neo4j"
     neo4j_password: str | None = None
+    neo4j_database: str = "neo4j"
+    llm_base_url: str = ""
+    llm_model: str = ""
+    llm_api_key: str = ""
+    llm_timeout_seconds: float = 60
+    llm_allow_evidence_send: bool = False
+    llm_fallback_base_url: str = ""
+    llm_fallback_model: str = ""
+    llm_fallback_api_key: str = ""
+    llm_fallback_timeout_seconds: float = 60
+    llm_fallback_2_base_url: str = ""
+    llm_fallback_2_model: str = ""
+    llm_fallback_2_api_key: str = ""
+    llm_fallback_2_timeout_seconds: float = 60
 
     @classmethod
-    def from_environment(cls, *, dotenv_path: Path | None = PROJECT_ROOT / ".env") -> "Settings":
+    def from_environment(
+        cls,
+        *,
+        dotenv_path: Path | None = PROJECT_ROOT / ".env",
+    ) -> "Settings":
         environment = _read_dotenv(dotenv_path) if dotenv_path is not None else {}
         environment.update(os.environ)
 
@@ -59,4 +77,18 @@ class Settings:
             neo4j_uri=environment.get("NEO4J_URI", "neo4j://localhost:7688"),
             neo4j_user=environment.get("NEO4J_USER", "neo4j"),
             neo4j_password=environment.get("NEO4J_PASSWORD"),
+            neo4j_database=environment.get("NEO4J_DATABASE", "neo4j"),
+            llm_base_url=environment.get("LLM_BASE_URL", ""),
+            llm_model=environment.get("LLM_MODEL", ""),
+            llm_api_key=environment.get("LLM_API_KEY", environment.get("OPENAI_API_KEY", "")),
+            llm_timeout_seconds=float(environment.get("LLM_TIMEOUT_SECONDS", "60")),
+            llm_allow_evidence_send=environment.get("LLM_ALLOW_EVIDENCE_SEND", "false").lower() == "true",
+            llm_fallback_base_url=environment.get("LLM_FALLBACK_BASE_URL", ""),
+            llm_fallback_model=environment.get("LLM_FALLBACK_MODEL", ""),
+            llm_fallback_api_key=environment.get("LLM_FALLBACK_API_KEY", ""),
+            llm_fallback_timeout_seconds=float(environment.get("LLM_FALLBACK_TIMEOUT_SECONDS", "60")),
+            llm_fallback_2_base_url=environment.get("LLM_FALLBACK_2_BASE_URL", ""),
+            llm_fallback_2_model=environment.get("LLM_FALLBACK_2_MODEL", ""),
+            llm_fallback_2_api_key=environment.get("LLM_FALLBACK_2_API_KEY", ""),
+            llm_fallback_2_timeout_seconds=float(environment.get("LLM_FALLBACK_2_TIMEOUT_SECONDS", "60")),
         )

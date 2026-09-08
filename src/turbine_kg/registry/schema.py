@@ -117,11 +117,45 @@ ASSET_RECORD_FIELDS = {
     "admission_status",
     "applicability_status",
     "applicability_scope",
+    "applicability_scope_structured",
     "review_flags",
     "manual_findings",
     "manual_notes",
     "manual_follow_up",
 }
+
+STRUCTURED_APPLICABILITY_FIELDS = {
+    "model",
+    "equipment",
+    "lifecycle_stage",
+    "activity",
+    "operating_state",
+    "capacity_range",
+    "condition",
+}
+
+
+def _validate_structured_applicability_scope(scope: Any) -> None:
+    if not isinstance(scope, dict) or not scope:
+        raise ValueError("applicability_scope_structured must be a non-empty object")
+    extra = sorted(set(scope) - STRUCTURED_APPLICABILITY_FIELDS)
+    if extra:
+        raise ValueError(f"applicability_scope_structured has unexpected fields: {extra}")
+    for field in STRUCTURED_APPLICABILITY_FIELDS - {"capacity_range"}:
+        if field in scope and (not isinstance(scope[field], str) or not scope[field].strip()):
+            raise ValueError(f"applicability_scope_structured.{field} must be a non-empty string")
+    if "capacity_range" in scope:
+        value = scope["capacity_range"]
+        if not isinstance(value, dict) or not value or set(value) - {"min", "max"}:
+            raise ValueError("applicability_scope_structured.capacity_range must contain only min/max")
+        minimum, maximum = value.get("min"), value.get("max")
+        for label, number in (("min", minimum), ("max", maximum)):
+            if number is not None and (isinstance(number, bool) or not isinstance(number, (int, float))):
+                raise ValueError(f"applicability_scope_structured.capacity_range.{label} must be numeric")
+        if minimum is None and maximum is None:
+            raise ValueError("applicability_scope_structured.capacity_range cannot be empty")
+        if minimum is not None and maximum is not None and minimum > maximum:
+            raise ValueError("applicability_scope_structured.capacity_range min cannot exceed max")
 
 DOCUMENT_RECORD_FIELDS = {
     "document_logical_id",
@@ -242,6 +276,11 @@ def validate_asset_record(record: dict[str, Any]) -> None:
         or not all(isinstance(item, str) and item.strip() for item in record["applicability_scope"])
     ):
         raise ValueError("applicability_scope must be a non-empty array of strings")
+    structured_scope = record.get("applicability_scope_structured")
+    if record["applicability_status"] == "confirmed":
+        _validate_structured_applicability_scope(structured_scope)
+    elif structured_scope is not None:
+        _validate_structured_applicability_scope(structured_scope)
 
 
 def collapsed_context(member_records: list[dict[str, Any]], field: str) -> str:

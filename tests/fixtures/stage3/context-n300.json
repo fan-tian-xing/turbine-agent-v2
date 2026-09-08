@@ -1,0 +1,9 @@
+{
+  "model": "N-300",
+  "equipment": "steam_turbine",
+  "lifecycle_stage": "installation",
+  "activity": "alignment",
+  "operating_state": "cold",
+  "capacity_range": 300,
+  "condition": "shaft_alignment"
+}

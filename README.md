@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-独立工程、配置边界和本地运行基础已经建立。阶段 2A、2B 已完成：全库 Source Registry 基线已建立，并已选出 5 个满足试点条件的来源。D300N、`DL/T 863—2016`、HAF103（当前提供的印刷页 3–34 完整供给单元）和《汽轮机辅机安装（第二版）》整本 480 页资料单元的本地 OCR 已完成逐页比对和独立抽检。该选择记录只证明资料可进入阶段 3 的研发试点；阶段 15 的 `First Batch Admission Gate` 仍须在正式处理开始前逐来源复核。Registry 构建器已完成第一轮模块化：CLI 入口、PDF 检查、指纹、资料 Profile、重复关系、分组物化、校验和 Registry 组装已分离；重复关系和重复分组分别写入 `source_duplicate_relations.jsonl` 与 `source_duplicate_groups.jsonl`。其他资料仍按后续批次保留在审核队列，尚未进入正式抽取；文档语义解析、本体、图谱和问答尚未开始。
+独立工程、配置边界和本地运行基础已经建立。阶段 0、1、2A、2B 已完成：全库 Source Registry 基线已建立，并已选出 5 个满足试点条件的来源。D300N、`DL/T 863—2016`、HAF103（当前提供的印刷页 3–34 完整供给单元）和《汽轮机辅机安装（第二版）》整本 480 页资料单元的本地 OCR 已完成逐页比对和独立抽检。该选择记录只证明资料可进入阶段 3 的研发试点；阶段 15 的 `First Batch Admission Gate` 仍须在正式处理开始前逐来源复核。阶段 3 已建立三类公开/合成 Fixture、确定性适用性匹配、JSON 精确过滤、最小可追溯投影、Equipment/Component/Process/Procedure/Step/QuantityValue 对象链和逐 Claim 校验，并完成 15 个真实试点页面的文本适配抽取和 3 组人工确认 Evidence。当前已将这 3 组确认 Evidence 对应的 4 条 Engineering Statement 导入新版 Neo4j，验证中文检索能够回查资料、页码和证据。Registry 现以结构化范围约束确认来源和 Statement，LLM 面向用户的文本只由本地通过校验的 Claim 重新组装。阶段 3 核心研发闭环已完成，但外部 LLM 的严格可重放审计仍待补证；阶段 4 的设计可以开始，`formal_release=false` 不变，正式整本书抽取和正式 Release 尚未开始。Registry 构建器已完成第一轮模块化：CLI 入口、PDF 检查、指纹、资料 Profile、重复关系、分组物化、校验和 Registry 组装已分离；重复关系和重复分组分别写入 `source_duplicate_relations.jsonl` 与 `source_duplicate_groups.jsonl`。其他资料仍按后续批次保留在审核队列，尚未进入正式抽取。
 
 ## 项目边界
 
@@ -31,6 +31,52 @@ Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和�
 
 - Neo4j Browser：`http://localhost:7475`
 - Neo4j Bolt：`neo4j://localhost:7688`
+
+本地阶段 3 试点命令（必须进入 `新版demo` 目录，并在当前终端设置一次源码路径）。终端是 `cmd`，使用下面第一种写法：
+
+```cmd
+cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
+set "PYTHONPATH=%CD%\src"
+python -m turbine_kg.stage3.trial_cli import
+python -m turbine_kg.stage3.trial_cli status
+python -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺检查要求是什么？"
+```
+
+如果终端是 PowerShell：
+
+```powershell
+cd "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
+$env:PYTHONPATH="src"
+python -m turbine_kg.stage3.trial_cli import
+python -m turbine_kg.stage3.trial_cli status
+python -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺检查要求是什么？"
+```
+
+提问命令会读取新版项目自己的 `.env` 模型连接配置，只需输入问题即可。默认输出简洁的中文回答、适用性提示和依据；需要完整机器可读结果时加 `--json`。也可以用 `--question` 覆盖默认值，或用 `--no-evidence-send` 只做检索、不调用模型。只发送 Neo4j 命中的最小证据片段；没有模型响应时仍返回检索证据和失败原因。新版代码不依赖旧版 Demo，旧版目录删除后不影响新版运行。
+
+其中 `import` 和 `status` 只需在需要时运行；日常提问只需要：
+
+```powershell
+cd "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
+$env:PYTHONPATH="src"
+python -m turbine_kg.stage3.trial_cli ask "你的问题"
+```
+
+在 `cmd` 中对应为：
+
+```cmd
+cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
+set "PYTHONPATH=%CD%\src"
+python -m turbine_kg.stage3.trial_cli ask "你的问题"
+```
+
+也可以像旧版 Demo 一样，启动后再输入问题：
+
+```powershell
+python -m turbine_kg.stage3.trial_cli ask
+```
+
+如果当前终端显示的是 `D:\本体\汽轮机安调项目\项目初期demo>`，说明还在父目录，必须先执行上面的 `cd`；否则会出现 `No module named 'turbine_kg'`。
 
 ## 当前检查
 

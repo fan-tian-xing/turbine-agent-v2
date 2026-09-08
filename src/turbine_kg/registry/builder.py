@@ -12,7 +12,7 @@ from .identity import (
     asset_id_for_path,
     load_derived_asset_links,
     load_document_identity_map,
-    revision_id_for_source_path,
+    revision_for_document,
 )
 from .inspection import inspect_pdf
 from .io import jsonl_write, load_manual_findings
@@ -39,6 +39,17 @@ REGISTRY_ROOT = PROJECT_ROOT / "data" / "registry"
 MANUAL_FINDINGS_PATH = REGISTRY_ROOT / "source_manual_findings.jsonl"
 DOCUMENT_IDENTITY_PATH = PROJECT_ROOT / "config" / "document_identity.tsv"
 DERIVED_ASSET_LINKS_PATH = PROJECT_ROOT / "config" / "derived_asset_links.tsv"
+STRUCTURED_SCOPE_PATH = PROJECT_ROOT / "config" / "source_applicability_scopes.json"
+
+
+def load_structured_applicability_scopes(path: Path) -> dict[str, dict[str, Any]]:
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if set(raw) != {"schema_version", "scopes"} or raw["schema_version"] != 1:
+        raise ValueError("structured applicability scope config has an invalid schema version")
+    scopes = raw["scopes"]
+    if not isinstance(scopes, dict) or not all(isinstance(key, str) and isinstance(value, dict) for key, value in scopes.items()):
+        raise ValueError("structured applicability scope config must map paths to objects")
+    return scopes
 
 
 def build_registry(settings: Settings) -> dict[str, int]:
@@ -48,6 +59,7 @@ def build_registry(settings: Settings) -> dict[str, int]:
     profiles, profile_assignments, default_profile_id = load_source_profiles()
     document_identity = load_document_identity_map(DOCUMENT_IDENTITY_PATH)
     derived_asset_links = load_derived_asset_links(DERIVED_ASSET_LINKS_PATH)
+    structured_scopes = load_structured_applicability_scopes(STRUCTURED_SCOPE_PATH)
     allowlisted_paths = {entry["path"] for entry in entries}
     if set(document_identity) != allowlisted_paths:
         missing = sorted(allowlisted_paths - set(document_identity))
@@ -135,10 +147,15 @@ def build_registry(settings: Settings) -> dict[str, int]:
         completeness_status = manual.get("completeness_status", inspected_asset["completeness_status"])
         applicability_status = manual.get("applicability_status", "review_required")
         applicability_scope = manual.get("applicability_scope", ["unknown"])
+        applicability_scope_structured = structured_scopes.get(path)
         if not isinstance(applicability_scope, list) or not applicability_scope or not all(
             isinstance(item, str) and item.strip() for item in applicability_scope
         ):
             raise ValueError(f"applicability_scope must be a non-empty array of strings for {path}")
+        if applicability_status == "confirmed" and applicability_scope_structured is None:
+            raise ValueError(f"confirmed Registry asset needs a structured applicability scope: {path}")
+        if applicability_status != "confirmed" and applicability_scope_structured is not None:
+            raise ValueError(f"unconfirmed Registry asset cannot declare a structured applicability scope: {path}")
         title_candidate = manual.get("title_candidate", inspected_asset["title_candidate"])
         title_source = manual.get("title_source", inspected_asset["title_source"])
         identifier_candidates = manual.get("identifier_candidates", inspected_asset["identifier_candidates"])
@@ -173,7 +190,7 @@ def build_registry(settings: Settings) -> dict[str, int]:
         asset_record = {
             "asset_id": asset_id,
             "document_logical_id": document_id,
-            "revision_id": revision_id_for_source_path(document_id, canonical_source_path),
+            "revision_id": revision_for_document(document_id)[0],
             "source_root_id": inspected_asset["source_root_id"],
             "asset_kind": profile.asset_kind,
             "source_profile_id": profile.profile_id,
@@ -209,6 +226,7 @@ def build_registry(settings: Settings) -> dict[str, int]:
             "admission_status": admission_status,
             "applicability_status": applicability_status,
             "applicability_scope": applicability_scope,
+            **({"applicability_scope_structured": applicability_scope_structured} if applicability_scope_structured is not None else {}),
             "review_flags": flags,
             "manual_findings": manual.get("findings", []),
             "manual_notes": manual.get("notes", []),
@@ -259,6 +277,20 @@ def build_registry(settings: Settings) -> dict[str, int]:
                     "question": manual["follow_up_required"],
                 }
             )
+
+    confirmed_paths = {
+        record["relative_path"] for record in asset_records
+        if record["applicability_status"] == "confirmed"
+    }
+    if set(structured_scopes) != confirmed_paths:
+        missing = sorted(confirmed_paths - set(structured_scopes))
+        extra = sorted(set(structured_scopes) - confirmed_paths)
+        details = []
+        if missing:
+            details.append(f"missing confirmed paths: {missing}")
+        if extra:
+            details.append(f"unconfirmed or unknown paths: {extra}")
+        raise ValueError("structured applicability scope config does not match confirmed Registry assets (" + "; ".join(details) + ")")
 
     open_review_counts: dict[str, int] = defaultdict(int)
     for item in review_records:

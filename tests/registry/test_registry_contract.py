@@ -10,6 +10,7 @@ from turbine_kg.registry.duplicates import duplicate_relations
 from turbine_kg.registry.profiles import load_source_profiles, profile_for_path
 from turbine_kg.registry.schema import validate_asset_record
 from turbine_kg.registry.source_inputs import validate_source_allowlist
+from turbine_kg.registry.identity import revision_id_for_source_path
 
 
 def _asset(path: str, *, text_status: str, text_fingerprint: str | None, visual_fingerprint: str) -> dict[str, object]:
@@ -21,6 +22,10 @@ def _asset(path: str, *, text_status: str, text_fingerprint: str | None, visual_
         "text_layer_status": text_status,
         "page_visual_fingerprints": [visual_fingerprint],
     }
+
+
+def test_revision_identity_is_not_derived_from_asset_path():
+    assert revision_id_for_source_path("doc-24b25833ab82e212d1fb", "one.pdf") == revision_id_for_source_path("doc-24b25833ab82e212d1fb", "renamed.pdf")
 
 
 def test_scan_only_assets_do_not_form_a_normalized_text_duplicate_group() -> None:
@@ -83,6 +88,46 @@ def test_asset_contract_requires_explicit_root_kind_and_decoupled_revision() -> 
     validate_asset_record(asset)
     asset["asset_kind"] = "invalid"
     with pytest.raises(ValueError, match="asset_kind"):
+        validate_asset_record(asset)
+
+
+def test_confirmed_asset_requires_a_nonempty_structured_applicability_scope() -> None:
+    asset = {
+        "asset_id": "asset-00000000000000000000",
+        "document_logical_id": "doc-00000000000000000000",
+        "revision_id": "rev-00000000000000000000",
+        "source_root_id": "source",
+        "asset_kind": "original",
+        "source_profile_id": "book",
+        "relative_path": "x.pdf",
+        "sha256": "0" * 64,
+        "size_bytes": 1,
+        "page_count": 1,
+        "source_role": "book",
+        "text_layer_status": "scan_only",
+        "text_adapter_status": "ocr_validated",
+        "identity_status": "confirmed",
+        "completeness_status": "complete",
+        "external_processing_status": "local_only",
+        "authority_level": "textbook",
+        "normative_modality": "informational",
+        "project_adoption_status": "not_applicable",
+        "manufacturer_approval_status": "not_applicable",
+        "validity_status": "unknown",
+        "supersedes": [],
+        "supersedes_status": "confirmed_none",
+        "exception_basis": [],
+        "exception_basis_status": "confirmed_none",
+        "admission_status": "admitted",
+        "applicability_status": "confirmed",
+        "applicability_scope": ["human-readable scope"],
+    }
+    with pytest.raises(ValueError, match="applicability_scope_structured"):
+        validate_asset_record(asset)
+    asset["applicability_scope_structured"] = {"lifecycle_stage": "installation"}
+    validate_asset_record(asset)
+    asset["applicability_scope_structured"] = {"unknown_key": "value"}
+    with pytest.raises(ValueError, match="unexpected fields"):
         validate_asset_record(asset)
 
 

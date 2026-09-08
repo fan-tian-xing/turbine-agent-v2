@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "corpus_kind": "public_synthetic_fixture",
+  "documents": [
+    {
+      "document_logical_id": "doc-11111111111111111111",
+      "source_role": "manufacturer_manual",
+      "title": "Synthetic N-300 Manufacturer Alignment Guide",
+      "asset": {
+        "asset_id": "asset-11111111111111111111",
+        "relative_path": "fixtures/stage3/manufacturer-alignment-guide.md",
+        "asset_kind": "synthetic_fixture",
+        "source_root_id": "fixture"
+      },
+      "revision": {
+        "revision_id": "rev-11111111111111111111",
+        "document_logical_id": "doc-11111111111111111111",
+        "label": "synthetic-2026-01"
+      },
+      "source_scope": {
+        "model": "N-300",
+        "equipment": "steam_turbine",
+        "lifecycle_stage": "installation",
+        "activity": "alignment",
+        "operating_state": "cold",
+        "capacity_range": {"min": 250, "max": 350},
+        "condition": "shaft_alignment"
+      },
+      "pages": [
+        {"page_id": "page-111-1", "revision_id": "rev-11111111111111111111", "page_number": 1, "text": "For the synthetic N-300 steam turbine, cold shaft alignment uses a 0.10 mm limit."},
+        {"page_id": "page-111-2", "revision_id": "rev-11111111111111111111", "page_number": 2, "text": "The alignment measurement must be repeated after the coupling is fitted."}
+      ],
+      "spans": [
+        {"span_id": "span-111-1", "page_id": "page-111-1", "quote": "cold shaft alignment uses a 0.10 mm limit"},
+        {"span_id": "span-111-2", "page_id": "page-111-2", "quote": "measurement must be repeated after the coupling is fitted"}
+      ],
+      "evidence": [
+        {"evidence_id": "evidence-111-1", "source_span_ids": ["span-111-1"], "statement_id": "statement-111-1", "object_id": "steam_turbine_shaft", "text": "Cold shaft alignment uses a 0.10 mm limit.", "value": 0.1, "unit": "mm"},
+        {"evidence_id": "evidence-111-2", "source_span_ids": ["span-111-1", "span-111-2"], "statement_id": "statement-111-2", "object_id": "steam_turbine_shaft", "text": "Measurement must be repeated after the coupling is fitted."}
+      ],
+      "statements": [
+        {"statement_id": "statement-111-1", "statement_type": "fact", "text": "Cold shaft alignment uses a 0.10 mm limit.", "evidence_ids": ["evidence-111-1"], "object_id": "steam_turbine_shaft", "scope": {"model": "N-300", "equipment": "steam_turbine", "lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold", "capacity_range": {"min": 250, "max": 350}, "condition": "shaft_alignment"}, "value": 0.1, "unit": "mm"},
+        {"statement_id": "statement-111-2", "statement_type": "candidate_recommendation", "text": "Repeat the shaft alignment measurement after coupling fit.", "evidence_ids": ["evidence-111-2"], "object_id": "steam_turbine_shaft", "scope": {"model": "N-300", "equipment": "steam_turbine", "lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold", "capacity_range": {"min": 250, "max": 350}, "condition": "shaft_alignment"}}
+      ]
+    },
+    {
+      "document_logical_id": "doc-22222222222222222222",
+      "source_role": "standard_or_regulation",
+      "title": "Synthetic Turbine Commissioning Standard",
+      "asset": {
+        "asset_id": "asset-22222222222222222222",
+        "relative_path": "fixtures/stage3/commissioning-standard.md",
+        "asset_kind": "synthetic_fixture",
+        "source_root_id": "fixture"
+      },
+      "revision": {
+        "revision_id": "rev-22222222222222222222",
+        "document_logical_id": "doc-22222222222222222222",
+        "label": "synthetic-2026-01"
+      },
+      "source_scope": {
+        "lifecycle_stage": "installation",
+        "activity": "alignment",
+        "operating_state": "cold",
+        "condition": "shaft_alignment"
+      },
+      "pages": [
+        {"page_id": "page-222-1", "revision_id": "rev-22222222222222222222", "page_number": 1, "text": "The generic commissioning baseline is 0.15 mm for cold alignment."},
+        {"page_id": "page-222-2", "revision_id": "rev-22222222222222222222", "page_number": 2, "text": "Before commissioning, verify the measured value and record the unit."}
+      ],
+      "spans": [
+        {"span_id": "span-222-1", "page_id": "page-222-1", "quote": "generic commissioning baseline is 0.15 mm", "content_kind": "table", "table_metadata": {"columns": ["baseline", "unit"], "rows": [["0.15", "mm"]], "merged_cells": [], "repeat_header": true, "continues_from": null}},
+        {"span_id": "span-222-2", "page_id": "page-222-2", "quote": "verify the measured value and record the unit"}
+      ],
+      "evidence": [
+        {"evidence_id": "evidence-222-1", "source_span_ids": ["span-222-1"], "statement_id": "statement-222-1", "object_id": "steam_turbine_shaft", "text": "The generic commissioning baseline is 0.15 mm.", "value": 0.15, "unit": "mm"},
+        {"evidence_id": "evidence-222-2", "source_span_ids": ["span-222-2"], "statement_id": "statement-222-2", "object_id": "steam_turbine_shaft", "text": "Verify the measured value and record the unit."}
+      ],
+      "statements": [
+        {"statement_id": "statement-222-1", "statement_type": "fact", "text": "The generic cold alignment commissioning baseline is 0.15 mm.", "evidence_ids": ["evidence-222-1"], "object_id": "steam_turbine_shaft", "scope": {"lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold", "condition": "shaft_alignment"}, "value": 0.15, "unit": "mm"},
+        {"statement_id": "statement-222-2", "statement_type": "candidate_recommendation", "text": "Verify the measured value and record the unit before commissioning.", "evidence_ids": ["evidence-222-2"], "object_id": "steam_turbine_shaft", "scope": {"lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold", "condition": "shaft_alignment"}}
+      ]
+    },
+    {
+      "document_logical_id": "doc-33333333333333333333",
+      "source_role": "training_background",
+      "title": "Synthetic Auxiliary Equipment Training Notes",
+      "asset": {
+        "asset_id": "asset-33333333333333333333",
+        "relative_path": "fixtures/stage3/auxiliary-training-notes.md",
+        "asset_kind": "synthetic_fixture",
+        "source_root_id": "fixture"
+      },
+      "revision": {
+        "revision_id": "rev-33333333333333333333",
+        "document_logical_id": "doc-33333333333333333333",
+        "label": "synthetic-2026-01"
+      },
+      "source_scope": {
+        "equipment": "auxiliary_pump",
+        "lifecycle_stage": "installation",
+        "activity": "inspection",
+        "condition": "visual_check"
+      },
+      "pages": [
+        {"page_id": "page-333-1", "revision_id": "rev-33333333333333333333", "page_number": 1, "text": "Record leaks during a visual check of the auxiliary pump."},
+        {"page_id": "page-333-2", "revision_id": "rev-33333333333333333333", "page_number": 2, "text": "Training notes do not authorize lifting or adjustment work."}
+      ],
+      "spans": [
+        {"span_id": "span-333-1", "page_id": "page-333-1", "quote": "Record leaks during a visual check of the auxiliary pump."},
+        {"span_id": "span-333-2", "page_id": "page-333-2", "quote": "do not authorize lifting or adjustment work"}
+      ],
+      "evidence": [
+        {"evidence_id": "evidence-333-1", "source_span_ids": ["span-333-1"], "statement_id": "statement-333-1", "object_id": "auxiliary_pump", "text": "Record leaks and loose fasteners during a visual check."},
+        {"evidence_id": "evidence-333-2", "source_span_ids": ["span-333-2"], "statement_id": "statement-333-2", "object_id": "auxiliary_pump", "text": "Training notes do not authorize lifting or adjustment work."}
+      ],
+      "statements": [
+        {"statement_id": "statement-333-1", "statement_type": "candidate_recommendation", "text": "Record leaks and loose fasteners during a visual check.", "evidence_ids": ["evidence-333-1"], "object_id": "auxiliary_pump", "scope": {"equipment": "auxiliary_pump", "lifecycle_stage": "installation", "activity": "inspection", "condition": "visual_check"}},
+        {"statement_id": "statement-333-2", "statement_type": "fact", "text": "Training notes do not authorize lifting or adjustment work.", "evidence_ids": ["evidence-333-2"], "object_id": "auxiliary_pump", "scope": {"equipment": "auxiliary_pump", "lifecycle_stage": "installation", "activity": "inspection", "condition": "visual_check"}, "risk_level": "high"}
+      ]
+    }
+  ]
+}

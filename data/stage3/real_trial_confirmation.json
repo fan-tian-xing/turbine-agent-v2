@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "stage": "3",
+  "status": "confirmed_by_user",
+  "authority": "manual_confirmation_in_current_task",
+  "formal_release": false,
+  "confirmation_group_count": 3,
+  "confirmed_page_count": 3,
+  "notes": "仅记录用户确认的三组真实页面证据，不把未确认页面或临时资料写入正式知识。完整页面文本仍保留在忽略的运行时试点语料中。",
+  "confirmed_groups": [
+    {
+      "group_id": "confirmation-dl5190-p86",
+      "page_id": "real-page-24b258-086",
+      "span_id": "real-span-24b258-086",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "asset_id": "asset-29ca16b111846e39aabf",
+      "source_role": "standard_or_regulation",
+      "title": "DL/T 5190.3—2019 电力建设施工技术规范 第3部分：汽轮发电机组",
+      "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "source_scope": {"lifecycle_stage": "installation", "activity": "inspection"},
+      "pdf_page_number": 86,
+      "review_status": "confirmed",
+      "user_confirmation": true,
+      "evidence": [
+        {
+          "evidence_id": "real-evidence-dl5190-p86-feeler",
+          "source_span_id": "real-span-24b258-086",
+          "object_id": "seal_bearing_seat_external_interface",
+          "statement_id": "real-statement-dl5190-p86-feeler",
+          "statement_type": "inspection_requirement",
+          "statement_text": "密封瓦座外部接口水平结合面用0.05mm塞尺检查应不入。",
+          "quote": "用0.05mm 塞尺检查应不入",
+          "value": 0.05,
+          "unit": "mm",
+          "applicability": {
+            "equipment": "seal_bearing_seat",
+            "lifecycle_stage": "installation",
+            "activity": "inspection",
+            "condition": "horizontal_joint_external_interface"
+          }
+        },
+        {
+          "evidence_id": "real-evidence-dl5190-p86-contact",
+          "source_span_id": "real-span-24b258-086",
+          "object_id": "seal_bearing_horizontal_joint",
+          "statement_id": "real-statement-dl5190-p86-contact",
+          "statement_type": "acceptance_requirement",
+          "statement_text": "密封瓦水平结合面接触面积应大于结合面面积的75％且分布均匀。",
+          "quote": "接触面积应大于结合面面积的75％且分布均匀",
+          "value": 75,
+          "unit": "%",
+          "applicability": {
+            "equipment": "seal_bearing",
+            "lifecycle_stage": "installation",
+            "activity": "inspection",
+            "condition": "horizontal_joint_contact"
+          }
+        }
+      ]
+    },
+    {
+      "group_id": "confirmation-d300n-p73",
+      "page_id": "real-page-af7fa1-073",
+      "span_id": "real-span-af7fa1-073",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "asset_id": "asset-dfd1ea84bc8622cede86",
+      "source_role": "manufacturer_manual",
+      "title": "N-300-16.7/537/537-8型（合缸）汽轮机本体安装及维护说明书",
+      "relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+      "sha256": "4710a8ecf189c75158e87a3e88e97a8943d8854e1b556c5d1d6448ee45d7431f",
+      "source_scope": {"model": "N-300-16.7/537/537-8", "equipment": "front_box_sliding_block", "lifecycle_stage": "overhaul", "activity": "lubrication_and_cleaning", "condition": "half_cylinder_state"},
+      "pdf_page_number": 73,
+      "review_status": "confirmed",
+      "user_confirmation": true,
+      "evidence": [
+        {
+          "evidence_id": "real-evidence-d300n-p73-lift-clearance",
+          "source_span_id": "real-span-af7fa1-073",
+          "object_id": "front_box_sliding_block",
+          "statement_id": "real-statement-d300n-p73-lift-clearance",
+          "statement_type": "maintenance_procedure",
+          "statement_text": "大修半空缸状态下，抬起高中压外缸前猫爪使下垫片脱开0.2～0.5mm，再将前箱抬起0.1～0.15mm与滑块脱开。",
+          "quote": "下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开",
+          "quantities": [
+            {"min": 0.2, "max": 0.5, "unit": "mm"},
+            {"min": 0.1, "max": 0.15, "unit": "mm"}
+          ],
+          "applicability": {
+            "model": "N-300-16.7/537/537-8",
+            "equipment": "front_box_sliding_block",
+            "lifecycle_stage": "overhaul",
+            "activity": "lubrication_and_cleaning",
+            "condition": "half_cylinder_state"
+          }
+        }
+      ]
+    },
+    {
+      "group_id": "confirmation-haf103-p1",
+      "page_id": "real-page-a1f2fb-001",
+      "span_id": "real-span-a1f2fb-001",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "asset_id": "asset-e4d060422e62fd656770",
+      "source_role": "standard_or_regulation",
+      "title": "HAF103 核动力厂调试和运行安全规定",
+      "relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+      "sha256": "24933cf948ee1a77fceb8819a4a5aaa3dcf3da6ec05f5cdcbd473a60e4e1ea22",
+      "source_scope": {"equipment": "land_based_fixed_nuclear_power_plant", "lifecycle_stage": "commissioning_and_operation", "activity": "nuclear_safety_management"},
+      "pdf_page_number": 1,
+      "review_status": "confirmed",
+      "user_confirmation": true,
+      "evidence": [
+        {
+          "evidence_id": "real-evidence-haf103-p1-scope",
+          "source_span_id": "real-span-a1f2fb-001",
+          "object_id": "land_based_fixed_nuclear_power_plant",
+          "statement_id": "real-statement-haf103-p1-scope",
+          "statement_type": "scope_definition",
+          "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面。",
+          "quote": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
+          "applicability": {
+            "equipment": "land_based_fixed_nuclear_power_plant",
+            "lifecycle_stage": "commissioning_and_operation",
+            "activity": "nuclear_safety_management"
+          }
+        }
+      ]
+    }
+  ]
+}

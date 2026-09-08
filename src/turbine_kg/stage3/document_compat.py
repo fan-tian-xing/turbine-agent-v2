@@ -8,8 +8,12 @@ those remain semantic inputs and must be supplied and validated separately.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
+from turbine_kg.documents.catalog import IdentityCatalog
 from turbine_kg.documents.models import DocumentIR
+from turbine_kg.documents.pdf import parse_registered_pdf
+from turbine_kg.documents.profiles import LayoutProfile
 from turbine_kg.documents.validation import validate_document_ir
 
 from .models import Page, Revision, SourceSpan
@@ -66,4 +70,27 @@ def project_document_ir(ir: DocumentIR) -> Stage3StructuralView:
         ),
         pages=pages,
         spans=spans,
+    )
+
+
+def project_registered_pdf(
+    path: Path,
+    relative_path: str,
+    catalog: IdentityCatalog,
+    *,
+    title: str,
+    profile: LayoutProfile = LayoutProfile(),
+    page_indices: tuple[int, ...] | None = None,
+) -> Stage3StructuralView:
+    """Run the read-only Registry → PDF → IR → Stage 3 structure bridge."""
+
+    return project_document_ir(
+        parse_registered_pdf(
+            path,
+            relative_path,
+            catalog,
+            title=title,
+            profile=profile,
+            page_indices=page_indices,
+        )
     )

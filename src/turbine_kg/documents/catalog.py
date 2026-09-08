@@ -59,6 +59,12 @@ class IdentityCatalog:
                 return asset
         raise KeyError(f"unregistered asset ID: {asset_id}")
 
+    def revision_for_id(self, revision_id: str) -> RevisionRecord:
+        for revision in self.revisions:
+            if revision.revision_id == revision_id:
+                return revision
+        raise KeyError(f"unregistered Revision ID: {revision_id}")
+
 
 def load_identity_catalog(
     assets_path: Path,

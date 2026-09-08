@@ -9,6 +9,7 @@ try:
 except ImportError:  # pragma: no cover - compatibility with older PyMuPDF imports
     import fitz as pymupdf
 
+from .catalog import IdentityCatalog
 from .models import AssetRef, Document, DocumentIR, DocumentRevision, BBox
 from .parser import parse_page_inputs
 from .profiles import LayoutProfile, PageInput, RawTextBlock
@@ -85,4 +86,58 @@ def parse_pdf(
         tuple(inputs),
         profile=profile,
         parser_version=parser_version,
+    )
+
+
+def parse_registered_pdf(
+    path: Path,
+    relative_path: str,
+    catalog: IdentityCatalog,
+    *,
+    title: str,
+    profile: LayoutProfile = LayoutProfile(),
+    parser_version: str = "pymupdf-page-inspector-v1",
+    page_indices: tuple[int, ...] | None = None,
+) -> DocumentIR:
+    """Parse one Registry-registered PDF without re-inferring its identity.
+
+    The caller must provide the Registry relative path and an explicit title;
+    the path is used only to look up a stable Asset identity, never to create
+    a new document or Revision.  This is the Stage 4 bridge used by future
+    batch entry points and by the Stage 3 structural adapter.
+    """
+
+    asset_identity = catalog.asset_for_path(relative_path)
+    revision_record = catalog.revision_for_id(asset_identity.revision_id)
+    asset = AssetRef(
+        asset_id=asset_identity.asset_id,
+        document_logical_id=asset_identity.document_logical_id,
+        revision_id=asset_identity.revision_id,
+        asset_kind=asset_identity.asset_kind,
+        relative_path=asset_identity.relative_path,
+        sha256=asset_identity.sha256,
+        source_root_id=asset_identity.source_root_id,
+        derived_from_asset_id=asset_identity.derived_from_asset_id,
+        derivation_type=asset_identity.derivation_type,
+    )
+    document = Document(
+        document_logical_id=asset_identity.document_logical_id,
+        title=title,
+        registry_document_ref=asset_identity.document_logical_id,
+    )
+    revision = DocumentRevision(
+        revision_id=revision_record.revision_id,
+        document_logical_id=revision_record.document_logical_id,
+        revision_label=revision_record.revision_label,
+        revision_basis=revision_record.revision_basis,
+        status=revision_record.revision_status,
+    )
+    return parse_pdf(
+        path,
+        document,
+        revision,
+        asset,
+        profile=profile,
+        parser_version=parser_version,
+        page_indices=page_indices,
     )

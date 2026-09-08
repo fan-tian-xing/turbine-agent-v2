@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "stage4_human_review",
+  "reviewed_at": "2026-09-08",
+  "reviewer": "project_owner_confirmed_in_chat",
+  "status": "conditionally_approved",
+  "decisions": [
+    {
+      "subject": "HAF103 source unit",
+      "decision": "approved",
+      "scope": "The supplied original is complete for the current unit and covers printed pages 3-34.",
+      "basis": "Project owner confirmed in chat."
+    },
+    {
+      "subject": "Auxiliary installation book source pages",
+      "decision": "approved",
+      "scope": "The reviewed pages are complete; large blank margins and right-shifted content are accepted as original scan layout, not treated as missing crop.",
+      "basis": "Project owner confirmed in chat."
+    },
+    {
+      "subject": "Stage 4 table boundary",
+      "decision": "approved_with_stage5_deferment",
+      "scope": "Stage 4 freezes table structure, source location and validation contracts; real row/column recovery remains Stage 5 work.",
+      "basis": "Project owner confirmed in chat."
+    }
+  ],
+  "not_a_stage4_closure": true,
+  "remaining_engineering_gates": [
+    "complete input/output/exception reconciliation",
+    "run the final Stage 4 exit audit"
+  ],
+  "formal_release": false
+}

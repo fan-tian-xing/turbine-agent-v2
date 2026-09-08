@@ -14,16 +14,19 @@
     "manual_correction_overlay": {"status": "pass", "evidence": "overlay records retain parser output and validate original_text against BlockVersion"},
     "stage3_structural_bridge": {"status": "pass", "evidence": "Registry → PDF → DocumentIR → Stage3 Page/SourceSpan smoke chain"},
     "test_suite": {"status": "pass", "evidence": "77 pytest tests passed on this implementation"},
-    "table_cell_extraction": {"status": "deferred", "evidence": "Table/TableCell contracts and negative validation exist; real row/column extraction is Stage 5 work"},
+    "table_cell_extraction": {"status": "deferred", "evidence": "Table/TableCell contracts and negative validation exist; project owner approved deferring real row/column extraction to Stage 5"},
+    "human_review_boundary": {"status": "pass", "evidence": "data/stage4/stage4_human_review_2026-09-08.json"},
+    "count_reconciliation": {"status": "pass", "evidence": "data/stage4/stage4_count_reconciliation_2026-09-08.json"},
+    "final_smoke_replay": {"status": "pass", "evidence": "5 assets, 15 sampled pages, 3 native_text pages, 12 mixed pages, 0 failures"},
+    "final_exit_audit": {"status": "ready_for_project_owner_signoff", "evidence": "data/stage4/stage4_final_exit_audit_2026-09-08.json"},
     "ocr_benchmark": {"status": "deferred", "evidence": "30-page Golden Sample and engine comparison belong to Stage 5"}
   },
   "remaining_stage4_gate": [
-    "freeze and record a real table/page sample contract without claiming Stage 5 quality",
-    "finalize Stage 4 input/output/exception count reconciliation",
-    "run one final exit audit after the table boundary is documented"
+    "project owner sign-off of data/stage4/stage4_final_exit_audit_2026-09-08.json"
   ],
   "next_allowed_work": [
     "prepare Stage 5 stratified sample matrix and evaluation protocol in parallel",
+    "await project owner sign-off before closing Stage 4",
     "do not start formal OCR benchmark or close Stage 4 yet"
   ]
 }

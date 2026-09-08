@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "stage4_final_exit_audit",
+  "audited_at": "2026-09-08",
+  "status": "ready_for_project_owner_signoff",
+  "closure_status": "not_closed",
+  "formal_release": false,
+  "checks": {
+    "human_review_boundary": {"status": "pass", "evidence": "data/stage4/stage4_human_review_2026-09-08.json"},
+    "source_inventory": {"status": "pass", "evidence": "44 Original materials PDFs, 48 Registry assets, 44 original assets and 4 OCR-derived assets"},
+    "admitted_source_identity": {"status": "pass", "evidence": "5 admitted original sources exist with Registry identity, page count and SHA-256 alignment"},
+    "smoke_input_output_exception_reconciliation": {"status": "pass", "evidence": "data/stage4/stage4_count_reconciliation_2026-09-08.json"},
+    "registered_pdf_smoke_replay": {"status": "pass", "evidence": "5 assets, 15 sampled pages, 3 native_text pages, 12 mixed pages, 0 failures"},
+    "document_ir_contract": {"status": "pass", "evidence": "stage4_exit_audit.json"},
+    "identity_catalog": {"status": "pass", "evidence": "stage4_exit_audit.json"},
+    "page_routing": {"status": "pass", "evidence": "77 pytest tests including review_required route coverage"},
+    "figure_location": {"status": "pass", "evidence": "stage4_exit_audit.json"},
+    "manual_correction_overlay": {"status": "pass", "evidence": "stage4_exit_audit.json"},
+    "stage3_structural_bridge": {"status": "pass", "evidence": "stage4_exit_audit.json"},
+    "test_suite": {"status": "pass", "evidence": "77 pytest tests passed"},
+    "table_cell_extraction": {"status": "deferred_by_approved_boundary", "evidence": "Real row/column recovery remains Stage 5 work"},
+    "ocr_benchmark": {"status": "deferred", "evidence": "30-page Golden Sample and engine comparison belong to Stage 5"}
+  },
+  "owner_decision_required": "Accept or reject the final Stage 4 audit. Acceptance may close Stage 4; rejection returns the listed check to remediation.",
+  "next_stage_allowed": "Stage 5 preparation may continue; formal OCR benchmark starts only after Stage 4 closure."
+}

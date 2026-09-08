@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "registered_pdf_smoke_count_reconciliation",
+  "reconciled_at": "2026-09-08",
+  "input_manifest": "data/stage3/initial_batch_manifest.json",
+  "manifest_kind": "research_trial_sampling",
+  "expected": {
+    "registered_asset_count": 5,
+    "sample_page_count": 15,
+    "pages_per_asset": 3,
+    "source_documents": 5
+  },
+  "actual": {
+    "registered_asset_count": 5,
+    "sample_page_count": 15,
+    "pages_per_asset": {
+      "asset-29ca16b111846e39aabf": 3,
+      "asset-dfd1ea84bc8622cede86": 3,
+      "asset-e82eacef4b82e06cf31c": 3,
+      "asset-6be125e4aa900f01e21b": 3,
+      "asset-e4d060422e62fd656770": 3
+    },
+    "source_documents": 5,
+    "output_pages": 15,
+    "failed_pages": 0,
+    "skipped_pages": 0,
+    "empty_output_pages": 0,
+    "exception_count": 0,
+    "original_asset_in_ir_for_derived_assets": 4
+  },
+  "status": "pass",
+  "notes": [
+    "This reconciles the registered PDF smoke sample only; it is not an OCR quality benchmark.",
+    "Table row/column extraction remains deferred to Stage 5.",
+    "Formal release remains false."
+  ]
+}

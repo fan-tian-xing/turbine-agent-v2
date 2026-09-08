@@ -30,6 +30,7 @@ def test_page_capability_routes_native_scan_and_mixed_without_filename_logic():
     assert choose_page_mode(inspect_page(PageInput("asset-" + "a" * 20, "rev-" + "b" * 20, 0, 600, 800, 0, "有足够多的原生文本" * 4, "native", 0.1))) == "native_text"
     assert choose_page_mode(inspect_page(PageInput("asset-" + "a" * 20, "rev-" + "b" * 20, 1, 600, 800, 0, "", "scan_only", 0.9))) == "scan_only"
     assert choose_page_mode(inspect_page(PageInput("asset-" + "a" * 20, "rev-" + "b" * 20, 2, 600, 800, 0, "混合页面存在文本" * 8, "native", 0.9))) == "mixed"
+    assert choose_page_mode(inspect_page(PageInput("asset-" + "a" * 20, "rev-" + "b" * 20, 3, 600, 800, 0, "少量待复核文本", "native", 0.1))) == "review_required"
 
 
 def test_three_page_modes_enter_one_document_ir():

@@ -19,6 +19,8 @@
 - 当前文档层回归测试共 23 项，项目全量测试共 77 项。
 - 阶段 3 兼容层目前是只读的结构投影桥接，仅提供 Revision/Page/SourceSpan，不替代 Stage 3 的语义 Fixture、Evidence 或 Statement；人工更正已作为不覆盖原始解析结果的 Overlay 记录，表格 SourceSpan 定位已纳入校验。
 
+阶段 4 当前仍不能关闭。除自动化测试外，还需要项目负责人审核资料身份与原件—OCR 对账、代表性页面定位、真实表格边界、人工更正 Overlay 和输入—输出—异常数量对账，并签署最终退出审计。审核要求及阶段 5 启动前置条件见根目录 `总计划.md` 的“阶段 4 人工审核门槛”和“阶段 5 启动前置条件”。审核结果应记录为 `data/stage4/stage4_human_review_YYYY-MM-DD.json`；在该记录形成前，不得把 `stage4_exit_audit.json` 改为 `complete`。
+
 当前明确留到阶段 5 及以后：
 
 - OCR 引擎选择和精度基准；

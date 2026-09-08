@@ -7,7 +7,7 @@ import json
 from dataclasses import replace
 
 from .ids import new_parsing_run_id
-from .models import AssetRef, Document, DocumentIR, DocumentRevision, Page, ParsingRun
+from .models import AssetRef, Document, DocumentIR, DocumentRevision, Page, ParsingRun, record_value
 from .profiles import LayoutProfile, PageInput, adapter_for_mode, choose_page_mode, inspect_page
 from .validation import validate_document_ir
 
@@ -46,7 +46,7 @@ def parse_page_inputs(
         parser_profile_id=profile.profile_id,
         parser_version=parser_version,
         config_fingerprint=config_fingerprint,
-        input_fingerprint=_fingerprint([(item.asset_id, item.pdf_page_index, item.text) for item in page_inputs]),
+        input_fingerprint=_fingerprint([record_value(item) for item in page_inputs]),
     )
     pages: list[Page] = []
     blocks = []
@@ -69,5 +69,9 @@ def parse_page_inputs(
         blocks=tuple(blocks),
         source_spans=tuple(spans),
     )
-    output_fingerprint = _fingerprint({"pages": [page.page_id for page in pages], "blocks": [block.block_version_id for block in blocks]})
+    output_fingerprint = _fingerprint({
+        "pages": [record_value(page) for page in pages],
+        "blocks": [record_value(block) for block in blocks],
+        "source_spans": [record_value(span) for span in spans],
+    })
     return validate_document_ir(replace(ir, parsing_run=replace(run, output_fingerprint=output_fingerprint)))

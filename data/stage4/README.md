@@ -13,8 +13,8 @@
 - 多 Revision 旧配置兼容读取和最小中文显示映射；
 - 阶段 3 兼容层的后续接入基础；
 - `stage3.document_compat.project_document_ir`：仅投影 Page/SourceSpan，不生成阶段 3 的业务适用范围、Evidence 或 Statement；
-- 当前 Document IR 回归测试共 19 项，项目全量测试共 73 项。
-- 阶段 3 兼容层目前是只读的结构投影桥接，仅提供 Revision/Page/SourceSpan，不替代 Stage 3 的语义 Fixture、Evidence 或 Statement；表格 SourceSpan 定位和人工更正 Overlay 仍需在阶段 4退出前明确。
+- 当前文档层回归测试共 22 项，项目全量测试共 76 项。
+- 阶段 3 兼容层目前是只读的结构投影桥接，仅提供 Revision/Page/SourceSpan，不替代 Stage 3 的语义 Fixture、Evidence 或 Statement；人工更正已作为不覆盖原始解析结果的 Overlay 记录，表格 SourceSpan 定位已纳入校验。
 
 当前明确留到阶段 5 及以后：
 

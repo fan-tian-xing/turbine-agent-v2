@@ -19,13 +19,14 @@
     "page_id": "page-[20 lowercase hex]",
     "block_version_id": "blockv-[20 lowercase hex]",
     "source_span_id": "span-[20 lowercase hex]",
-    "parsing_run_id": "run-[20 lowercase hex]"
+    "parsing_run_id": "run-[20 lowercase hex]",
+    "correction_id": "correction-[20 lowercase hex]"
   },
   "text_origins": ["native_text", "ocr_text", "manual_correction"],
   "page_modes": ["native_text", "scan_only", "mixed", "review_required"],
   "source_of_truth": {
     "registry": ["asset identity", "admission", "source role", "applicability"],
-    "document_ir": ["pages", "layout blocks", "tables", "figures", "locations", "parse runs"],
+    "document_ir": ["pages", "layout blocks", "tables", "figures", "locations", "parse runs", "manual correction overlays"],
     "evidence_layer": ["reviewed source claims"]
   }
 }

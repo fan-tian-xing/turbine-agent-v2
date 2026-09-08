@@ -7,7 +7,7 @@ import fitz
 
 from turbine_kg.documents.ids import stable_id
 from turbine_kg.documents.identity import load_revision_catalog
-from turbine_kg.documents.models import AssetRef, BBox, Document, DocumentRevision, Table
+from turbine_kg.documents.models import AssetRef, BBox, Document, DocumentRevision, ManualCorrection, Table
 from turbine_kg.documents.parser import parse_page_inputs
 from turbine_kg.documents.pdf import parse_pdf
 from turbine_kg.documents.profiles import PageInput, RawTextBlock, choose_page_mode, inspect_page, load_layout_profile
@@ -124,6 +124,46 @@ def test_table_source_span_requires_table_location_and_accepts_table_level_locat
     validate_document_ir(replace(ir, tables=(table,), source_spans=(table_span,)))
     with pytest.raises(ValueError, match="table source span"):
         validate_document_ir(replace(ir, source_spans=(replace(table_span, table_id=None),)))
+
+
+def test_manual_correction_is_an_overlay_and_does_not_mutate_parser_output():
+    document, revision, asset = _identity()
+    page = PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, "原始文本" * 12, "native", 0.1)
+    ir = parse_page_inputs(document, revision, (asset,), (page,), parsing_run_id="run-" + "9" * 20)
+    correction = ManualCorrection(
+        correction_id=stable_id("correction", ir.blocks[0].block_version_id, "reviewer", "修正文本"),
+        block_version_id=ir.blocks[0].block_version_id,
+        original_text=ir.blocks[0].text,
+        corrected_text="修正文本" * 12,
+        reason="人工核对数字",
+        reviewer="reviewer",
+        reviewed_at="2026-09-08T00:00:00Z",
+    )
+    validated = validate_document_ir(replace(ir, manual_corrections=(correction,)))
+    assert validated.blocks[0].text == ir.blocks[0].text
+    assert validated.manual_corrections[0].corrected_text == "修正文本" * 12
+
+
+def test_parsing_fingerprints_cover_layout_and_output_content():
+    document, revision, asset = _identity()
+    first_page = PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, "指纹文本" * 12, "native", 0.1)
+    second_page = replace(first_page, width_pt=601)
+    first = parse_page_inputs(document, revision, (asset,), (first_page,), parsing_run_id="run-" + "a" * 20)
+    second = parse_page_inputs(document, revision, (asset,), (second_page,), parsing_run_id="run-" + "a" * 20)
+    assert first.parsing_run.input_fingerprint != second.parsing_run.input_fingerprint
+    assert first.parsing_run.output_fingerprint != second.parsing_run.output_fingerprint
+
+
+def test_source_span_cannot_join_blocks_from_different_pages():
+    document, revision, asset = _identity()
+    pages = (
+        PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, "第一页文本" * 12, "native", 0.1),
+        PageInput(asset.asset_id, revision.revision_id, 1, 600, 800, 0, "第二页文本" * 12, "native", 0.1),
+    )
+    ir = parse_page_inputs(document, revision, (asset,), pages, parsing_run_id="run-" + "b" * 20)
+    invalid_span = replace(ir.source_spans[0], block_version_ids=(ir.blocks[0].block_version_id, ir.blocks[1].block_version_id))
+    with pytest.raises(ValueError, match="belong to its page"):
+        validate_document_ir(replace(ir, source_spans=(invalid_span,)))
 
 
 def test_revision_catalog_rejects_invalid_controlled_ids(tmp_path):

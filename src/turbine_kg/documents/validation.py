@@ -19,6 +19,7 @@ ID_PATTERNS = {
     "table_id": re.compile(r"^table-[0-9a-f]{20}$"),
     "cell_id": re.compile(r"^cell-[0-9a-f]{20}$"),
     "figure_id": re.compile(r"^figure-[0-9a-f]{20}$"),
+    "correction_id": re.compile(r"^correction-[0-9a-f]{20}$"),
 }
 
 
@@ -84,6 +85,11 @@ def validate_document_ir(ir: DocumentIR) -> DocumentIR:
             raise ValueError("page rotation must be 0, 90, 180 or 270")
         if page.page_mode not in PAGE_MODES:
             raise ValueError(f"unsupported page mode: {page.page_mode}")
+        for asset_page_ref in page.asset_page_refs:
+            if asset_page_ref.asset_id not in asset_ids:
+                raise ValueError("page references an asset outside the IR")
+            if asset_page_ref.page_index < 0:
+                raise ValueError("asset page reference must use a non-negative page index")
 
     block_ids = [block.block_version_id for block in ir.blocks]
     _unique(block_ids, "block version")
@@ -114,6 +120,13 @@ def validate_document_ir(ir: DocumentIR) -> DocumentIR:
             raise ValueError("table cell references a missing object")
         if cell.row_index < 0 or cell.column_index < 0 or cell.row_span < 1 or cell.column_span < 1:
             raise ValueError("table cell indexes and spans must be valid")
+        table = next(table for table in ir.tables if table.table_id == cell.table_id)
+        if cell.row_index + cell.row_span > table.row_count or cell.column_index + cell.column_span > table.column_count:
+            raise ValueError("table cell span exceeds table dimensions")
+    cell_id_set = set(cell_ids)
+    for table in ir.tables:
+        if any(cell_id not in cell_id_set for cell_id in table.cell_ids):
+            raise ValueError("table references a missing cell")
 
     figure_ids = [figure.figure_id for figure in ir.figures]
     _unique(figure_ids, "figure")
@@ -130,6 +143,8 @@ def validate_document_ir(ir: DocumentIR) -> DocumentIR:
             raise ValueError("source span must reference a page and at least one block")
         if any(block_id not in blocks for block_id in span.block_version_ids):
             raise ValueError("source span references a missing block")
+        if any(blocks[block_id].page_id != span.page_id for block_id in span.block_version_ids):
+            raise ValueError("source span blocks must belong to its page")
         first_block = blocks[span.block_version_ids[0]]
         if span.source_span_id != source_span_id(first_block.block_version_id, 0, span.quote):
             raise ValueError("source_span_id is not derived from its block and quote")
@@ -149,4 +164,18 @@ def validate_document_ir(ir: DocumentIR) -> DocumentIR:
         _bbox(span.bbox, page.width_pt, page.height_pt)
         if span.table_id and span.table_id not in table_ids:
             raise ValueError("source span table reference is missing")
+
+    correction_ids = [correction.correction_id for correction in ir.manual_corrections]
+    _unique(correction_ids, "manual correction")
+    for correction in ir.manual_corrections:
+        _id(correction.correction_id, "correction_id")
+        target = blocks.get(correction.block_version_id)
+        if target is None:
+            raise ValueError("manual correction references a missing block")
+        if correction.original_text != target.text:
+            raise ValueError("manual correction original_text must match the parser output")
+        if not correction.reason.strip() or not correction.reviewer.strip() or not correction.reviewed_at.strip():
+            raise ValueError("manual correction requires reason, reviewer and reviewed_at")
+        if correction.status not in {"accepted", "rejected"}:
+            raise ValueError("manual correction status is unsupported")
     return ir

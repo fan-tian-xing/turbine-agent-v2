@@ -160,6 +160,20 @@ class SourceSpan:
 
 
 @dataclass(frozen=True, slots=True)
+class ManualCorrection:
+    """Review overlay that never mutates the parser's original block output."""
+
+    correction_id: str
+    block_version_id: str
+    original_text: str
+    corrected_text: str
+    reason: str
+    reviewer: str
+    reviewed_at: str
+    status: str = "accepted"
+
+
+@dataclass(frozen=True, slots=True)
 class DocumentIR:
     schema_version: int
     document: Document
@@ -172,6 +186,7 @@ class DocumentIR:
     table_cells: tuple[TableCell, ...] = ()
     figures: tuple[Figure, ...] = ()
     source_spans: tuple[SourceSpan, ...] = ()
+    manual_corrections: tuple[ManualCorrection, ...] = ()
 
 
 def record_value(value: Any) -> Any:

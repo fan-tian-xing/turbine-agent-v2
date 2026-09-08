@@ -29,6 +29,17 @@ def _image_coverage(page) -> float:
     return min(1.0, covered / page_area)
 
 
+def _clip_bbox(raw_bbox, page) -> BBox:
+    width = float(page.rect.width)
+    height = float(page.rect.height)
+    return BBox(
+        max(0.0, min(width, float(raw_bbox[0]))),
+        max(0.0, min(height, float(raw_bbox[1]))),
+        max(0.0, min(width, float(raw_bbox[2]))),
+        max(0.0, min(height, float(raw_bbox[3]))),
+    )
+
+
 def _native_blocks(page) -> tuple[RawTextBlock, ...]:
     blocks: list[RawTextBlock] = []
     for raw in page.get_text("blocks"):
@@ -36,11 +47,23 @@ def _native_blocks(page) -> tuple[RawTextBlock, ...]:
             continue
         blocks.append(RawTextBlock(
             text=str(raw[4]).strip(),
-            bbox=BBox(float(raw[0]), float(raw[1]), float(raw[2]), float(raw[3])),
+            bbox=_clip_bbox(raw[:4], page),
             block_type="paragraph",
             reading_order=len(blocks),
         ))
     return tuple(blocks)
+
+
+def _image_boxes(page) -> tuple[BBox, ...]:
+    try:
+        image_info = page.get_image_info(xrefs=True)
+    except AttributeError:
+        return ()
+    return tuple(
+        _clip_bbox(item["bbox"], page)
+        for item in image_info
+        if item.get("bbox")
+    )
 
 
 def parse_pdf(
@@ -75,9 +98,10 @@ def parse_pdf(
                 height_pt=float(page.rect.height),
                 rotation_deg=int(page.rotation or 0),
                 text=text,
-                text_layer_status="native" if text else "scan_only",
+                text_layer_status=("ocr" if asset.asset_kind == "derived_ocr" else "native") if text else "scan_only",
                 image_coverage=images,
                 text_blocks=_native_blocks(page),
+                image_boxes=_image_boxes(page),
             ))
     return parse_page_inputs(
         document,

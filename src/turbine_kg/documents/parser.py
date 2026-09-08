@@ -51,14 +51,16 @@ def parse_page_inputs(
     pages: list[Page] = []
     blocks = []
     spans = []
+    figures = []
     for page_input in page_inputs:
         if page_input.revision_id != revision.revision_id:
             raise ValueError("page input revision does not match the requested IR revision")
         mode = choose_page_mode(inspect_page(page_input), profile)
-        page, page_blocks, page_spans = adapter_for_mode(mode).parse(page_input, run_id, mode)
+        page, page_blocks, page_spans, page_figures = adapter_for_mode(mode).parse(page_input, run_id, mode)
         pages.append(page)
         blocks.extend(page_blocks)
         spans.extend(page_spans)
+        figures.extend(page_figures)
     ir = DocumentIR(
         schema_version=1,
         document=document,
@@ -67,11 +69,13 @@ def parse_page_inputs(
         parsing_run=run,
         pages=tuple(pages),
         blocks=tuple(blocks),
+        figures=tuple(figures),
         source_spans=tuple(spans),
     )
     output_fingerprint = _fingerprint({
         "pages": [record_value(page) for page in pages],
         "blocks": [record_value(block) for block in blocks],
         "source_spans": [record_value(span) for span in spans],
+        "figures": [record_value(figure) for figure in figures],
     })
     return validate_document_ir(replace(ir, parsing_run=replace(run, output_fingerprint=output_fingerprint)))

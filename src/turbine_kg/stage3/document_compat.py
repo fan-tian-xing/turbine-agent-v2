@@ -41,7 +41,7 @@ def project_document_ir(ir: DocumentIR) -> Stage3StructuralView:
             page_id=page.page_id,
             revision_id=page.revision_id,
             page_number=page.display_page_number,
-            text="\n".join(block.text for block in blocks_by_page.get(page.page_id, [])),
+            text="\n".join(block.text for block in blocks_by_page.get(page.page_id, []) if block.text),
         )
         for page in sorted(ir.pages, key=lambda item: item.pdf_page_index)
     )

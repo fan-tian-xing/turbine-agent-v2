@@ -7,8 +7,8 @@ import json
 from pathlib import Path
 from typing import Protocol
 
-from .ids import block_version_id, page_id, source_span_id
-from .models import AssetPageRef, BBox, BlockVersion, Page, SourceSpan
+from .ids import block_version_id, figure_id, page_id, source_span_id
+from .models import AssetPageRef, BBox, BlockVersion, Figure, Page, SourceSpan
 
 
 @dataclass(frozen=True, slots=True)
@@ -33,6 +33,7 @@ class PageInput:
     printed_page_label: str | None = None
     visual_fingerprint: str | None = None
     text_blocks: tuple[RawTextBlock, ...] = ()
+    image_boxes: tuple[BBox, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -68,7 +69,7 @@ def load_layout_profile(path: Path, profile_id: str = "adaptive_pdf_v1") -> Layo
 class PageAdapter(Protocol):
     adapter_id: str
 
-    def parse(self, page_input: PageInput, parsing_run_id: str, mode: str) -> tuple[Page, tuple[BlockVersion, ...], tuple[SourceSpan, ...]]:
+    def parse(self, page_input: PageInput, parsing_run_id: str, mode: str) -> tuple[Page, tuple[BlockVersion, ...], tuple[SourceSpan, ...], tuple[Figure, ...]]:
         ...
 
 
@@ -109,12 +110,13 @@ def _page(page_input: PageInput, mode: str) -> Page:
     )
 
 
-def _text_outputs(page_input: PageInput, parsing_run_id: str, page: Page, mode: str) -> tuple[tuple[BlockVersion, ...], tuple[SourceSpan, ...]]:
+def _text_outputs(page_input: PageInput, parsing_run_id: str, page: Page, mode: str) -> tuple[tuple[BlockVersion, ...], tuple[SourceSpan, ...], tuple[Figure, ...]]:
     if not page_input.text.strip() or mode == "scan_only":
-        return (), ()
+        return (), (), ()
     raw_blocks = page_input.text_blocks or (RawTextBlock(page_input.text, BBox(0, 0, page.width_pt, page.height_pt)),)
     blocks: list[BlockVersion] = []
     spans: list[SourceSpan] = []
+    figures: list[Figure] = []
     origin = "ocr_text" if page_input.text_layer_status == "ocr" else "native_text"
     for ordinal, raw in enumerate(raw_blocks):
         block_id = block_version_id(parsing_run_id, page.page_id, ordinal)
@@ -140,7 +142,27 @@ def _text_outputs(page_input: PageInput, parsing_run_id: str, page: Page, mode: 
             bbox=raw.bbox,
             text_origin=origin,
         ))
-    return tuple(blocks), tuple(spans)
+    for bbox in page_input.image_boxes:
+        ordinal = len(blocks)
+        block_id = block_version_id(parsing_run_id, page.page_id, ordinal)
+        blocks.append(BlockVersion(
+            block_version_id=block_id,
+            page_id=page.page_id,
+            parsing_run_id=parsing_run_id,
+            block_ordinal=ordinal,
+            block_type="image",
+            text="",
+            bbox=bbox,
+            reading_order=ordinal,
+            text_origin=origin,
+        ))
+        figures.append(Figure(
+            figure_id=figure_id(block_id),
+            block_version_id=block_id,
+            caption_block_version_id=None,
+            figure_label=None,
+        ))
+    return tuple(blocks), tuple(spans), tuple(figures)
 
 
 class NativeTextAdapter:
@@ -148,15 +170,15 @@ class NativeTextAdapter:
 
     def parse(self, page_input: PageInput, parsing_run_id: str, mode: str):
         page = _page(page_input, mode)
-        blocks, spans = _text_outputs(page_input, parsing_run_id, page, mode)
-        return page, blocks, spans
+        blocks, spans, figures = _text_outputs(page_input, parsing_run_id, page, mode)
+        return page, blocks, spans, figures
 
 
 class ScanPendingAdapter:
     adapter_id = "scan_pending_v1"
 
     def parse(self, page_input: PageInput, parsing_run_id: str, mode: str):
-        return _page(page_input, "scan_only"), (), ()
+        return _page(page_input, "scan_only"), (), (), ()
 
 
 class MixedTextAdapter:
@@ -164,15 +186,15 @@ class MixedTextAdapter:
 
     def parse(self, page_input: PageInput, parsing_run_id: str, mode: str):
         page = _page(page_input, "mixed")
-        blocks, spans = _text_outputs(page_input, parsing_run_id, page, mode)
-        return page, blocks, spans
+        blocks, spans, figures = _text_outputs(page_input, parsing_run_id, page, mode)
+        return page, blocks, spans, figures
 
 
 class ReviewRequiredAdapter:
     adapter_id = "review_required_v1"
 
     def parse(self, page_input: PageInput, parsing_run_id: str, mode: str):
-        return _page(page_input, "review_required"), (), ()
+        return _page(page_input, "review_required"), (), (), ()
 
 
 def adapter_for_mode(mode: str) -> PageAdapter:

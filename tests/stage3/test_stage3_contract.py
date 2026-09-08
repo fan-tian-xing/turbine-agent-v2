@@ -109,24 +109,30 @@ def test_initial_batch_is_frozen_and_real_trial_summary_is_consistent():
         assert confirmation["confirmation_group_count"] == 3
 
 
-def test_stage3_exit_audit_records_core_loop_but_pending_strict_closure():
+def test_stage3_exit_audit_records_closed_strict_closure():
     audit = json.loads((PROJECT_ROOT / "data" / "stage3" / "stage3_exit_audit.json").read_text(encoding="utf-8"))
-    assert audit["status"] == "core_loop_complete_strict_closure_pending"
-    assert audit["closure_status"] == "strict_closure_pending"
+    assert audit["status"] == "complete"
+    assert audit["closure_status"] == "closed"
     assert audit["formal_release"] is False
     required_checks = {
         key for key, item in audit["checks"].items()
-        if key not in {"baseline_projection_comparison", "llm_answer_trial"}
+        if key not in {"baseline_projection_comparison"}
     }
     assert all(audit["checks"][key]["status"] in {"pass", "observed"} for key in required_checks)
     assert audit["checks"]["neo4j_import_and_chinese_retrieval"]["status"] == "pass"
-    assert audit["checks"]["llm_answer_trial"]["status"] == "observed"
+    assert audit["checks"]["llm_answer_trial"]["status"] == "pass"
     trial = json.loads((PROJECT_ROOT / "data" / "stage3" / "neo4j_trial_execution.json").read_text(encoding="utf-8"))
     assert trial["status"] == "completed"
     assert trial["idempotent_import_verified"] is True
     assert trial["llm"]["prior_live_answer_received"] is True
-    assert trial["llm"]["live_replay_after_contract_hardening"] == "historically_recorded_passed_with_safe_rejection_case"
-    assert trial["llm"]["strict_replay_status"] == "pending_independent_replay"
+    assert trial["llm"]["live_replay_after_contract_hardening"] == "passed_recorded_replay_with_safe_rejection_case"
+    assert trial["llm"]["strict_replay_status"] == "passed_recorded_replay"
+    replay = json.loads((PROJECT_ROOT / "data" / "stage3" / "llm_live_replay_2026-09-08.json").read_text(encoding="utf-8"))
+    assert replay["status"] == "passed"
+    assert replay["model"] == "gpt-5.6-luna"
+    assert replay["llm_ok"] is True
+    assert replay["claim_validation"] == "passed"
+    assert replay["fallback_used"] is False
     assert trial["database_counts"]["domain_node_type_count"] == 14
     assert trial["database_counts"]["technical_batch_node_type"] == "Stage3Batch"
     metrics = json.loads((PROJECT_ROOT / "data" / "stage3" / "review_metrics.json").read_text(encoding="utf-8"))
@@ -142,7 +148,7 @@ def test_stage3_exit_audit_records_core_loop_but_pending_strict_closure():
         "dead_code_orphan_output_review": "closed",
         "registry_structured_scope_chain": "closed",
         "claim_composed_answer_boundary": "closed",
-        "live_llm_replay_evidence": "pending",
+        "live_llm_replay_evidence": "closed",
     }
 
 

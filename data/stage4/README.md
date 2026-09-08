@@ -7,11 +7,12 @@
 - `config/document_ir_contract.json`：身份、页码、坐标和字段级真源边界；
 - `config/layout_profiles.json`：页面能力路由的最小声明式 Profile；
 - `src/turbine_kg/documents/`：Document、Revision、Asset、Page、ParsingRun、BlockVersion、Table、Figure、SourceSpan 模型、校验和统一页面入口；
+- Registry 身份目录：48 个资产、44 个逻辑文档和 OCR 派生关系均通过 `IdentityCatalog` 校验，路径只作为查找地址，不作为身份；
 - 原生文本、扫描待 OCR、混合页面和需复核页面的统一 IR 路由；
 - 不依赖文件名的页面能力判断；
 - 多 Revision 旧配置兼容读取和最小中文显示映射；
 - 阶段 3 兼容层的后续接入基础；
-- 当前 Document IR 回归测试共 12 项，项目全量测试共 65 项。
+- 当前 Document IR 回归测试共 16 项，项目全量测试共 69 项。
 
 当前明确留到阶段 5 及以后：
 

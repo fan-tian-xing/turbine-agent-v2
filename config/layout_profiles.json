@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "adaptive_pdf_v1": {
+      "native_min_characters": 30,
+      "scan_max_characters": 5,
+      "scan_min_image_coverage": 0.65,
+      "coordinates": "pdf_point_top_left",
+      "scan_output_status": "ocr_required"
+    }
+  }
+}

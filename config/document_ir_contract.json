@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "coordinate_system": {
+    "origin": "top_left",
+    "x_direction": "right",
+    "y_direction": "down",
+    "unit": "pdf_point",
+    "rotation_is_separate_field": true
+  },
+  "page_numbering": {
+    "pdf_page_index": "zero_based",
+    "display_page_number": "one_based",
+    "printed_page_label": "optional_string"
+  },
+  "identity": {
+    "document_logical_id": "doc-[20 lowercase hex]",
+    "revision_id": "rev-[20 lowercase hex]",
+    "asset_id": "asset-[20 lowercase hex]",
+    "page_id": "page-[20 lowercase hex]",
+    "block_version_id": "blockv-[20 lowercase hex]",
+    "source_span_id": "span-[20 lowercase hex]",
+    "parsing_run_id": "run-[20 lowercase hex]"
+  },
+  "text_origins": ["native_text", "ocr_text", "manual_correction"],
+  "page_modes": ["native_text", "scan_only", "mixed", "review_required"],
+  "source_of_truth": {
+    "registry": ["asset identity", "admission", "source role", "applicability"],
+    "document_ir": ["pages", "layout blocks", "tables", "figures", "locations", "parse runs"],
+    "evidence_layer": ["reviewed source claims"]
+  }
+}

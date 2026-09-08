@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "terms": [
+    {"machine_id": "Asset", "zh_cn": "文件资产", "definition": "一个具体的原始文件或派生文件。", "status": "seed"},
+    {"machine_id": "LogicalDocument", "zh_cn": "逻辑文档", "definition": "同一文档身份的稳定逻辑集合。", "status": "seed"},
+    {"machine_id": "Revision", "zh_cn": "文档版本", "definition": "逻辑文档的受控内容版本。", "status": "seed"},
+    {"machine_id": "Page", "zh_cn": "页面", "definition": "文档版本中的逻辑页面。", "status": "seed"},
+    {"machine_id": "SourceSpan", "zh_cn": "来源片段", "definition": "可回到页面位置的原文片段。", "status": "seed"},
+    {"machine_id": "Evidence", "zh_cn": "证据", "definition": "经过审核、可支持结论的来源内容。", "status": "seed"},
+    {"machine_id": "EngineeringStatement", "zh_cn": "工程结论", "definition": "由证据支持的工程层结论。", "status": "seed"},
+    {"machine_id": "Equipment", "zh_cn": "设备", "definition": "阶段3试点中的设备对象。", "status": "seed"},
+    {"machine_id": "Component", "zh_cn": "部件", "definition": "阶段3试点中的部件对象。", "status": "seed"},
+    {"machine_id": "Process", "zh_cn": "过程", "definition": "阶段3试点中的过程对象。", "status": "seed"},
+    {"machine_id": "Procedure", "zh_cn": "程序", "definition": "阶段3试点中的程序对象。", "status": "seed"},
+    {"machine_id": "Step", "zh_cn": "步骤", "definition": "阶段3试点中的步骤对象。", "status": "seed"},
+    {"machine_id": "QuantityValue", "zh_cn": "量值", "definition": "阶段3试点中的数值和单位对象。", "status": "seed"},
+    {"machine_id": "ApplicabilityScope", "zh_cn": "适用范围", "definition": "阶段3试点中的适用条件对象。", "status": "seed"}
+  ]
+}

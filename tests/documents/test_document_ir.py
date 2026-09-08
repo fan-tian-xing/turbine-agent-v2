@@ -1,4 +1,5 @@
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -6,7 +7,7 @@ import fitz
 
 from turbine_kg.documents.ids import stable_id
 from turbine_kg.documents.identity import load_revision_catalog
-from turbine_kg.documents.models import AssetRef, BBox, Document, DocumentRevision
+from turbine_kg.documents.models import AssetRef, BBox, Document, DocumentRevision, Table
 from turbine_kg.documents.parser import parse_page_inputs
 from turbine_kg.documents.pdf import parse_pdf
 from turbine_kg.documents.profiles import PageInput, RawTextBlock, choose_page_mode, inspect_page, load_layout_profile
@@ -91,6 +92,49 @@ def test_source_span_and_block_bbox_are_precise_and_bounded():
     invalid_page = PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, raw.text, "native", 0.1, text_blocks=(RawTextBlock(raw.text, BBox(0, 0, 601, 50)),))
     with pytest.raises(ValueError, match="bbox"):
         parse_page_inputs(document, revision, (asset,), (invalid_page,), parsing_run_id="run-" + "6" * 20)
+
+
+def test_page_number_contract_rejects_inconsistent_display_number():
+    document, revision, asset = _identity()
+    page = PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, "页码合同" * 12, "native", 0.1)
+    ir = parse_page_inputs(document, revision, (asset,), (page,), parsing_run_id="run-" + "7" * 20)
+    invalid = ir.pages[0].__class__(
+        **{**{field: getattr(ir.pages[0], field) for field in ir.pages[0].__dataclass_fields__}, "display_page_number": 9}
+    )
+    with pytest.raises(ValueError, match="page number"):
+        validate_document_ir(ir.__class__(**{
+            **{field: getattr(ir, field) for field in ir.__dataclass_fields__},
+            "pages": (invalid,),
+        }))
+
+
+def test_table_source_span_requires_table_location_and_accepts_table_level_location():
+    document, revision, asset = _identity()
+    page = PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, "表格文本" * 12, "native", 0.1)
+    ir = parse_page_inputs(document, revision, (asset,), (page,), parsing_run_id="run-" + "8" * 20)
+    table = Table(
+        table_id=stable_id("table", ir.blocks[0].block_version_id),
+        block_version_id=ir.blocks[0].block_version_id,
+        caption_block_version_id=None,
+        row_count=1,
+        column_count=1,
+        cell_ids=(),
+    )
+    table_span = replace(ir.source_spans[0], content_kind="table", table_id=table.table_id)
+    validate_document_ir(replace(ir, tables=(table,), source_spans=(table_span,)))
+    with pytest.raises(ValueError, match="table source span"):
+        validate_document_ir(replace(ir, source_spans=(replace(table_span, table_id=None),)))
+
+
+def test_revision_catalog_rejects_invalid_controlled_ids(tmp_path):
+    catalog = tmp_path / "invalid.tsv"
+    catalog.write_text(
+        "document_logical_id\trevision_id\trevision_label\n"
+        "doc-not-controlled\trev-not-controlled\tA\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="invalid"):
+        load_revision_catalog(catalog)
 
 
 def test_contract_file_freezes_coordinate_and_page_numbering():

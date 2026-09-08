@@ -70,7 +70,11 @@ def validate_document_ir(ir: DocumentIR) -> DocumentIR:
     pages = {page.page_id: page for page in ir.pages}
     for page in ir.pages:
         _id(page.page_id, "page_id")
-        if page.revision_id != ir.revision.revision_id or page.pdf_page_index < 0 or page.display_page_number < 1:
+        if (
+            page.revision_id != ir.revision.revision_id
+            or page.pdf_page_index < 0
+            or page.display_page_number != page.pdf_page_index + 1
+        ):
             raise ValueError("page has an invalid revision or page number")
         if page.page_id != page_id(ir.revision.revision_id, page.pdf_page_index):
             raise ValueError("page_id is not derived from revision and physical page index")
@@ -131,6 +135,12 @@ def validate_document_ir(ir: DocumentIR) -> DocumentIR:
             raise ValueError("source_span_id is not derived from its block and quote")
         if span.text_origin not in TEXT_ORIGINS:
             raise ValueError("source span text origin is not supported")
+        if span.content_kind == "table" and span.table_id is None:
+            raise ValueError("table source span must reference a table")
+        if (span.row_index is None) != (span.column_index is None):
+            raise ValueError("table source span row and column must be provided together")
+        if span.row_index is not None and (span.row_index < 0 or span.column_index < 0):
+            raise ValueError("table source span row and column must be non-negative")
         if span.char_start is not None and span.char_start < 0:
             raise ValueError("source span char_start must be non-negative")
         if span.char_end is not None and (span.char_end < 0 or (span.char_start is not None and span.char_end < span.char_start)):

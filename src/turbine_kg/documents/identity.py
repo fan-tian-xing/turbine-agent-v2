@@ -3,8 +3,13 @@
 from __future__ import annotations
 
 import csv
+import re
 from dataclasses import dataclass
 from pathlib import Path
+
+
+_DOCUMENT_ID = re.compile(r"^doc-[0-9a-f]{20}$")
+_REVISION_ID = re.compile(r"^rev-[0-9a-f]{20}$")
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,8 +37,13 @@ def load_revision_catalog(path: Path) -> tuple[RevisionRecord, ...]:
     for row in rows:
         revision_id = row["revision_id"].strip()
         document_id = row["document_logical_id"].strip()
-        if not document_id or not revision_id or revision_id in seen_ids:
-            raise ValueError("revision catalog contains an empty or duplicate identity")
+        if (
+            not _DOCUMENT_ID.fullmatch(document_id)
+            or not _REVISION_ID.fullmatch(revision_id)
+            or not row["revision_label"].strip()
+            or revision_id in seen_ids
+        ):
+            raise ValueError("revision catalog contains an invalid, empty or duplicate identity")
         seen_ids.add(revision_id)
         docs.setdefault(document_id, set()).add(revision_id)
         records.append(RevisionRecord(

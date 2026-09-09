@@ -3,8 +3,8 @@
   "stage": "4",
   "artifact_kind": "stage4_final_exit_audit",
   "audited_at": "2026-09-09",
-  "status": "ready_for_project_owner_signoff",
-  "closure_status": "not_closed",
+  "status": "complete",
+  "closure_status": "closed",
   "formal_release": false,
   "checks": {
     "source_identity_and_frozen_scope": {
@@ -56,6 +56,5 @@
       "evidence": "The full structural parse does not claim OCR character, number, unit, or layout accuracy."
     }
   },
-  "owner_decision_required": "Accept or reject this final Stage 4 exit audit. Acceptance may change Stage 4 from in_progress/not_closed to complete; rejection returns the identified check to remediation.",
-  "next_stage_allowed": "Stage 5 preparation may continue. Formal OCR benchmarking begins only after Stage 4 is closed."
+  "next_stage_allowed": "Stage 5 preparation and formal OCR benchmarking may proceed under the Stage 5 gates."
 }

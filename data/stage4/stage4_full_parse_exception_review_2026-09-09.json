@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "full_parse_exception_review",
+  "reviewed_at": "2026-09-09",
+  "scope": "All non-content pages reported by the full 775-page Document IR audit",
+  "items": [
+    {
+      "source_original_asset_id": "asset-29ca16b111846e39aabf",
+      "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "pdf_page_number": 11,
+      "page_mode": "review_required",
+      "finding": "Visually blank separator page between the English contents and the Chinese main text.",
+      "disposition": "approved_intentional_blank_page"
+    },
+    {
+      "source_original_asset_id": "asset-115e242947e0a4b46ea5",
+      "relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+      "pdf_page_number": 31,
+      "page_mode": "scan_only",
+      "finding": "Visually blank separator page between the chapter divider and the first page of section 4.1.",
+      "disposition": "approved_intentional_blank_page"
+    }
+  ],
+  "status": "pass",
+  "boundary": "This review approves only the two intentional blank-page exceptions. It does not rate OCR text accuracy or table-cell recovery."
+}

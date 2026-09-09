@@ -14,6 +14,12 @@
     {"machine_id": "Procedure", "zh_cn": "程序", "definition": "阶段3试点中的程序对象。", "status": "seed"},
     {"machine_id": "Step", "zh_cn": "步骤", "definition": "阶段3试点中的步骤对象。", "status": "seed"},
     {"machine_id": "QuantityValue", "zh_cn": "量值", "definition": "阶段3试点中的数值和单位对象。", "status": "seed"},
-    {"machine_id": "ApplicabilityScope", "zh_cn": "适用范围", "definition": "阶段3试点中的适用条件对象。", "status": "seed"}
+    {"machine_id": "ApplicabilityScope", "zh_cn": "适用范围", "definition": "阶段3试点中的适用条件对象。", "status": "seed"},
+    {"machine_id": "fact", "zh_cn": "事实结论", "definition": "经证据校验的事实性结论。", "status": "seed"},
+    {"machine_id": "candidate_recommendation", "zh_cn": "候选建议", "definition": "经证据支持但不构成现场执行授权的建议。", "status": "seed"},
+    {"machine_id": "action_authorization", "zh_cn": "执行授权", "definition": "需要额外授权边界的高风险动作类型。", "status": "seed"},
+    {"machine_id": "manufacturer_manual", "zh_cn": "制造商说明书", "definition": "制造商提供的资料角色。", "status": "seed"},
+    {"machine_id": "standard_or_regulation", "zh_cn": "标准或法规", "definition": "标准、规范或法规资料角色。", "status": "seed"},
+    {"machine_id": "training_background", "zh_cn": "培训背景资料", "definition": "仅作背景或培训用途的资料角色。", "status": "seed"}
   ]
 }

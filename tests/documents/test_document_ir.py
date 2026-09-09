@@ -13,6 +13,7 @@ from turbine_kg.documents.pdf import parse_pdf
 from turbine_kg.documents.profiles import PageInput, RawTextBlock, choose_page_mode, inspect_page, load_layout_profile
 from turbine_kg.documents.validation import validate_document_ir
 from turbine_kg.documents.vocabulary import display_name, load_display_terms
+from turbine_kg.review import load_manual_corrections
 
 
 def _identity():
@@ -81,6 +82,34 @@ def test_ocr_asset_can_share_revision_without_creating_new_revision():
     assert ir.pages[0].asset_page_refs[0].asset_id == derived.asset_id
 
 
+def test_pdf_entry_maps_a_derived_page_to_the_same_original_page(tmp_path):
+    document, revision, original = _identity()
+    derived = AssetRef(
+        stable_id("asset", "stage4", "mapped-ocr.pdf"),
+        document.document_logical_id,
+        revision.revision_id,
+        "derived_ocr",
+        "OCR/mapped.pdf",
+        "b" * 64,
+        "ocr_derived",
+        derived_from_asset_id=original.asset_id,
+        derivation_type="ocr",
+    )
+    pdf_path = tmp_path / "mapped-ocr.pdf"
+    pdf = fitz.open()
+    page = pdf.new_page(width=600, height=800)
+    page.insert_text((72, 72), "OCR映射页面" * 20)
+    pdf.save(pdf_path)
+    pdf.close()
+
+    ir = parse_pdf(pdf_path, document, revision, derived, additional_assets=(original,))
+
+    assert [(ref.asset_id, ref.page_index) for ref in ir.pages[0].asset_page_refs] == [
+        (derived.asset_id, 0),
+        (original.asset_id, 0),
+    ]
+
+
 def test_source_span_and_block_bbox_are_precise_and_bounded():
     document, revision, asset = _identity()
     raw = RawTextBlock("页内段落" * 12, BBox(10, 20, 100, 50))
@@ -143,6 +172,27 @@ def test_manual_correction_is_an_overlay_and_does_not_mutate_parser_output():
     validated = validate_document_ir(replace(ir, manual_corrections=(correction,)))
     assert validated.blocks[0].text == ir.blocks[0].text
     assert validated.manual_corrections[0].corrected_text == "修正文本" * 12
+
+
+def test_manual_correction_overlay_is_read_from_jsonl_without_mutating_blocks(tmp_path):
+    document, revision, asset = _identity()
+    page = PageInput(asset.asset_id, revision.revision_id, 0, 600, 800, 0, "原始文本" * 12, "native", 0.1)
+    ir = parse_page_inputs(document, revision, (asset,), (page,), parsing_run_id="run-" + "d" * 20)
+    overlay_path = tmp_path / "corrections.jsonl"
+    overlay_path.write_text(json.dumps({
+        "correction_id": stable_id("correction", ir.blocks[0].block_version_id, "reviewer", "已修正文本"),
+        "block_version_id": ir.blocks[0].block_version_id,
+        "original_text": ir.blocks[0].text,
+        "corrected_text": "已修正文本",
+        "reason": "人工核对数字",
+        "reviewer": "reviewer",
+        "reviewed_at": "2026-09-09T00:00:00Z",
+    }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    corrections = load_manual_corrections(overlay_path, ir)
+
+    assert ir.blocks[0].text == "原始文本" * 12
+    assert corrections[0].corrected_text == "已修正文本"
 
 
 def test_parsing_fingerprints_cover_layout_and_output_content():

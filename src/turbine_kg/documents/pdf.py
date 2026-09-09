@@ -10,7 +10,7 @@ except ImportError:  # pragma: no cover - compatibility with older PyMuPDF impor
     import fitz as pymupdf
 
 from .catalog import IdentityCatalog
-from .models import AssetRef, Document, DocumentIR, DocumentRevision, BBox
+from .models import AssetPageRef, AssetRef, Document, DocumentIR, DocumentRevision, BBox
 from .parser import parse_page_inputs
 from .profiles import LayoutProfile, PageInput, RawTextBlock
 
@@ -101,6 +101,11 @@ def parse_pdf(
                 text=text,
                 text_layer_status=("ocr" if asset.asset_kind == "derived_ocr" else "native") if text else "scan_only",
                 image_coverage=images,
+                related_asset_page_refs=tuple(
+                    AssetPageRef(extra.asset_id, index)
+                    for extra in additional_assets
+                    if extra.revision_id == revision.revision_id
+                ),
                 text_blocks=_native_blocks(page),
                 image_boxes=_image_boxes(page),
             ))

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "stage4_final_exit_audit",
+  "audited_at": "2026-09-09",
+  "status": "ready_for_project_owner_signoff",
+  "closure_status": "not_closed",
+  "formal_release": false,
+  "checks": {
+    "source_identity_and_frozen_scope": {
+      "status": "pass",
+      "evidence": "Five frozen processing units and the frozen Registry snapshot are verified by data/stage4/stage4_full_parse_audit_2026-09-09.json."
+    },
+    "full_document_ir_parse": {
+      "status": "pass",
+      "evidence": "5/5 documents and 775/775 pages parsed; 0 failed documents and 0 failed pages; audit includes on-disk SHA-256, frozen-manifest identity, and per-page routing evidence."
+    },
+    "derived_ocr_page_mapping": {
+      "status": "pass",
+      "evidence": "All four OCR-derived assets retain the original Asset in Document IR, include same-index AssetPageRef mapping, and pass geometry/layout correspondence checks."
+    },
+    "empty_output_page_disposition": {
+      "status": "pass",
+      "evidence": "data/stage4/stage4_full_parse_exception_review_2026-09-09.json confirms two intentional blank separator pages; neither is a missing or failed page."
+    },
+    "replay_stability": {
+      "status": "pass",
+      "evidence": "A second full 775-page replay passed and all five stable output fingerprints matched; random ParsingRun/BlockVersion IDs are excluded from the comparison."
+    },
+    "document_ir_contract_and_routing": {
+      "status": "pass",
+      "evidence": "Document, Revision, Asset, Page, BlockVersion, Figure, SourceSpan, ParsingRun and ManualCorrection contracts; native_text, mixed, scan_only and review_required routing are covered by tests."
+    },
+    "manual_correction_overlay": {
+      "status": "pass",
+      "evidence": "The JSONL overlay reader validates an exact parser BlockVersion/original text and never mutates parser output. No real correction was fabricated."
+    },
+    "chinese_display_names": {
+      "status": "pass",
+      "evidence": "The Stage 3 CLI now keeps machine identifiers and adds registered Chinese labels for claim type and source role, with regression coverage."
+    },
+    "stage3_structural_bridge": {
+      "status": "pass",
+      "evidence": "Registry → real PDF → Document IR → Stage 3 Page/SourceSpan structural projection remains covered."
+    },
+    "regression_suite": {
+      "status": "pass",
+      "evidence": "80 pytest tests passed after the final changes."
+    },
+    "table_cell_extraction": {
+      "status": "deferred_to_stage5",
+      "evidence": "The full audit records table_count=0 and table_cell_count=0; real row/column recovery is explicitly a Stage 5 responsibility."
+    },
+    "ocr_accuracy_benchmark": {
+      "status": "deferred_to_stage5",
+      "evidence": "The full structural parse does not claim OCR character, number, unit, or layout accuracy."
+    }
+  },
+  "owner_decision_required": "Accept or reject this final Stage 4 exit audit. Acceptance may change Stage 4 from in_progress/not_closed to complete; rejection returns the identified check to remediation.",
+  "next_stage_allowed": "Stage 5 preparation may continue. Formal OCR benchmarking begins only after Stage 4 is closed."
+}

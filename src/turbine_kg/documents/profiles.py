@@ -30,6 +30,7 @@ class PageInput:
     text: str
     text_layer_status: str
     image_coverage: float
+    related_asset_page_refs: tuple[AssetPageRef, ...] = ()
     printed_page_label: str | None = None
     visual_fingerprint: str | None = None
     text_blocks: tuple[RawTextBlock, ...] = ()
@@ -106,7 +107,10 @@ def _page(page_input: PageInput, mode: str) -> Page:
         page_mode=mode,
         text_layer_status=page_input.text_layer_status,
         visual_fingerprint=page_input.visual_fingerprint,
-        asset_page_refs=(AssetPageRef(page_input.asset_id, page_input.pdf_page_index),),
+        asset_page_refs=(
+            AssetPageRef(page_input.asset_id, page_input.pdf_page_index),
+            *page_input.related_asset_page_refs,
+        ),
     )
 
 

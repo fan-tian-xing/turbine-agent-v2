@@ -3,7 +3,7 @@
   "stage": "4",
   "artifact_kind": "stage4_final_exit_audit",
   "audited_at": "2026-09-08",
-  "status": "ready_for_project_owner_signoff",
+  "status": "superseded_by_full_page_requirement",
   "closure_status": "not_closed",
   "formal_release": false,
   "checks": {
@@ -22,6 +22,7 @@
     "table_cell_extraction": {"status": "deferred_by_approved_boundary", "evidence": "Real row/column recovery remains Stage 5 work"},
     "ocr_benchmark": {"status": "deferred", "evidence": "30-page Golden Sample and engine comparison belong to Stage 5"}
   },
-  "owner_decision_required": "Accept or reject the final Stage 4 audit. Acceptance may close Stage 4; rejection returns the listed check to remediation.",
+  "superseded_by": "data/stage4/stage4_full_parse_audit_2026-09-09.json",
+  "owner_decision_required": "No decision is requested from this preliminary 15-page audit. A refreshed final audit must incorporate the full 775-page parse before project-owner sign-off.",
   "next_stage_allowed": "Stage 5 preparation may continue; formal OCR benchmark starts only after Stage 4 closure."
 }

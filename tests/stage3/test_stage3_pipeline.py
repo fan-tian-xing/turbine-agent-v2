@@ -3,6 +3,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from turbine_kg.stage3.corpus import load_corpus
+from turbine_kg.stage3.cli import _with_chinese_display_names
 from turbine_kg.stage3.models import Claim, ScopeContext
 from turbine_kg.stage3.pipeline import answer_question
 from turbine_kg.stage3.retrieval import json_baseline, retrieve
@@ -37,6 +38,18 @@ def test_end_to_end_answer_and_evidence_gap():
     gap = answer_question(corpus, primary_question="What applies to a condenser?", context=ScopeContext.from_dict({"equipment": "condenser", "lifecycle_stage": "installation", "activity": "alignment"}))
     assert gap["status"] == "evidence_gap"
     assert not gap["claims"]
+
+
+def test_cli_output_adds_chinese_display_names_without_replacing_machine_ids():
+    corpus = load_corpus(FIXTURE_ROOT / "corpus.json")
+    context = ScopeContext.from_dict({"model": "N-300", "equipment": "steam_turbine", "lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold", "capacity_range": 300, "condition": "shaft_alignment"})
+    result = _with_chinese_display_names(
+        answer_question(corpus, primary_question="What is the manufacturer cold shaft alignment limit?", context=context)
+    )
+    assert result["claims"][0]["claim_type"] == "fact"
+    assert result["claims"][0]["claim_type_display_name"] == "事实结论"
+    assert result["retrieval"]["source_role"] == "manufacturer_manual"
+    assert result["retrieval"]["source_role_display_name"] == "制造商说明书"
 
 
 def test_plain_limit_question_does_not_silently_choose_between_sources():

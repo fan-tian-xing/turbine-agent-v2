@@ -35,6 +35,8 @@ def test_stage5_exit_audit_keeps_owner_quality_decisions_open():
     exit_audit = json.loads((STAGE5_ROOT / "stage5_exit_audit_2026-09-09.json").read_text(encoding="utf-8"))
 
     assert exit_audit["status"] == "awaiting_owner_quality_decisions"
+    assert exit_audit["owner_confirmed_quality_policy"]["content_must_match_original_exactly"] is True
+    assert exit_audit["owner_confirmed_quality_policy"]["similarity_is_acceptance_metric"] is False
     assert all(exit_audit["checks"].values())
     assert len(exit_audit["blocking_items"]) == 4
 

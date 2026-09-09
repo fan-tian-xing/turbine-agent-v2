@@ -51,6 +51,13 @@ def audit() -> dict:
         "artifact_kind": "stage5_exit_audit",
         "audited_at": TODAY,
         "status": "awaiting_owner_quality_decisions",
+        "owner_confirmed_quality_policy": {
+            "content_must_match_original_exactly": True,
+            "critical_tokens": ["Chinese characters", "digits", "decimal points", "units", "negation terms"],
+            "layout_requirements": ["table row/column and continuation relationships", "formula meaning", "figure/caption association"],
+            "similarity_is_acceptance_metric": False,
+            "unresolved_visual_content_must_not_enter_structured_evidence": True,
+        },
         "checks": checks,
         "completed_scope": {
             "document_count": len(sample["documents"]),
@@ -70,7 +77,7 @@ def audit() -> dict:
         ],
         "owner_review_needed_in_chat": [
             "确认扫描件主引擎与备用交叉复核引擎；当前可用引擎只有 RapidOCR。",
-            "确认数字、单位、否定词、表格行列和 bbox 的最低合格阈值。",
+            "确认如何实施“与原始资料一模一样”的质量门禁，以及复杂公式/图示/表格的人工视觉证据记录方式。",
             "确认 6 页候选表格的单元格真值及 DLT863 第 27–28 页续表关系。",
             "确认低相似度扫描页是否允许进入后续 Evidence 流程。",
             "确认低文本页的统计分母规则：全量记录 3 页，排除 review_required/scan_only 后候选 1 页。",

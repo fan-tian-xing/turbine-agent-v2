@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_runtime_environment_audit",
+  "audited_at": "2026-09-09",
+  "status": "pass",
+  "runtime": {
+    "python_executable": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+    "python_version": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "prefix": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env",
+    "base_prefix": "C:\\Users\\尹仕程\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+    "is_virtual_environment": true,
+    "required_installation_target": "D:/本体/汽轮机安调项目/项目初期demo/runtime-python/turbine-kg-env",
+    "target_matches_runtime": true
+  },
+  "module_status": {
+    "neo4j": true,
+    "numpy": true,
+    "opencv": true,
+    "pymupdf": true,
+    "fitz_compat": true,
+    "rapidocr": true,
+    "easyocr": true,
+    "torch": true,
+    "torchvision": true,
+    "onnxruntime": true,
+    "pytest": true
+  },
+  "package_versions": {
+    "neo4j": "6.2.0",
+    "numpy": "2.5.3",
+    "opencv-python": "4.14.0.94",
+    "pymupdf": "1.28.2",
+    "rapidocr-onnxruntime": "1.4.4",
+    "easyocr": "1.7.2",
+    "torch": "2.14.0",
+    "torchvision": "0.29.0",
+    "onnxruntime": "1.29.0",
+    "pytest": "8.4.2"
+  },
+  "engine_smoke": {
+    "source": "Original materials/2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+    "physical_pdf_page": 300,
+    "logical_page_label": "291",
+    "rapidocr_item_count": 37,
+    "easyocr_item_count": 37,
+    "status": "pass"
+  },
+  "boundaries": [
+    "This audit must be run with runtime-python/turbine-kg-env/Scripts/python.exe.",
+    "The smoke test proves both engines execute; it does not establish OCR accuracy.",
+    "Accuracy remains governed by original-page comparison and Stage 5 quality gates."
+  ]
+}

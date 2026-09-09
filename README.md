@@ -4,11 +4,11 @@
 
 ## 当前状态
 
-独立工程、配置边界和本地运行基础已经建立。阶段 0、1、2A、2B、3、4 已完成并分别留下退出审计；`formal_release=false` 不变。阶段 2B 选出的 5 份资料目前只是研发试点范围，正式首批处理仍须在阶段 15 通过 `First Batch Admission Gate`。阶段 3 的 Fixture、适用性匹配、证据追溯、Neo4j 中文检索和逐 Claim 校验闭环已验证；阶段 4 已完成 Document IR、身份目录、原生/扫描/混合页面统一入口、人工更正 Overlay、Registry→真实 PDF→Document IR→阶段 3 结构投影的只读链路，并完成 5 份冻结处理单元的 775 页全量结构解析审计。Registry 构建器已模块化，其他资料继续保留在审核队列，未进入正式抽取。
+独立工程、配置边界和本地运行基础已经建立。阶段 0、1、2A、2B、3、4 已完成并分别留下退出审计；阶段 5 已完成输入审计、775 页基线、36 页 OCR 复跑、表格结构基线和双引擎运行烟测，但尚未完成最终质量门禁；`formal_release=false` 不变。阶段 2B 选出的 5 份资料目前只是研发试点范围，正式首批处理仍须在阶段 15 通过 `First Batch Admission Gate`。阶段 3 的 Fixture、适用性匹配、证据追溯、Neo4j 中文检索和逐 Claim 校验闭环已验证；阶段 4 已完成 Document IR、身份目录、原生/扫描/混合页面统一入口、人工更正 Overlay、Registry→真实 PDF→Document IR→阶段 3 结构投影的只读链路，并完成 5 份冻结处理单元的 775 页全量结构解析审计。Registry 构建器已模块化，其他资料继续保留在审核队列，未进入正式抽取。
 
-阶段 4 的五份冻结处理单元已经完成 775 页全量结构解析审计：5/5 文档、775/775 页、0 失败页；4 个 OCR 派生件均已回连原件并完成同页序号、页面几何和低分辨率版面对应核查。两个空输出页已确认为正常空白分隔页；83 项全量回归和一次稳定输出指纹复跑均已通过。该结果仅证明 Document IR 结构链路完整，不评价 OCR 文字准确率或表格行列恢复；阶段 4 已关闭，阶段 5 可按总计划继续。
+阶段 4 的五份冻结处理单元已经完成 775 页全量结构解析审计：5/5 文档、775/775 页、0 失败页；4 个 OCR 派生件均已回连原件并完成同页序号、页面几何和低分辨率版面对应核查。两个空输出页已确认为正常空白分隔页；86 项全量回归和一次稳定输出指纹复跑均已通过。该结果仅证明 Document IR 结构链路完整，不评价 OCR 文字准确率或表格行列恢复；阶段 4 已关闭，阶段 5 的质量门禁仍按总计划执行。
 
-当前全量测试基线为 83 项；阶段 3 范围测试为 32 项。历史记录中的旧测试数量仅作历史背景，不作为当前验收计数。
+当前全量测试基线为 86 项；阶段 3 范围测试为 32 项。历史记录中的旧测试数量仅作历史背景，不作为当前验收计数。
 
 ## 项目边界
 
@@ -31,6 +31,8 @@
 
 `SOURCE_ROOT` 只放原始资料，`OCR_DERIVED_ROOT` 只放本地 OCR 派生产物；二者不可配置为同一目录。
 
+项目唯一运行环境为：`D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env`。项目代码、OCR、PDF、图像处理、Neo4j 客户端和测试必须使用该环境；Codex 通用 Python 不属于项目依赖环境。
+
 Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和启动。数据库只是磁盘权威产物的运行投影，正式知识不得直接在 Neo4j Browser 中修改。
 
 - Neo4j Browser：`http://localhost:7475`
@@ -41,9 +43,10 @@ Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和�
 ```cmd
 cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
 set "PYTHONPATH=%CD%\src"
-python -m turbine_kg.stage3.trial_cli import
-python -m turbine_kg.stage3.trial_cli status
-python -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺检查要求是什么？"
+set "PROJECT_PYTHON=D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
+%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli import
+%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli status
+%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺检查要求是什么？"
 ```
 
 如果终端是 PowerShell：
@@ -51,9 +54,10 @@ python -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺�
 ```powershell
 cd "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
 $env:PYTHONPATH="src"
-python -m turbine_kg.stage3.trial_cli import
-python -m turbine_kg.stage3.trial_cli status
-python -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺检查要求是什么？"
+$projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
+& $projectPython -m turbine_kg.stage3.trial_cli import
+& $projectPython -m turbine_kg.stage3.trial_cli status
+& $projectPython -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺检查要求是什么？"
 ```
 
 提问命令会读取新版项目自己的 `.env` 模型连接配置，只需输入问题即可。默认输出简洁的中文回答、适用性提示和依据；需要完整机器可读结果时加 `--json`。也可以用 `--question` 覆盖默认值，或用 `--no-evidence-send` 只做检索、不调用模型。只发送 Neo4j 命中的最小证据片段；没有模型响应时仍返回检索证据和失败原因。新版代码不依赖旧版 Demo，旧版目录删除后不影响新版运行。
@@ -63,7 +67,7 @@ python -m turbine_kg.stage3.trial_cli ask "密封瓦座水平结合面用塞尺�
 ```powershell
 cd "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
 $env:PYTHONPATH="src"
-python -m turbine_kg.stage3.trial_cli ask "你的问题"
+& $projectPython -m turbine_kg.stage3.trial_cli ask "你的问题"
 ```
 
 在 `cmd` 中对应为：
@@ -71,13 +75,13 @@ python -m turbine_kg.stage3.trial_cli ask "你的问题"
 ```cmd
 cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
 set "PYTHONPATH=%CD%\src"
-python -m turbine_kg.stage3.trial_cli ask "你的问题"
+%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli ask "你的问题"
 ```
 
 也可以像旧版 Demo 一样，启动后再输入问题：
 
 ```powershell
-python -m turbine_kg.stage3.trial_cli ask
+& $projectPython -m turbine_kg.stage3.trial_cli ask
 ```
 
 如果当前终端显示的是 `D:\本体\汽轮机安调项目\项目初期demo>`，说明还在父目录，必须先执行上面的 `cd`；否则会出现 `No module named 'turbine_kg'`。
@@ -87,20 +91,20 @@ python -m turbine_kg.stage3.trial_cli ask
 资料处理前可运行以下只读检查，确认白名单路径、文件大小和 SHA-256 均与当前资料一致：
 
 ```cmd
-python scripts/check_source_allowlist.py
+%PROJECT_PYTHON% scripts/check_source_allowlist.py
 ```
 
 工程测试：
 
 ```cmd
 set PYTHONPATH=src
-python -m pytest
+%PROJECT_PYTHON% -m pytest
 ```
 
 构建或更新 Source Registry（只读取白名单 PDF，不写入 Neo4j）：
 
 ```cmd
-python scripts/build_source_registry.py
+%PROJECT_PYTHON% scripts/build_source_registry.py
 ```
 
 Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。`stage2_source_selection.json` 记录进入阶段 3 研发试点的候选来源，不替代阶段 15 的正式准入门。`source_duplicate_groups.jsonl` 保存已物化的分组，`source_duplicate_relations.jsonl` 保存组内或候选关系。

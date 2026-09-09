@@ -32269,7 +32269,7 @@
   "candidate_engine_inventory": {
     "rapidocr_onnxruntime": "available",
     "paddleocr": "unavailable",
-    "easyocr": "unavailable",
+    "easyocr": "available",
     "pytesseract": "unavailable"
   },
   "current_baseline": {

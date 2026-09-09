@@ -414,8 +414,8 @@
       ],
       "source_has_native_text": false,
       "fresh_rapidocr": {
-        "char_count": 702,
-        "text_sha256": "15a1eb75e6c13e8074ae8a3e16ea895d85f28030f4ed73416a02b2fdf2ebd20a"
+        "char_count": 701,
+        "text_sha256": "b565893979f60cc4dd7e621671f65a8c22698d62311dc0c22ad386a1b7b4d809"
       },
       "registered_processing_text": {
         "char_count": 704,
@@ -425,8 +425,8 @@
         "char_count": 704,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.991465,
-      "fresh_vs_reference_similarity": 0.991465,
+      "fresh_vs_registered_similarity": 0.992171,
+      "fresh_vs_reference_similarity": 0.992171,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -464,8 +464,8 @@
       ],
       "source_has_native_text": true,
       "fresh_rapidocr": {
-        "char_count": 408,
-        "text_sha256": "a2da97e6694d023d3b75fc394f5165acefac5a7d1412b076e87b1d3eb4230889"
+        "char_count": 409,
+        "text_sha256": "b503b0d5dfee10ff828ff779b271786c640a264da66edf6a0e6fb50df9f81313"
       },
       "registered_processing_text": {
         "char_count": 408,
@@ -475,8 +475,8 @@
         "char_count": 417,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.979394,
+      "fresh_vs_registered_similarity": 0.998776,
+      "fresh_vs_reference_similarity": 0.975787,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -714,7 +714,7 @@
       "source_has_native_text": false,
       "fresh_rapidocr": {
         "char_count": 514,
-        "text_sha256": "f061fcfc3b22964c14c660d00407d3ded195fa6989e2058d5531d949ef365a90"
+        "text_sha256": "461a3ee7d4fdca80c4abac3783c6c69e7363b48e8fdff9a52ba4596b73e0d4fe"
       },
       "registered_processing_text": {
         "char_count": 514,
@@ -724,8 +724,8 @@
         "char_count": 514,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.980545,
+      "fresh_vs_reference_similarity": 0.980545,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -738,8 +738,8 @@
       ],
       "source_has_native_text": false,
       "fresh_rapidocr": {
-        "char_count": 576,
-        "text_sha256": "65b3d12c724506d3f4689d2dc5347503944aa68d2a5ff35b2ca9b2676b825fd3"
+        "char_count": 577,
+        "text_sha256": "b2b9771c40e113356c76ecad3afe2c951a489f3e8c89a3ef9455ee4ac2bee7f2"
       },
       "registered_processing_text": {
         "char_count": 576,
@@ -749,8 +749,8 @@
         "char_count": 576,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.999133,
+      "fresh_vs_reference_similarity": 0.999133,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -763,8 +763,8 @@
       ],
       "source_has_native_text": false,
       "fresh_rapidocr": {
-        "char_count": 588,
-        "text_sha256": "f323f678f2260e963b99c822e997be90e8ac4d8288e9560aeb645865340af4b3"
+        "char_count": 589,
+        "text_sha256": "f07c52b7177e74fb3df89ec6852dda10bb673a319290e080b9601724d41084a3"
       },
       "registered_processing_text": {
         "char_count": 588,
@@ -774,8 +774,8 @@
         "char_count": 588,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.99915,
+      "fresh_vs_reference_similarity": 0.99915,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -815,7 +815,7 @@
       "source_has_native_text": false,
       "fresh_rapidocr": {
         "char_count": 428,
-        "text_sha256": "c84eabffb46d5c91b11b5b54d9765e9b41e69755e0254b92f46f30b4d4d950ea"
+        "text_sha256": "3f2c434daf3f5cc80f6fc7188065788383bfeb5dc8f67b213ea591769310041d"
       },
       "registered_processing_text": {
         "char_count": 447,
@@ -825,8 +825,8 @@
         "char_count": 447,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.898286,
-      "fresh_vs_reference_similarity": 0.898286,
+      "fresh_vs_registered_similarity": 0.896,
+      "fresh_vs_reference_similarity": 0.896,
       "status": "comparison_only_no_accuracy_claim"
     },
     {

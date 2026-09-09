@@ -8,14 +8,21 @@
 
 阶段 5 的全量运行记录应覆盖 775 页，但人工精度真值主要覆盖冻结 Golden Sample 和所有高风险异常页。原始 PDF 保持只读，OCR 派生结果写入 `OCR_DERIVED_ROOT`。
 
+所有命令必须使用项目专用解释器：`D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe`。不要使用 Codex 通用 Python 代替。
+
 当前基线命令（在仓库根目录执行）：
 
-- `PYTHONPATH=src python scripts/audit_stage5_inputs.py`
-- `PYTHONPATH=src python scripts/benchmark_stage5_baseline.py`
-- `PYTHONPATH=src;scripts python scripts/benchmark_stage5_rapidocr_sample.py`
-- `PYTHONPATH=src python scripts/audit_stage5_tables.py`
-- `PYTHONPATH=src python scripts/audit_stage5_exit.py`
-- `PYTHONPATH=src python scripts/audit_stage5_page_identity.py`
+```powershell
+$projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
+$env:PYTHONPATH = "src;scripts"
+& $projectPython scripts/audit_stage5_inputs.py
+& $projectPython scripts/benchmark_stage5_baseline.py
+& $projectPython scripts/benchmark_stage5_rapidocr_sample.py
+& $projectPython scripts/audit_stage5_tables.py
+& $projectPython scripts/audit_stage5_exit.py
+& $projectPython scripts/audit_stage5_page_identity.py
+& $projectPython scripts/audit_project_runtime.py
+```
 
 当前已完成：5 份资料、775 页输入审计和页面基线；36 页 Golden Sample 的 RapidOCR 复跑；6 页表格/续表结构基线。基线中 3 页的页面记录触发低文本标记，其中 1 页是排除 `review_required` 和 `scan_only` 后的工程候选；两者必须分别报告，不能把候选数当成全量低文本数。当前尚未宣布阶段 5 关闭，因为表格单元格真值、OCR 指标真值以及主/备用引擎和最终质量阈值仍需完成决策。规则线检测只产生候选区域，不代表单元格文字已经准确。
 

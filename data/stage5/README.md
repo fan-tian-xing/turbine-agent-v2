@@ -15,5 +15,8 @@
 - `PYTHONPATH=src;scripts python scripts/benchmark_stage5_rapidocr_sample.py`
 - `PYTHONPATH=src python scripts/audit_stage5_tables.py`
 - `PYTHONPATH=src python scripts/audit_stage5_exit.py`
+- `PYTHONPATH=src python scripts/audit_stage5_page_identity.py`
 
 当前已完成：5 份资料、775 页输入审计和页面基线；36 页 Golden Sample 的 RapidOCR 复跑；6 页表格/续表结构基线。基线中 3 页的页面记录触发低文本标记，其中 1 页是排除 `review_required` 和 `scan_only` 后的工程候选；两者必须分别报告，不能把候选数当成全量低文本数。当前尚未宣布阶段 5 关闭，因为表格单元格真值、OCR 指标真值以及主/备用引擎和最终质量阈值仍需完成决策。规则线检测只产生候选区域，不代表单元格文字已经准确。
+
+页码约定：阶段 5 的 `pdf_page` 是从 1 开始的物理 PDF 页码；资料自身页脚、章节页号或图纸编号另记为 `logical_page_label`。当前已复核：D300N 物理第 94 页对应逻辑标识 `3-3-4`，是接近空白的边界页；辅机书物理第 300 页对应印刷/逻辑页 `291`，有完整题目、公式、图和图注，不能按空白页处理。对应证据见 `stage5_page_identity_audit_2026-09-09.json`。

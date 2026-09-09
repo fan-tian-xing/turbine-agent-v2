@@ -37,3 +37,14 @@ def test_stage5_exit_audit_keeps_owner_quality_decisions_open():
     assert exit_audit["status"] == "awaiting_owner_quality_decisions"
     assert all(exit_audit["checks"].values())
     assert len(exit_audit["blocking_items"]) == 4
+
+
+def test_stage5_page_identity_distinguishes_physical_and_logical_pages():
+    identity = json.loads((STAGE5_ROOT / "stage5_page_identity_audit_2026-09-09.json").read_text(encoding="utf-8"))
+
+    assert identity["status"] == "page_identity_reconciled"
+    d300n = next(item for item in identity["records"] if item["document_key"] == "D300N")
+    aux = next(item for item in identity["records"] if item["document_key"] == "auxiliary_installation_book")
+    assert (d300n["physical_pdf_page"], d300n["logical_page_label"], d300n["page_role"]) == (94, "3-3-4", "blank_boundary_page")
+    assert (aux["physical_pdf_page"], aux["logical_page_label"], aux["page_role"]) == (300, "291", "formula_figure_text_page")
+    assert all(item["source_page_visual_match"] for item in identity["records"])

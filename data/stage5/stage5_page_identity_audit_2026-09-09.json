@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_page_identity_audit",
+  "audited_at": "2026-09-09",
+  "status": "page_identity_reconciled",
+  "records": [
+    {
+      "document_key": "D300N",
+      "physical_pdf_page": 94,
+      "logical_page_label": "3-3-4",
+      "page_role": "blank_boundary_page",
+      "original_visual_assessment": "near_blank_page_with_header_document_code_and_printed_logical_label",
+      "ocr_interpretation": "low_similarity_is_not_a_content_loss_signal_for_this_near_blank_boundary_page",
+      "page_number_semantics": "physical_pdf_page_is_one_based_page_index; logical_page_label_is_printed_or_document_internal_label",
+      "original_image_sha256": "424743901eb9f6d904b1845a2c85ae37b7c1b31a663c40b305f0262a58b557a3",
+      "processing_image_sha256": "687b71e4e6e00a95a4deb6099bb041be1c604e5423713e50c541bb5e0fd00ba4",
+      "original_and_processing_render_hashes": {
+        "original": "424743901eb9f6d904b1845a2c85ae37b7c1b31a663c40b305f0262a58b557a3",
+        "processing": "687b71e4e6e00a95a4deb6099bb041be1c604e5423713e50c541bb5e0fd00ba4"
+      },
+      "rendered_shape": [
+        1516,
+        1191,
+        3
+      ],
+      "mean_abs_pixel_delta": 0.141812,
+      "exact_pixel_fraction": 0.992575,
+      "source_page_visual_match": true,
+      "status": "reconciled_for_review"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_pdf_page": 300,
+      "logical_page_label": "291",
+      "page_role": "formula_figure_text_page",
+      "original_visual_assessment": "content_present_with_problem_text_formula_figure_caption_and_printed_page_number",
+      "ocr_interpretation": "content_is_present; low_similarity_is_due_to_formula_figure_and_reading_order_and_requires_visual_truth",
+      "page_number_semantics": "physical_pdf_page_is_one_based_page_index; logical_page_label_is_printed_or_document_internal_label",
+      "original_image_sha256": "4ed6c396ddae16d35ed1d839dbecfae05fe7c1c0f14fd2d04976962a1b7becbc",
+      "processing_image_sha256": "0d09cbcaaefcf8ceab8042f7a8dd55b7384c77b5939a451452729ba01d44586c",
+      "original_and_processing_render_hashes": {
+        "original": "4ed6c396ddae16d35ed1d839dbecfae05fe7c1c0f14fd2d04976962a1b7becbc",
+        "processing": "0d09cbcaaefcf8ceab8042f7a8dd55b7384c77b5939a451452729ba01d44586c"
+      },
+      "rendered_shape": [
+        1146,
+        795,
+        3
+      ],
+      "mean_abs_pixel_delta": 3.073685,
+      "exact_pixel_fraction": 0.915578,
+      "source_page_visual_match": true,
+      "status": "reconciled_for_review"
+    }
+  ],
+  "boundaries": [
+    "All stage5 pdf_page fields refer to one-based physical PDF page indices unless explicitly named logical_page_label.",
+    "A low text or OCR similarity result on a blank boundary page is not evidence of lost substantive content.",
+    "A content-bearing formula/figure page requires visual truth before its OCR text can enter Evidence."
+  ]
+}

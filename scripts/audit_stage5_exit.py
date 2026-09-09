@@ -22,6 +22,7 @@ def audit() -> dict:
     baseline = read(f"stage5_baseline_benchmark_{TODAY}.json")
     rapidocr = read(f"stage5_rapidocr_sample_benchmark_{TODAY}.json")
     tables = read(f"stage5_table_baseline_{TODAY}.json")
+    page_identity = read(f"stage5_page_identity_audit_{TODAY}.json")
     sample = read("stage5_sample_manifest.json")
     low_similarity_scanned = [
         {
@@ -42,6 +43,7 @@ def audit() -> dict:
         "rapidocr_sample_36_pages": rapidocr["actual"]["sample_page_count"] == 36,
         "rapidocr_zero_failures": rapidocr["actual"]["failed_page_count"] == 0,
         "table_candidates_six_pages": tables["candidate_count"] == 6,
+        "page_identity_reconciled": page_identity["status"] == "page_identity_reconciled" and all(item["source_page_visual_match"] for item in page_identity["records"]),
     }
     return {
         "schema_version": 1,

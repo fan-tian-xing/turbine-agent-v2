@@ -12,7 +12,8 @@
     "full_baseline_zero_failures": true,
     "rapidocr_sample_36_pages": true,
     "rapidocr_zero_failures": true,
-    "table_candidates_six_pages": true
+    "table_candidates_six_pages": true,
+    "page_identity_reconciled": true
   },
   "completed_scope": {
     "document_count": 5,

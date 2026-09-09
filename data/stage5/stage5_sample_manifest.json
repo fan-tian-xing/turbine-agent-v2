@@ -67,7 +67,7 @@
         {"pdf_page": 38, "categories": ["figure", "caption", "scan_page"]},
         {"pdf_page": 50, "categories": ["table", "scan_page", "numeric_and_unit"]},
         {"pdf_page": 73, "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 94, "categories": ["boundary_page", "blank_or_low_text", "scan_page"]}
+        {"pdf_page": 94, "physical_pdf_page": 94, "logical_page_label": "3-3-4", "categories": ["boundary_page", "blank_or_low_text", "scan_page"]}
       ],
       "visual_review_status": "reviewed_by_codex_against_original_pages"
     },
@@ -124,7 +124,7 @@
         {"pdf_page": 120, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
         {"pdf_page": 180, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
         {"pdf_page": 244, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 300, "categories": ["figure", "caption", "rotated_page", "scan_page"]},
+        {"pdf_page": 300, "physical_pdf_page": 300, "logical_page_label": "291", "categories": ["figure", "caption", "rotated_page", "scan_page"]},
         {"pdf_page": 360, "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
         {"pdf_page": 468, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
         {"pdf_page": 480, "categories": ["table", "boundary_page", "rotated_page", "scan_page"]}

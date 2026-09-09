@@ -151,7 +151,7 @@ def benchmark() -> dict:
     assets = _load_jsonl(REGISTRY_ASSETS)
     stage4_by_asset = {row["processing_asset"]["asset_id"]: row for row in stage4["documents"]}
     sample_by_doc_page = {
-        (item["document_key"], int(page["pdf_page"])): page
+        (item["document_key"], int(page.get("physical_page", page["pdf_page"]))): page
         for item in sample["documents"]
         for page in item["sample_pages"]
     }
@@ -179,6 +179,7 @@ def benchmark() -> dict:
                     "processing_asset_id": item["processing_asset_id"],
                     "original_asset_id": item["original_asset_id"],
                     "pdf_page": page_number,
+                    "physical_page": page_number,
                     "page_mode": modes.get(page_number, "unknown"),
                     "is_golden_sample": (item["document_key"], page_number) in sample_by_doc_page,
                     "sample_categories": sample_by_doc_page.get((item["document_key"], page_number), {}).get("categories", []),
@@ -212,7 +213,7 @@ def benchmark() -> dict:
         reason_codes = []
         if categories & {"numeric_and_unit", "negative_word_candidate"}:
             reason_codes.append("critical_token_review")
-        if categories & {"table", "continuation_table", "table_candidate"}:
+        if categories & {"table", "continuation_table", "table_candidate", "complex_layout"}:
             reason_codes.append("table_structure_review")
         if categories & {"figure", "caption"}:
             reason_codes.append("figure_bbox_review")
@@ -224,6 +225,7 @@ def benchmark() -> dict:
             "review_id": f"stage5-{record['document_key']}-{record['pdf_page']:03d}",
             "document_key": record["document_key"],
             "pdf_page": record["pdf_page"],
+            "physical_page": record["physical_page"],
             "reason_codes": sorted(set(reason_codes)) or ["sample_truth_annotation"],
             "status": "codex_first_pass_complete_user_escalation_only_if_uncertain",
             "user_escalation_rule": "Escalate only unresolved high-risk numeric, unit, negation, table, or engine-decision questions.",

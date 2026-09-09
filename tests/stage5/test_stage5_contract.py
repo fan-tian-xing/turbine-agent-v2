@@ -14,12 +14,18 @@ def test_stage5_sample_manifest_is_frozen_to_five_documents_and_36_pages():
     assert len(manifest["documents"]) == 5
     assert sum(len(document["sample_pages"]) for document in manifest["documents"]) == 36
     assert all(document["page_count"] > 0 for document in manifest["documents"])
+    assert all(
+        page["physical_page"] == page["pdf_page"]
+        for document in manifest["documents"]
+        for page in document["sample_pages"]
+    )
 
 
-def test_stage5_input_and_baseline_audits_have_no_page_failures():
+def test_stage5_input_and_both_ocr_audits_have_no_page_failures():
     input_audit = json.loads((STAGE5_ROOT / "stage5_input_audit_2026-09-09.json").read_text(encoding="utf-8"))
     baseline = json.loads((STAGE5_ROOT / "stage5_baseline_benchmark_2026-09-09.json").read_text(encoding="utf-8"))
     rapidocr = json.loads((STAGE5_ROOT / "stage5_rapidocr_sample_benchmark_2026-09-09.json").read_text(encoding="utf-8"))
+    easyocr = json.loads((STAGE5_ROOT / "stage5_easyocr_sample_benchmark_2026-09-09.json").read_text(encoding="utf-8"))
 
     assert input_audit["status"] == "pass"
     assert input_audit["sample_page_count"] == 36
@@ -29,16 +35,19 @@ def test_stage5_input_and_baseline_audits_have_no_page_failures():
     assert baseline["actual"]["low_text_candidate_count_excluding_expected_exception_modes"] == 1
     assert rapidocr["actual"]["sample_page_count"] == 36
     assert rapidocr["actual"]["failed_page_count"] == 0
+    assert easyocr["actual"]["sample_page_count"] == 36
+    assert easyocr["actual"]["failed_page_count"] == 0
 
 
-def test_stage5_exit_audit_keeps_owner_quality_decisions_open():
+def test_stage5_exit_audit_closes_after_visual_gate_and_keeps_boundaries():
     exit_audit = json.loads((STAGE5_ROOT / "stage5_exit_audit_2026-09-09.json").read_text(encoding="utf-8"))
 
-    assert exit_audit["status"] == "awaiting_owner_quality_decisions"
+    assert exit_audit["status"] == "complete"
     assert exit_audit["owner_confirmed_quality_policy"]["content_must_match_original_exactly"] is True
     assert exit_audit["owner_confirmed_quality_policy"]["similarity_is_acceptance_metric"] is False
     assert all(exit_audit["checks"].values())
-    assert len(exit_audit["blocking_items"]) == 4
+    assert exit_audit["blocking_items"] == []
+    assert exit_audit["owner_review_needed_in_chat"] == []
 
 
 def test_stage5_page_identity_distinguishes_physical_and_logical_pages():

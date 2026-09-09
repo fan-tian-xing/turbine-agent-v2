@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_table_and_complex_layout_truth_review",
+  "reviewed_at": "2026-09-09",
+  "authority": "original_pdf_visual_review_plus_user_ocr_confirmation",
+  "scope": "seven layout candidates after correcting DL5190.3 p86/p113 classification",
+  "page_identity_rule": "physical_page is one-based PDF index; logical_page is the printed/internal label when visually confirmed",
+  "records": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "logical_page": "75",
+      "role": "complex_layout_not_table",
+      "table_truth_status": "not_applicable",
+      "visible_content_match": true,
+      "finding": "条款、图示和连续正文页面，不是表格；从表格候选降级为复杂版面候选。"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "role": "table_with_merged_cells_and_figure",
+      "table_truth_status": "codex_reviewed_structural_truth",
+      "visible_content_match": true,
+      "leaf_column_count": 2,
+      "header_structure": "表12.1.15含合并单元格；页面下方另有图12.2.1及图注，必须分成独立版面区域",
+      "continuation": null,
+      "finding": "原始页视觉复核确认存在真实两叶列表格，左列为静态刚性说明，右列为低/中/高定位精度要求；包含S/500、S/750、S/1000等关键值。表格与下方图示不得合并为单一文本证据，后续Evidence仍应以原页坐标和人工单元格标注为准。"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "logical_page": "2-14-3",
+      "role": "continuation_table",
+      "table_truth_status": "codex_reviewed_structural_truth",
+      "visible_content_match": true,
+      "leaf_column_count": 4,
+      "header_structure": "项号、工作内容、附图号、证明书目录",
+      "continuation": {"continues_from_physical_page": 49, "continues_to_physical_page": 51, "label": "续表2-14-1"},
+      "finding": "第6项尾部 g-i 及第7、8、9项；原始页与处理页可见内容一致。OCR文字层不作为单元格顺序权威。"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "role": "table_start",
+      "table_truth_status": "codex_reviewed_structural_truth",
+      "visible_content_match": true,
+      "leaf_column_count": 12,
+      "header_structure": "锅炉、汽轮机、发电机三组；每组项目、单位、设计值、数值",
+      "continuation": {"continues_to_physical_page": 28, "label": "表D.1"},
+      "finding": "表D.1起始页，原始页与处理页可见内容一致；OCR文字层不作为单元格顺序权威。"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "role": "continuation_table_and_second_table",
+      "table_truth_status": "codex_reviewed_structural_truth",
+      "visible_content_match": true,
+      "leaf_column_count": 12,
+      "header_structure": "上方表D.1续表；下方新表D.2为13个叶子列",
+      "continuation": {"continues_from_physical_page": 27, "label": "表D.1（续）"},
+      "secondary_table": {"label": "表D.2", "leaf_column_count": 13},
+      "finding": "必须把D.1续表和下方D.2分成两个表区域；原始页与处理页可见内容一致。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "logical_page": "31",
+      "role": "nested_header_table",
+      "table_truth_status": "codex_reviewed_structural_truth",
+      "visible_content_match": true,
+      "leaf_column_count": 5,
+      "header_structure": "运行状态跨2列；事故工况跨3列；设计扩展工况跨最后2列",
+      "continuation": null,
+      "finding": "无跨页续表；原始页与处理页可见内容一致。"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 480,
+      "logical_page": "471",
+      "role": "table",
+      "table_truth_status": "codex_reviewed_structural_truth",
+      "visible_content_match": true,
+      "leaf_column_count": 5,
+      "header_structure": "题型；鉴定等级2列；配分2列，二层表头",
+      "continuation": null,
+      "rotation_mapping": "original rotation=90; OCR derivative rotation=0; visual content retained, coordinate transform remains required",
+      "finding": "选择、判断、简答/计算、绘图/论述、总计五行；无续表。"
+    }
+  ],
+  "boundaries": [
+    "This record confirms original-page visual structure and visible content, not that flattened OCR text preserves table cell reading order.",
+    "Future Evidence must retain original-page coordinates and physical/logical page identity; table text-layer output cannot be the sole authority.",
+    "The six-page user OCR confirmation is recorded as content confirmation; engine accuracy metrics remain in the 36-page benchmark artifacts."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_golden_sample_visual_review",
+  "reviewed_at": "2026-09-09",
+  "authority": "original_pdf_visual_review",
+  "sample_page_count": 36,
+  "reviewed_page_count": 36,
+  "status": "codex_reviewed_for_stage5_gate",
+  "policy": {
+    "original_pdf_is_authority": true,
+    "visual_match_is_not_hidden_text_accuracy": true,
+    "structured_evidence_requires_region_or_cell_level_confirmation": true,
+    "quarantine_unresolved_layout": true
+  },
+  "summary": {
+    "pass_count": 26,
+    "uncertain_count": 8,
+    "fail_count": 2,
+    "quarantined_structured_pages": 6,
+    "boundary_or_blank_exceptions": 2,
+    "user_escalation_required": false
+  },
+  "records": [
+    {"document_key":"DL5190.3","physical_page":1,"logical_page":null,"review_status":"pass","gate_disposition":"metadata_only","finding":"封面和文档身份视觉一致。"},
+    {"document_key":"DL5190.3","physical_page":14,"logical_page":"3","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"条款、数字、单位和限制表达可按文本区域使用。"},
+    {"document_key":"DL5190.3","physical_page":25,"logical_page":"14","review_status":"uncertain","gate_disposition":"region_scoped_only","finding":"正文可用；图形、尺寸线和图内编号必须隔离。"},
+    {"document_key":"DL5190.3","physical_page":42,"logical_page":"31","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"密集条款中的数字、单位和否定词视觉一致。"},
+    {"document_key":"DL5190.3","physical_page":86,"logical_page":"75","review_status":"uncertain","gate_disposition":"region_scoped_only","finding":"条款可按区域使用；该页是条款加示意图，不是表格，图示必须隔离。"},
+    {"document_key":"DL5190.3","physical_page":113,"logical_page":"102","review_status":"uncertain","gate_disposition":"quarantine_structured_ocr","finding":"表12.1.15含合并单元格且下方有图示；未确认单元格级文字和坐标前不得作为结构化表格证据。"},
+
+    {"document_key":"D300N","physical_page":1,"logical_page":null,"review_status":"pass","gate_disposition":"metadata_only","finding":"封面、型号、编号和日期视觉一致。"},
+    {"document_key":"D300N","physical_page":2,"logical_page":null,"review_status":"pass","gate_disposition":"metadata_only","finding":"审批页各字段视觉一致。"},
+    {"document_key":"D300N","physical_page":38,"logical_page":"2-10-4","review_status":"pass","gate_disposition":"region_scoped_only","finding":"图、图注和图内标注视觉一致；空间关系保留原页。"},
+    {"document_key":"D300N","physical_page":50,"logical_page":"2-14-3","review_status":"pass","gate_disposition":"quarantine_structured_ocr","finding":"续表和四列结构视觉一致；单元格证据须使用原页坐标。"},
+    {"document_key":"D300N","physical_page":73,"logical_page":"3-5-1","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"标题、范围数值、单位和条件表达视觉一致。"},
+    {"document_key":"D300N","physical_page":94,"logical_page":"3-3-4","review_status":"pass","gate_disposition":"boundary_exception","finding":"接近空白的边界页，保留为空白/低文本例外。"},
+
+    {"document_key":"DLT863","physical_page":1,"logical_page":null,"review_status":"pass","gate_disposition":"metadata_only","finding":"封面身份信息视觉一致。"},
+    {"document_key":"DLT863","physical_page":2,"logical_page":"I","review_status":"uncertain","gate_disposition":"navigation_only","finding":"目录可见内容基本一致，但线性 OCR 阅读顺序不稳定，不直接作为事实证据。"},
+    {"document_key":"DLT863","physical_page":14,"logical_page":"10","review_status":"uncertain","gate_disposition":"region_scoped_only","finding":"数字、单位和否定表达可见；列表顺序需逐条定位。"},
+    {"document_key":"DLT863","physical_page":15,"logical_page":"11","review_status":"uncertain","gate_disposition":"region_scoped_only","finding":"标准号、百分比和限制表达可见；列表顺序需逐条定位。"},
+    {"document_key":"DLT863","physical_page":27,"logical_page":"38","review_status":"fail","gate_disposition":"quarantine_structured_ocr","finding":"表D.1行列被 OCR 文本层压平，部分℃变为C，不能作为结构化表格证据。"},
+    {"document_key":"DLT863","physical_page":28,"logical_page":"39","review_status":"fail","gate_disposition":"quarantine_structured_ocr","finding":"表D.1续表与表D.2边界和单元格关系不能由线性 OCR 恢复，必须隔离。"},
+
+    {"document_key":"HAF103","physical_page":1,"logical_page":"3","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"标题、章节和限制表达视觉一致。"},
+    {"document_key":"HAF103","physical_page":11,"logical_page":"13","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"条款顺序和条件关系视觉一致。"},
+    {"document_key":"HAF103","physical_page":12,"logical_page":"14","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"章节、编号和安全限值表达视觉一致。"},
+    {"document_key":"HAF103","physical_page":16,"logical_page":"18","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"范围词、限制词和条款顺序视觉一致。"},
+    {"document_key":"HAF103","physical_page":29,"logical_page":"31","review_status":"pass","gate_disposition":"quarantine_structured_ocr","finding":"五个叶列的嵌套表头视觉一致；单元格证据须使用原页坐标。"},
+    {"document_key":"HAF103","physical_page":32,"logical_page":"34","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"低文本边界页但不是空白页，正文和页码视觉一致。"},
+
+    {"document_key":"auxiliary_installation_book","physical_page":1,"logical_page":null,"review_status":"pass","gate_disposition":"metadata_only","finding":"封面视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":12,"logical_page":"3","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"正文和学时数字视觉一致；旋转坐标须保留。"},
+    {"document_key":"auxiliary_installation_book","physical_page":31,"logical_page":null,"review_status":"pass","gate_disposition":"boundary_exception","finding":"原始页和 OCR 页均为空白页，作为空白页例外保留。"},
+    {"document_key":"auxiliary_installation_book","physical_page":32,"logical_page":"23","review_status":"pass","gate_disposition":"region_scoped_only","finding":"题目、公式、单位和选项顺序视觉一致；公式语义保留原页。"},
+    {"document_key":"auxiliary_installation_book","physical_page":64,"logical_page":"55","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"题目、百分比、范围和单位视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":120,"logical_page":"111","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"角度、分数、毫米范围和限制词视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":180,"logical_page":"171","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"问答正文、编号和参数符号视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":244,"logical_page":"235","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"浓度、pH、小时、毫米和否定表达视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":300,"logical_page":"291","review_status":"uncertain","gate_disposition":"region_scoped_only","finding":"公式、计算结果和图D-12视觉一致；公式与图中标注不得只依赖线性 OCR。"},
+    {"document_key":"auxiliary_installation_book","physical_page":360,"logical_page":"351","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"水泵参数说明、列表和符号视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":468,"logical_page":"459","review_status":"pass","gate_disposition":"structured_text_candidate","finding":"题目、百分比、范围和限制表达视觉一致。"},
+    {"document_key":"auxiliary_installation_book","physical_page":480,"logical_page":"471","review_status":"uncertain","gate_disposition":"quarantine_structured_ocr","finding":"五叶列、两级表头、合并单元格和数据视觉一致；单元格结构须保留旋转坐标并经后续 Evidence 级标注。"}
+  ],
+  "stage5_gate": {
+    "processing_pages_are_visual_match": true,
+    "all_unresolved_structured_regions_quarantined": true,
+    "may_close_stage5_benchmark_gate": true,
+    "does_not_authorize_stage6_evidence_without_region_or_cell_review": true
+  }
+}

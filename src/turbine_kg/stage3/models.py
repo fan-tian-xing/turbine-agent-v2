@@ -115,6 +115,7 @@ class Page:
     revision_id: str
     page_number: int
     text: str
+    logical_page: str | None = None
 
 
 @dataclass(frozen=True, slots=True)

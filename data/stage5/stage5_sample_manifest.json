@@ -44,12 +44,12 @@
       "processing_relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
       "page_count": 141,
       "sample_pages": [
-        {"pdf_page": 1, "categories": ["cover", "document_identity"]},
-        {"pdf_page": 14, "categories": ["ordinary_text", "numeric_and_unit"]},
-        {"pdf_page": 25, "categories": ["figure", "caption", "bbox"]},
-        {"pdf_page": 42, "categories": ["dense_clause_text", "numeric_and_unit"]},
-        {"pdf_page": 86, "categories": ["dense_clause_text", "table_candidate"]},
-        {"pdf_page": 113, "categories": ["figure", "caption", "numeric_and_unit"]}
+        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity"]},
+        {"pdf_page": 14, "physical_page": 14, "logical_page_label": "3", "categories": ["ordinary_text", "numeric_and_unit"]},
+        {"pdf_page": 25, "physical_page": 25, "logical_page_label": "14", "categories": ["figure", "caption", "bbox"]},
+        {"pdf_page": 42, "physical_page": 42, "logical_page_label": "31", "categories": ["dense_clause_text", "numeric_and_unit"]},
+        {"pdf_page": 86, "physical_page": 86, "logical_page_label": "75", "categories": ["dense_clause_text", "complex_layout"]},
+        {"pdf_page": 113, "physical_page": 113, "logical_page_label": "102", "categories": ["figure", "caption", "table", "numeric_and_unit"]}
       ],
       "visual_review_status": "reviewed_by_codex_against_original_pages"
     },
@@ -62,12 +62,12 @@
       "original_relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
       "page_count": 94,
       "sample_pages": [
-        {"pdf_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
-        {"pdf_page": 2, "categories": ["document_identity", "scan_page"]},
-        {"pdf_page": 38, "categories": ["figure", "caption", "scan_page"]},
-        {"pdf_page": 50, "categories": ["table", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 73, "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 94, "physical_pdf_page": 94, "logical_page_label": "3-3-4", "categories": ["boundary_page", "blank_or_low_text", "scan_page"]}
+        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
+        {"pdf_page": 2, "physical_page": 2, "categories": ["document_identity", "scan_page"]},
+        {"pdf_page": 38, "physical_page": 38, "logical_page_label": "2-10-4", "categories": ["figure", "caption", "scan_page"]},
+        {"pdf_page": 50, "physical_page": 50, "logical_page_label": "2-14-3", "categories": ["table", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 73, "physical_page": 73, "logical_page_label": "3-5-1", "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 94, "physical_page": 94, "physical_pdf_page": 94, "logical_page_label": "3-3-4", "categories": ["boundary_page", "blank_or_low_text", "scan_page"]}
       ],
       "visual_review_status": "reviewed_by_codex_against_original_pages"
     },
@@ -80,12 +80,12 @@
       "original_relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
       "page_count": 28,
       "sample_pages": [
-        {"pdf_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
-        {"pdf_page": 2, "categories": ["contents", "scan_page"]},
-        {"pdf_page": 14, "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 15, "categories": ["dense_clause_text", "negative_word_candidate", "scan_page"]},
-        {"pdf_page": 27, "categories": ["table", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 28, "categories": ["continuation_table", "boundary_page", "scan_page"]}
+        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
+        {"pdf_page": 2, "physical_page": 2, "logical_page_label": "I", "categories": ["contents", "scan_page"]},
+        {"pdf_page": 14, "physical_page": 14, "logical_page_label": "10", "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 15, "physical_page": 15, "logical_page_label": "11", "categories": ["dense_clause_text", "negative_word_candidate", "scan_page"]},
+        {"pdf_page": 27, "physical_page": 27, "logical_page_label": "38", "categories": ["table", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 28, "physical_page": 28, "logical_page_label": "39", "categories": ["continuation_table", "boundary_page", "scan_page"]}
       ],
       "visual_review_status": "reviewed_by_codex_against_original_pages"
     },
@@ -98,12 +98,12 @@
       "original_relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
       "page_count": 32,
       "sample_pages": [
-        {"pdf_page": 1, "categories": ["scope", "document_identity", "scan_page"]},
-        {"pdf_page": 11, "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
-        {"pdf_page": 12, "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
-        {"pdf_page": 16, "categories": ["dense_clause_text", "scan_page"]},
-        {"pdf_page": 29, "categories": ["table", "numeric_and_unit", "scan_page"]},
-        {"pdf_page": 32, "categories": ["boundary_page", "ordinary_text", "scan_page"]}
+        {"pdf_page": 1, "physical_page": 1, "logical_page_label": "3", "categories": ["scope", "document_identity", "scan_page"]},
+        {"pdf_page": 11, "physical_page": 11, "logical_page_label": "13", "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
+        {"pdf_page": 12, "physical_page": 12, "logical_page_label": "14", "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
+        {"pdf_page": 16, "physical_page": 16, "logical_page_label": "18", "categories": ["dense_clause_text", "scan_page"]},
+        {"pdf_page": 29, "physical_page": 29, "logical_page_label": "31", "categories": ["table", "numeric_and_unit", "scan_page"]},
+        {"pdf_page": 32, "physical_page": 32, "logical_page_label": "34", "categories": ["boundary_page", "ordinary_text", "scan_page"]}
       ],
       "visual_review_status": "reviewed_by_codex_against_original_pages"
     },
@@ -116,18 +116,18 @@
       "original_relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
       "page_count": 480,
       "sample_pages": [
-        {"pdf_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
-        {"pdf_page": 12, "categories": ["contents", "rotated_page", "scan_page"]},
-        {"pdf_page": 31, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 32, "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 64, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 120, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 180, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 244, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 300, "physical_pdf_page": 300, "logical_page_label": "291", "categories": ["figure", "caption", "rotated_page", "scan_page"]},
-        {"pdf_page": 360, "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 468, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 480, "categories": ["table", "boundary_page", "rotated_page", "scan_page"]}
+        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
+        {"pdf_page": 12, "physical_page": 12, "logical_page_label": "3", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 31, "physical_page": 31, "categories": ["blank_or_low_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 32, "physical_page": 32, "logical_page_label": "23", "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 64, "physical_page": 64, "logical_page_label": "55", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 120, "physical_page": 120, "logical_page_label": "111", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 180, "physical_page": 180, "logical_page_label": "171", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 244, "physical_page": 244, "logical_page_label": "235", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 300, "physical_page": 300, "physical_pdf_page": 300, "logical_page_label": "291", "categories": ["figure", "caption", "rotated_page", "scan_page"]},
+        {"pdf_page": 360, "physical_page": 360, "logical_page_label": "351", "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 468, "physical_page": 468, "logical_page_label": "459", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 480, "physical_page": 480, "logical_page_label": "471", "categories": ["table", "boundary_page", "rotated_page", "scan_page"]}
       ],
       "visual_review_status": "reviewed_by_codex_against_original_pages"
     }
@@ -135,7 +135,7 @@
   "user_review_boundary": {
     "original_completeness": "handled_by_codex; no_user_confirmation_required",
     "uncertain_pages": "codex_first_pass; ask_user_only_for_unresolved_high_risk_pages",
-    "engine_and_final_threshold_decision": "ask_user_after_benchmark_comparison"
+    "engine_and_final_threshold_decision": "codex_decide_from_benchmark_and_record_boundary; ask_user_only_if_unresolved_high_risk"
   },
-  "next_step": "run_stage5_input_audit_then_prepare_ocr_layout_table_benchmark"
+  "next_step": "stage5_exit_complete; preserve quarantined layout regions and begin Stage 6 Evidence Golden Sample work"
 }

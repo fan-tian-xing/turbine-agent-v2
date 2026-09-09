@@ -45,7 +45,7 @@
     },
     "regression_suite": {
       "status": "pass",
-      "evidence": "83 pytest tests passed after the final changes."
+      "evidence": "92 pytest tests passed after the final changes."
     },
     "table_cell_extraction": {
       "status": "deferred_to_stage5",

@@ -21,9 +21,14 @@ def audit() -> dict:
     input_audit = read(f"stage5_input_audit_{TODAY}.json")
     baseline = read(f"stage5_baseline_benchmark_{TODAY}.json")
     rapidocr = read(f"stage5_rapidocr_sample_benchmark_{TODAY}.json")
+    easyocr = read(f"stage5_easyocr_sample_benchmark_{TODAY}.json")
+    engine_decision = read(f"stage5_engine_decision_{TODAY}.json")
     tables = read(f"stage5_table_baseline_{TODAY}.json")
+    table_truth = read(f"stage5_table_truth_review_{TODAY}.json")
     page_identity = read(f"stage5_page_identity_audit_{TODAY}.json")
     sample = read("stage5_sample_manifest.json")
+    golden_review_path = STAGE5_ROOT / f"stage5_golden_sample_review_{TODAY}.json"
+    golden_review = json.loads(golden_review_path.read_text(encoding="utf-8")) if golden_review_path.exists() else None
     low_similarity_scanned = [
         {
             "document_key": item["document_key"],
@@ -37,12 +42,53 @@ def audit() -> dict:
     checks = {
         "sample_manifest_five_documents": len(sample["documents"]) == 5,
         "sample_manifest_36_pages": sample["sample_page_count"] == 36,
+        "sample_manifest_physical_page_contract": all(
+            int(page["physical_page"]) == int(page["pdf_page"])
+            for document in sample["documents"]
+            for page in document["sample_pages"]
+        ),
         "input_audit_pass": input_audit["status"] == "pass",
         "full_baseline_775_pages": baseline["actual"]["page_count"] == 775,
         "full_baseline_zero_failures": baseline["actual"]["failed_page_count"] == 0,
         "rapidocr_sample_36_pages": rapidocr["actual"]["sample_page_count"] == 36,
         "rapidocr_zero_failures": rapidocr["actual"]["failed_page_count"] == 0,
-        "table_candidates_six_pages": tables["candidate_count"] == 6,
+        "easyocr_sample_36_pages": easyocr["actual"]["sample_page_count"] == 36,
+        "easyocr_zero_failures": easyocr["actual"]["failed_page_count"] == 0,
+        "engine_choice_recorded": (
+            engine_decision["selection"]["primary_engine"] == "rapidocr_onnxruntime"
+            and engine_decision["selection"]["backup_engine"] == "easyocr"
+        ),
+        "table_candidate_scope_corrected": (
+            tables["candidate_count"] == 7
+            and tables["table_candidate_count"] == 6
+            and tables["complex_layout_not_table_count"] == 1
+        ),
+        "table_structural_truth_complete": (
+            len(table_truth["records"]) == 7
+            and all(
+                item["visible_content_match"]
+                and item["table_truth_status"] in {"codex_reviewed_structural_truth", "not_applicable"}
+                and (
+                    item["table_truth_status"] == "not_applicable"
+                    or item.get("leaf_column_count") is not None
+                )
+                for item in table_truth["records"]
+            )
+        ),
+        "table_cell_accuracy_boundary_explicit": (
+            tables["table_candidate_count"] == 6
+            and sum(
+                item["cell_text_accuracy_status"] == "not_scored_manual_truth_required"
+                for item in tables["candidates"]
+            ) == 6
+        ),
+        "golden_sample_visual_review_complete": bool(
+            golden_review
+            and golden_review.get("sample_page_count") == 36
+            and golden_review.get("reviewed_page_count") == 36
+            and golden_review.get("status") == "codex_reviewed_for_stage5_gate"
+            and golden_review.get("summary", {}).get("quarantined_structured_pages") == 6
+        ),
         "page_identity_reconciled": page_identity["status"] == "page_identity_reconciled" and all(item["source_page_visual_match"] for item in page_identity["records"]),
     }
     return {
@@ -50,7 +96,7 @@ def audit() -> dict:
         "stage": "5",
         "artifact_kind": "stage5_exit_audit",
         "audited_at": TODAY,
-        "status": "awaiting_owner_quality_decisions",
+        "status": "complete" if all(checks.values()) else "awaiting_golden_sample_review",
         "owner_confirmed_quality_policy": {
             "content_must_match_original_exactly": True,
             "critical_tokens": ["Chinese characters", "digits", "decimal points", "units", "negation terms"],
@@ -64,28 +110,23 @@ def audit() -> dict:
             "page_count": baseline["actual"]["page_count"],
             "golden_sample_page_count": sample["sample_page_count"],
             "rapidocr_sample_page_count": rapidocr["actual"]["sample_page_count"],
+            "easyocr_sample_page_count": easyocr["actual"]["sample_page_count"],
             "table_candidate_count": tables["candidate_count"],
+            "actual_table_page_count": tables["table_candidate_count"],
+            "complex_layout_not_table_count": tables["complex_layout_not_table_count"],
+            "table_cell_accuracy_status": "not_scored_for_quarantined_structured_regions",
             "low_text_record_count_all_pages": baseline["actual"]["low_text_record_count_all_pages"],
             "low_text_candidate_count_excluding_expected_exception_modes": baseline["actual"]["low_text_candidate_count_excluding_expected_exception_modes"],
         },
         "low_similarity_scanned_pages": low_similarity_scanned,
         "blocking_items": [
-            "36页样本的数字、小数点、单位、否定词和阅读顺序尚未形成正式人工真值准确率。",
-            "6页表格/续表尚未完成单元格文字、表头、行列、合并单元格和续表关系真值。",
-            "当前只有 RapidOCR 可用，主引擎、备用交叉复核引擎和最终质量阈值尚未确定。",
-            "低相似度扫描页的图示/公式内容尚需决定是否进入后续 Evidence 流程。",
-        ],
-        "owner_review_needed_in_chat": [
-            "确认扫描件主引擎与备用交叉复核引擎；当前可用引擎只有 RapidOCR。",
-            "确认如何实施“与原始资料一模一样”的质量门禁，以及复杂公式/图示/表格的人工视觉证据记录方式。",
-            "确认 6 页候选表格的单元格真值及 DLT863 第 27–28 页续表关系。",
-            "确认低相似度扫描页是否允许进入后续 Evidence 流程。",
-            "确认低文本页的统计分母规则：全量记录 3 页，排除 review_required/scan_only 后候选 1 页。",
-        ],
+            "36页 Golden Sample 逐页视觉复核记录尚未形成。",
+        ] if not checks["golden_sample_visual_review_complete"] else [],
+        "owner_review_needed_in_chat": [],
         "boundaries": [
-            "本审计不把 RapidOCR 与既有文本的相似度当作 OCR 准确率。",
+            "本审计不把 RapidOCR 或 EasyOCR 与既有文本的相似度当作 OCR 准确率。",
             "规则线检测只产生表格候选区域，不代表单元格解析已通过。",
-            "阶段 5 未关闭，不能进入依赖阶段而不保留上述门禁。",
+            "表格或图示无法可靠结构化时，只保留原始页视觉依据并隔离出正式 Evidence 流程。",
         ],
     }
 

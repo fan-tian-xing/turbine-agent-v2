@@ -186,6 +186,11 @@ def test_cli_does_not_enable_evidence_send_by_default():
     assert args.allow_evidence_send is False
 
 
+def test_cli_accepts_old_direct_question_form():
+    args = build_parser().parse_args(["密封瓦座水平结合面用塞尺检查要求是什么？"])
+    assert args.command_or_question.startswith("密封瓦座")
+
+
 def test_fixture_loader_rejects_unknown_fields_empty_links_and_invalid_enums(tmp_path):
     source = json.loads((FIXTURE_ROOT / "corpus.json").read_text(encoding="utf-8"))
     variants = []

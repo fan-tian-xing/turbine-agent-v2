@@ -79,7 +79,12 @@ def make_projection(documents, registry_assets: dict) -> dict:
         nodes[doc.revision.revision_id].update(asdict(doc.revision))
         for page in doc.pages:
             # Only the confirmed source spans are persisted, not the sampled page body.
-            nodes[page.page_id].update(page_number=page.page_number, revision_id=page.revision_id)
+            nodes[page.page_id].update(
+                page_number=page.page_number,
+                physical_page=page.page_number,
+                logical_page=page.logical_page,
+                revision_id=page.revision_id,
+            )
         for span in doc.spans:
             quotes = [ev.text for ev in doc.evidence if span.span_id in ev.source_span_ids]
             nodes[span.span_id].update(page_id=span.page_id, quote="\n".join(quotes), content_kind=span.content_kind)
@@ -121,7 +126,9 @@ def hit_document(hit: dict) -> FixtureDocument:
             e.get("value"), e.get("unit"), tuple(tuple(q) for q in json.loads(e["quantities"])),
         )
         spans[sp["id"]] = SourceSpan(sp["id"], p["id"], sp["quote"])
-        pages[p["id"]] = Page(p["id"], r["id"], p["page_number"], sp["quote"])
+        pages[p["id"]] = Page(
+            p["id"], r["id"], p["page_number"], sp["quote"], p.get("logical_page")
+        )
     scope = ApplicabilityScope.from_dict(json.loads(d["source_scope"]))
     return FixtureDocument(
         Asset(

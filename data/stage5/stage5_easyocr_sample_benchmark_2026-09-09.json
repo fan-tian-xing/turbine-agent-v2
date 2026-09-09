@@ -1,12 +1,17 @@
 {
   "schema_version": 1,
   "stage": "5",
-  "artifact_kind": "stage5_rapidocr_sample_benchmark",
+  "artifact_kind": "stage5_easyocr_sample_benchmark",
   "audited_at": "2026-09-09",
   "engine": {
-    "name": "rapidocr_onnxruntime",
+    "name": "easyocr",
+    "languages": [
+      "ch_sim",
+      "en"
+    ],
+    "gpu": false,
     "dpi": 170,
-    "script": "scripts/generate_ocr_pdf.py::grouped_text"
+    "script": "scripts/benchmark_stage5_easyocr_sample.py::grouped_text"
   },
   "scope": "36 frozen Golden Sample pages; comparison baseline only",
   "records": [
@@ -19,9 +24,9 @@
         "document_identity"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 226,
-        "text_sha256": "9742bc2c83b90b7fe468e72208f6f3558150c4e222daadf792951f75514e5d43"
+      "fresh_easyocr": {
+        "char_count": 208,
+        "text_sha256": "014d8d712a744d38b14d90c5630ac3a97057d7b1ca7eaf0520d3d2a147d63636"
       },
       "registered_processing_text": {
         "char_count": 253,
@@ -31,8 +36,8 @@
         "char_count": 253,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 0.85595,
-      "fresh_vs_reference_similarity": 0.85595,
+      "fresh_vs_registered_similarity": 0.824295,
+      "fresh_vs_reference_similarity": 0.824295,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -44,9 +49,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 1145,
-        "text_sha256": "2bae2e890066709210201a56904734c92322f260bf879806b08fda014e4505f7"
+      "fresh_easyocr": {
+        "char_count": 1071,
+        "text_sha256": "413ef8325425454fb3281dbec29446aab2889a40b7f3a7a55e1de7b0ab832b9a"
       },
       "registered_processing_text": {
         "char_count": 1194,
@@ -56,8 +61,8 @@
         "char_count": 1194,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 0.960239,
-      "fresh_vs_reference_similarity": 0.960239,
+      "fresh_vs_registered_similarity": 0.754967,
+      "fresh_vs_reference_similarity": 0.754967,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -70,9 +75,9 @@
         "bbox"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 441,
-        "text_sha256": "d4a3b4413593e8ee0db5a5fde0f0687e71ccaf783b4c314b1f1323fc4c73a201"
+      "fresh_easyocr": {
+        "char_count": 310,
+        "text_sha256": "eb9c696448cc92ee330df8f9018c85e5b63972084952fa5dd52878ba86a7a3d6"
       },
       "registered_processing_text": {
         "char_count": 361,
@@ -82,8 +87,8 @@
         "char_count": 361,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 0.835411,
-      "fresh_vs_reference_similarity": 0.835411,
+      "fresh_vs_registered_similarity": 0.530551,
+      "fresh_vs_reference_similarity": 0.530551,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -95,9 +100,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 1125,
-        "text_sha256": "7163370cb0f8530cb4dcf107c6618dd4749e0036ed56221de12eff6b08a54870"
+      "fresh_easyocr": {
+        "char_count": 1042,
+        "text_sha256": "140b779b651e9b54a172955fa6bc4a43c6552c49065693596910144935655295"
       },
       "registered_processing_text": {
         "char_count": 1181,
@@ -107,8 +112,8 @@
         "char_count": 1181,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 0.943625,
-      "fresh_vs_reference_similarity": 0.943625,
+      "fresh_vs_registered_similarity": 0.79892,
+      "fresh_vs_reference_similarity": 0.79892,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -120,9 +125,9 @@
         "complex_layout"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 1210,
-        "text_sha256": "8bc7c4bf5c7b6504b06015d229ec19c3a24ec0aaa523dd9b20873206802445e8"
+      "fresh_easyocr": {
+        "char_count": 1120,
+        "text_sha256": "5f2a72590d847eb15ef376a5702accc1024045e89023662d8383d47f02aad152"
       },
       "registered_processing_text": {
         "char_count": 1248,
@@ -132,8 +137,8 @@
         "char_count": 1248,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 0.969894,
-      "fresh_vs_reference_similarity": 0.969894,
+      "fresh_vs_registered_similarity": 0.804899,
+      "fresh_vs_reference_similarity": 0.804899,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -147,9 +152,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 991,
-        "text_sha256": "d9ad66e612b70f45c54036daa24a67fc7bce2c51451ae7e4c9891bc38d8bdcd4"
+      "fresh_easyocr": {
+        "char_count": 930,
+        "text_sha256": "c497dab6dda60f27b05bc948e51c71970836b961758f1825cec679545a9fcb55"
       },
       "registered_processing_text": {
         "char_count": 1030,
@@ -159,8 +164,8 @@
         "char_count": 1030,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 0.949035,
-      "fresh_vs_reference_similarity": 0.949035,
+      "fresh_vs_registered_similarity": 0.738776,
+      "fresh_vs_reference_similarity": 0.738776,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -173,9 +178,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 83,
-        "text_sha256": "5749047c8d683dc0f86236af66cd0c2ad27f0ffef187ae734fa7e1926e582712"
+      "fresh_easyocr": {
+        "char_count": 86,
+        "text_sha256": "edde819f0256633df86b018d6c3fd64b0c173b5752fc4450080ac5238f674ec8"
       },
       "registered_processing_text": {
         "char_count": 83,
@@ -185,8 +190,8 @@
         "char_count": 83,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.87574,
+      "fresh_vs_reference_similarity": 0.87574,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -198,9 +203,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 35,
-        "text_sha256": "bd41909175380c9576611d35483f5def775148bf0e433f529dfaea42850d95ab"
+      "fresh_easyocr": {
+        "char_count": 32,
+        "text_sha256": "11f3aecfaccc5cc6dfd909c78ef91c096c8e8141fd764daf1c80e957da017188"
       },
       "registered_processing_text": {
         "char_count": 35,
@@ -210,8 +215,8 @@
         "char_count": 35,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.865672,
+      "fresh_vs_reference_similarity": 0.865672,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -224,9 +229,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 84,
-        "text_sha256": "0f06c63c6b1eee418165d75590983e0fc581059293c15eacc0ed94015aa2e740"
+      "fresh_easyocr": {
+        "char_count": 57,
+        "text_sha256": "c02ac5a64c1585415d4987a26316017393e072e36825dd8656599eec1851d626"
       },
       "registered_processing_text": {
         "char_count": 84,
@@ -236,8 +241,8 @@
         "char_count": 84,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.751773,
+      "fresh_vs_reference_similarity": 0.751773,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -250,9 +255,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 633,
-        "text_sha256": "38c1da4ee771aaf851b2064e2d84e97f5eab3ba7e2b135f7a81f0b6129efb8f9"
+      "fresh_easyocr": {
+        "char_count": 615,
+        "text_sha256": "65db1562baa52985878f29ff05cd5927b347e512bec55d41dfe3faf210148ebd"
       },
       "registered_processing_text": {
         "char_count": 633,
@@ -262,8 +267,8 @@
         "char_count": 633,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.918269,
+      "fresh_vs_reference_similarity": 0.918269,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -276,9 +281,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 240,
-        "text_sha256": "36f5f4ff303dd8a838e7294d57a5597a5b721985fe41fc6001fb3cb11fe5c008"
+      "fresh_easyocr": {
+        "char_count": 230,
+        "text_sha256": "8affad310a8638109cae739ea7c01cc1bdfb6c90d59703009602b1effe78eeca"
       },
       "registered_processing_text": {
         "char_count": 241,
@@ -288,8 +293,8 @@
         "char_count": 241,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.997921,
-      "fresh_vs_reference_similarity": 0.997921,
+      "fresh_vs_registered_similarity": 0.828025,
+      "fresh_vs_reference_similarity": 0.828025,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -302,9 +307,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 31,
-        "text_sha256": "99770c102a49b6a2dc4fb6f88b57a4a59546ffb32dd99b873306b5ce9c01ed33"
+      "fresh_easyocr": {
+        "char_count": 28,
+        "text_sha256": "66584845f3e8897b8521dd4e735d1d8555e7ec22fa1a14073560655eb47ed40c"
       },
       "registered_processing_text": {
         "char_count": 34,
@@ -314,8 +319,8 @@
         "char_count": 34,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.953846,
-      "fresh_vs_reference_similarity": 0.953846,
+      "fresh_vs_registered_similarity": 0.645161,
+      "fresh_vs_reference_similarity": 0.645161,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -328,9 +333,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 155,
-        "text_sha256": "2fdb84b52e018c5a3a19dd40c174c062876d775f2a5fdef15a4aff0b82ac3996"
+      "fresh_easyocr": {
+        "char_count": 130,
+        "text_sha256": "578932a979e43d337a04eb6bb8e120ea2b8246432080490e02b4f037a97fd648"
       },
       "registered_processing_text": {
         "char_count": 155,
@@ -340,8 +345,8 @@
         "char_count": 155,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.849123,
+      "fresh_vs_reference_similarity": 0.849123,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -353,9 +358,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 451,
-        "text_sha256": "317a1b193b7c44f3691a6a970791bda890a611c21b46ee0fab4b2b1ba556d1fc"
+      "fresh_easyocr": {
+        "char_count": 261,
+        "text_sha256": "0a1ade9d9ac11535b5925d1e05b060dda20504e952a7168b80ea2da4415a15de"
       },
       "registered_processing_text": {
         "char_count": 451,
@@ -365,8 +370,8 @@
         "char_count": 451,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.997783,
-      "fresh_vs_reference_similarity": 0.997783,
+      "fresh_vs_registered_similarity": 0.311798,
+      "fresh_vs_reference_similarity": 0.311798,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -379,9 +384,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 823,
-        "text_sha256": "89e1b668672d4e2be410f84068ad6105a89af9d449790b31d06ad5768dfadc25"
+      "fresh_easyocr": {
+        "char_count": 738,
+        "text_sha256": "5dd173c48c80d00f78d070129e56ec585fe2c23e29158be71a4e0d327e12c2ae"
       },
       "registered_processing_text": {
         "char_count": 823,
@@ -391,8 +396,8 @@
         "char_count": 823,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.99757,
-      "fresh_vs_reference_similarity": 0.99757,
+      "fresh_vs_registered_similarity": 0.766176,
+      "fresh_vs_reference_similarity": 0.766176,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -405,9 +410,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 767,
-        "text_sha256": "f2636f834b57a8d5b9e8692d80120c65754295157af9c7d9c040e4fcaabc00b5"
+      "fresh_easyocr": {
+        "char_count": 732,
+        "text_sha256": "a6d6a88110b90c2929d029ce0ca1b2863f16529c5f47aa1a9e4262c0c41b3c75"
       },
       "registered_processing_text": {
         "char_count": 767,
@@ -417,8 +422,8 @@
         "char_count": 767,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.84056,
+      "fresh_vs_reference_similarity": 0.84056,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -431,9 +436,9 @@
         "numeric_and_unit"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 702,
-        "text_sha256": "15a1eb75e6c13e8074ae8a3e16ea895d85f28030f4ed73416a02b2fdf2ebd20a"
+      "fresh_easyocr": {
+        "char_count": 270,
+        "text_sha256": "c1f39c387e4d12cd6774494e079b44542ec8674350ab11598a91b79b73c43f41"
       },
       "registered_processing_text": {
         "char_count": 704,
@@ -443,8 +448,8 @@
         "char_count": 704,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.991465,
-      "fresh_vs_reference_similarity": 0.991465,
+      "fresh_vs_registered_similarity": 0.262834,
+      "fresh_vs_reference_similarity": 0.262834,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -457,9 +462,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 365,
-        "text_sha256": "1d5796d20980aec92331d48bcc20beeb9e61aa978f83bb0b13890a094cf0fd12"
+      "fresh_easyocr": {
+        "char_count": 266,
+        "text_sha256": "4226c05720148627e5ca02da3f2429425b4a77c86b81105bb572b74d304b271f"
       },
       "registered_processing_text": {
         "char_count": 366,
@@ -469,8 +474,8 @@
         "char_count": 366,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.998632,
-      "fresh_vs_reference_similarity": 0.998632,
+      "fresh_vs_registered_similarity": 0.518987,
+      "fresh_vs_reference_similarity": 0.518987,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -483,9 +488,9 @@
         "scan_page"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 408,
-        "text_sha256": "a2da97e6694d023d3b75fc394f5165acefac5a7d1412b076e87b1d3eb4230889"
+      "fresh_easyocr": {
+        "char_count": 413,
+        "text_sha256": "5f9bf7fbf7084f1dcc474316d0c197284496ea3651c77b118846a053826fd888"
       },
       "registered_processing_text": {
         "char_count": 408,
@@ -495,8 +500,8 @@
         "char_count": 417,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.979394,
+      "fresh_vs_registered_similarity": 0.874543,
+      "fresh_vs_reference_similarity": 0.898795,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -509,9 +514,9 @@
         "scan_page"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 520,
-        "text_sha256": "cf7361dac2c3e515c9e02fac15b1f241f9009fbebf149e85542145c48f715c78"
+      "fresh_easyocr": {
+        "char_count": 524,
+        "text_sha256": "fbcc6546c06c756c2dc6ba624ec90472b1ec3791f3a3e406b020aa83a78d9f69"
       },
       "registered_processing_text": {
         "char_count": 520,
@@ -521,8 +526,8 @@
         "char_count": 530,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.980952,
+      "fresh_vs_registered_similarity": 0.934866,
+      "fresh_vs_reference_similarity": 0.929791,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -535,9 +540,9 @@
         "scan_page"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 445,
-        "text_sha256": "6ec8a68d8a20ab098538c2957ba2d8f8afb3a1d5b2199a1d34aa9d896970ce59"
+      "fresh_easyocr": {
+        "char_count": 443,
+        "text_sha256": "093ccfb3da0a0a499f00eadda2c11b798e72b21b6b9d3cf1bd8ef8f4e65dcd92"
       },
       "registered_processing_text": {
         "char_count": 445,
@@ -547,8 +552,8 @@
         "char_count": 454,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.921023,
+      "fresh_vs_registered_similarity": 0.828829,
+      "fresh_vs_reference_similarity": 0.824972,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -560,9 +565,9 @@
         "scan_page"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 531,
-        "text_sha256": "9bcb8818cd2ededa6291147c086a14ac441a4cdf89b3a1c0cb9117fdbc560153"
+      "fresh_easyocr": {
+        "char_count": 527,
+        "text_sha256": "bf0e8417ed7c3be4addd9ceba34224a90bb573a66ff29ad0828689ee3fe1d03e"
       },
       "registered_processing_text": {
         "char_count": 531,
@@ -572,8 +577,8 @@
         "char_count": 541,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.981343,
+      "fresh_vs_registered_similarity": 0.890359,
+      "fresh_vs_reference_similarity": 0.883895,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -586,9 +591,9 @@
         "scan_page"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 318,
-        "text_sha256": "4674cc036f54b6711439ebdb74657b25eba9e6718cf77a4cc0b250880a1b8b12"
+      "fresh_easyocr": {
+        "char_count": 327,
+        "text_sha256": "cc30a40bfdc480abeb915990c6caf019bcc6d36c361fa10158d0134c523a6c26"
       },
       "registered_processing_text": {
         "char_count": 318,
@@ -598,8 +603,8 @@
         "char_count": 326,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.897516,
+      "fresh_vs_registered_similarity": 0.911628,
+      "fresh_vs_reference_similarity": 0.836141,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -612,9 +617,9 @@
         "scan_page"
       ],
       "source_has_native_text": true,
-      "fresh_rapidocr": {
-        "char_count": 132,
-        "text_sha256": "e83f2f057212e5d70ae122934d51f84afceb336786fa5c13e2a0a3405c95dbdc"
+      "fresh_easyocr": {
+        "char_count": 130,
+        "text_sha256": "dace0fab7d8614af186b546fcf276cbeca22b1a8d23a927ec20c90404a73d891"
       },
       "registered_processing_text": {
         "char_count": 132,
@@ -624,8 +629,8 @@
         "char_count": 134,
         "reference_kind": "native_pdf_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 0.954887,
+      "fresh_vs_registered_similarity": 0.839695,
+      "fresh_vs_reference_similarity": 0.810606,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -638,9 +643,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 98,
-        "text_sha256": "e16dd1a63833884420b10ac88f129be2987dd4cec60aea0ac03562eeb472dbed"
+      "fresh_easyocr": {
+        "char_count": 57,
+        "text_sha256": "93956f109f778362544387809dc1449f58589246970d588d8a047d483d673e29"
       },
       "registered_processing_text": {
         "char_count": 98,
@@ -650,8 +655,8 @@
         "char_count": 98,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.658065,
+      "fresh_vs_reference_similarity": 0.658065,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -664,9 +669,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 414,
-        "text_sha256": "8b0398f124fcd4d6c835ceac382211bc6ea3c57b691b6c26f216e95459741c47"
+      "fresh_easyocr": {
+        "char_count": 349,
+        "text_sha256": "f6917f5277ce90b8d9424b552dd218b0daab337184b3a4cffb9cb6eb250832a8"
       },
       "registered_processing_text": {
         "char_count": 414,
@@ -676,8 +681,8 @@
         "char_count": 414,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.665793,
+      "fresh_vs_reference_similarity": 0.665793,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -690,7 +695,7 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
+      "fresh_easyocr": {
         "char_count": 0,
         "text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
@@ -716,9 +721,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 397,
-        "text_sha256": "734155b98d5de6da7a4347c39ee6d2e331da32b043144783a92fb2870b4246ba"
+      "fresh_easyocr": {
+        "char_count": 304,
+        "text_sha256": "f718f06e36fb6cca0bc915824ddf2023dca9dd520ea35da75456535a4981eee7"
       },
       "registered_processing_text": {
         "char_count": 397,
@@ -728,8 +733,8 @@
         "char_count": 397,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.997481,
-      "fresh_vs_reference_similarity": 0.997481,
+      "fresh_vs_registered_similarity": 0.388017,
+      "fresh_vs_reference_similarity": 0.388017,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -742,9 +747,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 514,
-        "text_sha256": "f061fcfc3b22964c14c660d00407d3ded195fa6989e2058d5531d949ef365a90"
+      "fresh_easyocr": {
+        "char_count": 404,
+        "text_sha256": "265b18e87d93def8f630205592b91f1c668c4e6a6d53de3fc4ea1b3090ca4e76"
       },
       "registered_processing_text": {
         "char_count": 514,
@@ -754,8 +759,8 @@
         "char_count": 514,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.505447,
+      "fresh_vs_reference_similarity": 0.505447,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -768,9 +773,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 576,
-        "text_sha256": "65b3d12c724506d3f4689d2dc5347503944aa68d2a5ff35b2ca9b2676b825fd3"
+      "fresh_easyocr": {
+        "char_count": 513,
+        "text_sha256": "783c32e7272ce4f0ae4e7604b473467527e41c76dd2fc0ff209a2b2372f3a2dd"
       },
       "registered_processing_text": {
         "char_count": 576,
@@ -780,8 +785,8 @@
         "char_count": 576,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.523416,
+      "fresh_vs_reference_similarity": 0.523416,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -794,9 +799,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 588,
-        "text_sha256": "f323f678f2260e963b99c822e997be90e8ac4d8288e9560aeb645865340af4b3"
+      "fresh_easyocr": {
+        "char_count": 411,
+        "text_sha256": "50c25463645902617e079a9712b3b45355f31112e592ff3e83d8e18ffb781058"
       },
       "registered_processing_text": {
         "char_count": 588,
@@ -806,8 +811,8 @@
         "char_count": 588,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.646647,
+      "fresh_vs_reference_similarity": 0.646647,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -820,9 +825,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 678,
-        "text_sha256": "b41648068f15465b65b2599dfab019a91f7e15eac3490f65d9f936b28378d414"
+      "fresh_easyocr": {
+        "char_count": 399,
+        "text_sha256": "0f75556ede6d1523469b1720d06739aafc829e21ff481054091b66e41441092c"
       },
       "registered_processing_text": {
         "char_count": 678,
@@ -832,8 +837,8 @@
         "char_count": 678,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.627669,
+      "fresh_vs_reference_similarity": 0.627669,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -847,9 +852,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 428,
-        "text_sha256": "c84eabffb46d5c91b11b5b54d9765e9b41e69755e0254b92f46f30b4d4d950ea"
+      "fresh_easyocr": {
+        "char_count": 205,
+        "text_sha256": "0d0999d5ce4b731a9bfb15529dc036dd5e8e4a8421afb264f6d9934bc9387201"
       },
       "registered_processing_text": {
         "char_count": 447,
@@ -859,8 +864,8 @@
         "char_count": 447,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.898286,
-      "fresh_vs_reference_similarity": 0.898286,
+      "fresh_vs_registered_similarity": 0.423313,
+      "fresh_vs_reference_similarity": 0.423313,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -873,9 +878,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 604,
-        "text_sha256": "a0c89ac8fb1e94356b735cb2dd3a5de5a4132de0cb02cccfcbd2ff5a9a6de6fd"
+      "fresh_easyocr": {
+        "char_count": 361,
+        "text_sha256": "498ddccadcad184a6564002d45fcb2276e98424dab4f62cdac471cf1c3214a92"
       },
       "registered_processing_text": {
         "char_count": 604,
@@ -885,8 +890,8 @@
         "char_count": 604,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.630052,
+      "fresh_vs_reference_similarity": 0.630052,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -899,9 +904,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 491,
-        "text_sha256": "32199b746d46fad127971b841c9188dff8c6cccdcaab37cc3da4077212e9d01e"
+      "fresh_easyocr": {
+        "char_count": 423,
+        "text_sha256": "219fdc6b1127a2cbe9f6f3c2f69f5de096c529a342811ae3288f626c2c14ff41"
       },
       "registered_processing_text": {
         "char_count": 491,
@@ -911,8 +916,8 @@
         "char_count": 491,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 0.997963,
-      "fresh_vs_reference_similarity": 0.997963,
+      "fresh_vs_registered_similarity": 0.603939,
+      "fresh_vs_reference_similarity": 0.603939,
       "status": "comparison_only_no_accuracy_claim"
     },
     {
@@ -926,9 +931,9 @@
         "scan_page"
       ],
       "source_has_native_text": false,
-      "fresh_rapidocr": {
-        "char_count": 500,
-        "text_sha256": "b985d814838fd8626cd07b10cb969e6a10fb3c2dc0dda876dfa249e25946cd99"
+      "fresh_easyocr": {
+        "char_count": 300,
+        "text_sha256": "f7847e84263581cd91b15ac152370109c31a775dad13de2c4bbd31b7bd85bb7c"
       },
       "registered_processing_text": {
         "char_count": 500,
@@ -938,8 +943,8 @@
         "char_count": 500,
         "reference_kind": "registered_ocr_derivative_text"
       },
-      "fresh_vs_registered_similarity": 1.0,
-      "fresh_vs_reference_similarity": 1.0,
+      "fresh_vs_registered_similarity": 0.4325,
+      "fresh_vs_reference_similarity": 0.4325,
       "status": "comparison_only_no_accuracy_claim"
     }
   ],
@@ -954,6 +959,6 @@
   "boundaries": [
     "Similarity to an OCR derivative is not ground-truth accuracy.",
     "Critical numeric, unit, negation and table values still require original-page review.",
-    "EasyOCR is installed in the same project runtime and is benchmarked by the companion script; this artifact alone does not choose the primary engine."
+    "This comparison does not choose a primary engine without the Stage 5 truth record."
   ]
 }

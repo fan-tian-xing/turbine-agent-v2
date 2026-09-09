@@ -81,7 +81,15 @@ def audit() -> dict:
             errors.append(f"{item['document_key']} processing page count differs: {processing_summary['page_count']} != {expected}")
         if original_summary["page_count"] != expected:
             errors.append(f"{item['document_key']} original page count differs: {original_summary['page_count']} != {expected}")
-        sample_pages = [int(page["pdf_page"]) for page in item["sample_pages"]]
+        sample_pages = []
+        for page in item["sample_pages"]:
+            physical_page = int(page["physical_page"])
+            pdf_page = int(page["pdf_page"])
+            if physical_page != pdf_page:
+                errors.append(
+                    f"{item['document_key']} physical_page/pdf_page mismatch: {physical_page} != {pdf_page}"
+                )
+            sample_pages.append(physical_page)
         if len(sample_pages) != len(set(sample_pages)):
             errors.append(f"{item['document_key']} sample pages contain duplicates")
         for page in sample_pages:

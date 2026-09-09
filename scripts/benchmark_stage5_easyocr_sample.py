@@ -1,4 +1,4 @@
-"""Run the configured RapidOCR engine on the frozen Stage 5 sample pages."""
+"""Run the complete EasyOCR backup-engine comparison on the frozen Stage 5 sample."""
 
 from __future__ import annotations
 
@@ -9,9 +9,9 @@ import hashlib
 import json
 from pathlib import Path
 
+import easyocr
 import fitz
 import numpy as np
-from rapidocr_onnxruntime import RapidOCR
 
 from generate_ocr_pdf import grouped_text
 from turbine_kg.settings import PROJECT_ROOT, Settings
@@ -46,10 +46,10 @@ def _normalize(text: str) -> str:
     return " ".join(text.split())
 
 
-def _render_ocr(engine: RapidOCR, page) -> str:
+def _render_ocr(reader: easyocr.Reader, page) -> str:
     pixmap = page.get_pixmap(matrix=fitz.Matrix(170 / 72.0, 170 / 72.0), alpha=False)
     image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(pixmap.height, pixmap.width, pixmap.n)
-    result, _ = engine(image)
+    result = reader.readtext(image, detail=1, paragraph=False)
     return grouped_text(result or [])
 
 
@@ -57,7 +57,7 @@ def benchmark() -> dict:
     settings = Settings.from_environment()
     sample = json.loads(SAMPLE_MANIFEST.read_text(encoding="utf-8"))
     assets = _load_jsonl(REGISTRY_ASSETS)
-    engine = RapidOCR()
+    reader = easyocr.Reader(["ch_sim", "en"], gpu=False, verbose=False)
     records = []
     errors = []
     for item in sample["documents"]:
@@ -70,7 +70,7 @@ def benchmark() -> dict:
             try:
                 original_text = _normalize(original_doc[page_number - 1].get_text("text"))
                 existing_text = _normalize(processing_doc[page_number - 1].get_text("text"))
-                fresh_text = _normalize(_render_ocr(engine, original_doc[page_number - 1]))
+                fresh_text = _normalize(_render_ocr(reader, original_doc[page_number - 1]))
                 baseline_text = original_text if original_text else existing_text
                 records.append({
                     "document_key": item["document_key"],
@@ -78,7 +78,7 @@ def benchmark() -> dict:
                     "physical_page": page_number,
                     "categories": sample_page["categories"],
                     "source_has_native_text": bool(original_text),
-                    "fresh_rapidocr": {
+                    "fresh_easyocr": {
                         "char_count": len(fresh_text),
                         "text_sha256": _sha256_text(fresh_text),
                     },
@@ -105,12 +105,14 @@ def benchmark() -> dict:
     return {
         "schema_version": 1,
         "stage": "5",
-        "artifact_kind": "stage5_rapidocr_sample_benchmark",
+        "artifact_kind": "stage5_easyocr_sample_benchmark",
         "audited_at": date.today().isoformat(),
         "engine": {
-            "name": "rapidocr_onnxruntime",
+            "name": "easyocr",
+            "languages": ["ch_sim", "en"],
+            "gpu": False,
             "dpi": 170,
-            "script": "scripts/generate_ocr_pdf.py::grouped_text",
+            "script": "scripts/benchmark_stage5_easyocr_sample.py::grouped_text",
         },
         "scope": "36 frozen Golden Sample pages; comparison baseline only",
         "records": records,
@@ -125,7 +127,7 @@ def benchmark() -> dict:
         "boundaries": [
             "Similarity to an OCR derivative is not ground-truth accuracy.",
             "Critical numeric, unit, negation and table values still require original-page review.",
-            "EasyOCR is installed in the same project runtime and is benchmarked by the companion script; this artifact alone does not choose the primary engine."
+            "This comparison does not choose a primary engine without the Stage 5 truth record.",
         ],
     }
 
@@ -135,7 +137,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "data" / "stage5" / f"stage5_rapidocr_sample_benchmark_{date.today().isoformat()}.json",
+        default=PROJECT_ROOT / "data" / "stage5" / f"stage5_easyocr_sample_benchmark_{date.today().isoformat()}.json",
     )
     args = parser.parse_args()
     result = benchmark()

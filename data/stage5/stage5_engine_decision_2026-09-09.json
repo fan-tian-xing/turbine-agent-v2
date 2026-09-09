@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_engine_decision",
+  "decided_at": "2026-09-09",
+  "selection": {
+    "primary_engine": "rapidocr_onnxruntime",
+    "backup_engine": "easyocr",
+    "primary_use": "扫描件首轮 OCR 与页面基线生成",
+    "backup_use": "低置信度、关键页或双引擎不一致页面的交叉复核"
+  },
+  "comparison": {
+    "rapidocr": {
+      "engine": "rapidocr_onnxruntime",
+      "sample_page_count": 36,
+      "failed_page_count": 0,
+      "native_text_page_count": 12,
+      "scanned_or_derived_page_count": 24,
+      "mean_similarity_to_registered_processing_text": 0.981808,
+      "pages_below_similarity_0_97": 8,
+      "comparison_status": "comparison_ready_for_codex_review"
+    },
+    "easyocr": {
+      "engine": "easyocr",
+      "sample_page_count": 36,
+      "failed_page_count": 0,
+      "native_text_page_count": 12,
+      "scanned_or_derived_page_count": 24,
+      "mean_similarity_to_registered_processing_text": 0.701981,
+      "pages_below_similarity_0_97": 35,
+      "comparison_status": "comparison_ready_for_codex_review"
+    }
+  },
+  "decision_basis": [
+    "两套引擎均在同一项目专用运行环境完成相同的 36 页样本，均为 36/36 页、0 失败。",
+    "RapidOCR 对已登记处理文本的样本平均相似度更高，低于 0.97 的页面更少，因此作为首轮主引擎；EasyOCR 保留为备用交叉复核。",
+    "相似度只用于工程选型和发现疑点，不是 OCR 字符、数字、单位、否定词或表格准确率证明。"
+  ],
+  "quality_boundary": {
+    "original_pdf_is_authority": true,
+    "unresolved_visual_or_table_content_is_quarantined": true,
+    "formal_evidence_generation": "not_stage5_output"
+  },
+  "status": "engine_choice_recorded"
+}

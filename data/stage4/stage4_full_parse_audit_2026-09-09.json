@@ -10,7 +10,7 @@
     "scan_or_invalid_text_source": "parse the registered OCR-derived asset and retain its original asset relation in Document IR"
   },
   "reproducibility_basis": {
-    "audit_script_sha256": "513dc835250c82d021f2e58d1917b4091b19d9872416d26c8cfcc132c1d045aa",
+    "audit_script_sha256": "4dea996af4b504063665595b1bce696fdef633c8b1bdc30b812466c39ef4c1e8",
     "registry_snapshot": {
       "path": "data/registry/source_registry_summary.json",
       "sha256": "140fb6412a1a639fdae30ffde9e49475f1b0210ec1e58b7d7696ceaaf525d925"
@@ -29,11 +29,11 @@
   },
   "expected": {
     "document_count": 5,
-    "logical_page_count": 775
+    "physical_page_count": 775
   },
   "actual": {
     "document_count": 5,
-    "logical_page_count": 775,
+    "physical_page_count": 775,
     "block_count": 3104,
     "source_span_count": 2431,
     "figure_count": 673,
@@ -244,7 +244,7 @@
           11
         ],
         "parsing_run": {
-          "parsing_run_id": "run-1d4efcd0e4f84d458269",
+          "parsing_run_id": "run-05708e3c59054008be27",
           "input_asset_ids": [
             "asset-29ca16b111846e39aabf"
           ],
@@ -255,7 +255,7 @@
           "parser_version": "pymupdf-page-inspector-v1",
           "config_fingerprint": "layout-profile-adaptive-pdf-v1",
           "input_fingerprint": "3e4e60ab0898e41c5a7f7576aa686b3fa5d4a8f4f652ae2ab577780e4c1b52c0",
-          "output_fingerprint": "c438cc22c773c8ea95be8d75a78bcd9944581433b005d267b6636a7387f617a7",
+          "output_fingerprint": "18d10b97394da8a639de48f7d85c60e5c506128d1a2a507c5353d4821a1d0656",
           "status": "succeeded",
           "started_at": null,
           "finished_at": null,
@@ -410,7 +410,7 @@
         },
         "empty_output_pages": [],
         "parsing_run": {
-          "parsing_run_id": "run-f0f67cfb370b45019fe6",
+          "parsing_run_id": "run-6ac82aeac7be40179fe2",
           "input_asset_ids": [
             "asset-dfd1ea84bc8622cede86",
             "asset-ffc1d592a5b4e204578c"
@@ -422,7 +422,7 @@
           "parser_version": "pymupdf-page-inspector-v1",
           "config_fingerprint": "layout-profile-adaptive-pdf-v1",
           "input_fingerprint": "8bec695cd56933299f4d37aa8154c9eb931309e8264d898e395b37981cb9ec14",
-          "output_fingerprint": "6e1fa775e561698464a106ce4227143273ac473a74309128d09442566298586b",
+          "output_fingerprint": "40b48a600247fc4934b1975c8877847b0aba53120ce8a9c31b90f67082dcec09",
           "status": "succeeded",
           "started_at": null,
           "finished_at": null,
@@ -511,7 +511,7 @@
         },
         "empty_output_pages": [],
         "parsing_run": {
-          "parsing_run_id": "run-981e49d934a74ab9aece",
+          "parsing_run_id": "run-b28482c3733f48148a81",
           "input_asset_ids": [
             "asset-e82eacef4b82e06cf31c",
             "asset-d146688100212c0aa1fe"
@@ -523,7 +523,7 @@
           "parser_version": "pymupdf-page-inspector-v1",
           "config_fingerprint": "layout-profile-adaptive-pdf-v1",
           "input_fingerprint": "31542a571e667ee9150905baff5f9439a1f72103674d1b0b1639968daddfd777",
-          "output_fingerprint": "9c84818a483f5c1068dd506247832110a455f5f26ab55979e5015040438a6db4",
+          "output_fingerprint": "4b857ab4b7f793f0231b4acbdf7b336a1e8bcc4ce3410614cc456f6867410e2d",
           "status": "succeeded",
           "started_at": null,
           "finished_at": null,
@@ -1069,7 +1069,7 @@
           31
         ],
         "parsing_run": {
-          "parsing_run_id": "run-f4dae7ae40c24417a178",
+          "parsing_run_id": "run-96fbdf53a9f0401e9c16",
           "input_asset_ids": [
             "asset-6be125e4aa900f01e21b",
             "asset-115e242947e0a4b46ea5"
@@ -1081,7 +1081,7 @@
           "parser_version": "pymupdf-page-inspector-v1",
           "config_fingerprint": "layout-profile-adaptive-pdf-v1",
           "input_fingerprint": "9214c9f7bb21bb4b3a6e7102a3140f425e696caa1f6d9d8c76af2e346d999e6e",
-          "output_fingerprint": "d35e87579fdf68c80a25123cba0911d7ea8c973a49e5f0e6135061db9629035f",
+          "output_fingerprint": "c27ea7f1730d136835dbddce88e503fd13f66928fa1d0f87765008c11f4a16ab",
           "status": "succeeded",
           "started_at": null,
           "finished_at": null,
@@ -1174,7 +1174,7 @@
         },
         "empty_output_pages": [],
         "parsing_run": {
-          "parsing_run_id": "run-29495944c5074a408e67",
+          "parsing_run_id": "run-febb97c5b389417daad6",
           "input_asset_ids": [
             "asset-e4d060422e62fd656770",
             "asset-2e27a3f10284708e2d10"
@@ -1186,7 +1186,7 @@
           "parser_version": "pymupdf-page-inspector-v1",
           "config_fingerprint": "layout-profile-adaptive-pdf-v1",
           "input_fingerprint": "b60689e5b7c2521aa11fda131f72a611a98fe419bd3c8cc4083548ade66432f0",
-          "output_fingerprint": "7b54cc87657a8e2352e020a4a2bf64a62ddfa06308a043935be0b343f4e2ff0a",
+          "output_fingerprint": "e357274351ec951d4c1763b05008391cac9024078528894d9a74fa4cb9b5bf20",
           "status": "succeeded",
           "started_at": null,
           "finished_at": null,

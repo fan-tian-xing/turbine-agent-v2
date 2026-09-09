@@ -414,7 +414,7 @@ def run_audit() -> dict:
         },
         "expected": {
             "document_count": len(manifest["source_documents"]),
-            "logical_page_count": sum(
+            "physical_page_count": sum(
                 int(records[
                     catalog.asset_for_id(item["asset_id"]).derived_from_asset_id
                     or item["asset_id"]
@@ -424,7 +424,7 @@ def run_audit() -> dict:
         },
         "actual": {
             "document_count": len(rows),
-            "logical_page_count": sum(row["output"]["page_count"] for row in rows),
+            "physical_page_count": sum(row["output"]["page_count"] for row in rows),
             "block_count": sum(row["output"]["block_count"] for row in rows),
             "source_span_count": sum(row["output"]["source_span_count"] for row in rows),
             "figure_count": sum(row["output"]["figure_count"] for row in rows),

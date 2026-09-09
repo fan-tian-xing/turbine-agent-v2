@@ -21,6 +21,7 @@
       "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
       "source_scope": {"lifecycle_stage": "installation", "activity": "inspection"},
       "pdf_page_number": 86,
+      "logical_page": "75",
       "review_status": "confirmed",
       "user_confirmation": true,
       "evidence": [
@@ -73,6 +74,7 @@
       "sha256": "4710a8ecf189c75158e87a3e88e97a8943d8854e1b556c5d1d6448ee45d7431f",
       "source_scope": {"model": "N-300-16.7/537/537-8", "equipment": "front_box_sliding_block", "lifecycle_stage": "overhaul", "activity": "lubrication_and_cleaning", "condition": "half_cylinder_state"},
       "pdf_page_number": 73,
+      "logical_page": "3-5-1",
       "review_status": "confirmed",
       "user_confirmation": true,
       "evidence": [
@@ -111,6 +113,7 @@
       "sha256": "24933cf948ee1a77fceb8819a4a5aaa3dcf3da6ec05f5cdcbd473a60e4e1ea22",
       "source_scope": {"equipment": "land_based_fixed_nuclear_power_plant", "lifecycle_stage": "commissioning_and_operation", "activity": "nuclear_safety_management"},
       "pdf_page_number": 1,
+      "logical_page": "3",
       "review_status": "confirmed",
       "user_confirmation": true,
       "evidence": [

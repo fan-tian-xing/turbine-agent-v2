@@ -15,7 +15,7 @@
     "figure_location": {"status": "pass", "evidence": "real native PDF image blocks produce Figure objects with bounded page bboxes"},
     "manual_correction_overlay": {"status": "pass", "evidence": "JSONL overlay reader validates original_text against the exact parser BlockVersion without mutating parser output"},
     "stage3_structural_bridge": {"status": "pass", "evidence": "Registry → PDF → DocumentIR → Stage3 Page/SourceSpan smoke chain"},
-    "test_suite": {"status": "pass", "evidence": "83 pytest tests passed on this implementation"},
+    "test_suite": {"status": "pass", "evidence": "92 pytest tests passed on this implementation"},
     "table_cell_extraction": {"status": "deferred", "evidence": "Table/TableCell contracts and negative validation exist; real row/column extraction remains a Stage 5 responsibility"},
     "human_review_boundary": {"status": "pass", "evidence": "data/stage4/stage4_human_review_2026-09-08.json"},
     "count_reconciliation": {"status": "pass", "evidence": "data/stage4/stage4_count_reconciliation_2026-09-08.json"},

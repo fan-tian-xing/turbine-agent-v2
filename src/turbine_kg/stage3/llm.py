@@ -46,7 +46,10 @@ def _evidence_payload(hits: list[dict]) -> list[dict]:
                     {
                         "evidence_id": item["evidence"]["id"],
                         "quote": item["evidence"]["text"],
-                        "page": item["page"].get("page_number"),
+                        "physical_page": item["page"].get(
+                            "physical_page", item["page"].get("page_number")
+                        ),
+                        "logical_page": item["page"].get("logical_page"),
                         "title": hit["document"]["title"],
                         "relative_path": hit["asset"]["relative_path"],
                     }
@@ -66,9 +69,13 @@ def _prompt(question: str, hits: list[dict]) -> tuple[str, str]:
         "若条件不足，明确指出缺少的条件；涉及起吊、调整、打磨、更换或执行动作时，只能给候选建议，不能授权现场执行。"
         "回答使用中文。必须只返回一个 JSON 对象，不要 Markdown、代码围栏或额外说明。JSON 必须包含 answer 和 claims。"
         "answer 是给用户看的中文回答；claims 是原子结论数组。每个 claim 必须包含：claim_id、claim_type、text、"
-        "statement_id、evidence_ids、page、object_id、context、value、unit、quantities。claim_type 只能是 fact、"
+        "statement_id、evidence_ids、physical_page、logical_page、object_id、context、value、unit、quantities。claim_type 只能是 fact、"
         "conditioned_inference、candidate_recommendation、action_authorization。context 必须复制该结论实际使用的适用条件；"
         "如果使用 applicability 作为同义字段名，也必须提供同样的 JSON 对象，不能省略。"
+        "每个 claim 必须包含 physical_page；logical_page 必须复制对应 Evidence 的逻辑页，"
+        "如果来源没有逻辑页则必须为 null。不得使用旧的 page 字段代替 physical_page。"
+        "如果一个 claim 的 evidence_ids 分布在多个页，必须额外提供 source_locations 数组，"
+        "逐项列出每个物理页和逻辑页；不得只用一个页码代表多个来源页。"
         "每个 claim 的 evidence_ids 必须来自 EVIDENCE_JSON，并且 answer 中必须原样出现这些 evidence_id。"
         "answer 中不得出现 claims.evidence_ids 之外的 Evidence ID；如果 answer 使用两条证据，必须分别在 claims 中列出并绑定。"
     )
@@ -110,6 +117,8 @@ def _validate_llm_payload(payload: dict, hits: list[dict]) -> tuple[str, int, st
             raise ValueError("each LLM claim must be an object")
         if not raw.get("claim_id") or not isinstance(raw.get("text"), str) or not raw["text"].strip():
             raise ValueError("each LLM claim needs claim_id and text")
+        if "page" in raw:
+            raise ValueError("legacy page field is not allowed; use physical_page and logical_page")
         claim_type = raw.get("claim_type")
         statement_id = raw.get("statement_id")
         evidence_ids = raw.get("evidence_ids")
@@ -124,13 +133,36 @@ def _validate_llm_payload(payload: dict, hits: list[dict]) -> tuple[str, int, st
         statement_evidence = set(statement["evidence_ids"])
         if not set(evidence_ids) <= statement_evidence or not set(evidence_ids) <= allowed_evidence:
             raise ValueError(f"LLM claim references unsupported Evidence: {evidence_ids}")
-        source_pages = {
-            item["page"].get("page_number")
+        source_locations = {
+            (
+                item["page"].get("physical_page", item["page"].get("page_number")),
+                item["page"].get("logical_page"),
+            )
             for item in hit["sources"]
             if item["evidence"]["id"] in evidence_ids
         }
-        if raw.get("page") not in source_pages:
-            raise ValueError(f"LLM claim page is not supported for {statement_id}")
+        physical_page = raw.get("physical_page")
+        logical_page = raw.get("logical_page")
+        if (physical_page, logical_page) not in source_locations:
+            raise ValueError(f"LLM claim page location is not supported for {statement_id}")
+        raw_source_locations = raw.get("source_locations")
+        if len(source_locations) > 1:
+            if not isinstance(raw_source_locations, list) or not raw_source_locations:
+                raise ValueError(f"LLM claim needs source_locations for multiple Evidence pages: {statement_id}")
+            normalized_locations = {
+                (item.get("physical_page"), item.get("logical_page"))
+                for item in raw_source_locations
+                if isinstance(item, dict) and "physical_page" in item
+            }
+            if normalized_locations != source_locations:
+                raise ValueError(f"LLM claim source_locations are incomplete for {statement_id}")
+        elif raw_source_locations is not None:
+            if not isinstance(raw_source_locations, list) or {
+                (item.get("physical_page"), item.get("logical_page"))
+                for item in raw_source_locations
+                if isinstance(item, dict) and "physical_page" in item
+            } != source_locations:
+                raise ValueError(f"LLM claim source_locations are unsupported for {statement_id}")
         if raw.get("object_id") != statement["object_id"]:
             raise ValueError(f"LLM claim object mismatch for {statement_id}")
         # Some OpenAI-compatible models use the source vocabulary
@@ -168,7 +200,20 @@ def _validate_llm_payload(payload: dict, hits: list[dict]) -> tuple[str, int, st
     rendered_claims = []
     for raw, result in validated_claims:
         evidence_text = "、".join(raw["evidence_ids"])
-        rendered = f"{raw['text']}（依据：{evidence_text}；第{raw['page']}页）"
+        raw_source_locations = raw.get("source_locations")
+        if raw_source_locations:
+            location_parts = []
+            for item in raw_source_locations:
+                location_part = f"物理页第{item['physical_page']}页"
+                if item.get("logical_page") is not None:
+                    location_part += f"；逻辑页{item['logical_page']}"
+                location_parts.append(location_part)
+            location = "；".join(location_parts)
+        else:
+            location = f"物理页第{raw['physical_page']}页"
+            if raw.get("logical_page") is not None:
+                location += f"；逻辑页{raw['logical_page']}"
+        rendered = f"{raw['text']}（依据：{evidence_text}；{location}）"
         if result.status == "downgraded_candidate":
             rendered += "；not_authorized_for_execution：不得作为现场执行授权。"
         rendered_claims.append(rendered)

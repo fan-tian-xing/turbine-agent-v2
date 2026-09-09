@@ -5,16 +5,19 @@
   "audited_at": "2026-09-09",
   "baseline": "data/stage5/stage5_baseline_benchmark_2026-09-09.json",
   "scope": "Golden Sample table and continuation-table pages only",
-  "candidate_count": 6,
+  "candidate_count": 7,
   "ruled_grid_candidate_count": 4,
   "partial_rule_candidate_count": 2,
+  "table_candidate_count": 6,
+  "complex_layout_not_table_count": 1,
   "candidates": [
     {
       "document_key": "DL5190.3",
       "pdf_page": 86,
+      "physical_page": 86,
       "sample_categories": [
         "dense_clause_text",
-        "table_candidate"
+        "complex_layout"
       ],
       "page_mode": "native_text",
       "pymupdf_table_count": 0,
@@ -30,14 +33,47 @@
         "estimated_table_regions": [],
         "ruled_table_candidate": false
       },
+      "status": "complex_layout_not_table_reviewed",
+      "cell_text_accuracy_status": "not_applicable_not_table",
+      "review_scope": "complex_layout_not_table",
+      "user_escalation": false,
+      "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
+    },
+    {
+      "document_key": "DL5190.3",
+      "pdf_page": 113,
+      "physical_page": 113,
+      "sample_categories": [
+        "figure",
+        "caption",
+        "table",
+        "numeric_and_unit"
+      ],
+      "page_mode": "native_text",
+      "pymupdf_table_count": 1,
+      "visual_table_metrics": {
+        "horizontal_rule_count": 4,
+        "vertical_rule_count": 0,
+        "horizontal_rule_positions_px": [
+          131,
+          147,
+          163,
+          179
+        ],
+        "vertical_rule_positions_px": [],
+        "estimated_table_regions": [],
+        "ruled_table_candidate": false
+      },
       "status": "partial_rules_manual_column_boundary_review_pending",
       "cell_text_accuracy_status": "not_scored_manual_truth_required",
+      "review_scope": "table_candidate",
       "user_escalation": false,
       "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
     },
     {
       "document_key": "D300N",
       "pdf_page": 50,
+      "physical_page": 50,
       "sample_categories": [
         "table",
         "scan_page",
@@ -79,12 +115,14 @@
       },
       "status": "ruled_grid_candidate_manual_cell_truth_pending",
       "cell_text_accuracy_status": "not_scored_manual_truth_required",
+      "review_scope": "table_candidate",
       "user_escalation": false,
       "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
     },
     {
       "document_key": "DLT863",
       "pdf_page": 27,
+      "physical_page": 27,
       "sample_categories": [
         "table",
         "scan_page",
@@ -155,12 +193,14 @@
       },
       "status": "ruled_grid_candidate_manual_cell_truth_pending",
       "cell_text_accuracy_status": "not_scored_manual_truth_required",
+      "review_scope": "table_candidate",
       "user_escalation": false,
       "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
     },
     {
       "document_key": "DLT863",
       "pdf_page": 28,
+      "physical_page": 28,
       "sample_categories": [
         "continuation_table",
         "boundary_page",
@@ -236,12 +276,14 @@
       },
       "status": "ruled_grid_candidate_manual_cell_truth_pending",
       "cell_text_accuracy_status": "not_scored_manual_truth_required",
+      "review_scope": "table_candidate",
       "user_escalation": false,
       "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
     },
     {
       "document_key": "HAF103",
       "pdf_page": 29,
+      "physical_page": 29,
       "sample_categories": [
         "table",
         "numeric_and_unit",
@@ -264,12 +306,14 @@
       },
       "status": "partial_rules_manual_column_boundary_review_pending",
       "cell_text_accuracy_status": "not_scored_manual_truth_required",
+      "review_scope": "table_candidate",
       "user_escalation": false,
       "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
     },
     {
       "document_key": "auxiliary_installation_book",
       "pdf_page": 480,
+      "physical_page": 480,
       "sample_categories": [
         "table",
         "boundary_page",
@@ -316,11 +360,12 @@
       },
       "status": "ruled_grid_candidate_manual_cell_truth_pending",
       "cell_text_accuracy_status": "not_scored_manual_truth_required",
+      "review_scope": "table_candidate",
       "user_escalation": false,
       "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page."
     }
   ],
-  "status": "table_structure_baseline_ready_manual_cell_truth_pending",
+  "status": "table_structure_baseline_ready_original_page_truth_recorded",
   "boundaries": [
     "Rule detection estimates candidate regions; it does not establish cell text or row/column accuracy.",
     "PyMuPDF returning zero tables is recorded as detector output, not as proof that no table exists.",

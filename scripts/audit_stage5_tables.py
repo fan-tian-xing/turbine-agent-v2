@@ -18,27 +18,35 @@ def audit() -> dict:
         record
         for record in baseline["page_records"]
         if record["is_golden_sample"]
-        and set(record["sample_categories"]) & {"table", "continuation_table", "table_candidate"}
+        and set(record["sample_categories"]) & {"table", "continuation_table", "table_candidate", "complex_layout"}
     ]
     candidates = []
     for record in records:
         metrics = record["processing_metrics"]["visual_table_metrics"] or {}
         has_grid = bool(metrics.get("ruled_table_candidate"))
-        if has_grid:
+        if "complex_layout" in record["sample_categories"]:
+            status = "complex_layout_not_table_reviewed"
+            cell_status = "not_applicable_not_table"
+        elif has_grid:
             status = "ruled_grid_candidate_manual_cell_truth_pending"
+            cell_status = "not_scored_manual_truth_required"
         elif metrics.get("horizontal_rule_count", 0) >= 2:
             status = "partial_rules_manual_column_boundary_review_pending"
+            cell_status = "not_scored_manual_truth_required"
         else:
             status = "no_rule_detected_manual_layout_review_pending"
+            cell_status = "not_scored_manual_truth_required"
         candidates.append({
             "document_key": record["document_key"],
             "pdf_page": record["pdf_page"],
+            "physical_page": record.get("physical_page", record["pdf_page"]),
             "sample_categories": record["sample_categories"],
             "page_mode": record["page_mode"],
             "pymupdf_table_count": record["processing_metrics"]["table_count_detected"],
             "visual_table_metrics": metrics,
             "status": status,
-            "cell_text_accuracy_status": "not_scored_manual_truth_required",
+            "cell_text_accuracy_status": cell_status,
+            "review_scope": "complex_layout_not_table" if "complex_layout" in record["sample_categories"] else "table_candidate",
             "user_escalation": False,
             "user_escalation_rule": "Escalate only if Codex cannot resolve a numeric, unit, negation, cell-boundary, or continuation-table question from the original page.",
         })
@@ -52,8 +60,10 @@ def audit() -> dict:
         "candidate_count": len(candidates),
         "ruled_grid_candidate_count": sum(item["status"].startswith("ruled_grid") for item in candidates),
         "partial_rule_candidate_count": sum(item["status"].startswith("partial_rules") for item in candidates),
+        "table_candidate_count": sum(item["review_scope"] == "table_candidate" for item in candidates),
+        "complex_layout_not_table_count": sum(item["review_scope"] == "complex_layout_not_table" for item in candidates),
         "candidates": candidates,
-        "status": "table_structure_baseline_ready_manual_cell_truth_pending",
+        "status": "table_structure_baseline_ready_original_page_truth_recorded",
         "boundaries": [
             "Rule detection estimates candidate regions; it does not establish cell text or row/column accuracy.",
             "PyMuPDF returning zero tables is recorded as detector output, not as proof that no table exists.",

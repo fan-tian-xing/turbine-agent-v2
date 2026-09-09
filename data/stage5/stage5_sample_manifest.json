@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_sample_manifest",
+  "status": "frozen_for_initial_review",
+  "created_at": "2026-09-09",
+  "scope": "the five Stage 3 research-trial processing units only",
+  "formal_release": false,
+  "source_registry_snapshot": {
+    "path": "data/registry/source_registry_summary.json",
+    "sha256": "140fb6412a1a639fdae30ffde9e49475f1b0210ec1e58b7d7696ceaaf525d925"
+  },
+  "stage3_manifest": "data/stage3/initial_batch_manifest.json",
+  "sample_page_count": 36,
+  "sample_policy": {
+    "minimum_required": 30,
+    "target": 36,
+    "allocation": {
+      "DL5190.3": 6,
+      "D300N": 6,
+      "DLT863": 6,
+      "HAF103": 6,
+      "auxiliary_installation_book": 12
+    },
+    "coverage": [
+      "ordinary text",
+      "numeric and decimal values",
+      "units and tolerances",
+      "negative or exclusion wording",
+      "multi-column or dense clauses",
+      "landscape or rotated pages",
+      "tables and continuation tables",
+      "figures and captions",
+      "blank or boundary pages"
+    ],
+    "stage3_pages_are_prior_evidence_only": true
+  },
+  "documents": [
+    {
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "processing_asset_id": "asset-29ca16b111846e39aabf",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "page_count": 141,
+      "sample_pages": [
+        {"pdf_page": 1, "categories": ["cover", "document_identity"]},
+        {"pdf_page": 14, "categories": ["ordinary_text", "numeric_and_unit"]},
+        {"pdf_page": 25, "categories": ["figure", "caption", "bbox"]},
+        {"pdf_page": 42, "categories": ["dense_clause_text", "numeric_and_unit"]},
+        {"pdf_page": 86, "categories": ["dense_clause_text", "table_candidate"]},
+        {"pdf_page": 113, "categories": ["figure", "caption", "numeric_and_unit"]}
+      ],
+      "visual_review_status": "reviewed_by_codex_against_original_pages"
+    },
+    {
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+      "original_relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+      "page_count": 94,
+      "sample_pages": [
+        {"pdf_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
+        {"pdf_page": 2, "categories": ["document_identity", "scan_page"]},
+        {"pdf_page": 38, "categories": ["figure", "caption", "scan_page"]},
+        {"pdf_page": 50, "categories": ["table", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 73, "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 94, "categories": ["boundary_page", "blank_or_low_text", "scan_page"]}
+      ],
+      "visual_review_status": "reviewed_by_codex_against_original_pages"
+    },
+    {
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_relative_path": "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf",
+      "original_relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+      "page_count": 28,
+      "sample_pages": [
+        {"pdf_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
+        {"pdf_page": 2, "categories": ["contents", "scan_page"]},
+        {"pdf_page": 14, "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 15, "categories": ["dense_clause_text", "negative_word_candidate", "scan_page"]},
+        {"pdf_page": 27, "categories": ["table", "scan_page", "numeric_and_unit"]},
+        {"pdf_page": 28, "categories": ["continuation_table", "boundary_page", "scan_page"]}
+      ],
+      "visual_review_status": "reviewed_by_codex_against_original_pages"
+    },
+    {
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+      "original_relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
+      "page_count": 32,
+      "sample_pages": [
+        {"pdf_page": 1, "categories": ["scope", "document_identity", "scan_page"]},
+        {"pdf_page": 11, "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
+        {"pdf_page": 12, "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
+        {"pdf_page": 16, "categories": ["dense_clause_text", "scan_page"]},
+        {"pdf_page": 29, "categories": ["table", "numeric_and_unit", "scan_page"]},
+        {"pdf_page": 32, "categories": ["boundary_page", "ordinary_text", "scan_page"]}
+      ],
+      "visual_review_status": "reviewed_by_codex_against_original_pages"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_relative_path": "OCR/汽轮机辅机安装（第二版）(OCR).pdf",
+      "original_relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+      "page_count": 480,
+      "sample_pages": [
+        {"pdf_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
+        {"pdf_page": 12, "categories": ["contents", "rotated_page", "scan_page"]},
+        {"pdf_page": 31, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 32, "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 64, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 120, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 180, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 244, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 300, "categories": ["figure", "caption", "rotated_page", "scan_page"]},
+        {"pdf_page": 360, "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 468, "categories": ["ordinary_text", "rotated_page", "scan_page"]},
+        {"pdf_page": 480, "categories": ["table", "boundary_page", "rotated_page", "scan_page"]}
+      ],
+      "visual_review_status": "reviewed_by_codex_against_original_pages"
+    }
+  ],
+  "user_review_boundary": {
+    "original_completeness": "handled_by_codex; no_user_confirmation_required",
+    "uncertain_pages": "codex_first_pass; ask_user_only_for_unresolved_high_risk_pages",
+    "engine_and_final_threshold_decision": "ask_user_after_benchmark_comparison"
+  },
+  "next_step": "run_stage5_input_audit_then_prepare_ocr_layout_table_benchmark"
+}

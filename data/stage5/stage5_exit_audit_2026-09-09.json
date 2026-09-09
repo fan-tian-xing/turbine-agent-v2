@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_exit_audit",
+  "audited_at": "2026-09-09",
+  "status": "awaiting_owner_quality_decisions",
+  "checks": {
+    "sample_manifest_five_documents": true,
+    "sample_manifest_36_pages": true,
+    "input_audit_pass": true,
+    "full_baseline_775_pages": true,
+    "full_baseline_zero_failures": true,
+    "rapidocr_sample_36_pages": true,
+    "rapidocr_zero_failures": true,
+    "table_candidates_six_pages": true
+  },
+  "completed_scope": {
+    "document_count": 5,
+    "page_count": 775,
+    "golden_sample_page_count": 36,
+    "rapidocr_sample_page_count": 36,
+    "table_candidate_count": 6,
+    "low_text_record_count_all_pages": 3,
+    "low_text_candidate_count_excluding_expected_exception_modes": 1
+  },
+  "low_similarity_scanned_pages": [
+    {
+      "document_key": "D300N",
+      "pdf_page": 94,
+      "fresh_vs_registered_similarity": 0.953846,
+      "status": "codex_first_pass_complete_user_escalation_only_if_uncertain"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "pdf_page": 300,
+      "fresh_vs_registered_similarity": 0.898286,
+      "status": "codex_first_pass_complete_user_escalation_only_if_uncertain"
+    }
+  ],
+  "blocking_items": [
+    "36页样本的数字、小数点、单位、否定词和阅读顺序尚未形成正式人工真值准确率。",
+    "6页表格/续表尚未完成单元格文字、表头、行列、合并单元格和续表关系真值。",
+    "当前只有 RapidOCR 可用，主引擎、备用交叉复核引擎和最终质量阈值尚未确定。",
+    "低相似度扫描页的图示/公式内容尚需决定是否进入后续 Evidence 流程。"
+  ],
+  "owner_review_needed_in_chat": [
+    "确认扫描件主引擎与备用交叉复核引擎；当前可用引擎只有 RapidOCR。",
+    "确认数字、单位、否定词、表格行列和 bbox 的最低合格阈值。",
+    "确认 6 页候选表格的单元格真值及 DLT863 第 27–28 页续表关系。",
+    "确认低相似度扫描页是否允许进入后续 Evidence 流程。",
+    "确认低文本页的统计分母规则：全量记录 3 页，排除 review_required/scan_only 后候选 1 页。"
+  ],
+  "boundaries": [
+    "本审计不把 RapidOCR 与既有文本的相似度当作 OCR 准确率。",
+    "规则线检测只产生表格候选区域，不代表单元格解析已通过。",
+    "阶段 5 未关闭，不能进入依赖阶段而不保留上述门禁。"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "stage": "2",
+  "artifact_kind": "stage2_exit_audit",
+  "audited_at": "2026-09-09",
+  "status": "complete",
+  "closure_status": "closed",
+  "formal_release": false,
+  "checks": {
+    "registry_baseline": {
+      "status": "pass",
+      "evidence": "data/registry/source_registry_summary.json records 48 physical assets, 44 logical documents and the configured SOURCE_ROOT/OCR_DERIVED_ROOT boundary."
+    },
+    "identity_and_revision_contract": {
+      "status": "pass",
+      "evidence": "source_assets.jsonl, source_documents.jsonl, config/revision_identity.tsv and the Registry contract tests keep physical Asset, logical document and controlled Revision distinct."
+    },
+    "duplicate_and_derivative_relations": {
+      "status": "pass",
+      "evidence": "source_duplicate_relations.jsonl and source_duplicate_groups.jsonl materialize controlled duplicate and OCR-derivative relationships with stable asset IDs."
+    },
+    "review_queue_and_scope_records": {
+      "status": "pass",
+      "evidence": "source_review_queue.jsonl retains unresolved review items, while the selected sources record identity, completeness, applicability, source scope and text-adapter decisions without silently widening scope."
+    },
+    "stage2a_registry_construction": {
+      "status": "pass",
+      "evidence": "Registry builder, source allowlist checks, schemas, snapshot tests and summary/count reconciliation are present and reproducible."
+    },
+    "stage2b_research_trial_admission": {
+      "status": "pass",
+      "evidence": "data/registry/stage2_source_selection.json records 5 selected processing units with blocking_open_reviews=0 and validated text-adapter status; data/stage3/initial_batch_manifest.json freezes the Stage 3 research-trial pages."
+    },
+    "formal_first_batch_admission": {
+      "status": "deferred_to_stage15",
+      "evidence": "Stage 2B selection is a research-trial admission only. The formal First Batch Admission Gate remains a separate Stage 15 deliverable."
+    }
+  },
+  "remaining_stage2_gate": [],
+  "next_allowed_work": [
+    "Stage 3 trial and Stage 4 general document-structure work may use the admitted research-trial scope",
+    "Stage 15 must repeat formal first-batch admission before Release-bound processing"
+  ]
+}

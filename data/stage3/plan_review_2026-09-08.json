@@ -1,6 +1,8 @@
 {
   "schema_version": 1,
+  "record_status": "historical_review",
   "review_date": "2026-09-08",
+  "superseded_by": "data/stage3/stage3_exit_audit.json",
   "scope": "总计划.md 阶段0-3退出条件、阶段4-22依赖顺序与当前实现的一致性复盘",
   "overall_conclusion": "总体路线合理，阶段0-2可关闭；阶段3核心研发闭环、Registry结构化适用范围链和Claim组装边界已完成。实时LLM记录仍需一次可重放的独立验证后才能关闭严格外部调用门禁；阶段4设计可开始，但不代表阶段3已无条件完全关闭。",
   "non_blocking_maintenance_items": [

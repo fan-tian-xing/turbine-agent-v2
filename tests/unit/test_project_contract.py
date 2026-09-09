@@ -25,3 +25,37 @@ def test_compose_uses_isolated_names_ports_and_mounts():
         "cypher-shell",
     ):
         assert expected in compose
+
+
+def test_ocr_output_path_is_bound_to_configured_derivative_root(tmp_path: Path):
+    from scripts.generate_ocr_pdf import validate_output_path
+
+    root = tmp_path / "ocr"
+    output = validate_output_path(root / "derived.pdf", root)
+
+    assert output == (root / "derived.pdf").resolve()
+
+
+def test_ocr_output_path_rejects_source_or_arbitrary_locations(tmp_path: Path):
+    from scripts.generate_ocr_pdf import validate_output_path
+
+    root = tmp_path / "ocr"
+    for output in (tmp_path / "source.pdf", tmp_path / "elsewhere" / "derived.pdf"):
+        try:
+            validate_output_path(output, root)
+        except ValueError as exc:
+            assert "OCR_DERIVED_ROOT" in str(exc)
+        else:
+            raise AssertionError("OCR output escaped the configured derivative root")
+
+
+def test_ocr_font_path_is_explicitly_configured(monkeypatch, tmp_path: Path):
+    from scripts.generate_ocr_pdf import default_font_file
+
+    monkeypatch.delenv("OCR_FONT_FILE", raising=False)
+    assert default_font_file() is None
+
+    font = tmp_path / "font.ttf"
+    font.write_bytes(b"font")
+    monkeypatch.setenv("OCR_FONT_FILE", str(font))
+    assert default_font_file() == font.resolve()

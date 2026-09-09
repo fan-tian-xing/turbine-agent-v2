@@ -45,7 +45,7 @@
     },
     "regression_suite": {
       "status": "pass",
-      "evidence": "80 pytest tests passed after the final changes."
+      "evidence": "83 pytest tests passed after the final changes."
     },
     "table_cell_extraction": {
       "status": "deferred_to_stage5",
@@ -54,6 +54,10 @@
     "ocr_accuracy_benchmark": {
       "status": "deferred_to_stage5",
       "evidence": "The full structural parse does not claim OCR character, number, unit, or layout accuracy."
+    },
+    "dead_code_orphan_output_review": {
+      "status": "pass",
+      "evidence": "data/stage4/stage4_dead_code_orphan_audit.json records the scoped Stage 4 module/output review."
     }
   },
   "next_stage_allowed": "Stage 5 preparation and formal OCR benchmarking may proceed under the Stage 5 gates."

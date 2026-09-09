@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage4_dead_code_orphan_audit",
+  "audited_at": "2026-09-09",
+  "scope": [
+    "src/turbine_kg/documents/",
+    "src/turbine_kg/stage3/document_compat.py",
+    "scripts/audit_stage4_full_parse.py",
+    "tests/documents/",
+    "tests/stage3/test_document_compat.py"
+  ],
+  "status": "pass",
+  "findings": [
+    {
+      "kind": "module_consumption",
+      "status": "pass",
+      "evidence": "Document, Revision, Asset, Page, ParsingRun, BlockVersion, Table, Figure, SourceSpan, catalog and PDF parser modules are imported by the registered-PDF pipeline, CLI, or their regression tests."
+    },
+    {
+      "kind": "script_consumption",
+      "status": "pass",
+      "evidence": "scripts/audit_stage4_full_parse.py produces the full-parse and exception-review artifacts and is referenced by the Stage 4 run instructions and exit audits."
+    },
+    {
+      "kind": "output_consumption",
+      "status": "pass",
+      "evidence": "Stage 4 JSON outputs are referenced by README/exit-audit records or consumed by the corresponding regression checks; no orphan output directory or unreferenced release-like artifact was found in the scoped Stage 4 tree."
+    },
+    {
+      "kind": "stage_boundary",
+      "status": "pass",
+      "evidence": "OCR accuracy, Golden Sample scoring and real table row/column recovery remain explicitly deferred to Stage 5; Stage 4 does not claim those outcomes."
+    }
+  ],
+  "manual_static_review": true,
+  "automated_dead_code_detector": false,
+  "conclusion": "No scoped Stage 4 dead-code or orphan-output blocker was identified."
+}

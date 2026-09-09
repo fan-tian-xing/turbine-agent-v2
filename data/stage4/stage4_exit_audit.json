@@ -3,7 +3,7 @@
   "stage": "4",
   "status": "complete",
   "closure_status": "closed",
-  "audited_at": "2026-09-08",
+  "audited_at": "2026-09-09",
   "formal_release": false,
   "checks": {
     "document_ir_contract": {"status": "pass", "evidence": "config/document_ir_contract.json and runtime validation"},
@@ -15,13 +15,14 @@
     "figure_location": {"status": "pass", "evidence": "real native PDF image blocks produce Figure objects with bounded page bboxes"},
     "manual_correction_overlay": {"status": "pass", "evidence": "JSONL overlay reader validates original_text against the exact parser BlockVersion without mutating parser output"},
     "stage3_structural_bridge": {"status": "pass", "evidence": "Registry → PDF → DocumentIR → Stage3 Page/SourceSpan smoke chain"},
-    "test_suite": {"status": "pass", "evidence": "80 pytest tests passed on this implementation"},
+    "test_suite": {"status": "pass", "evidence": "83 pytest tests passed on this implementation"},
     "table_cell_extraction": {"status": "deferred", "evidence": "Table/TableCell contracts and negative validation exist; real row/column extraction remains a Stage 5 responsibility"},
     "human_review_boundary": {"status": "pass", "evidence": "data/stage4/stage4_human_review_2026-09-08.json"},
     "count_reconciliation": {"status": "pass", "evidence": "data/stage4/stage4_count_reconciliation_2026-09-08.json"},
     "final_smoke_replay": {"status": "pass", "evidence": "5 assets, 15 sampled pages, 3 native_text pages, 12 mixed pages, 0 failures"},
     "final_exit_audit": {"status": "complete", "evidence": "data/stage4/stage4_final_exit_audit_2026-09-09.json"},
-    "ocr_benchmark": {"status": "deferred", "evidence": "30-page Golden Sample and engine comparison belong to Stage 5"}
+    "ocr_benchmark": {"status": "deferred", "evidence": "30-page Golden Sample and engine comparison belong to Stage 5"},
+    "dead_code_orphan_output_review": {"status": "pass", "evidence": "data/stage4/stage4_dead_code_orphan_audit.json"}
   },
   "remaining_stage4_gate": [],
   "next_allowed_work": [

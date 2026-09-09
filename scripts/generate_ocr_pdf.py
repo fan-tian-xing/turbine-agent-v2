@@ -12,6 +12,8 @@ import fitz
 import numpy as np
 from rapidocr_onnxruntime import RapidOCR
 
+from turbine_kg.settings import Settings
+
 
 def grouped_text(result: list) -> str:
     if not result:
@@ -35,13 +37,26 @@ def grouped_text(result: list) -> str:
 
 
 def default_font_file() -> Path | None:
-    candidates = [
-        Path(os.environ.get("OCR_FONT_FILE", "")),
-        Path(r"C:\Windows\Fonts\simhei.ttf"),
-        Path(r"C:\Windows\Fonts\msyh.ttc"),
-        Path(r"/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
-    ]
-    return next((path for path in candidates if str(path) and path.is_file()), None)
+    configured = os.environ.get("OCR_FONT_FILE", "").strip()
+    if not configured:
+        return None
+    path = Path(configured).expanduser().resolve()
+    return path if path.is_file() else None
+
+
+def validate_output_path(output: Path, ocr_derived_root: Path | None = None) -> Path:
+    """Keep generated OCR derivatives inside the configured derivative root."""
+    root = (ocr_derived_root or Settings.from_environment().ocr_derived_root).resolve()
+    resolved_output = output.expanduser().resolve()
+    try:
+        resolved_output.relative_to(root)
+    except ValueError as exc:
+        raise ValueError(
+            f"OCR output must be inside OCR_DERIVED_ROOT ({root}), got {resolved_output}"
+        ) from exc
+    if resolved_output == root:
+        raise ValueError("OCR output must be a file below OCR_DERIVED_ROOT")
+    return resolved_output
 
 
 def patch_unicode_map(document: fitz.Document, page_texts: list[str]) -> None:
@@ -124,6 +139,7 @@ def generate(
     font_file: Path | None,
     corrections_file: Path | None = None,
 ) -> None:
+    output = validate_output_path(output)
     source_doc = fitz.open(source)
     output.parent.mkdir(parents=True, exist_ok=True)
     output_doc = fitz.open()

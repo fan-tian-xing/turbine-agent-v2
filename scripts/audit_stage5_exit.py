@@ -11,24 +11,34 @@ from turbine_kg.settings import PROJECT_ROOT
 
 STAGE5_ROOT = PROJECT_ROOT / "data" / "stage5"
 TODAY = date.today().isoformat()
+FROZEN_REVIEW_DATE = "2026-09-09"
 
 
 def read(name: str) -> dict:
-    return json.loads((STAGE5_ROOT / name).read_text(encoding="utf-8"))
+    path = STAGE5_ROOT / name
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def read_latest(pattern: str) -> tuple[Path, dict]:
+    candidates = sorted(STAGE5_ROOT.glob(pattern), reverse=True)
+    path = candidates[0] if candidates else None
+    if path is None:
+        raise FileNotFoundError(f"no Stage 5 artifact matches {pattern}")
+    return path, json.loads(path.read_text(encoding="utf-8"))
 
 
 def audit() -> dict:
-    input_audit = read(f"stage5_input_audit_{TODAY}.json")
-    baseline = read(f"stage5_baseline_benchmark_{TODAY}.json")
-    rapidocr = read(f"stage5_rapidocr_sample_benchmark_{TODAY}.json")
-    easyocr = read(f"stage5_easyocr_sample_benchmark_{TODAY}.json")
-    engine_decision = read(f"stage5_engine_decision_{TODAY}.json")
-    tables = read(f"stage5_table_baseline_{TODAY}.json")
-    table_truth = read(f"stage5_table_truth_review_{TODAY}.json")
-    page_identity = read(f"stage5_page_identity_audit_{TODAY}.json")
+    input_audit_path, input_audit = read_latest("stage5_input_audit_*.json")
+    baseline_path, baseline = read_latest("stage5_baseline_benchmark_*.json")
+    rapidocr_path, rapidocr = read_latest("stage5_rapidocr_sample_benchmark_*.json")
+    engine_decision_path, engine_decision = read_latest("stage5_engine_decision_*.json")
+    tables = read(f"stage5_table_baseline_{FROZEN_REVIEW_DATE}.json")
+    table_truth = read(f"stage5_table_truth_review_{FROZEN_REVIEW_DATE}.json")
+    page_identity = read(f"stage5_page_identity_audit_{FROZEN_REVIEW_DATE}.json")
     sample = read("stage5_sample_manifest.json")
-    golden_review_path = STAGE5_ROOT / f"stage5_golden_sample_review_{TODAY}.json"
+    golden_review_path = STAGE5_ROOT / f"stage5_golden_sample_review_{FROZEN_REVIEW_DATE}.json"
     golden_review = json.loads(golden_review_path.read_text(encoding="utf-8")) if golden_review_path.exists() else None
+    quality_path, quality = read_latest("stage5_quality_benchmark_*.json")
     low_similarity_scanned = [
         {
             "document_key": item["document_key"],
@@ -52,11 +62,8 @@ def audit() -> dict:
         "full_baseline_zero_failures": baseline["actual"]["failed_page_count"] == 0,
         "rapidocr_sample_36_pages": rapidocr["actual"]["sample_page_count"] == 36,
         "rapidocr_zero_failures": rapidocr["actual"]["failed_page_count"] == 0,
-        "easyocr_sample_36_pages": easyocr["actual"]["sample_page_count"] == 36,
-        "easyocr_zero_failures": easyocr["actual"]["failed_page_count"] == 0,
         "engine_choice_recorded": (
             engine_decision["selection"]["primary_engine"] == "rapidocr_onnxruntime"
-            and engine_decision["selection"]["backup_engine"] == "easyocr"
         ),
         "table_candidate_scope_corrected": (
             tables["candidate_count"] == 7
@@ -90,6 +97,13 @@ def audit() -> dict:
             and golden_review.get("summary", {}).get("quarantined_structured_pages") == 6
         ),
         "page_identity_reconciled": page_identity["status"] == "page_identity_reconciled" and all(item["source_page_visual_match"] for item in page_identity["records"]),
+        "original_pdf_quality_benchmark_recorded": bool(
+            quality
+            and quality.get("status") == "complete_with_quarantine"
+            and quality.get("sample_page_count") == sample["sample_page_count"]
+            and not quality.get("errors")
+            and quality.get("table_quality", {}).get("quarantine_coverage") == "6/6"
+        ),
     }
     return {
         "schema_version": 1,
@@ -97,6 +111,8 @@ def audit() -> dict:
         "artifact_kind": "stage5_exit_audit",
         "audited_at": TODAY,
         "status": "complete" if all(checks.values()) else "awaiting_golden_sample_review",
+        "closure_status": "closed_with_quarantine" if all(checks.values()) else "open",
+        "formal_release": False,
         "owner_confirmed_quality_policy": {
             "content_must_match_original_exactly": True,
             "critical_tokens": ["Chinese characters", "digits", "decimal points", "units", "negation terms"],
@@ -110,7 +126,6 @@ def audit() -> dict:
             "page_count": baseline["actual"]["page_count"],
             "golden_sample_page_count": sample["sample_page_count"],
             "rapidocr_sample_page_count": rapidocr["actual"]["sample_page_count"],
-            "easyocr_sample_page_count": easyocr["actual"]["sample_page_count"],
             "table_candidate_count": tables["candidate_count"],
             "actual_table_page_count": tables["table_candidate_count"],
             "complex_layout_not_table_count": tables["complex_layout_not_table_count"],
@@ -119,12 +134,38 @@ def audit() -> dict:
             "low_text_candidate_count_excluding_expected_exception_modes": baseline["actual"]["low_text_candidate_count_excluding_expected_exception_modes"],
         },
         "low_similarity_scanned_pages": low_similarity_scanned,
+        "quality_benchmark": (
+            {
+                "path": str(quality_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+                "status": quality["status"],
+                "authority": quality["authority"],
+                "rapidocr": quality["engines"]["rapidocr"],
+                "table_quality": quality["table_quality"],
+            }
+            if quality
+            else {"status": "not_run"}
+        ),
+        "audit_mode": "frozen_stage5_artifact_read_only",
+        "automatic_recheck": False,
+        "manual_recheck_trigger": "仅在负责人明确要求或主动确认原始资料/OCR代码发生变化时重新执行阶段5复核",
+        "artifact_provenance": {
+            "input_fingerprint": rapidocr.get("input_fingerprint"),
+            "input_audit": str(input_audit_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+            "baseline": str(baseline_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+            "rapidocr": str(rapidocr_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+            "engine_decision": str(engine_decision_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+            "matched_by_input_fingerprint": False,
+        },
         "blocking_items": [
             "36页 Golden Sample 逐页视觉复核记录尚未形成。",
-        ] if not checks["golden_sample_visual_review_complete"] else [],
+        ] if not checks["golden_sample_visual_review_complete"] else (
+            ["Original PDF quality benchmark has not completed."]
+            if not checks["original_pdf_quality_benchmark_recorded"]
+            else []
+        ),
         "owner_review_needed_in_chat": [],
         "boundaries": [
-            "本审计不把 RapidOCR 或 EasyOCR 与既有文本的相似度当作 OCR 准确率。",
+            "本审计不把 RapidOCR 与既有文本的相似度当作 OCR 准确率。",
             "规则线检测只产生表格候选区域，不代表单元格解析已通过。",
             "表格或图示无法可靠结构化时，只保留原始页视觉依据并隔离出正式 Evidence 流程。",
         ],

@@ -5,9 +5,9 @@
   "closure_status": "closed",
   "formal_release": false,
   "audited_at": "2026-09-09",
-  "stage_0_1_2": "complete",
+  "stage_0_1_2": "stage_0_pending_v1_reconciliation",
   "checks": {
-    "fixture_questions_and_local_tests": {"status": "pass", "evidence": "36 Stage 3-scoped pytest tests passed; 20 public/synthetic questions; 92 tests passed in the full repository suite; external source snapshot test is explicitly local-input gated"},
+    "fixture_questions_and_local_tests": {"status": "pass", "evidence": "36 Stage 3-scoped pytest tests passed; 20 public/synthetic questions; the full repository suite passed at audit time; external source snapshot test is explicitly local-input gated"},
     "fixture_roles": {"status": "pass", "evidence": "manufacturer_manual, standard_or_regulation, training_background"},
     "vertical_traceability_loop": {"status": "pass", "evidence": "synthetic corpus plus 3 user-confirmed real evidence groups; projection now includes Equipment/Component/Process/Procedure/Step/QuantityValue"},
     "applicability_matching": {"status": "pass", "evidence": "positive, negative, missing, partial and source-scope-boundary tests; confirmed real corpus now enforces Registry structured scope ⊇ confirmed source scope ⊇ Statement scope"},

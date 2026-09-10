@@ -1,4 +1,4 @@
-"""Verify that the project runtime contains and can execute all required OCR/PDF libraries."""
+"""Verify that the project runtime contains and can execute required OCR/PDF libraries."""
 
 from __future__ import annotations
 
@@ -24,9 +24,6 @@ REQUIRED_MODULES = {
     "pymupdf": "pymupdf",
     "fitz_compat": "fitz",
     "rapidocr": "rapidocr_onnxruntime",
-    "easyocr": "easyocr",
-    "torch": "torch",
-    "torchvision": "torchvision",
     "onnxruntime": "onnxruntime",
     "pytest": "pytest",
 }
@@ -36,9 +33,6 @@ PACKAGE_NAMES = {
     "opencv-python": "opencv-python",
     "pymupdf": "PyMuPDF",
     "rapidocr-onnxruntime": "rapidocr_onnxruntime",
-    "easyocr": "easyocr",
-    "torch": "torch",
-    "torchvision": "torchvision",
     "onnxruntime": "onnxruntime",
     "pytest": "pytest",
 }
@@ -67,7 +61,6 @@ def package_versions() -> dict[str, str | None]:
 
 def engine_smoke() -> dict:
     import cv2
-    import easyocr
     from rapidocr_onnxruntime import RapidOCR
 
     settings = Settings.from_environment()
@@ -78,16 +71,13 @@ def engine_smoke() -> dict:
     pixmap = page.get_pixmap(matrix=pymupdf.Matrix(2, 2), alpha=False)
     image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(pixmap.height, pixmap.width, pixmap.n)
     rapid_result, _ = RapidOCR()(image)
-    easy_reader = easyocr.Reader(["ch_sim", "en"], gpu=False, verbose=False)
-    easy_result = easy_reader.readtext(image, detail=1, paragraph=False)
     document.close()
     return {
         "source": str(source.relative_to(PROJECT_ROOT.parent)).replace("\\", "/"),
         "physical_pdf_page": physical_page,
         "logical_page_label": "291",
         "rapidocr_item_count": len(rapid_result or []),
-        "easyocr_item_count": len(easy_result or []),
-        "status": "pass" if rapid_result and easy_result else "fail",
+        "status": "pass" if rapid_result else "fail",
     }
 
 
@@ -114,7 +104,7 @@ def audit() -> dict:
         "engine_smoke": smoke,
         "boundaries": [
             "This audit must be run with runtime-python/turbine-kg-env/Scripts/python.exe.",
-            "The smoke test proves both engines execute; it does not establish OCR accuracy.",
+            "The smoke test proves RapidOCR executes; it does not establish OCR accuracy.",
             "Accuracy remains governed by original-page comparison and Stage 5 quality gates.",
         ],
     }

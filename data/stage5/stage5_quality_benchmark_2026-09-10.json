@@ -1,0 +1,1551 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_original_pdf_quality_benchmark",
+  "audited_at": "2026-09-10",
+  "authority": "Original materials original PDF; scanned-page text is scored only against independent manual transcription",
+  "ocr_input_fingerprint": "7feac660c1c4dadb896369d40088fb9815960e6492b730b51779a1f4cd856cd7",
+  "ocr_artifact": "data/stage5/stage5_rapidocr_sample_benchmark_2026-09-10.json",
+  "truth_annotations": "data/stage5/stage5_truth_annotations_2026-09-10.json",
+  "sample_page_count": 36,
+  "engines": {
+    "rapidocr": {
+      "scored_text_page_count": 10,
+      "visual_only_or_quarantined_page_count": 26,
+      "char_accuracy_mean": 0.936427,
+      "critical_tokens": {
+        "numbers": {
+          "precision": 0.942613,
+          "recall": 0.93852,
+          "f1": 0.940424
+        },
+        "units": {
+          "precision": 0.83,
+          "recall": 0.9,
+          "f1": 0.855556
+        },
+        "negations": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "native_geometry_scored_page_count": 12,
+      "bbox_iou_mean": 0.54459,
+      "reading_order_similarity_mean": 0.360473,
+      "runtime": {
+        "total_seconds": 180.641558,
+        "mean_page_seconds": 5.017821,
+        "p95_page_seconds": 10.18285
+      }
+    }
+  },
+  "table_quality": {
+    "table_page_count": 6,
+    "cell_accuracy_scored_page_count": 0,
+    "cell_accuracy_status": "quarantined_not_scored",
+    "quarantine_coverage": "6/6"
+  },
+  "records": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "55fcbc115c836b2e2e76209984cb5c5dded441f7dce25d23e28abc5dca7b8d10",
+      "truth_scope": "structured_text",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.650827,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 214,
+          "candidate_char_count": 202,
+          "edit_distance": 30,
+          "char_accuracy": 0.859813,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 13,
+              "candidate_count": 12,
+              "matched_count": 10,
+              "precision": 0.833333,
+              "recall": 0.769231,
+              "f1": 0.8
+            },
+            "units": {
+              "reference_count": 9,
+              "candidate_count": 9,
+              "matched_count": 9,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 14,
+          "candidate_box_count": 15,
+          "matched_box_count": 14,
+          "bbox_iou_mean": 0.614287,
+          "reading_order_similarity": 0.24
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 14,
+      "categories": [
+        "ordinary_text",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "24114ec7e7f14615ffceaa482427e2608c52b9f6fae8696a5cad1f1a3a098e20",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 11.132434,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 1102,
+          "candidate_char_count": 1102,
+          "edit_distance": 18,
+          "char_accuracy": 0.983666,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 51,
+              "candidate_count": 51,
+              "matched_count": 48,
+              "precision": 0.941176,
+              "recall": 0.941176,
+              "f1": 0.941176
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 1,
+              "matched_count": 0,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0
+            },
+            "negations": {
+              "reference_count": 5,
+              "candidate_count": 5,
+              "matched_count": 5,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 44,
+          "candidate_box_count": 56,
+          "matched_box_count": 44,
+          "bbox_iou_mean": 0.271981,
+          "reading_order_similarity": 0.022727
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "categories": [
+        "figure",
+        "caption",
+        "bbox"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "01ad4b75407c7b1b9847d8b9ba88f046eeeff62afd8fa18d175c7540687c29cb",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.834809,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 339,
+          "candidate_char_count": 418,
+          "edit_distance": 94,
+          "char_accuracy": 0.722714,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 40,
+              "candidate_count": 41,
+              "matched_count": 38,
+              "precision": 0.926829,
+              "recall": 0.95,
+              "f1": 0.938272
+            },
+            "units": {
+              "reference_count": 1,
+              "candidate_count": 2,
+              "matched_count": 1,
+              "precision": 0.5,
+              "recall": 1.0,
+              "f1": 0.666667
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 13,
+          "candidate_box_count": 27,
+          "matched_box_count": 13,
+          "bbox_iou_mean": 0.30826,
+          "reading_order_similarity": 0.111111
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 42,
+      "categories": [
+        "dense_clause_text",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "3ceb4d20e458cfbcc6ee05a6c9eb8e9226df3299eaf55febcd932f428355768b",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 10.18285,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 1079,
+          "candidate_char_count": 1079,
+          "edit_distance": 43,
+          "char_accuracy": 0.960148,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 69,
+              "candidate_count": 69,
+              "matched_count": 66,
+              "precision": 0.956522,
+              "recall": 0.956522,
+              "f1": 0.956522
+            },
+            "units": {
+              "reference_count": 7,
+              "candidate_count": 7,
+              "matched_count": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 47,
+          "candidate_box_count": 75,
+          "matched_box_count": 47,
+          "bbox_iou_mean": 0.090228,
+          "reading_order_similarity": 0.021277
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "categories": [
+        "dense_clause_text",
+        "complex_layout"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "7e3719b084640e87a454b75bf4b63267c58cb149421ec810ed0d1febd5146bbe",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 10.895784,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 1165,
+          "candidate_char_count": 1167,
+          "edit_distance": 24,
+          "char_accuracy": 0.979399,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 52,
+              "candidate_count": 52,
+              "matched_count": 51,
+              "precision": 0.980769,
+              "recall": 0.980769,
+              "f1": 0.980769
+            },
+            "units": {
+              "reference_count": 4,
+              "candidate_count": 5,
+              "matched_count": 4,
+              "precision": 0.8,
+              "recall": 1.0,
+              "f1": 0.888889
+            },
+            "negations": {
+              "reference_count": 4,
+              "candidate_count": 4,
+              "matched_count": 4,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 43,
+          "candidate_box_count": 50,
+          "matched_box_count": 43,
+          "bbox_iou_mean": 0.115546,
+          "reading_order_similarity": 0.022989
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "categories": [
+        "figure",
+        "caption",
+        "table",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "d468ad5da1cd539d57321c3e861cafadb07f665f4e476b27adaa280ff6da4a2f",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 9.148098,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 38,
+          "candidate_box_count": 41,
+          "matched_box_count": 38,
+          "bbox_iou_mean": 0.453859,
+          "reading_order_similarity": 0.027397
+        }
+      },
+      "table_metrics": {
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 2,
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 2.593581,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 2,
+      "categories": [
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 1.957243,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "categories": [
+        "figure",
+        "caption",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 2.45091,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "categories": [
+        "table",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.803742,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 4,
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 73,
+      "categories": [
+        "ordinary_text",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 3.740122,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 94,
+      "categories": [
+        "boundary_page",
+        "blank_or_low_text",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "boundary_exception",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 2.749343,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 3.226626,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 2,
+      "categories": [
+        "contents",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "navigation_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 3.941211,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "categories": [
+        "ordinary_text",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 8.094538,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "categories": [
+        "dense_clause_text",
+        "negative_word_candidate",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 7.509628,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "categories": [
+        "table",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.114117,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 12,
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "categories": [
+        "continuation_table",
+        "boundary_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 3.398691,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 12,
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "categories": [
+        "scope",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "e2359447546423cb42b166a7864cb5c542dfb85db80f600c1614ce5ecfdd66ca",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.30622,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 388,
+          "candidate_char_count": 388,
+          "edit_distance": 6,
+          "char_accuracy": 0.984536,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 10,
+              "candidate_count": 10,
+              "matched_count": 9,
+              "precision": 0.9,
+              "recall": 0.9,
+              "f1": 0.9
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 21,
+          "candidate_box_count": 21,
+          "matched_box_count": 21,
+          "bbox_iou_mean": 0.873035,
+          "reading_order_similarity": 0.619048
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "categories": [
+        "ordinary_text",
+        "negative_word_candidate",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "c584b7d59c1190fb22323d265583130f8a0f6acb9ec847192be29b954a87bc52",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.111524,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 498,
+          "candidate_char_count": 498,
+          "edit_distance": 8,
+          "char_accuracy": 0.983936,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 16,
+              "candidate_count": 16,
+              "matched_count": 15,
+              "precision": 0.9375,
+              "recall": 0.9375,
+              "f1": 0.9375
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 23,
+          "candidate_box_count": 24,
+          "matched_box_count": 23,
+          "bbox_iou_mean": 0.888723,
+          "reading_order_similarity": 0.608696
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "categories": [
+        "ordinary_text",
+        "negative_word_candidate",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "cb0951851b7c086d798fcad1bc45a546c89d511bd18a8bb14cf38ab0c1cf0d37",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.884321,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 423,
+          "candidate_char_count": 423,
+          "edit_distance": 13,
+          "char_accuracy": 0.969267,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 20,
+              "candidate_count": 20,
+              "matched_count": 19,
+              "precision": 0.95,
+              "recall": 0.95,
+              "f1": 0.95
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 23,
+          "candidate_box_count": 23,
+          "matched_box_count": 23,
+          "bbox_iou_mean": 0.873222,
+          "reading_order_similarity": 0.478261
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 16,
+      "categories": [
+        "dense_clause_text",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "97465b8066213c29856cfa226c4547c25ef18fa498cc892652f445a29b63f183",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.959345,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 509,
+          "candidate_char_count": 509,
+          "edit_distance": 8,
+          "char_accuracy": 0.984283,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 16,
+              "candidate_count": 16,
+              "matched_count": 16,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 23,
+          "candidate_box_count": 24,
+          "matched_box_count": 23,
+          "bbox_iou_mean": 0.844423,
+          "reading_order_similarity": 0.608696
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "categories": [
+        "table",
+        "numeric_and_unit",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "1ef19aa450eed6c54d0799dd95752f5c7917c4db7e93cb5803953c642e261f51",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 3.641725,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 27,
+          "candidate_box_count": 27,
+          "matched_box_count": 27,
+          "bbox_iou_mean": 0.341001,
+          "reading_order_similarity": 0.708333
+        }
+      },
+      "table_metrics": {
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 5,
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 32,
+      "categories": [
+        "boundary_page",
+        "ordinary_text",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_native_text_visual_confirmed",
+      "truth_reference_text_sha256": "ddfc5375b5dfda6404f5226d53b7e0bba13d7ae75c94f8c6ee3a6d45832a9e72",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 2.561488,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "scored",
+          "reference_char_count": 126,
+          "candidate_char_count": 126,
+          "edit_distance": 8,
+          "char_accuracy": 0.936508,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 7,
+          "candidate_box_count": 7,
+          "matched_box_count": 7,
+          "bbox_iou_mean": 0.860519,
+          "reading_order_similarity": 0.857143
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 2.991453,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 12,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.121182,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 31,
+      "categories": [
+        "blank_or_low_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "boundary_exception",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 0.641367,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 32,
+      "categories": [
+        "dense_clause_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 3.349107,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 64,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.236539,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 120,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.722148,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 180,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.454622,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 244,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.916993,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 300,
+      "categories": [
+        "figure",
+        "caption",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.065515,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "categories": [
+        "dense_clause_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 6.680726,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 468,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 5.06597,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 480,
+      "categories": [
+        "table",
+        "boundary_page",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_visual_only_unscored",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "rapidocr": {
+          "elapsed_seconds": 4.506759,
+          "render_dpi": 170
+        }
+      },
+      "text_metrics": {
+        "rapidocr": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "rapidocr": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 5,
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    }
+  ],
+  "errors": [],
+  "status": "complete_with_quarantine",
+  "boundaries": [
+    "Character and critical-token metrics are scored only where native PDF text or independent manual transcription is available and the Golden Sample disposition permits it.",
+    "Native-text pages additionally score geometry and reading-order similarity against original PDF word boxes.",
+    "Scanned-page text without independent transcription, scanned-page bbox truth and unresolved table cell text remain visual/region-level work; all such pages stay unscored or quarantined.",
+    "Runtime is measured locally and is not a cost estimate for external services."
+  ]
+}

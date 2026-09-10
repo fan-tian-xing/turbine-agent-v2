@@ -2,8 +2,10 @@
   "schema_version": 1,
   "stage": "5",
   "artifact_kind": "stage5_exit_audit",
-  "audited_at": "2026-09-09",
+  "audited_at": "2026-09-10",
   "status": "complete",
+  "closure_status": "closed_with_quarantine",
+  "formal_release": false,
   "owner_confirmed_quality_policy": {
     "content_must_match_original_exactly": true,
     "critical_tokens": [
@@ -30,21 +32,19 @@
     "full_baseline_zero_failures": true,
     "rapidocr_sample_36_pages": true,
     "rapidocr_zero_failures": true,
-    "easyocr_sample_36_pages": true,
-    "easyocr_zero_failures": true,
     "engine_choice_recorded": true,
     "table_candidate_scope_corrected": true,
     "table_structural_truth_complete": true,
     "table_cell_accuracy_boundary_explicit": true,
     "golden_sample_visual_review_complete": true,
-    "page_identity_reconciled": true
+    "page_identity_reconciled": true,
+    "original_pdf_quality_benchmark_recorded": true
   },
   "completed_scope": {
     "document_count": 5,
     "page_count": 775,
     "golden_sample_page_count": 36,
     "rapidocr_sample_page_count": 36,
-    "easyocr_sample_page_count": 36,
     "table_candidate_count": 7,
     "actual_table_page_count": 6,
     "complex_layout_not_table_count": 1,
@@ -66,10 +66,62 @@
       "status": "codex_first_pass_complete_user_escalation_only_if_uncertain"
     }
   ],
+  "quality_benchmark": {
+    "path": "data/stage5/stage5_quality_benchmark_2026-09-10.json",
+    "status": "complete_with_quarantine",
+    "authority": "Original materials original PDF; scanned-page text is scored only against independent manual transcription",
+    "rapidocr": {
+      "scored_text_page_count": 10,
+      "visual_only_or_quarantined_page_count": 26,
+      "char_accuracy_mean": 0.936427,
+      "critical_tokens": {
+        "numbers": {
+          "precision": 0.942613,
+          "recall": 0.93852,
+          "f1": 0.940424
+        },
+        "units": {
+          "precision": 0.83,
+          "recall": 0.9,
+          "f1": 0.855556
+        },
+        "negations": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "native_geometry_scored_page_count": 12,
+      "bbox_iou_mean": 0.54459,
+      "reading_order_similarity_mean": 0.360473,
+      "runtime": {
+        "total_seconds": 180.641558,
+        "mean_page_seconds": 5.017821,
+        "p95_page_seconds": 10.18285
+      }
+    },
+    "table_quality": {
+      "table_page_count": 6,
+      "cell_accuracy_scored_page_count": 0,
+      "cell_accuracy_status": "quarantined_not_scored",
+      "quarantine_coverage": "6/6"
+    }
+  },
+  "audit_mode": "frozen_stage5_artifact_read_only",
+  "automatic_recheck": false,
+  "manual_recheck_trigger": "仅在负责人明确要求或主动确认原始资料/OCR代码发生变化时重新执行阶段5复核",
+  "artifact_provenance": {
+    "input_fingerprint": "7feac660c1c4dadb896369d40088fb9815960e6492b730b51779a1f4cd856cd7",
+    "input_audit": "data/stage5/stage5_input_audit_2026-09-10.json",
+    "baseline": "data/stage5/stage5_baseline_benchmark_2026-09-10.json",
+    "rapidocr": "data/stage5/stage5_rapidocr_sample_benchmark_2026-09-10.json",
+    "engine_decision": "data/stage5/stage5_engine_decision_2026-09-10.json",
+    "matched_by_input_fingerprint": false
+  },
   "blocking_items": [],
   "owner_review_needed_in_chat": [],
   "boundaries": [
-    "本审计不把 RapidOCR 或 EasyOCR 与既有文本的相似度当作 OCR 准确率。",
+    "本审计不把 RapidOCR 与既有文本的相似度当作 OCR 准确率。",
     "规则线检测只产生表格候选区域，不代表单元格解析已通过。",
     "表格或图示无法可靠结构化时，只保留原始页视觉依据并隔离出正式 Evidence 流程。"
   ]

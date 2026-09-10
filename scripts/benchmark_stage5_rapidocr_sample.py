@@ -8,12 +8,14 @@ import difflib
 import hashlib
 import json
 from pathlib import Path
+import time
 
 import fitz
 import numpy as np
 from rapidocr_onnxruntime import RapidOCR
 
 from generate_ocr_pdf import grouped_text
+from stage5_fingerprint import OCR_DPI, find_matching_artifact, ocr_fingerprint
 from turbine_kg.settings import PROJECT_ROOT, Settings
 
 
@@ -46,11 +48,23 @@ def _normalize(text: str) -> str:
     return " ".join(text.split())
 
 
-def _render_ocr(engine: RapidOCR, page) -> str:
-    pixmap = page.get_pixmap(matrix=fitz.Matrix(170 / 72.0, 170 / 72.0), alpha=False)
+def _render_ocr(engine: RapidOCR, page) -> list:
+    pixmap = page.get_pixmap(matrix=fitz.Matrix(OCR_DPI / 72.0, OCR_DPI / 72.0), alpha=False)
     image = np.frombuffer(pixmap.samples, dtype=np.uint8).reshape(pixmap.height, pixmap.width, pixmap.n)
     result, _ = engine(image)
-    return grouped_text(result or [])
+    return result or []
+
+
+def _ocr_boxes(result: list) -> list[dict]:
+    boxes = []
+    for item in result:
+        if len(item) < 2:
+            continue
+        points, text = item[0], str(item[1])
+        xs = [float(point[0]) for point in points]
+        ys = [float(point[1]) for point in points]
+        boxes.append({"text": text, "x0": min(xs), "y0": min(ys), "x1": max(xs), "y1": max(ys)})
+    return boxes
 
 
 def benchmark() -> dict:
@@ -68,9 +82,12 @@ def benchmark() -> dict:
         for sample_page in item["sample_pages"]:
             page_number = int(sample_page.get("physical_page", sample_page["pdf_page"]))
             try:
+                started = time.perf_counter()
                 original_text = _normalize(original_doc[page_number - 1].get_text("text"))
                 existing_text = _normalize(processing_doc[page_number - 1].get_text("text"))
-                fresh_text = _normalize(_render_ocr(engine, original_doc[page_number - 1]))
+                raw_result = _render_ocr(engine, original_doc[page_number - 1])
+                fresh_raw_text = grouped_text(raw_result)
+                fresh_text = _normalize(fresh_raw_text)
                 baseline_text = original_text if original_text else existing_text
                 records.append({
                     "document_key": item["document_key"],
@@ -81,6 +98,9 @@ def benchmark() -> dict:
                     "fresh_rapidocr": {
                         "char_count": len(fresh_text),
                         "text_sha256": _sha256_text(fresh_text),
+                        "text": fresh_raw_text,
+                        "boxes": _ocr_boxes(raw_result),
+                        "elapsed_seconds": round(time.perf_counter() - started, 6),
                     },
                     "registered_processing_text": {
                         "char_count": len(existing_text),
@@ -125,7 +145,7 @@ def benchmark() -> dict:
         "boundaries": [
             "Similarity to an OCR derivative is not ground-truth accuracy.",
             "Critical numeric, unit, negation and table values still require original-page review.",
-            "EasyOCR is installed in the same project runtime and is benchmarked by the companion script; this artifact alone does not choose the primary engine."
+            "RapidOCR is the only configured OCR engine; accuracy is accepted only against the Original materials truth record."
         ],
     }
 
@@ -137,8 +157,17 @@ def main() -> int:
         type=Path,
         default=PROJECT_ROOT / "data" / "stage5" / f"stage5_rapidocr_sample_benchmark_{date.today().isoformat()}.json",
     )
+    parser.add_argument("--force", action="store_true", help="ignore a matching cached OCR artifact")
     args = parser.parse_args()
+    fingerprint, components = ocr_fingerprint()
+    if not args.force:
+        cached = find_matching_artifact("stage5_rapidocr_sample_benchmark_*.json", fingerprint)
+        if cached:
+            print(json.dumps({"status": "reused_cached_result", "source": str(cached), "input_fingerprint": fingerprint}, ensure_ascii=False))
+            return 0
     result = benchmark()
+    result["input_fingerprint"] = fingerprint
+    result["fingerprint_components"] = components
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "output": str(args.output), "pages": result["actual"]["sample_page_count"]}, ensure_ascii=False))

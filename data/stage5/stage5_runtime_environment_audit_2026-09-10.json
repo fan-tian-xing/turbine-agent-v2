@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "5",
   "artifact_kind": "stage5_runtime_environment_audit",
-  "audited_at": "2026-09-09",
+  "audited_at": "2026-09-10",
   "status": "pass",
   "runtime": {
     "python_executable": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
@@ -20,9 +20,6 @@
     "pymupdf": true,
     "fitz_compat": true,
     "rapidocr": true,
-    "easyocr": true,
-    "torch": true,
-    "torchvision": true,
     "onnxruntime": true,
     "pytest": true
   },
@@ -32,9 +29,6 @@
     "opencv-python": "4.14.0.94",
     "pymupdf": "1.28.2",
     "rapidocr-onnxruntime": "1.4.4",
-    "easyocr": "1.7.2",
-    "torch": "2.14.0",
-    "torchvision": "0.29.0",
     "onnxruntime": "1.29.0",
     "pytest": "8.4.2"
   },
@@ -43,12 +37,11 @@
     "physical_pdf_page": 300,
     "logical_page_label": "291",
     "rapidocr_item_count": 37,
-    "easyocr_item_count": 37,
     "status": "pass"
   },
   "boundaries": [
     "This audit must be run with runtime-python/turbine-kg-env/Scripts/python.exe.",
-    "The smoke test proves both engines execute; it does not establish OCR accuracy.",
+    "The smoke test proves RapidOCR executes; it does not establish OCR accuracy.",
     "Accuracy remains governed by original-page comparison and Stage 5 quality gates."
   ]
 }

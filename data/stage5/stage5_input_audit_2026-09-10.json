@@ -2,11 +2,78 @@
   "schema_version": 1,
   "stage": "5",
   "artifact_kind": "stage5_input_audit",
-  "audited_at": "2026-09-09",
+  "audited_at": "2026-09-10",
   "scope": "the five Stage 3 research-trial processing units only",
   "sample_manifest": "data/stage5/stage5_sample_manifest.json",
   "sample_page_count": 36,
   "expected_sample_page_count": 36,
+  "input_fingerprint": "7feac660c1c4dadb896369d40088fb9815960e6492b730b51779a1f4cd856cd7",
+  "fingerprint_components": {
+    "manifest_sha256": "324be6d9b1318850ad273da1d34c0e138d3108e22e369e6100ff9b9235439efd",
+    "selected_assets": [
+      {
+        "asset_id": "asset-29ca16b111846e39aabf",
+        "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+        "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813"
+      },
+      {
+        "asset_id": "asset-29ca16b111846e39aabf",
+        "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+        "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813"
+      },
+      {
+        "asset_id": "asset-ffc1d592a5b4e204578c",
+        "relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+        "sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9"
+      },
+      {
+        "asset_id": "asset-dfd1ea84bc8622cede86",
+        "relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+        "sha256": "4710a8ecf189c75158e87a3e88e97a8943d8854e1b556c5d1d6448ee45d7431f"
+      },
+      {
+        "asset_id": "asset-d146688100212c0aa1fe",
+        "relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+        "sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb"
+      },
+      {
+        "asset_id": "asset-e82eacef4b82e06cf31c",
+        "relative_path": "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf",
+        "sha256": "fc255bb60ffaeef51109f395853d36b04be2922ed1e1e2dbba5081ef6aeeec65"
+      },
+      {
+        "asset_id": "asset-2e27a3f10284708e2d10",
+        "relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
+        "sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+      },
+      {
+        "asset_id": "asset-e4d060422e62fd656770",
+        "relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+        "sha256": "24933cf948ee1a77fceb8819a4a5aaa3dcf3da6ec05f5cdcbd473a60e4e1ea22"
+      },
+      {
+        "asset_id": "asset-115e242947e0a4b46ea5",
+        "relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+        "sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d"
+      },
+      {
+        "asset_id": "asset-6be125e4aa900f01e21b",
+        "relative_path": "OCR/汽轮机辅机安装（第二版）(OCR).pdf",
+        "sha256": "c15ec262ad488f21a3c8170224a3f529b401543e395e582327c6019f48b12e93"
+      }
+    ],
+    "ocr_engine": "rapidocr_onnxruntime",
+    "ocr_engine_version": "1.4.4",
+    "render_dpi": 170,
+    "python_version": "3.12.14",
+    "script_sha256": {
+      "scripts/benchmark_stage5_rapidocr_sample.py": "3926948d8b70d02f71e1d1bc8af33ee48d88ddf9182c653214eda49f79b484e3",
+      "scripts/generate_ocr_pdf.py": "2637cabf119e2bdb67eb3d5e25324f36c2ef0694c46d4e5741f27b82c00f27b4",
+      "scripts/stage5_fingerprint.py": "89cd572ebbb0db8c6f6d9dcead7e8769cb3cdb3fb7cff9f5cb31cf21f969afc4",
+      "pyproject.toml": "01c501c898a4124148e9856a7494a0c3a0551c2f676b2e0807b6418e10f2261a",
+      "uv.lock": "f60a0e74bd4a42f1f1771db99fe4ce431dae8002ac6cc8c6171362580fdc436b"
+    }
+  },
   "documents": [
     {
       "document_key": "DL5190.3",

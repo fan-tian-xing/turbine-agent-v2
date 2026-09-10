@@ -11,6 +11,7 @@ from pathlib import Path
 import pymupdf
 
 from turbine_kg.settings import PROJECT_ROOT, Settings
+from stage5_fingerprint import ocr_fingerprint
 
 
 SAMPLE_MANIFEST = PROJECT_ROOT / "data" / "stage5" / "stage5_sample_manifest.json"
@@ -61,6 +62,7 @@ def audit() -> dict:
     settings = Settings.from_environment()
     sample = json.loads(SAMPLE_MANIFEST.read_text(encoding="utf-8"))
     assets = _load_assets()
+    input_fingerprint, fingerprint_components = ocr_fingerprint()
     documents = []
     errors: list[str] = []
     seen_pages: set[tuple[str, int]] = set()
@@ -131,6 +133,8 @@ def audit() -> dict:
         "sample_manifest": str(SAMPLE_MANIFEST.relative_to(PROJECT_ROOT)).replace("\\", "/"),
         "sample_page_count": len(seen_pages),
         "expected_sample_page_count": expected_sample_count,
+        "input_fingerprint": input_fingerprint,
+        "fingerprint_components": fingerprint_components,
         "documents": documents,
         "errors": errors,
         "status": "pass" if not errors else "fail",

@@ -14,6 +14,7 @@ import numpy as np
 import pymupdf
 
 from turbine_kg.settings import PROJECT_ROOT, Settings
+from stage5_fingerprint import ocr_fingerprint
 
 
 SAMPLE_MANIFEST = PROJECT_ROOT / "data" / "stage5" / "stage5_sample_manifest.json"
@@ -139,12 +140,13 @@ def _metrics(page) -> dict:
 def _module_status() -> dict[str, str]:
     return {
         name: ("available" if importlib.util.find_spec(name) else "unavailable")
-        for name in ("rapidocr_onnxruntime", "paddleocr", "easyocr", "pytesseract")
+        for name in ("rapidocr_onnxruntime",)
     }
 
 
 def benchmark() -> dict:
     settings = Settings.from_environment()
+    input_fingerprint, fingerprint_components = ocr_fingerprint()
     sample = json.loads(SAMPLE_MANIFEST.read_text(encoding="utf-8"))
     input_audit = json.loads(INPUT_AUDIT.read_text(encoding="utf-8"))
     stage4 = json.loads(STAGE4_AUDIT.read_text(encoding="utf-8"))
@@ -242,6 +244,8 @@ def benchmark() -> dict:
         "stage": "5",
         "artifact_kind": "stage5_baseline_benchmark",
         "audited_at": date.today().isoformat(),
+        "input_fingerprint": input_fingerprint,
+        "fingerprint_components": fingerprint_components,
         "scope": sample["scope"],
         "input_audit": str(INPUT_AUDIT.relative_to(PROJECT_ROOT)).replace("\\", "/"),
         "documents": documents,

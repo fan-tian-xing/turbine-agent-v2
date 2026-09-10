@@ -4,11 +4,13 @@
 
 ## 当前状态
 
-独立工程、配置边界和本地运行基础已经建立。阶段 1、2A、2B 的功能已完成；阶段 3、4、5 的核心研发闭环、775 页 Document IR 全量解析和 OCR/版面基准门已完成，但阶段 0 的旧版冻结一致性、阶段 2 的自动审计可重算性以及正式 Release 前的严格页码/数据库回查仍保留审计边界，不能把阶段 0–5 统称为无条件完全关闭。阶段 5 已完成 775 页全量结构基线、RapidOCR/EasyOCR 各 36 页同口径复跑、36 页逐页原件复核、物理页/逻辑页核对、6 个真实表格页和 1 个复杂版面页的分类与隔离，并确定 RapidOCR 为主引擎、EasyOCR 为备用交叉复核引擎；`formal_release=false` 不变。阶段 2B 选出的 5 份资料目前只是研发试点范围，正式首批处理仍须在阶段 15 通过 `First Batch Admission Gate`。阶段 3 的 Fixture、适用性匹配、证据追溯、Neo4j 中文检索和逐 Claim 校验闭环已验证；阶段 4 已完成 Document IR、身份目录、原生/扫描/混合页面统一入口、人工更正 Overlay、Registry→真实 PDF→Document IR→阶段 3 结构投影的只读链路，并完成 5 份冻结处理单元的 775 页全量结构解析审计。Registry 构建器已模块化，其他资料继续保留在审核队列，未进入正式抽取。
+独立工程、配置边界和本地运行基础已经建立。阶段 1、2A、2B 的功能已完成；阶段 3、4、5 的核心研发闭环、775 页 Document IR 全量解析和 OCR/版面基准门已完成，但阶段 0 的旧版冻结一致性、阶段 2 的自动审计可重算性以及正式 Release 前的严格页码/数据库回查仍保留审计边界，不能把阶段 0–5 统称为无条件完全关闭。阶段 5 已补充基于 `Original materials` 原始 PDF 的 36 页定量质量报告：可评分文本区域记录字符、数字、单位、否定词、原生页面几何、阅读顺序和本地耗时；6 个复杂表格页保持隔离并记录 6/6 隔离覆盖，不把未确认的 cell-level accuracy 伪装成通过。项目 OCR 统一使用 RapidOCR；低置信度和复杂版面直接回到原始页复核；`formal_release=false` 不变。阶段 2B 选出的 5 份资料目前只是研发试点范围，正式首批处理仍须在阶段 15 通过 `First Batch Admission Gate`。阶段 3 的 Fixture、适用性匹配、证据追溯、Neo4j 中文检索和逐 Claim 校验闭环已验证；阶段 4 已完成 Document IR、身份目录、原生/扫描/混合页面统一入口、人工更正 Overlay、Registry→真实 PDF→Document IR→阶段 3 结构投影的只读链路，并完成 5 份冻结处理单元的 775 页全量结构解析审计。Registry 构建器已模块化，其他资料继续保留在审核队列，未进入正式抽取。
 
-阶段 4 的五份冻结处理单元已经完成 775 页全量结构解析审计：5/5 文档、775/775 页、0 失败页；4 个 OCR 派生件均已回连原件并完成同页序号、页面几何和低分辨率版面对应核查。两个空输出页已确认为正常空白分隔页；当前 92 项全量回归均已通过。该结果仅证明 Document IR 结构链路完整，不评价 OCR 文字准确率或表格行列恢复；阶段 5 的退出审计记录在 `data/stage5/stage5_exit_audit_2026-09-09.json`，对无法可靠恢复的表格、公式、图示和阅读顺序明确采取隔离策略，不把视觉一致冒充为结构化 OCR 准确。
+阶段 4 的五份冻结处理单元已经完成 775 页全量结构解析审计：5/5 文档、775/775 页、0 失败页；4 个 OCR 派生件均已回连原件并完成同页序号、页面几何和低分辨率版面对应核查。两个空输出页已确认为正常空白分隔页；当前全量回归均已通过。阶段 5 的退出审计和原始 PDF 质量报告记录在 `data/stage5/`，对无法可靠恢复的表格、公式、图示和阅读顺序明确采取隔离策略，不把视觉一致冒充为结构化 OCR 准确。
 
-当前全量测试基线为 92 项；阶段 3 范围测试为 36 项。历史记录中的旧测试数量仅作历史背景，不作为当前验收计数。
+当前全量回归测试均已通过；阶段 3 范围测试为 36 项。历史记录中的旧测试数量仅作历史背景，不作为当前验收计数。
+
+阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
 
 ## 项目边界
 
@@ -43,10 +45,9 @@ Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和�
 ```cmd
 cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
 set "PYTHONPATH=%CD%\src"
-set "PROJECT_PYTHON=D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
-%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli import
-%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli status
-%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli "密封瓦座水平结合面用塞尺检查要求是什么？"
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli import
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli status
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli "密封瓦座水平结合面用塞尺检查要求是什么？"
 ```
 
 如果终端是 PowerShell：
@@ -76,8 +77,7 @@ $projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-pytho
 ```cmd
 cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
 set "PYTHONPATH=%CD%\src"
-set "PROJECT_PYTHON=D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
-%PROJECT_PYTHON% -m turbine_kg.stage3.trial_cli "你的问题"
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli "你的问题"
 ```
 
 也可以像旧版 Demo 一样，启动后再输入问题：
@@ -93,20 +93,20 @@ set "PROJECT_PYTHON=D:\本体\汽轮机安调项目\项目初期demo\runtime-pyt
 资料处理前可运行以下只读检查，确认白名单路径、文件大小和 SHA-256 均与当前资料一致：
 
 ```cmd
-%PROJECT_PYTHON% scripts/check_source_allowlist.py
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" scripts/check_source_allowlist.py
 ```
 
 工程测试：
 
 ```cmd
 set PYTHONPATH=src
-%PROJECT_PYTHON% -m pytest
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m pytest
 ```
 
 构建或更新 Source Registry（只读取白名单 PDF，不写入 Neo4j）：
 
 ```cmd
-%PROJECT_PYTHON% scripts/build_source_registry.py
+"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" scripts/build_source_registry.py
 ```
 
 Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。`stage2_source_selection.json` 记录进入阶段 3 研发试点的候选来源，不替代阶段 15 的正式准入门。`source_duplicate_groups.jsonl` 保存已物化的分组，`source_duplicate_relations.jsonl` 保存组内或候选关系。

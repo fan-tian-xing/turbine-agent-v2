@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_engine_decision",
+  "decided_at": "2026-09-10",
+  "ocr_input_fingerprint": "7feac660c1c4dadb896369d40088fb9815960e6492b730b51779a1f4cd856cd7",
+  "ocr_artifact": "data/stage5/stage5_rapidocr_sample_benchmark_2026-09-10.json",
+  "selection": {
+    "primary_engine": "rapidocr_onnxruntime",
+    "primary_use": "扫描件首轮 OCR 与页面基线生成",
+    "fallback_policy": "低置信度或关键页只回到 Original materials 原始页人工复核，不切换 OCR 引擎"
+  },
+  "comparison": {
+    "rapidocr": {
+      "engine": "rapidocr_onnxruntime",
+      "sample_page_count": 36,
+      "failed_page_count": 0,
+      "native_text_page_count": 12,
+      "scanned_or_derived_page_count": 24,
+      "mean_similarity_to_registered_processing_text": 0.981808,
+      "pages_below_similarity_0_97": 8,
+      "comparison_status": "comparison_ready_for_codex_review"
+    }
+  },
+  "decision_basis": [
+    "RapidOCR 在项目专用运行环境完成冻结 Golden Sample 的 36 页复跑，0 失败。",
+    "以后所有 OCR 结果只使用 RapidOCR；低置信度和关键页回到 Original materials 原始页复核，不使用第二套 OCR 结果覆盖原件。",
+    "相似度只用于发现疑点，不是 OCR 字符、数字、单位、否定词或表格准确率证明。"
+  ],
+  "quality_boundary": {
+    "original_pdf_is_authority": true,
+    "unresolved_visual_or_table_content_is_quarantined": true,
+    "formal_evidence_generation": "not_stage5_output"
+  },
+  "status": "engine_choice_recorded"
+}

@@ -13,11 +13,6 @@ dependencies = [
     "rapidocr-onnxruntime>=1.4,<2",
 ]
 
-[project.optional-dependencies]
-ocr-backup = [
-    "easyocr>=1.7,<2",
-]
-
 [project.scripts]
 turbine-stage3 = "turbine_kg.stage3.cli:main"
 turbine-trial = "turbine_kg.stage3.trial_cli:main"

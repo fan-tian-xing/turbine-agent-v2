@@ -6,8 +6,8 @@
   "corrections": {
     "test_count": {
       "previous_text": "53 pytest tests passed",
-      "current_text": "32 Stage 3-scoped tests passed; 83 tests passed in the full repository suite after the Stage 1 OCR guard tests were added",
-      "reason": "The prior audit mixed a historical test count with the current Stage 3 scope. The authoritative count after the current change is refreshed after the full test run."
+      "current_text": "36 Stage 3-scoped tests passed; 92 tests passed in the full repository suite after the Stage 5 table-baseline lookup was made date-independent",
+      "reason": "The prior audit mixed a historical test count with the current Stage 3 scope. The current Stage 3 audit is authoritative for 36 scoped tests; the full-suite count is now 92 passed after the dated Stage 5 lookup was corrected."
     },
     "historical_plan_review": {
       "file": "data/stage3/plan_review_2026-09-08.json",

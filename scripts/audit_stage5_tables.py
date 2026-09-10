@@ -9,11 +9,16 @@ from pathlib import Path
 from turbine_kg.settings import PROJECT_ROOT
 
 
-BASELINE = PROJECT_ROOT / "data" / "stage5" / f"stage5_baseline_benchmark_{date.today().isoformat()}.json"
+def _latest_baseline() -> Path:
+    candidates = sorted((PROJECT_ROOT / "data" / "stage5").glob("stage5_baseline_benchmark_*.json"))
+    if not candidates:
+        raise FileNotFoundError("no Stage 5 baseline benchmark artifact is available")
+    return candidates[-1]
 
 
 def audit() -> dict:
-    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
+    baseline_path = _latest_baseline()
+    baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
     records = [
         record
         for record in baseline["page_records"]
@@ -55,7 +60,7 @@ def audit() -> dict:
         "stage": "5",
         "artifact_kind": "stage5_table_structure_baseline",
         "audited_at": date.today().isoformat(),
-        "baseline": str(BASELINE.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "baseline": str(baseline_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
         "scope": "Golden Sample table and continuation-table pages only",
         "candidate_count": len(candidates),
         "ruled_grid_candidate_count": sum(item["status"].startswith("ruled_grid") for item in candidates),

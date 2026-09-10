@@ -24,6 +24,7 @@ def _ir():
             "native",
             0.1,
             text_blocks=(RawTextBlock("兼容文本" * 20, BBox(10, 10, 100, 30)),),
+            printed_page_label="逻辑1",
         ),
         PageInput(asset.asset_id, revision_id, 1, 600, 800, 0, "", "scan_only", 0.9),
     )
@@ -42,6 +43,7 @@ def test_projection_preserves_structure_without_inventing_semantics():
     view = project_document_ir(_ir())
     assert view.revision.document_logical_id.startswith("doc-")
     assert [page.page_number for page in view.pages] == [1, 2]
+    assert [page.logical_page for page in view.pages] == ["逻辑1", None]
     assert view.pages[0].text == "兼容文本" * 20
     assert view.pages[1].text == ""
     assert view.spans[0].quote == "兼容文本" * 20

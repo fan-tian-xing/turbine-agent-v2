@@ -1,13 +1,19 @@
 import json
-from datetime import date
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def _latest_table_baseline() -> Path:
+    candidates = sorted((ROOT / "data" / "stage5").glob("stage5_table_baseline_*.json"))
+    if not candidates:
+        raise AssertionError("no Stage 5 table baseline artifact is available")
+    return candidates[-1]
+
+
 def test_stage5_table_baseline_has_all_layout_review_pages():
-    path = ROOT / "data" / "stage5" / f"stage5_table_baseline_{date.today().isoformat()}.json"
+    path = _latest_table_baseline()
     report = json.loads(path.read_text(encoding="utf-8"))
     assert report["status"] == "table_structure_baseline_ready_original_page_truth_recorded"
     assert report["candidate_count"] == 7

@@ -17,6 +17,7 @@ def validate_page_record(record: dict) -> None:
         "processing_asset_id", "authority_asset_id", "physical_page", "page_status",
         "text_source", "processing_relative_path", "authority_relative_path",
         "processing_text_sha256", "exclusion_reason",
+        "analysis_text_sha256",
     }
     missing = required - record.keys()
     if missing:
@@ -27,6 +28,8 @@ def validate_page_record(record: dict) -> None:
         raise ValueError("physical_page must be a positive integer")
     if record["page_status"] == "text_accepted" and not record["processing_text_sha256"]:
         raise ValueError("text_accepted page must have a processing text fingerprint")
+    if record["page_status"] == "text_accepted" and not record["analysis_text_sha256"]:
+        raise ValueError("text_accepted page must have an analysis text fingerprint")
     if record["page_status"] != "text_accepted" and not record["exclusion_reason"]:
         raise ValueError("non-accepted page must explain its exclusion")
 

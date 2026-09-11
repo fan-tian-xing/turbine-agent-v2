@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "7",
   "artifact_kind": "stage7_exit_audit",
-  "status": "complete",
+  "status": "blocked_pending_user_review",
   "scope": "candidate terminology and business capability templates only",
   "formal_release": false,
   "producer": "scripts/audit_stage7_exit.py",
@@ -11,16 +11,41 @@
     "terminology_candidates": "data/stage7/terminology_candidates.json",
     "business_capability_questions": "data/stage7/business_capability_questions.json",
     "review_queue": "data/stage7/terminology_review_queue.jsonl",
-    "review_decisions": "data/stage7/terminology_review_decisions.jsonl"
+    "relationship_review_queue": "data/stage7/terminology_relationship_review_queue.jsonl",
+    "review_decisions": "data/stage7/terminology_review_decisions.jsonl",
+    "test_evidence": "data/stage7/stage7_test_evidence.json"
   },
   "counts": {
     "page_count": 775,
-    "text_accepted_page_count": 752,
-    "candidate_count": 5401,
-    "review_queue_count": 1189,
-    "review_decision_count": 1189,
+    "text_accepted_page_count": 123,
+    "visual_only_page_count": 642,
+    "ocr_accepted_page_count": 15,
+    "table_candidate_page_count": 33,
+    "candidate_count": 1827,
+    "review_queue_count": 595,
+    "relationship_review_queue_count": 2,
+    "review_decision_count": 0,
     "capability_question_count": 10
   },
+  "candidate_type_counts": {
+    "abbreviation_candidate": 40,
+    "action": 471,
+    "applicability_condition": 13,
+    "component": 224,
+    "equipment": 241,
+    "ocr_variant_candidate": 96,
+    "old_name_candidate": 0,
+    "parameter": 68,
+    "phenomenon": 61,
+    "process": 84,
+    "requirement": 378,
+    "synonym_candidate": 0,
+    "verification": 151
+  },
+  "unobserved_declared_candidate_types": [
+    "old_name_candidate",
+    "synonym_candidate"
+  ],
   "candidate_scope": {
     "stage6_evidence_is_sample_cross_check_only": true,
     "full_document_evidence_claim": false,
@@ -32,21 +57,79 @@
     "input_manifest_frozen": true,
     "all_775_pages_have_one_status": true,
     "only_five_admitted_units": true,
+    "case_holdout_blind_materials_explicitly_excluded": true,
     "non_accepted_pages_not_consumed": true,
+    "table_pages_are_isolated": true,
+    "ocr_pages_bind_to_stage6_canonical_evidence": true,
+    "ocr_candidates_are_explicit": true,
     "candidate_types_are_controlled": true,
     "candidate_fingerprints_stable": true,
     "candidate_traceability_complete": true,
-    "ocr_candidates_are_explicit": true,
-    "review_records_reconcile": true,
-    "review_queue_is_non_blocking_boundary": true,
+    "occurrence_counts_are_complete": true,
+    "document_frequencies_reconcile": true,
+    "review_queue_covers_all_blocking_candidates": true,
+    "relationship_review_queue_is_explicit": true,
+    "review_decisions_are_fingerprint_bound": true,
     "capability_questions_complete": true,
     "candidate_only_no_promotion": true,
     "formal_release_false": true,
-    "stage6_consumer_fingerprint_recorded": true
+    "stage6_consumer_fingerprint_recorded": true,
+    "runtime_contract_fingerprint_recorded": true,
+    "failure_isolation_and_rollback_declared": true,
+    "test_evidence_is_current_and_passing": true,
+    "formal_artifacts_have_consumers": true
   },
   "failures": [],
-  "user_review_required_now": [],
-  "review_boundary": "Candidate-only terms, especially OCR, numeric, requirement, and applicability candidates, remain non-promoted until separate human review.",
-  "next_stage_allowed": true,
-  "next_stage": "Stage 8 minimal OWL ontology design"
+  "failure_isolation": {
+    "changed_input_fingerprint": "quarantine_new_run",
+    "invalid_output": "do_not_activate",
+    "rollback": "retain_last_valid_candidate_artifacts_and_restore_by_manifest_fingerprint"
+  },
+  "rollback": {
+    "policy": "retain_last_valid_candidate_artifacts_and_restore_by_manifest_fingerprint",
+    "automatic_activation": false
+  },
+  "dead_code_orphan_output_review": {
+    "stage6_canonical_lookup_is_enforced_for_accepted_ocr": true,
+    "occurrence_truncation": false,
+    "relationship_queue_consumer": "human reviewer",
+    "unobserved_candidate_types_are_not_claimed_as_implemented": [
+      "old_name_candidate",
+      "synonym_candidate"
+    ]
+  },
+  "test_evidence": {
+    "schema_version": 1,
+    "stage": "7",
+    "artifact_kind": "stage7_test_evidence",
+    "status": "passed",
+    "command": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe -m pytest -q",
+    "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+    "commit": "3e745ad20a53f04c1141ccbe935fbf9c4e44d0cc",
+    "recorded_at": "2026-09-11T11:20:54.624258+00:00",
+    "returncode": 0,
+    "stdout_tail": "........................................................................ [ 53%]\n..............................................................           [100%]\n",
+    "stderr_tail": ""
+  },
+  "user_review_required_now": {
+    "candidate_queue_count": 595,
+    "relationship_queue_count": 2,
+    "ocr_pages_to_review": 15,
+    "visual_or_table_pages_to_review": 32,
+    "required_candidate_types": [
+      "abbreviation_candidate",
+      "applicability_condition",
+      "ocr_variant_candidate",
+      "parameter",
+      "requirement"
+    ],
+    "required_relationship_types": [
+      "old_name_candidate",
+      "synonym_candidate"
+    ],
+    "instructions": "Record one human decision per candidate queue row; accepted requires reviewer, timestamp, matching fingerprints, evidence_refs, and consumer_permission=stage8_mapping."
+  },
+  "review_boundary": "Candidate-only terms remain non-promoted until explicit human review; this audit does not authorize Stage 8 mapping.",
+  "next_stage_allowed": false,
+  "next_stage": null
 }

@@ -20,5 +20,28 @@
     "automatic_display_vocabulary_change": false,
     "stage8_requires_review_status": "accepted"
   },
-  "frequency_policy": "document_family_equal_weight_discovery_only"
+  "frequency_policy": "document_family_equal_weight_discovery_only",
+  "lexical_rules": {
+    "equipment_suffixes": ["汽轮机", "发电机", "电动机", "泵", "阀", "箱", "缸", "轴", "瓦", "系统", "装置", "设备", "转子", "定子"],
+    "component_suffixes": ["座", "盖", "板", "环", "管", "孔", "室", "螺栓", "弹簧", "猫爪", "滑块", "垫片", "轴颈"],
+    "action_suffixes": ["安装", "检查", "调整", "清洗", "测量", "试验", "运行", "启动", "停机", "紧固", "拆除", "更换", "校验", "验收", "监测", "确认", "记录", "调试", "维护", "润滑", "复位", "抽出"],
+    "process_suffixes": ["安装", "调试", "启动", "运行", "检修", "维护", "试运", "验收", "拆装", "清洗", "润滑"],
+    "phenomenon_suffixes": ["振动", "泄漏", "磨损", "裂纹", "松动", "超温", "高温", "低压", "失效", "噪声", "异常", "卡涩", "错口", "腐蚀", "污染"],
+    "verification_suffixes": ["检查", "试验", "检验", "测量", "验收", "校验", "验证", "监测"],
+    "requirement_suffixes": ["要求", "规定", "标准", "验收"],
+    "applicability_condition_suffixes": ["工况", "状态", "适用范围", "适用条件"],
+    "number_unit_pattern": "(?<![\\w])[-+]?\\d+(?:\\.\\d+)?\\s*(?:mm|cm|m|μm|um|MPa|kPa|Pa|℃|°C|%|毫米|厘米|米|微米|兆帕|千帕|帕|度)(?![\\w])",
+    "ocr_variant_characters": "圧夲眞測應與為發",
+    "abbreviation_pattern": "(?<![A-Za-z0-9])[A-Z][A-Z0-9/-]{1,11}(?![A-Za-z0-9])"
+  },
+  "review": {
+    "blocking_candidate_types": ["parameter", "requirement", "applicability_condition", "abbreviation_candidate", "ocr_variant_candidate"],
+    "blocking_page_sources": ["stage6_accepted_evidence"],
+    "unresolved_relationship_types_require_user_review": ["synonym_candidate", "old_name_candidate"]
+  },
+  "failure_handling": {
+    "changed_input_fingerprint": "quarantine_new_run",
+    "invalid_output": "do_not_activate",
+    "rollback": "retain_last_valid_candidate_artifacts_and_restore_by_manifest_fingerprint"
+  }
 }

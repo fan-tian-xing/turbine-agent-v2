@@ -6,7 +6,7 @@
 
 项目当前状态唯一以 [`data/project_state.json`](data/project_state.json) 为准；阶段退出审计是各阶段的证据记录，不再复制维护项目总状态。本文件不重复维护具体阶段状态。
 
-阶段 7 是当前完成阶段：术语输入清单、候选术语和业务能力问题模板均为 `candidate_only`，以 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json) 为准。阶段 6 的样本 Evidence、原始材料权威边界、表格隔离边界和 775 页全文 Evidence 的后续门禁，仍以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
+阶段 7 的候选生成自动部分已完成，但当前状态为待人工审核：术语输入清单、候选术语和业务能力问题模板均为 `candidate_only`，以 [`data/project_state.json`](data/project_state.json) 和 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json) 为准。审核清单见 [`data/stage7/stage7_human_review_summary.json`](data/stage7/stage7_human_review_summary.json)，未完成审核前不得进入阶段 8 本体映射。阶段 6 的样本 Evidence、原始材料权威边界、表格隔离边界和 775 页全文 Evidence 的后续门禁，仍以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
 
 阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
 

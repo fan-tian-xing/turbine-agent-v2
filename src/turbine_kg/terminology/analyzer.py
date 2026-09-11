@@ -15,17 +15,7 @@ from .validation import content_fingerprint
 
 
 _CJK_TERM = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]{2,16}")
-_NUMBER_UNIT = re.compile(
-    r"(?<![\w])[-+]?\d+(?:\.\d+)?\s*(?:mm|cm|m|μm|um|MPa|kPa|Pa|℃|°C|%|毫米|厘米|米|微米|兆帕|千帕|帕|度)(?![\w])",
-    re.IGNORECASE,
-)
-_ACTION_SUFFIXES = ("安装", "检查", "调整", "清洗", "测量", "试验", "运行", "启动", "停机", "紧固", "拆除", "更换", "校验", "验收", "监测", "确认", "记录", "调试", "维护", "润滑", "复位", "抽出")
-_PROCESS_SUFFIXES = ("安装", "调试", "启动", "运行", "检修", "维护", "试运", "验收", "拆装", "清洗", "润滑")
-_EQUIPMENT_SUFFIXES = ("汽轮机", "发电机", "电动机", "泵", "阀", "箱", "缸", "轴", "瓦", "系统", "装置", "设备", "转子", "定子")
-_COMPONENT_SUFFIXES = ("座", "盖", "板", "环", "管", "孔", "室", "螺栓", "弹簧", "猫爪", "滑块", "垫片", "轴颈")
-_PHENOMENON_SUFFIXES = ("振动", "泄漏", "磨损", "裂纹", "松动", "超温", "高温", "低压", "失效", "噪声", "异常", "卡涩", "错口", "腐蚀", "污染")
-_VERIFICATION_SUFFIXES = ("检查", "试验", "检验", "测量", "验收", "校验", "验证", "监测")
-_OCR_VARIANT_CHARS = frozenset("圧夲眞測應與為發")
+DEFAULT_CONTRACT_PATH = Path(__file__).resolve().parents[3] / "config" / "terminology_contract.json"
 
 CAPABILITY_QUESTIONS = (
     {"question_id": "cap-01", "question_template": "某设备在某阶段有哪些要求？", "required_slots": ["equipment", "lifecycle_stage"]},
@@ -63,26 +53,33 @@ def normalize_term(value: str) -> str:
     return re.sub(r"\s+", "", value).strip("，。；：、,.!！?？()（）[]【】")
 
 
-def _types_for_term(term: str) -> set[str]:
+def load_terminology_contract(path: Path = DEFAULT_CONTRACT_PATH) -> dict:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("schema_version") != 1 or payload.get("stage") != "7":
+        raise ValueError("invalid terminology contract")
+    return payload
+
+
+def _types_for_term(term: str, rules: dict) -> set[str]:
     categories: set[str] = set()
-    if term.endswith(_EQUIPMENT_SUFFIXES):
+    if term.endswith(tuple(rules["equipment_suffixes"])):
         categories.add("equipment")
-    if term.endswith(_COMPONENT_SUFFIXES):
+    if term.endswith(tuple(rules["component_suffixes"])):
         categories.add("component")
-    if term.endswith(_ACTION_SUFFIXES):
+    if term.endswith(tuple(rules["action_suffixes"])):
         categories.add("action")
-    if term.endswith(_PROCESS_SUFFIXES):
+    if term.endswith(tuple(rules["process_suffixes"])):
         categories.add("process")
-    if term.endswith(_PHENOMENON_SUFFIXES):
+    if term.endswith(tuple(rules["phenomenon_suffixes"])):
         categories.add("phenomenon")
-    if term.endswith(_VERIFICATION_SUFFIXES):
+    if term.endswith(tuple(rules["verification_suffixes"])):
         categories.add("verification")
     # Do not label every term near a modality word as a requirement.  The
     # candidate layer records only lexical discovery signals; statement-level
     # modality belongs to later Evidence/ontology work.
-    if term.endswith(("要求", "规定", "标准", "验收")):
+    if term.endswith(tuple(rules["requirement_suffixes"])):
         categories.add("requirement")
-    if term.endswith(("工况", "状态", "适用范围", "适用条件")):
+    if term.endswith(tuple(rules["applicability_condition_suffixes"])):
         categories.add("applicability_condition")
     return categories
 
@@ -103,65 +100,89 @@ def _questions_for_type(candidate_type: str) -> list[str]:
     return mapping.get(candidate_type, ["cap-04"])
 
 
-def _add_occurrence(store: dict[tuple[str, str], dict], term: str, candidate_type: str, page: dict, *, method: str, text_origin: str, source_kind: str = "page_text") -> None:
+def _add_occurrence(store: dict[tuple[str, str], dict], term: str, candidate_type: str, page: dict, *, method: str, text_origin: str, source_kind: str = "page_text", ocr_variant_signal: bool = False) -> None:
     normalized = normalize_term(term)
     if not normalized or candidate_type not in CANDIDATE_TYPES:
         return
     key = (normalized, candidate_type)
-    item = store.setdefault(key, {"normalized_form": normalized, "candidate_type": candidate_type, "occurrences": [], "origins": set(), "documents": set()})
+    item = store.setdefault(key, {"normalized_form": normalized, "candidate_type": candidate_type, "occurrences": [], "origins": set(), "documents": set(), "ocr_variant_signals": set()})
     occurrence = {
         "document_key": page["document_key"],
         "document_logical_id": page["document_logical_id"],
         "revision_id": page["revision_id"],
         "physical_page": page["physical_page"],
         "page_id": page["page_id"],
-        "text_fingerprint": page["processing_text_sha256"],
+        "text_fingerprint": page["analysis_text_sha256"],
         "text_origin": text_origin,
         "source_kind": source_kind,
     }
+    if page.get("stage6_evidence_ids"):
+        occurrence["evidence_ids"] = page["stage6_evidence_ids"]
     if occurrence not in item["occurrences"]:
         item["occurrences"].append(occurrence)
     item["origins"].add(text_origin)
     item["documents"].add(page["document_logical_id"])
     item["surface_forms"] = item.get("surface_forms", set()) | {term}
     item["discovery_methods"] = item.get("discovery_methods", set()) | {method}
+    if ocr_variant_signal:
+        item["ocr_variant_signals"].add(page["page_id"])
 
 
-def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_rows: Iterable[dict] = ()) -> list[dict]:
+def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_rows: Iterable[dict] = (), contract: dict | None = None) -> list[dict]:
     """Create stable candidates from only text-accepted manifest pages."""
+    contract = contract or load_terminology_contract()
+    rules = contract["lexical_rules"]
+    number_unit = re.compile(rules["number_unit_pattern"], re.IGNORECASE)
+    abbreviation = re.compile(rules["abbreviation_pattern"])
+    ocr_variant_chars = frozenset(rules["ocr_variant_characters"])
     accepted = [page for page in manifest["pages"] if page["page_status"] == "text_accepted"]
-    by_key = {(row["document_key"], int(row["input"]["physical_page"])): row for row in stage6_rows}
+    by_key: dict[tuple[str, int], list[dict]] = {}
+    for row in stage6_rows:
+        by_key.setdefault((row["document_key"], int(row["input"]["physical_page"])), []).append(row)
     store: dict[tuple[str, str], dict] = {}
     for page in accepted:
         text = page_texts.get(page["page_id"], "")
         if not text.strip():
             raise ValueError(f"text_accepted page has no text: {page['page_id']}")
-        text_origin = "native_text" if page["text_source"] == "native_pdf_text" else "ocr_text"
-        for match in _NUMBER_UNIT.finditer(text):
-            _add_occurrence(store, match.group(0), "parameter", page, method="numeric_unit_pattern", text_origin=text_origin)
+        is_stage6_text = page["text_source"] == "stage6_accepted_evidence"
+        is_ocr = page["processing_asset_id"] != page["authority_asset_id"]
+        text_origin = "ocr_text" if is_ocr else "native_text"
+        ocr_signal = is_ocr and any(character in text for character in ocr_variant_chars)
+        if is_ocr and not is_stage6_text:
+            raise ValueError(f"OCR text accepted without Stage 6 canonical Evidence: {page['page_id']}")
+        if is_stage6_text:
+            canonical_rows = by_key.get((page["document_key"], page["physical_page"]), [])
+            if not canonical_rows:
+                raise ValueError(f"OCR text accepted without Stage 6 canonical Evidence: {page['page_id']}")
+            canonical_ids = {row["evidence"]["evidence_id"] for row in canonical_rows}
+            if not set(page.get("stage6_evidence_ids", [])) <= canonical_ids:
+                raise ValueError(f"Stage 6 Evidence IDs do not match canonical bundle: {page['page_id']}")
+        for match in number_unit.finditer(text):
+            _add_occurrence(store, match.group(0), "ocr_variant_candidate" if is_ocr else "parameter", page, method="numeric_unit_pattern", text_origin=text_origin, source_kind="accepted_stage6_evidence" if is_stage6_text else "page_text", ocr_variant_signal=ocr_signal)
         for match in _CJK_TERM.finditer(text):
             term = match.group(0)
-            types = _types_for_term(term)
+            types = _types_for_term(term, rules)
             if not types:
                 continue
-            for candidate_type in types:
-                method = "lexical_pattern"
-                _add_occurrence(store, term, candidate_type, page, method=method, text_origin=text_origin)
-                if text_origin == "ocr_text" and any(char in _OCR_VARIANT_CHARS for char in term):
-                    _add_occurrence(store, term, "ocr_variant_candidate", page, method=method, text_origin=text_origin)
-        # Stage 6 is a bounded verification cross-check, not a source of
-        # full-document text.  Looking it up proves the consumer path and
-        # protects against accidentally treating sample Evidence as corpus.
-        _ = by_key.get((page["document_key"], page["physical_page"]))
+            method = "lexical_pattern"
+            if is_ocr:
+                _add_occurrence(store, term, "ocr_variant_candidate", page, method=method, text_origin=text_origin, source_kind="accepted_stage6_evidence" if is_stage6_text else "page_text", ocr_variant_signal=ocr_signal)
+            else:
+                for candidate_type in types:
+                    _add_occurrence(store, term, candidate_type, page, method=method, text_origin=text_origin)
+        for match in abbreviation.finditer(text):
+            _add_occurrence(store, match.group(0), "ocr_variant_candidate" if is_ocr else "abbreviation_candidate", page, method="lexical_pattern", text_origin=text_origin, source_kind="accepted_stage6_evidence" if is_stage6_text else "page_text", ocr_variant_signal=ocr_signal)
+        # Stage 6 is a bounded verification cross-check.  For OCR pages the
+        # build producer has already used its accepted effective_text; this
+        # lookup prevents a page from being treated as accepted without the
+        # canonical Evidence row that authorizes it.
 
     records: list[dict] = []
     for item in store.values():
         origins = sorted(item["origins"])
         candidate_type = item["candidate_type"]
         surface_forms = sorted(item.get("surface_forms", {item["normalized_form"]}))
-        is_ocr_variant = candidate_type == "ocr_variant_candidate" or (
-            "ocr_text" in origins and any(normalize_term(surface) != surface for surface in surface_forms)
-        )
+        is_ocr_variant = candidate_type == "ocr_variant_candidate"
         occurrences = sorted(item["occurrences"], key=lambda value: (value["document_key"], value["physical_page"], value["page_id"]))
         candidate_id = stable_id("term", item["normalized_form"], candidate_type)
         record = {
@@ -173,9 +194,10 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
             "occurrence_count": len(occurrences),
             "document_frequency": len(item["documents"]),
             "document_frequency_policy": "document_family_equal_weight_discovery_only",
-            "occurrences": occurrences[:50],
+            "occurrences": occurrences,
             "text_origins": origins,
             "is_ocr_variant": is_ocr_variant,
+            "ocr_variant_signal": bool(item.get("ocr_variant_signals")),
             "review_status": "candidate_only",
             "review_reason": "Stage 7 discovery output; no automatic ontology or runtime vocabulary promotion.",
             "capability_question_ids": _questions_for_type(candidate_type),

@@ -14,9 +14,9 @@ def test_project_state_is_the_current_state_source():
 
     assert state["artifact_kind"] == "project_state"
     assert state["current_stage"] == 7
-    assert state["current_stage_status"] == "complete"
-    assert state["next_stage"] == 8
-    assert state["next_stage_status"] == "ready"
+    assert state["current_stage_status"] == "blocked_pending_user_review"
+    assert state["next_stage"] is None
+    assert state["next_stage_status"] == "blocked"
     assert state["formal_release"] is False
     assert state["stages"]["6"]["scope"] == "golden_sample_only"
     assert state["stages"]["7"]["scope"] == "candidate_terminology_and_capability_templates_only"
@@ -36,5 +36,5 @@ def test_project_state_references_matching_stage_exit_audits():
     assert stage6_audit["next_stage_allowed"] is True
     assert stage6_audit["next_stage"] == "Stage 7 terminology analysis and business capability questions"
     stage7_audit = _read_json(state["stages"]["7"]["exit_audit"])
-    assert stage7_audit["next_stage_allowed"] is True
-    assert stage7_audit["next_stage"] == "Stage 8 minimal OWL ontology design"
+    assert stage7_audit["next_stage_allowed"] is False
+    assert stage7_audit["next_stage"] is None

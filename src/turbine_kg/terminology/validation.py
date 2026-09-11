@@ -30,6 +30,11 @@ def validate_input_manifest(payload: dict) -> dict:
         seen.add(key)
     if len(records) != 775:
         raise ValueError(f"Stage 7 input manifest must cover 775 pages, got {len(records)}")
+    boundary = payload.get("input_boundary", {})
+    excluded = boundary.get("excluded_source_classes", {})
+    required_exclusions = {"formal_case_materials", "holdout_materials", "blind_test_materials"}
+    if not required_exclusions <= set(excluded) or not boundary.get("exclusion_enforcement"):
+        raise ValueError("Stage 7 input manifest must explicitly exclude case, holdout, and blind-test materials")
     if set(payload.get("status_counts", {})) - PAGE_STATUSES:
         raise ValueError("manifest contains an unknown status count")
     return payload
@@ -42,6 +47,10 @@ def validate_candidates(records: list[dict], accepted_page_keys: set[tuple[str, 
         if row["candidate_id"] in ids:
             raise ValueError("duplicate terminology candidate ID")
         ids.add(row["candidate_id"])
+        if row["occurrence_count"] != len(row["occurrences"]):
+            raise ValueError("candidate occurrence_count does not match retained occurrences")
+        if row["document_frequency"] != len({item["document_logical_id"] for item in row["occurrences"]}):
+            raise ValueError("candidate document_frequency does not match occurrences")
         for occurrence in row["occurrences"]:
             key = (occurrence["document_logical_id"], occurrence["physical_page"])
             if key not in accepted_page_keys:

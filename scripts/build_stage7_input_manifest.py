@@ -53,29 +53,34 @@ def _sample_categories(sample: dict) -> dict[tuple[str, int], list[str]]:
     return result
 
 
-def _stage6_page_status() -> dict[tuple[str, int], str]:
-    result: dict[tuple[str, int], str] = {}
+def _stage6_page_status() -> dict[tuple[str, int], dict]:
+    result: dict[tuple[str, int], dict] = {}
     for row in _jsonl(STAGE6 / "stage6_evidence_bundle.jsonl"):
         evidence = row["evidence"]
         key = (row["document_key"], int(row["input"]["physical_page"]))
-        current = result.get(key)
+        current = result.setdefault(key, {"status": None, "rows": []})
+        current["rows"].append(row)
         if evidence["disposition"] == "region_scoped":
-            result[key] = "accepted_region_evidence"
-        elif evidence["disposition"] == "structured" and current != "accepted_region_evidence":
-            result[key] = "accepted_text_evidence"
+            current["status"] = "accepted_region_evidence"
+        elif evidence["disposition"] == "structured" and current["status"] != "accepted_region_evidence":
+            current["status"] = "accepted_text_evidence"
     return result
 
 
-def _status(categories: list[str], page_mode: str, metrics: dict, stage6_status: str | None) -> tuple[str, str]:
+def _status(categories: list[str], page_mode: str, metrics: dict, stage6_status: str | None, *, original_processing: bool, table_candidate: bool) -> tuple[str, str]:
     if stage6_status == "accepted_region_evidence":
         return "visual_only", "Stage 6 accepted this sample only as region-scoped Evidence."
-    if any(value in categories for value in ("cover", "contents", "blank_or_low_text", "boundary_page")):
-        return "excluded_non_content", "Sample review classified the page as metadata, navigation, or boundary-only."
+    if any(value in categories for value in ("cover", "contents", "blank_or_low_text", "document_identity")) and stage6_status != "accepted_text_evidence":
+        return "excluded_non_content", "Sample review classified the page as metadata, navigation, or blank-only."
+    if table_candidate:
+        return "visual_only", "Stage 5 detected table structure; without cell-level original-page review, table text is not terminology input."
     if page_mode == "review_required" or not metrics.get("text_chars", 0):
         return "quarantined", "No reliable processing text is available; retain the page for later review."
     if metrics.get("low_text_flag"):
         return "quarantined", "Stage 5 marked the page as low-text and it is not safe for terminology discovery."
-    return "text_accepted", "Stage 5 processing text is available within the admitted five-unit scope."
+    if original_processing or stage6_status == "accepted_text_evidence":
+        return "text_accepted", "Native text or Stage 6 original-page-accepted Evidence is available for candidate discovery."
+    return "visual_only", "OCR text lacks page-level original-page Evidence acceptance; retained for user review and not consumed."
 
 
 def _processing_path(settings: Settings, relative_path: str) -> Path:
@@ -106,14 +111,29 @@ def main() -> None:
                 baseline_row = baseline_pages[(document["document_key"], physical_page)]
                 metrics = baseline_row["processing_metrics"]
                 page_mode = baseline_row["page_mode"]
-                stage6_status = stage6_pages.get((document["document_key"], physical_page))
+                stage6_detail = stage6_pages.get((document["document_key"], physical_page), {})
+                stage6_status = stage6_detail.get("status")
+                table_candidate = bool(
+                    metrics.get("table_count_detected", 0)
+                    or (metrics.get("visual_table_metrics") or {}).get("ruled_table_candidate", False)
+                )
                 page_status, reason = _status(
                     categories.get((document["document_key"], physical_page), []),
                     page_mode,
                     metrics,
                     stage6_status,
+                    original_processing=processing["asset_id"] == authority["asset_id"],
+                    table_candidate=table_candidate,
                 )
                 text = pdf[physical_page - 1].get_text("text").strip()
+                evidence_ids = sorted({row["evidence"]["evidence_id"] for row in stage6_detail.get("rows", [])})
+                evidence_text = "\n".join(
+                    row["evidence"].get("effective_text") or row["evidence"].get("source_text") or ""
+                    for row in stage6_detail.get("rows", [])
+                    if row["evidence"].get("disposition") == "structured"
+                ).strip()
+                is_stage6_text = page_status == "text_accepted" and stage6_status == "accepted_text_evidence" and bool(evidence_text)
+                analysis_text = evidence_text if is_stage6_text else text
                 page = {
                     "page_id": stable_id("page", processing["revision_id"], physical_page - 1),
                     "document_key": document["document_key"],
@@ -123,13 +143,21 @@ def main() -> None:
                     "authority_asset_id": authority["asset_id"],
                     "physical_page": physical_page,
                     "page_status": page_status,
-                    "text_source": "native_pdf_text" if processing["asset_id"] == authority["asset_id"] else "validated_ocr_pdf_text",
+                    "text_source": (
+                        "stage6_accepted_evidence" if is_stage6_text
+                        else "native_pdf_text" if processing["asset_id"] == authority["asset_id"]
+                        else "ocr_text_not_accepted"
+                    ),
                     "processing_relative_path": processing["relative_path"],
                     "authority_relative_path": authority["relative_path"],
                     "processing_text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest() if text else None,
+                    "analysis_text_sha256": hashlib.sha256(analysis_text.encode("utf-8")).hexdigest() if analysis_text else None,
                     "processing_text_chars": len(text),
+                    "analysis_text_chars": len(analysis_text),
                     "stage5_page_mode": page_mode,
                     "stage6_sample_status": stage6_status,
+                    "stage6_evidence_ids": evidence_ids,
+                    "table_candidate": table_candidate,
                     "exclusion_reason": None if page_status == "text_accepted" else reason,
                 }
                 pages.append(page)
@@ -151,6 +179,13 @@ def main() -> None:
             "source_count": 5,
             "page_count": 775,
             "unauthorized_source_count": 0,
+            "admitted_source_scope": "stage3_research_trial_five_units_only",
+            "excluded_source_classes": {
+                "formal_case_materials": "excluded_from_stage7_candidate_input; reserved for Stage 21 after Stage 20 blind evaluation",
+                "holdout_materials": "excluded_from_stage7_candidate_input; reserved for independent evaluation sets",
+                "blind_test_materials": "excluded_from_stage7_candidate_input; user-held and never read by this producer",
+            },
+            "exclusion_enforcement": "producer reads only the five documents enumerated by stage5_sample_manifest; no recursive workspace scan or case/evaluation input is permitted",
         },
         "inputs": {
             "stage5_baseline_sha256": _sha(STAGE5 / "stage5_baseline_benchmark_2026-09-10.json"),

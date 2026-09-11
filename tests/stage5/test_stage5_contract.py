@@ -62,7 +62,7 @@ def test_stage5_exit_audit_is_frozen_read_only():
 def test_stage5_exit_audit_closes_after_visual_gate_and_keeps_boundaries():
     exit_audit = json.loads(_latest("stage5_exit_audit_*.json").read_text(encoding="utf-8"))
 
-    assert exit_audit["status"] == "complete"
+    assert exit_audit["status"] == "complete_with_quarantine"
     assert exit_audit["closure_status"] == "closed_with_quarantine"
     assert exit_audit["formal_release"] is False
     assert exit_audit["owner_confirmed_quality_policy"]["content_must_match_original_exactly"] is True
@@ -127,6 +127,8 @@ def test_stage5_latest_exit_audit_consumes_original_pdf_quality_benchmark():
     candidates = sorted(STAGE5_ROOT.glob("stage5_exit_audit_*.json"))
     assert candidates, "Stage 5 exit audit artifact has not been generated"
     audit = json.loads(candidates[-1].read_text(encoding="utf-8"))
-    assert audit["status"] == "complete"
+    assert audit["status"] == "complete_with_quarantine"
     assert audit["checks"]["original_pdf_quality_benchmark_recorded"] is True
     assert audit["quality_benchmark"]["status"] == "complete_with_quarantine"
+    assert "Stage 6" in audit["next_stage_allowed"]
+    assert audit["next_stage_inputs"]

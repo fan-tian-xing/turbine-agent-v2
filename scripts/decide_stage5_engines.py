@@ -52,7 +52,7 @@ def decide() -> dict:
         },
         "decision_basis": [
             "RapidOCR 在项目专用运行环境完成冻结 Golden Sample 的 36 页复跑，0 失败。",
-            "以后所有 OCR 结果只使用 RapidOCR；低置信度和关键页回到 Original materials 原始页复核，不使用第二套 OCR 结果覆盖原件。",
+            "以后所有 OCR 结果只使用 RapidOCR；低置信度和关键页回到 Original materials 原始页复核，不用复核结果覆盖原件。",
             "相似度只用于发现疑点，不是 OCR 字符、数字、单位、否定词或表格准确率证明。",
         ],
         "quality_boundary": {

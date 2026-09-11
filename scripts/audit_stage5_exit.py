@@ -110,7 +110,7 @@ def audit() -> dict:
         "stage": "5",
         "artifact_kind": "stage5_exit_audit",
         "audited_at": TODAY,
-        "status": "complete" if all(checks.values()) else "awaiting_golden_sample_review",
+        "status": "complete_with_quarantine" if all(checks.values()) else "awaiting_golden_sample_review",
         "closure_status": "closed_with_quarantine" if all(checks.values()) else "open",
         "formal_release": False,
         "owner_confirmed_quality_policy": {
@@ -148,6 +148,18 @@ def audit() -> dict:
         "audit_mode": "frozen_stage5_artifact_read_only",
         "automatic_recheck": False,
         "manual_recheck_trigger": "仅在负责人明确要求或主动确认原始资料/OCR代码发生变化时重新执行阶段5复核",
+        "next_stage_allowed": (
+            "Stage 6 may begin for original-page-verified, reliably locatable regions; quarantined pages and structured regions require region/cell review first."
+            if all(checks.values())
+            else "Stage 6 is blocked until the Stage 5 visual and quality gates close."
+        ),
+        "next_stage_inputs": [
+            "data/stage5/stage5_sample_manifest.json",
+            "data/stage5/stage5_truth_annotations_*.json",
+            "data/stage5/stage5_quality_benchmark_*.json",
+            "data/stage5/stage5_exit_audit_*.json",
+            "Original materials original PDF pages",
+        ],
         "artifact_provenance": {
             "input_fingerprint": rapidocr.get("input_fingerprint"),
             "input_audit": str(input_audit_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),

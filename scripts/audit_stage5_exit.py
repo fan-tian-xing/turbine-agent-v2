@@ -166,7 +166,8 @@ def audit() -> dict:
             "baseline": str(baseline_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
             "rapidocr": str(rapidocr_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
             "engine_decision": str(engine_decision_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
-            "matched_by_input_fingerprint": False,
+            "fingerprint_comparison_performed": False,
+            "fingerprint_match_status": "not_rechecked_by_frozen_exit_audit",
         },
         "blocking_items": [
             "36页 Golden Sample 逐页视觉复核记录尚未形成。",

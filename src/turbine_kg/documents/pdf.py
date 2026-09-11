@@ -76,6 +76,7 @@ def parse_pdf(
     parser_version: str = "pymupdf-page-inspector-v1",
     page_indices: tuple[int, ...] | None = None,
     additional_assets: tuple[AssetRef, ...] = (),
+    parsing_run_id: str | None = None,
 ) -> DocumentIR:
     """Inspect and normalize PDF pages.
 
@@ -116,6 +117,7 @@ def parse_pdf(
         tuple(inputs),
         profile=profile,
         parser_version=parser_version,
+        parsing_run_id=parsing_run_id,
     )
 
 
@@ -128,6 +130,7 @@ def parse_registered_pdf(
     profile: LayoutProfile = LayoutProfile(),
     parser_version: str = "pymupdf-page-inspector-v1",
     page_indices: tuple[int, ...] | None = None,
+    parsing_run_id: str | None = None,
 ) -> DocumentIR:
     """Parse one Registry-registered PDF without re-inferring its identity.
 
@@ -177,4 +180,5 @@ def parse_registered_pdf(
         parser_version=parser_version,
         page_indices=page_indices,
         additional_assets=additional_assets,
+        parsing_run_id=parsing_run_id,
     )

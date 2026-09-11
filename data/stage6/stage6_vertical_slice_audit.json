@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "stage": "6",
+  "artifact_kind": "stage6_vertical_slice_audit",
+  "artifact_scope": "non_authoritative_initial_slice_diagnostic",
+  "status": "complete_initial_slice",
+  "formal_release": false,
+  "producer": "scripts/build_stage6_vertical_slice.py",
+  "consumers": [
+    "turbine_kg.evidence.validation",
+    "stage6_evidence_review_queue.jsonl",
+    "future Stage 6 Evidence Golden Sample closure audit"
+  ],
+  "candidate_page_count": 3,
+  "candidate_evidence_count": 3,
+  "accepted_evidence_count": 3,
+  "quarantined_review_count": 1,
+  "candidate_annotations": "data/stage6/stage6_evidence_candidate_annotations.jsonl",
+  "review_queue": "data/stage6/stage6_evidence_review_queue.jsonl",
+  "blocking_items": [],
+  "superseded_by": "data/stage6/stage6_evidence_quality_audit.json",
+  "formal_evidence_source": "data/stage6/stage6_evidence_annotations.jsonl",
+  "visual_review": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "page_pair_visual_match": true,
+      "bbox_overlay_coverage": "pass",
+      "text_decision": "accepted_native_text_visual_confirmed"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 73,
+      "page_pair_visual_match": true,
+      "bbox_overlay_coverage": "pass",
+      "text_decision": "accepted_ocr_text_visual_confirmed"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "page_pair_visual_match": true,
+      "bbox_overlay_coverage": "pass",
+      "text_decision": "accepted_ocr_text_visual_confirmed"
+    }
+  ],
+  "boundaries": [
+    "No Stage 3 real-trial JSON was consumed",
+    "No Engineering Statement, ontology object, Neo4j projection or Release was created",
+    "Stage 5 artifacts and Original materials remain unchanged",
+    "Accepted Evidence approves only source text and location; it is not an Engineering Statement or Release"
+  ],
+  "next_action": "Build and review the remaining Golden Sample Evidence units; keep unresolved tables quarantined."
+}

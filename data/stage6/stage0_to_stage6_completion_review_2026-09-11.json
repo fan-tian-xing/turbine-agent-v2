@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage0_to_stage6_completion_review",
+  "reviewed_at": "2026-09-11",
+  "overall_status": "complete_with_declared_boundaries",
+  "next_stage_allowed": true,
+  "next_stage": "Stage 7 terminology analysis after terminology_input_manifest is frozen",
+  "stages": {
+    "0": {
+      "status": "complete_for_v2_boundary",
+      "evidence": "The v2 repository, allowlist and regression tests keep the new build isolated from legacy build inputs.",
+      "boundary": "This does not assert that the legacy v1 database can be reconstructed exactly from its historical frozen state."
+    },
+    "1": {
+      "status": "complete",
+      "evidence": "Independent Git repository, environment configuration, dedicated project runtime, ignored runtime/secret paths and isolated Neo4j configuration are present and tested."
+    },
+    "2": {
+      "status": "complete",
+      "evidence": "data/registry/stage2_exit_audit.json; 48 allowlisted assets verified; formal first-batch admission remains correctly deferred to Stage 15."
+    },
+    "3": {
+      "status": "complete",
+      "evidence": "data/stage3/stage3_exit_audit.json; the research trial, traceability, applicability, Claim validation and isolated Neo4j projection are closed without becoming a formal Release."
+    },
+    "4": {
+      "status": "complete",
+      "evidence": "data/stage4/stage4_exit_audit.json; 5 supply units and 775/775 physical pages parsed with 0 failed pages."
+    },
+    "5": {
+      "status": "complete_with_quarantine",
+      "evidence": "data/stage5/stage5_exit_audit_2026-09-10.json; 36-page Golden Sample completed and unresolved structured content remains explicitly quarantined.",
+      "boundary": "Quarantine is an accepted safe disposition, not proof of cell-level table or formula accuracy."
+    },
+    "6": {
+      "status": "complete",
+      "scope": "golden_sample_only",
+      "evidence": "data/stage6/stage6_exit_audit.json; 36 pages, 287 accepted Evidence records, 0 unresolved reviews and 15/15 exit checks passed.",
+      "boundary": "The 287 records are Golden Sample Evidence, not full-corpus Evidence for all 775 pages."
+    }
+  },
+  "verification": {
+    "source_allowlist": "48 files verified",
+    "pytest": {
+      "status": "pass",
+      "test_count": 124
+    },
+    "stage6_rebuild": {
+      "status": "pass",
+      "accepted_evidence_count": 287,
+      "exit_check_count": 15,
+      "failure_count": 0
+    }
+  },
+  "formal_release": false,
+  "user_review_required_now": []
+}

@@ -4,11 +4,13 @@
 
 ## 当前状态
 
-独立工程、配置边界和本地运行基础已经建立。阶段 1、2A、2B 的功能已完成；阶段 3、4、5 的核心研发闭环、775 页 Document IR 全量解析和 OCR/版面基准门已完成，但阶段 0 的旧版冻结一致性、阶段 2 的自动审计可重算性以及正式 Release 前的严格页码/数据库回查仍保留审计边界，不能把阶段 0–5 统称为无条件完全关闭。阶段 5 已完成基于 `Original materials` 原始 PDF 的 RapidOCR 36 页定量质量报告：可评分文本区域记录字符、数字、单位、否定词、原生页面几何、阅读顺序和本地耗时；6 个复杂表格页保持隔离并记录 6/6 隔离覆盖，不把未确认的 cell-level accuracy 伪装成通过。项目 OCR 统一使用 RapidOCR；低置信度和复杂版面直接回到原始页复核；`formal_release=false` 不变。阶段 2B 选出的 5 份资料目前只是研发试点范围，正式首批处理仍须在阶段 15 通过 `First Batch Admission Gate`。阶段 3 的 Fixture、适用性匹配、证据追溯、Neo4j 中文检索和逐 Claim 校验闭环已验证；阶段 4 已完成 Document IR、身份目录、原生/扫描/混合页面统一入口、人工更正 Overlay、Registry→真实 PDF→Document IR→阶段 3 结构投影的只读链路，并完成 5 份冻结处理单元的 775 页全量结构解析审计。Registry 构建器已模块化，其他资料继续保留在审核队列，未进入正式抽取。
+阶段 0～6 的 v2 研发门已按各自边界完成，可以进入阶段 7。阶段 0 完成的是新版与旧版的隔离边界；按照总计划，不据此宣称旧版当前数据库可以从历史冻结状态完整重建。阶段 1 的独立工程、配置、专用运行环境和 Neo4j 数据边界已建立；阶段 2 的 Registry 退出审计为 `complete`；阶段 3 的最小真实闭环为 `complete`；阶段 4 的五个资料供给单元已完成 5/5 文档、775/775 页 Document IR 解析且 0 失败页。
 
-阶段 4 的五份冻结处理单元已经完成 775 页全量结构解析审计：5/5 文档、775/775 页、0 失败页；4 个 OCR 派生件均已回连原件并完成同页序号、页面几何和低分辨率版面对应核查。两个空输出页已确认为正常空白分隔页；当前全量回归均已通过。阶段 5 的退出审计和原始 PDF 质量报告记录在 `data/stage5/`，状态 `complete_with_quarantine` 表示质量基准门已关闭但保留隔离边界；对无法可靠恢复的表格、公式、图示和阅读顺序明确采取隔离策略，不把视觉一致冒充为结构化 OCR 准确。阶段 6 可以从已与原始页核对且可可靠定位的区域开始建立 Evidence Golden Sample；隔离页和复杂结构必须先做区域/单元格复核。
+阶段 5 状态为 `complete_with_quarantine`：36 页 Golden Sample 已完成基于 `Original materials` 原始 PDF 的 RapidOCR、版面和质量复核，不能可靠结构化的内容保留隔离边界。阶段 6 状态为 `complete`，范围明确是 `golden_sample_only`：36 页形成 287 条已接受 Evidence，其中 280 条为文字/区域 Evidence，7 条为 6 个复杂表格页的区域级 Evidence；表格单元格数值尚未结构化放行。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
 
-当前全量回归测试均已通过；阶段 3 范围测试为 36 项。历史记录中的旧测试数量仅作历史背景，不作为当前验收计数。
+阶段 6 的 287 条 Evidence 不代表首批五个资料供给单元的 775 页已经完成全文 Evidence。下一步阶段 7 先建立逐页 `terminology_input_manifest`，只消费可接受文本进行候选术语分析；全文 Evidence 和 Engineering Statement 按修订后的阶段 15A/15B 流程处理。当前仍无正式 Release，`formal_release=false`。
+
+2026-09-11 已重新构建阶段 6 并执行全量回归：124 项测试全部通过，阶段 6 退出审计 15/15 项通过。阶段 0～6 的汇总边界见 `data/stage6/stage0_to_stage6_completion_review_2026-09-11.json`。
 
 阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
 
@@ -110,3 +112,5 @@ set PYTHONPATH=src
 ```
 
 Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。`stage2_source_selection.json` 记录进入阶段 3 研发试点的候选来源，不替代阶段 15 的正式准入门。`source_duplicate_groups.jsonl` 保存已物化的分组，`source_duplicate_relations.jsonl` 保存组内或候选关系。
+
+阶段 6 的构建顺序和权威产物见 `data/stage6/README.md`。最终退出检查执行 `scripts/audit_stage6_exit.py`，只有 `stage6_exit_audit.json` 的 15 项检查全部通过，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。

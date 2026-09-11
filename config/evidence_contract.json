@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "stage": "6",
+  "runtime_source_of_truth": "turbine_kg.evidence.models plus turbine_kg.evidence.validation; this JSON is the auditable contract manifest",
+  "source_of_truth": {
+    "document_ir": [
+      "SourceSpan quote",
+      "page identity",
+      "bbox",
+      "text origin",
+      "parsing run fingerprint"
+    ],
+    "evidence_layer": [
+      "authority_asset_id pointing to Original materials original asset",
+      "processing_asset_id only as OCR/layout assistance provenance",
+      "authority_basis",
+      "Evidence role",
+      "review status",
+      "gate disposition",
+      "review metadata",
+      "traceable manual correction IDs",
+      "table row, column, cell, unit and continuation context",
+      "table-region review scope when data cells are intentionally not promoted",
+      "separate whole-figure, caption and figure-text context"
+    ],
+    "stage5_original_pdf_truth": [
+      "golden sample page scope",
+      "quarantine boundary",
+      "independent text and layout review"
+    ]
+  },
+  "requirements": {
+    "source_span_count_min": 1,
+    "physical_page_required": true,
+    "logical_page_optional": true,
+    "bbox_must_be_rechecked_against_ir": true,
+    "source_text_must_equal_ordered_source_span_quotes": true,
+    "authority_asset_must_be_original_material": true,
+    "processing_asset_is_never_evidence_authority": true,
+    "structured_evidence_must_not_use_mixed_content": true,
+    "structured_evidence_must_not_use_whole_page_bbox": true,
+    "accepted_citable_evidence_requires_bbox": true,
+    "source_spans_must_follow_document_order": true,
+    "manual_effective_text_requires_accepted_correction_records": true,
+    "evidence_and_version_ids_are_recomputed_during_validation": true,
+    "text_origin_must_match_source_spans": true,
+    "processing_asset_provenance_cannot_be_omitted": true,
+    "table_value_cells_must_match_declared_rows_and_columns": true,
+    "page_review_fingerprint_binds_accepted_text_and_bboxes": true,
+    "frozen_stage5_rapidocr_input_hash_required": true,
+    "quarantined_regions_must_not_be_structured": true,
+    "reviewed_table_region_may_be_accepted_only_as_region_scoped": true,
+    "table_region_review_must_not_claim_unreviewed_data_cells": true,
+    "similarity_is_not_acceptance": true
+  },
+  "identity": {
+    "evidence_id": "stable across parsing runs when revision, location, quote and role are unchanged",
+    "evidence_version_id": "changes with Document IR output and SourceSpan version",
+    "review_status_does_not_change_evidence_id": true
+  },
+  "text_versions": {
+    "source_text": "immutable ordered SourceSpan quote",
+    "effective_text": "optional reviewed text; must name native_text, ocr_text or manual_correction origin",
+    "source_text_is_never_overwritten": true
+  },
+  "roles": [
+    "requirement_source",
+    "observation_source",
+    "calculation_basis",
+    "approved_answer",
+    "verification_record",
+    "background"
+  ],
+  "dispositions": [
+    "structured",
+    "region_scoped",
+    "visual_only",
+    "quarantined",
+    "metadata_only"
+  ],
+  "formal_release": false
+}

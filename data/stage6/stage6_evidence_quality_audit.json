@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "stage": "6",
+  "artifact_kind": "stage6_evidence_quality_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/evaluate_stage6_evidence.py",
+  "inputs": {
+    "golden_sample": "data/stage6/stage6_evidence_golden_sample.json",
+    "evidence_annotations": "data/stage6/stage6_evidence_annotations.jsonl",
+    "table_evidence_annotations": "data/stage6/stage6_table_evidence_annotations.jsonl",
+    "review_decisions": "data/stage6/stage6_page_review_decisions.jsonl",
+    "table_review_decisions": "data/stage6/stage6_table_review_decisions.jsonl"
+  },
+  "counts": {
+    "golden_pages": 36,
+    "positive_pages": 22,
+    "accepted_text_evidence": 280,
+    "accepted_table_region_evidence": 7,
+    "reviewed_table_pages": 6,
+    "negative_gate_pages": 8
+  },
+  "metrics": {
+    "original_authority_integrity": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "physical_logical_page_accuracy": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "bbox_presence": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "source_effective_text_integrity": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "golden_disposition_compliance": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "accepted_review_binding": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "table_region_resolution": {
+      "numerator": 6,
+      "denominator": 6,
+      "rate": 1.0
+    },
+    "reviewed_page_text_bbox_fingerprint_binding": {
+      "numerator": 22,
+      "denominator": 22,
+      "rate": 1.0
+    },
+    "reference_number_unit_negation_retention": {
+      "numerator": 9,
+      "denominator": 9,
+      "rate": 1.0
+    }
+  },
+  "checks": {
+    "positive_page_coverage": true,
+    "negative_pages_excluded": true,
+    "reviewed_table_page_coverage": true,
+    "negative_pages_excluded_from_table_evidence": true,
+    "table_regions_are_not_in_text_evidence": true,
+    "no_remaining_review_queue": true,
+    "all_table_regions_remain_non_cell_scoped": true,
+    "build_audit_complete": true,
+    "table_audit_complete": true,
+    "evidence_ids_unique": true,
+    "evidence_version_ids_unique": true,
+    "all_evidence_zero_tolerance_checks_pass": true,
+    "all_accepted_page_fingerprints_match_reviewed_text_and_bboxes": true,
+    "all_available_reference_numbers_units_and_negations_retained": true
+  },
+  "failed_evidence_ids": [],
+  "reviewed_table_boundary": [
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "reason": "quarantined_structured_regions_require_region_or_cell_review"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "reason": "quarantined_structured_regions_require_region_or_cell_review"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "reason": "quarantined_structured_regions_require_region_or_cell_review"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "reason": "quarantined_structured_regions_require_region_or_cell_review"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "reason": "quarantined_structured_regions_require_region_or_cell_review"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 480,
+      "reason": "quarantined_structured_regions_require_region_or_cell_review"
+    }
+  ],
+  "user_review_required_now": [],
+  "future_user_review_trigger": "Only if a table region is later promoted to cell-level Evidence and a specific header/cell relation remains ambiguous after original-page review.",
+  "boundaries": [
+    "Original materials is the sole Evidence authority; OCR remains processing assistance.",
+    "Formerly quarantined tables are accepted only as region-scoped Evidence; no data cells are promoted.",
+    "No Engineering Statement, ontology object, Neo4j projection or Release was created."
+  ]
+}

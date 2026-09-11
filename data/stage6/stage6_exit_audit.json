@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "stage": "6",
+  "artifact_kind": "stage6_exit_audit",
+  "status": "complete",
+  "formal_release": false,
+  "authority": "Original materials original PDF pages; OCR is processing assistance only",
+  "golden_sample_page_count": 36,
+  "accepted_text_page_count": 22,
+  "accepted_table_page_count": 6,
+  "negative_gate_page_count": 8,
+  "accepted_text_evidence_count": 280,
+  "accepted_table_region_evidence_count": 7,
+  "accepted_evidence_count": 287,
+  "structured_table_data_cell_count": 0,
+  "unresolved_review_count": 0,
+  "user_review_required_now": [],
+  "future_user_review_trigger": "Only if table data cells are promoted and original-page header inheritance or cell ownership remains ambiguous.",
+  "canonical_evidence": "data/stage6/stage6_evidence_bundle.jsonl",
+  "artifact_chain": [
+    "Stage 5 truth + Original materials -> stage6_evidence_golden_sample.json",
+    "Golden Sample + page review decisions -> stage6_evidence_annotations.jsonl",
+    "Table structural truth + table review decisions -> stage6_table_evidence_annotations.jsonl",
+    "Text/table component annotations -> stage6_evidence_bundle.jsonl",
+    "Canonical Evidence bundle -> Stage 7 terminology analysis"
+  ],
+  "dead_code_orphan_output_review": {
+    "status": "pass",
+    "canonical_outputs_have_consumers": true,
+    "initial_vertical_slice_is_non_authoritative_diagnostic": true,
+    "temporary_render_outputs_are_not_formal_artifacts": true
+  },
+  "checks": {
+    "golden_sample_has_36_pages": true,
+    "text_page_scope_exact": true,
+    "table_page_scope_exact": true,
+    "negative_pages_not_promoted": true,
+    "all_text_evidence_accepted": true,
+    "all_table_evidence_accepted": true,
+    "tables_remain_region_scoped": true,
+    "table_values_not_promoted": true,
+    "original_assets_are_authority": true,
+    "ocr_never_named_as_authority": true,
+    "text_build_complete": true,
+    "evidence_quality_complete": true,
+    "table_build_complete": true,
+    "no_unreviewed_table_regions": true,
+    "canonical_evidence_ids_unique": true
+  },
+  "failures": [],
+  "boundaries": [
+    "Evidence authority is always the Original materials original PDF asset.",
+    "OCR and OCR-derived PDFs are processing aids and never Evidence authority.",
+    "The six formerly quarantined table pages are accepted only as seven region-scoped table Evidence records.",
+    "No unreviewed table data cell is available for a structured numeric claim.",
+    "Metadata, navigation and boundary-only pages remain negative gates.",
+    "No Engineering Statement, ontology object, Neo4j formal projection or Release was created."
+  ],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 7 terminology analysis and business capability questions"
+}

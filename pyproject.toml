@@ -8,7 +8,6 @@ dependencies = [
     "neo4j>=6.2,<7",
     "numpy>=2.4,<3",
     "opencv-python>=4.13,<5",
-    "opencv-python-headless>=4.13,<5",
     "pymupdf>=1.28,<2",
     "rapidocr-onnxruntime>=1.4,<2",
 ]

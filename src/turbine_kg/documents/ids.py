@@ -39,5 +39,26 @@ def correction_id(block_version_id_value: str, reviewer: str, corrected_text: st
     return stable_id("correction", block_version_id_value, reviewer, corrected_text)
 
 
+def evidence_id(
+    revision_id_value: str,
+    physical_pages: tuple[int, ...],
+    bboxes: tuple[object, ...],
+    quote: str,
+    role: str,
+) -> str:
+    """Stable content/location identity, independent of a parsing run."""
+
+    return stable_id("evidence", revision_id_value, physical_pages, bboxes, quote, role)
+
+
+def evidence_version_id(
+    parsing_output_fingerprint: str,
+    source_span_ids: tuple[str, ...],
+) -> str:
+    """Run/version identity kept separate from stable Evidence identity."""
+
+    return stable_id("evver", parsing_output_fingerprint, *source_span_ids)
+
+
 def new_parsing_run_id() -> str:
     return f"run-{uuid.uuid4().hex[:20]}"

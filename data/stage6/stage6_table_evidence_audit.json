@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "stage": "6",
+  "artifact_kind": "stage6_table_evidence_audit",
+  "status": "complete",
+  "formal_release": false,
+  "authority": "Original materials original PDF pages; OCR is processing assistance only",
+  "reviewed_page_count": 6,
+  "accepted_page_count": 6,
+  "table_region_count": 7,
+  "accepted_evidence_count": 7,
+  "remaining_quarantined_page_count": 0,
+  "structured_data_cell_count": 0,
+  "disposition": "All reviewed tables are accepted only as region-scoped Evidence; unreviewed data cells remain unavailable for structured claims.",
+  "annotations": "data/stage6/stage6_table_evidence_annotations.jsonl",
+  "review_decisions": "data/stage6/stage6_table_review_decisions.jsonl",
+  "page_results": [
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "logical_page": "2-14-3",
+      "decision": "accepted_region_scoped",
+      "table_region_count": 1,
+      "review_ids": [
+        "stage6-D300N-p50-table-d300n-continuation-2-14-1"
+      ]
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "decision": "accepted_region_scoped",
+      "table_region_count": 1,
+      "review_ids": [
+        "stage6-DL5190.3-p113-table-dl5190-table-12.1.15"
+      ]
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "decision": "accepted_region_scoped",
+      "table_region_count": 1,
+      "review_ids": [
+        "stage6-DLT863-p27-table-dlt863-table-d1-start"
+      ]
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "decision": "accepted_region_scoped",
+      "table_region_count": 2,
+      "review_ids": [
+        "stage6-DLT863-p28-table-dlt863-table-d1-continuation",
+        "stage6-DLT863-p28-table-dlt863-table-d2"
+      ]
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "logical_page": "31",
+      "decision": "accepted_region_scoped",
+      "table_region_count": 1,
+      "review_ids": [
+        "stage6-HAF103-p29-table-haf103-operating-state"
+      ]
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 480,
+      "logical_page": "471",
+      "decision": "accepted_region_scoped",
+      "table_region_count": 1,
+      "review_ids": [
+        "stage6-auxiliary_installation_book-p480-table-aux-grouping-plan"
+      ]
+    }
+  ]
+}

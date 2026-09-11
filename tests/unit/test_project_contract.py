@@ -59,3 +59,17 @@ def test_ocr_font_path_is_explicitly_configured(monkeypatch, tmp_path: Path):
     font.write_bytes(b"font")
     monkeypatch.setenv("OCR_FONT_FILE", str(font))
     assert default_font_file() == font.resolve()
+
+
+def test_roadmap_orders_claim_validation_before_cli_and_activation():
+    plan = (PROJECT_ROOT / "总计划.md").read_text(encoding="utf-8")
+
+    claim_stage = plan.index("### 阶段 18：逐结论校验")
+    cli_stage = plan.index("### 阶段 19：建设 CLI 问答")
+    evaluation_stage = plan.index("### 阶段 20：分层测试和未知盲测")
+
+    assert claim_stage < cli_stage < evaluation_stage
+    assert "阶段 17 不写入 active Release" in plan
+    assert "才允许在维护窗口把经过测试的同一 candidate 原样晋级为 `active_release`" in plan
+    assert "本阶段范围明确为 `golden_sample_only`" in plan
+    assert "`terminology_input_manifest`" in plan

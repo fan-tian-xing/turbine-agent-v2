@@ -124,7 +124,8 @@
     "baseline": "data/stage5/stage5_baseline_benchmark_2026-09-10.json",
     "rapidocr": "data/stage5/stage5_rapidocr_sample_benchmark_2026-09-10.json",
     "engine_decision": "data/stage5/stage5_engine_decision_2026-09-10.json",
-    "matched_by_input_fingerprint": false
+    "fingerprint_comparison_performed": false,
+    "fingerprint_match_status": "not_rechecked_by_frozen_exit_audit"
   },
   "blocking_items": [],
   "owner_review_needed_in_chat": [],

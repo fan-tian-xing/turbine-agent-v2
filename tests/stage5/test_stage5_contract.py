@@ -57,6 +57,10 @@ def test_stage5_exit_audit_is_frozen_read_only():
     audit = json.loads(_latest("stage5_exit_audit_*.json").read_text(encoding="utf-8"))
     assert audit["audit_mode"] == "frozen_stage5_artifact_read_only"
     assert audit["automatic_recheck"] is False
+    provenance = audit["artifact_provenance"]
+    assert provenance["fingerprint_comparison_performed"] is False
+    assert provenance["fingerprint_match_status"] == "not_rechecked_by_frozen_exit_audit"
+    assert "matched_by_input_fingerprint" not in provenance
 
 
 def test_stage5_exit_audit_closes_after_visual_gate_and_keeps_boundaries():

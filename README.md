@@ -6,7 +6,7 @@
 
 项目当前状态唯一以 [`data/project_state.json`](data/project_state.json) 为准；阶段退出审计是各阶段的证据记录，不再复制维护项目总状态。本文件不重复维护具体阶段状态。
 
-阶段 6 的样本 Evidence、原始材料权威边界、表格隔离边界和 775 页全文 Evidence 的后续门禁，分别以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
+阶段 7 是当前完成阶段：术语输入清单、候选术语和业务能力问题模板均为 `candidate_only`，以 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json) 为准。阶段 6 的样本 Evidence、原始材料权威边界、表格隔离边界和 775 页全文 Evidence 的后续门禁，仍以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
 
 阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
 
@@ -109,4 +109,4 @@ set PYTHONPATH=src
 
 Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。`stage2_source_selection.json` 记录进入阶段 3 研发试点的候选来源，不替代阶段 15 的正式准入门。`source_duplicate_groups.jsonl` 保存已物化的分组，`source_duplicate_relations.jsonl` 保存组内或候选关系。
 
-阶段 6 的构建顺序和权威产物见 `data/stage6/README.md`。最终退出检查执行 `scripts/audit_stage6_exit.py`，只有 `stage6_exit_audit.json` 的 15 项检查全部通过，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。
+阶段 6 的构建顺序和权威产物见 `data/stage6/README.md`。最终退出检查执行 `scripts/audit_stage6_exit.py`，只有 `stage6_exit_audit.json` 的 17 项检查全部通过，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。阶段 7 的输入清单和候选构建分别执行 `scripts/build_stage7_input_manifest.py`、`scripts/build_stage7_terminology.py`，最终退出检查执行 `scripts/audit_stage7_exit.py`。

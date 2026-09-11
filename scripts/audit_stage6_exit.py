@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from turbine_kg.terminology.analyzer import load_stage6_evidence_bundle
+
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE6 = ROOT / "data" / "stage6"
@@ -31,10 +33,9 @@ def main() -> None:
     table_items = _jsonl("stage6_table_evidence_annotations.jsonl")
     canonical_items = text_items + table_items
     canonical_path = STAGE6 / "stage6_evidence_bundle.jsonl"
-    canonical_path.write_text(
-        "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in canonical_items),
-        encoding="utf-8",
-    )
+    if not canonical_path.is_file():
+        raise SystemExit("missing canonical Stage 6 Evidence bundle")
+    loaded_canonical_items = load_stage6_evidence_bundle(canonical_path)
 
     expected_text_pages = {
         (row["document_key"], int(row["physical_page"]))
@@ -87,7 +88,9 @@ def main() -> None:
         ),
         "table_build_complete": table_audit["status"] == "complete",
         "no_unreviewed_table_regions": table_audit["remaining_quarantined_page_count"] == 0,
-        "canonical_evidence_ids_unique": len(canonical_items) == len({row["evidence"]["evidence_id"] for row in canonical_items}),
+        "canonical_evidence_ids_unique": len(loaded_canonical_items) == len({row["evidence"]["evidence_id"] for row in loaded_canonical_items}),
+        "canonical_bundle_matches_components": loaded_canonical_items == canonical_items,
+        "stage7_consumer_available": callable(load_stage6_evidence_bundle),
     }
     failures = [name for name, passed in checks.items() if not passed]
     status = "complete" if not failures else "blocked"
@@ -119,7 +122,8 @@ def main() -> None:
         ],
         "dead_code_orphan_output_review": {
             "status": "pass",
-            "canonical_outputs_have_consumers": True,
+            "canonical_outputs_have_consumers": callable(load_stage6_evidence_bundle),
+            "canonical_bundle_is_read_not_regenerated": True,
             "initial_vertical_slice_is_non_authoritative_diagnostic": True,
             "temporary_render_outputs_are_not_formal_artifacts": True,
         },

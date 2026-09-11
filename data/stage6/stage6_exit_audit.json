@@ -27,6 +27,7 @@
   "dead_code_orphan_output_review": {
     "status": "pass",
     "canonical_outputs_have_consumers": true,
+    "canonical_bundle_is_read_not_regenerated": true,
     "initial_vertical_slice_is_non_authoritative_diagnostic": true,
     "temporary_render_outputs_are_not_formal_artifacts": true
   },
@@ -45,7 +46,9 @@
     "evidence_quality_complete": true,
     "table_build_complete": true,
     "no_unreviewed_table_regions": true,
-    "canonical_evidence_ids_unique": true
+    "canonical_evidence_ids_unique": true,
+    "canonical_bundle_matches_components": true,
+    "stage7_consumer_available": true
   },
   "failures": [],
   "boundaries": [

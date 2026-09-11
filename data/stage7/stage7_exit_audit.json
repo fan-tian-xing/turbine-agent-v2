@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "stage": "7",
+  "artifact_kind": "stage7_exit_audit",
+  "status": "complete",
+  "scope": "candidate terminology and business capability templates only",
+  "formal_release": false,
+  "producer": "scripts/audit_stage7_exit.py",
+  "inputs": {
+    "terminology_input_manifest": "data/stage7/terminology_input_manifest.json",
+    "terminology_candidates": "data/stage7/terminology_candidates.json",
+    "business_capability_questions": "data/stage7/business_capability_questions.json",
+    "review_queue": "data/stage7/terminology_review_queue.jsonl",
+    "review_decisions": "data/stage7/terminology_review_decisions.jsonl"
+  },
+  "counts": {
+    "page_count": 775,
+    "text_accepted_page_count": 752,
+    "candidate_count": 5401,
+    "review_queue_count": 1189,
+    "review_decision_count": 1189,
+    "capability_question_count": 10
+  },
+  "candidate_scope": {
+    "stage6_evidence_is_sample_cross_check_only": true,
+    "full_document_evidence_claim": false,
+    "engineering_statements_created": false,
+    "owl_or_neo4j_changes_created": false,
+    "release_created": false
+  },
+  "checks": {
+    "input_manifest_frozen": true,
+    "all_775_pages_have_one_status": true,
+    "only_five_admitted_units": true,
+    "non_accepted_pages_not_consumed": true,
+    "candidate_types_are_controlled": true,
+    "candidate_fingerprints_stable": true,
+    "candidate_traceability_complete": true,
+    "ocr_candidates_are_explicit": true,
+    "review_records_reconcile": true,
+    "review_queue_is_non_blocking_boundary": true,
+    "capability_questions_complete": true,
+    "candidate_only_no_promotion": true,
+    "formal_release_false": true,
+    "stage6_consumer_fingerprint_recorded": true
+  },
+  "failures": [],
+  "user_review_required_now": [],
+  "review_boundary": "Candidate-only terms, especially OCR, numeric, requirement, and applicability candidates, remain non-promoted until separate human review.",
+  "next_stage_allowed": true,
+  "next_stage": "Stage 8 minimal OWL ontology design"
+}

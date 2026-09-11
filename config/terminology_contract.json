@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "stage": "7",
+  "artifact_kind": "terminology_contract",
+  "page_statuses": ["text_accepted", "visual_only", "quarantined", "excluded_non_content"],
+  "candidate_types": [
+    "equipment", "component", "action", "parameter", "phenomenon", "process",
+    "verification", "requirement", "applicability_condition", "synonym_candidate",
+    "abbreviation_candidate", "old_name_candidate", "ocr_variant_candidate"
+  ],
+  "text_acceptance": {
+    "only_page_status_is_consumed": "text_accepted",
+    "original_asset_is_authority": true,
+    "ocr_is_processing_input_only": true,
+    "unresolved_table_cells_are_excluded": true
+  },
+  "promotion": {
+    "candidate_only": true,
+    "automatic_ontology_change": false,
+    "automatic_display_vocabulary_change": false,
+    "stage8_requires_review_status": "accepted"
+  },
+  "frequency_policy": "document_family_equal_weight_discovery_only"
+}

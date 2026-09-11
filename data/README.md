@@ -4,4 +4,6 @@
 
 项目当前状态唯一以 `project_state.json` 为准；本目录中的阶段退出审计只证明对应阶段的边界和门禁，不重复维护项目总状态。阶段 6 的唯一权威样本 Evidence 数据源是 `stage6/stage6_evidence_bundle.jsonl`；其范围为 `golden_sample_only`，不能当作 775 页全文 Evidence。
 
+阶段 7 的术语输入清单覆盖首批五个供给单元的 775 个物理页，但只消费其中 `text_accepted` 页面；`stage7/terminology_candidates.json` 和业务能力问题均为 `candidate_only`，不得当作本体、正式词汇或 Release。
+
 临时解析数据写入 `data/staging/`；私有评测材料写入 `data/private_evaluation/`。这两类内容不进入 Git。大体积运行产物、缓存、日志和 OCR 派生 PDF 统一写入 `var/`，其中 OCR 由 `OCR_DERIVED_ROOT` 指向，不能落入只读 `SOURCE_ROOT`；Neo4j 数据与日志统一写入 `docker-data/`。

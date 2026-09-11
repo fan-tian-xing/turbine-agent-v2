@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "stage": "7",
+  "artifact_kind": "business_capability_questions",
+  "formal_release": false,
+  "producer": "turbine_kg.terminology.analyzer",
+  "status": "candidate_templates_only",
+  "questions": [
+    {
+      "question_id": "cap-01",
+      "question_template": "某设备在某阶段有哪些要求？",
+      "required_slots": [
+        "equipment",
+        "lifecycle_stage"
+      ]
+    },
+    {
+      "question_id": "cap-02",
+      "question_template": "某工序包含哪些有序步骤？",
+      "required_slots": [
+        "process"
+      ]
+    },
+    {
+      "question_id": "cap-03",
+      "question_template": "某参数的数值、范围、单位、位置和工况是什么？",
+      "required_slots": [
+        "parameter",
+        "condition"
+      ]
+    },
+    {
+      "question_id": "cap-04",
+      "question_template": "某异常涉及哪个具体对象？",
+      "required_slots": [
+        "phenomenon",
+        "object"
+      ]
+    },
+    {
+      "question_id": "cap-05",
+      "question_template": "多份资料分别适用于什么机型和条件？",
+      "required_slots": [
+        "document",
+        "model",
+        "condition"
+      ]
+    },
+    {
+      "question_id": "cap-06",
+      "question_template": "当前有哪些证据支持的候选方案？",
+      "required_slots": [
+        "evidence",
+        "option"
+      ]
+    },
+    {
+      "question_id": "cap-07",
+      "question_template": "多个方案的前提和验证要求分别是什么？",
+      "required_slots": [
+        "option",
+        "condition",
+        "verification"
+      ]
+    },
+    {
+      "question_id": "cap-08",
+      "question_template": "当前还缺少哪些信息？",
+      "required_slots": [
+        "information_gap"
+      ]
+    },
+    {
+      "question_id": "cap-09",
+      "question_template": "历史案例当时发生了什么、如何处理、结果如何？",
+      "required_slots": [
+        "case",
+        "action",
+        "result"
+      ]
+    },
+    {
+      "question_id": "cap-10",
+      "question_template": "当前场景与历史案例有哪些相同点和不同点？",
+      "required_slots": [
+        "current_scene",
+        "case",
+        "comparison"
+      ]
+    }
+  ],
+  "consumer": "Stage 8 ontology capability mapping and later test design",
+  "boundary": "Templates do not execute retrieval, answering, case matching, or Claim validation.",
+  "inputs": {
+    "terminology_contract_sha256": "001a91b5fe98229790d42bf3ef49eb33806bc541bcf6f2539fc0bf01ea187547"
+  },
+  "content_fingerprint": "a91f0a7df4c733fbd96cea008a1d3ce5aa41023213e9ee51b5039c15a9b61fc7"
+}

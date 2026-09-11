@@ -1,8 +1,8 @@
 # 阶段 3：最小研发验证闭环
 
-本目录记录阶段 3 的研发验证产物，不是正式 Release，也不包含私有资料、盲测题或真实资料正文。
+本目录记录阶段 3 的研发验证产物，不是正式 Release，也不包含私有资料、盲测题或真实资料正文。项目当前状态唯一以 `../project_state.json` 为准，阶段 3 的门禁证据见 `stage3_exit_audit.json`。
 
-当前已建立：
+主要产物：
 
 - `initial_batch_manifest.json`：从阶段 2B 已准入来源中冻结 15 个代表页的试点采样入口；
 - `review_metrics.json`：人工审核结果和错误类别记录；
@@ -23,6 +23,6 @@ CLI smoke 示例（在项目根目录执行）：
 PYTHONPATH=src python -m turbine_kg.stage3.cli --corpus tests/fixtures/stage3/corpus.json --question "What is the cold shaft alignment limit?" --context-json tests/fixtures/stage3/context-n300.json
 ```
 
-阶段 3 已完成研发闭环和严格退出审计：首批 15 页已完成抽取并确认 3 组真实 Evidence，其中 4 条工程结论已以 14 类领域节点加 `Stage3Batch` 控制节点、45 条关系导入新版 Neo4j；中文问题已实际从数据库检索并完成来源、页码和 Evidence 回查。LLM 适配器现在只接受带 Evidence ID、页码、对象、适用条件和 Claim 类型的结构化回答，并已通过真实回答放行与错误回答拒绝两类验证。2026-09-08 的真实 `gpt-5.6-luna` 重放已通过 Claim 校验，最终答案由本地验证后的 Claim 组装。外部 LLM 只接收检索到的最小证据片段。Neo4j 试点仍属于隔离的 Stage3 投影；当前样本未证明需要增加向量检索。总计划复盘记录见 `plan_review_2026-09-08.json`；正式首批处理仍需遵守阶段 15 的准入门禁。
+研发闭环记录包括：首批 15 页抽取、3 组真实 Evidence 确认、4 条工程结论的隔离 Neo4j 试点投影，以及中文问题的来源、页码和 Evidence 回查。LLM 适配器只接受带 Evidence ID、页码、对象、适用条件和 Claim 类型的结构化回答；真实重放、Claim 校验和最终答案组装均保留在本目录的审计与回放记录中。外部 LLM 只接收检索到的最小证据片段。正式首批处理仍需遵守阶段 15 的准入门禁。
 
 LLM 端点按主模型、备用模型 1、备用模型 2 顺序尝试：只有连接失败、超时或 HTTP 服务不可用时才切换备用模型；如果接口已经返回内容但 JSON/Claim/页码/对象/适用性校验失败，则立即报告校验错误，不用备用模型掩盖回答质量问题。

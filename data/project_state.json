@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "project_state",
+  "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
+  "updated_at": "2026-09-11",
+  "current_stage": 6,
+  "current_stage_status": "complete",
+  "current_stage_scope": "golden_sample_only",
+  "next_stage": 7,
+  "next_stage_status": "ready",
+  "formal_release": false,
+  "stages": {
+    "0": {
+      "status": "complete_for_v2_boundary",
+      "scope": "v2_isolation_boundary",
+      "basis": "新版与旧版隔离边界及项目契约检查"
+    },
+    "1": {
+      "status": "complete",
+      "basis": "独立工程、配置、运行环境和 Neo4j 数据边界"
+    },
+    "2": {
+      "status": "complete",
+      "exit_audit": "data/registry/stage2_exit_audit.json"
+    },
+    "3": {
+      "status": "complete",
+      "exit_audit": "data/stage3/stage3_exit_audit.json"
+    },
+    "4": {
+      "status": "complete",
+      "exit_audit": "data/stage4/stage4_exit_audit.json"
+    },
+    "5": {
+      "status": "complete_with_quarantine",
+      "exit_audit": "data/stage5/stage5_exit_audit_2026-09-10.json"
+    },
+    "6": {
+      "status": "complete",
+      "scope": "golden_sample_only",
+      "exit_audit": "data/stage6/stage6_exit_audit.json",
+      "quality_audit": "data/stage6/stage6_evidence_quality_audit.json",
+      "table_audit": "data/stage6/stage6_table_evidence_audit.json"
+    }
+  },
+  "boundaries": [
+    "阶段 6 Evidence 仅覆盖 36 页 Golden Sample，不代表 775 页全文 Evidence 已完成。",
+    "阶段 5 隔离边界继续保留；未逐格确认的表格数值不得进入结构化 Claim。",
+    "阶段 15A/15B 才是首批五份资料的全文 Evidence 与正式准入处理门。",
+    "当前没有正式 Release；阶段 3 的试验投影和阶段 6 的样本 Evidence 不等于正式发布。"
+  ]
+}

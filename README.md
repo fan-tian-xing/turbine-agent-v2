@@ -4,13 +4,9 @@
 
 ## 当前状态
 
-阶段 0～6 的 v2 研发门已按各自边界完成，可以进入阶段 7。阶段 0 完成的是新版与旧版的隔离边界；按照总计划，不据此宣称旧版当前数据库可以从历史冻结状态完整重建。阶段 1 的独立工程、配置、专用运行环境和 Neo4j 数据边界已建立；阶段 2 的 Registry 退出审计为 `complete`；阶段 3 的最小真实闭环为 `complete`；阶段 4 的五个资料供给单元已完成 5/5 文档、775/775 页 Document IR 解析且 0 失败页。
+项目当前状态唯一以 [`data/project_state.json`](data/project_state.json) 为准；阶段退出审计是各阶段的证据记录，不再复制维护项目总状态。本文件不重复维护具体阶段状态。
 
-阶段 5 状态为 `complete_with_quarantine`：36 页 Golden Sample 已完成基于 `Original materials` 原始 PDF 的 RapidOCR、版面和质量复核，不能可靠结构化的内容保留隔离边界。阶段 6 状态为 `complete`，范围明确是 `golden_sample_only`：36 页形成 287 条已接受 Evidence，其中 280 条为文字/区域 Evidence，7 条为 6 个复杂表格页的区域级 Evidence；表格单元格数值尚未结构化放行。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
-
-阶段 6 的 287 条 Evidence 不代表首批五个资料供给单元的 775 页已经完成全文 Evidence。下一步阶段 7 先建立逐页 `terminology_input_manifest`，只消费可接受文本进行候选术语分析；全文 Evidence 和 Engineering Statement 按修订后的阶段 15A/15B 流程处理。当前仍无正式 Release，`formal_release=false`。
-
-2026-09-11 已重新构建阶段 6 并执行全量回归：124 项测试全部通过，阶段 6 退出审计 15/15 项通过。阶段 0～6 的汇总边界见 `data/stage6/stage0_to_stage6_completion_review_2026-09-11.json`。
+阶段 6 的样本 Evidence、原始材料权威边界、表格隔离边界和 775 页全文 Evidence 的后续门禁，分别以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源，OCR 只用于文字和坐标辅助。
 
 阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
 

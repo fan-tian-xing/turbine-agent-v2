@@ -1,6 +1,6 @@
 # 阶段 6：Evidence 层与 Golden Sample
 
-阶段 6 已完成并通过退出审计，范围为 `golden_sample_only`。Evidence 的唯一权威来源是 `Original materials` 原始资产；OCR、RapidOCR 文本和处理 PDF 只用于文字适配、坐标辅助和原页对照，不是证据来源。
+本目录记录阶段 6 的 Evidence 产物和退出门禁；当前项目状态及下一阶段状态唯一以 `../project_state.json` 为准。Evidence 的唯一权威来源是 `Original materials` 原始资产；OCR、RapidOCR 文本和处理 PDF 只用于文字适配、坐标辅助和原页对照，不是证据来源。
 
 当前闭环：
 
@@ -29,4 +29,4 @@ Registry + Original materials
 
 阶段 6 未生成 Engineering Statement、OWL/SHACL、Neo4j 正式投影或 Release。阶段 3 试验 Evidence 也没有被直接晋级或作为本阶段构建输入。
 
-阶段 0～6 的汇总复核见 `stage0_to_stage6_completion_review_2026-09-11.json`。下一阶段必须先冻结覆盖 775 个物理页的 `terminology_input_manifest`；阶段 7 只消费其中 `text_accepted` 内容，全文 Evidence 仍在阶段 15 构建。
+下一阶段必须先冻结覆盖 775 个物理页的 `terminology_input_manifest`；阶段 7 只消费其中 `text_accepted` 内容，全文 Evidence 仍在阶段 15 构建。

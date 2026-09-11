@@ -1,6 +1,6 @@
 # 阶段 5：OCR、版面解析和页面 Golden Sample
 
-阶段 5 只处理当前首批五份资料，不做全库一次性 OCR，不形成正式 Evidence、Release 或阶段 15 的正式首批准入。
+阶段 5 只处理当前首批五份资料，不做全库一次性 OCR，不形成正式 Evidence、Release 或阶段 15 的正式首批准入。项目当前状态唯一以 `../project_state.json` 为准，阶段 5 的门禁证据见 `stage5_exit_audit_2026-09-10.json`。
 
 当前冻结范围：5 份资料、775 页；人工 Golden Sample 目标为 36 页。`stage5_sample_manifest.json` 记录页面分层、原始资料和处理资产边界。`audit_stage5_inputs.py` 先核对原件、OCR 派生件、页数、页序边界和 Registry SHA-256，再允许进入 OCR/版面/表格基准测试。
 
@@ -35,7 +35,7 @@ $env:PYTHONPATH = "src;scripts"
 & $projectPython scripts/audit_stage5_exit.py
 ```
 
-当前已完成：5 份资料、775 页输入审计和页面基线；RapidOCR 完成冻结 Golden Sample 36 页复跑、0 失败；并完成 7 个版面候选的分类（6 个真实表格页、1 个复杂非表格页）及原始页结构复核。当前只使用 RapidOCR；低置信度、关键数字或复杂版面直接回到 Original materials 原始页人工复核，不用复核结果覆盖原件。相似度只用于发现疑点，不代表字符准确率；无法可靠恢复的表格、公式、图示和阅读顺序只能保留原始页视觉依据，不能直接进入结构化 Evidence。规则线检测只产生候选区域，不代表单元格文字已经准确。
+阶段 5 产物记录了：5 份资料、775 页输入审计和页面基线；RapidOCR 冻结 Golden Sample 36 页复跑、0 失败；以及 7 个版面候选的分类（6 个真实表格页、1 个复杂非表格页）和原始页结构复核。当前只使用 RapidOCR；低置信度、关键数字或复杂版面直接回到 Original materials 原始页人工复核，不用复核结果覆盖原件。相似度只用于发现疑点，不代表字符准确率；无法可靠恢复的表格、公式、图示和阅读顺序只能保留原始页视觉依据，不能直接进入结构化 Evidence。规则线检测只产生候选区域，不代表单元格文字已经准确。
 
 新增的 `stage5_truth_annotations_*.json` 和 `stage5_quality_benchmark_*.json` 使用 `Original materials` 原始 PDF 作为真值来源，记录可评分文本区域的字符、数字、单位、否定词、原生页面几何、阅读顺序和本地耗时指标；扫描页只有存在独立人工转录时才允许文字定量评分，不能把处理链生成的 OCR 文字再当作真值。复杂表格和没有独立文字真值的扫描页，其 bbox/cell/字符结果明确保留为隔离状态。质量报告状态 `complete_with_quarantine` 表示定量复核已完成且所有未确认结构均已隔离，不表示复杂表格 cell-level accuracy 已通过。
 

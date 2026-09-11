@@ -17,8 +17,12 @@ def test_stage7_manifest_covers_exactly_775_pages_and_frozen_statuses():
     assert manifest["input_boundary"]["source_count"] == 5
     assert set(manifest["input_boundary"]["excluded_source_classes"]) == {"formal_case_materials", "holdout_materials", "blind_test_materials"}
     assert sum(manifest["status_counts"].values()) == 775
-    assert manifest["status_counts"]["text_accepted"] < 752
-    assert manifest["status_counts"]["visual_only"] > 13
+    assert manifest["status_counts"] == {
+        "text_accepted": 726,
+        "visual_only": 39,
+        "quarantined": 2,
+        "excluded_non_content": 8,
+    }
     assert all(row["page_status"] == "text_accepted" or row["exclusion_reason"] for row in manifest["pages"])
 
 

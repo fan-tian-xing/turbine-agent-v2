@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 from turbine_kg.terminology.models import CANDIDATE_TYPES
+from turbine_kg.terminology.analyzer import analyze_terminology
 from turbine_kg.terminology.validation import content_fingerprint, validate_candidates
 
 
@@ -35,3 +36,77 @@ def test_candidate_fingerprints_and_origins_are_stable():
     )
     assert all(set(row["text_origins"]) <= {"native_text", "ocr_text"} for row in candidates)
     assert all(isinstance(row["is_ocr_variant"], bool) for row in candidates)
+
+
+def test_ocr_candidates_keep_semantic_types_and_confirmation_boundary():
+    candidates = _read("terminology_candidates.json")["candidates"]
+    ocr_candidates = [row for row in candidates if row["text_origins"] == ["ocr_text"]]
+    assert ocr_candidates
+    assert any(row["candidate_type"] in {"equipment", "component", "action", "process", "verification"} for row in ocr_candidates)
+    assert all(
+        row["requires_original_confirmation"] is True
+        for row in ocr_candidates
+        if all(occurrence["source_kind"] != "accepted_stage6_evidence" for occurrence in row["occurrences"])
+    )
+    assert all(0 <= row["family_weighted_score"] <= 1 for row in candidates)
+    assert not {row["normalized_form"] for row in candidates} & {"的规定", "术要求", "要求", "规定"}
+
+
+def test_explicit_synonym_and_old_name_patterns_produce_source_bound_candidates():
+    text = "汽封环又称密封环。调节阀旧称控制阀。"
+    pages = []
+    texts = {}
+    for number in (1,):
+        page_id = f"fixture-{number}"
+        page = {
+            "page_id": page_id,
+            "document_key": "fixture",
+            "document_logical_id": "doc-fixture",
+            "revision_id": "rev-fixture",
+            "processing_asset_id": "asset-original",
+            "authority_asset_id": "asset-original",
+            "physical_page": number,
+            "page_status": "text_accepted",
+            "text_source": "native_pdf_text",
+            "analysis_text_sha256": "fixture-sha",
+        }
+        pages.append(page)
+        texts[page_id] = text
+    candidates = analyze_terminology(
+        {"pages": pages},
+        texts,
+    )
+    relations = {row["candidate_type"]: row for row in candidates if row["candidate_type"] in {"synonym_candidate", "old_name_candidate"}}
+    assert relations["synonym_candidate"]["relation"]["left"] == "汽封环"
+    assert relations["synonym_candidate"]["relation"]["right"] == "密封环"
+    assert relations["old_name_candidate"]["relation"]["left"] == "调节阀"
+    assert relations["old_name_candidate"]["relation"]["right"] == "控制阀"
+    assert all(row["occurrences"][0]["physical_page"] == 1 for row in relations.values())
+
+
+def test_family_weighted_score_equalizes_long_and_short_documents():
+    pages = []
+    texts = {}
+    for document_key, page_number, text in (
+        ("long", 1, "汽轮机"),
+        ("long", 2, "密封瓦检查"),
+        ("short", 1, "汽轮机"),
+    ):
+        page_id = f"{document_key}-{page_number}"
+        pages.append({
+            "page_id": page_id,
+            "document_key": document_key,
+            "document_logical_id": f"doc-{document_key}",
+            "revision_id": f"rev-{document_key}",
+            "processing_asset_id": f"asset-{document_key}",
+            "authority_asset_id": f"asset-{document_key}",
+            "physical_page": page_number,
+            "page_status": "text_accepted",
+            "text_source": "native_pdf_text",
+            "analysis_text_sha256": "fixture-sha",
+        })
+        texts[page_id] = text
+    candidates = analyze_terminology({"pages": pages}, texts)
+    turbine = next(row for row in candidates if row["normalized_form"] == "汽轮机" and row["candidate_type"] == "equipment")
+    assert turbine["document_occurrence_counts"] == {"long": 1, "short": 1}
+    assert turbine["family_weighted_score"] == 0.75

@@ -35,6 +35,10 @@ def validate_input_manifest(payload: dict) -> dict:
     required_exclusions = {"formal_case_materials", "holdout_materials", "blind_test_materials"}
     if not required_exclusions <= set(excluded) or not boundary.get("exclusion_enforcement"):
         raise ValueError("Stage 7 input manifest must explicitly exclude case, holdout, and blind-test materials")
+    if payload.get("content_fingerprint"):
+        expected = content_fingerprint({key: value for key, value in payload.items() if key != "content_fingerprint"})
+        if expected != payload["content_fingerprint"]:
+            raise ValueError("Stage 7 input manifest content fingerprint mismatch")
     if set(payload.get("status_counts", {})) - PAGE_STATUSES:
         raise ValueError("manifest contains an unknown status count")
     return payload
@@ -51,6 +55,11 @@ def validate_candidates(records: list[dict], accepted_page_keys: set[tuple[str, 
             raise ValueError("candidate occurrence_count does not match retained occurrences")
         if row["document_frequency"] != len({item["document_logical_id"] for item in row["occurrences"]}):
             raise ValueError("candidate document_frequency does not match occurrences")
+        counts = {}
+        for occurrence in row["occurrences"]:
+            counts[occurrence["document_key"]] = counts.get(occurrence["document_key"], 0) + 1
+        if counts != row["document_occurrence_counts"]:
+            raise ValueError("candidate document occurrence counts do not match occurrences")
         for occurrence in row["occurrences"]:
             key = (occurrence["document_logical_id"], occurrence["physical_page"])
             if key not in accepted_page_keys:

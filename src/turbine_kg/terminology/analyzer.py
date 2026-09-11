@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 import unicodedata
+from collections import Counter
 from pathlib import Path
 from typing import Iterable
 
@@ -14,7 +15,7 @@ from .models import CANDIDATE_TYPES
 from .validation import content_fingerprint
 
 
-_CJK_TERM = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]{2,16}")
+_CJK_RUN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff]+")
 DEFAULT_CONTRACT_PATH = Path(__file__).resolve().parents[3] / "config" / "terminology_contract.json"
 
 CAPABILITY_QUESTIONS = (
@@ -55,7 +56,7 @@ def normalize_term(value: str) -> str:
 
 def load_terminology_contract(path: Path = DEFAULT_CONTRACT_PATH) -> dict:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if payload.get("schema_version") != 1 or payload.get("stage") != "7":
+    if payload.get("schema_version") != 1 or payload.get("stage") != "7" or set(payload.get("candidate_types", [])) != set(CANDIDATE_TYPES):
         raise ValueError("invalid terminology contract")
     return payload
 
@@ -84,6 +85,57 @@ def _types_for_term(term: str, rules: dict) -> set[str]:
     return categories
 
 
+def _clean_lexical_term(term: str, rules: dict) -> str:
+    normalized = normalize_term(term)
+    minimum = int(rules.get("min_term_chars", 2))
+    maximum = int(rules.get("max_term_chars", 12))
+    ignored = set(rules.get("ignored_fragments", []))
+    if not minimum <= len(normalized) <= maximum or normalized in ignored:
+        return ""
+    if normalized.startswith(("的", "其", "并且", "以及")):
+        return ""
+    return normalized
+
+
+def _lexical_terms(text: str, rules: dict) -> list[str]:
+    suffixes = sorted(
+        set(
+            rules.get("equipment_suffixes", [])
+            + rules.get("component_suffixes", [])
+            + rules.get("action_suffixes", [])
+            + rules.get("process_suffixes", [])
+            + rules.get("phenomenon_suffixes", [])
+            + rules.get("verification_suffixes", [])
+            + rules.get("requirement_suffixes", [])
+            + rules.get("applicability_condition_suffixes", [])
+        ),
+        key=len,
+        reverse=True,
+    )
+    maximum = int(rules.get("max_term_chars", 12))
+    terms: set[str] = set()
+    for match in _CJK_RUN.finditer(text):
+        run = match.group(0)
+        for suffix in suffixes:
+            cursor = 0
+            while True:
+                hit = run.find(suffix, cursor)
+                if hit < 0:
+                    break
+                end = hit + len(suffix)
+                start = max(0, end - maximum)
+                context = run[start:end]
+                for marker in ("恢复至", "处于", "符合", "下列", "按照", "其中", "应", "须", "需"):
+                    marker_start = context.rfind(marker)
+                    if 0 <= marker_start < len(context) - len(marker):
+                        context = context[marker_start + len(marker):]
+                cleaned = _clean_lexical_term(context, rules)
+                if cleaned:
+                    terms.add(cleaned)
+                cursor = end
+    return sorted(terms)
+
+
 def _questions_for_type(candidate_type: str) -> list[str]:
     mapping = {
         "equipment": ["cap-01", "cap-04", "cap-05"],
@@ -95,6 +147,9 @@ def _questions_for_type(candidate_type: str) -> list[str]:
         "verification": ["cap-03", "cap-07"],
         "requirement": ["cap-01", "cap-03", "cap-05"],
         "applicability_condition": ["cap-03", "cap-05", "cap-07"],
+        "synonym_candidate": ["cap-05", "cap-08"],
+        "old_name_candidate": ["cap-05", "cap-08"],
+        "abbreviation_candidate": ["cap-05", "cap-08"],
         "ocr_variant_candidate": ["cap-08"],
     }
     return mapping.get(candidate_type, ["cap-04"])
@@ -102,6 +157,7 @@ def _questions_for_type(candidate_type: str) -> list[str]:
 
 def _add_occurrence(store: dict[tuple[str, str], dict], term: str, candidate_type: str, page: dict, *, method: str, text_origin: str, source_kind: str = "page_text", ocr_variant_signal: bool = False) -> None:
     normalized = normalize_term(term)
+    normalized = _clean_lexical_term(normalized, {"min_term_chars": 2, "max_term_chars": 64, "ignored_fragments": []}) if candidate_type not in {"synonym_candidate", "old_name_candidate"} else normalized
     if not normalized or candidate_type not in CANDIDATE_TYPES:
         return
     key = (normalized, candidate_type)
@@ -148,8 +204,6 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
         is_ocr = page["processing_asset_id"] != page["authority_asset_id"]
         text_origin = "ocr_text" if is_ocr else "native_text"
         ocr_signal = is_ocr and any(character in text for character in ocr_variant_chars)
-        if is_ocr and not is_stage6_text:
-            raise ValueError(f"OCR text accepted without Stage 6 canonical Evidence: {page['page_id']}")
         if is_stage6_text:
             canonical_rows = by_key.get((page["document_key"], page["physical_page"]), [])
             if not canonical_rows:
@@ -157,27 +211,38 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
             canonical_ids = {row["evidence"]["evidence_id"] for row in canonical_rows}
             if not set(page.get("stage6_evidence_ids", [])) <= canonical_ids:
                 raise ValueError(f"Stage 6 Evidence IDs do not match canonical bundle: {page['page_id']}")
+        source_kind = "accepted_stage6_evidence" if is_stage6_text else "page_text"
         for match in number_unit.finditer(text):
-            _add_occurrence(store, match.group(0), "ocr_variant_candidate" if is_ocr else "parameter", page, method="numeric_unit_pattern", text_origin=text_origin, source_kind="accepted_stage6_evidence" if is_stage6_text else "page_text", ocr_variant_signal=ocr_signal)
-        for match in _CJK_TERM.finditer(text):
-            term = match.group(0)
+            _add_occurrence(store, match.group(0), "parameter", page, method="numeric_unit_pattern", text_origin=text_origin, source_kind=source_kind, ocr_variant_signal=ocr_signal)
+        for term in _lexical_terms(text, rules):
             types = _types_for_term(term, rules)
-            if not types:
-                continue
-            method = "lexical_pattern"
-            if is_ocr:
-                _add_occurrence(store, term, "ocr_variant_candidate", page, method=method, text_origin=text_origin, source_kind="accepted_stage6_evidence" if is_stage6_text else "page_text", ocr_variant_signal=ocr_signal)
-            else:
-                for candidate_type in types:
-                    _add_occurrence(store, term, candidate_type, page, method=method, text_origin=text_origin)
+            for candidate_type in types:
+                _add_occurrence(store, term, candidate_type, page, method="lexical_pattern", text_origin=text_origin, source_kind=source_kind, ocr_variant_signal=ocr_signal)
+            if is_ocr and ocr_signal:
+                _add_occurrence(store, term, "ocr_variant_candidate", page, method="lexical_pattern", text_origin=text_origin, source_kind=source_kind, ocr_variant_signal=True)
         for match in abbreviation.finditer(text):
-            _add_occurrence(store, match.group(0), "ocr_variant_candidate" if is_ocr else "abbreviation_candidate", page, method="lexical_pattern", text_origin=text_origin, source_kind="accepted_stage6_evidence" if is_stage6_text else "page_text", ocr_variant_signal=ocr_signal)
+            _add_occurrence(store, match.group(0), "abbreviation_candidate", page, method="lexical_pattern", text_origin=text_origin, source_kind=source_kind, ocr_variant_signal=ocr_signal)
+            if is_ocr and ocr_signal:
+                _add_occurrence(store, match.group(0), "ocr_variant_candidate", page, method="lexical_pattern", text_origin=text_origin, source_kind=source_kind, ocr_variant_signal=True)
+        for relation_type, pattern_key in (("synonym_candidate", "synonym_pattern"), ("old_name_candidate", "old_name_pattern")):
+            pattern = rules.get(pattern_key)
+            if not pattern:
+                continue
+            for match in re.finditer(pattern, text):
+                left = _clean_lexical_term(match.group("left"), rules)
+                right = _clean_lexical_term(match.group("right"), rules)
+                if not left or not right or left == right:
+                    continue
+                relation_term = f"{left}→{right}"
+                _add_occurrence(store, relation_term, relation_type, page, method="explicit_relation_pattern", text_origin=text_origin, source_kind=source_kind, ocr_variant_signal=ocr_signal)
         # Stage 6 is a bounded verification cross-check.  For OCR pages the
         # build producer has already used its accepted effective_text; this
         # lookup prevents a page from being treated as accepted without the
         # canonical Evidence row that authorizes it.
 
     records: list[dict] = []
+    accepted_page_counts = Counter(page["document_key"] for page in accepted)
+    document_count = max(1, len(accepted_page_counts))
     for item in store.values():
         origins = sorted(item["origins"])
         candidate_type = item["candidate_type"]
@@ -197,12 +262,25 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
             "occurrences": occurrences,
             "text_origins": origins,
             "is_ocr_variant": is_ocr_variant,
+            "requires_original_confirmation": origins == ["ocr_text"] and not any(
+                occurrence["source_kind"] == "accepted_stage6_evidence" for occurrence in occurrences
+            ),
             "ocr_variant_signal": bool(item.get("ocr_variant_signals")),
             "review_status": "candidate_only",
             "review_reason": "Stage 7 discovery output; no automatic ontology or runtime vocabulary promotion.",
             "capability_question_ids": _questions_for_type(candidate_type),
             "discovery_method": sorted(item["discovery_methods"])[0],
         }
+        document_occurrence_counts = Counter(item["document_key"] for item in occurrences)
+        record["document_occurrence_counts"] = dict(sorted(document_occurrence_counts.items()))
+        record["family_weighted_score"] = round(
+            sum(min(count / accepted_page_counts[document_key], 1.0) for document_key, count in document_occurrence_counts.items())
+            / document_count,
+            6,
+        )
+        if candidate_type in {"synonym_candidate", "old_name_candidate"}:
+            left, right = item["normalized_form"].split("→", 1)
+            record["relation"] = {"relation_type": candidate_type, "left": left, "right": right}
         record["content_fingerprint"] = content_fingerprint(record)
         records.append(record)
     return sorted(records, key=lambda row: (row["candidate_type"], row["normalized_form"], row["candidate_id"]))

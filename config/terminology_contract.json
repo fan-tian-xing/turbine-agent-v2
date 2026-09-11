@@ -32,16 +32,17 @@
     "applicability_condition_suffixes": ["工况", "状态", "适用范围", "适用条件"],
     "number_unit_pattern": "(?<![\\w])[-+]?\\d+(?:\\.\\d+)?\\s*(?:mm|cm|m|μm|um|MPa|kPa|Pa|℃|°C|%|毫米|厘米|米|微米|兆帕|千帕|帕|度)(?![\\w])",
     "ocr_variant_characters": "圧夲眞測應與為發",
-    "abbreviation_pattern": "(?<![A-Za-z0-9])[A-Z][A-Z0-9/-]{1,11}(?![A-Za-z0-9])"
+    "abbreviation_pattern": "(?<![A-Za-z0-9])[A-Z][A-Z0-9/-]{1,11}(?![A-Za-z0-9])",
+    "synonym_pattern": "(?P<left>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})\\s*(?:又称|亦称|也称|称为)\\s*(?P<right>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})",
+    "old_name_pattern": "(?P<left>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})\\s*(?:原称|旧称|曾称|改称)\\s*(?P<right>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})",
+    "min_term_chars": 2,
+    "max_term_chars": 12,
+    "ignored_fragments": ["的规定", "术要求", "要求", "规定", "下列规定", "的有关规定", "技术要求", "还应符合下列规定", "应符合下列规定", "列规定"]
   },
   "review": {
-    "blocking_candidate_types": ["parameter", "requirement", "applicability_condition", "abbreviation_candidate", "ocr_variant_candidate"],
-    "blocking_page_sources": ["stage6_accepted_evidence"],
-    "unresolved_relationship_types_require_user_review": ["synonym_candidate", "old_name_candidate"]
-  },
-  "failure_handling": {
-    "changed_input_fingerprint": "quarantine_new_run",
-    "invalid_output": "do_not_activate",
-    "rollback": "retain_last_valid_candidate_artifacts_and_restore_by_manifest_fingerprint"
+    "stage7_is_non_blocking": true,
+    "stage8_requires_selected_candidate_review": true,
+    "ocr_only_requires_original_confirmation": true,
+    "relationship_candidates_require_source_comparison": true
   }
 }

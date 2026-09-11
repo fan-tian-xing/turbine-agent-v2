@@ -92,7 +92,7 @@
   "consumer": "Stage 8 ontology capability mapping and later test design",
   "boundary": "Templates do not execute retrieval, answering, case matching, or Claim validation.",
   "inputs": {
-    "terminology_contract_sha256": "5c32504bb23e688cfd5ed7428b5537627a03c1f440fb8445fbdf7de1006abef0"
+    "terminology_contract_sha256": "05b0c57358d81ed231ffd6fb3e87421ddc15a05e4491718e6ba59cccf34c2d59"
   },
-  "content_fingerprint": "5c39e3055131cea1ad2130f9da915a32b6128ef75376d17d15b7adb1f10821f7"
+  "content_fingerprint": "447ba4c09f9d8922665c9b4749aa3a863600f6e16ff7fc97275ba39211072d7e"
 }

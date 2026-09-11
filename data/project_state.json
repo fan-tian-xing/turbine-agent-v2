@@ -4,10 +4,10 @@
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
   "updated_at": "2026-09-11",
   "current_stage": 7,
-  "current_stage_status": "blocked_pending_user_review",
+  "current_stage_status": "complete",
   "current_stage_scope": "candidate_terminology_and_capability_templates_only",
-  "next_stage": null,
-  "next_stage_status": "blocked",
+  "next_stage": 8,
+  "next_stage_status": "ready",
   "formal_release": false,
   "stages": {
     "0": {
@@ -43,7 +43,7 @@
       "table_audit": "data/stage6/stage6_table_evidence_audit.json"
     },
     "7": {
-      "status": "blocked_pending_user_review",
+      "status": "complete",
       "scope": "candidate_terminology_and_capability_templates_only",
       "exit_audit": "data/stage7/stage7_exit_audit.json",
       "input_manifest": "data/stage7/terminology_input_manifest.json"

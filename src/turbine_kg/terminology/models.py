@@ -8,7 +8,7 @@ CANDIDATE_TYPES = frozenset({
     "verification", "requirement", "applicability_condition", "synonym_candidate",
     "abbreviation_candidate", "old_name_candidate", "ocr_variant_candidate",
 })
-DISCOVERY_METHODS = frozenset({"lexical_pattern", "numeric_unit_pattern", "document_metadata"})
+DISCOVERY_METHODS = frozenset({"lexical_pattern", "numeric_unit_pattern", "document_metadata", "explicit_relation_pattern"})
 
 
 def validate_page_record(record: dict) -> None:
@@ -39,7 +39,8 @@ def validate_candidate(record: dict) -> None:
         "candidate_id", "surface_form", "normalized_form", "candidate_type",
         "occurrence_count", "document_frequency", "occurrences", "text_origins",
         "is_ocr_variant", "review_status", "capability_question_ids",
-        "discovery_method", "content_fingerprint",
+        "discovery_method", "content_fingerprint", "requires_original_confirmation",
+        "document_occurrence_counts", "family_weighted_score",
     }
     missing = required - record.keys()
     if missing:
@@ -52,3 +53,13 @@ def validate_candidate(record: dict) -> None:
         raise ValueError("invalid terminology review status")
     if not record["occurrences"] or not record["capability_question_ids"]:
         raise ValueError("candidate must retain an occurrence and a capability question")
+    if not isinstance(record["requires_original_confirmation"], bool):
+        raise ValueError("requires_original_confirmation must be boolean")
+    if not isinstance(record["document_occurrence_counts"], dict) or not record["document_occurrence_counts"]:
+        raise ValueError("candidate must retain document occurrence counts")
+    if not 0 <= float(record["family_weighted_score"]) <= 1:
+        raise ValueError("family_weighted_score must be between 0 and 1")
+    if record["candidate_type"] in {"synonym_candidate", "old_name_candidate"}:
+        relation = record.get("relation")
+        if not isinstance(relation, dict) or relation.get("relation_type") != record["candidate_type"] or not relation.get("left") or not relation.get("right"):
+            raise ValueError("relationship candidate must retain its explicit left/right terms")

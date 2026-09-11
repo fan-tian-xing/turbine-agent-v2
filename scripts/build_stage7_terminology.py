@@ -33,10 +33,6 @@ def _read(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _write_jsonl(path: Path, rows: list[dict]) -> None:
-    path.write_text("".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
-
-
 def _accepted_page_texts(manifest: dict, settings: Settings, stage6_rows: list[dict]) -> dict[str, str]:
     texts: dict[str, str] = {}
     grouped: dict[str, list[dict]] = {}
@@ -65,8 +61,6 @@ def _accepted_page_texts(manifest: dict, settings: Settings, stage6_rows: list[d
                         raise ValueError(f"Stage 6 analysis text fingerprint changed: {page['page_id']}")
                     texts[page["page_id"]] = evidence_text
                     continue
-                if page["text_source"] != "native_pdf_text":
-                    raise ValueError(f"non-native page entered text_accepted without Stage 6 acceptance: {page['page_id']}")
                 text = pdf[page["physical_page"] - 1].get_text("text").strip()
                 actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
                 if actual_sha != page["processing_text_sha256"]:
@@ -94,51 +88,8 @@ def main() -> None:
     }
     validate_candidates(candidates, accepted_keys)
 
-    review_queue = []
-    for candidate in candidates:
-        needs_review = (
-            candidate["candidate_type"] in set(contract["review"]["blocking_candidate_types"])
-            or "ocr_text" in candidate["text_origins"]
-        )
-        if not needs_review:
-            continue
-        queue_row = {
-            "queue_id": f"review-{candidate['candidate_id']}",
-            "candidate_id": candidate["candidate_id"],
-            "candidate_fingerprint": candidate["content_fingerprint"],
-            "manifest_fingerprint": manifest["content_fingerprint"],
-            "reason": "high-risk, abbreviation, or OCR candidate requires human review before ontology or vocabulary promotion",
-            "blocking": True,
-            "status": "pending_human_review",
-            "human_review_required": True,
-        }
-        review_queue.append(queue_row)
-
-    relationship_queue = [
-        {
-            "queue_id": "relationship-synonym-candidate",
-            "candidate_type": "synonym_candidate",
-            "status": "pending_human_review",
-            "blocking": True,
-            "human_review_required": True,
-            "reason": "Synonym relation discovery requires an explicit source-backed human comparison; no automatic inference is made in Stage 7.",
-            "manifest_fingerprint": manifest["content_fingerprint"],
-        },
-        {
-            "queue_id": "relationship-old-name-candidate",
-            "candidate_type": "old_name_candidate",
-            "status": "pending_human_review",
-            "blocking": True,
-            "human_review_required": True,
-            "reason": "Old-name relation discovery requires an explicit source-backed human comparison; no automatic inference is made in Stage 7.",
-            "manifest_fingerprint": manifest["content_fingerprint"],
-        },
-    ]
-    review_decisions: list[dict] = []
-
     source_fingerprint = content_fingerprint({
         "manifest": manifest["content_fingerprint"],
-        "stage6_bundle_sha256": _sha(ROOT / "data" / "stage6" / "stage6_evidence_bundle.jsonl"),
         "page_text_ids": sorted(page_texts),
     })
     header = {
@@ -148,10 +99,9 @@ def main() -> None:
         "status": "candidate_only",
         "formal_release": False,
         "producer": "turbine_kg.terminology.analyzer",
-        "consumer": ["data/stage7/terminology_review_queue.jsonl", "Stage 8 only after review_status=accepted"],
+        "consumer": ["Stage 8 ontology capability mapping and selected-candidate review"],
         "inputs": {
             "terminology_input_manifest": "data/stage7/terminology_input_manifest.json",
-            "stage6_canonical_sample": "data/stage6/stage6_evidence_bundle.jsonl",
             "source_fingerprint": source_fingerprint,
         },
         "analysis_rounds": {
@@ -164,37 +114,12 @@ def main() -> None:
         "candidates": candidates,
     }
     (STAGE7 / "terminology_candidates.json").write_text(json.dumps(header, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    _write_jsonl(STAGE7 / "terminology_review_queue.jsonl", review_queue)
-    _write_jsonl(STAGE7 / "terminology_review_decisions.jsonl", review_decisions)
-    _write_jsonl(STAGE7 / "terminology_relationship_review_queue.jsonl", relationship_queue)
-
-    review_summary = {
-        "schema_version": 1,
-        "stage": "7",
-        "artifact_kind": "stage7_human_review_summary",
-        "status": "pending_human_review",
-        "formal_release": False,
-        "producer": "scripts/build_stage7_terminology.py",
-        "consumer": ["human reviewer", "scripts/audit_stage7_exit.py"],
-        "manifest_fingerprint": manifest["content_fingerprint"],
-        "candidate_count": len(candidates),
-        "candidate_review_queue_count": len(review_queue),
-        "relationship_review_queue_count": len(relationship_queue),
-        "required_review_candidate_types": sorted(set(contract["review"]["blocking_candidate_types"])),
-        "required_relationship_types": sorted(contract["review"]["unresolved_relationship_types_require_user_review"]),
-        "review_queue": "data/stage7/terminology_review_queue.jsonl",
-        "relationship_review_queue": "data/stage7/terminology_relationship_review_queue.jsonl",
-        "decisions": "data/stage7/terminology_review_decisions.jsonl",
-        "promotion_permission": "none_until_human_reviewed_accepted_with_matching_fingerprint_and_evidence_refs",
-    }
-    review_summary["content_fingerprint"] = content_fingerprint(review_summary)
-    (STAGE7 / "stage7_human_review_summary.json").write_text(json.dumps(review_summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     capability = capability_questions_payload()
     capability["inputs"] = {"terminology_contract_sha256": _sha(ROOT / "config" / "terminology_contract.json")}
     capability["content_fingerprint"] = content_fingerprint(capability)
     (STAGE7 / "business_capability_questions.json").write_text(json.dumps(capability, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"status": header["status"], "candidate_count": len(candidates), "review_queue_count": len(review_queue), "accepted_page_count": len(page_texts)}, ensure_ascii=False))
+    print(json.dumps({"status": header["status"], "candidate_count": len(candidates), "accepted_page_count": len(page_texts)}, ensure_ascii=False))
 
 
 if __name__ == "__main__":

@@ -21,7 +21,13 @@
 
 阶段 4 已关闭。五份冻结处理单元的全量解析、异常页处置、最终回归和退出审计刷新均已完成；`stage4_final_exit_audit_2026-09-09.json` 与 `stage4_exit_audit.json` 均为 `complete/closed`。OCR 精度、Golden Sample 和表格行列恢复仍按总计划进入阶段 5。
 
-复跑全量审计：在仓库根目录设置 `PYTHONPATH=src` 后执行 `C:\\Users\\尹仕程\\Documents\\Codex\\.venvs\\default\\Scripts\\python.exe scripts/audit_stage4_full_parse.py`。
+复跑全量审计（PowerShell）：在仓库根目录执行：
+
+```powershell
+$env:PYTHONPATH = "src"
+$projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
+& $projectPython scripts/audit_stage4_full_parse.py
+```
 
 当前明确留到阶段 5 及以后：
 

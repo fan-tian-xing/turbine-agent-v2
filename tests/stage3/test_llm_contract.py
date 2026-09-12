@@ -102,6 +102,7 @@ def test_llm_payload_is_claim_validated_with_page_and_evidence():
     assert answer.startswith(hit["statement"]["text"])
     assert "未绑定断言" not in answer
     assert hit["statement"]["evidence_ids"][0] in answer
+    assert f"原文（{hit['statement']['evidence_ids'][0]}）：{hit['sources'][0]['evidence']['text']}" in answer
     assert count == 1
     assert status == "passed"
 

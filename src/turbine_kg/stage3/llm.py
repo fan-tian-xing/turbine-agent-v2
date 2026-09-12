@@ -110,6 +110,11 @@ def _validate_llm_payload(payload: dict, hits: list[dict]) -> tuple[str, int, st
         for hit in hits
         for item in hit["sources"]
     }
+    evidence_by_id = {
+        item["evidence"]["id"]: item
+        for hit in hits
+        for item in hit["sources"]
+    }
     validated_claims: list[tuple[dict, object]] = []
     claim_statuses: set[str] = set()
     for raw in claims:
@@ -214,13 +219,25 @@ def _validate_llm_payload(payload: dict, hits: list[dict]) -> tuple[str, int, st
             if raw.get("logical_page") is not None:
                 location += f"；逻辑页{raw['logical_page']}"
         rendered = f"{raw['text']}（依据：{evidence_text}；{location}）"
+        # Evidence is a user-facing product.  Render the stored quote from
+        # the retrieval result, never a quote supplied or rewritten by the
+        # model.  Each source remains separate so multiple Evidence records
+        # cannot be silently concatenated into a new sentence.
+        for evidence_id in raw["evidence_ids"]:
+            quote = evidence_by_id[evidence_id]["evidence"]["text"]
+            rendered += f"\n原文（{evidence_id}）：{quote}"
         if result.status == "downgraded_candidate":
             rendered += "；not_authorized_for_execution：不得作为现场执行授权。"
         rendered_claims.append(rendered)
     # The model's `answer` is treated as an untrusted draft.  The user-facing
     # answer is rendered solely from claims that have passed local validation.
     answer = "\n".join(rendered_claims)
-    status = "downgraded_candidate" if "downgraded_candidate" in claim_statuses else "passed"
+    if "downgraded_candidate" in claim_statuses:
+        status = "downgraded_candidate"
+    elif "conditional_reference" in claim_statuses:
+        status = "conditional_reference"
+    else:
+        status = "passed"
     return answer.strip(), len(claims), status
 
 

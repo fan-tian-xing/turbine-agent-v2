@@ -34,7 +34,9 @@ def retrieve(
     for document in documents:
         for statement in document.statements:
             scope = match_scope(statement.scope, context)
-            if not scope.matched:
+            # Missing context is a condition for a qualified result, not an
+            # automatic retrieval stop.  Hard mismatches remain excluded.
+            if any(reason.startswith("mismatch:") for reason in scope.reasons):
                 continue
             searchable = _terms(statement.text + " " + document.title)
             overlap = len(query_terms & searchable)

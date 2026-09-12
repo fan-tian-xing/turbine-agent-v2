@@ -8,7 +8,7 @@ from turbine_kg.stage3.corpus import load_corpus
 from turbine_kg.stage3.models import ApplicabilityScope, ScopeContext
 from turbine_kg.stage3.projection import build_traceability_projection
 from turbine_kg.stage3.real_trial import load_confirmed_real_corpus
-from turbine_kg.stage3.trial_cli import build_parser
+from turbine_kg.stage3.trial_cli import _human_result, build_parser
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -184,6 +184,23 @@ def test_initial_batch_assets_match_the_registry_snapshot():
 def test_cli_does_not_enable_evidence_send_by_default():
     args = build_parser().parse_args(["status"])
     assert args.allow_evidence_send is False
+
+
+def test_cli_displays_stored_evidence_quote_when_llm_is_skipped(capsys):
+    _human_result({
+        "primary_question": "检查要求是什么？",
+        "status": "retrieved",
+        "llm": {"ok": False, "skipped": True},
+        "hits": [{
+            "statement": "需要检查。",
+            "title": "合成资料",
+            "physical_page": 2,
+            "logical_page": None,
+            "evidence_ids": ["evidence-1"],
+            "evidence_quotes": [{"evidence_id": "evidence-1", "quote": "原始检查要求。"}],
+        }],
+    })
+    assert "原文（evidence-1）：原始检查要求。" in capsys.readouterr().out
 
 
 def test_cli_accepts_old_direct_question_form():

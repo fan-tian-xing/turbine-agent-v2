@@ -125,7 +125,9 @@ def projected_retrieve(
         if node.get("type") != "EngineeringStatement":
             continue
         scope_result = match_scope(ApplicabilityScope.from_dict(scope_by_statement.get(statement_id, {})), context)
-        if not scope_result.matched:
+        # A missing query field makes a result conditional; only a hard
+        # mismatch removes it from the candidate set.
+        if any(reason.startswith("mismatch:") for reason in scope_result.reasons):
             continue
         searchable = _projection_terms(f"{node.get('text', '')} {node.get('document_title', '')}")
         overlap = len(query_terms & searchable)

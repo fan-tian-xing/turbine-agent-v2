@@ -142,7 +142,8 @@ def validate_claim(claim: Claim, documents: tuple[FixtureDocument, ...]) -> Vali
         failures.append("claim_text_not_supported")
     if _has_negation(claim.text) != _has_negation(statement.text):
         failures.append("negation_mismatch")
-    if not match_scope(statement.scope, claim.context).matched:
+    scope_result = match_scope(statement.scope, claim.context)
+    if any(reason.startswith("mismatch:") for reason in scope_result.reasons):
         failures.append("applicability_mismatch")
     if failures:
         return ValidationResult(False, "rejected", tuple(failures))
@@ -152,4 +153,6 @@ def validate_claim(claim: Claim, documents: tuple[FixtureDocument, ...]) -> Vali
             "downgraded_candidate",
             warnings=("not_authorized_for_execution",),
         )
+    if scope_result.reasons:
+        return ValidationResult(True, "conditional_reference", warnings=scope_result.reasons)
     return ValidationResult(True, "validated")

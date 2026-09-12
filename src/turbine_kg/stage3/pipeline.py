@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from .applicability import match_scope
 from .models import Claim, FixtureDocument, ScopeContext
 from .retrieval import retrieve
 from .validation import validate_claim
@@ -102,13 +103,25 @@ def answer_question(
     for object_id, value, unit in candidate_values:
         values_by_object_unit.setdefault((object_id, unit), set()).add(value)
     has_conflicting_values = any(len(values) > 1 for values in values_by_object_unit.values())
+    scope_matches = [match_scope(candidate.statement.scope, context) for candidate in hits]
+    missing_context = sorted({
+        reason.split(":", 1)[1]
+        for result in scope_matches
+        for reason in result.reasons
+        if reason.startswith("missing_context:")
+    })
+    value_hits = [candidate for candidate in hits if candidate.statement.value is not None]
+    confirmed_conflict = has_conflicting_values and bool(value_hits) and all(
+        not any(reason.startswith("missing_context:") for reason in match_scope(candidate.statement.scope, context).reasons)
+        for candidate in value_hits
+    )
     comparison_requested = any(token in primary_question.lower() for token in ("compare", "conflict", "比较", "冲突"))
     lowered_question = primary_question.lower()
     value_requested = (
         ("value" in lowered_question and "unit" in lowered_question)
         or any(token in lowered_question for token in ("how much", "多少", "数值", "单位", "限值", "limit", "间隙"))
     )
-    if (comparison_requested or value_requested) and has_conflicting_values:
+    if (comparison_requested or value_requested) and confirmed_conflict:
         claims = []
         for candidate in hits:
             if candidate.statement.value is None:
@@ -123,6 +136,7 @@ def answer_question(
             "claims": claims,
             "retrieval": {
                 "candidate_statement_ids": [item.statement.statement_id for item in hits],
+                "missing_context": missing_context,
                 "conflicting_values": [
                     {"object_id": object_id, "value": value, "unit": unit}
                     for object_id, value, unit in sorted(candidate_values, key=str)
@@ -145,6 +159,8 @@ def answer_question(
             "candidate_statement_ids": [item.statement.statement_id for item in hits],
             "source_document_id": hit.document.revision.document_logical_id,
             "source_role": hit.document.source_role,
+            "missing_context": missing_context,
+            "applicability": "conditional_reference" if missing_context else "matched",
         },
     }
     if not validation.allowed:

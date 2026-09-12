@@ -71,6 +71,8 @@ def _human_result(result: dict) -> None:
         if hit.get("logical_page") is not None:
             page += f"；逻辑页{hit['logical_page']}"
         print(f"- {hit['statement']}（{hit['title']}，{page}；{evidence_ids}）")
+        for evidence in hit.get("evidence_quotes", []):
+            print(f"  原文（{evidence['evidence_id']}）：{evidence['quote']}")
 
     missing: list[str] = []
     applicability: list[str] = []
@@ -149,6 +151,13 @@ def main() -> int:
                             if hit["sources"] else None
                         ),
                         "evidence_ids": [item["evidence"]["id"] for item in hit["sources"]],
+                        "evidence_quotes": [
+                            {
+                                "evidence_id": item["evidence"]["id"],
+                                "quote": item["evidence"]["text"],
+                            }
+                            for item in hit["sources"]
+                        ],
                         "applicability": hit["applicability"],
                         "missing_context": hit["missing_context"],
                     }

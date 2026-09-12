@@ -6,6 +6,7 @@ from turbine_kg.stage3.corpus import load_corpus
 from turbine_kg.stage3.cli import _with_chinese_display_names
 from turbine_kg.stage3.models import Claim, ScopeContext
 from turbine_kg.stage3.pipeline import answer_question
+from turbine_kg.stage3.projection import build_traceability_projection, projected_retrieve
 from turbine_kg.stage3.retrieval import json_baseline, retrieve
 from turbine_kg.stage3.validation import validate_claim
 
@@ -40,6 +41,15 @@ def test_end_to_end_answer_and_evidence_gap():
     assert not gap["claims"]
 
 
+def test_missing_context_returns_a_conditional_reference_instead_of_stopping_retrieval():
+    corpus = load_corpus(FIXTURE_ROOT / "corpus.json")
+    context = ScopeContext.from_dict({"equipment": "steam_turbine", "lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold"})
+    answer = answer_question(corpus, primary_question="What should happen after coupling fit?", context=context)
+    assert answer["status"] == "conditional_reference"
+    assert answer["claims"]
+    assert any(item.startswith("missing_context:") for item in answer["claims"][0]["validation"]["warnings"])
+
+
 def test_cli_output_adds_chinese_display_names_without_replacing_machine_ids():
     corpus = load_corpus(FIXTURE_ROOT / "corpus.json")
     context = ScopeContext.from_dict({"model": "N-300", "equipment": "steam_turbine", "lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold", "capacity_range": 300, "condition": "shaft_alignment"})
@@ -65,6 +75,15 @@ def test_conflict_is_visible_in_baseline_candidates():
     hits = retrieve(corpus, question="alignment value and unit", context=context)
     assert {hit.statement.statement_id for hit in hits} >= {"statement-111-1", "statement-222-1"}
     assert json_baseline(corpus, question="alignment value and unit", context=context) == tuple(hit.statement.statement_id for hit in hits)
+
+
+def test_baseline_and_projected_retrieval_keep_conditional_hits_when_context_is_incomplete():
+    corpus = load_corpus(FIXTURE_ROOT / "corpus.json")
+    context = ScopeContext.from_dict({"equipment": "steam_turbine", "lifecycle_stage": "installation", "activity": "alignment", "operating_state": "cold"})
+    baseline = json_baseline(corpus, question="What should happen after coupling fit?", context=context)
+    projected = projected_retrieve(build_traceability_projection(corpus), question="What should happen after coupling fit?", context=context)
+    assert baseline == projected
+    assert baseline == ("statement-111-2",)
 
 
 def test_high_risk_claim_is_downgraded_not_authorized():

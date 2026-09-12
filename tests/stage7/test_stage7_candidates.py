@@ -25,6 +25,8 @@ def test_candidates_are_traceable_and_candidate_only():
     assert all(row["candidate_type"] in CANDIDATE_TYPES for row in candidates)
     assert all(row["review_status"] == "candidate_only" for row in candidates)
     assert all(row["occurrences"] and row["capability_question_ids"] for row in candidates)
+    assert all(row["document_weighting_policy"] == "admitted_document_equal_weight_discovery_only" for row in candidates)
+    assert all("family_weighted_score" not in row and "family_score_breakdown" not in row for row in candidates)
 
 
 def test_candidate_fingerprints_and_origins_are_stable():
@@ -48,7 +50,7 @@ def test_ocr_candidates_keep_semantic_types_and_confirmation_boundary():
         for row in ocr_candidates
         if all(occurrence["source_kind"] != "accepted_stage6_evidence" for occurrence in row["occurrences"])
     )
-    assert all(0 <= row["family_weighted_score"] <= 1 for row in candidates)
+    assert all(0 <= row["document_equal_weighted_score"] <= 1 for row in candidates)
     assert not {row["normalized_form"] for row in candidates} & {"的规定", "术要求", "要求", "规定"}
 
 
@@ -84,13 +86,14 @@ def test_explicit_synonym_and_old_name_patterns_produce_source_bound_candidates(
     assert all(row["occurrences"][0]["physical_page"] == 1 for row in relations.values())
 
 
-def test_family_weighted_score_equalizes_long_and_short_documents():
+def test_document_equal_weighted_score_gives_each_document_equal_influence():
     pages = []
     texts = {}
-    for document_key, page_number, text in (
-        ("long", 1, "汽轮机"),
-        ("long", 2, "密封瓦检查"),
-        ("short", 1, "汽轮机"),
+    for document_key, page_number, text, profile in (
+        ("long", 1, "汽轮机", "manufacturer_manual"),
+        ("long", 2, "密封瓦检查", "manufacturer_manual"),
+        ("short", 1, "汽轮机", "manufacturer_manual"),
+        ("other", 1, "密封瓦检查", "book"),
     ):
         page_id = f"{document_key}-{page_number}"
         pages.append({
@@ -104,12 +107,14 @@ def test_family_weighted_score_equalizes_long_and_short_documents():
             "page_status": "text_accepted",
             "text_source": "native_pdf_text",
             "analysis_text_sha256": "fixture-sha",
+            "authority_source_profile_id": profile,
         })
         texts[page_id] = text
     candidates = analyze_terminology({"pages": pages}, texts)
     turbine = next(row for row in candidates if row["normalized_form"] == "汽轮机" and row["candidate_type"] == "equipment")
     assert turbine["document_occurrence_counts"] == {"long": 1, "short": 1}
-    assert turbine["family_weighted_score"] == 0.75
+    assert turbine["document_equal_weighted_score"] == 0.5
+    assert turbine["document_equal_weighted_score_breakdown"] == {"long": 0.5, "other": 0.0, "short": 1.0}
 
 
 def test_numeric_units_keep_decimal_and_local_critical_context():

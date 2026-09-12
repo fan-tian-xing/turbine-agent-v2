@@ -42,16 +42,18 @@ def validate_page_record(record: dict) -> None:
 def validate_candidate(record: dict) -> None:
     required = {
         "candidate_id", "surface_form", "normalized_form", "candidate_type",
-        "occurrence_count", "document_frequency", "occurrences", "text_origins",
+        "occurrence_count", "document_frequency", "document_weighting_policy", "occurrences", "text_origins",
         "is_ocr_variant", "review_status", "capability_question_ids",
         "discovery_method", "content_fingerprint", "requires_original_confirmation",
-        "document_occurrence_counts", "family_weighted_score",
+        "document_occurrence_counts", "document_equal_weighted_score", "document_equal_weighted_score_breakdown",
     }
     missing = required - record.keys()
     if missing:
         raise ValueError(f"terminology candidate is missing: {', '.join(sorted(missing))}")
     if record["candidate_type"] not in CANDIDATE_TYPES:
         raise ValueError(f"invalid terminology candidate type: {record['candidate_type']}")
+    if record["document_weighting_policy"] != "admitted_document_equal_weight_discovery_only":
+        raise ValueError("unsupported document weighting policy")
     if record["discovery_method"] not in DISCOVERY_METHODS:
         raise ValueError(f"invalid terminology discovery method: {record['discovery_method']}")
     if record["review_status"] not in {"candidate_only", "accepted", "rejected", "deferred"}:
@@ -62,8 +64,11 @@ def validate_candidate(record: dict) -> None:
         raise ValueError("requires_original_confirmation must be boolean")
     if not isinstance(record["document_occurrence_counts"], dict) or not record["document_occurrence_counts"]:
         raise ValueError("candidate must retain document occurrence counts")
-    if not 0 <= float(record["family_weighted_score"]) <= 1:
-        raise ValueError("family_weighted_score must be between 0 and 1")
+    if not 0 <= float(record["document_equal_weighted_score"]) <= 1:
+        raise ValueError("document_equal_weighted_score must be between 0 and 1")
+    breakdown = record["document_equal_weighted_score_breakdown"]
+    if not isinstance(breakdown, dict) or not breakdown or not all(0 <= float(value) <= 1 for value in breakdown.values()):
+        raise ValueError("document_equal_weighted_score_breakdown must contain values between 0 and 1")
     if record["candidate_type"] in {"synonym_candidate", "old_name_candidate"}:
         relation = record.get("relation")
         if not isinstance(relation, dict) or relation.get("relation_type") != record["candidate_type"] or not relation.get("left") or not relation.get("right"):

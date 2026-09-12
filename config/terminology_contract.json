@@ -20,7 +20,7 @@
     "automatic_display_vocabulary_change": false,
     "stage8_requires_review_status": "accepted"
   },
-  "frequency_policy": "document_family_equal_weight_discovery_only",
+  "weighting_policy": "admitted_document_equal_weight_discovery_only",
   "future_extension_policy": {
     "existing_concept_reuses_stable_identifier": true,
     "new_alias_requires_review": true,

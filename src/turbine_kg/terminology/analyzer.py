@@ -56,7 +56,12 @@ def normalize_term(value: str) -> str:
 
 def load_terminology_contract(path: Path = DEFAULT_CONTRACT_PATH) -> dict:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if payload.get("schema_version") != 1 or payload.get("stage") != "7" or set(payload.get("candidate_types", [])) != set(CANDIDATE_TYPES):
+    if (
+        payload.get("schema_version") != 1
+        or payload.get("stage") != "7"
+        or set(payload.get("candidate_types", [])) != set(CANDIDATE_TYPES)
+        or payload.get("weighting_policy") != "admitted_document_equal_weight_discovery_only"
+    ):
         raise ValueError("invalid terminology contract")
     return payload
 
@@ -270,12 +275,9 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
 
     records: list[dict] = []
     accepted_pages_by_document: dict[str, set[int]] = defaultdict(set)
-    document_family: dict[str, str] = {}
     for page in accepted:
         accepted_pages_by_document[page["document_key"]].add(int(page["physical_page"]))
-        document_family[page["document_key"]] = page.get("authority_source_profile_id") or page["document_logical_id"]
     valid_documents = {key for key, pages in accepted_pages_by_document.items() if pages}
-    valid_families = sorted({document_family[key] for key in valid_documents})
     for item in store.values():
         origins = sorted(item["origins"])
         candidate_type = item["candidate_type"]
@@ -291,7 +293,7 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
             "candidate_type": candidate_type,
             "occurrence_count": len(occurrences),
             "document_frequency": len(item["documents"]),
-            "document_frequency_policy": "document_family_equal_weight_discovery_only",
+            "document_weighting_policy": contract["weighting_policy"],
             "occurrences": occurrences,
             "text_origins": origins,
             "is_ocr_variant": is_ocr_variant,
@@ -309,14 +311,16 @@ def analyze_terminology(manifest: dict, page_texts: dict[str, str], *, stage6_ro
         pages_by_document = defaultdict(set)
         for occurrence in occurrences:
             pages_by_document[occurrence["document_key"]].add(int(occurrence["physical_page"]))
-        family_scores = {}
-        for family in valid_families:
-            document_scores = []
-            for document_key in sorted(key for key in valid_documents if document_family[key] == family):
-                document_scores.append(len(pages_by_document.get(document_key, set())) / len(accepted_pages_by_document[document_key]))
-            family_scores[family] = sum(document_scores) / len(document_scores) if document_scores else 0.0
-        record["family_weighted_score"] = round(sum(family_scores.values()) / len(valid_families), 6) if valid_families else 0.0
-        record["family_score_breakdown"] = {key: round(value, 6) for key, value in sorted(family_scores.items())}
+        document_scores = {
+            document_key: len(pages_by_document.get(document_key, set())) / len(accepted_pages_by_document[document_key])
+            for document_key in sorted(valid_documents)
+        }
+        record["document_equal_weighted_score"] = round(
+            sum(document_scores.values()) / len(document_scores), 6
+        ) if document_scores else 0.0
+        record["document_equal_weighted_score_breakdown"] = {
+            key: round(value, 6) for key, value in document_scores.items()
+        }
         if candidate_type in {"synonym_candidate", "old_name_candidate"}:
             left, right = item["normalized_form"].split("→", 1)
             record["relation"] = {"relation_type": candidate_type, "left": left, "right": right}

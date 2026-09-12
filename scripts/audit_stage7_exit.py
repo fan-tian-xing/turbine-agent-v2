@@ -161,6 +161,19 @@ def main() -> None:
         sample_document_keys == set(manifest["input_boundary"].get("admitted_document_keys", []))
         and set(manifest["input_boundary"].get("admitted_original_asset_ids", [])).issubset(admitted_originals)
     )
+    accepted_pages_by_doc = defaultdict(set)
+    for page in pages:
+        if page["page_status"] == "text_accepted":
+            accepted_pages_by_doc[page["document_key"]].add(page["physical_page"])
+    admitted_document_keys = set(manifest["input_boundary"].get("admitted_document_keys", []))
+    logical_ids_by_document = defaultdict(set)
+    for page in pages:
+        if page["page_status"] == "text_accepted":
+            logical_ids_by_document[page["document_key"]].add(page["document_logical_id"])
+    document_identity_ok = (
+        set(accepted_pages_by_doc) == admitted_document_keys
+        and all(len(logical_ids) == 1 for logical_ids in logical_ids_by_document.values())
+    )
 
     evidence_by_id = {row["evidence"]["evidence_id"]: row for row in stage6_rows}
     canonical_evidence_ok = all(
@@ -198,23 +211,30 @@ def main() -> None:
         }
         for row in candidates
     )
-    accepted_pages_by_doc = defaultdict(set)
-    family_by_doc = {}
-    for page in pages:
-        if page["page_status"] == "text_accepted":
-            accepted_pages_by_doc[page["document_key"]].add(page["physical_page"])
-            family_by_doc[page["document_key"]] = page.get("authority_source_profile_id") or page["document_logical_id"]
-    def expected_family_score(candidate):
+    def expected_document_equal_weighted_raw(candidate):
         occurrence_pages = defaultdict(set)
         for occurrence in candidate["occurrences"]:
             occurrence_pages[occurrence["document_key"]].add(occurrence["physical_page"])
-        families = sorted(set(family_by_doc.values()))
-        family_values = []
-        for family in families:
-            docs = [doc for doc, profile in family_by_doc.items() if profile == family]
-            family_values.append(sum(len(occurrence_pages.get(doc, set())) / len(accepted_pages_by_doc[doc]) for doc in docs) / len(docs))
-        return round(sum(family_values) / len(family_values), 6) if family_values else 0.0
-    family_scores_ok = all(round(float(row["family_weighted_score"]), 6) == expected_family_score(row) for row in candidates)
+        return {
+            document_key: len(occurrence_pages.get(document_key, set())) / len(accepted_pages_by_doc[document_key])
+            for document_key in sorted(accepted_pages_by_doc)
+        }
+
+    def expected_document_equal_weighted_breakdown(candidate):
+        return {
+            key: round(value, 6)
+            for key, value in expected_document_equal_weighted_raw(candidate).items()
+        }
+
+    def expected_document_equal_weighted_score(candidate):
+        document_scores = expected_document_equal_weighted_raw(candidate).values()
+        return round(sum(document_scores) / len(document_scores), 6) if document_scores else 0.0
+    document_equal_weighted_scores_ok = all(
+        round(float(row["document_equal_weighted_score"]), 6)
+        == expected_document_equal_weighted_score(row)
+        and row["document_equal_weighted_score_breakdown"] == expected_document_equal_weighted_breakdown(row)
+        for row in candidates
+    )
     ocr_confirmation_ok = all(
         not (
             row["requires_original_confirmation"] is False
@@ -254,13 +274,18 @@ def main() -> None:
         "case_holdout_blind_materials_explicitly_excluded": set(manifest["input_boundary"].get("excluded_source_classes", {})) == {"formal_case_materials", "holdout_materials", "blind_test_materials"} and bool(manifest["input_boundary"].get("exclusion_enforcement")),
         "only_accepted_pages_are_consumed": accepted_sources_ok and traceability_ok,
         "family_profile_snapshot_matches_original_registry": authority_profiles_ok,
+        "admitted_documents_have_unique_logical_identity": document_identity_ok,
         "round_one_metadata_discovery_is_registry_bound": metadata_discovery_ok,
         "table_pages_are_isolated": table_isolated,
         "stage6_sample_cross_check_is_canonical": canonical_evidence_ok,
         "candidate_types_are_controlled": all(row["candidate_type"] in CANDIDATE_TYPES for row in candidates),
         "candidate_fingerprints_stable": candidate_fingerprints,
         "candidate_occurrence_counts_reconcile": occurrence_counts_ok,
-        "family_scores_reconcile": family_scores_ok,
+        "document_equal_weighted_scores_reconcile": document_equal_weighted_scores_ok,
+        "document_weighting_policy_is_recorded": all(
+            row.get("document_weighting_policy") == contract["weighting_policy"]
+            for row in candidates
+        ),
         "ocr_confirmation_boundary_is_explicit": ocr_confirmation_ok,
         "candidate_only_no_promotion": candidates_payload.get("status") == "candidate_only" and candidates_payload.get("automatic_promotion") is False,
         "formal_release_false": candidates_payload.get("formal_release") is False and capability.get("formal_release") is False,

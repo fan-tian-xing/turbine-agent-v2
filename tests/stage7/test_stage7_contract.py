@@ -21,3 +21,4 @@ def test_terminology_contract_forbids_promotion_and_table_cell_inference():
     assert contract["text_acceptance"]["unresolved_table_cells_are_excluded"] is True
     assert contract["promotion"]["automatic_ontology_change"] is False
     assert contract["promotion"]["automatic_display_vocabulary_change"] is False
+    assert contract["weighting_policy"] == "admitted_document_equal_weight_discovery_only"

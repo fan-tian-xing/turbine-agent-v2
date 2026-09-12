@@ -73,3 +73,7 @@ def test_roadmap_orders_claim_validation_before_cli_and_activation():
     assert "才允许在维护窗口把经过测试的同一 candidate 原样晋级为 `active_release`" in plan
     assert "本阶段范围明确为 `golden_sample_only`" in plan
     assert "`terminology_input_manifest`" in plan
+    assert "按每个 admitted document 等权归一化" in plan
+    assert "Statement 保持原子化" not in plan
+    assert "上下文不完整时先检索并回答" in plan
+    assert "问题上下文不足时先澄清" not in plan

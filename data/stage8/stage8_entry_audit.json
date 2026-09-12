@@ -20,7 +20,7 @@
     },
     "ontology_contract": {
       "path": "config/ontology_contract.json",
-      "sha256": "25eaa6b4a084340a6553659c7edb6df7e5f2db8eaac5733eaa4ca17ead2299bc"
+      "sha256": "d1a9a728f3073fb7a6ac7593c801456e2f3ce1d5ff9293c49da72fe7be33f204"
     },
     "mapping_review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",

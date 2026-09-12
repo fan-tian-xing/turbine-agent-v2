@@ -113,28 +113,8 @@ def main() -> None:
     (stage8 / "stage8_entry_audit.json").write_text(
         json.dumps(entry, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    if not queue:
-        (stage8 / "stage8_exit_audit.json").write_text(
-            json.dumps({
-                "schema_version": 1,
-                "stage": "8",
-                "artifact_kind": "stage8_exit_audit",
-                "status": "complete",
-                "formal_release": False,
-                "producer": "scripts/build_stage8_ontology.py",
-                "inputs": mapping["inputs"],
-                "outputs": entry["outputs"],
-                "counts": entry["counts"],
-                "checks": {
-                    **entry["checks"],
-                    "manual_mapping_review_complete": True,
-                    "no_pending_review_queue": True,
-                    "no_formal_vocabulary_or_release": True,
-                },
-                "next_stage_allowed": True,
-                "next_stage": "Stage 9 OWL/SHACL semantic authority package",
-            }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-        )
+    # The independent exit script is the only producer of stage8_exit_audit.
+    # An empty review queue is necessary but cannot by itself open Stage 9.
     print(json.dumps({
         "status": mapping["status"],
         "shortlist_count": len(mapping["shortlist"]),

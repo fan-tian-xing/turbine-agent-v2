@@ -1,0 +1,69 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix tv2: <https://example.invalid/turbine-v2#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Domain/range constraints are generated in memory directly from the loaded
+# OWL package and consumed by pySHACL; this file owns additional cardinality,
+# controlled-value and cross-property rules.
+tv2:EngineeringStatementShape a sh:NodeShape ;
+  sh:targetClass tv2:EngineeringStatement ; sh:severity sh:Violation ;
+  sh:property [ sh:path tv2:aboutEntity ; sh:minCount 1 ; sh:maxCount 1 ] ;
+  sh:property [ sh:path tv2:supportedBy ; sh:minCount 1 ] ;
+  sh:property [ sh:path tv2:hasApplicabilityScope ; sh:minCount 1 ; sh:maxCount 1 ] ;
+  sh:property [ sh:path tv2:statementText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:statementType ; sh:minCount 1 ; sh:maxCount 1 ;
+    sh:in ("fact" "conditioned_inference" "candidate_recommendation" "action_authorization"
+           "acceptance_requirement" "inspection_requirement" "scope_definition" "maintenance_procedure") ] ;
+  sh:sparql [ sh:message "Statement 与 Evidence 的对象绑定不一致。" ;
+    sh:select """
+      SELECT $this WHERE {
+        $this <https://example.invalid/turbine-v2#aboutEntity> ?entity ;
+              <https://example.invalid/turbine-v2#supportedBy> ?evidence .
+        ?evidence <https://example.invalid/turbine-v2#evidenceAboutEntity> ?other .
+        FILTER (?entity != ?other)
+      }
+    """ ] .
+
+tv2:EvidenceShape a sh:NodeShape ; sh:targetClass tv2:Evidence ;
+  sh:property [ sh:path tv2:evidenceText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:evidenceAboutEntity ; sh:minCount 1 ; sh:maxCount 1 ] ;
+  sh:property [ sh:path tv2:sourceSpan ; sh:minCount 1 ] .
+
+tv2:SourceSpanShape a sh:NodeShape ; sh:targetClass tv2:SourceSpan ;
+  sh:property [ sh:path tv2:physicalPage ; sh:minCount 1 ; sh:maxCount 1 ; sh:minInclusive 1 ] ;
+  sh:property [ sh:path tv2:logicalPage ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:pageId ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:revisionId ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:documentId ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:spanText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] .
+
+tv2:PhysicalEntityShape a sh:NodeShape ; sh:targetClass tv2:PhysicalEntity ;
+  sh:property [ sh:path tv2:objectKey ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] .
+
+tv2:ApplicabilityScopeShape a sh:NodeShape ; sh:targetClass tv2:ApplicabilityScope ;
+  sh:property [ sh:path tv2:model ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:equipment ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:lifecycleStage ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:activity ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:operatingState ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:condition ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:capacityMinimum ; sh:maxCount 1 ; sh:minInclusive 0 ; sh:lessThanOrEquals tv2:capacityMaximum ] ;
+  sh:property [ sh:path tv2:capacityMaximum ; sh:maxCount 1 ; sh:minInclusive 0 ] .
+
+tv2:QuantityValueShape a sh:NodeShape ; sh:targetClass tv2:QuantityValue ;
+  sh:property [ sh:path tv2:numericValue ; sh:maxCount 1 ] ;
+  sh:property [ sh:path tv2:minimumValue ; sh:maxCount 1 ; sh:lessThanOrEquals tv2:maximumValue ] ;
+  sh:property [ sh:path tv2:maximumValue ; sh:maxCount 1 ] ;
+  sh:property [ sh:path tv2:unitSymbol ; sh:minCount 1 ; sh:maxCount 1 ;
+    sh:in ("mm" "m" "μm" "MW" "MPa" "kPa" "Pa" "%" "s" "Hz" "r/min" "℃") ] ;
+  sh:property [ sh:path tv2:quantityKindLabel ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:xone (
+    [ sh:property [ sh:path tv2:numericValue ; sh:minCount 1 ] ;
+      sh:property [ sh:path tv2:minimumValue ; sh:maxCount 0 ] ;
+      sh:property [ sh:path tv2:maximumValue ; sh:maxCount 0 ] ]
+    [ sh:property [ sh:path tv2:numericValue ; sh:maxCount 0 ] ;
+      sh:or (
+        [ sh:property [ sh:path tv2:minimumValue ; sh:minCount 1 ] ]
+        [ sh:property [ sh:path tv2:maximumValue ; sh:minCount 1 ] ]
+      ) ]
+  ) .

@@ -3,10 +3,10 @@
   "artifact_kind": "project_state",
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
   "updated_at": "2026-09-12",
-  "current_stage": 8,
+  "current_stage": 9,
   "current_stage_status": "complete",
-  "current_stage_scope": "minimal_owl_design_and_candidate_mapping_review",
-  "next_stage": 9,
+  "current_stage_scope": "owl_shacl_semantic_authority_and_runtime_validation",
+  "next_stage": 10,
   "next_stage_status": "ready",
   "formal_release": false,
   "stages": {
@@ -57,6 +57,17 @@
       "mapping_shortlist": "data/stage8/ontology_mapping_shortlist.json",
       "review_queue": "data/stage8/ontology_mapping_review_queue.jsonl",
       "review_overlay": "data/stage8/ontology_mapping_review_overlay.jsonl"
+    },
+    "9": {
+      "status": "complete",
+      "scope": "owl_shacl_semantic_authority_and_runtime_validation",
+      "entry_record": "data/stage9/stage9_entry_audit.json",
+      "exit_audit": "data/stage9/stage9_exit_audit.json",
+      "ontology": ["ontology/minimal_turbine.ttl", "ontology/stage9_core.ttl"],
+      "shapes": "ontology/stage9_shapes.ttl",
+      "runtime_schema": "config/semantic_runtime.schema.json",
+      "review": "data/stage9/stage9_semantic_review.json",
+      "runtime_module": "src/turbine_kg/ontology/semantic.py"
     }
   },
   "boundaries": [

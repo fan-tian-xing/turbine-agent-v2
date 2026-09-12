@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "stage": "9",
+  "artifact_kind": "stage9_entry_audit",
+  "status": "in_progress",
+  "scope": "revalidation_and_repair_of_stage8_policy_and_stage9_semantic_chain",
+  "basis": [
+    "Stage 8 否定语义和审核映射一致性需要修复。",
+    "Stage 9 缺运行合同、完整语义约束及实际投影前消费者。"
+  ],
+  "formal_release": false,
+  "next_stage_allowed": false
+}

@@ -12,6 +12,16 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+
+from turbine_kg.ontology.builder import (  # noqa: E402
+    apply_mapping_review_overlay,
+    build_mapping_payload,
+    build_review_queue,
+    render_turtle,
+    resolve_phenomenon_mapping_spec,
+)
+
 STAGE7 = ROOT / "data" / "stage7"
 STAGE8 = ROOT / "data" / "stage8"
 
@@ -45,6 +55,16 @@ def _run_tests() -> dict:
         "stdout_tail": result.stdout[-4000:],
         "stderr_tail": result.stderr[-4000:],
     }
+
+
+def _phenomenon_record_matches_policy(contract: dict, row: dict) -> bool:
+    resolved = resolve_phenomenon_mapping_spec(contract, row, {
+        "target_class": row.get("mapped_class"), "mapping_kind": row.get("mapping_kind"),
+    })
+    return (
+        resolved.get("target_class") == row.get("mapped_class")
+        and resolved.get("mapping_kind") == row.get("mapping_kind")
+    )
 
 
 def _audit() -> dict:
@@ -96,6 +116,52 @@ def _audit() -> dict:
         and not row.get("normalized_form", "").startswith(("当", "应", "如果", "若", "如", "在", "并", "且", "则", "不得", "第"))
         for row in mapping.get("shortlist", [])
     )
+    phenomenon_semantics_ok = all(
+        row.get("candidate_type") != "phenomenon"
+        or _phenomenon_record_matches_policy(contract, row)
+        for row in mapped_rows
+    )
+    overlay_by_id = {row.get("candidate_id"): row for row in overlay}
+    review_records_consistent = (
+        len(mapped_by_id) == len(mapped_rows)
+        and len(overlay_by_id) == len(overlay)
+        and all(
+            (row.get("mapping_kind") != "defer" or row.get("candidate_disposition") == "defer")
+            and (
+                row.get("mapping_review_decision") != "accepted"
+                or (row.get("mapping_kind") == "class_label" and row.get("mapped_class") in class_ids)
+            )
+            and row.get("mapping_review_decision", "pending_manual_review")
+            == overlay_by_id.get(row.get("candidate_id"), {}).get("decision", "pending_manual_review")
+            for row in mapped_rows
+        )
+    )
+    try:
+        rebuilt = apply_mapping_review_overlay(build_mapping_payload(
+            contract, candidates_payload,
+            _read(STAGE7 / "business_capability_questions.json"), overlay,
+        ), overlay)
+        rebuilt_without_inputs = {key: value for key, value in rebuilt.items() if key != "inputs"}
+        mapping_without_inputs = {key: value for key, value in mapping.items() if key != "inputs"}
+        expected_input_paths = {
+            "terminology_input_manifest": "data/stage7/terminology_input_manifest.json",
+            "terminology_candidates": "data/stage7/terminology_candidates.json",
+            "business_capability_questions": "data/stage7/business_capability_questions.json",
+            "ontology_contract": "config/ontology_contract.json",
+            "mapping_review_overlay": "data/stage8/ontology_mapping_review_overlay.jsonl",
+        }
+        expected_inputs = {
+            name: {"path": path, "sha256": _sha(ROOT / path)}
+            for name, path in expected_input_paths.items()
+        }
+        mapping_rebuild_ok = (
+            rebuilt_without_inputs == mapping_without_inputs
+            and mapping.get("inputs") == expected_inputs
+        )
+        queue_rebuild_ok = queue == build_review_queue(rebuilt)
+        ttl_rebuild_ok = ttl == render_turtle(contract)
+    except (ValueError, KeyError, TypeError, re.error):
+        mapping_rebuild_ok = queue_rebuild_ok = ttl_rebuild_ok = False
     active_ids = {row.get("candidate_id") for row in mapping.get("shortlist", [])}
     queue_binding_ok = all(
         item.get("candidate_id") in active_ids
@@ -160,6 +226,11 @@ def _audit() -> dict:
         "review_queue_is_bound_to_active_shortlist": queue_binding_ok,
         "modeling_pattern_coverage": modeling_pattern_coverage_ok,
         "shortlist_content_quality_gate": content_clean_ok,
+        "phenomenon_mapping_policy_enforced": phenomenon_semantics_ok,
+        "review_records_match_policy_and_overlay": review_records_consistent,
+        "mapping_matches_current_input_rebuild": mapping_rebuild_ok,
+        "review_queue_matches_current_input_rebuild": queue_rebuild_ok,
+        "owl_matches_current_contract_rebuild": ttl_rebuild_ok,
         "candidate_dispositions_recorded": decisions_ok,
         "reviewed_hierarchy_relations_bind_to_candidates": hierarchy_relations_ok,
         "automatic_promotion_and_formal_release_disabled": no_early_promotion_ok,

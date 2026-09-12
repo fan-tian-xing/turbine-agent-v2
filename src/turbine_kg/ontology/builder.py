@@ -36,6 +36,17 @@ def validate_contract(contract: dict) -> None:
         raise ValueError("Stage 8 candidate mapping cannot automatically promote terms")
     if mapping.get("review_status") != "pending_manual_review":
         raise ValueError("Stage 8 mapping must stop at manual review")
+    phenomenon_policy = mapping.get("phenomenon_policy", {})
+    if phenomenon_policy.get("default_mapping_kind") != "defer":
+        raise ValueError("Stage 8 ordinary phenomena must default to defer")
+    for field in ("explicit_abnormal_patterns", "negated_or_unconfirmed_patterns"):
+        patterns = phenomenon_policy.get(field)
+        if not isinstance(patterns, list) or not patterns or any(
+            not isinstance(pattern, str) or not pattern for pattern in patterns
+        ):
+            raise ValueError(f"Stage 8 phenomenon policy requires {field}")
+        for pattern in patterns:
+            re.compile(pattern)
     expected_questions = {f"cap-{i:02d}" for i in range(1, 11)}
     if set(contract.get("capability_coverage", {})) != expected_questions:
         raise ValueError("Stage 8 contract must cover all ten Stage 7 capability questions")
@@ -156,6 +167,33 @@ def _is_generic_deferred_process(label: str, policy: dict) -> bool:
     )
 
 
+def resolve_phenomenon_mapping_spec(contract: dict, row: dict, mapping_spec: dict) -> dict:
+    """Resolve phenomenon candidates conservatively by their lexical semantics."""
+    if row.get("candidate_type") != "phenomenon":
+        return mapping_spec
+    policy = contract["candidate_mapping"].get("phenomenon_policy", {})
+    label = row.get("normalized_form", "")
+    abnormal_labels = set(policy.get("explicit_abnormal_labels", []))
+    abnormal_patterns = policy.get("explicit_abnormal_patterns", [])
+    non_assertive = any(
+        re.search(pattern, label)
+        for pattern in policy.get("negated_or_unconfirmed_patterns", [])
+    )
+    is_abnormal = not non_assertive and (
+        label in abnormal_labels or any(re.search(pattern, label) for pattern in abnormal_patterns)
+    )
+    if is_abnormal:
+        return mapping_spec
+    return {
+        "target_class": None,
+        "mapping_kind": policy.get("default_mapping_kind", "defer"),
+        "selection_reason": policy.get(
+            "default_selection_reason",
+            "ordinary measurable phenomenon is deferred for QuantityValue/parameter review",
+        ),
+    }
+
+
 def _is_shadowed_process_prefix(row: dict, peers: list[dict]) -> bool:
     """Drop a shorter lexical prefix when a longer process label occurs on the same pages."""
     label = row.get("normalized_form", "")
@@ -183,6 +221,7 @@ def _build_mapping_row(
 ) -> dict:
     mapping = contract["candidate_mapping"]["allowed_candidate_types"]
     mapping_spec = mapping_spec or mapping[row["candidate_type"]]
+    mapping_spec = resolve_phenomenon_mapping_spec(contract, row, mapping_spec)
     occurrence_policy = contract["candidate_mapping"].get("source_occurrence_policy", {})
     accepted_occurrences = [
         item for item in row["occurrences"]
@@ -240,6 +279,7 @@ def _build_mapping_row(
         "candidate_type": row["candidate_type"],
         "mapped_class": mapping_spec.get("target_class"),
         "mapping_kind": mapping_spec["mapping_kind"],
+        "candidate_disposition": "defer" if mapping_spec["mapping_kind"] == "defer" else "class",
         "capability_question_ids": sorted(row.get("capability_question_ids", [])),
         "candidate_content_fingerprint": row["content_fingerprint"],
         "source_occurrences": review_occurrences,
@@ -434,6 +474,11 @@ def apply_mapping_review_overlay(mapping_payload: dict, overlay: list[dict]) -> 
         expected_disposition = "class" if outcome == "accepted" else "defer"
         if disposition != expected_disposition:
             raise ValueError(f"Stage 8 review overlay disposition does not match decision: {candidate_id}")
+        if outcome == "accepted" and (
+            row.get("mapping_kind") != "class_label"
+            or row.get("mapped_class") not in REQUIRED_TOP_LEVEL_CLASSES | REQUIRED_RUNTIME_CLASSES
+        ):
+            raise ValueError(f"Stage 8 class acceptance requires a valid class_label mapping: {candidate_id}")
         row["candidate_disposition"] = disposition
         confirmation = decision.get("original_page_confirmation")
         if confirmation not in {None, "confirmed_by_user"}:
@@ -469,7 +514,7 @@ def apply_mapping_review_overlay(mapping_payload: dict, overlay: list[dict]) -> 
         rows[candidate_id] = row
     for row in rows.values():
         row.setdefault("mapping_review_decision", "pending_manual_review")
-        row.setdefault("candidate_disposition", "class")
+        row.setdefault("candidate_disposition", "defer" if row.get("mapping_kind") == "defer" else "class")
         row.setdefault(
             "original_page_confirmation_status",
             "pending" if row["requires_original_confirmation"] else "not_required",
@@ -540,7 +585,9 @@ def build_review_queue(mapping_payload: dict) -> list[dict]:
             "mapping_kind": row["mapping_kind"],
             "review_status": row["review_status"],
             "mapping_review_decision": row.get("mapping_review_decision", "pending_manual_review"),
-            "candidate_disposition": row.get("candidate_disposition", "class"),
+            "candidate_disposition": row.get(
+                "candidate_disposition", "defer" if row.get("mapping_kind") == "defer" else "class"
+            ),
             "requires_original_confirmation": row["requires_original_confirmation"],
             "source_occurrences": row["source_occurrences"],
             "excluded_occurrence_count": row["excluded_occurrence_count"],

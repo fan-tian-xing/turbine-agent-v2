@@ -24,7 +24,7 @@
     },
     "ontology_contract": {
       "path": "config/ontology_contract.json",
-      "sha256": "25eaa6b4a084340a6553659c7edb6df7e5f2db8eaac5733eaa4ca17ead2299bc"
+      "sha256": "d1a9a728f3073fb7a6ac7593c801456e2f3ce1d5ff9293c49da72fe7be33f204"
     },
     "mapping_review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
@@ -361,6 +361,7 @@
       "candidate_type": "component",
       "mapped_class": "Component",
       "mapping_kind": "class_label",
+      "candidate_disposition": "class",
       "capability_question_ids": [
         "cap-01",
         "cap-04"
@@ -430,7 +431,6 @@
         "hierarchy"
       ],
       "mapping_review_decision": "accepted",
-      "candidate_disposition": "class",
       "original_page_confirmation_status": "confirmed_by_user",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -451,6 +451,7 @@
       "candidate_type": "equipment",
       "mapped_class": "Equipment",
       "mapping_kind": "class_label",
+      "candidate_disposition": "class",
       "capability_question_ids": [
         "cap-01",
         "cap-04",
@@ -556,7 +557,6 @@
         "equipment"
       ],
       "mapping_review_decision": "accepted",
-      "candidate_disposition": "class",
       "original_page_confirmation_status": "confirmed_by_user",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -570,6 +570,7 @@
       "candidate_type": "component",
       "mapped_class": "Component",
       "mapping_kind": "class_label",
+      "candidate_disposition": "class",
       "capability_question_ids": [
         "cap-01",
         "cap-04"
@@ -621,7 +622,6 @@
         "component"
       ],
       "mapping_review_decision": "accepted",
-      "candidate_disposition": "class",
       "original_page_confirmation_status": "not_required",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -635,6 +635,7 @@
       "candidate_type": "phenomenon",
       "mapped_class": "Situation",
       "mapping_kind": "class_label",
+      "candidate_disposition": "class",
       "capability_question_ids": [
         "cap-04",
         "cap-06"
@@ -719,7 +720,6 @@
         "situation"
       ],
       "mapping_review_decision": "accepted",
-      "candidate_disposition": "class",
       "original_page_confirmation_status": "confirmed_by_user",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -735,6 +735,7 @@
       "candidate_type": "synonym_candidate",
       "mapped_class": null,
       "mapping_kind": "alias_relation",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-05",
         "cap-08"
@@ -773,7 +774,6 @@
         "alias"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "agent",
       "reviewed_at": "2026-09-12",
@@ -787,6 +787,7 @@
       "candidate_type": "process",
       "mapped_class": "ProcedureDefinition",
       "mapping_kind": "class_label",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-02",
         "cap-07"
@@ -834,7 +835,6 @@
         "process_procedure"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "agent",
       "reviewed_at": "2026-09-12",
@@ -846,8 +846,9 @@
       "surface_form": "低压",
       "normalized_form": "低压",
       "candidate_type": "phenomenon",
-      "mapped_class": "Situation",
-      "mapping_kind": "class_label",
+      "mapped_class": null,
+      "mapping_kind": "defer",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-04",
         "cap-06"
@@ -889,7 +890,7 @@
       ],
       "requires_original_confirmation": true,
       "review_status": "pending_manual_review",
-      "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
+      "selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
       "review_requirements": [
         "confirm candidate-to-class mapping",
         "confirm OCR-derived surface form against the original page",
@@ -898,7 +899,6 @@
         "confirm applicability and non-merging boundaries"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -912,6 +912,7 @@
       "candidate_type": "action",
       "mapped_class": "StepDefinition",
       "mapping_kind": "class_label",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-02",
         "cap-07",
@@ -968,7 +969,6 @@
         "process_procedure"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "agent",
       "reviewed_at": "2026-09-12",
@@ -982,6 +982,7 @@
       "candidate_type": "component",
       "mapped_class": "Component",
       "mapping_kind": "class_label",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-01",
         "cap-04"
@@ -1036,7 +1037,6 @@
         "confirm applicability and non-merging boundaries"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -1048,8 +1048,9 @@
       "surface_form": "轴承振动",
       "normalized_form": "轴承振动",
       "candidate_type": "phenomenon",
-      "mapped_class": "QuantityValue",
-      "mapping_kind": "quantity_kind_label",
+      "mapped_class": null,
+      "mapping_kind": "defer",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-04",
         "cap-06"
@@ -1092,7 +1093,7 @@
       ],
       "requires_original_confirmation": true,
       "review_status": "pending_manual_review",
-      "selection_reason": "representative real Stage 7 candidate for modeling pattern quantity_kind",
+      "selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
       "review_requirements": [
         "confirm candidate-to-class mapping",
         "confirm OCR-derived surface form against the original page",
@@ -1104,7 +1105,6 @@
         "quantity_kind"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "agent",
       "reviewed_at": "2026-09-12",
@@ -1116,8 +1116,9 @@
       "surface_form": "振动",
       "normalized_form": "振动",
       "candidate_type": "phenomenon",
-      "mapped_class": "Situation",
-      "mapping_kind": "class_label",
+      "mapped_class": null,
+      "mapping_kind": "defer",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-04",
         "cap-06"
@@ -1193,7 +1194,7 @@
       ],
       "requires_original_confirmation": true,
       "review_status": "pending_manual_review",
-      "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
+      "selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
       "review_requirements": [
         "confirm candidate-to-class mapping",
         "confirm OCR-derived surface form against the original page",
@@ -1202,7 +1203,6 @@
         "confirm applicability and non-merging boundaries"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -1216,6 +1216,7 @@
       "candidate_type": "applicability_condition",
       "mapped_class": "ApplicabilityScope",
       "mapping_kind": "scope_value",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-03",
         "cap-05",
@@ -1258,7 +1259,6 @@
         "applicability"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "agent",
       "reviewed_at": "2026-09-12",
@@ -1272,6 +1272,7 @@
       "candidate_type": "equipment",
       "mapped_class": "Equipment",
       "mapping_kind": "class_label",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-01",
         "cap-04",
@@ -1359,7 +1360,6 @@
         "confirm applicability and non-merging boundaries"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "not_required",
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
@@ -1373,6 +1373,7 @@
       "candidate_type": "process",
       "mapped_class": "ProcedureDefinition",
       "mapping_kind": "class_label",
+      "candidate_disposition": "defer",
       "capability_question_ids": [
         "cap-02",
         "cap-07"
@@ -1416,7 +1417,6 @@
         "confirm applicability and non-merging boundaries"
       ],
       "mapping_review_decision": "deferred",
-      "candidate_disposition": "defer",
       "original_page_confirmation_status": "pending",
       "reviewer": "agent",
       "reviewed_at": "2026-09-12",

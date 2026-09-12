@@ -11,6 +11,12 @@ from .models import ApplicabilityScope, FixtureDocument, ScopeContext
 
 
 def build_traceability_projection(documents: tuple[FixtureDocument, ...]) -> dict[str, Any]:
+    from turbine_kg.ontology.research_adapter import validate_research_documents
+    from turbine_kg.ontology.semantic import SemanticValidationError
+
+    report = validate_research_documents(documents)
+    if not report["conforms"]:
+        raise SemanticValidationError(report)
     node_by_id: dict[str, dict[str, Any]] = {}
     edges: list[dict[str, str]] = []
     edge_keys: set[tuple[str, str, str]] = set()

@@ -10,6 +10,7 @@ from turbine_kg.ontology.builder import (
     load_json,
     render_turtle,
     select_mapping_shortlist,
+    select_modeling_pattern_coverage,
     validate_contract,
 )
 
@@ -36,6 +37,102 @@ def test_stage8_contract_has_minimal_classes_and_capability_coverage():
     assert contract["capability_paths"]["cap-04"]["path"] == ["Situation", "involvesEntity", "PhysicalEntity"]
     assert contract["capability_status"]["cap-09"].startswith("deferred")
     assert contract["candidate_mapping"]["automatic_promotion"] is False
+    assert contract["candidate_mapping"]["phenomenon_policy"]["default_mapping_kind"] == "defer"
+
+
+def test_stage8_phenomenon_policy_defers_measurements_and_allows_explicit_abnormality():
+    contract = _read("config/ontology_contract.json")
+    candidates = _read("data/stage7/terminology_candidates.json")["candidates"]
+    capabilities = _read("data/stage7/business_capability_questions.json")["questions"]
+    template = next(row for row in candidates if row["candidate_type"] == "phenomenon")
+
+    def resolve(label: str) -> dict:
+        row = json.loads(json.dumps(template, ensure_ascii=False))
+        row["candidate_id"] = f"synthetic-{label}"
+        row["surface_form"] = row["normalized_form"] = label
+        return select_mapping_shortlist(contract, [row], capabilities)[0]
+
+    ordinary = resolve("振动")
+    assert ordinary["mapped_class"] is None
+    assert ordinary["mapping_kind"] == "defer"
+    abnormal = resolve("振动异常")
+    assert abnormal["mapped_class"] == "Situation"
+    assert abnormal["mapping_kind"] == "class_label"
+
+
+def _synthetic_phenomenon(label: str, score: int = 1) -> dict:
+    return {
+        "candidate_id": f"synthetic-{label}", "candidate_type": "phenomenon",
+        "surface_form": label, "normalized_form": label,
+        "content_fingerprint": f"synthetic-fingerprint-{label}",
+        "review_status": "candidate_only", "document_equal_weighted_score": score,
+        "capability_question_ids": [], "text_origins": ["native_text"],
+        "occurrences": [{
+            "source_kind": "accepted_stage6_evidence", "text_origin": "native_text",
+            "document_key": "synthetic-document", "physical_page": 1,
+            "page_id": "synthetic-page", "text_start": 0, "text_end": len(label),
+        }],
+    }
+
+
+@pytest.mark.parametrize("label", [
+    "振幅", "无异常", "未见异常", "不存在缺陷", "振动无异常", "非故障",
+    "疑似故障", "可能异常", "异常待确认", "待核实缺陷", "是否异常",
+])
+def test_stage8_non_assertive_and_measurable_phenomena_defer(label):
+    contract = _read("config/ontology_contract.json")
+    row = select_mapping_shortlist(contract, [_synthetic_phenomenon(label)], [])[0]
+    assert row["mapped_class"] is None
+    assert row["mapping_kind"] == row["candidate_disposition"] == "defer"
+
+
+def test_stage8_policy_defer_keeps_manual_decision_pending():
+    contract = _read("config/ontology_contract.json")
+    row = select_mapping_shortlist(contract, [_synthetic_phenomenon("振动")], [])[0]
+    reviewed = apply_mapping_review_overlay({"shortlist": [row], "modeling_pattern_definitions": []}, [])
+    assert reviewed["status"] == "pending_manual_review"
+    assert reviewed["review_summary"]["pending_manual_review_count"] == 1
+    assert reviewed["review_summary"]["deferred_count"] == 0
+    assert reviewed["shortlist"][0]["mapping_review_decision"] == "pending_manual_review"
+    assert reviewed["shortlist"][0]["candidate_disposition"] == "defer"
+    assert "reviewer" not in reviewed["shortlist"][0]
+    assert build_review_queue(reviewed)[0]["candidate_disposition"] == "defer"
+
+
+@pytest.mark.parametrize("kind, target", [
+    ("defer", None), ("class_label", None), ("class_label", "UnknownClass"),
+    ("quantity_kind_label", "QuantityValue"),
+])
+def test_stage8_overlay_class_acceptance_requires_a_valid_mapping(kind, target):
+    contract = _read("config/ontology_contract.json")
+    row = select_mapping_shortlist(contract, [_synthetic_phenomenon("振动")], [])[0]
+    row["mapping_kind"], row["mapped_class"] = kind, target
+    decision = {
+        "candidate_id": row["candidate_id"],
+        "candidate_content_fingerprint": row["candidate_content_fingerprint"],
+        "decision": "accepted", "disposition": "class",
+        "original_page_confirmation": "confirmed_by_user",
+    }
+    with pytest.raises(ValueError, match="valid class_label mapping"):
+        apply_mapping_review_overlay({"shortlist": [row], "modeling_pattern_definitions": []}, [decision])
+
+
+@pytest.mark.parametrize("label", ["振动", "未见异常", "疑似故障"])
+def test_stage8_policy_applies_to_pinned_and_coverage_candidates(label):
+    contract = _read("config/ontology_contract.json")
+    candidate = _synthetic_phenomenon(label)
+    competitors = [_synthetic_phenomenon("振幅", 3), _synthetic_phenomenon("频率", 2)]
+    pinned = select_mapping_shortlist(contract, competitors + [candidate], [], {candidate["candidate_id"]})
+    row = next(row for row in pinned if row["candidate_id"] == candidate["candidate_id"])
+    assert row["mapped_class"] is None and row["mapping_kind"] == "defer"
+    contract["modeling_pattern_coverage"] = [{
+        "pattern_id": "situation", "representatives": [{
+            "candidate_id": candidate["candidate_id"], "target_class": "Situation", "mapping_kind": "class_label",
+        }],
+    }]
+    coverage = select_modeling_pattern_coverage(contract, [candidate], [])
+    assert coverage[0]["mapped_class"] is None
+    assert coverage[0]["mapping_kind"] == coverage[0]["candidate_disposition"] == "defer"
 
 
 def test_stage8_owl_is_generated_from_contract_and_defers_future_scope():

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage9_semantic_review",
+  "status": "passed",
+  "scope": "code_contract_runtime_chain",
+  "reviewer": "independent_agent_recheck9",
+  "knowledge_approval": false,
+  "reviewed_inputs": {
+    "ontology/minimal_turbine.ttl": "c513ddbc2c5c167f3ec7d6af1b2d13349a432a318e00c014d06fb96724a25d34",
+    "ontology/stage9_core.ttl": "0d28b5c2d68035227632836b720ac617467f6b9aa93cd0e763f8ba691d01deaf",
+    "ontology/stage9_shapes.ttl": "9ad12df7b748ec6301e7b7c40126de68da1e0bcfab4289eacb4aabf97628bf74",
+    "src/turbine_kg/ontology/semantic.py": "90f6620373c8cd7cc2818e25fce631c2b15369af3dcaad0c6127e9667164d5de",
+    "src/turbine_kg/ontology/research_adapter.py": "feb977eec2a913ffcf3474bff5bfa4de8f66342bf3cc6eae9896c329749330a6",
+    "src/turbine_kg/stage3/projection.py": "12f604808acb763721a24d90c437490842b84c1fe749ac146d32076e6d0c8005",
+    "config/semantic_runtime.schema.json": "1cf14ceff2941c3900ae2d2344852ed035a49d91e9433c1e66bff5cc1bfa724a"
+  },
+  "checks": {
+    "schema_transport_checked": true,
+    "deterministic_real_dataset": true,
+    "stage8_local_import_preserved": true,
+    "owl_catalog_consumed": true,
+    "owl_domain_range_shapes_consumed": true,
+    "statement_controlled_values_and_cardinality": true,
+    "evidence_locator_and_object_binding": true,
+    "source_quote_and_revision_reference_checks": true,
+    "optional_context_and_quantity_kind_preserved": true,
+    "scalar_and_one_sided_interval_validated": true,
+    "research_projection_consumer_gate": true,
+    "nonconforming_batch_preserved_before_projection": true,
+    "existing_ids_and_synthetic_contract_preserved": true,
+    "no_formal_release_or_stage12_expansion": true
+  },
+  "evidence": {
+    "review_scope": "代码、合同和研发运行消费者交叉复核，不是业务知识批准。",
+    "independent_negative_probes": [
+      "span_not_in_page",
+      "wrong_revision_document",
+      "real_quote_not_in_span"
+    ],
+    "negative_probe_result": "全部生成失败报告并在投影前阻断。",
+    "synthetic_evidence_boundary": "沿用既有公开合成 Fixture 的描述性 Evidence，不重写或晋级为正式原文。"
+  },
+  "blockers": []
+}

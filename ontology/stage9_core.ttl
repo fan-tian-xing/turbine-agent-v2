@@ -1,0 +1,55 @@
+@prefix tv2: <https://example.invalid/turbine-v2#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<https://example.invalid/turbine-v2/stage9> a owl:Ontology ;
+    owl:imports <https://example.invalid/turbine-v2#> ;
+    rdfs:label "汽轮机 v2 运行语义扩展"@zh-CN ;
+    rdfs:comment "Stage 8 类和属性由 minimal_turbine.ttl 唯一声明；本文件只补当前运行消费者所需的来源定位和校验属性。"@zh-CN .
+
+tv2:SourceSpan a owl:Class ; rdfs:subClassOf tv2:InformationEntity ;
+    rdfs:label "来源片段"@zh-CN ; skos:altLabel "原文片段"@zh-CN ;
+    rdfs:comment "绑定原页、资料身份、Revision 和逐字来源文本的来源定位片段，不是工程对象。"@zh-CN .
+
+tv2:sourceSpan a owl:ObjectProperty ; rdfs:domain tv2:Evidence ; rdfs:range tv2:SourceSpan ; rdfs:label "来源于片段"@zh-CN ; rdfs:comment "证据绑定的一个或多个来源位置。"@zh-CN .
+tv2:evidenceAboutEntity a owl:ObjectProperty ; rdfs:domain tv2:Evidence ; rdfs:range tv2:PhysicalEntity ; rdfs:label "证据关于对象"@zh-CN ; rdfs:comment "证据支持的明确工程对象，需与工程断言对象一致。"@zh-CN .
+
+tv2:statementType a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "断言类型"@zh-CN ; rdfs:comment "当前研发运行断言的语义类型，合法值由 SHACL 唯一约束。"@zh-CN .
+tv2:statementText a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "断言文本"@zh-CN ; rdfs:comment "中等粒度完整工程断言的文本。"@zh-CN .
+tv2:evidenceText a owl:DatatypeProperty ; rdfs:domain tv2:Evidence ; rdfs:range xsd:string ; rdfs:label "研发证据文本"@zh-CN ; rdfs:comment "保持当前研发合同的存储文本。真实已审核输入必须是绑定片段中的原文；公开合成 Fixture 的描述性 Evidence 不被重标为正式原文，逐字来源文本见 SourceSpan.spanText。"@zh-CN .
+tv2:objectKey a owl:DatatypeProperty ; rdfs:domain tv2:PhysicalEntity ; rdfs:range xsd:string ; rdfs:label "对象标识"@zh-CN ; rdfs:comment "既有运行输入的对象标识，不合并相似对象。"@zh-CN .
+tv2:spanText a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "片段原文"@zh-CN ; rdfs:comment "来源片段的存储文本。"@zh-CN .
+tv2:physicalPage a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:integer ; rdfs:label "物理页"@zh-CN ; rdfs:comment "从一开始的原始 PDF 页序。"@zh-CN .
+tv2:logicalPage a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "逻辑页"@zh-CN ; rdfs:comment "原始输入明确记录的内部页码；缺失时不推造。"@zh-CN .
+tv2:pageId a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "来源页标识"@zh-CN ; rdfs:comment "既有来源 Page ID。"@zh-CN .
+tv2:revisionId a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "资料修订标识"@zh-CN ; rdfs:comment "来源资料 Revision ID。"@zh-CN .
+tv2:documentId a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "逻辑资料标识"@zh-CN ; rdfs:comment "来源逻辑资料 ID。"@zh-CN .
+tv2:model a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "适用机型"@zh-CN ; rdfs:comment "结论适用机型，不存在时保持未记录。"@zh-CN .
+tv2:equipment a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "适用设备"@zh-CN ; rdfs:comment "适用范围中的设备限制。"@zh-CN .
+tv2:lifecycleStage a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "生命周期阶段"@zh-CN ; rdfs:comment "安装、调试等既有范围阶段。"@zh-CN .
+tv2:activity a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "适用活动"@zh-CN ; rdfs:comment "结论适用的工程活动。"@zh-CN .
+tv2:operatingState a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "适用工况"@zh-CN ; rdfs:comment "结论适用的运行状态。"@zh-CN .
+tv2:condition a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "适用条件"@zh-CN ; rdfs:comment "输入中明确记录的条件限制。"@zh-CN .
+tv2:capacityMinimum a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:decimal ; rdfs:label "容量下界"@zh-CN ; rdfs:comment "以 MW 表达的既有范围容量下界。"@zh-CN .
+tv2:capacityMaximum a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:decimal ; rdfs:label "容量上界"@zh-CN ; rdfs:comment "以 MW 表达的既有范围容量上界。"@zh-CN .
+tv2:minimumValue a owl:DatatypeProperty ; rdfs:domain tv2:QuantityValue ; rdfs:range xsd:decimal ; rdfs:label "量值下界"@zh-CN ; rdfs:comment "允许单边区间的工程量下界。"@zh-CN .
+tv2:maximumValue a owl:DatatypeProperty ; rdfs:domain tv2:QuantityValue ; rdfs:range xsd:decimal ; rdfs:label "量值上界"@zh-CN ; rdfs:comment "允许单边区间的工程量上界。"@zh-CN .
+
+# Complete definitions for the Stage 8 property IRIs without redefining their
+# classes, identifiers, domains or ranges.
+tv2:hasComponent rdfs:comment "设备到所组成部件的关系。"@zh-CN .
+tv2:hasStep rdfs:comment "工序定义到其步骤定义的关系。"@zh-CN .
+tv2:precedes rdfs:comment "一个步骤定义在另一步骤定义之前。"@zh-CN .
+tv2:hasProcedureDefinition rdfs:comment "设备绑定的工序定义，不表示现场已实施。"@zh-CN .
+tv2:aboutEntity rdfs:comment "工程断言所描述的物理对象。"@zh-CN .
+tv2:hasApplicabilityScope rdfs:comment "工程断言的结构化适用边界。"@zh-CN .
+tv2:supportedBy rdfs:comment "工程断言到其支持证据的绑定。"@zh-CN .
+tv2:hasQuantityValue rdfs:comment "工程断言到带单位量值的关系。"@zh-CN .
+tv2:describes rdfs:comment "证据所描述的信息对象。"@zh-CN .
+tv2:involvesEntity rdfs:comment "工程情境所涉及的物理对象。"@zh-CN .
+tv2:normalizedLabel rdfs:comment "信息对象的规范显示标签。"@zh-CN .
+tv2:numericValue rdfs:comment "带单位的标量工程数值，不表示参数种类。"@zh-CN .
+tv2:unitSymbol rdfs:comment "量值的单位符号，合法值由当前 SHACL 合同约束。"@zh-CN .
+tv2:quantityKindLabel rdfs:comment "量值可选的参数种类描述；未记录时不得由转换器补写。"@zh-CN .

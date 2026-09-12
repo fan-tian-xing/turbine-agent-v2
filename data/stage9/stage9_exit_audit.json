@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "stage": "9",
+  "artifact_kind": "stage9_exit_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/audit_stage9_exit.py",
+  "inputs": {
+    "data/stage8/stage8_exit_audit.json": {
+      "path": "data/stage8/stage8_exit_audit.json",
+      "sha256": "2dc6953a035397bf57cae11d501bbc3f2598678196b406a1961bf62f6aecc2c8"
+    },
+    "ontology/minimal_turbine.ttl": {
+      "path": "ontology/minimal_turbine.ttl",
+      "sha256": "c513ddbc2c5c167f3ec7d6af1b2d13349a432a318e00c014d06fb96724a25d34"
+    },
+    "ontology/stage9_core.ttl": {
+      "path": "ontology/stage9_core.ttl",
+      "sha256": "0d28b5c2d68035227632836b720ac617467f6b9aa93cd0e763f8ba691d01deaf"
+    },
+    "ontology/stage9_shapes.ttl": {
+      "path": "ontology/stage9_shapes.ttl",
+      "sha256": "9ad12df7b748ec6301e7b7c40126de68da1e0bcfab4289eacb4aabf97628bf74"
+    },
+    "src/turbine_kg/ontology/semantic.py": {
+      "path": "src/turbine_kg/ontology/semantic.py",
+      "sha256": "90f6620373c8cd7cc2818e25fce631c2b15369af3dcaad0c6127e9667164d5de"
+    },
+    "src/turbine_kg/ontology/research_adapter.py": {
+      "path": "src/turbine_kg/ontology/research_adapter.py",
+      "sha256": "feb977eec2a913ffcf3474bff5bfa4de8f66342bf3cc6eae9896c329749330a6"
+    },
+    "src/turbine_kg/stage3/projection.py": {
+      "path": "src/turbine_kg/stage3/projection.py",
+      "sha256": "12f604808acb763721a24d90c437490842b84c1fe749ac146d32076e6d0c8005"
+    },
+    "src/turbine_kg/stage3/corpus.py": {
+      "path": "src/turbine_kg/stage3/corpus.py",
+      "sha256": "256d2c8ef1b5c823a6301e04faa324117402aa89835604337408f29147062a30"
+    },
+    "src/turbine_kg/stage3/models.py": {
+      "path": "src/turbine_kg/stage3/models.py",
+      "sha256": "975e1fbd8da4c5357250aee820391085eaf17d28599d6e5918bb7318eb94926f"
+    },
+    "pyproject.toml": {
+      "path": "pyproject.toml",
+      "sha256": "9d4e5482e3e412a5db47e66d90440cf68ff2358a861341bd32aa94c56b2090db"
+    },
+    "uv.lock": {
+      "path": "uv.lock",
+      "sha256": "2bf932c38009b0923393f37152a6332f6c37b4abd411829fc51790ea2ece2b44"
+    },
+    "src/turbine_kg/stage3/real_trial.py": {
+      "path": "src/turbine_kg/stage3/real_trial.py",
+      "sha256": "117d24e10c60fa426906454245ac8c0fe5293d513c3641a03e556da76a5be406"
+    },
+    "data/stage3/real_trial_confirmation.json": {
+      "path": "data/stage3/real_trial_confirmation.json",
+      "sha256": "afbdadbcccecc68887b3e45cdfc76e33d48145cdcf268931ba2d19ffbdca8055"
+    },
+    "data/registry/source_assets.jsonl": {
+      "path": "data/registry/source_assets.jsonl",
+      "sha256": "e336425b3d9b4879db84010af23564464a035460b573b764b439129e82309471"
+    },
+    "config/semantic_runtime.schema.json": {
+      "path": "config/semantic_runtime.schema.json",
+      "sha256": "1cf14ceff2941c3900ae2d2344852ed035a49d91e9433c1e66bff5cc1bfa724a"
+    },
+    "tests/fixtures/stage3/corpus.json": {
+      "path": "tests/fixtures/stage3/corpus.json",
+      "sha256": "494eb4dbaeb11c036f0f5dbde5de0c0635051df7bdce3ff35cc52981a9c7e8b1"
+    },
+    "tests/stage9/test_stage9_semantic.py": {
+      "path": "tests/stage9/test_stage9_semantic.py",
+      "sha256": "790496faa6606fdce5dc2b559dea46bb3362a2b3b040970a7e14b16fb4324ff1"
+    },
+    "scripts/audit_stage9_exit.py": {
+      "path": "scripts/audit_stage9_exit.py",
+      "sha256": "4c4d2c501fe8d54de508ba6b5ef4eeb7e082c680a99640787c4c89068b091080"
+    },
+    "var/stage3/real_trial_pages.json": {
+      "path": "var/stage3/real_trial_pages.json",
+      "sha256": "762f8ac657a896e5c9b152112850af730b564063eeac71c3db8120384d0c8396"
+    },
+    "data/stage9/stage9_semantic_review.json": {
+      "path": "data/stage9/stage9_semantic_review.json",
+      "sha256": "15292fd8cd0f3a79eaf92cb769f8051ec5d3a6c8c6b07bc8bbfddb8a49a92b44"
+    }
+  },
+  "input_scope": "Existing Stage 8 frozen ontology plus public synthetic corpus and already admitted, user-confirmed real research sample; research-only, not formal knowledge or Release. Only confirmed/runtime/Registry artifacts are read, no original materials, case data or blind-test inputs.",
+  "versions": {
+    "python": "3.12.14",
+    "rdflib": "7.6.0",
+    "pyshacl": "0.40.1",
+    "jsonschema": "4.26.0",
+    "runtime_schema": 1,
+    "dependency_lock": "uv.lock"
+  },
+  "outputs": {
+    "ontology_authority": [
+      "ontology/minimal_turbine.ttl",
+      "ontology/stage9_core.ttl"
+    ],
+    "constraint_authority": "ontology/stage9_shapes.ttl",
+    "runtime_schema_authority": "config/semantic_runtime.schema.json",
+    "validation_report": "validate_runtime_payload / validate_research_documents return value consumed before stage3 projection",
+    "review": "data/stage9/stage9_semantic_review.json",
+    "exit_audit": "data/stage9/stage9_exit_audit.json"
+  },
+  "counts": {
+    "public_synthetic": {
+      "documents": 3,
+      "pages": 6,
+      "source_spans": 6,
+      "evidence": 6,
+      "statements": 6,
+      "quantities": 2,
+      "runtime_nodes": 28,
+      "runtime_relations": 33,
+      "dataset_triples": 173,
+      "projection_nodes": 54,
+      "projection_edges": 65,
+      "warning_count": 4
+    },
+    "confirmed_real_research": {
+      "document_groups": 3,
+      "logical_documents": 3,
+      "pages": 3,
+      "source_spans": 3,
+      "evidence": 4,
+      "statements": 4,
+      "quantities": 4,
+      "runtime_nodes": 23,
+      "runtime_relations": 24,
+      "dataset_triples": 126,
+      "projection_nodes": 46,
+      "projection_edges": 45,
+      "pages_with_logical_page": 3,
+      "warning_count": 4
+    }
+  },
+  "checks": {
+    "stage8_gate_and_input_fingerprints": true,
+    "project_python_environment": true,
+    "semantic_dependencies_match_lock": true,
+    "actual_rdf_dataset": true,
+    "owl_terms_have_chinese_labels_and_definitions": true,
+    "owl_local_stage8_import_only": true,
+    "owl_extension_has_no_duplicate_term_declarations": true,
+    "owl_properties_have_single_domain_and_range": true,
+    "public_fixture_semantic_validation": true,
+    "optional_scope_is_allowed_and_warnings_are_consumed": true,
+    "runtime_dataset_counts_reconcile": true,
+    "projection_statement_counts_reconcile": true,
+    "projection_evidence_counts_reconcile": true,
+    "confirmed_real_research_validation": true,
+    "confirmed_real_counts_reconcile": true,
+    "confirmed_real_projection_counts_reconcile": true,
+    "confirmed_real_page_dual_identifiers_preserved": true,
+    "confirmed_real_user_admission_is_preserved": true,
+    "confirmed_real_invalid_batch_projection_blocked": true,
+    "negative_contract_tests": true,
+    "invalid_batch_preserved_and_projection_blocked": true,
+    "independent_code_contract_review": true,
+    "targeted_and_consumer_tests": true,
+    "full_project_tests": true
+  },
+  "negative_checks": {
+    "unknown_schema_field": true,
+    "unknown_class": true,
+    "unknown_predicate": true,
+    "invalid_statement_type": true,
+    "wrong_evidence_endpoint": true,
+    "invalid_unit": true,
+    "missing_physical_page": true,
+    "revision_document_mismatch": true,
+    "fabricated_page_span": true,
+    "fabricated_reviewed_evidence": true,
+    "assembled_reviewed_spans": true
+  },
+  "review": {
+    "scope": "code_contract_runtime_chain",
+    "status": "passed",
+    "fingerprints_current": true,
+    "knowledge_approval": false,
+    "admitted_data_metadata": "Existing user-confirmed groups, runtime identity/quote binding and Registry applicability are validated by load_confirmed_real_corpus; no overlay or user confirmation is changed."
+  },
+  "test_result": {
+    "targeted": {
+      "command": [
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/stage9",
+        "tests/stage3",
+        "tests/unit/test_project_state.py"
+      ],
+      "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+      "status": "passed",
+      "returncode": 0,
+      "stdout_tail": "........................................................................ [ 76%]\n......................                                                   [100%]\n",
+      "stderr_tail": ""
+    },
+    "full_project": {
+      "command": [
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests"
+      ],
+      "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+      "status": "passed",
+      "returncode": 0,
+      "stdout_tail": "........................................................................ [ 30%]\n........................................................................ [ 60%]\n........................................................................ [ 91%]\n.....................                                                    [100%]\n",
+      "stderr_tail": ""
+    }
+  },
+  "zero_tolerance_errors": [],
+  "blockers": [],
+  "failure_isolation": "Any schema, vocabulary, SHACL or research-adapter failure yields a nonconforming report and raises SemanticValidationError before Property Graph construction/Neo4j loading; retain the whole original batch unchanged.",
+  "rollback": "Restore the previous verified OWL/SHACL/runtime authority package and rerun the same input batch; no bypass or database correction.",
+  "next_stage_allowed": true,
+  "next_stage": "Stage 10 runtime provenance and reproducibility",
+  "next_stage_inputs": {
+    "owl": [
+      "ontology/minimal_turbine.ttl",
+      "ontology/stage9_core.ttl"
+    ],
+    "shacl": "ontology/stage9_shapes.ttl",
+    "runtime_contract": "src/turbine_kg/ontology/semantic.py:validate_runtime_payload",
+    "research_consumer": "src/turbine_kg/ontology/research_adapter.py:validate_research_documents",
+    "report_fields": [
+      "conforms",
+      "failures",
+      "warnings",
+      "counts",
+      "report_text",
+      "dataset_triple_count"
+    ]
+  }
+}

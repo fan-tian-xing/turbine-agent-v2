@@ -49,6 +49,13 @@
       "process": {"target_class": "ProcedureDefinition", "mapping_kind": "class_label"},
       "phenomenon": {"target_class": "Situation", "mapping_kind": "class_label"}
     },
+    "phenomenon_policy": {
+      "default_mapping_kind": "defer",
+      "default_selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
+      "explicit_abnormal_labels": ["腐蚀", "裂纹", "磨损", "泄漏", "变形", "断裂"],
+      "explicit_abnormal_patterns": ["异常$", "超限$", "过大$", "过小$", "故障$", "缺陷$", "失效$"],
+      "negated_or_unconfirmed_patterns": ["(?:无|未|不|非|没有|否认|排除)", "(?:疑似|可能|可疑|是否|尚待|待(?:确认|排查|核实|定|查|检|审核))"]
+    },
     "deferred_candidate_types": ["action", "parameter", "requirement", "verification", "applicability_condition", "abbreviation_candidate", "synonym_candidate", "old_name_candidate", "ocr_variant_candidate"],
     "excluded_candidate_types": ["parameter", "requirement", "verification", "applicability_condition", "abbreviation_candidate", "synonym_candidate", "old_name_candidate", "ocr_variant_candidate"],
     "filter_policy": {

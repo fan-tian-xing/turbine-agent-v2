@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/turbine-v2/semantic-runtime.schema.json",
+  "title": "Stage 9 semantic runtime bundle",
+  "type": "object",
+  "required": ["schema_version", "nodes", "relations"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "nodes": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["id", "type", "properties"], "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "#/$defs/iri"},
+          "type": {"type": "string", "minLength": 1},
+          "properties": {"type": "object", "additionalProperties": {"$ref": "#/$defs/value"}}
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["source", "predicate", "target"], "additionalProperties": false,
+        "properties": {
+          "source": {"$ref": "#/$defs/iri"},
+          "predicate": {"type": "string", "minLength": 1},
+          "target": {"$ref": "#/$defs/iri"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "iri": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s<>\"{}|\\\\^`]+$"},
+    "scalar": {"type": ["string", "number"]},
+    "value": {
+      "oneOf": [
+        {"$ref": "#/$defs/scalar"},
+        {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/scalar"}}
+      ]
+    }
+  }
+}

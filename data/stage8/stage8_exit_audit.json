@@ -8,7 +8,7 @@
   "inputs": {
     "ontology_contract": {
       "path": "config/ontology_contract.json",
-      "sha256": "25eaa6b4a084340a6553659c7edb6df7e5f2db8eaac5733eaa4ca17ead2299bc"
+      "sha256": "d1a9a728f3073fb7a6ac7593c801456e2f3ce1d5ff9293c49da72fe7be33f204"
     },
     "terminology_candidates": {
       "path": "data/stage7/terminology_candidates.json",
@@ -16,7 +16,7 @@
     },
     "mapping_shortlist": {
       "path": "data/stage8/ontology_mapping_shortlist.json",
-      "sha256": "6d13745a650e0be8699c862a62c84d14a845f94e95a32599b7f6ac5f2f1fc209"
+      "sha256": "0b1da3152defdbe67e3a93d2c9aa0c315b1f89374f79b6717adb25639dc1ca34"
     },
     "review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
@@ -53,6 +53,11 @@
     "review_queue_is_bound_to_active_shortlist": true,
     "modeling_pattern_coverage": true,
     "shortlist_content_quality_gate": true,
+    "phenomenon_mapping_policy_enforced": true,
+    "review_records_match_policy_and_overlay": true,
+    "mapping_matches_current_input_rebuild": true,
+    "review_queue_matches_current_input_rebuild": true,
+    "owl_matches_current_contract_rebuild": true,
     "candidate_dispositions_recorded": true,
     "reviewed_hierarchy_relations_bind_to_candidates": true,
     "automatic_promotion_and_formal_release_disabled": true,
@@ -70,7 +75,7 @@
     "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
     "status": "passed",
     "returncode": 0,
-    "stdout_tail": "...........                                                              [100%]\n",
+    "stdout_tail": "...............................                                          [100%]\n",
     "stderr_tail": ""
   },
   "next_stage_allowed": true,

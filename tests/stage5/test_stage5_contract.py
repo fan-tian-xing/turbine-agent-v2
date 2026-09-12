@@ -146,6 +146,16 @@ def test_stage5_latest_exit_audit_consumes_original_pdf_quality_benchmark():
     assert audit["next_stage_inputs"]
 
 
+def test_stage5_latest_exit_audit_closes_runtime_and_orphan_review():
+    audit = json.loads(_latest("stage5_exit_audit_*.json").read_text(encoding="utf-8"))
+
+    assert audit["checks"]["runtime_environment_audit_pass"] is True
+    assert audit["checks"]["dead_code_orphan_output_review"] is True
+    assert audit["dead_code_orphan_output_review"]["status"] == "pass"
+    assert audit["artifact_provenance"]["runtime_environment_audit"].startswith("data/stage5/")
+    assert audit["artifact_provenance"]["review_queue"].startswith("data/stage5/")
+
+
 def _configure_input_audit(monkeypatch, tmp_path, registry_sha256: str):
     pdf_path = tmp_path / "document.pdf"
     pdf_path.write_bytes(b"fixture")

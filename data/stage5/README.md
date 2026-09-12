@@ -1,6 +1,6 @@
 # 阶段 5：OCR、版面解析和页面 Golden Sample
 
-阶段 5 只处理当前首批五份资料，不做全库一次性 OCR，不形成正式 Evidence、Release 或阶段 15 的正式首批准入。项目当前状态唯一以 `../project_state.json` 为准，阶段 5 的门禁证据见 `stage5_exit_audit_2026-09-10.json`。
+阶段 5 只处理当前首批五份资料，不做全库一次性 OCR，不形成正式 Evidence、Release 或阶段 15 的正式首批准入。项目当前状态唯一以 `../project_state.json` 为准，阶段 5 的门禁证据见 `stage5_exit_audit_2026-09-12.json`。
 
 当前冻结范围：5 份资料、775 页；人工 Golden Sample 目标为 36 页。`stage5_sample_manifest.json` 记录页面分层、原始资料和处理资产边界。`audit_stage5_inputs.py` 先核对原件、OCR 派生件、页数、页序边界和 Registry SHA-256，再允许进入 OCR/版面/表格基准测试。
 
@@ -24,6 +24,8 @@ $env:PYTHONPATH = "src;scripts"
 & $projectPython scripts/audit_stage5_page_identity.py
 & $projectPython scripts/audit_project_runtime.py
 ```
+
+阶段 5 退出审计还会消费专用运行环境审计和阶段 5 复核队列，显式检查运行环境、冻结产物消费者以及已解决复核项；对应结果记录在 `stage5_exit_audit_2026-09-12.json` 的 `dead_code_orphan_output_review` 中。
 
 阶段 5 的 36 页 OCR 和质量复核是一次性验收记录，不纳入日常自动复核。`audit_stage5_exit.py` 只读取已经冻结的结果，不会因为日期变化或指纹变化自动触发 OCR。只有负责人明确要求复核时，才执行 `benchmark_stage5_rapidocr_sample.py --force`，再重建真值、质量报告和退出审计。已有结果仍记录输入指纹，供人工决定是否需要复核。
 

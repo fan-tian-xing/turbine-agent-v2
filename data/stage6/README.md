@@ -29,4 +29,4 @@ Registry + Original materials
 
 阶段 6 未生成 Engineering Statement、OWL/SHACL、Neo4j 正式投影或 Release。阶段 3 试验 Evidence 也没有被直接晋级或作为本阶段构建输入。
 
-下一阶段必须先冻结覆盖 775 个物理页的 `terminology_input_manifest`；阶段 7 只消费其中 `text_accepted` 内容，全文 Evidence 仍在阶段 15 构建。
+阶段 7 已消费冻结的 `../stage7/terminology_input_manifest.json`，该清单覆盖 775 个物理页；阶段 7 仅消费其中 `text_accepted` 内容，全文 Evidence 仍须到阶段 15 构建。

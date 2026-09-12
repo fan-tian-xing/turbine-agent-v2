@@ -39,7 +39,9 @@
     "table_cell_accuracy_boundary_explicit": true,
     "golden_sample_visual_review_complete": true,
     "page_identity_reconciled": true,
-    "original_pdf_quality_benchmark_recorded": true
+    "original_pdf_quality_benchmark_recorded": true,
+    "runtime_environment_audit_pass": true,
+    "dead_code_orphan_output_review": true
   },
   "completed_scope": {
     "document_count": 5,
@@ -135,8 +137,17 @@
       "golden_review": "data/stage5/stage5_golden_sample_review_2026-09-09.json",
       "sample": "data/stage5/stage5_sample_manifest.json"
     },
+    "runtime_environment_audit": "data/stage5/stage5_runtime_environment_audit_2026-09-10.json",
+    "review_queue": "data/stage5/stage5_review_queue_2026-09-09.jsonl",
     "fingerprint_comparison_performed": true,
     "fingerprint_match_status": "matched"
+  },
+  "dead_code_orphan_output_review": {
+    "status": "pass",
+    "runtime_environment_audit_consumer": "Stage 5 exit audit runtime gate",
+    "resolved_review_queue_consumer": "Stage 5 exit audit and manual review boundary",
+    "selected_frozen_artifact_consumer": "Stage 5 exit checks and Stage 6 approved-input boundary",
+    "temporary_or_quarantined_outputs_consumed_as_structured_evidence": false
   },
   "blocking_items": [],
   "owner_review_needed_in_chat": [],

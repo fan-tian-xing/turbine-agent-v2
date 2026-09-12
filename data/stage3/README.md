@@ -20,7 +20,9 @@
 CLI smoke 示例（在项目根目录执行）：
 
 ```text
-PYTHONPATH=src python -m turbine_kg.stage3.cli --corpus tests/fixtures/stage3/corpus.json --question "What is the cold shaft alignment limit?" --context-json tests/fixtures/stage3/context-n300.json
+$env:PYTHONPATH="src"
+$projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
+& $projectPython -m turbine_kg.stage3.cli --corpus tests/fixtures/stage3/corpus.json --question "What is the cold shaft alignment limit?" --context-json tests/fixtures/stage3/context-n300.json
 ```
 
 研发闭环记录包括：首批 15 页抽取、3 组真实 Evidence 确认、4 条工程结论的隔离 Neo4j 试点投影，以及中文问题的来源、页码和 Evidence 回查。LLM 适配器只接受带 Evidence ID、页码、对象、适用条件和 Claim 类型的结构化回答；真实重放、Claim 校验和最终答案组装均保留在本目录的审计与回放记录中。外部 LLM 只接收检索到的最小证据片段。正式首批处理仍需遵守阶段 15 的准入门禁。

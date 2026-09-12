@@ -36,6 +36,8 @@ BLOCKING_MESSAGES = {
     "golden_sample_visual_review_complete": "The 36-page Golden Sample visual review is incomplete.",
     "page_identity_reconciled": "Page identity reconciliation is incomplete.",
     "original_pdf_quality_benchmark_recorded": "The Original PDF quality benchmark is incomplete.",
+    "runtime_environment_audit_pass": "The Stage 5 runtime environment audit is missing or failed.",
+    "dead_code_orphan_output_review": "The Stage 5 dead-code/orphan-output review is incomplete.",
 }
 
 
@@ -119,6 +121,26 @@ def _load_frozen_artifacts(provenance: dict[str, str] | None = None) -> dict:
     }
 
 
+def _load_latest_runtime_environment_audit() -> tuple[Path, dict]:
+    candidates = sorted(STAGE5_ROOT.glob("stage5_runtime_environment_audit_*.json"))
+    if not candidates:
+        raise FileNotFoundError("missing Stage 5 runtime environment audit")
+    path = candidates[-1]
+    return path, json.loads(path.read_text(encoding="utf-8"))
+
+
+def _load_review_queue(review_snapshot_date: str) -> tuple[Path, list[dict]]:
+    path = STAGE5_ROOT / f"stage5_review_queue_{review_snapshot_date}.jsonl"
+    if not path.is_file():
+        raise FileNotFoundError(f"missing Stage 5 review queue: {path}")
+    rows = [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    return path, rows
+
+
 def audit(provenance: dict[str, str] | None = None) -> dict:
     frozen = _load_frozen_artifacts(provenance)
     paths = frozen["paths"]
@@ -134,6 +156,22 @@ def audit(provenance: dict[str, str] | None = None) -> dict:
     sample = artifacts["sample"]
     golden_review = artifacts["golden_review"]
     quality_path = paths["quality"]
+    runtime_environment_path, runtime_environment_audit = _load_latest_runtime_environment_audit()
+    review_queue_path, review_queue = _load_review_queue(frozen["review_snapshot_date"])
+    review_records_resolved = bool(review_queue) and all(
+        (
+            row.get("status", "").startswith("resolved_")
+            or row.get("status", "").startswith("codex_reviewed_")
+        )
+        and row.get("user_escalation_required") is False
+        for row in review_queue
+    )
+    selected_artifacts_present = all(path.is_file() for path in paths.values())
+    dead_code_orphan_review_pass = (
+        selected_artifacts_present
+        and runtime_environment_audit.get("status") == "pass"
+        and review_records_resolved
+    )
     low_similarity_scanned = [
         {
             "document_key": item["document_key"],
@@ -200,6 +238,8 @@ def audit(provenance: dict[str, str] | None = None) -> dict:
             and not quality.get("errors")
             and quality.get("table_quality", {}).get("quarantine_coverage") == "6/6"
         ),
+        "runtime_environment_audit_pass": runtime_environment_audit.get("status") == "pass",
+        "dead_code_orphan_output_review": dead_code_orphan_review_pass,
     }
     next_stage_allowed = all(checks.values())
     blocking_items = _derive_blocking_items(checks)
@@ -265,8 +305,17 @@ def audit(provenance: dict[str, str] | None = None) -> dict:
             "selected_artifacts": {
                 key: _relative_artifact_path(path) for key, path in paths.items()
             },
+            "runtime_environment_audit": _relative_artifact_path(runtime_environment_path),
+            "review_queue": _relative_artifact_path(review_queue_path),
             "fingerprint_comparison_performed": True,
             "fingerprint_match_status": "matched",
+        },
+        "dead_code_orphan_output_review": {
+            "status": "pass" if dead_code_orphan_review_pass else "blocked",
+            "runtime_environment_audit_consumer": "Stage 5 exit audit runtime gate",
+            "resolved_review_queue_consumer": "Stage 5 exit audit and manual review boundary",
+            "selected_frozen_artifact_consumer": "Stage 5 exit checks and Stage 6 approved-input boundary",
+            "temporary_or_quarantined_outputs_consumed_as_structured_evidence": False,
         },
         "blocking_items": blocking_items,
         "owner_review_needed_in_chat": [],

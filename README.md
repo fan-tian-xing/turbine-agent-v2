@@ -109,4 +109,4 @@ set PYTHONPATH=src
 
 Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。`stage2_source_selection.json` 记录进入阶段 3 研发试点的候选来源，不替代阶段 15 的正式准入门。`source_duplicate_groups.jsonl` 保存已物化的分组，`source_duplicate_relations.jsonl` 保存组内或候选关系。
 
-阶段 6 的构建顺序和权威产物见 `data/stage6/README.md`。最终退出检查执行 `scripts/audit_stage6_exit.py`，只有 `stage6_exit_audit.json` 的 17 项检查全部通过，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。阶段 7 的输入清单和候选构建分别执行 `scripts/build_stage7_input_manifest.py`、`scripts/build_stage7_terminology.py`，最终退出检查执行 `scripts/audit_stage7_exit.py`。
+阶段 6 的构建顺序和权威产物见 `data/stage6/README.md`。最终退出检查执行 `scripts/audit_stage6_exit.py`，只有 `stage6_exit_audit.json` 的 19 项检查全部通过，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。阶段 7 的输入清单和候选构建分别执行 `scripts/build_stage7_input_manifest.py`、`scripts/build_stage7_terminology.py`，最终退出检查执行 `scripts/audit_stage7_exit.py`。

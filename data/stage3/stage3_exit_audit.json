@@ -5,7 +5,7 @@
   "closure_status": "closed",
   "formal_release": false,
   "audited_at": "2026-09-09",
-  "stage_0_1_2": "stage_0_pending_v1_reconciliation",
+  "stage_0_1_2": "complete_for_v2_boundary",
   "checks": {
     "fixture_questions_and_local_tests": {"status": "pass", "evidence": "36 Stage 3-scoped pytest tests passed; 20 public/synthetic questions; the full repository suite passed at audit time; external source snapshot test is explicitly local-input gated"},
     "fixture_roles": {"status": "pass", "evidence": "manufacturer_manual, standard_or_regulation, training_background"},

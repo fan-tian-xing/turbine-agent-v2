@@ -25,7 +25,7 @@ Registry + Original materials
 
 `stage6_evidence_bundle.jsonl` 是阶段 6 唯一权威样本 Evidence 数据源，由 280 条文字/区域 Evidence 和 7 条表格区域 Evidence 对账合并生成。两个 component annotations 只作为其可重建输入。带 `vertical_slice` 或 `candidate` 名称的早期三页产物只保留为非权威启动诊断记录，不得被下游阶段消费。
 
-当前不需要用户立即审核。只有未来准备把表格数据晋级为单元格级 Evidence，且原页表头继承或单元格归属仍存在歧义时，才触发用户复核。
+当前阶段无需新增用户审核。只有未来准备把表格数据晋级为单元格级 Evidence，且原页表头继承或单元格归属仍存在歧义时，才触发负责人复核。
 
 阶段 6 未生成 Engineering Statement、OWL/SHACL、Neo4j 正式投影或 Release。阶段 3 试验 Evidence 也没有被直接晋级或作为本阶段构建输入。
 

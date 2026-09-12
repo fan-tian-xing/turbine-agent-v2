@@ -112,6 +112,16 @@
     "cap-09": {"status": "deferred", "path": []},
     "cap-10": {"status": "deferred", "path": []}
   },
+  "modeling_pattern_coverage": [
+    {"pattern_id": "equipment", "label": "Equipment", "required": true, "representatives": [{"candidate_id": "term-6276f7217aa3e69267bb", "target_class": "Equipment", "mapping_kind": "class_label"}]},
+    {"pattern_id": "component", "label": "Component", "required": true, "representatives": [{"candidate_id": "term-046bedfa01a1d941213f", "target_class": "Component", "mapping_kind": "class_label"}, {"candidate_id": "term-71b9d9c035c0eb73dcfb", "target_class": "Component", "mapping_kind": "class_label"}]},
+    {"pattern_id": "situation", "label": "Situation", "required": true, "representatives": [{"candidate_id": "term-aadbfee9b6b9b84269a8", "target_class": "Situation", "mapping_kind": "class_label"}]},
+    {"pattern_id": "quantity_kind", "label": "参数/Quantity Kind", "required": true, "representatives": [{"candidate_id": "term-c87f5a6deaa0a13c0567", "target_class": "QuantityValue", "mapping_kind": "quantity_kind_label"}]},
+    {"pattern_id": "process_procedure", "label": "Process/Procedure", "required": true, "representatives": [{"candidate_id": "term-1dd988febace6fe80f96", "target_class": "ProcedureDefinition", "mapping_kind": "class_label"}, {"candidate_id": "term-9d2f374e9e460329208a", "target_class": "StepDefinition", "mapping_kind": "class_label"}]},
+    {"pattern_id": "hierarchy", "label": "层级关系", "required": true, "representatives": [{"candidate_id": "term-046bedfa01a1d941213f", "target_class": "Component", "mapping_kind": "broader_than"}]},
+    {"pattern_id": "alias", "label": "alias/同义关系", "required": true, "representatives": [{"candidate_id": "term-16e3caf09e0115d697c4", "target_class": null, "mapping_kind": "alias_relation"}]},
+    {"pattern_id": "applicability", "label": "Applicability 相关语义", "required": true, "representatives": [{"candidate_id": "term-ed1f3e67dbdaf21d5030", "target_class": "ApplicabilityScope", "mapping_kind": "scope_value"}]}
+  ],
   "deferred_scope": ["EngineeringCase", "现场活动", "批准", "验证结果", "SHACL 约束包", "正式运行词汇", "Release"],
   "inputs": [
     "data/stage7/terminology_input_manifest.json",

@@ -8,7 +8,7 @@
   "inputs": {
     "ontology_contract": {
       "path": "config/ontology_contract.json",
-      "sha256": "e70b77b48e1dce170b3beff1b27ff18db83733d1c3930e515277bde6a2c94af2"
+      "sha256": "25eaa6b4a084340a6553659c7edb6df7e5f2db8eaac5733eaa4ca17ead2299bc"
     },
     "terminology_candidates": {
       "path": "data/stage7/terminology_candidates.json",
@@ -16,11 +16,11 @@
     },
     "mapping_shortlist": {
       "path": "data/stage8/ontology_mapping_shortlist.json",
-      "sha256": "3020ba9940f33008321e5bb2b8965e23a82c8b90b9ccabaa28c2b05660fcd078"
+      "sha256": "6d13745a650e0be8699c862a62c84d14a845f94e95a32599b7f6ac5f2f1fc209"
     },
     "review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
-      "sha256": "5644a8dfd39bda6235fc624a8db211cc47b6fff1c187af03f6d57f8cd9b1cdf7"
+      "sha256": "6787c4a2a2c3829244cf951288abfc37156241f7477bc14fc0b4f56efc010a92"
     },
     "review_queue": {
       "path": "data/stage8/ontology_mapping_review_queue.jsonl",
@@ -40,7 +40,7 @@
   "counts": {
     "stage7_candidate_count": 19304,
     "shortlist_count": 4,
-    "deferred_count": 5,
+    "deferred_count": 10,
     "review_pending_count": 0,
     "accepted_count": 4
   },
@@ -51,6 +51,7 @@
     "shortlist_and_deferred_bind_to_stage7": true,
     "review_overlay_fingerprints_bind_to_candidates": true,
     "review_queue_is_bound_to_active_shortlist": true,
+    "modeling_pattern_coverage": true,
     "shortlist_content_quality_gate": true,
     "candidate_dispositions_recorded": true,
     "reviewed_hierarchy_relations_bind_to_candidates": true,

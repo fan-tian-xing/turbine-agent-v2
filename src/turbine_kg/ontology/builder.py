@@ -58,6 +58,20 @@ def validate_contract(contract: dict) -> None:
         if any((token not in class_ids if index % 2 == 0 else token not in property_ids)
                for index, token in enumerate(path)):
             raise ValueError(f"capability path references an unknown class or property: {question_id}")
+    coverage = contract.get("modeling_pattern_coverage", [])
+    required_patterns = {row.get("pattern_id") for row in coverage if row.get("required") is True}
+    if required_patterns != {
+        "equipment", "component", "situation", "quantity_kind",
+        "process_procedure", "hierarchy", "alias", "applicability",
+    }:
+        raise ValueError("Stage 8 modeling pattern coverage must define the eight required patterns")
+    for pattern in coverage:
+        representatives = pattern.get("representatives", [])
+        if not 1 <= len(representatives) <= 3:
+            raise ValueError(f"modeling pattern must have one to three representatives: {pattern.get('pattern_id')}")
+        for representative in representatives:
+            if not representative.get("candidate_id") or not representative.get("mapping_kind"):
+                raise ValueError(f"incomplete modeling pattern representative: {pattern.get('pattern_id')}")
 
 
 def _turtle_literal(value: str) -> str:
@@ -161,8 +175,14 @@ def _is_shadowed_process_prefix(row: dict, peers: list[dict]) -> bool:
     return False
 
 
-def _build_mapping_row(contract: dict, row: dict) -> dict:
+def _build_mapping_row(
+    contract: dict,
+    row: dict,
+    mapping_spec: dict | None = None,
+    pattern_ids: list[str] | None = None,
+) -> dict:
     mapping = contract["candidate_mapping"]["allowed_candidate_types"]
+    mapping_spec = mapping_spec or mapping[row["candidate_type"]]
     occurrence_policy = contract["candidate_mapping"].get("source_occurrence_policy", {})
     accepted_occurrences = [
         item for item in row["occurrences"]
@@ -218,8 +238,8 @@ def _build_mapping_row(contract: dict, row: dict) -> dict:
         "surface_form": row["surface_form"],
         "normalized_form": row["normalized_form"],
         "candidate_type": row["candidate_type"],
-        "mapped_class": mapping[row["candidate_type"]]["target_class"],
-        "mapping_kind": mapping[row["candidate_type"]]["mapping_kind"],
+        "mapped_class": mapping_spec.get("target_class"),
+        "mapping_kind": mapping_spec["mapping_kind"],
         "capability_question_ids": sorted(row.get("capability_question_ids", [])),
         "candidate_content_fingerprint": row["content_fingerprint"],
         "source_occurrences": review_occurrences,
@@ -227,8 +247,12 @@ def _build_mapping_row(contract: dict, row: dict) -> dict:
         "source_text_origins": row["text_origins"],
         "requires_original_confirmation": requires_original_confirmation,
         "review_status": contract["candidate_mapping"]["review_status"],
-        "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
+        "selection_reason": mapping_spec.get(
+            "selection_reason",
+            "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
+        ),
         "review_requirements": review_requirements,
+        **({"coverage_pattern_ids": sorted(pattern_ids)} if pattern_ids else {}),
     }
 
 
@@ -302,6 +326,41 @@ def select_mapping_shortlist(
     return selected
 
 
+def select_modeling_pattern_coverage(
+    contract: dict,
+    candidates: list[dict],
+    shortlist: list[dict],
+) -> list[dict]:
+    candidate_by_id = {row.get("candidate_id"): row for row in candidates}
+    shortlist_by_id = {row["candidate_id"]: row for row in shortlist}
+    coverage_rows: list[dict] = []
+    for pattern in contract["modeling_pattern_coverage"]:
+        pattern_id = pattern["pattern_id"]
+        for representative in pattern["representatives"]:
+            candidate_id = representative["candidate_id"]
+            source_row = candidate_by_id.get(candidate_id)
+            if source_row is None:
+                raise ValueError(f"modeling pattern references an unknown Stage 7 candidate: {candidate_id}")
+            if source_row.get("review_status") != contract["candidate_mapping"]["required_candidate_status"]:
+                raise ValueError(f"modeling pattern candidate is not candidate_only: {candidate_id}")
+            if candidate_id in shortlist_by_id:
+                row = shortlist_by_id[candidate_id]
+                row.setdefault("coverage_pattern_ids", []).append(pattern_id)
+                row["coverage_pattern_ids"] = sorted(set(row["coverage_pattern_ids"]))
+                continue
+            coverage_rows.append(_build_mapping_row(
+                contract,
+                source_row,
+                mapping_spec={
+                    "target_class": representative.get("target_class"),
+                    "mapping_kind": representative["mapping_kind"],
+                    "selection_reason": f"representative real Stage 7 candidate for modeling pattern {pattern_id}",
+                },
+                pattern_ids=[pattern_id],
+            ))
+    return coverage_rows
+
+
 def build_mapping_payload(
     contract: dict,
     candidates_payload: dict,
@@ -314,12 +373,21 @@ def build_mapping_payload(
     questions = capability_payload.get("questions", [])
     if capability_payload.get("artifact_kind") != "business_capability_questions" or len(questions) != 10:
         raise ValueError("Stage 8 requires the ten Stage 7 business capability questions")
+    mapping_overlay = [
+        row for row in (review_overlay or [])
+        if row.get("review_scope") != "modeling_pattern_coverage"
+    ]
     shortlist = select_mapping_shortlist(
         contract,
         candidates_payload.get("candidates", []),
         questions,
-        {row.get("candidate_id") for row in (review_overlay or [])},
+        {row.get("candidate_id") for row in mapping_overlay},
     )
+    shortlist.extend(select_modeling_pattern_coverage(
+        contract,
+        candidates_payload.get("candidates", []),
+        shortlist,
+    ))
     return {
         "schema_version": 1,
         "stage": "8",
@@ -343,6 +411,7 @@ def build_mapping_payload(
         "source_occurrence_policy": contract["candidate_mapping"]["source_occurrence_policy"],
         "deferred_candidate_types": contract["candidate_mapping"]["deferred_candidate_types"],
         "candidate_disposition_schema": contract["candidate_mapping"]["candidate_disposition_schema"],
+        "modeling_pattern_definitions": contract["modeling_pattern_coverage"],
         "shortlist": shortlist,
     }
 
@@ -423,6 +492,30 @@ def apply_mapping_review_overlay(mapping_payload: dict, overlay: list[dict]) -> 
             row["mapping_review_decision"] == "pending_manual_review" for row in all_rows
         ),
     }
+    row_by_id = {row["candidate_id"]: row for row in all_rows}
+    result["modeling_pattern_coverage"] = [
+        {
+            "pattern_id": pattern["pattern_id"],
+            "label": pattern["label"],
+            "required": pattern["required"],
+            "representatives": [
+                {
+                    "candidate_id": representative["candidate_id"],
+                    "normalized_form": row_by_id[representative["candidate_id"]]["normalized_form"],
+                    "candidate_type": row_by_id[representative["candidate_id"]]["candidate_type"],
+                    "proposed_target_class": representative.get("target_class"),
+                    "mapping_kind": representative["mapping_kind"],
+                    "mapping_review_decision": row_by_id[representative["candidate_id"]].get("mapping_review_decision"),
+                    "candidate_disposition": row_by_id[representative["candidate_id"]].get("candidate_disposition"),
+                    "decision_reason": row_by_id[representative["candidate_id"]].get("decision_reason", ""),
+                    "source_supported": bool(row_by_id[representative["candidate_id"]].get("source_occurrences")),
+                    "source_occurrences": row_by_id[representative["candidate_id"]].get("source_occurrences", []),
+                }
+                for representative in pattern["representatives"]
+            ],
+        }
+        for pattern in mapping_payload["modeling_pattern_definitions"]
+    ]
     result["status"] = (
         "review_complete_candidate_only"
         if all(

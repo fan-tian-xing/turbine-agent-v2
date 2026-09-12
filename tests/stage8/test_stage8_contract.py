@@ -60,11 +60,17 @@ def test_stage8_mapping_consumes_stage7_and_stops_at_manual_review():
     assert payload["status"] == "pending_manual_review"
     assert payload["automatic_promotion"] is False
     assert payload["shortlist"]
-    assert {row["candidate_type"] for row in payload["shortlist"]} <= {
+    standard_rows = [row for row in payload["shortlist"] if not row.get("coverage_pattern_ids")]
+    coverage_rows = [row for row in payload["shortlist"] if row.get("coverage_pattern_ids")]
+    assert {row["candidate_type"] for row in standard_rows} <= {
         "equipment", "component", "process", "phenomenon"
     }
+    assert {row["candidate_type"] for row in coverage_rows} <= {
+        "equipment", "component", "phenomenon", "process", "action",
+        "applicability_condition", "synonym_candidate"
+    }
     assert all(row["candidate_type"] != "parameter" for row in payload["shortlist"])
-    assert all(row["candidate_type"] != "applicability_condition" for row in payload["shortlist"])
+    assert all(row["candidate_type"] != "applicability_condition" for row in standard_rows)
     assert all(row["review_status"] == "pending_manual_review" for row in payload["shortlist"])
     assert all(isinstance(row["requires_original_confirmation"], bool) for row in payload["shortlist"])
     assert all(row["source_occurrences"] for row in payload["shortlist"])
@@ -165,7 +171,7 @@ def test_stage8_persisted_artifacts_are_consistent():
     assert mapping["status"] == "review_complete_candidate_only"
     assert mapping["automatic_promotion"] is False
     assert len(mapping["shortlist"]) == 4
-    assert len(mapping["deferred_candidates"]) == 5
+    assert len(mapping["deferred_candidates"]) == 10
     assert sum(row["mapping_review_decision"] == "accepted" for row in mapping["shortlist"]) == 4
     assert sum(row["mapping_review_decision"] == "pending_manual_review" for row in mapping["shortlist"]) == 0
     assert all(row["candidate_disposition"] in mapping["candidate_disposition_schema"] for row in mapping["shortlist"])
@@ -205,3 +211,16 @@ def test_stage8_persisted_artifacts_are_consistent():
         "target_candidate_id": "term-71b9d9c035c0eb73dcfb",
         "target_normalized_form": "地脚螺栓",
     }]
+    coverage = {row["pattern_id"]: row for row in mapping["modeling_pattern_coverage"]}
+    assert set(coverage) == {
+        "equipment", "component", "situation", "quantity_kind",
+        "process_procedure", "hierarchy", "alias", "applicability",
+    }
+    assert coverage["quantity_kind"]["representatives"][0]["proposed_target_class"] == "QuantityValue"
+    assert coverage["quantity_kind"]["representatives"][0]["mapping_review_decision"] == "deferred"
+    assert coverage["situation"]["representatives"][0]["normalized_form"] == "腐蚀"
+    assert all(
+        representative["decision_reason"] and representative["source_supported"]
+        for pattern in coverage.values()
+        for representative in pattern["representatives"]
+    )

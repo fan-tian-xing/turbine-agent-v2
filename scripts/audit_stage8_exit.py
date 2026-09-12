@@ -102,6 +102,29 @@ def _audit() -> dict:
         and item.get("candidate_content_fingerprint") == mapped_by_id.get(item.get("candidate_id"), {}).get("candidate_content_fingerprint")
         for item in queue
     )
+    required_patterns = {
+        "equipment", "component", "situation", "quantity_kind",
+        "process_procedure", "hierarchy", "alias", "applicability",
+    }
+    coverage = mapping.get("modeling_pattern_coverage", [])
+    coverage_by_pattern = {item.get("pattern_id"): item for item in coverage}
+    modeling_pattern_coverage_ok = (
+        set(coverage_by_pattern) == required_patterns
+        and all(
+            item.get("required") is True
+            and 1 <= len(item.get("representatives", [])) <= 3
+            and all(
+                representative.get("candidate_id") in candidate_by_id
+                and representative.get("candidate_id") in mapped_by_id
+                and representative.get("mapping_review_decision") in {"accepted", "deferred"}
+                and representative.get("candidate_disposition") in contract["candidate_mapping"]["candidate_disposition_schema"]
+                and representative.get("decision_reason")
+                and representative.get("source_supported") is True
+                for representative in item.get("representatives", [])
+            )
+            for item in coverage
+        )
+    )
     decisions_ok = all(
         row.get("candidate_disposition") in contract["candidate_mapping"]["candidate_disposition_schema"]
         for row in mapped_rows
@@ -135,6 +158,7 @@ def _audit() -> dict:
         "shortlist_and_deferred_bind_to_stage7": mapped_binding_ok,
         "review_overlay_fingerprints_bind_to_candidates": overlay_binding_ok,
         "review_queue_is_bound_to_active_shortlist": queue_binding_ok,
+        "modeling_pattern_coverage": modeling_pattern_coverage_ok,
         "shortlist_content_quality_gate": content_clean_ok,
         "candidate_dispositions_recorded": decisions_ok,
         "reviewed_hierarchy_relations_bind_to_candidates": hierarchy_relations_ok,

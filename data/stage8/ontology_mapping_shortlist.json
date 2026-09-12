@@ -24,11 +24,11 @@
     },
     "ontology_contract": {
       "path": "config/ontology_contract.json",
-      "sha256": "e70b77b48e1dce170b3beff1b27ff18db83733d1c3930e515277bde6a2c94af2"
+      "sha256": "25eaa6b4a084340a6553659c7edb6df7e5f2db8eaac5733eaa4ca17ead2299bc"
     },
     "mapping_review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
-      "sha256": "5644a8dfd39bda6235fc624a8db211cc47b6fff1c187af03f6d57f8cd9b1cdf7"
+      "sha256": "6787c4a2a2c3829244cf951288abfc37156241f7477bc14fc0b4f56efc010a92"
     }
   },
   "automatic_promotion": false,
@@ -245,6 +245,114 @@
     "reject",
     "defer"
   ],
+  "modeling_pattern_definitions": [
+    {
+      "pattern_id": "equipment",
+      "label": "Equipment",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-6276f7217aa3e69267bb",
+          "target_class": "Equipment",
+          "mapping_kind": "class_label"
+        }
+      ]
+    },
+    {
+      "pattern_id": "component",
+      "label": "Component",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-046bedfa01a1d941213f",
+          "target_class": "Component",
+          "mapping_kind": "class_label"
+        },
+        {
+          "candidate_id": "term-71b9d9c035c0eb73dcfb",
+          "target_class": "Component",
+          "mapping_kind": "class_label"
+        }
+      ]
+    },
+    {
+      "pattern_id": "situation",
+      "label": "Situation",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-aadbfee9b6b9b84269a8",
+          "target_class": "Situation",
+          "mapping_kind": "class_label"
+        }
+      ]
+    },
+    {
+      "pattern_id": "quantity_kind",
+      "label": "参数/Quantity Kind",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-c87f5a6deaa0a13c0567",
+          "target_class": "QuantityValue",
+          "mapping_kind": "quantity_kind_label"
+        }
+      ]
+    },
+    {
+      "pattern_id": "process_procedure",
+      "label": "Process/Procedure",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-1dd988febace6fe80f96",
+          "target_class": "ProcedureDefinition",
+          "mapping_kind": "class_label"
+        },
+        {
+          "candidate_id": "term-9d2f374e9e460329208a",
+          "target_class": "StepDefinition",
+          "mapping_kind": "class_label"
+        }
+      ]
+    },
+    {
+      "pattern_id": "hierarchy",
+      "label": "层级关系",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-046bedfa01a1d941213f",
+          "target_class": "Component",
+          "mapping_kind": "broader_than"
+        }
+      ]
+    },
+    {
+      "pattern_id": "alias",
+      "label": "alias/同义关系",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-16e3caf09e0115d697c4",
+          "target_class": null,
+          "mapping_kind": "alias_relation"
+        }
+      ]
+    },
+    {
+      "pattern_id": "applicability",
+      "label": "Applicability 相关语义",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-ed1f3e67dbdaf21d5030",
+          "target_class": "ApplicabilityScope",
+          "mapping_kind": "scope_value"
+        }
+      ]
+    }
+  ],
   "shortlist": [
     {
       "candidate_id": "term-046bedfa01a1d941213f",
@@ -316,6 +424,10 @@
       "review_requirements": [
         "confirm candidate-to-class mapping",
         "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "component",
+        "hierarchy"
       ],
       "mapping_review_decision": "accepted",
       "candidate_disposition": "class",
@@ -440,6 +552,9 @@
         "confirm candidate-to-class mapping",
         "confirm applicability and non-merging boundaries"
       ],
+      "coverage_pattern_ids": [
+        "equipment"
+      ],
       "mapping_review_decision": "accepted",
       "candidate_disposition": "class",
       "original_page_confirmation_status": "confirmed_by_user",
@@ -501,6 +616,9 @@
         "confirm normalized label against the original page",
         "confirm every occurrence used for mapping is original-page Evidence",
         "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "component"
       ],
       "mapping_review_decision": "accepted",
       "candidate_disposition": "class",
@@ -597,6 +715,9 @@
         "confirm candidate-to-class mapping",
         "confirm applicability and non-merging boundaries"
       ],
+      "coverage_pattern_ids": [
+        "situation"
+      ],
       "mapping_review_decision": "accepted",
       "candidate_disposition": "class",
       "original_page_confirmation_status": "confirmed_by_user",
@@ -607,6 +728,119 @@
     }
   ],
   "deferred_candidates": [
+    {
+      "candidate_id": "term-16e3caf09e0115d697c4",
+      "surface_form": "氧化处理→发黑处理",
+      "normalized_form": "氧化处理→发黑处理",
+      "candidate_type": "synonym_candidate",
+      "mapped_class": null,
+      "mapping_kind": "alias_relation",
+      "capability_question_ids": [
+        "cap-05",
+        "cap-08"
+      ],
+      "candidate_content_fingerprint": "e8f7c1fb39c5293cc8e01a521e3597491fbf5426dfbc84b21c57e340fb533626",
+      "source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 175,
+          "page_id": "page-9c49967e4b8976691361",
+          "text_fingerprint": "aa0dba0fb3d175168bac307f873e89f9e12a4d00679a7f2635505ec3bc69c403",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 444,
+          "text_end": 454,
+          "matched_text": "氧化处理→发黑处理"
+        }
+      ],
+      "excluded_occurrence_count": 0,
+      "source_text_origins": [
+        "ocr_text"
+      ],
+      "requires_original_confirmation": true,
+      "review_status": "pending_manual_review",
+      "selection_reason": "representative real Stage 7 candidate for modeling pattern alias",
+      "review_requirements": [
+        "confirm candidate-to-class mapping",
+        "confirm OCR-derived surface form against the original page",
+        "confirm normalized label against the original page",
+        "confirm every occurrence used for mapping is original-page Evidence",
+        "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "alias"
+      ],
+      "mapping_review_decision": "deferred",
+      "candidate_disposition": "defer",
+      "original_page_confirmation_status": "pending",
+      "reviewer": "agent",
+      "reviewed_at": "2026-09-12",
+      "decision_reason": "“氧化处理→发黑处理”是真实 Stage 7 同义候选格式，可验证 alias 关系的输入边界；但 OCR 箭头文本不足以证明两者同义，本轮不接受 alias，保留待后续原页确认。",
+      "promotion_status": "candidate_only"
+    },
+    {
+      "candidate_id": "term-1dd988febace6fe80f96",
+      "surface_form": "汽轮机本体安装",
+      "normalized_form": "汽轮机本体安装",
+      "candidate_type": "process",
+      "mapped_class": "ProcedureDefinition",
+      "mapping_kind": "class_label",
+      "capability_question_ids": [
+        "cap-02",
+        "cap-07"
+      ],
+      "candidate_content_fingerprint": "f65bcdb034010a6ac3d3aeca22d83cd08c0733f10c86f210b5389a6c9be3a31d",
+      "source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 73,
+          "page_id": "page-ef5ef0a55876e0d12f14",
+          "text_fingerprint": "249481e4cbc243d5e01bdbcca2174fed0f301317e6ce6110dbd2878ca10b11be",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-0e591f670b6406b0e99e",
+            "evidence-6f418f11b4a55be269c2",
+            "evidence-8fb19e6edddf67c2494c",
+            "evidence-93fb6fefbfccb828c68c",
+            "evidence-abdcb41a66efd748f891",
+            "evidence-ba129078a6b5c3bc7867"
+          ],
+          "text_start": 0,
+          "text_end": 7,
+          "matched_text": "汽轮机本体安装"
+        }
+      ],
+      "excluded_occurrence_count": 90,
+      "source_text_origins": [
+        "native_text",
+        "ocr_text"
+      ],
+      "requires_original_confirmation": true,
+      "review_status": "pending_manual_review",
+      "selection_reason": "representative real Stage 7 candidate for modeling pattern process_procedure",
+      "review_requirements": [
+        "confirm candidate-to-class mapping",
+        "confirm OCR-derived surface form against the original page",
+        "confirm normalized label against the original page",
+        "confirm every occurrence used for mapping is original-page Evidence",
+        "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "process_procedure"
+      ],
+      "mapping_review_decision": "deferred",
+      "candidate_disposition": "defer",
+      "original_page_confirmation_status": "pending",
+      "reviewer": "agent",
+      "reviewed_at": "2026-09-12",
+      "decision_reason": "“汽轮机本体安装”是完整的真实过程候选，可验证 ProcedureDefinition 模式；但其与说明书标题和维护范围的边界仍需后续原页与过程建模审核，本轮只作覆盖验证，不晋级正式本体。",
+      "promotion_status": "candidate_only"
+    },
     {
       "candidate_id": "term-3b6dcb39dcd046633f29",
       "surface_form": "低压",
@@ -669,6 +903,76 @@
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
       "decision_reason": "用户暂缓；当前不作为 Stage 8 首批映射审核对象。",
+      "promotion_status": "candidate_only"
+    },
+    {
+      "candidate_id": "term-9d2f374e9e460329208a",
+      "surface_form": "检查",
+      "normalized_form": "检查",
+      "candidate_type": "action",
+      "mapped_class": "StepDefinition",
+      "mapping_kind": "class_label",
+      "capability_question_ids": [
+        "cap-02",
+        "cap-07",
+        "cap-09"
+      ],
+      "candidate_content_fingerprint": "43a125240ac3f5f2209614eb6904073aa3f1ab9aa6c86e8a84aae9f18008baad",
+      "source_occurrences": [
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 16,
+          "page_id": "page-602f37997979dc914dbb",
+          "text_fingerprint": "0e76749b6ee8b4907d39c3e187f75b0d4b67175baf10703002b48d2522ff9d48",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-1caf2eabf40f0e9b06a4",
+            "evidence-20133a4eafce5a59032d",
+            "evidence-4647eb14881616c6804d",
+            "evidence-5d63ebe7e7fe96b3d925",
+            "evidence-6936bc9719e9ce7fd779",
+            "evidence-7ef9aadbe778cbdb6714",
+            "evidence-805e22821c7c06c9cef3",
+            "evidence-9320aa2b0dd9f6a18309",
+            "evidence-d23de94ee1acbca318bf",
+            "evidence-f5da8eae65314c50b0e0",
+            "evidence-fc61d8199b96e94e2fb7"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 290,
+          "text_end": 292,
+          "matched_text": "检查"
+        }
+      ],
+      "excluded_occurrence_count": 135,
+      "source_text_origins": [
+        "native_text",
+        "ocr_text"
+      ],
+      "requires_original_confirmation": true,
+      "review_status": "pending_manual_review",
+      "selection_reason": "representative real Stage 7 candidate for modeling pattern process_procedure",
+      "review_requirements": [
+        "confirm candidate-to-class mapping",
+        "confirm OCR-derived surface form against the original page",
+        "confirm normalized label against the original page",
+        "confirm every occurrence used for mapping is original-page Evidence",
+        "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "process_procedure"
+      ],
+      "mapping_review_decision": "deferred",
+      "candidate_disposition": "defer",
+      "original_page_confirmation_status": "pending",
+      "reviewer": "agent",
+      "reviewed_at": "2026-09-12",
+      "decision_reason": "“检查”是真实高频动作候选，可验证 StepDefinition/过程步骤模式，但单独动作词不能直接确定完整步骤定义，本轮保留为 coverage probe 并暂缓正式映射。",
       "promotion_status": "candidate_only"
     },
     {
@@ -737,6 +1041,74 @@
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
       "decision_reason": "用户暂缓；当前不作为 Stage 8 首批映射审核对象。",
+      "promotion_status": "candidate_only"
+    },
+    {
+      "candidate_id": "term-c87f5a6deaa0a13c0567",
+      "surface_form": "轴承振动",
+      "normalized_form": "轴承振动",
+      "candidate_type": "phenomenon",
+      "mapped_class": "QuantityValue",
+      "mapping_kind": "quantity_kind_label",
+      "capability_question_ids": [
+        "cap-04",
+        "cap-06"
+      ],
+      "candidate_content_fingerprint": "93a43cf5e5ec2206da9c8ed3f57f4df5c5135c720d577ae707ad8090192b1213",
+      "source_occurrences": [
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 22,
+          "page_id": "page-0c906b7783f31a57ec10",
+          "text_fingerprint": "7fef2fd72f88f263f7edf619a4316053007741354c124dd85122a4dbafdbec84",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 417,
+          "text_end": 421,
+          "matched_text": "轴承振动"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 63,
+          "page_id": "page-b16557c8b6a61115b2eb",
+          "text_fingerprint": "2b0e349b37dd971482520184f4b5ee0a0164f8e44937ed7ffe65a9af0b842187",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "comparator"
+          ],
+          "text_start": 255,
+          "text_end": 259,
+          "matched_text": "轴承振动"
+        }
+      ],
+      "excluded_occurrence_count": 2,
+      "source_text_origins": [
+        "ocr_text"
+      ],
+      "requires_original_confirmation": true,
+      "review_status": "pending_manual_review",
+      "selection_reason": "representative real Stage 7 candidate for modeling pattern quantity_kind",
+      "review_requirements": [
+        "confirm candidate-to-class mapping",
+        "confirm OCR-derived surface form against the original page",
+        "confirm normalized label against the original page",
+        "confirm every occurrence used for mapping is original-page Evidence",
+        "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "quantity_kind"
+      ],
+      "mapping_review_decision": "deferred",
+      "candidate_disposition": "defer",
+      "original_page_confirmation_status": "pending",
+      "reviewer": "agent",
+      "reviewed_at": "2026-09-12",
+      "decision_reason": "“轴承振动”作为真实 Stage 7 候选验证 Quantity Kind 模式；普通振动类术语应通过 QuantityValue 的参数种类标签表达，但本候选仍需在后续参数、数值、单位、对象和工况绑定后使用，本轮不晋级正式本体。",
       "promotion_status": "candidate_only"
     },
     {
@@ -835,6 +1207,62 @@
       "reviewer": "user",
       "reviewed_at": "2026-09-12",
       "decision_reason": "用户确认普通“振动”按参数/可测量量语义处理，不接受为 Situation；只有“振动异常”“振动超限”“振动过大”等带异常状态的复合概念，才进入 Situation。",
+      "promotion_status": "candidate_only"
+    },
+    {
+      "candidate_id": "term-ed1f3e67dbdaf21d5030",
+      "surface_form": "不同负荷工况",
+      "normalized_form": "不同负荷工况",
+      "candidate_type": "applicability_condition",
+      "mapped_class": "ApplicabilityScope",
+      "mapping_kind": "scope_value",
+      "capability_question_ids": [
+        "cap-03",
+        "cap-05",
+        "cap-07"
+      ],
+      "candidate_content_fingerprint": "9da326ecdde8f470834bf0fa05dddf7baaa813d371dec9d842b7da2107016a86",
+      "source_occurrences": [
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 17,
+          "page_id": "page-1d53732cefdc573d0be2",
+          "text_fingerprint": "0e0e4595b1974e789fa2047dc37617f769403df8614a448823b16e10eadc9797",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "applicability"
+          ],
+          "text_start": 541,
+          "text_end": 547,
+          "matched_text": "不同负荷工况"
+        }
+      ],
+      "excluded_occurrence_count": 0,
+      "source_text_origins": [
+        "ocr_text"
+      ],
+      "requires_original_confirmation": true,
+      "review_status": "pending_manual_review",
+      "selection_reason": "representative real Stage 7 candidate for modeling pattern applicability",
+      "review_requirements": [
+        "confirm candidate-to-class mapping",
+        "confirm OCR-derived surface form against the original page",
+        "confirm normalized label against the original page",
+        "confirm every occurrence used for mapping is original-page Evidence",
+        "confirm applicability and non-merging boundaries"
+      ],
+      "coverage_pattern_ids": [
+        "applicability"
+      ],
+      "mapping_review_decision": "deferred",
+      "candidate_disposition": "defer",
+      "original_page_confirmation_status": "pending",
+      "reviewer": "agent",
+      "reviewed_at": "2026-09-12",
+      "decision_reason": "“不同负荷工况”是真实 Stage 7 适用性候选，可验证 ApplicabilityScope 模式；它必须绑定设备、工程断言或生命周期范围，不能单独作为正式本体类。",
       "promotion_status": "candidate_only"
     },
     {
@@ -998,7 +1426,561 @@
   ],
   "review_summary": {
     "accepted_count": 4,
-    "deferred_count": 5,
+    "deferred_count": 10,
     "pending_manual_review_count": 0
-  }
+  },
+  "modeling_pattern_coverage": [
+    {
+      "pattern_id": "equipment",
+      "label": "Equipment",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-6276f7217aa3e69267bb",
+          "normalized_form": "汽轮机",
+          "candidate_type": "equipment",
+          "proposed_target_class": "Equipment",
+          "mapping_kind": "class_label",
+          "mapping_review_decision": "accepted",
+          "candidate_disposition": "class",
+          "decision_reason": "用户确认“汽轮机”文字无误并可作为 Equipment 候选。该决定只完成 Stage 8 映射审核，不代表正式本体或运行词汇 promotion。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "D300N",
+              "document_logical_id": "doc-af7fa1738c5c89599e41",
+              "revision_id": "rev-c700c57426b967b2d2c9",
+              "physical_page": 73,
+              "page_id": "page-ef5ef0a55876e0d12f14",
+              "text_fingerprint": "249481e4cbc243d5e01bdbcca2174fed0f301317e6ce6110dbd2878ca10b11be",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-0e591f670b6406b0e99e",
+                "evidence-6f418f11b4a55be269c2",
+                "evidence-8fb19e6edddf67c2494c",
+                "evidence-93fb6fefbfccb828c68c",
+                "evidence-abdcb41a66efd748f891",
+                "evidence-ba129078a6b5c3bc7867"
+              ],
+              "text_start": 0,
+              "text_end": 3,
+              "matched_text": "汽轮机"
+            },
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 180,
+              "page_id": "page-8775a65254722ba7528c",
+              "text_fingerprint": "a7eab3e11a8570d0bad4eb816831b016413a9ef43c9f8fe6039c833fd9f817d5",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-0739dd8eb5529c2caea4",
+                "evidence-1e4e5315b21895a81b5d",
+                "evidence-2a7bf0288c3414b93397",
+                "evidence-341095aa667f76ec77ee",
+                "evidence-52a0bef3f4540b25b844",
+                "evidence-53b016798a1c6c78b1b6",
+                "evidence-652e0b336774d87258f7",
+                "evidence-6e2c5b9784fd16de0928",
+                "evidence-79d6c987ae87dab02e0f",
+                "evidence-7fc705c8a2889862e63f",
+                "evidence-a92ce685fb42b059d99f",
+                "evidence-c16905bb1910a8279ed0",
+                "evidence-ca5c9f15eeaa7e1f4246",
+                "evidence-da7dcebfa4c3f289f184",
+                "evidence-e7cb4f266f8d44a2001f",
+                "evidence-f2a82b048733f7fea4bd"
+              ],
+              "text_start": 256,
+              "text_end": 259,
+              "matched_text": "汽轮机"
+            },
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 360,
+              "page_id": "page-22bdfc6e1f0a6e7f5a5d",
+              "text_fingerprint": "cf03327477909a27b96f3b24b6a2595e5bef3d00a6a7eeaf4e3f74e80fe2a886",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-09c9412df66ef629070a",
+                "evidence-0e9c89ebc13d84bb0b69",
+                "evidence-2c313cabe04d2f1e20b4",
+                "evidence-2df82cbb5c50e066d536",
+                "evidence-4133418350369b17611a",
+                "evidence-8bd668229484821df462",
+                "evidence-aa97a9ec78cf7cc57dc5",
+                "evidence-bbcfc1160d50afc8934a",
+                "evidence-caa53fbb9fb9c7fd8b1d",
+                "evidence-dd634fa41159311e9870",
+                "evidence-e7ec55e801c7f07496b9"
+              ],
+              "critical_signals": [
+                "applicability"
+              ],
+              "text_start": 374,
+              "text_end": 377,
+              "matched_text": "汽轮机"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "component",
+      "label": "Component",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-046bedfa01a1d941213f",
+          "normalized_form": "螺栓",
+          "candidate_type": "component",
+          "proposed_target_class": "Component",
+          "mapping_kind": "class_label",
+          "mapping_review_decision": "accepted",
+          "candidate_disposition": "class",
+          "decision_reason": "用户确认“螺栓”接受为 Component；与“地脚螺栓”保留上下位关系，并确认抽取的原始页面文字。该决定只完成映射审核，不代表正式本体或运行词汇 promotion。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "D300N",
+              "document_logical_id": "doc-af7fa1738c5c89599e41",
+              "revision_id": "rev-c700c57426b967b2d2c9",
+              "physical_page": 24,
+              "page_id": "page-eb853431bba188ce4d52",
+              "text_fingerprint": "85bd510b8194bf561e2474814df6c298817f09ebb81e4da967f57840999595ec",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "critical_signals": [
+                "acceptance_or_verification"
+              ],
+              "text_start": 373,
+              "text_end": 375,
+              "matched_text": "螺栓"
+            },
+            {
+              "document_key": "DL5190.3",
+              "document_logical_id": "doc-24b25833ab82e212d1fb",
+              "revision_id": "rev-4c1c24a74e4b364652e3",
+              "physical_page": 18,
+              "page_id": "page-612c046d3a40e1db6107",
+              "text_fingerprint": "bb0b1d5d6b33b1a883cc919a2ce589ee320f2daf5d2e303c87339d7df5db8880",
+              "text_origin": "native_text",
+              "source_kind": "page_text",
+              "text_start": 317,
+              "text_end": 319,
+              "matched_text": "螺栓"
+            },
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 96,
+              "page_id": "page-d36f5956194b048e883e",
+              "text_fingerprint": "e3f7e98adba4955171537351644ac11975ded0a8c5fcbe4d5bf4b81875e25b0d",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "critical_signals": [
+                "comparator"
+              ],
+              "text_start": 73,
+              "text_end": 75,
+              "matched_text": "螺栓"
+            }
+          ]
+        },
+        {
+          "candidate_id": "term-71b9d9c035c0eb73dcfb",
+          "normalized_form": "地脚螺栓",
+          "candidate_type": "component",
+          "proposed_target_class": "Component",
+          "mapping_kind": "class_label",
+          "mapping_review_decision": "accepted",
+          "candidate_disposition": "class",
+          "decision_reason": "用户确认“地脚螺栓”可作为 Component 候选。该决定只完成 Stage 8 映射审核，不代表正式本体或运行词汇 promotion。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "DL5190.3",
+              "document_logical_id": "doc-24b25833ab82e212d1fb",
+              "revision_id": "rev-4c1c24a74e4b364652e3",
+              "physical_page": 14,
+              "page_id": "page-9c34fb1fae6fb5744901",
+              "text_fingerprint": "61fa8e6e9a5ed66a626eee5c6b465c0525f3ad6ddde16e1bf5fc5c5777daff0b",
+              "text_origin": "native_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-0be2ce5c91d61eba812d",
+                "evidence-111e9dc5263ec94003bb",
+                "evidence-1e86e29287bd6425e7b3",
+                "evidence-2727ec15f4e2190c45d3",
+                "evidence-291b8c352838ac7ecc80",
+                "evidence-5e43b0eec278db704a21",
+                "evidence-93817b2f4dd1e670ad57",
+                "evidence-cbce7568bef677f62bac",
+                "evidence-dbb753a6d55deab037f5",
+                "evidence-dcf187ed12ba60c79047",
+                "evidence-f706744108453c894d4c"
+              ],
+              "text_start": 173,
+              "text_end": 177,
+              "matched_text": "地脚螺栓"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "situation",
+      "label": "Situation",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-aadbfee9b6b9b84269a8",
+          "normalized_form": "腐蚀",
+          "candidate_type": "phenomenon",
+          "proposed_target_class": "Situation",
+          "mapping_kind": "class_label",
+          "mapping_review_decision": "accepted",
+          "candidate_disposition": "class",
+          "decision_reason": "用户确认“腐蚀”文字无误并可作为 Situation 候选。该决定只完成 Stage 8 映射审核，不代表正式本体或运行词汇 promotion。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 180,
+              "page_id": "page-8775a65254722ba7528c",
+              "text_fingerprint": "a7eab3e11a8570d0bad4eb816831b016413a9ef43c9f8fe6039c833fd9f817d5",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-0739dd8eb5529c2caea4",
+                "evidence-1e4e5315b21895a81b5d",
+                "evidence-2a7bf0288c3414b93397",
+                "evidence-341095aa667f76ec77ee",
+                "evidence-52a0bef3f4540b25b844",
+                "evidence-53b016798a1c6c78b1b6",
+                "evidence-652e0b336774d87258f7",
+                "evidence-6e2c5b9784fd16de0928",
+                "evidence-79d6c987ae87dab02e0f",
+                "evidence-7fc705c8a2889862e63f",
+                "evidence-a92ce685fb42b059d99f",
+                "evidence-c16905bb1910a8279ed0",
+                "evidence-ca5c9f15eeaa7e1f4246",
+                "evidence-da7dcebfa4c3f289f184",
+                "evidence-e7cb4f266f8d44a2001f",
+                "evidence-f2a82b048733f7fea4bd"
+              ],
+              "text_start": 409,
+              "text_end": 411,
+              "matched_text": "腐蚀"
+            },
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 468,
+              "page_id": "page-15a511a50d46e77bcc23",
+              "text_fingerprint": "c76eece9de5507f3f52cbd5ca63efd40caab8bb2208e714ee6b65a8f327699bb",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-127f3e541c175ee217cc",
+                "evidence-2069c85d76c0ab285f62",
+                "evidence-2457b8bae14034ef2eb6",
+                "evidence-3eb8f11f21e0f13c26f2",
+                "evidence-6a6e732fd926dcad7c7b",
+                "evidence-6cda4a4481650365bfe1",
+                "evidence-772a83606745a165ff87",
+                "evidence-7d132ae9e862fbb64021",
+                "evidence-932e725f591c66fe49cb",
+                "evidence-a9bd9a359052aef696f4",
+                "evidence-be4d6345fa3048fbaedc",
+                "evidence-c5c9d046b18494cf2240",
+                "evidence-e5b71ba801b4d65818ac",
+                "evidence-f77ea9b96fe9850563b9",
+                "evidence-f9ca37ba407e35f25fd1"
+              ],
+              "text_start": 406,
+              "text_end": 408,
+              "matched_text": "腐蚀"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "quantity_kind",
+      "label": "参数/Quantity Kind",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-c87f5a6deaa0a13c0567",
+          "normalized_form": "轴承振动",
+          "candidate_type": "phenomenon",
+          "proposed_target_class": "QuantityValue",
+          "mapping_kind": "quantity_kind_label",
+          "mapping_review_decision": "deferred",
+          "candidate_disposition": "defer",
+          "decision_reason": "“轴承振动”作为真实 Stage 7 候选验证 Quantity Kind 模式；普通振动类术语应通过 QuantityValue 的参数种类标签表达，但本候选仍需在后续参数、数值、单位、对象和工况绑定后使用，本轮不晋级正式本体。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "DLT863",
+              "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+              "revision_id": "rev-a6ea5862f790a65e1dbf",
+              "physical_page": 22,
+              "page_id": "page-0c906b7783f31a57ec10",
+              "text_fingerprint": "7fef2fd72f88f263f7edf619a4316053007741354c124dd85122a4dbafdbec84",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "text_start": 417,
+              "text_end": 421,
+              "matched_text": "轴承振动"
+            },
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 63,
+              "page_id": "page-b16557c8b6a61115b2eb",
+              "text_fingerprint": "2b0e349b37dd971482520184f4b5ee0a0164f8e44937ed7ffe65a9af0b842187",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "critical_signals": [
+                "comparator"
+              ],
+              "text_start": 255,
+              "text_end": 259,
+              "matched_text": "轴承振动"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "process_procedure",
+      "label": "Process/Procedure",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-1dd988febace6fe80f96",
+          "normalized_form": "汽轮机本体安装",
+          "candidate_type": "process",
+          "proposed_target_class": "ProcedureDefinition",
+          "mapping_kind": "class_label",
+          "mapping_review_decision": "deferred",
+          "candidate_disposition": "defer",
+          "decision_reason": "“汽轮机本体安装”是完整的真实过程候选，可验证 ProcedureDefinition 模式；但其与说明书标题和维护范围的边界仍需后续原页与过程建模审核，本轮只作覆盖验证，不晋级正式本体。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "D300N",
+              "document_logical_id": "doc-af7fa1738c5c89599e41",
+              "revision_id": "rev-c700c57426b967b2d2c9",
+              "physical_page": 73,
+              "page_id": "page-ef5ef0a55876e0d12f14",
+              "text_fingerprint": "249481e4cbc243d5e01bdbcca2174fed0f301317e6ce6110dbd2878ca10b11be",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-0e591f670b6406b0e99e",
+                "evidence-6f418f11b4a55be269c2",
+                "evidence-8fb19e6edddf67c2494c",
+                "evidence-93fb6fefbfccb828c68c",
+                "evidence-abdcb41a66efd748f891",
+                "evidence-ba129078a6b5c3bc7867"
+              ],
+              "text_start": 0,
+              "text_end": 7,
+              "matched_text": "汽轮机本体安装"
+            }
+          ]
+        },
+        {
+          "candidate_id": "term-9d2f374e9e460329208a",
+          "normalized_form": "检查",
+          "candidate_type": "action",
+          "proposed_target_class": "StepDefinition",
+          "mapping_kind": "class_label",
+          "mapping_review_decision": "deferred",
+          "candidate_disposition": "defer",
+          "decision_reason": "“检查”是真实高频动作候选，可验证 StepDefinition/过程步骤模式，但单独动作词不能直接确定完整步骤定义，本轮保留为 coverage probe 并暂缓正式映射。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "HAF103",
+              "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+              "revision_id": "rev-be31e11d289998c918fa",
+              "physical_page": 16,
+              "page_id": "page-602f37997979dc914dbb",
+              "text_fingerprint": "0e76749b6ee8b4907d39c3e187f75b0d4b67175baf10703002b48d2522ff9d48",
+              "text_origin": "ocr_text",
+              "source_kind": "accepted_stage6_evidence",
+              "evidence_ids": [
+                "evidence-1caf2eabf40f0e9b06a4",
+                "evidence-20133a4eafce5a59032d",
+                "evidence-4647eb14881616c6804d",
+                "evidence-5d63ebe7e7fe96b3d925",
+                "evidence-6936bc9719e9ce7fd779",
+                "evidence-7ef9aadbe778cbdb6714",
+                "evidence-805e22821c7c06c9cef3",
+                "evidence-9320aa2b0dd9f6a18309",
+                "evidence-d23de94ee1acbca318bf",
+                "evidence-f5da8eae65314c50b0e0",
+                "evidence-fc61d8199b96e94e2fb7"
+              ],
+              "critical_signals": [
+                "acceptance_or_verification"
+              ],
+              "text_start": 290,
+              "text_end": 292,
+              "matched_text": "检查"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "hierarchy",
+      "label": "层级关系",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-046bedfa01a1d941213f",
+          "normalized_form": "螺栓",
+          "candidate_type": "component",
+          "proposed_target_class": "Component",
+          "mapping_kind": "broader_than",
+          "mapping_review_decision": "accepted",
+          "candidate_disposition": "class",
+          "decision_reason": "用户确认“螺栓”接受为 Component；与“地脚螺栓”保留上下位关系，并确认抽取的原始页面文字。该决定只完成映射审核，不代表正式本体或运行词汇 promotion。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "D300N",
+              "document_logical_id": "doc-af7fa1738c5c89599e41",
+              "revision_id": "rev-c700c57426b967b2d2c9",
+              "physical_page": 24,
+              "page_id": "page-eb853431bba188ce4d52",
+              "text_fingerprint": "85bd510b8194bf561e2474814df6c298817f09ebb81e4da967f57840999595ec",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "critical_signals": [
+                "acceptance_or_verification"
+              ],
+              "text_start": 373,
+              "text_end": 375,
+              "matched_text": "螺栓"
+            },
+            {
+              "document_key": "DL5190.3",
+              "document_logical_id": "doc-24b25833ab82e212d1fb",
+              "revision_id": "rev-4c1c24a74e4b364652e3",
+              "physical_page": 18,
+              "page_id": "page-612c046d3a40e1db6107",
+              "text_fingerprint": "bb0b1d5d6b33b1a883cc919a2ce589ee320f2daf5d2e303c87339d7df5db8880",
+              "text_origin": "native_text",
+              "source_kind": "page_text",
+              "text_start": 317,
+              "text_end": 319,
+              "matched_text": "螺栓"
+            },
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 96,
+              "page_id": "page-d36f5956194b048e883e",
+              "text_fingerprint": "e3f7e98adba4955171537351644ac11975ded0a8c5fcbe4d5bf4b81875e25b0d",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "critical_signals": [
+                "comparator"
+              ],
+              "text_start": 73,
+              "text_end": 75,
+              "matched_text": "螺栓"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "alias",
+      "label": "alias/同义关系",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-16e3caf09e0115d697c4",
+          "normalized_form": "氧化处理→发黑处理",
+          "candidate_type": "synonym_candidate",
+          "proposed_target_class": null,
+          "mapping_kind": "alias_relation",
+          "mapping_review_decision": "deferred",
+          "candidate_disposition": "defer",
+          "decision_reason": "“氧化处理→发黑处理”是真实 Stage 7 同义候选格式，可验证 alias 关系的输入边界；但 OCR 箭头文本不足以证明两者同义，本轮不接受 alias，保留待后续原页确认。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "auxiliary_installation_book",
+              "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+              "revision_id": "rev-a2a1d7444e558b2a813a",
+              "physical_page": 175,
+              "page_id": "page-9c49967e4b8976691361",
+              "text_fingerprint": "aa0dba0fb3d175168bac307f873e89f9e12a4d00679a7f2635505ec3bc69c403",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "text_start": 444,
+              "text_end": 454,
+              "matched_text": "氧化处理→发黑处理"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "pattern_id": "applicability",
+      "label": "Applicability 相关语义",
+      "required": true,
+      "representatives": [
+        {
+          "candidate_id": "term-ed1f3e67dbdaf21d5030",
+          "normalized_form": "不同负荷工况",
+          "candidate_type": "applicability_condition",
+          "proposed_target_class": "ApplicabilityScope",
+          "mapping_kind": "scope_value",
+          "mapping_review_decision": "deferred",
+          "candidate_disposition": "defer",
+          "decision_reason": "“不同负荷工况”是真实 Stage 7 适用性候选，可验证 ApplicabilityScope 模式；它必须绑定设备、工程断言或生命周期范围，不能单独作为正式本体类。",
+          "source_supported": true,
+          "source_occurrences": [
+            {
+              "document_key": "DLT863",
+              "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+              "revision_id": "rev-a6ea5862f790a65e1dbf",
+              "physical_page": 17,
+              "page_id": "page-1d53732cefdc573d0be2",
+              "text_fingerprint": "0e0e4595b1974e789fa2047dc37617f769403df8614a448823b16e10eadc9797",
+              "text_origin": "ocr_text",
+              "source_kind": "page_text",
+              "critical_signals": [
+                "applicability"
+              ],
+              "text_start": 541,
+              "text_end": 547,
+              "matched_text": "不同负荷工况"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

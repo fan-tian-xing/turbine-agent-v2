@@ -66,6 +66,6 @@
     "当前没有正式 Release；阶段 3 的试验投影和阶段 6 的样本 Evidence 不等于正式发布。",
     "阶段 7 候选不得自动 promotion。阶段 8 根据业务能力问题筛选 ontology mapping shortlist；被选中的高风险、缩写、OCR-only、同义/旧称候选必须完成相应审核，审核通过前不得进入正式本体或运行词汇。",
     "阶段 7 输入清单覆盖首批五个供给单元的 775 个物理页；仅消费冻结清单中 `page_status=text_accepted` 的页面。OCR 仅作为候选发现的处理输入，原件和已核验原页证据保持权威；全部候选仍为 `candidate_only`，未自动推动本体或运行词汇变化。阶段 7 的数量与门禁以 `data/stage7/stage7_exit_audit.json` 为准。",
-    "阶段 8 已完成最小 OWL 设计和候选映射审核；“螺栓”已接受为 Component 并保留与“地脚螺栓”的上位关系，原始页面已确认，普通“振动”已暂缓且不映射为 Situation。审核接受只表示候选映射决定，候选仍保持 `candidate_only`，不得自动进入正式本体标签、运行词汇或 Release。阶段 8 入口和独立退出记录分别以 `data/stage8/stage8_entry_audit.json`、`data/stage8/stage8_exit_audit.json` 为准。"
+    "阶段 8 已完成最小 OWL 设计和候选映射审核；“螺栓”已接受为 Component 并保留与“地脚螺栓”的上位关系，原始页面已确认，普通“振动”已暂缓且不映射为 Situation。建模模式覆盖审计仅验证少量真实 Stage 7 candidate 的代表性，不扩大本体或批量 promotion。审核接受只表示候选映射决定，候选仍保持 `candidate_only`，不得自动进入正式本体标签、运行词汇或 Release。阶段 8 入口和独立退出记录分别以 `data/stage8/stage8_entry_audit.json`、`data/stage8/stage8_exit_audit.json` 为准。"
   ]
 }

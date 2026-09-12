@@ -1,0 +1,585 @@
+{
+  "schema_version": 1,
+  "stage": "7",
+  "artifact_kind": "stage7_critical_term_golden_set",
+  "formal_release": false,
+  "producer": "scripts/build_stage7_critical_golden.py",
+  "independently_authored": true,
+  "scope": "small sample gate for critical terminology discovery; not exhaustive page recall",
+  "categories": [
+    "prohibition",
+    "negation",
+    "numeric_unit",
+    "acceptance",
+    "interlock_protection",
+    "applicability"
+  ],
+  "positive_examples": [
+    {
+      "example_id": "synthetic-prohibition-01",
+      "source_kind": "synthetic",
+      "category": "prohibition",
+      "text": "严禁汽轮机启动。",
+      "expected": {
+        "normalized_form": "严禁汽轮机启动",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-prohibition-02",
+      "source_kind": "synthetic",
+      "category": "prohibition",
+      "text": "禁止设备运行。",
+      "expected": {
+        "normalized_form": "禁止设备运行",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-prohibition-03",
+      "source_kind": "synthetic",
+      "category": "prohibition",
+      "text": "严禁阀门拆除。",
+      "expected": {
+        "normalized_form": "严禁阀门拆除",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-prohibition-04",
+      "source_kind": "synthetic",
+      "category": "prohibition",
+      "text": "禁止转子抽出。",
+      "expected": {
+        "normalized_form": "禁止转子抽出",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-prohibition-05",
+      "source_kind": "synthetic",
+      "category": "prohibition",
+      "text": "严禁系统复位。",
+      "expected": {
+        "normalized_form": "严禁系统复位",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-prohibition-06",
+      "source_kind": "synthetic",
+      "category": "prohibition",
+      "text": "禁止泵启动。",
+      "expected": {
+        "normalized_form": "禁止泵启动",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-negation-01",
+      "source_kind": "synthetic",
+      "category": "negation",
+      "text": "设备不得启动。",
+      "expected": {
+        "normalized_form": "设备不得启动",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-negation-02",
+      "source_kind": "synthetic",
+      "category": "negation",
+      "text": "系统不应运行。",
+      "expected": {
+        "normalized_form": "系统不应运行",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-negation-03",
+      "source_kind": "synthetic",
+      "category": "negation",
+      "text": "阀门不能拆除。",
+      "expected": {
+        "normalized_form": "阀门不能拆除",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-negation-04",
+      "source_kind": "synthetic",
+      "category": "negation",
+      "text": "转子不可抽出。",
+      "expected": {
+        "normalized_form": "转子不可抽出",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-negation-05",
+      "source_kind": "synthetic",
+      "category": "negation",
+      "text": "装置无需复位。",
+      "expected": {
+        "normalized_form": "装置无需复位",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-negation-06",
+      "source_kind": "synthetic",
+      "category": "negation",
+      "text": "泵无须启动。",
+      "expected": {
+        "normalized_form": "泵无须启动",
+        "candidate_type": "action"
+      }
+    },
+    {
+      "example_id": "synthetic-numeric_unit-01",
+      "source_kind": "synthetic",
+      "category": "numeric_unit",
+      "text": "压力应不大于0.2MPa。",
+      "expected": {
+        "normalized_form": "0.2MPa",
+        "candidate_type": "parameter"
+      }
+    },
+    {
+      "example_id": "synthetic-numeric_unit-02",
+      "source_kind": "synthetic",
+      "category": "numeric_unit",
+      "text": "间隙为0.03mm。",
+      "expected": {
+        "normalized_form": "0.03mm",
+        "candidate_type": "parameter"
+      }
+    },
+    {
+      "example_id": "synthetic-numeric_unit-03",
+      "source_kind": "synthetic",
+      "category": "numeric_unit",
+      "text": "温度范围20mm。",
+      "expected": {
+        "normalized_form": "20mm",
+        "candidate_type": "parameter"
+      }
+    },
+    {
+      "example_id": "synthetic-numeric_unit-04",
+      "source_kind": "synthetic",
+      "category": "numeric_unit",
+      "text": "压力为1.5kPa。",
+      "expected": {
+        "normalized_form": "1.5kPa",
+        "candidate_type": "parameter"
+      }
+    },
+    {
+      "example_id": "synthetic-numeric_unit-05",
+      "source_kind": "synthetic",
+      "category": "numeric_unit",
+      "text": "间隔2-3mm。",
+      "expected": {
+        "normalized_form": "2-3mm",
+        "candidate_type": "parameter"
+      }
+    },
+    {
+      "example_id": "synthetic-numeric_unit-06",
+      "source_kind": "synthetic",
+      "category": "numeric_unit",
+      "text": "含量不超过5%。",
+      "expected": {
+        "normalized_form": "5%",
+        "candidate_type": "parameter"
+      }
+    },
+    {
+      "example_id": "synthetic-acceptance-01",
+      "source_kind": "synthetic",
+      "category": "acceptance",
+      "text": "汽轮机验收。",
+      "expected": {
+        "normalized_form": "汽轮机验收",
+        "candidate_type": "verification"
+      }
+    },
+    {
+      "example_id": "synthetic-acceptance-02",
+      "source_kind": "synthetic",
+      "category": "acceptance",
+      "text": "设备检查。",
+      "expected": {
+        "normalized_form": "设备检查",
+        "candidate_type": "verification"
+      }
+    },
+    {
+      "example_id": "synthetic-acceptance-03",
+      "source_kind": "synthetic",
+      "category": "acceptance",
+      "text": "系统试验。",
+      "expected": {
+        "normalized_form": "系统试验",
+        "candidate_type": "verification"
+      }
+    },
+    {
+      "example_id": "synthetic-acceptance-04",
+      "source_kind": "synthetic",
+      "category": "acceptance",
+      "text": "转子测量。",
+      "expected": {
+        "normalized_form": "转子测量",
+        "candidate_type": "verification"
+      }
+    },
+    {
+      "example_id": "synthetic-acceptance-05",
+      "source_kind": "synthetic",
+      "category": "acceptance",
+      "text": "阀门校验。",
+      "expected": {
+        "normalized_form": "阀门校验",
+        "candidate_type": "verification"
+      }
+    },
+    {
+      "example_id": "synthetic-acceptance-06",
+      "source_kind": "synthetic",
+      "category": "acceptance",
+      "text": "装置检验。",
+      "expected": {
+        "normalized_form": "装置检验",
+        "candidate_type": "verification"
+      }
+    },
+    {
+      "example_id": "synthetic-interlock_protection-01",
+      "source_kind": "synthetic",
+      "category": "interlock_protection",
+      "text": "联锁装置动作。",
+      "expected": {
+        "normalized_form": "联锁装置",
+        "candidate_type": "equipment"
+      }
+    },
+    {
+      "example_id": "synthetic-interlock_protection-02",
+      "source_kind": "synthetic",
+      "category": "interlock_protection",
+      "text": "联锁系统检查。",
+      "expected": {
+        "normalized_form": "联锁系统",
+        "candidate_type": "equipment"
+      }
+    },
+    {
+      "example_id": "synthetic-interlock_protection-03",
+      "source_kind": "synthetic",
+      "category": "interlock_protection",
+      "text": "保护系统投入。",
+      "expected": {
+        "normalized_form": "保护系统",
+        "candidate_type": "equipment"
+      }
+    },
+    {
+      "example_id": "synthetic-interlock_protection-04",
+      "source_kind": "synthetic",
+      "category": "interlock_protection",
+      "text": "保护装置试验。",
+      "expected": {
+        "normalized_form": "保护装置",
+        "candidate_type": "equipment"
+      }
+    },
+    {
+      "example_id": "synthetic-interlock_protection-05",
+      "source_kind": "synthetic",
+      "category": "interlock_protection",
+      "text": "联锁设备确认。",
+      "expected": {
+        "normalized_form": "联锁设备",
+        "candidate_type": "equipment"
+      }
+    },
+    {
+      "example_id": "synthetic-interlock_protection-06",
+      "source_kind": "synthetic",
+      "category": "interlock_protection",
+      "text": "保护阀运行。",
+      "expected": {
+        "normalized_form": "保护阀",
+        "candidate_type": "equipment"
+      }
+    },
+    {
+      "example_id": "synthetic-applicability-01",
+      "source_kind": "synthetic",
+      "category": "applicability",
+      "text": "适用条件明确。",
+      "expected": {
+        "normalized_form": "适用条件",
+        "candidate_type": "applicability_condition"
+      }
+    },
+    {
+      "example_id": "synthetic-applicability-02",
+      "source_kind": "synthetic",
+      "category": "applicability",
+      "text": "适用范围确认。",
+      "expected": {
+        "normalized_form": "适用范围",
+        "candidate_type": "applicability_condition"
+      }
+    },
+    {
+      "example_id": "synthetic-applicability-03",
+      "source_kind": "synthetic",
+      "category": "applicability",
+      "text": "运行工况记录。",
+      "expected": {
+        "normalized_form": "运行工况",
+        "candidate_type": "applicability_condition"
+      }
+    },
+    {
+      "example_id": "synthetic-applicability-04",
+      "source_kind": "synthetic",
+      "category": "applicability",
+      "text": "设备状态检查。",
+      "expected": {
+        "normalized_form": "设备状态",
+        "candidate_type": "applicability_condition"
+      }
+    },
+    {
+      "example_id": "synthetic-applicability-05",
+      "source_kind": "synthetic",
+      "category": "applicability",
+      "text": "检修工况满足。",
+      "expected": {
+        "normalized_form": "检修工况",
+        "candidate_type": "applicability_condition"
+      }
+    },
+    {
+      "example_id": "synthetic-applicability-06",
+      "source_kind": "synthetic",
+      "category": "applicability",
+      "text": "启动状态确认。",
+      "expected": {
+        "normalized_form": "启动状态",
+        "candidate_type": "applicability_condition"
+      }
+    }
+  ],
+  "real_examples": [
+    {
+      "example_id": "real-prohibition-01",
+      "source_kind": "allowed_stage6_reviewed",
+      "category": "prohibition",
+      "expected": {
+        "normalized_form": "不得用波纹管变形方法调整",
+        "candidate_type": "action",
+        "source_kind": "accepted_stage6_evidence"
+      }
+    },
+    {
+      "example_id": "real-negation-01",
+      "source_kind": "allowed_stage6_reviewed",
+      "category": "negation",
+      "expected": {
+        "normalized_form": "散热器严密性试验",
+        "candidate_type": "action",
+        "source_kind": "accepted_stage6_evidence"
+      }
+    },
+    {
+      "example_id": "real-numeric_unit-01",
+      "source_kind": "allowed_stage6_reviewed",
+      "category": "numeric_unit",
+      "expected": {
+        "normalized_form": "0.03mm",
+        "candidate_type": "parameter",
+        "source_kind": "accepted_stage6_evidence"
+      }
+    },
+    {
+      "example_id": "real-acceptance-01",
+      "source_kind": "allowed_stage6_reviewed",
+      "category": "acceptance",
+      "expected": {
+        "normalized_form": "设备开箱检查",
+        "candidate_type": "verification",
+        "source_kind": "accepted_stage6_evidence"
+      }
+    },
+    {
+      "example_id": "real-interlock_protection-01",
+      "source_kind": "allowed_stage6_reviewed",
+      "category": "interlock_protection",
+      "expected": {
+        "normalized_form": "以保护核动力厂设备",
+        "candidate_type": "equipment",
+        "source_kind": "accepted_stage6_evidence"
+      }
+    },
+    {
+      "example_id": "real-applicability-01",
+      "source_kind": "allowed_stage6_reviewed",
+      "category": "applicability",
+      "expected": {
+        "normalized_form": "在半空缸状态",
+        "candidate_type": "applicability_condition",
+        "source_kind": "accepted_stage6_evidence"
+      }
+    }
+  ],
+  "negative_examples": [
+    {
+      "example_id": "synthetic-negative-01",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第1页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-02",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第2页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-03",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第3页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-04",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第4页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-05",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第5页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-06",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第6页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-07",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第7页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-08",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第8页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-09",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第9页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-10",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第10页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-11",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第11页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    },
+    {
+      "example_id": "synthetic-negative-12",
+      "source_kind": "synthetic",
+      "category": "ocr_locality",
+      "text": "汽轮机检查。第12页含误字圧。",
+      "expected": {
+        "normalized_form": "汽轮机",
+        "candidate_type": "ocr_variant_candidate",
+        "present": false
+      }
+    }
+  ],
+  "review_provenance": {
+    "real_examples": "selected only when an allowed current-batch occurrence is later bound to reviewed original-page evidence",
+    "synthetic_examples": "independently authored fixtures for missing or boundary cases",
+    "reviewers": [
+      "Codex_fixture_review"
+    ],
+    "user_confirmation_required": false
+  },
+  "consumer": "scripts/audit_stage7_exit.py",
+  "content_fingerprint": "a592e61c5e4a07e77584e3cecf23f790fbe0d2683d4daa07aaebc87fc0f42204"
+}

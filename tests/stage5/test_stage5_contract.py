@@ -1,5 +1,12 @@
 import json
 from pathlib import Path
+import sys
+
+import pytest
+
+import audit_stage5_exit
+import audit_stage5_inputs
+import benchmark_stage5_rapidocr_sample
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -58,9 +65,9 @@ def test_stage5_exit_audit_is_frozen_read_only():
     assert audit["audit_mode"] == "frozen_stage5_artifact_read_only"
     assert audit["automatic_recheck"] is False
     provenance = audit["artifact_provenance"]
-    assert provenance["fingerprint_comparison_performed"] is False
-    assert provenance["fingerprint_match_status"] == "not_rechecked_by_frozen_exit_audit"
-    assert "matched_by_input_fingerprint" not in provenance
+    assert provenance["fingerprint_comparison_performed"] is True
+    assert provenance["fingerprint_match_status"] == "matched"
+    assert "selected_artifacts" in provenance
 
 
 def test_stage5_exit_audit_closes_after_visual_gate_and_keeps_boundaries():
@@ -134,5 +141,156 @@ def test_stage5_latest_exit_audit_consumes_original_pdf_quality_benchmark():
     assert audit["status"] == "complete_with_quarantine"
     assert audit["checks"]["original_pdf_quality_benchmark_recorded"] is True
     assert audit["quality_benchmark"]["status"] == "complete_with_quarantine"
-    assert "Stage 6" in audit["next_stage_allowed"]
+    assert audit["next_stage_allowed"] is True
+    assert "Stage 6" in audit["next_stage_message"]
     assert audit["next_stage_inputs"]
+
+
+def _configure_input_audit(monkeypatch, tmp_path, registry_sha256: str):
+    pdf_path = tmp_path / "document.pdf"
+    pdf_path.write_bytes(b"fixture")
+    asset = {
+        "asset_id": "asset-fixture",
+        "source_root_id": "source",
+        "relative_path": "document.pdf",
+        "sha256": registry_sha256,
+    }
+    sample_path = tmp_path / "sample.json"
+    sample_path.write_text(
+        json.dumps(
+            {
+                "scope": "fixture",
+                "sample_page_count": 1,
+                "documents": [
+                    {
+                        "document_key": "fixture",
+                        "document_logical_id": "doc-fixture",
+                        "processing_asset_id": "asset-fixture",
+                        "original_asset_id": "asset-fixture",
+                        "page_count": 1,
+                        "sample_pages": [{"physical_page": 1, "pdf_page": 1}],
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    class FixtureSettings:
+        source_root = tmp_path
+        ocr_derived_root = tmp_path
+
+        @classmethod
+        def from_environment(cls):
+            return cls()
+
+    monkeypatch.setattr(audit_stage5_inputs, "Settings", FixtureSettings)
+    monkeypatch.setattr(audit_stage5_inputs, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(audit_stage5_inputs, "SAMPLE_MANIFEST", sample_path)
+    monkeypatch.setattr(audit_stage5_inputs, "_load_assets", lambda: {asset["asset_id"]: asset})
+    monkeypatch.setattr(audit_stage5_inputs, "ocr_fingerprint", lambda: ("fixture-input", {}))
+    monkeypatch.setattr(audit_stage5_inputs, "_page_summary", lambda path: {"page_count": 1})
+    return pdf_path
+
+
+def test_stage5_input_audit_hashes_each_physical_file_once(monkeypatch, tmp_path):
+    pdf_path = _configure_input_audit(monkeypatch, tmp_path, "fixture-sha256")
+    calls = []
+
+    def fake_sha256(path):
+        calls.append(path.resolve())
+        return "fixture-sha256"
+
+    monkeypatch.setattr(audit_stage5_inputs, "_sha256", fake_sha256)
+    result = audit_stage5_inputs.audit()
+
+    assert result["status"] == "pass"
+    assert calls == [pdf_path.resolve()]
+
+
+def test_stage5_input_audit_hash_mismatch_is_a_blocking_error(monkeypatch, tmp_path):
+    _configure_input_audit(monkeypatch, tmp_path, "registry-sha256")
+    monkeypatch.setattr(audit_stage5_inputs, "_sha256", lambda path: "actual-sha256")
+
+    result = audit_stage5_inputs.audit()
+
+    assert result["status"] == "fail"
+    assert any("SHA-256 differs from Registry" in error for error in result["errors"])
+
+
+def test_stage5_exit_uses_one_explicit_frozen_provenance_set():
+    frozen = audit_stage5_exit._load_frozen_artifacts()
+
+    assert frozen["input_fingerprint"]
+    assert frozen["review_snapshot_date"] == "2026-09-09"
+    assert set(frozen["paths"]) == {
+        "input_audit",
+        "baseline",
+        "rapidocr",
+        "engine_decision",
+        "quality",
+        "tables",
+        "table_truth",
+        "page_identity",
+        "golden_review",
+        "sample",
+    }
+    assert not hasattr(audit_stage5_exit, "read_latest")
+
+
+def test_stage5_exit_rejects_cross_batch_fingerprint_mix(tmp_path, monkeypatch):
+    root = tmp_path / "data" / "stage5"
+    root.mkdir(parents=True)
+    monkeypatch.setattr(audit_stage5_exit, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(audit_stage5_exit, "STAGE5_ROOT", root)
+    names = dict(audit_stage5_exit.FROZEN_PROVENANCE)
+    for key in ("input_audit", "baseline", "rapidocr", "engine_decision", "quality"):
+        payload = {
+            "input_fingerprint": "batch-a",
+            "ocr_input_fingerprint": "batch-a",
+        }
+        if key == "quality":
+            payload["ocr_input_fingerprint"] = "batch-b"
+        if key == "baseline":
+            payload["input_audit"] = "data/stage5/" + names["input_audit"]
+        if key in {"engine_decision", "quality"}:
+            payload["ocr_artifact"] = "data/stage5/" + names["rapidocr"]
+        (root / names[key]).write_text(
+            json.dumps(payload),
+            encoding="utf-8",
+        )
+    for name in (
+        "stage5_table_baseline_2026-09-09.json",
+        "stage5_table_truth_review_2026-09-09.json",
+        "stage5_page_identity_audit_2026-09-09.json",
+        "stage5_golden_sample_review_2026-09-09.json",
+        "stage5_sample_manifest.json",
+    ):
+        (root / name).write_text("{}", encoding="utf-8")
+    with pytest.raises(ValueError, match="one input fingerprint"):
+        audit_stage5_exit._load_frozen_artifacts()
+
+
+def test_stage5_blocking_items_are_derived_from_failed_boolean_checks():
+    checks = {name: True for name in audit_stage5_exit.BLOCKING_MESSAGES}
+    checks["input_audit_pass"] = False
+    checks["rapidocr_zero_failures"] = False
+
+    assert audit_stage5_exit._derive_blocking_items(checks) == [
+        "The Stage 5 input audit has blocking discrepancies.",
+        "The frozen RapidOCR sample contains failed pages.",
+    ]
+
+
+def test_stage5_rapidocr_cache_mismatch_does_not_rerun_without_force(monkeypatch, tmp_path):
+    cached = tmp_path / "cached.json"
+    monkeypatch.setattr(benchmark_stage5_rapidocr_sample, "ocr_fingerprint", lambda: ("new", {}))
+    monkeypatch.setattr(benchmark_stage5_rapidocr_sample, "find_matching_artifact", lambda pattern, fingerprint: cached)
+    monkeypatch.setattr(
+        benchmark_stage5_rapidocr_sample,
+        "benchmark",
+        lambda: pytest.fail("OCR must not rerun without --force"),
+    )
+    monkeypatch.setattr(sys, "argv", ["benchmark_stage5_rapidocr_sample.py", "--output", str(tmp_path / "new.json")])
+
+    assert benchmark_stage5_rapidocr_sample.main() == 0

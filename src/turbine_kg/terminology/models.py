@@ -32,6 +32,11 @@ def validate_page_record(record: dict) -> None:
         raise ValueError("text_accepted page must have an analysis text fingerprint")
     if record["page_status"] != "text_accepted" and not record["exclusion_reason"]:
         raise ValueError("non-accepted page must explain its exclusion")
+    if "authority_source_profile_id" in record and (
+        not isinstance(record["authority_source_profile_id"], str)
+        or not record["authority_source_profile_id"].strip()
+    ):
+        raise ValueError("authority_source_profile_id must be a non-empty Registry profile id")
 
 
 def validate_candidate(record: dict) -> None:

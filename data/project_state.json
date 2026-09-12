@@ -2,7 +2,7 @@
   "schema_version": 1,
   "artifact_kind": "project_state",
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
-  "updated_at": "2026-09-11",
+  "updated_at": "2026-09-12",
   "current_stage": 7,
   "current_stage_status": "complete",
   "current_stage_scope": "candidate_terminology_and_capability_templates_only",
@@ -28,12 +28,12 @@
       "exit_audit": "data/stage3/stage3_exit_audit.json"
     },
     "4": {
-      "status": "complete",
-      "exit_audit": "data/stage4/stage4_exit_audit.json"
+      "status": "pass",
+      "exit_audit": "data/stage4/stage4_full_parse_audit_2026-09-12.json"
     },
     "5": {
       "status": "complete_with_quarantine",
-      "exit_audit": "data/stage5/stage5_exit_audit_2026-09-10.json"
+      "exit_audit": "data/stage5/stage5_exit_audit_2026-09-12.json"
     },
     "6": {
       "status": "complete",
@@ -55,6 +55,6 @@
     "阶段 15A/15B 才是首批五份资料的全文 Evidence 与正式准入处理门。",
     "当前没有正式 Release；阶段 3 的试验投影和阶段 6 的样本 Evidence 不等于正式发布。",
     "阶段 7 术语与业务能力产物仅为 candidate_only；高风险、缩写、OCR 变体及同义/旧称关系均须人工审核后才能进入阶段 8。",
-    "阶段 7 输入清单覆盖首批五个供给单元的 775 个物理页，仅消费 123 个 text_accepted 页面；表格和未通过 Stage 6 页级证据门禁的 OCR 页面均不消费。"
+    "阶段 7 输入清单覆盖首批五个供给单元的 775 个物理页；仅消费冻结清单中 `page_status=text_accepted` 的页面。OCR 仅作为候选发现的处理输入，原件和已核验原页证据保持权威；全部候选仍为 `candidate_only`，未自动推动本体或运行词汇变化。阶段 7 的数量与门禁以 `data/stage7/stage7_exit_audit.json` 为准。"
   ]
 }

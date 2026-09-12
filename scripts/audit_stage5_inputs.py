@@ -26,6 +26,32 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _sha256_once(path: Path, cache: dict[Path, str]) -> str:
+    """Hash one physical file at most once during a single audit."""
+
+    resolved = path.resolve()
+    if resolved not in cache:
+        cache[resolved] = _sha256(resolved)
+    return cache[resolved]
+
+
+def _seed_hash_cache_from_fingerprint(
+    assets: dict[str, dict],
+    settings: Settings,
+    fingerprint_components: dict,
+    cache: dict[Path, str],
+) -> None:
+    """Reuse hashes already computed while constructing the input fingerprint."""
+
+    for item in fingerprint_components.get("selected_assets", []):
+        asset = assets.get(item.get("asset_id"))
+        if asset is None:
+            continue
+        path = _resolve(asset, settings)
+        if path.is_file() and item.get("sha256"):
+            cache[path.resolve()] = item["sha256"]
+
+
 def _load_assets() -> dict[str, dict]:
     return {
         row["asset_id"]: row
@@ -66,6 +92,8 @@ def audit() -> dict:
     documents = []
     errors: list[str] = []
     seen_pages: set[tuple[str, int]] = set()
+    hash_cache: dict[Path, str] = {}
+    _seed_hash_cache_from_fingerprint(assets, settings, fingerprint_components, hash_cache)
 
     for item in sample["documents"]:
         processing = assets[item["processing_asset_id"]]
@@ -83,6 +111,26 @@ def audit() -> dict:
             errors.append(f"{item['document_key']} processing page count differs: {processing_summary['page_count']} != {expected}")
         if original_summary["page_count"] != expected:
             errors.append(f"{item['document_key']} original page count differs: {original_summary['page_count']} != {expected}")
+        processing_sha256 = _sha256_once(processing_path, hash_cache) if processing_path.is_file() else None
+        original_sha256 = _sha256_once(original_path, hash_cache) if original_path.is_file() else None
+        processing_hash_matches = (
+            processing_sha256 is not None
+            and processing_sha256 == processing.get("sha256")
+        )
+        original_hash_matches = (
+            original_sha256 is not None
+            and original_sha256 == original.get("sha256")
+        )
+        if processing_path.is_file() and not processing_hash_matches:
+            errors.append(
+                f"{item['document_key']} processing SHA-256 differs from Registry: "
+                f"{processing_sha256} != {processing.get('sha256')}"
+            )
+        if original_path.is_file() and not original_hash_matches:
+            errors.append(
+                f"{item['document_key']} original SHA-256 differs from Registry: "
+                f"{original_sha256} != {original.get('sha256')}"
+            )
         sample_pages = []
         for page in item["sample_pages"]:
             physical_page = int(page["physical_page"])
@@ -108,15 +156,15 @@ def audit() -> dict:
             "expected_page_count": expected,
             "processing": {
                 **processing_summary,
-                "sha256": _sha256(processing_path) if processing_path.is_file() else None,
+                "sha256": processing_sha256,
                 "registry_sha256": processing.get("sha256"),
-                "sha256_matches_registry": processing_path.is_file() and _sha256(processing_path) == processing.get("sha256"),
+                "sha256_matches_registry": processing_hash_matches,
             },
             "original": {
                 **original_summary,
-                "sha256": _sha256(original_path) if original_path.is_file() else None,
+                "sha256": original_sha256,
                 "registry_sha256": original.get("sha256"),
-                "sha256_matches_registry": original_path.is_file() and _sha256(original_path) == original.get("sha256"),
+                "sha256_matches_registry": original_hash_matches,
             },
             "sample_page_count": len(sample_pages),
         })

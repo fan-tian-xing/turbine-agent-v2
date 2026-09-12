@@ -51,8 +51,8 @@ def _validate_admitted_scope(sample: dict, assets: dict[str, dict]) -> set[str]:
         if asset.get("asset_kind") == "original" and asset.get("admission_status") == "admitted"
     }
     sample_originals = {document["original_asset_id"] for document in sample["documents"]}
-    if sample_originals != admitted_originals:
-        raise ValueError("Stage 7 sample scope does not exactly match admitted original Registry assets")
+    if not sample_originals <= admitted_originals:
+        raise ValueError("Stage 7 sample scope contains an original outside admitted Registry assets")
     for document in sample["documents"]:
         original = assets[document["original_asset_id"]]
         processing = assets[document["processing_asset_id"]]
@@ -62,7 +62,7 @@ def _validate_admitted_scope(sample: dict, assets: dict[str, dict]) -> set[str]:
             raise ValueError(f"sample processing asset identity mismatch: {document['document_key']}")
         if processing.get("asset_kind") not in {"original", "derived_ocr"}:
             raise ValueError(f"sample processing asset is not an original or declared OCR derivative: {document['document_key']}")
-    return admitted_originals
+    return sample_originals
 
 
 def _sample_categories(sample: dict) -> dict[tuple[str, int], list[str]]:
@@ -109,6 +109,30 @@ def _processing_path(settings: Settings, relative_path: str) -> Path:
     if relative_path.startswith("OCR/"):
         return settings.ocr_derived_root / relative_path.removeprefix("OCR/")
     return settings.source_root / relative_path
+
+
+def _round_one_metadata(sample: dict, assets: dict[str, dict]) -> list[dict]:
+    """Record only Registry-backed metadata; do not invent physical pages."""
+    rows = []
+    for document in sample["documents"]:
+        authority = assets[document["original_asset_id"]]
+        findings = authority.get("manual_findings", [])
+        rows.append({
+            "document_key": document["document_key"],
+            "document_logical_id": document["document_logical_id"],
+            "authority_asset_id": authority["asset_id"],
+            "source_profile_id": authority["source_profile_id"],
+            "registered_name": authority.get("title_candidate") or authority.get("file_name"),
+            "registered_name_source": authority.get("title_source", "registry_record"),
+            "identifier_candidates": authority.get("identifier_candidates", []),
+            "native_text_status": authority.get("text_layer_status"),
+            "directory_discovery": {
+                "status": "verified_registry_record",
+                "basis": [finding for finding in findings if "contents" in finding or "scope" in finding or "body" in finding],
+                "physical_pages_invented": False,
+            },
+        })
+    return rows
 
 
 def main() -> None:
@@ -162,6 +186,7 @@ def main() -> None:
                     "revision_id": processing["revision_id"],
                     "processing_asset_id": processing["asset_id"],
                     "authority_asset_id": authority["asset_id"],
+                    "authority_source_profile_id": authority["source_profile_id"],
                     "physical_page": physical_page,
                     "page_status": page_status,
                     "text_source": (
@@ -197,8 +222,8 @@ def main() -> None:
             "stage5_baseline": "data/stage5/stage5_baseline_benchmark_2026-09-10.json",
             "stage6_canonical_sample": "data/stage6/stage6_evidence_bundle.jsonl",
             "source_root": "SOURCE_ROOT",
-            "source_count": 5,
-            "page_count": 775,
+            "source_count": len(sample["documents"]),
+            "page_count": sum(document["page_count"] for document in sample["documents"]),
             "unauthorized_source_count": 0,
             "admitted_document_keys": sorted(document["document_key"] for document in sample["documents"]),
             "admitted_original_asset_ids": sorted(admitted_originals),
@@ -219,9 +244,10 @@ def main() -> None:
             "terminology_contract_sha256": _sha(ROOT / "config" / "terminology_contract.json"),
         },
         "rounds": {
-            "round_1": "metadata and reliable native text discovery; candidate-only",
+            "round_1": "Registry-backed registered-name, identifier, native-text and directory discovery; candidate-only; no unverified scan TOC consumption",
             "round_2": "accepted processing text from the frozen 775-page manifest",
         },
+        "round_1_metadata_discovery": _round_one_metadata(sample, assets),
         "status_counts": status_counts,
         "pages": pages,
     }

@@ -48,7 +48,9 @@
     "no_unreviewed_table_regions": true,
     "canonical_evidence_ids_unique": true,
     "canonical_bundle_matches_components": true,
-    "stage7_consumer_available": true
+    "persisted_evidence_identity_and_text_hashes_recomputed": true,
+    "table_review_decisions_bind_actual_bbox_headers_and_continuations": true,
+    "stage7_consumer_reads_canonical_bundle": true
   },
   "failures": [],
   "boundaries": [

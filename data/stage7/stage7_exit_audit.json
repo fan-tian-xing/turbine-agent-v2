@@ -17,25 +17,25 @@
     "visual_only_page_count": 39,
     "quarantined_page_count": 2,
     "excluded_non_content_page_count": 8,
-    "ocr_candidate_page_count": 621,
+    "ocr_candidate_page_count": 603,
     "table_candidate_page_count": 33,
-    "candidate_count": 18680,
+    "candidate_count": 19304,
     "capability_question_count": 10
   },
   "candidate_type_counts": {
     "abbreviation_candidate": 586,
-    "action": 3646,
-    "applicability_condition": 160,
-    "component": 4094,
-    "equipment": 5254,
+    "action": 3807,
+    "applicability_condition": 162,
+    "component": 4135,
+    "equipment": 5352,
     "ocr_variant_candidate": 0,
     "old_name_candidate": 0,
-    "parameter": 342,
-    "phenomenon": 664,
-    "process": 1884,
-    "requirement": 720,
-    "synonym_candidate": 24,
-    "verification": 1306
+    "parameter": 478,
+    "phenomenon": 707,
+    "process": 1942,
+    "requirement": 752,
+    "synonym_candidate": 20,
+    "verification": 1363
   },
   "unobserved_declared_candidate_types": [
     "ocr_variant_candidate",
@@ -56,6 +56,8 @@
     "only_five_admitted_units": true,
     "case_holdout_blind_materials_explicitly_excluded": true,
     "only_accepted_pages_are_consumed": true,
+    "family_profile_snapshot_matches_original_registry": true,
+    "round_one_metadata_discovery_is_registry_bound": true,
     "table_pages_are_isolated": true,
     "stage6_sample_cross_check_is_canonical": true,
     "candidate_types_are_controlled": true,
@@ -67,6 +69,7 @@
     "formal_release_false": true,
     "runtime_contract_fingerprint_recorded": true,
     "capability_questions_complete": true,
+    "critical_term_golden_set_recall": true,
     "test_suite_passed": true,
     "formal_artifacts_have_runtime_consumers": true
   },
@@ -76,8 +79,100 @@
     "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
     "status": "passed",
     "returncode": 0,
-    "stdout_tail": "........................................................................ [ 52%]\n.................................................................        [100%]\n",
+    "stdout_tail": "........................................................................ [ 47%]\n........................................................................ [ 95%]\n.......                                                                  [100%]\n",
     "stderr_tail": ""
+  },
+  "critical_term_metrics": {
+    "synthetic": {
+      "overall": {
+        "found": 36,
+        "expected": 36,
+        "recall": 1.0
+      },
+      "by_category": {
+        "acceptance": {
+          "found": 6,
+          "expected": 6,
+          "recall": 1.0
+        },
+        "applicability": {
+          "found": 6,
+          "expected": 6,
+          "recall": 1.0
+        },
+        "interlock_protection": {
+          "found": 6,
+          "expected": 6,
+          "recall": 1.0
+        },
+        "negation": {
+          "found": 6,
+          "expected": 6,
+          "recall": 1.0
+        },
+        "numeric_unit": {
+          "found": 6,
+          "expected": 6,
+          "recall": 1.0
+        },
+        "prohibition": {
+          "found": 6,
+          "expected": 6,
+          "recall": 1.0
+        }
+      }
+    },
+    "real": {
+      "status": "evaluated",
+      "overall": {
+        "found": 6,
+        "expected": 6,
+        "recall": 1.0
+      },
+      "by_category": {
+        "acceptance": {
+          "found": 1,
+          "expected": 1,
+          "recall": 1.0
+        },
+        "applicability": {
+          "found": 1,
+          "expected": 1,
+          "recall": 1.0
+        },
+        "interlock_protection": {
+          "found": 1,
+          "expected": 1,
+          "recall": 1.0
+        },
+        "negation": {
+          "found": 1,
+          "expected": 1,
+          "recall": 1.0
+        },
+        "numeric_unit": {
+          "found": 1,
+          "expected": 1,
+          "recall": 1.0
+        },
+        "prohibition": {
+          "found": 1,
+          "expected": 1,
+          "recall": 1.0
+        }
+      }
+    },
+    "negative": {
+      "leakage_count": 0,
+      "expected_zero": true
+    }
+  },
+  "review_summary": {
+    "candidate_count": 19304,
+    "candidate_only_count": 19304,
+    "requires_original_confirmation_count": 12483,
+    "review_decisions_present": 0,
+    "human_review_required_now": false
   },
   "user_review_required_now": [],
   "review_boundary": "Stage 7 emits candidate_only terms. Stage 8 must review only candidates selected for ontology mapping; OCR-only candidates require original-page confirmation before promotion.",

@@ -110,3 +110,28 @@ def test_family_weighted_score_equalizes_long_and_short_documents():
     turbine = next(row for row in candidates if row["normalized_form"] == "汽轮机" and row["candidate_type"] == "equipment")
     assert turbine["document_occurrence_counts"] == {"long": 1, "short": 1}
     assert turbine["family_weighted_score"] == 0.75
+
+
+def test_numeric_units_keep_decimal_and_local_critical_context():
+    page = {
+        "page_id": "numeric-fixture", "document_key": "fixture", "document_logical_id": "doc-fixture",
+        "revision_id": "rev-fixture", "processing_asset_id": "asset-original", "authority_asset_id": "asset-original",
+        "physical_page": 1, "page_status": "text_accepted", "text_source": "native_pdf_text", "analysis_text_sha256": "fixture-sha",
+    }
+    candidates = analyze_terminology({"pages": [page]}, {"numeric-fixture": "压力应不大于0.2MPa，间隙为0.03mm。"})
+    values = {row["normalized_form"]: row for row in candidates if row["candidate_type"] == "parameter"}
+    assert "0.2MPa" in values
+    assert "0.03mm" in values
+    assert "2MPa" not in values
+    assert "03mm" not in values
+    assert "comparator" in values["0.2MPa"]["occurrences"][0]["critical_signals"]
+
+
+def test_ocr_variant_signal_is_term_local():
+    page = {
+        "page_id": "ocr-fixture", "document_key": "fixture", "document_logical_id": "doc-fixture",
+        "revision_id": "rev-fixture", "processing_asset_id": "asset-ocr", "authority_asset_id": "asset-original",
+        "physical_page": 1, "page_status": "text_accepted", "text_source": "ocr_processing_text", "analysis_text_sha256": "fixture-sha",
+    }
+    candidates = analyze_terminology({"pages": [page]}, {"ocr-fixture": "汽轮机检查。误字圧出现在别处。"})
+    assert not any(row["candidate_type"] == "ocr_variant_candidate" for row in candidates)

@@ -21,6 +21,14 @@
     "stage8_requires_review_status": "accepted"
   },
   "frequency_policy": "document_family_equal_weight_discovery_only",
+  "future_extension_policy": {
+    "existing_concept_reuses_stable_identifier": true,
+    "new_alias_requires_review": true,
+    "ontology_gap_requires_reviewed_schema_upgrade": true,
+    "candidate_id_reuse_key": ["normalized_form", "candidate_type"],
+    "new_source_occurrence_requires_review": true,
+    "same_display_name_does_not_prove_identity": true
+  },
   "lexical_rules": {
     "equipment_suffixes": ["汽轮机", "发电机", "电动机", "泵", "阀", "箱", "缸", "轴", "瓦", "系统", "装置", "设备", "转子", "定子"],
     "component_suffixes": ["座", "盖", "板", "环", "管", "孔", "室", "螺栓", "弹簧", "猫爪", "滑块", "垫片", "轴颈"],
@@ -30,11 +38,11 @@
     "verification_suffixes": ["检查", "试验", "检验", "测量", "验收", "校验", "验证", "监测"],
     "requirement_suffixes": ["要求", "规定", "标准", "验收"],
     "applicability_condition_suffixes": ["工况", "状态", "适用范围", "适用条件"],
-    "number_unit_pattern": "(?<![\\w])[-+]?\\d+(?:\\.\\d+)?\\s*(?:mm|cm|m|μm|um|MPa|kPa|Pa|℃|°C|%|毫米|厘米|米|微米|兆帕|千帕|帕|度)(?![\\w])",
+    "number_unit_pattern": "(?<![A-Za-z0-9_.])[-+]?\\d+(?:\\.\\d+)?(?:\\s*(?:-|–|—|~|至)\\s*[-+]?\\d+(?:\\.\\d+)?)?\\s*(?:mm|cm|m|μm|um|MPa|kPa|Pa|℃|°C|%|毫米|厘米|米|微米|兆帕|千帕|帕|度)(?![A-Za-z0-9_])",
     "ocr_variant_characters": "圧夲眞測應與為發",
     "abbreviation_pattern": "(?<![A-Za-z0-9])[A-Z][A-Z0-9/-]{1,11}(?![A-Za-z0-9])",
-    "synonym_pattern": "(?P<left>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})\\s*(?:又称|亦称|也称|称为)\\s*(?P<right>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})",
-    "old_name_pattern": "(?P<left>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})\\s*(?:原称|旧称|曾称|改称)\\s*(?P<right>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16})",
+    "synonym_pattern": "(?P<left>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16}?)(?:又称|亦称|也称|称为)(?P<right>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16}?)(?=[，。；：、,.!?！？\\s]|$)",
+    "old_name_pattern": "(?P<left>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16}?)(?:原称|旧称|曾称|改称)(?P<right>[\\u3400-\\u4dbf\\u4e00-\\u9fff]{2,16}?)(?=[，。；：、,.!?！？\\s]|$)",
     "min_term_chars": 2,
     "max_term_chars": 12,
     "ignored_fragments": ["的规定", "术要求", "要求", "规定", "下列规定", "的有关规定", "技术要求", "还应符合下列规定", "应符合下列规定", "列规定"]

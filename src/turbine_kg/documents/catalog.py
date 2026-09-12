@@ -127,15 +127,19 @@ def load_identity_catalog(
         raise ValueError("Registry asset catalog is empty")
     if derived_links_path is not None:
         derived_relations = _load_derived_relations(derived_links_path)
+        linked_derived_paths: set[str] = set()
         for derived_path, source_path in derived_relations:
             derived = _asset_by_path(by_path, by_id, derived_path)
             source = _asset_by_path(by_path, by_id, source_path)
             if derived.asset_kind != "derived_ocr":
                 raise ValueError("derived asset link must point to an OCR-derived asset")
+            if source.asset_kind != "original":
+                raise ValueError("derived OCR asset source must be an original asset")
             if (derived.document_logical_id, derived.revision_id) != (source.document_logical_id, source.revision_id):
                 raise ValueError("derived asset and source asset must share document and Revision")
             if derived.derived_from_asset_id is not None:
                 raise ValueError("derived relation is declared more than once")
+            linked_derived_paths.add(derived.relative_path)
             values = {
                 field: getattr(derived, field)
                 for field in AssetIdentity.__dataclass_fields__
@@ -147,6 +151,16 @@ def load_identity_catalog(
             replacement = AssetIdentity(**values)
             by_id[derived.asset_id] = replacement
             assets[assets.index(derived)] = replacement
+        unlinked_derived = {
+            asset.relative_path
+            for asset in assets
+            if asset.asset_kind == "derived_ocr"
+        } - linked_derived_paths
+        if unlinked_derived:
+            raise ValueError(
+                "derived OCR assets are missing relations: "
+                + ", ".join(sorted(unlinked_derived))
+            )
 
     return IdentityCatalog(tuple(assets), revisions, dict(by_path))
 

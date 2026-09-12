@@ -51,6 +51,26 @@
       "denominator": 287,
       "rate": 1.0
     },
+    "persisted_evidence_identity": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "persisted_evidence_version_identity": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "persisted_source_text_hash": {
+      "numerator": 287,
+      "denominator": 287,
+      "rate": 1.0
+    },
+    "table_review_decision_binding": {
+      "numerator": 7,
+      "denominator": 7,
+      "rate": 1.0
+    },
     "table_region_resolution": {
       "numerator": 6,
       "denominator": 6,
@@ -81,7 +101,12 @@
     "evidence_version_ids_unique": true,
     "all_evidence_zero_tolerance_checks_pass": true,
     "all_accepted_page_fingerprints_match_reviewed_text_and_bboxes": true,
-    "all_available_reference_numbers_units_and_negations_retained": true
+    "all_available_reference_numbers_units_and_negations_retained": true,
+    "persisted_evidence_ids_recomputed": true,
+    "persisted_evidence_version_ids_recomputed": true,
+    "persisted_source_text_hashes_recomputed": true,
+    "table_review_decisions_bind_bbox_headers_and_continuations": true,
+    "canonical_components_merge_without_identity_errors": true
   },
   "failed_evidence_ids": [],
   "reviewed_table_boundary": [

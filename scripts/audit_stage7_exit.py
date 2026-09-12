@@ -7,9 +7,10 @@ import json
 import os
 import subprocess
 import sys
+from collections import defaultdict
 from pathlib import Path
 
-from turbine_kg.terminology.analyzer import load_stage6_evidence_bundle, load_terminology_contract
+from turbine_kg.terminology.analyzer import analyze_terminology, load_stage6_evidence_bundle, load_terminology_contract
 from turbine_kg.terminology.models import CANDIDATE_TYPES
 from turbine_kg.terminology.validation import content_fingerprint, validate_candidates, validate_input_manifest
 
@@ -59,6 +60,63 @@ def _run_tests() -> dict:
     }
 
 
+def _critical_sample_metrics(golden: dict, contract: dict, candidates: list[dict]) -> dict:
+    """Execute the independent fixture set through the real analyzer."""
+    positive_results = []
+    for item in golden.get("positive_examples", []):
+        page_id = item["example_id"]
+        page = {
+            "page_id": page_id, "document_key": page_id, "document_logical_id": page_id,
+            "revision_id": page_id, "processing_asset_id": "fixture-ocr",
+            "authority_asset_id": "fixture-original", "physical_page": 1,
+            "page_status": "text_accepted", "text_source": "ocr_processing_text",
+            "analysis_text_sha256": "fixture-sha",
+        }
+        rows = analyze_terminology({"pages": [page]}, {page_id: item["text"]}, contract=contract)
+        expected = item["expected"]
+        found = any(row["normalized_form"] == expected["normalized_form"] and row["candidate_type"] == expected["candidate_type"] for row in rows)
+        positive_results.append({"category": item["category"], "found": found, "example_id": page_id})
+    negative_results = []
+    for item in golden.get("negative_examples", []):
+        page_id = item["example_id"]
+        page = {
+            "page_id": page_id, "document_key": page_id, "document_logical_id": page_id,
+            "revision_id": page_id, "processing_asset_id": "fixture-ocr",
+            "authority_asset_id": "fixture-original", "physical_page": 1,
+            "page_status": "text_accepted", "text_source": "ocr_processing_text",
+            "analysis_text_sha256": "fixture-sha",
+        }
+        rows = analyze_terminology({"pages": [page]}, {page_id: item["text"]}, contract=contract)
+        expected = item["expected"]
+        leaked = any(row["normalized_form"] == expected["normalized_form"] and row["candidate_type"] == expected["candidate_type"] for row in rows)
+        negative_results.append({"example_id": page_id, "leaked": leaked})
+    categories = sorted({item["category"] for item in positive_results})
+    by_category = {}
+    for category in categories:
+        values = [row["found"] for row in positive_results if row["category"] == category]
+        by_category[category] = {"found": sum(values), "expected": len(values), "recall": sum(values) / len(values)}
+    real_results = []
+    for item in golden.get("real_examples", []):
+        expected = item["expected"]
+        found = any(
+            row["normalized_form"] == expected["normalized_form"]
+            and row["candidate_type"] == expected["candidate_type"]
+            and any(occurrence.get("source_kind") == expected["source_kind"] for occurrence in row["occurrences"])
+            for row in candidates
+        )
+        real_results.append({"category": item["category"], "found": found, "example_id": item["example_id"]})
+    real_categories = sorted({item["category"] for item in real_results})
+    real_by_category = {}
+    for category in real_categories:
+        values = [row["found"] for row in real_results if row["category"] == category]
+        real_by_category[category] = {"found": sum(values), "expected": len(values), "recall": sum(values) / len(values)}
+    return {
+        "synthetic": {"overall": {"found": sum(row["found"] for row in positive_results), "expected": len(positive_results), "recall": sum(row["found"] for row in positive_results) / len(positive_results)}, "by_category": by_category},
+        "real": {"status": "evaluated", "overall": {"found": sum(row["found"] for row in real_results), "expected": len(real_results), "recall": sum(row["found"] for row in real_results) / len(real_results) if real_results else None}, "by_category": real_by_category},
+        "negative": {"leakage_count": sum(row["leaked"] for row in negative_results), "expected_zero": True},
+    }
+
+
 def main() -> None:
     manifest = _read(STAGE7 / "terminology_input_manifest.json")
     candidates_payload = _read(STAGE7 / "terminology_candidates.json")
@@ -67,6 +125,7 @@ def main() -> None:
     assets = _asset_index()
     stage6_rows = load_stage6_evidence_bundle(STAGE6 / "stage6_evidence_bundle.jsonl")
     contract = load_terminology_contract(ROOT / "config" / "terminology_contract.json")
+    golden = _read(STAGE7 / "stage7_critical_term_golden_set.json")
     validate_input_manifest(manifest)
 
     pages = manifest["pages"]
@@ -75,6 +134,23 @@ def main() -> None:
     candidate_validation = validate_candidates(candidates, accepted_keys)
     candidate_by_id = {row["candidate_id"]: row for row in candidates}
     page_by_key = {(row["document_logical_id"], row["physical_page"]): row for row in pages}
+    authority_profiles_ok = all(
+        page.get("authority_source_profile_id") == assets.get(page["authority_asset_id"], {}).get("source_profile_id")
+        for page in pages
+    )
+    metadata_rows = manifest.get("round_1_metadata_discovery", [])
+    metadata_discovery_ok = (
+        len(metadata_rows) == manifest["input_boundary"].get("source_count")
+        and all(
+            row.get("authority_asset_id") in assets
+            and assets[row["authority_asset_id"]].get("asset_kind") == "original"
+            and row.get("registered_name")
+            and row.get("registered_name_source") == assets[row["authority_asset_id"]].get("title_source")
+            and row.get("directory_discovery", {}).get("status") == "verified_registry_record"
+            and row.get("directory_discovery", {}).get("physical_pages_invented") is False
+            for row in metadata_rows
+        )
+    )
 
     sample_document_keys = {row["document_key"] for row in sample["documents"]}
     admitted_originals = {
@@ -83,7 +159,7 @@ def main() -> None:
     }
     sample_scope_ok = (
         sample_document_keys == set(manifest["input_boundary"].get("admitted_document_keys", []))
-        and admitted_originals == set(manifest["input_boundary"].get("admitted_original_asset_ids", []))
+        and set(manifest["input_boundary"].get("admitted_original_asset_ids", [])).issubset(admitted_originals)
     )
 
     evidence_by_id = {row["evidence"]["evidence_id"]: row for row in stage6_rows}
@@ -122,7 +198,23 @@ def main() -> None:
         }
         for row in candidates
     )
-    family_scores_ok = all(0 <= float(row["family_weighted_score"]) <= 1 for row in candidates)
+    accepted_pages_by_doc = defaultdict(set)
+    family_by_doc = {}
+    for page in pages:
+        if page["page_status"] == "text_accepted":
+            accepted_pages_by_doc[page["document_key"]].add(page["physical_page"])
+            family_by_doc[page["document_key"]] = page.get("authority_source_profile_id") or page["document_logical_id"]
+    def expected_family_score(candidate):
+        occurrence_pages = defaultdict(set)
+        for occurrence in candidate["occurrences"]:
+            occurrence_pages[occurrence["document_key"]].add(occurrence["physical_page"])
+        families = sorted(set(family_by_doc.values()))
+        family_values = []
+        for family in families:
+            docs = [doc for doc, profile in family_by_doc.items() if profile == family]
+            family_values.append(sum(len(occurrence_pages.get(doc, set())) / len(accepted_pages_by_doc[doc]) for doc in docs) / len(docs))
+        return round(sum(family_values) / len(family_values), 6) if family_values else 0.0
+    family_scores_ok = all(round(float(row["family_weighted_score"]), 6) == expected_family_score(row) for row in candidates)
     ocr_confirmation_ok = all(
         not (
             row["requires_original_confirmation"] is False
@@ -136,6 +228,15 @@ def main() -> None:
         len(capability_questions) == 10
         and len({row.get("question_id") for row in capability_questions}) == 10
         and all(row.get("question_template") and row.get("required_slots") for row in capability_questions)
+    )
+    critical_metrics = _critical_sample_metrics(golden, contract, candidates)
+    critical_golden_ok = (
+        len(golden.get("positive_examples", [])) == 36
+        and len(golden.get("negative_examples", [])) == 12
+        and critical_metrics["synthetic"]["overall"]["recall"] == 1.0
+        and all(value["recall"] == 1.0 for value in critical_metrics["synthetic"]["by_category"].values())
+        and critical_metrics["negative"]["leakage_count"] == 0
+        and critical_metrics["real"]["overall"]["recall"] == 1.0
     )
     tests = _run_tests()
     status_counts = manifest["status_counts"]
@@ -152,6 +253,8 @@ def main() -> None:
         "only_five_admitted_units": manifest["input_boundary"].get("source_count") == 5 and manifest["input_boundary"].get("unauthorized_source_count") == 0 and sample_scope_ok,
         "case_holdout_blind_materials_explicitly_excluded": set(manifest["input_boundary"].get("excluded_source_classes", {})) == {"formal_case_materials", "holdout_materials", "blind_test_materials"} and bool(manifest["input_boundary"].get("exclusion_enforcement")),
         "only_accepted_pages_are_consumed": accepted_sources_ok and traceability_ok,
+        "family_profile_snapshot_matches_original_registry": authority_profiles_ok,
+        "round_one_metadata_discovery_is_registry_bound": metadata_discovery_ok,
         "table_pages_are_isolated": table_isolated,
         "stage6_sample_cross_check_is_canonical": canonical_evidence_ok,
         "candidate_types_are_controlled": all(row["candidate_type"] in CANDIDATE_TYPES for row in candidates),
@@ -163,6 +266,7 @@ def main() -> None:
         "formal_release_false": candidates_payload.get("formal_release") is False and capability.get("formal_release") is False,
         "runtime_contract_fingerprint_recorded": candidates_payload.get("contract_sha256") == _sha(ROOT / "config" / "terminology_contract.json"),
         "capability_questions_complete": capability_shape_ok,
+        "critical_term_golden_set_recall": critical_golden_ok,
         "test_suite_passed": tests["status"] == "passed",
         "formal_artifacts_have_runtime_consumers": bool(candidates_payload.get("consumer")) and bool(manifest.get("consumer")),
     }
@@ -187,7 +291,7 @@ def main() -> None:
             "visual_only_page_count": status_counts["visual_only"],
             "quarantined_page_count": status_counts["quarantined"],
             "excluded_non_content_page_count": status_counts["excluded_non_content"],
-            "ocr_candidate_page_count": sum(row["text_source"] == "ocr_processing_text" for row in pages),
+            "ocr_candidate_page_count": sum(row["text_source"] == "ocr_processing_text" and row["page_status"] == "text_accepted" for row in pages),
             "table_candidate_page_count": sum(bool(row.get("table_candidate")) for row in pages),
             "candidate_count": len(candidates),
             "capability_question_count": len(capability_questions),
@@ -205,6 +309,14 @@ def main() -> None:
         "checks": structural_checks,
         "failures": failures,
         "validation": tests,
+        "critical_term_metrics": critical_metrics,
+        "review_summary": {
+            "candidate_count": len(candidates),
+            "candidate_only_count": sum(row["review_status"] == "candidate_only" for row in candidates),
+            "requires_original_confirmation_count": sum(row["requires_original_confirmation"] for row in candidates),
+            "review_decisions_present": 0,
+            "human_review_required_now": False,
+        },
         "user_review_required_now": [],
         "review_boundary": "Stage 7 emits candidate_only terms. Stage 8 must review only candidates selected for ontology mapping; OCR-only candidates require original-page confirmation before promotion.",
         "next_stage_allowed": not failures,

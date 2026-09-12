@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import date
 import hashlib
 import json
@@ -18,8 +18,9 @@ import sys
 import pymupdf
 
 from turbine_kg.documents.catalog import IdentityCatalog, load_identity_catalog
-from turbine_kg.documents.pdf import parse_registered_pdf
 from turbine_kg.documents.models import record_value
+from turbine_kg.documents.pdf import parse_registered_pdf
+from turbine_kg.documents.profiles import LayoutProfile, load_layout_profile
 from turbine_kg.registry.source_inputs import sha256_file
 from turbine_kg.settings import PROJECT_ROOT, Settings
 
@@ -32,6 +33,7 @@ LAYOUT_PROFILES = PROJECT_ROOT / "config" / "layout_profiles.json"
 DOCUMENT_IR_CONTRACT = PROJECT_ROOT / "config" / "document_ir_contract.json"
 EXCEPTION_REVIEW = PROJECT_ROOT / "data" / "stage4" / "stage4_full_parse_exception_review_2026-09-09.json"
 MAX_DERIVED_PAGE_LAYOUT_DISTANCE = 0.30
+LAYOUT_PROFILE_ID = "adaptive_pdf_v1"
 
 
 class DocumentAuditError(RuntimeError):
@@ -65,6 +67,45 @@ def _assert_manifest_identity(item: dict, processing_record: dict) -> None:
     for field in ("asset_id", "document_logical_id", "revision_id", "sha256", "relative_path"):
         if item.get(field) != processing_record.get(field):
             raise ValueError(f"frozen manifest {field} differs from Registry for {item.get('asset_id')}")
+
+
+def _layout_profile_fingerprint(profile: LayoutProfile) -> str:
+    """Fingerprint the exact profile values passed to the parser."""
+    payload = asdict(profile)
+    return hashlib.sha256(
+        json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+
+
+def _parse_registered_pdf(
+    path: Path,
+    relative_path: str,
+    catalog: IdentityCatalog,
+    *,
+    title: str,
+    profile: LayoutProfile,
+    config_fingerprint: str,
+    page_indices: tuple[int, ...] | None = None,
+):
+    """Parse a registered asset with the profile selected from Stage 4 config.
+
+    The public Registry bridge receives the selected profile explicitly.  Its
+    historical interface has no config-fingerprint parameter, so the audit
+    attaches the fingerprint of those exact profile values to the returned
+    parsing-run metadata at this boundary.
+    """
+    ir = parse_registered_pdf(
+        path,
+        relative_path,
+        catalog,
+        title=title,
+        profile=profile,
+        page_indices=page_indices,
+    )
+    return replace(
+        ir,
+        parsing_run=replace(ir.parsing_run, config_fingerprint=config_fingerprint),
+    )
 
 
 def _page_layout_bits(page) -> list[bool]:
@@ -188,19 +229,37 @@ def _page_mode_numbers(ir) -> dict[str, list[int]]:
     return dict(sorted(modes.items()))
 
 
-def _parse_with_page_failure_isolation(path: Path, relative_path: str, catalog: IdentityCatalog, *, title: str, expected_pages: int):
+def _parse_with_page_failure_isolation(
+    path: Path,
+    relative_path: str,
+    catalog: IdentityCatalog,
+    *,
+    title: str,
+    expected_pages: int,
+    profile: LayoutProfile,
+    config_fingerprint: str,
+):
     """Report a concrete page list when full-document parsing cannot complete."""
     try:
-        return parse_registered_pdf(path, relative_path, catalog, title=title), []
+        return _parse_registered_pdf(
+            path,
+            relative_path,
+            catalog,
+            title=title,
+            profile=profile,
+            config_fingerprint=config_fingerprint,
+        ), []
     except Exception as full_error:
         page_failures: list[dict] = []
         for page_index in range(expected_pages):
             try:
-                parse_registered_pdf(
+                _parse_registered_pdf(
                     path,
                     relative_path,
                     catalog,
                     title=title,
+                    profile=profile,
+                    config_fingerprint=config_fingerprint,
                     page_indices=(page_index,),
                 )
             except Exception as page_error:
@@ -220,6 +279,8 @@ def _audit_document(
     catalog: IdentityCatalog,
     records: dict[str, dict],
     settings: Settings,
+    profile: LayoutProfile,
+    config_fingerprint: str,
 ) -> dict:
     processing_asset = catalog.asset_for_id(item["asset_id"])
     source_asset = (
@@ -256,6 +317,8 @@ def _audit_document(
         catalog,
         title=item["document_logical_id"],
         expected_pages=expected_pages,
+        profile=profile,
+        config_fingerprint=config_fingerprint,
     )
     if page_failures:
         raise DocumentAuditError("page-level parsing failures detected", page_failures=page_failures)
@@ -334,6 +397,8 @@ def _audit_document(
 
 def run_audit() -> dict:
     settings = Settings.from_environment()
+    profile = load_layout_profile(LAYOUT_PROFILES, LAYOUT_PROFILE_ID)
+    config_fingerprint = _layout_profile_fingerprint(profile)
     catalog = load_identity_catalog(REGISTRY_ASSETS, REVISION_CATALOG, DERIVED_LINKS)
     records = _load_jsonl(REGISTRY_ASSETS)
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -351,7 +416,16 @@ def run_audit() -> dict:
     failures: list[dict] = []
     for item in manifest["source_documents"]:
         try:
-            rows.append(_audit_document(item, catalog=catalog, records=records, settings=settings))
+            rows.append(
+                _audit_document(
+                    item,
+                    catalog=catalog,
+                    records=records,
+                    settings=settings,
+                    profile=profile,
+                    config_fingerprint=config_fingerprint,
+                )
+            )
         except DocumentAuditError as exc:
             failures.append({
                 "asset_id": item["asset_id"],
@@ -401,6 +475,8 @@ def run_audit() -> dict:
             "audit_script_sha256": _sha256(Path(__file__).resolve()),
             "registry_snapshot": snapshot,
             "layout_profile_sha256": _sha256(LAYOUT_PROFILES),
+            "layout_profile_id": profile.profile_id,
+            "layout_profile_config_fingerprint": config_fingerprint,
             "document_ir_contract_sha256": _sha256(DOCUMENT_IR_CONTRACT),
             "python_version": sys.version.split()[0],
             "pymupdf_version": getattr(pymupdf, "VersionBind", "unknown"),

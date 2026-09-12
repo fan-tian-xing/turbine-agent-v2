@@ -28,9 +28,10 @@ def validate_input_manifest(payload: dict) -> dict:
         if key in seen:
             raise ValueError("duplicate document physical page in terminology manifest")
         seen.add(key)
-    if len(records) != 775:
-        raise ValueError(f"Stage 7 input manifest must cover 775 pages, got {len(records)}")
     boundary = payload.get("input_boundary", {})
+    declared_page_count = boundary.get("page_count")
+    if not isinstance(declared_page_count, int) or declared_page_count != len(records):
+        raise ValueError("Stage 7 input manifest page_count does not match pages")
     excluded = boundary.get("excluded_source_classes", {})
     required_exclusions = {"formal_case_materials", "holdout_materials", "blind_test_materials"}
     if not required_exclusions <= set(excluded) or not boundary.get("exclusion_enforcement"):

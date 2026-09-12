@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 
 from turbine_kg.terminology.analyzer import load_stage6_evidence_bundle
+
+from evaluate_stage6_evidence import (
+    merge_component_annotations,
+    validate_persisted_identity,
+    validate_table_decision_binding,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,18 +31,32 @@ def _jsonl(path: str) -> list[dict]:
     ]
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=STAGE6 / "stage6_exit_audit.json",
+        help="exit audit output path",
+    )
+    args = parser.parse_args(argv)
     golden = _json("stage6_evidence_golden_sample.json")
     text_audit = _json("stage6_evidence_build_audit.json")
     quality_audit = _json("stage6_evidence_quality_audit.json")
     table_audit = _json("stage6_table_evidence_audit.json")
     text_items = _jsonl("stage6_evidence_annotations.jsonl")
     table_items = _jsonl("stage6_table_evidence_annotations.jsonl")
-    canonical_items = text_items + table_items
+    try:
+        canonical_items = merge_component_annotations(text_items, table_items)
+    except (KeyError, TypeError, ValueError) as exc:
+        raise SystemExit(f"invalid Stage 6 component annotations: {exc}") from exc
     canonical_path = STAGE6 / "stage6_evidence_bundle.jsonl"
     if not canonical_path.is_file():
         raise SystemExit("missing canonical Stage 6 Evidence bundle")
     loaded_canonical_items = load_stage6_evidence_bundle(canonical_path)
+    table_decisions = {
+        row["review_id"]: row for row in _jsonl("stage6_table_review_decisions.jsonl")
+    }
 
     expected_text_pages = {
         (row["document_key"], int(row["physical_page"]))
@@ -58,6 +79,13 @@ def main() -> None:
     actual_table_pages = {
         (row["document_key"], int(row["input"]["physical_page"])) for row in table_items
     }
+    persisted_identity_ok = all(
+        all(validate_persisted_identity(row).values()) for row in canonical_items
+    )
+    table_review_binding_ok = all(
+        validate_table_decision_binding(row, table_decisions.get(row.get("review_id")))
+        for row in table_items
+    )
 
     checks = {
         "golden_sample_has_36_pages": golden["sample_page_count"] == 36 == len(golden["records"]),
@@ -90,7 +118,9 @@ def main() -> None:
         "no_unreviewed_table_regions": table_audit["remaining_quarantined_page_count"] == 0,
         "canonical_evidence_ids_unique": len(loaded_canonical_items) == len({row["evidence"]["evidence_id"] for row in loaded_canonical_items}),
         "canonical_bundle_matches_components": loaded_canonical_items == canonical_items,
-        "stage7_consumer_available": callable(load_stage6_evidence_bundle),
+        "persisted_evidence_identity_and_text_hashes_recomputed": persisted_identity_ok,
+        "table_review_decisions_bind_actual_bbox_headers_and_continuations": table_review_binding_ok,
+        "stage7_consumer_reads_canonical_bundle": bool(loaded_canonical_items),
     }
     failures = [name for name, passed in checks.items() if not passed]
     status = "complete" if not failures else "blocked"
@@ -122,7 +152,7 @@ def main() -> None:
         ],
         "dead_code_orphan_output_review": {
             "status": "pass",
-            "canonical_outputs_have_consumers": callable(load_stage6_evidence_bundle),
+            "canonical_outputs_have_consumers": bool(loaded_canonical_items),
             "canonical_bundle_is_read_not_regenerated": True,
             "initial_vertical_slice_is_non_authoritative_diagnostic": True,
             "temporary_render_outputs_are_not_formal_artifacts": True,
@@ -140,7 +170,7 @@ def main() -> None:
         "next_stage_allowed": status == "complete",
         "next_stage": "Stage 7 terminology analysis and business capability questions",
     }
-    output = STAGE6 / "stage6_exit_audit.json"
+    output = args.output
     output.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": status, "checks": len(checks), "failures": failures}, ensure_ascii=False))
     if failures:

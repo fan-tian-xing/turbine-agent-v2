@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_exit_audit",
+  "audited_at": "2026-09-12",
+  "status": "complete_with_quarantine",
+  "closure_status": "closed_with_quarantine",
+  "formal_release": false,
+  "owner_confirmed_quality_policy": {
+    "content_must_match_original_exactly": true,
+    "critical_tokens": [
+      "Chinese characters",
+      "digits",
+      "decimal points",
+      "units",
+      "negation terms"
+    ],
+    "layout_requirements": [
+      "table row/column and continuation relationships",
+      "formula meaning",
+      "figure/caption association"
+    ],
+    "similarity_is_acceptance_metric": false,
+    "unresolved_visual_content_must_not_enter_structured_evidence": true
+  },
+  "checks": {
+    "frozen_provenance_consistent": true,
+    "sample_manifest_five_documents": true,
+    "sample_manifest_36_pages": true,
+    "sample_manifest_physical_page_contract": true,
+    "input_audit_pass": true,
+    "full_baseline_775_pages": true,
+    "full_baseline_zero_failures": true,
+    "rapidocr_sample_36_pages": true,
+    "rapidocr_zero_failures": true,
+    "engine_choice_recorded": true,
+    "table_candidate_scope_corrected": true,
+    "table_structural_truth_complete": true,
+    "table_cell_accuracy_boundary_explicit": true,
+    "golden_sample_visual_review_complete": true,
+    "page_identity_reconciled": true,
+    "original_pdf_quality_benchmark_recorded": true
+  },
+  "completed_scope": {
+    "document_count": 5,
+    "page_count": 775,
+    "golden_sample_page_count": 36,
+    "rapidocr_sample_page_count": 36,
+    "table_candidate_count": 7,
+    "actual_table_page_count": 6,
+    "complex_layout_not_table_count": 1,
+    "table_cell_accuracy_status": "not_scored_for_quarantined_structured_regions",
+    "low_text_record_count_all_pages": 3,
+    "low_text_candidate_count_excluding_expected_exception_modes": 1
+  },
+  "low_similarity_scanned_pages": [
+    {
+      "document_key": "D300N",
+      "pdf_page": 94,
+      "fresh_vs_registered_similarity": 0.953846,
+      "status": "codex_first_pass_complete_user_escalation_only_if_uncertain"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "pdf_page": 300,
+      "fresh_vs_registered_similarity": 0.898286,
+      "status": "codex_first_pass_complete_user_escalation_only_if_uncertain"
+    }
+  ],
+  "quality_benchmark": {
+    "path": "data/stage5/stage5_quality_benchmark_2026-09-10.json",
+    "status": "complete_with_quarantine",
+    "authority": "Original materials original PDF; scanned-page text is scored only against independent manual transcription",
+    "rapidocr": {
+      "scored_text_page_count": 10,
+      "visual_only_or_quarantined_page_count": 26,
+      "char_accuracy_mean": 0.936427,
+      "critical_tokens": {
+        "numbers": {
+          "precision": 0.942613,
+          "recall": 0.93852,
+          "f1": 0.940424
+        },
+        "units": {
+          "precision": 0.83,
+          "recall": 0.9,
+          "f1": 0.855556
+        },
+        "negations": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "native_geometry_scored_page_count": 12,
+      "bbox_iou_mean": 0.54459,
+      "reading_order_similarity_mean": 0.360473,
+      "runtime": {
+        "total_seconds": 180.641558,
+        "mean_page_seconds": 5.017821,
+        "p95_page_seconds": 10.18285
+      }
+    },
+    "table_quality": {
+      "table_page_count": 6,
+      "cell_accuracy_scored_page_count": 0,
+      "cell_accuracy_status": "quarantined_not_scored",
+      "quarantine_coverage": "6/6"
+    }
+  },
+  "audit_mode": "frozen_stage5_artifact_read_only",
+  "automatic_recheck": false,
+  "manual_recheck_trigger": "仅在负责人明确要求或主动确认原始资料/OCR代码发生变化时重新执行阶段5复核",
+  "next_stage_allowed": true,
+  "next_stage_message": "Stage 6 may begin for original-page-verified, reliably locatable regions; quarantined pages and structured regions require region/cell review first.",
+  "next_stage_inputs": [
+    "data/stage5/stage5_sample_manifest.json",
+    "data/stage5/stage5_truth_annotations_*.json",
+    "data/stage5/stage5_quality_benchmark_*.json",
+    "data/stage5/stage5_exit_audit_*.json",
+    "Original materials original PDF pages"
+  ],
+  "artifact_provenance": {
+    "input_fingerprint": "7feac660c1c4dadb896369d40088fb9815960e6492b730b51779a1f4cd856cd7",
+    "review_snapshot_date": "2026-09-09",
+    "selected_artifacts": {
+      "input_audit": "data/stage5/stage5_input_audit_2026-09-10.json",
+      "baseline": "data/stage5/stage5_baseline_benchmark_2026-09-10.json",
+      "rapidocr": "data/stage5/stage5_rapidocr_sample_benchmark_2026-09-10.json",
+      "engine_decision": "data/stage5/stage5_engine_decision_2026-09-10.json",
+      "quality": "data/stage5/stage5_quality_benchmark_2026-09-10.json",
+      "tables": "data/stage5/stage5_table_baseline_2026-09-09.json",
+      "table_truth": "data/stage5/stage5_table_truth_review_2026-09-09.json",
+      "page_identity": "data/stage5/stage5_page_identity_audit_2026-09-09.json",
+      "golden_review": "data/stage5/stage5_golden_sample_review_2026-09-09.json",
+      "sample": "data/stage5/stage5_sample_manifest.json"
+    },
+    "fingerprint_comparison_performed": true,
+    "fingerprint_match_status": "matched"
+  },
+  "blocking_items": [],
+  "owner_review_needed_in_chat": [],
+  "boundaries": [
+    "本审计不把 RapidOCR 与既有文本的相似度当作 OCR 准确率。",
+    "规则线检测只产生表格候选区域，不代表单元格解析已通过。",
+    "表格或图示无法可靠结构化时，只保留原始页视觉依据并隔离出正式 Evidence 流程。"
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "stage": "8",
+  "artifact_kind": "stage8_entry_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/build_stage8_ontology.py",
+  "inputs": {
+    "terminology_input_manifest": {
+      "path": "data/stage7/terminology_input_manifest.json",
+      "sha256": "347dc00235a8a45fa8087aa1f0927389f21b585bc42e992d745f8fe07c158a49"
+    },
+    "terminology_candidates": {
+      "path": "data/stage7/terminology_candidates.json",
+      "sha256": "803b697f951df42a0741e51ac725362d602f8076d3130ee8df6ecff47d77f13e"
+    },
+    "business_capability_questions": {
+      "path": "data/stage7/business_capability_questions.json",
+      "sha256": "0a00084853feaad9e8c265459d63064eaa73e7a6c7ebf49020c7e6f1c0dfde9e"
+    },
+    "ontology_contract": {
+      "path": "config/ontology_contract.json",
+      "sha256": "30015d3544c3378b7122046d28705478155808d525bda03a30b33e6d6fe002f2"
+    },
+    "mapping_review_overlay": {
+      "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
+      "sha256": "476c4b7a3dc98947f67afadc159fd102e2351ca78e3b13f9f271a0c1756a1e20"
+    }
+  },
+  "outputs": {
+    "ontology": "ontology/minimal_turbine.ttl",
+    "mapping_shortlist": "data/stage8/ontology_mapping_shortlist.json",
+    "review_queue": "data/stage8/ontology_mapping_review_queue.jsonl",
+    "exit_audit": "data/stage8/stage8_exit_audit.json"
+  },
+  "counts": {
+    "shortlist_count": 3,
+    "reviewed_accepted_count": 3,
+    "reviewed_deferred_count": 4,
+    "review_pending_count": 0,
+    "original_page_confirmation_pending_count": 0
+  },
+  "checks": {
+    "minimal_owl_built": true,
+    "stage7_candidate_only_input": true,
+    "candidate_content_fingerprints_bound": true,
+    "original_page_evidence_bound": true,
+    "automatic_promotion_disabled": true,
+    "numeric_only_values_excluded": true,
+    "sentence_and_scope_fragments_excluded": true,
+    "review_overlay_fingerprints_bound": true,
+    "candidate_dispositions_recorded": true,
+    "future_scope_deferred": true,
+    "manual_mapping_review_complete": true
+  },
+  "review_boundary": "Stage 8 mapping review is complete; no formal vocabulary or Release is produced.",
+  "next_stage_allowed": true,
+  "next_stage": "Stage 9 OWL/SHACL semantic authority package"
+}

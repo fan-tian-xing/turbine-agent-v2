@@ -1,0 +1,128 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix tv2: <https://example.invalid/turbine-v2#> .
+
+tv2: a owl:Ontology ;
+    rdfs:label "核电汽轮机安调 v2 最小本体"@zh ;
+    rdfs:comment "Stage 8 最小本体设计；不包含案例、SHACL 或 Release。"@zh .
+
+tv2:PhysicalEntity a owl:Class ;
+    rdfs:label "物理实体"@zh ;
+    rdfs:comment "设备、系统、部件等物理对象的稳定顶层类别。"@zh .
+
+tv2:ProcessEntity a owl:Class ;
+    rdfs:label "过程实体"@zh ;
+    rdfs:comment "工序、动作和实际过程的稳定顶层类别。"@zh .
+
+tv2:InformationEntity a owl:Class ;
+    rdfs:label "信息实体"@zh ;
+    rdfs:comment "文档、信息缺口和可描述信息的稳定顶层类别。"@zh .
+
+tv2:Situation a owl:Class ;
+    rdfs:label "情境"@zh ;
+    rdfs:comment "异常、缺陷、风险和其他工程情境的稳定顶层类别。"@zh .
+
+tv2:Context a owl:Class ;
+    rdfs:label "上下文"@zh ;
+    rdfs:comment "机型、工况、生命周期阶段和其他适用边界的稳定顶层类别。"@zh .
+
+tv2:Equipment a owl:Class ;
+    rdfs:subClassOf tv2:PhysicalEntity ;
+    rdfs:label "设备"@zh ;
+    rdfs:comment "可被识别、适用和核验的工程设备。"@zh .
+
+tv2:Component a owl:Class ;
+    rdfs:subClassOf tv2:PhysicalEntity ;
+    rdfs:label "部件"@zh ;
+    rdfs:comment "设备的部件或可独立定位的组成对象。"@zh .
+
+tv2:ProcedureDefinition a owl:Class ;
+    rdfs:subClassOf tv2:ProcessEntity ;
+    rdfs:label "工序定义"@zh ;
+    rdfs:comment "描述一组有序工程步骤的过程定义。"@zh .
+
+tv2:StepDefinition a owl:Class ;
+    rdfs:subClassOf tv2:ProcessEntity ;
+    rdfs:label "步骤定义"@zh ;
+    rdfs:comment "工序中的可排序步骤定义。"@zh .
+
+tv2:EngineeringStatement a owl:Class ;
+    rdfs:subClassOf tv2:InformationEntity ;
+    rdfs:label "工程断言"@zh ;
+    rdfs:comment "由 Evidence 支持且可核验的工程断言。"@zh .
+
+tv2:Evidence a owl:Class ;
+    rdfs:subClassOf tv2:InformationEntity ;
+    rdfs:label "证据"@zh ;
+    rdfs:comment "支持工程断言的来源证据引用。"@zh .
+
+tv2:ApplicabilityScope a owl:Class ;
+    rdfs:subClassOf tv2:Context ;
+    rdfs:label "适用范围"@zh ;
+    rdfs:comment "结论、要求或步骤适用的机型、工况和生命周期边界。"@zh .
+
+tv2:QuantityValue a owl:Class ;
+    rdfs:subClassOf tv2:InformationEntity ;
+    rdfs:label "量值"@zh ;
+    rdfs:comment "带数值、单位及可选位置和条件的工程量值。"@zh .
+
+tv2:hasComponent a owl:ObjectProperty ;
+    rdfs:domain tv2:Equipment ;
+    rdfs:range tv2:Component ;
+    rdfs:label "具有部件"@zh .
+
+tv2:hasStep a owl:ObjectProperty ;
+    rdfs:domain tv2:ProcedureDefinition ;
+    rdfs:range tv2:StepDefinition ;
+    rdfs:label "包含步骤"@zh .
+
+tv2:precedes a owl:ObjectProperty ;
+    rdfs:domain tv2:StepDefinition ;
+    rdfs:range tv2:StepDefinition ;
+    rdfs:label "先于"@zh .
+
+tv2:hasProcedureDefinition a owl:ObjectProperty ;
+    rdfs:domain tv2:Equipment ;
+    rdfs:range tv2:ProcedureDefinition ;
+    rdfs:label "具有工序定义"@zh .
+
+tv2:aboutEntity a owl:ObjectProperty ;
+    rdfs:domain tv2:EngineeringStatement ;
+    rdfs:range tv2:PhysicalEntity ;
+    rdfs:label "关于对象"@zh .
+
+tv2:hasApplicabilityScope a owl:ObjectProperty ;
+    rdfs:domain tv2:EngineeringStatement ;
+    rdfs:range tv2:ApplicabilityScope ;
+    rdfs:label "具有适用范围"@zh .
+
+tv2:supportedBy a owl:ObjectProperty ;
+    rdfs:domain tv2:EngineeringStatement ;
+    rdfs:range tv2:Evidence ;
+    rdfs:label "由证据支持"@zh .
+
+tv2:hasQuantityValue a owl:ObjectProperty ;
+    rdfs:domain tv2:EngineeringStatement ;
+    rdfs:range tv2:QuantityValue ;
+    rdfs:label "具有量值"@zh .
+
+tv2:describes a owl:ObjectProperty ;
+    rdfs:domain tv2:Evidence ;
+    rdfs:range tv2:InformationEntity ;
+    rdfs:label "描述"@zh .
+
+tv2:normalizedLabel a owl:DatatypeProperty ;
+    rdfs:domain tv2:InformationEntity ;
+    rdfs:range xsd:string ;
+    rdfs:label "规范标签"@zh .
+
+tv2:numericValue a owl:DatatypeProperty ;
+    rdfs:domain tv2:QuantityValue ;
+    rdfs:range xsd:decimal ;
+    rdfs:label "数值"@zh .
+
+tv2:unitSymbol a owl:DatatypeProperty ;
+    rdfs:domain tv2:QuantityValue ;
+    rdfs:range xsd:string ;
+    rdfs:label "单位符号"@zh .

@@ -56,7 +56,7 @@
     "only_five_admitted_units": true,
     "case_holdout_blind_materials_explicitly_excluded": true,
     "only_accepted_pages_are_consumed": true,
-    "family_profile_snapshot_matches_original_registry": true,
+    "authority_source_profile_snapshot_matches_registry": true,
     "admitted_documents_have_unique_logical_identity": true,
     "round_one_metadata_discovery_is_registry_bound": true,
     "table_pages_are_isolated": true,
@@ -81,7 +81,7 @@
     "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
     "status": "passed",
     "returncode": 0,
-    "stdout_tail": "........................................................................ [ 46%]\n........................................................................ [ 92%]\n...........                                                              [100%]\n",
+    "stdout_tail": "........................................................................ [ 44%]\n........................................................................ [ 88%]\n...................                                                      [100%]\n",
     "stderr_tail": ""
   },
   "critical_term_metrics": {

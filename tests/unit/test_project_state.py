@@ -21,6 +21,10 @@ def test_project_state_is_the_current_state_source():
     else:
         assert state["next_stage"] is None
 
+    boundaries = state["boundaries"]
+    assert any("阶段 7 候选不得自动 promotion" in item for item in boundaries)
+    assert not any("高风险、缩写、OCR 变体及同义/旧称关系均须人工审核后才能进入阶段 8" in item for item in boundaries)
+
 
 def test_project_state_references_matching_stage_exit_audits():
     state = _read_json("data/project_state.json")
@@ -32,6 +36,15 @@ def test_project_state_references_matching_stage_exit_audits():
         assert audit["stage"] == stage
         assert audit["status"] == stage_state["status"]
 
-    current_audit = _read_json(state["stages"][str(state["current_stage"])] ["exit_audit"])
-    assert current_audit["status"] == state["current_stage_status"]
-    assert bool(current_audit["next_stage_allowed"]) == (state["next_stage_status"] == "ready")
+    current_stage = state["stages"][str(state["current_stage"])]
+    if state["current_stage_status"] == "complete":
+        current_audit = _read_json(current_stage["exit_audit"])
+        assert current_audit["status"] == state["current_stage_status"]
+        assert bool(current_audit["next_stage_allowed"]) == (state["next_stage_status"] == "ready")
+    else:
+        assert state["current_stage_status"] == "in_progress"
+        assert current_stage["status"] == "in_progress"
+        assert current_stage.get("entry_record")
+        entry = _read_json(current_stage["entry_record"])
+        assert entry["stage"] == str(state["current_stage"])
+        assert entry["status"] == "in_progress"

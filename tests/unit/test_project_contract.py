@@ -74,6 +74,10 @@ def test_roadmap_orders_claim_validation_before_cli_and_activation():
     assert "本阶段范围明确为 `golden_sample_only`" in plan
     assert "`terminology_input_manifest`" in plan
     assert "按每个 admitted document 等权归一化" in plan
+    assert "阶段 5～6 已用于页面/OCR/版面/Evidence 技术选择的 36 页统一作为 `development/regression golden`" in plan
+    assert "从正式资料中另外分层抽取此前未参与对应技术调优的样本作为 `acceptance_holdout`" in plan
+    assert "输入安全与鲁棒性" in plan
+    assert "用户输入试图绕过 Evidence-only 约束" in plan
     assert "Statement 保持原子化" not in plan
     assert "上下文不完整时先检索并回答" in plan
     assert "问题上下文不足时先澄清" not in plan

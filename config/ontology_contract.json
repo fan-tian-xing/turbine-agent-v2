@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "stage": "8",
+  "artifact_kind": "ontology_contract",
+  "status": "draft_for_manual_mapping_review",
+  "formal_release": false,
+  "namespace": "https://example.invalid/turbine-v2#",
+  "semantic_authority": "ontology/minimal_turbine.ttl",
+  "design_input": "config/ontology_contract.json",
+  "top_level_classes": [
+    {"id": "PhysicalEntity", "label": "物理实体", "comment": "设备、系统、部件等物理对象的稳定顶层类别。"},
+    {"id": "ProcessEntity", "label": "过程实体", "comment": "工序、动作和实际过程的稳定顶层类别。"},
+    {"id": "InformationEntity", "label": "信息实体", "comment": "文档、信息缺口和可描述信息的稳定顶层类别。"},
+    {"id": "Situation", "label": "情境", "comment": "异常、缺陷、风险和其他工程情境的稳定顶层类别。"},
+    {"id": "Context", "label": "上下文", "comment": "机型、工况、生命周期阶段和其他适用边界的稳定顶层类别。"}
+  ],
+  "runtime_classes": [
+    {"id": "Equipment", "parent": "PhysicalEntity", "label": "设备", "comment": "可被识别、适用和核验的工程设备。"},
+    {"id": "Component", "parent": "PhysicalEntity", "label": "部件", "comment": "设备的部件或可独立定位的组成对象。"},
+    {"id": "ProcedureDefinition", "parent": "ProcessEntity", "label": "工序定义", "comment": "描述一组有序工程步骤的过程定义。"},
+    {"id": "StepDefinition", "parent": "ProcessEntity", "label": "步骤定义", "comment": "工序中的可排序步骤定义。"},
+    {"id": "EngineeringStatement", "parent": "InformationEntity", "label": "工程断言", "comment": "由 Evidence 支持且可核验的工程断言。"},
+    {"id": "Evidence", "parent": "InformationEntity", "label": "证据", "comment": "支持工程断言的来源证据引用。"},
+    {"id": "ApplicabilityScope", "parent": "Context", "label": "适用范围", "comment": "结论、要求或步骤适用的机型、工况和生命周期边界。"},
+    {"id": "QuantityValue", "parent": "InformationEntity", "label": "量值", "comment": "带数值、单位及可选位置和条件的工程量值。"}
+  ],
+  "object_properties": [
+    {"id": "hasComponent", "domain": "Equipment", "range": "Component", "label": "具有部件"},
+    {"id": "hasStep", "domain": "ProcedureDefinition", "range": "StepDefinition", "label": "包含步骤"},
+    {"id": "precedes", "domain": "StepDefinition", "range": "StepDefinition", "label": "先于"},
+    {"id": "hasProcedureDefinition", "domain": "Equipment", "range": "ProcedureDefinition", "label": "具有工序定义"},
+    {"id": "aboutEntity", "domain": "EngineeringStatement", "range": "PhysicalEntity", "label": "关于对象"},
+    {"id": "hasApplicabilityScope", "domain": "EngineeringStatement", "range": "ApplicabilityScope", "label": "具有适用范围"},
+    {"id": "supportedBy", "domain": "EngineeringStatement", "range": "Evidence", "label": "由证据支持"},
+    {"id": "hasQuantityValue", "domain": "EngineeringStatement", "range": "QuantityValue", "label": "具有量值"},
+    {"id": "describes", "domain": "Evidence", "range": "InformationEntity", "label": "描述"}
+  ],
+  "datatype_properties": [
+    {"id": "normalizedLabel", "domain": "InformationEntity", "range": "http://www.w3.org/2001/XMLSchema#string", "label": "规范标签"},
+    {"id": "numericValue", "domain": "QuantityValue", "range": "http://www.w3.org/2001/XMLSchema#decimal", "label": "数值"},
+    {"id": "unitSymbol", "domain": "QuantityValue", "range": "http://www.w3.org/2001/XMLSchema#string", "label": "单位符号"}
+  ],
+  "candidate_mapping": {
+    "allowed_candidate_types": {
+      "equipment": {"target_class": "Equipment", "mapping_kind": "class_label"},
+      "component": {"target_class": "Component", "mapping_kind": "class_label"},
+      "process": {"target_class": "ProcedureDefinition", "mapping_kind": "class_label"},
+      "phenomenon": {"target_class": "Situation", "mapping_kind": "class_label"}
+    },
+    "deferred_candidate_types": ["action", "parameter", "requirement", "verification", "applicability_condition", "abbreviation_candidate", "synonym_candidate", "old_name_candidate", "ocr_variant_candidate"],
+    "excluded_candidate_types": ["parameter", "requirement", "verification", "applicability_condition", "abbreviation_candidate", "synonym_candidate", "old_name_candidate", "ocr_variant_candidate"],
+    "filter_policy": {
+      "shortlist_is_concept_only": true,
+      "exclude_numeric_only_values": true,
+      "exclude_sentence_or_scope_fragments": true,
+      "exclude_shadowed_process_prefixes": true,
+      "defer_generic_process_labels": ["安装", "找中", "调整", "更换", "运行"],
+      "defer_generic_process_suffixes": ["运行", "安装", "找中", "调整", "更换", "调试"],
+      "minimum_process_label_chars": 4,
+      "max_candidates_by_type": {"process": 1},
+      "fragment_prefixes": ["当", "应", "应当", "如果", "若", "如", "在", "并", "且", "则", "因为", "由于", "不得", "防止", "进行", "开展", "确保"],
+      "chapter_prefix_pattern": "^第[0-9一二三四五六七八九十]+章",
+      "excluded_candidate_types_are_not_deleted": true
+    },
+    "candidate_disposition_schema": ["class", "property_value", "alias", "individual", "reject", "defer"],
+    "max_candidates_per_type": 2,
+    "required_candidate_status": "candidate_only",
+    "requires_original_confirmation_for_promotion": true,
+    "automatic_promotion": false,
+    "review_status": "pending_manual_review"
+  },
+  "capability_status": {
+    "cap-01": "supported_by_minimal_classes",
+    "cap-02": "supported_by_minimal_classes",
+    "cap-03": "supported_by_minimal_classes",
+    "cap-04": "supported_by_minimal_classes",
+    "cap-05": "partially_supported_context_only",
+    "cap-06": "supported_by_minimal_classes",
+    "cap-07": "partially_supported_without_verification_result",
+    "cap-08": "partially_supported_information_gap_only",
+    "cap-09": "deferred_to_stage_21_case_model",
+    "cap-10": "deferred_to_stage_21_case_model"
+  },
+  "capability_coverage": {
+    "cap-01": ["Equipment", "EngineeringStatement", "ApplicabilityScope"],
+    "cap-02": ["ProcedureDefinition", "StepDefinition"],
+    "cap-03": ["QuantityValue", "ApplicabilityScope"],
+    "cap-04": ["Situation", "PhysicalEntity"],
+    "cap-05": ["InformationEntity", "ApplicabilityScope"],
+    "cap-06": ["Evidence", "EngineeringStatement"],
+    "cap-07": ["EngineeringStatement", "ApplicabilityScope"],
+    "cap-08": ["InformationEntity"],
+    "cap-09": ["InformationEntity", "ProcessEntity"],
+    "cap-10": ["InformationEntity", "Situation"]
+  },
+  "deferred_scope": ["EngineeringCase", "现场活动", "批准", "验证结果", "SHACL 约束包", "正式运行词汇", "Release"],
+  "inputs": [
+    "data/stage7/terminology_input_manifest.json",
+    "data/stage7/terminology_candidates.json",
+    "data/stage7/business_capability_questions.json"
+  ],
+  "producer": "scripts/build_stage8_ontology.py",
+  "consumer": ["Stage 8 ontology mapping review queue", "Stage 8 contract tests", "Stage 9 OWL/SHACL semantic authority package"]
+}

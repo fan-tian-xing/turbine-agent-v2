@@ -273,7 +273,7 @@ def main() -> None:
         "only_five_admitted_units": manifest["input_boundary"].get("source_count") == 5 and manifest["input_boundary"].get("unauthorized_source_count") == 0 and sample_scope_ok,
         "case_holdout_blind_materials_explicitly_excluded": set(manifest["input_boundary"].get("excluded_source_classes", {})) == {"formal_case_materials", "holdout_materials", "blind_test_materials"} and bool(manifest["input_boundary"].get("exclusion_enforcement")),
         "only_accepted_pages_are_consumed": accepted_sources_ok and traceability_ok,
-        "family_profile_snapshot_matches_original_registry": authority_profiles_ok,
+        "authority_source_profile_snapshot_matches_registry": authority_profiles_ok,
         "admitted_documents_have_unique_logical_identity": document_identity_ok,
         "round_one_metadata_discovery_is_registry_bound": metadata_discovery_ok,
         "table_pages_are_isolated": table_isolated,

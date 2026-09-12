@@ -4,27 +4,31 @@
   "artifact_kind": "stage8_exit_audit",
   "status": "complete",
   "formal_release": false,
-  "producer": "scripts/build_stage8_ontology.py",
+  "producer": "scripts/audit_stage8_exit.py",
   "inputs": {
-    "terminology_input_manifest": {
-      "path": "data/stage7/terminology_input_manifest.json",
-      "sha256": "347dc00235a8a45fa8087aa1f0927389f21b585bc42e992d745f8fe07c158a49"
+    "ontology_contract": {
+      "path": "config/ontology_contract.json",
+      "sha256": "e70b77b48e1dce170b3beff1b27ff18db83733d1c3930e515277bde6a2c94af2"
     },
     "terminology_candidates": {
       "path": "data/stage7/terminology_candidates.json",
       "sha256": "803b697f951df42a0741e51ac725362d602f8076d3130ee8df6ecff47d77f13e"
     },
-    "business_capability_questions": {
-      "path": "data/stage7/business_capability_questions.json",
-      "sha256": "0a00084853feaad9e8c265459d63064eaa73e7a6c7ebf49020c7e6f1c0dfde9e"
+    "mapping_shortlist": {
+      "path": "data/stage8/ontology_mapping_shortlist.json",
+      "sha256": "3020ba9940f33008321e5bb2b8965e23a82c8b90b9ccabaa28c2b05660fcd078"
     },
-    "ontology_contract": {
-      "path": "config/ontology_contract.json",
-      "sha256": "30015d3544c3378b7122046d28705478155808d525bda03a30b33e6d6fe002f2"
-    },
-    "mapping_review_overlay": {
+    "review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
-      "sha256": "476c4b7a3dc98947f67afadc159fd102e2351ca78e3b13f9f271a0c1756a1e20"
+      "sha256": "5644a8dfd39bda6235fc624a8db211cc47b6fff1c187af03f6d57f8cd9b1cdf7"
+    },
+    "review_queue": {
+      "path": "data/stage8/ontology_mapping_review_queue.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ontology": {
+      "path": "ontology/minimal_turbine.ttl",
+      "sha256": "c513ddbc2c5c167f3ec7d6af1b2d13349a432a318e00c014d06fb96724a25d34"
     }
   },
   "outputs": {
@@ -34,26 +38,39 @@
     "exit_audit": "data/stage8/stage8_exit_audit.json"
   },
   "counts": {
-    "shortlist_count": 3,
-    "reviewed_accepted_count": 3,
-    "reviewed_deferred_count": 4,
+    "stage7_candidate_count": 19304,
+    "shortlist_count": 4,
+    "deferred_count": 5,
     "review_pending_count": 0,
-    "original_page_confirmation_pending_count": 0
+    "accepted_count": 4
   },
   "checks": {
-    "minimal_owl_built": true,
+    "contract_stage8": true,
+    "capability_paths_are_explicit": true,
     "stage7_candidate_only_input": true,
-    "candidate_content_fingerprints_bound": true,
-    "original_page_evidence_bound": true,
-    "automatic_promotion_disabled": true,
-    "numeric_only_values_excluded": true,
-    "sentence_and_scope_fragments_excluded": true,
-    "review_overlay_fingerprints_bound": true,
+    "shortlist_and_deferred_bind_to_stage7": true,
+    "review_overlay_fingerprints_bind_to_candidates": true,
+    "review_queue_is_bound_to_active_shortlist": true,
+    "shortlist_content_quality_gate": true,
     "candidate_dispositions_recorded": true,
-    "future_scope_deferred": true,
-    "manual_mapping_review_complete": true,
-    "no_pending_review_queue": true,
-    "no_formal_vocabulary_or_release": true
+    "reviewed_hierarchy_relations_bind_to_candidates": true,
+    "automatic_promotion_and_formal_release_disabled": true,
+    "owl_classes_match_contract": true,
+    "owl_properties_match_contract": true,
+    "future_scope_not_generated": true,
+    "stage8_focused_tests_passed": true
+  },
+  "failure_isolation": "不合格候选保留在 deferred_candidates 或 review_queue，不写入正式词汇、Release 或 Neo4j。",
+  "rollback": "重建 Stage 8 生成产物；保留 Stage 7 candidates 与人工 review overlay 不变。",
+  "zero_tolerance_errors": [],
+  "blockers": [],
+  "test_result": {
+    "command": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe -m pytest -q tests/stage8 tests/unit/test_project_state.py",
+    "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+    "status": "passed",
+    "returncode": 0,
+    "stdout_tail": "...........                                                              [100%]\n",
+    "stderr_tail": ""
   },
   "next_stage_allowed": true,
   "next_stage": "Stage 9 OWL/SHACL semantic authority package"

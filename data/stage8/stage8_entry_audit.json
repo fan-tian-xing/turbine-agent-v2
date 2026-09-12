@@ -20,11 +20,11 @@
     },
     "ontology_contract": {
       "path": "config/ontology_contract.json",
-      "sha256": "30015d3544c3378b7122046d28705478155808d525bda03a30b33e6d6fe002f2"
+      "sha256": "e70b77b48e1dce170b3beff1b27ff18db83733d1c3930e515277bde6a2c94af2"
     },
     "mapping_review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
-      "sha256": "476c4b7a3dc98947f67afadc159fd102e2351ca78e3b13f9f271a0c1756a1e20"
+      "sha256": "5644a8dfd39bda6235fc624a8db211cc47b6fff1c187af03f6d57f8cd9b1cdf7"
     }
   },
   "outputs": {
@@ -34,9 +34,9 @@
     "exit_audit": "data/stage8/stage8_exit_audit.json"
   },
   "counts": {
-    "shortlist_count": 3,
-    "reviewed_accepted_count": 3,
-    "reviewed_deferred_count": 4,
+    "shortlist_count": 4,
+    "reviewed_accepted_count": 4,
+    "reviewed_deferred_count": 5,
     "review_pending_count": 0,
     "original_page_confirmation_pending_count": 0
   },

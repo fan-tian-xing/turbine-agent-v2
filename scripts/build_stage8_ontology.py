@@ -44,8 +44,9 @@ def main() -> None:
     stage8.mkdir(parents=True, exist_ok=True)
 
     (ROOT / "ontology" / "minimal_turbine.ttl").write_text(render_turtle(contract), encoding="utf-8")
-    mapping = build_mapping_payload(contract, candidates, capabilities)
-    mapping = apply_mapping_review_overlay(mapping, load_jsonl(overlay_path))
+    overlay = load_jsonl(overlay_path)
+    mapping = build_mapping_payload(contract, candidates, capabilities, overlay)
+    mapping = apply_mapping_review_overlay(mapping, overlay)
     mapping["inputs"] = {
         "terminology_input_manifest": {"path": "data/stage7/terminology_input_manifest.json", "sha256": file_sha256(manifest_path)},
         "terminology_candidates": {"path": "data/stage7/terminology_candidates.json", "sha256": file_sha256(ROOT / "data" / "stage7" / "terminology_candidates.json")},

@@ -112,6 +112,11 @@ tv2:describes a owl:ObjectProperty ;
     rdfs:range tv2:InformationEntity ;
     rdfs:label "描述"@zh .
 
+tv2:involvesEntity a owl:ObjectProperty ;
+    rdfs:domain tv2:Situation ;
+    rdfs:range tv2:PhysicalEntity ;
+    rdfs:label "涉及对象"@zh .
+
 tv2:normalizedLabel a owl:DatatypeProperty ;
     rdfs:domain tv2:InformationEntity ;
     rdfs:range xsd:string ;
@@ -126,3 +131,8 @@ tv2:unitSymbol a owl:DatatypeProperty ;
     rdfs:domain tv2:QuantityValue ;
     rdfs:range xsd:string ;
     rdfs:label "单位符号"@zh .
+
+tv2:quantityKindLabel a owl:DatatypeProperty ;
+    rdfs:domain tv2:QuantityValue ;
+    rdfs:range xsd:string ;
+    rdfs:label "参数种类标签"@zh .

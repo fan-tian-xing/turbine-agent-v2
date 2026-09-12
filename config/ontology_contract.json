@@ -33,12 +33,14 @@
     {"id": "hasApplicabilityScope", "domain": "EngineeringStatement", "range": "ApplicabilityScope", "label": "具有适用范围"},
     {"id": "supportedBy", "domain": "EngineeringStatement", "range": "Evidence", "label": "由证据支持"},
     {"id": "hasQuantityValue", "domain": "EngineeringStatement", "range": "QuantityValue", "label": "具有量值"},
-    {"id": "describes", "domain": "Evidence", "range": "InformationEntity", "label": "描述"}
+    {"id": "describes", "domain": "Evidence", "range": "InformationEntity", "label": "描述"},
+    {"id": "involvesEntity", "domain": "Situation", "range": "PhysicalEntity", "label": "涉及对象"}
   ],
   "datatype_properties": [
     {"id": "normalizedLabel", "domain": "InformationEntity", "range": "http://www.w3.org/2001/XMLSchema#string", "label": "规范标签"},
     {"id": "numericValue", "domain": "QuantityValue", "range": "http://www.w3.org/2001/XMLSchema#decimal", "label": "数值"},
-    {"id": "unitSymbol", "domain": "QuantityValue", "range": "http://www.w3.org/2001/XMLSchema#string", "label": "单位符号"}
+    {"id": "unitSymbol", "domain": "QuantityValue", "range": "http://www.w3.org/2001/XMLSchema#string", "label": "单位符号"},
+    {"id": "quantityKindLabel", "domain": "QuantityValue", "range": "http://www.w3.org/2001/XMLSchema#string", "label": "参数种类标签"}
   ],
   "candidate_mapping": {
     "allowed_candidate_types": {
@@ -63,6 +65,11 @@
       "excluded_candidate_types_are_not_deleted": true
     },
     "candidate_disposition_schema": ["class", "property_value", "alias", "individual", "reject", "defer"],
+    "source_occurrence_policy": {
+      "accepted_stage6_evidence_preferred": true,
+      "fallback_to_stage7_page_occurrence": true,
+      "max_occurrences_per_candidate": 5
+    },
     "max_candidates_per_type": 2,
     "required_candidate_status": "candidate_only",
     "requires_original_confirmation_for_promotion": true,
@@ -92,6 +99,18 @@
     "cap-08": ["InformationEntity"],
     "cap-09": ["InformationEntity", "ProcessEntity"],
     "cap-10": ["InformationEntity", "Situation"]
+  },
+  "capability_paths": {
+    "cap-01": {"status": "supported", "path": ["EngineeringStatement", "aboutEntity", "PhysicalEntity", "hasApplicabilityScope", "ApplicabilityScope"]},
+    "cap-02": {"status": "supported", "path": ["Equipment", "hasProcedureDefinition", "ProcedureDefinition", "hasStep", "StepDefinition"]},
+    "cap-03": {"status": "supported", "path": ["EngineeringStatement", "hasQuantityValue", "QuantityValue", "quantityKindLabel"]},
+    "cap-04": {"status": "supported", "path": ["Situation", "involvesEntity", "PhysicalEntity"]},
+    "cap-05": {"status": "partial", "path": ["EngineeringStatement", "hasApplicabilityScope", "ApplicabilityScope"]},
+    "cap-06": {"status": "supported", "path": ["EngineeringStatement", "supportedBy", "Evidence"]},
+    "cap-07": {"status": "partial", "path": ["EngineeringStatement", "hasApplicabilityScope", "ApplicabilityScope"]},
+    "cap-08": {"status": "partial", "path": ["Evidence", "describes", "InformationEntity"]},
+    "cap-09": {"status": "deferred", "path": []},
+    "cap-10": {"status": "deferred", "path": []}
   },
   "deferred_scope": ["EngineeringCase", "现场活动", "批准", "验证结果", "SHACL 约束包", "正式运行词汇", "Release"],
   "inputs": [

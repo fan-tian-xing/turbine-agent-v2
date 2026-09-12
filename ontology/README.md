@@ -1,5 +1,5 @@
 # 语义权威包
 
-Stage 8 已建立最小 Ontology Contract 和可重建的 `minimal_turbine.ttl`。合同是本阶段的设计输入，OWL 文件由 `scripts/build_stage8_ontology.py` 生成；当前只覆盖五个稳定顶层类、八个首版运行类及最小关系，不包含 SHACL、案例、正式运行词汇或 Release。
+Stage 8 已建立最小 Ontology Contract 和可重建的 minimal_turbine.ttl。合同是本阶段的设计输入，OWL 文件由 scripts/build_stage8_ontology.py 生成；当前只覆盖五个稳定顶层类、八个首版运行类及最小关系，不包含 SHACL、案例、正式运行词汇或 Release。能力路径明确保留“量值—参数种类标签”和“情境—涉及对象”两条最小语义连接。
 
-完整 OWL/SHACL 语义权威包将在 Stage 9 建立。Stage 8 的候选映射审核已经完成；接受记录仍保持 `candidate_only`，任何候选都不会自动晋级为正式运行词汇或 Release。
+完整 OWL/SHACL 语义权威包将在 Stage 9 建立。Stage 8 已完成本体设计和候选映射审核；“螺栓”已接受为 Component 并保留与“地脚螺栓”的上下位关系，原始页面已确认；普通“振动”已暂缓，不作为 Situation。接受记录仍保持 candidate_only，任何候选都不会自动晋级为正式运行词汇或 Release。

@@ -32,6 +32,8 @@ def test_stage8_contract_has_minimal_classes_and_capability_coverage():
         "EngineeringStatement", "Evidence", "ApplicabilityScope", "QuantityValue"
     }
     assert set(contract["capability_coverage"]) == {f"cap-{i:02d}" for i in range(1, 11)}
+    assert contract["capability_paths"]["cap-03"]["path"][-1] == "quantityKindLabel"
+    assert contract["capability_paths"]["cap-04"]["path"] == ["Situation", "involvesEntity", "PhysicalEntity"]
     assert contract["capability_status"]["cap-09"].startswith("deferred")
     assert contract["candidate_mapping"]["automatic_promotion"] is False
 
@@ -65,7 +67,6 @@ def test_stage8_mapping_consumes_stage7_and_stops_at_manual_review():
     assert all(row["candidate_type"] != "applicability_condition" for row in payload["shortlist"])
     assert all(row["review_status"] == "pending_manual_review" for row in payload["shortlist"])
     assert all(isinstance(row["requires_original_confirmation"], bool) for row in payload["shortlist"])
-    assert any(row["requires_original_confirmation"] is True for row in payload["shortlist"])
     assert all(row["source_occurrences"] for row in payload["shortlist"])
     assert all(row["candidate_content_fingerprint"] for row in payload["shortlist"])
     assert all(row["excluded_occurrence_count"] >= 0 for row in payload["shortlist"])
@@ -76,6 +77,20 @@ def test_stage8_mapping_consumes_stage7_and_stops_at_manual_review():
         for row in payload["shortlist"]
     )
     assert all(row["review_status"] == "pending_manual_review" for row in queue)
+
+
+def test_stage8_allows_stage7_page_occurrence_without_stage6_evidence():
+    contract = _read("config/ontology_contract.json")
+    candidates = _read("data/stage7/terminology_candidates.json")
+    capabilities = _read("data/stage7/business_capability_questions.json")
+    forged = json.loads(json.dumps(candidates, ensure_ascii=False))
+    target = next(row for row in forged["candidates"] if row["candidate_id"] == "term-6276f7217aa3e69267bb")
+    target["occurrences"] = [item for item in target["occurrences"] if item["source_kind"] == "page_text"]
+    target["text_origins"] = sorted({item["text_origin"] for item in target["occurrences"]})
+    selected = select_mapping_shortlist(contract, forged["candidates"], capabilities["questions"])
+    assert any(row["candidate_id"] == target["candidate_id"] for row in selected)
+
+
 
 
 def test_stage8_review_overlay_keeps_only_accepted_and_pending_rows():
@@ -149,9 +164,9 @@ def test_stage8_persisted_artifacts_are_consistent():
     assert render_turtle(contract) == (ROOT / "ontology/minimal_turbine.ttl").read_text(encoding="utf-8")
     assert mapping["status"] == "review_complete_candidate_only"
     assert mapping["automatic_promotion"] is False
-    assert len(mapping["shortlist"]) == 3
-    assert len(mapping["deferred_candidates"]) == 4
-    assert sum(row["mapping_review_decision"] == "accepted" for row in mapping["shortlist"]) == 3
+    assert len(mapping["shortlist"]) == 4
+    assert len(mapping["deferred_candidates"]) == 5
+    assert sum(row["mapping_review_decision"] == "accepted" for row in mapping["shortlist"]) == 4
     assert sum(row["mapping_review_decision"] == "pending_manual_review" for row in mapping["shortlist"]) == 0
     assert all(row["candidate_disposition"] in mapping["candidate_disposition_schema"] for row in mapping["shortlist"])
     assert set(mapping["inputs"]) == {
@@ -178,9 +193,15 @@ def test_stage8_persisted_artifacts_are_consistent():
     assert entry["status"] == "complete"
     assert entry["next_stage_allowed"] is True
     assert entry["checks"]["manual_mapping_review_complete"] is True
-    assert entry["counts"]["shortlist_count"] == 3
+    assert entry["counts"]["shortlist_count"] == 4
     assert entry["counts"]["review_pending_count"] == 0
     assert entry["counts"]["original_page_confirmation_pending_count"] == 0
     assert entry["checks"]["numeric_only_values_excluded"] is True
     assert entry["checks"]["sentence_and_scope_fragments_excluded"] is True
     assert entry["checks"]["candidate_dispositions_recorded"] is True
+    bolt = next(row for row in mapping["shortlist"] if row["normalized_form"] == "螺栓")
+    assert bolt["hierarchy_relations"] == [{
+        "relation": "broader_than",
+        "target_candidate_id": "term-71b9d9c035c0eb73dcfb",
+        "target_normalized_form": "地脚螺栓",
+    }]

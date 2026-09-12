@@ -41,6 +41,23 @@ def validate_contract(contract: dict) -> None:
         raise ValueError("Stage 8 contract must cover all ten Stage 7 capability questions")
     if set(contract.get("capability_status", {})) != expected_questions:
         raise ValueError("Stage 8 contract must classify all ten capability questions")
+    paths = contract.get("capability_paths", {})
+    if set(paths) != expected_questions:
+        raise ValueError("Stage 8 contract must define a path check for all ten capability questions")
+    class_ids = top | runtime
+    property_ids = {row.get("id") for row in contract.get("object_properties", [])}
+    property_ids |= {row.get("id") for row in contract.get("datatype_properties", [])}
+    for question_id, path_record in paths.items():
+        path = path_record.get("path", [])
+        if path_record.get("status") == "deferred":
+            if path:
+                raise ValueError(f"deferred capability path must be empty: {question_id}")
+            continue
+        if len(path) < 3:
+            raise ValueError(f"supported capability path must contain a class and property: {question_id}")
+        if any((token not in class_ids if index % 2 == 0 else token not in property_ids)
+               for index, token in enumerate(path)):
+            raise ValueError(f"capability path references an unknown class or property: {question_id}")
 
 
 def _turtle_literal(value: str) -> str:
@@ -144,7 +161,83 @@ def _is_shadowed_process_prefix(row: dict, peers: list[dict]) -> bool:
     return False
 
 
-def select_mapping_shortlist(contract: dict, candidates: list[dict], questions: list[dict]) -> list[dict]:
+def _build_mapping_row(contract: dict, row: dict) -> dict:
+    mapping = contract["candidate_mapping"]["allowed_candidate_types"]
+    occurrence_policy = contract["candidate_mapping"].get("source_occurrence_policy", {})
+    accepted_occurrences = [
+        item for item in row["occurrences"]
+        if item.get("source_kind") == "accepted_stage6_evidence"
+    ]
+    if accepted_occurrences and occurrence_policy.get("accepted_stage6_evidence_preferred", True):
+        review_occurrences = sorted(
+            accepted_occurrences,
+            key=lambda item: (
+                item.get("document_key", ""),
+                int(item.get("physical_page", 0)),
+                item.get("page_id", ""),
+                int(item.get("text_start", 0)),
+            ),
+        )
+    elif occurrence_policy.get("fallback_to_stage7_page_occurrence", True):
+        review_occurrences = []
+        seen_documents = set()
+        for item in sorted(
+            row["occurrences"],
+            key=lambda item: (
+                item.get("document_key", ""),
+                int(item.get("physical_page", 0)),
+                item.get("page_id", ""),
+                int(item.get("text_start", 0)),
+            ),
+        ):
+            document_key = item.get("document_key")
+            if item.get("source_kind") not in {"page_text", "accepted_stage6_evidence"}:
+                continue
+            if document_key in seen_documents:
+                continue
+            seen_documents.add(document_key)
+            review_occurrences.append(item)
+    else:
+        review_occurrences = []
+    review_occurrences = review_occurrences[:occurrence_policy.get("max_occurrences_per_candidate", 5)]
+    requires_original_confirmation = (
+        row.get("requires_original_confirmation") is True
+        or not accepted_occurrences
+        or not any(item.get("text_origin") == "native_text" for item in review_occurrences)
+    )
+    review_requirements = [
+        "confirm candidate-to-class mapping",
+        "confirm normalized label against the original page",
+        "confirm every occurrence used for mapping is original-page Evidence",
+        "confirm applicability and non-merging boundaries",
+    ]
+    if requires_original_confirmation:
+        review_requirements.insert(1, "confirm OCR-derived surface form against the original page")
+    return {
+        "candidate_id": row["candidate_id"],
+        "surface_form": row["surface_form"],
+        "normalized_form": row["normalized_form"],
+        "candidate_type": row["candidate_type"],
+        "mapped_class": mapping[row["candidate_type"]]["target_class"],
+        "mapping_kind": mapping[row["candidate_type"]]["mapping_kind"],
+        "capability_question_ids": sorted(row.get("capability_question_ids", [])),
+        "candidate_content_fingerprint": row["content_fingerprint"],
+        "source_occurrences": review_occurrences,
+        "excluded_occurrence_count": len(row["occurrences"]) - len(review_occurrences),
+        "source_text_origins": row["text_origins"],
+        "requires_original_confirmation": requires_original_confirmation,
+        "review_status": contract["candidate_mapping"]["review_status"],
+        "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
+        "review_requirements": review_requirements,
+    }
+
+
+def select_mapping_shortlist(
+    contract: dict,
+    candidates: list[dict],
+    questions: list[dict],
+    pinned_candidate_ids: set[str] | None = None,
+) -> list[dict]:
     mapping = contract["candidate_mapping"]["allowed_candidate_types"]
     max_per_type = contract["candidate_mapping"]["max_candidates_per_type"]
     filter_policy = contract["candidate_mapping"].get("filter_policy", {})
@@ -153,7 +246,10 @@ def select_mapping_shortlist(contract: dict, candidates: list[dict], questions: 
         row for row in candidates
         if row.get("review_status") == contract["candidate_mapping"]["required_candidate_status"]
         and row.get("candidate_type") in mapping
-        and any(item.get("source_kind") == "accepted_stage6_evidence" for item in row.get("occurrences", []))
+        and any(
+            item.get("source_kind") in {"page_text", "accepted_stage6_evidence"}
+            for item in row.get("occurrences", [])
+        )
         and set(row.get("capability_question_ids", [])) <= question_ids
         and not (
             filter_policy.get("exclude_numeric_only_values", True)
@@ -171,7 +267,9 @@ def select_mapping_shortlist(contract: dict, candidates: list[dict], questions: 
             )
         )
     ]
+    pinned_candidate_ids = pinned_candidate_ids or set()
     selected: list[dict] = []
+    selected_ids: set[str] = set()
     for candidate_type in sorted(mapping):
         ordered_rows = sorted(
             (
@@ -195,51 +293,33 @@ def select_mapping_shortlist(contract: dict, candidates: list[dict], questions: 
             deduplicated_rows.append(row)
         rows = deduplicated_rows[:filter_policy.get("max_candidates_by_type", {}).get(candidate_type, max_per_type)]
         for row in rows:
-            accepted_occurrences = [
-                item for item in row["occurrences"]
-                if item.get("source_kind") == "accepted_stage6_evidence"
-            ]
-            requires_original_confirmation = row.get("requires_original_confirmation") is True or not any(
-                item.get("text_origin") == "native_text" for item in accepted_occurrences
-            )
-            review_requirements = [
-                "confirm candidate-to-class mapping",
-                "confirm normalized label against the original page",
-                "confirm every occurrence used for mapping is original-page Evidence",
-                "confirm applicability and non-merging boundaries",
-            ]
-            if requires_original_confirmation:
-                review_requirements.insert(1, "confirm OCR-derived surface form against the original page")
-            selected.append({
-                "candidate_id": row["candidate_id"],
-                "surface_form": row["surface_form"],
-                "normalized_form": row["normalized_form"],
-                "candidate_type": row["candidate_type"],
-                "mapped_class": mapping[row["candidate_type"]]["target_class"],
-                "mapping_kind": mapping[row["candidate_type"]]["mapping_kind"],
-                "capability_question_ids": sorted(row.get("capability_question_ids", [])),
-                "candidate_content_fingerprint": row["content_fingerprint"],
-                "source_occurrences": accepted_occurrences,
-                "excluded_occurrence_count": len(row["occurrences"]) - sum(
-                    item.get("source_kind") == "accepted_stage6_evidence" for item in row["occurrences"]
-                ),
-                "source_text_origins": row["text_origins"],
-                "requires_original_confirmation": requires_original_confirmation,
-                "review_status": contract["candidate_mapping"]["review_status"],
-                "selection_reason": "capability coverage plus original-page Evidence; equal-weight score is only a deterministic tie-break",
-                "review_requirements": review_requirements,
-            })
+            selected.append(_build_mapping_row(contract, row))
+            selected_ids.add(row["candidate_id"])
+    for row in sorted(eligible, key=lambda item: item["candidate_id"]):
+        if row["candidate_id"] in pinned_candidate_ids and row["candidate_id"] not in selected_ids:
+            selected.append(_build_mapping_row(contract, row))
+            selected_ids.add(row["candidate_id"])
     return selected
 
 
-def build_mapping_payload(contract: dict, candidates_payload: dict, capability_payload: dict) -> dict:
+def build_mapping_payload(
+    contract: dict,
+    candidates_payload: dict,
+    capability_payload: dict,
+    review_overlay: list[dict] | None = None,
+) -> dict:
     validate_contract(contract)
     if candidates_payload.get("status") != "candidate_only" or candidates_payload.get("automatic_promotion") is not False:
         raise ValueError("Stage 8 accepts only candidate_only Stage 7 terminology output")
     questions = capability_payload.get("questions", [])
     if capability_payload.get("artifact_kind") != "business_capability_questions" or len(questions) != 10:
         raise ValueError("Stage 8 requires the ten Stage 7 business capability questions")
-    shortlist = select_mapping_shortlist(contract, candidates_payload.get("candidates", []), questions)
+    shortlist = select_mapping_shortlist(
+        contract,
+        candidates_payload.get("candidates", []),
+        questions,
+        {row.get("candidate_id") for row in (review_overlay or [])},
+    )
     return {
         "schema_version": 1,
         "stage": "8",
@@ -256,9 +336,11 @@ def build_mapping_payload(contract: dict, candidates_payload: dict, capability_p
         "automatic_promotion": False,
         "review_boundary": "Only this shortlist is eligible for manual ontology mapping review; no candidate enters formal vocabulary before approval.",
         "capability_coverage": contract["capability_coverage"],
+        "capability_paths": contract["capability_paths"],
         "capability_status": contract["capability_status"],
         "deferred_scope": contract["deferred_scope"],
         "filter_policy": contract["candidate_mapping"]["filter_policy"],
+        "source_occurrence_policy": contract["candidate_mapping"]["source_occurrence_policy"],
         "deferred_candidate_types": contract["candidate_mapping"]["deferred_candidate_types"],
         "candidate_disposition_schema": contract["candidate_mapping"]["candidate_disposition_schema"],
         "shortlist": shortlist,
@@ -303,6 +385,17 @@ def apply_mapping_review_overlay(mapping_payload: dict, overlay: list[dict]) -> 
         row["reviewer"] = decision.get("reviewer", "unknown")
         row["reviewed_at"] = decision.get("reviewed_at")
         row["decision_reason"] = decision.get("decision_reason", "")
+        if "hierarchy_relations" in decision:
+            relations = decision["hierarchy_relations"]
+            if not isinstance(relations, list) or any(
+                relation.get("relation") not in {"broader_than", "narrower_than"}
+                or relation.get("target_candidate_id") == candidate_id
+                or not relation.get("target_candidate_id")
+                for relation in relations
+                if isinstance(relation, dict)
+            ) or any(not isinstance(relation, dict) for relation in relations):
+                raise ValueError(f"invalid Stage 8 hierarchy relation: {candidate_id}")
+            row["hierarchy_relations"] = relations
         row["promotion_status"] = "candidate_only"
         rows[candidate_id] = row
     for row in rows.values():

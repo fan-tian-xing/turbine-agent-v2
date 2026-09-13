@@ -38,9 +38,13 @@
       "path": "src/turbine_kg/stage3/llm.py",
       "sha256": "859b07a49604c0ceac3bee4669624c38293f70b5715dae54140eedfe66d10d69"
     },
+    "src/turbine_kg/registry/identity.py": {
+      "path": "src/turbine_kg/registry/identity.py",
+      "sha256": "cb77e4a8d9719776303180c359e8e154b3b8fca0fdb5e43672ee7e8efe46e9d9"
+    },
     "scripts/audit_stage10_exit.py": {
       "path": "scripts/audit_stage10_exit.py",
-      "sha256": "4d5f6b61b4bd21ce493c7baf0fbc78eb59d568c666d32997dbccc20d331ca4f8"
+      "sha256": "ae0a1fdd89a36c2c23d253f44ead47da5e1aeaf66b91e99609d7c5c6e23991be"
     },
     "uv.lock": {
       "path": "uv.lock",
@@ -49,6 +53,10 @@
     "config/asset_revision_identity.tsv": {
       "path": "config/asset_revision_identity.tsv",
       "sha256": "3acd7af150321c6080b67d71334cab90a0fd0ed8523fbe2523e60706a3d4af94"
+    },
+    "data/registry/source_assets.jsonl": {
+      "path": "data/registry/source_assets.jsonl",
+      "sha256": "e336425b3d9b4879db84010af23564464a035460b573b764b439129e82309471"
     },
     "src/turbine_kg/observability/lifecycle.py": {
       "path": "src/turbine_kg/observability/lifecycle.py",
@@ -104,7 +112,7 @@
     "knowledge_lifecycle_field": true,
     "revision_scoped_dependency_helper": true,
     "revision_catalog_readable": true,
-    "asset_revision_assignments_cover_registry": true,
+    "asset_revision_assignments_match_registry": true,
     "targeted_tests": true,
     "full_project_tests": true
   },
@@ -128,7 +136,7 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-targeted-8d9928e7f4be",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-targeted-d13e54de9227",
         "tests/stage10",
         "tests/stage7",
         "tests/stage8",
@@ -139,7 +147,7 @@
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 71%]\n.............................                                            [100%]\n",
+      "stdout_tail": "........................................................................ [ 68%]\n.................................                                        [100%]\n",
       "stderr_tail": ""
     },
     "full_project": {
@@ -151,13 +159,13 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-full-d0905958a7b4",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-full-49e152e4d891",
         "tests"
       ],
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 27%]\n........................................................................ [ 54%]\n........................................................................ [ 81%]\n..................................................                       [100%]\n",
+      "stdout_tail": "........................................................................ [ 26%]\n........................................................................ [ 53%]\n........................................................................ [ 80%]\n......................................................                   [100%]\n",
       "stderr_tail": ""
     }
   },

@@ -106,7 +106,15 @@ def _audit() -> dict:
 
     revisions = load_revision_catalog(ROOT / "config/revision_identity.tsv")
     asset_assignments = load_asset_revision_map(ROOT / "config/asset_revision_identity.tsv")
-    registry_asset_count = sum(1 for line in (ROOT / "data/registry/source_assets.jsonl").read_text(encoding="utf-8").splitlines() if line.strip())
+    registry_assets = [
+        json.loads(line)
+        for line in (ROOT / "data/registry/source_assets.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    registry_by_path = {
+        row["relative_path"]: (row["document_logical_id"], row["revision_id"])
+        for row in registry_assets
+    }
     lifecycle_scope = impacted_by_revision(
         "rev-fixture",
         [
@@ -138,7 +146,11 @@ def _audit() -> dict:
         "knowledge_lifecycle_field": contract.get("knowledge_lifecycle", {}).get("field") == "knowledge_status",
         "revision_scoped_dependency_helper": lifecycle_scope == {"evidence_ids": ["e-fixture"], "statement_ids": ["s-fixture"]},
         "revision_catalog_readable": len(revisions) >= 1 and all(record.revision_id.startswith("rev-") for record in revisions),
-        "asset_revision_assignments_cover_registry": len(asset_assignments) == registry_asset_count and all(revision.startswith("rev-") for _, revision in asset_assignments.values()),
+        "asset_revision_assignments_match_registry": (
+            len(registry_by_path) == len(registry_assets)
+            and set(asset_assignments) == set(registry_by_path)
+            and all(asset_assignments[path] == registry_by_path[path] for path in registry_by_path)
+        ),
     }
     targeted = _run_tests()
     checks["targeted_tests"] = targeted["status"] == "passed"
@@ -158,8 +170,10 @@ def _audit() -> dict:
             "data/stage9/stage9_exit_audit.json", "data/stage8/ontology_mapping_shortlist.json",
             "data/stage8/ontology_mapping_review_queue.jsonl", "src/turbine_kg/observability/runtime.py",
             "scripts/build_stage7_terminology.py", "src/turbine_kg/stage3/llm.py",
+            "src/turbine_kg/registry/identity.py",
             "scripts/audit_stage10_exit.py", "uv.lock",
             "config/asset_revision_identity.tsv",
+            "data/registry/source_assets.jsonl",
             "src/turbine_kg/observability/lifecycle.py",
             "tests/stage10/test_stage10_runtime.py",
         )

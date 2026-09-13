@@ -7,7 +7,7 @@ import hashlib
 from functools import lru_cache
 from pathlib import Path
 
-from .schema import DOCUMENT_ID_PATTERN
+from .schema import DOCUMENT_ID_PATTERN, REVISION_ID_PATTERN
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -39,7 +39,14 @@ def load_revision_identity_map(path: Path = DEFAULT_REVISION_IDENTITY_PATH) -> d
     result: dict[str, tuple[str, str]] = {}
     for row in reader:
         document_id = row["document_logical_id"]
-        if document_id in result or not document_id or not row["revision_id"] or not row["revision_label"]:
+        if (
+            document_id in result
+            or not isinstance(document_id, str)
+            or not DOCUMENT_ID_PATTERN.fullmatch(document_id)
+            or not isinstance(row["revision_id"], str)
+            or not REVISION_ID_PATTERN.fullmatch(row["revision_id"])
+            or not row["revision_label"]
+        ):
             raise ValueError(f"revision identity map has duplicate or empty values: {row}")
         result[document_id] = (row["revision_id"], row["revision_label"])
     return result
@@ -105,8 +112,10 @@ def load_asset_revision_map(path: Path = DEFAULT_ASSET_REVISION_PATH) -> dict[st
         revision_id = row["revision_id"]
         if (
             not relative_path or relative_path in assignments
+            or not isinstance(document_id, str)
             or not DOCUMENT_ID_PATTERN.fullmatch(document_id)
-            or not revision_id
+            or not isinstance(revision_id, str)
+            or not REVISION_ID_PATTERN.fullmatch(revision_id)
         ):
             raise ValueError(f"asset Revision identity map has invalid or duplicate row: {row}")
         assignments[relative_path] = (document_id, revision_id)

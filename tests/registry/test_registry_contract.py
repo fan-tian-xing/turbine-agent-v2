@@ -10,7 +10,11 @@ from turbine_kg.registry.duplicates import duplicate_relations
 from turbine_kg.registry.profiles import load_source_profiles, profile_for_path
 from turbine_kg.registry.schema import validate_asset_record
 from turbine_kg.registry.source_inputs import validate_source_allowlist
-from turbine_kg.registry.identity import revision_id_for_source_path
+from turbine_kg.registry.identity import (
+    load_asset_revision_map,
+    load_revision_identity_map,
+    revision_id_for_source_path,
+)
 
 
 def _asset(path: str, *, text_status: str, text_fingerprint: str | None, visual_fingerprint: str) -> dict[str, object]:
@@ -26,6 +30,36 @@ def _asset(path: str, *, text_status: str, text_fingerprint: str | None, visual_
 
 def test_revision_identity_is_not_derived_from_asset_path():
     assert revision_id_for_source_path("doc-24b25833ab82e212d1fb", "one.pdf") == revision_id_for_source_path("doc-24b25833ab82e212d1fb", "renamed.pdf")
+
+
+@pytest.mark.parametrize(
+    ("document_id", "revision_id"),
+    [("doc-invalid", "rev-" + "a" * 20), ("doc-" + "a" * 20, "rev-invalid")],
+)
+def test_revision_identity_map_rejects_invalid_controlled_ids(tmp_path: Path, document_id: str, revision_id: str):
+    path = tmp_path / "revision_identity.tsv"
+    path.write_text(
+        "document_logical_id\trevision_id\trevision_label\n"
+        f"{document_id}\t{revision_id}\tbaseline\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="revision identity map"):
+        load_revision_identity_map(path)
+
+
+@pytest.mark.parametrize(
+    ("document_id", "revision_id"),
+    [("doc-invalid", "rev-" + "a" * 20), ("doc-" + "a" * 20, "rev-invalid")],
+)
+def test_asset_revision_map_rejects_invalid_controlled_ids(tmp_path: Path, document_id: str, revision_id: str):
+    path = tmp_path / "asset_revision_identity.tsv"
+    path.write_text(
+        "relative_path\tdocument_logical_id\trevision_id\n"
+        f"source.pdf\t{document_id}\t{revision_id}\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="asset Revision identity map"):
+        load_asset_revision_map(path)
 
 
 def test_scan_only_assets_do_not_form_a_normalized_text_duplicate_group() -> None:

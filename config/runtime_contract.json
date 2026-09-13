@@ -1,45 +1,47 @@
 {
   "schema_version": 1,
   "stage": "10",
-  "artifact_kind": "runtime_contract",
+  "artifact_kind": "knowledge_lifecycle_contract",
   "status": "active_for_stage10",
-  "run_schema": "config/runtime_run.schema.json",
-  "authority": "runtime_run.schema.json defines fields; observability.runtime enforces behavior",
-  "required_provenance": ["input_refs", "config_refs", "producer_ref", "output_ref", "output_fingerprint", "cache_key"],
-  "operations": ["terminology_extraction", "answer", "parse", "ocr", "review", "publish"],
-  "version_policy": {
-    "producer_reference": "readable relative file path plus SHA-256 and repository revision when available",
-    "config_reference": "readable controlled config path plus SHA-256; one version may be shared by many Runs",
-    "per_run_source_snapshot": false,
-    "historical_runs": "retain immutable structured outputs and references; missing legacy details remain unknown"
+  "authority": "Document/Revision/Evidence/Statement contracts define knowledge identity; runtime_run.schema.json defines the optional extraction batch shape",
+  "knowledge_lifecycle": {
+    "statuses": ["active", "superseded", "invalid", "replaced"],
+    "identity_chain": ["document_logical_id", "revision_id", "page_id", "source_span_id", "evidence_id", "statement_id"],
+    "revision_replacement": "mark the old Revision superseded, invalidate or rebuild only dependent Evidence, Statements and derived relationships, and retain shared Entity records",
+    "stable_ids": "unchanged source content keeps its existing Evidence and Statement identities when the owning producer contract permits it",
+    "review_overlay": "manual decisions bind to the exact Evidence or Statement identity and content/version fingerprint; mapping acceptance is separate from knowledge approval"
   },
-  "identity_policy": {
-    "evidence_id_formula": "inherit_stage6_documents.ids",
-    "statement_identity": "controlled opaque anchor supplied by its future producer; no Stage 10 business ledger",
-    "review_binding": "review references exact content/version fingerprint",
-    "stable_content_fingerprint_excludes": ["started_at", "finished_at", "imported_at", "reviewed_at", "run_at", "recorded_at"],
-    "stable_content_fingerprint_keeps": ["effective_time", "event_time", "observation_time", "validity", "applicability", "unknown_time_state"]
+  "extraction_batch": {
+    "schema": "config/runtime_run.schema.json",
+    "field": "extraction_batch_id",
+    "required_for_statement": false,
+    "purpose": "optional internal grouping for one automatic extraction operation",
+    "formal_metadata_excluded": ["model", "prompt_hash", "started_at", "finished_at", "git_head", "producer_sha", "raw_response", "prov_o_run_graph"]
   },
   "cache_policy": {
     "structured_result_required": true,
     "raw_model_response_persisted": false,
+    "cache_key_and_implementation_context": "implementation-only; never a knowledge, Evidence, Statement or Release identity",
     "cache_hit_revalidates_input_and_output": true,
-    "force_rerun_creates_new_run": true,
+    "force_rerun_creates_new_batch": true,
     "failed_result_enters_success_cache": false,
-    "cache_scope": "local_stage10_runtime_only"
+    "cache_scope": "local stage runtime; structured output is referenced rather than copied into formal knowledge"
+  },
+  "provenance_policy": {
+    "formal_chain": "Document -> Revision -> Page/SourceSpan -> Evidence -> Engineering Statement -> Graph",
+    "required_for_release": ["document_logical_id", "revision_id", "evidence_identity", "statement_identity", "review_overlay"],
+    "runtime_details_required_for_release": false,
+    "prov_o": "not persisted as a separate authority; any projection is derived in memory from formal provenance"
   },
   "release_policy": {
     "formal_release": false,
-    "mapping_accepted_is_not_knowledge_approval": true,
-    "stage17_owns_release_package": true
+    "release_owner": "Stage 17 and later Release stages",
+    "neo4j_role": "rebuildable projection of formal disk artifacts",
+    "mapping_accepted_is_not_knowledge_approval": true
   },
   "legacy_policy": {
     "missing_historical_fields": "unknown",
     "rebuild_old_runs": false,
     "rewrite_original_or_frozen_evidence": false
-  },
-  "prov_o": {
-    "storage": "derived in memory from the RunRecord and consumed by the Stage 10 exit audit",
-    "relations": ["used", "wasGeneratedBy", "wasDerivedFrom", "wasAssociatedWith"]
   }
 }

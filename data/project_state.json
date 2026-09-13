@@ -5,7 +5,7 @@
   "updated_at": "2026-09-13",
   "current_stage": 10,
   "current_stage_status": "complete",
-  "current_stage_scope": "runtime_provenance_versioning_and_reproducibility",
+  "current_stage_scope": "stable_identity_document_revision_and_knowledge_maintainability",
   "next_stage": 11,
   "next_stage_status": "ready",
   "formal_release": false,
@@ -71,11 +71,12 @@
     },
     "10": {
       "status": "complete",
-      "scope": "runtime_provenance_versioning_and_reproducibility",
+      "scope": "stable_identity_document_revision_and_knowledge_maintainability",
       "entry_record": "data/stage10/stage10_audit.json",
       "exit_audit": "data/stage10/stage10_audit.json",
       "runtime_contract": "config/runtime_contract.json",
       "runtime_schema": "config/runtime_run.schema.json",
+      "lifecycle_helper": "src/turbine_kg/observability/lifecycle.py",
       "runtime_consumer": "scripts/build_stage7_terminology.py --runtime",
       "next_stage_inputs": {
         "stage9_exit": "data/stage9/stage9_exit_audit.json",

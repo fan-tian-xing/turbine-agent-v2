@@ -16,7 +16,7 @@ from turbine_kg.settings import Settings
 from turbine_kg.terminology.analyzer import analyze_terminology, capability_questions_payload, load_stage6_evidence_bundle, load_terminology_contract
 from turbine_kg.terminology.models import CANDIDATE_TYPES
 from turbine_kg.terminology.validation import content_fingerprint, validate_candidates, validate_input_manifest
-from turbine_kg.observability.runtime import producer_ref, run_with_cache, sha256_value
+from turbine_kg.observability.runtime import run_with_cache, sha256_value
 from turbine_kg.registry.source_inputs import load_allowlist, resolve_allowlisted_path, sha256_file
 
 
@@ -60,21 +60,32 @@ def _runtime_input_gate(manifest: dict, settings: Settings) -> None:
 
 def _runtime_run(manifest: dict, settings: Settings, *, force: bool) -> None:
     stage6_path = ROOT / "data/stage6/stage6_evidence_bundle.jsonl"
-    manifest_ref = {"id": "stage7-input-manifest", "path": "data/stage7/terminology_input_manifest.json", "sha256": _sha(STAGE7 / "terminology_input_manifest.json")}
-    stage6_ref = {"id": "stage6-evidence-bundle", "path": "data/stage6/stage6_evidence_bundle.jsonl", "sha256": _sha(stage6_path)}
+    manifest_ref = {"kind": "input_manifest", "id": "stage7-input-manifest", "path": "data/stage7/terminology_input_manifest.json", "sha256": _sha(STAGE7 / "terminology_input_manifest.json")}
+    stage6_ref = {"kind": "evidence_bundle", "id": "stage6-evidence-bundle", "path": "data/stage6/stage6_evidence_bundle.jsonl", "sha256": _sha(stage6_path)}
+    revision_scope = sorted({
+        (row["document_logical_id"], row["revision_id"])
+        for row in manifest["pages"] if row["page_status"] == "text_accepted"
+    })
+    revision_ref = {
+        "kind": "revision_scope",
+        "revisions": [{"document_logical_id": document_id, "revision_id": revision_id} for document_id, revision_id in revision_scope],
+        "content_fingerprint": sha256_value(revision_scope),
+    }
     config_path = ROOT / "config/terminology_contract.json"
-    config_ref = {"id": "stage7-terminology-contract", "path": "config/terminology_contract.json", "sha256": _sha(config_path)}
+    config_ref = {"kind": "contract", "id": "stage7-terminology-contract", "path": "config/terminology_contract.json", "sha256": _sha(config_path)}
     runtime_settings = {
         "source_root": str(settings.source_root),
         "ocr_derived_root": str(settings.ocr_derived_root),
         "llm_model": settings.llm_model,
         "llm_allow_evidence_send": settings.llm_allow_evidence_send,
     }
-    config_refs = (
-        config_ref,
-        {"id": "stage10-runtime-settings", "settings": runtime_settings, "sha256": sha256_value(runtime_settings)},
+    cache_context = (
+        {"implementation": "stage7-terminology-analyzer", "files": [
+            {"path": str(Path(__file__).relative_to(ROOT)).replace("\\", "/"), "sha256": _sha(Path(__file__))},
+            {"path": "src/turbine_kg/terminology/analyzer.py", "sha256": _sha(ROOT / "src/turbine_kg/terminology/analyzer.py")},
+            {"path": "src/turbine_kg/terminology/validation.py", "sha256": _sha(ROOT / "src/turbine_kg/terminology/validation.py")},
+        ], "settings": runtime_settings},
     )
-    producer = producer_ref(ROOT, (Path(__file__), ROOT / "src/turbine_kg/terminology/analyzer.py", ROOT / "src/turbine_kg/terminology/validation.py"), label="stage7-terminology-analyzer")
 
     def build_output() -> dict:
         stage6_rows = load_stage6_evidence_bundle(stage6_path)
@@ -88,13 +99,12 @@ def _runtime_run(manifest: dict, settings: Settings, *, force: bool) -> None:
     run, output = run_with_cache(
         cache_root=ROOT / "var/model_runs/stage10",
         operation="terminology_extraction",
-        input_refs=(manifest_ref, stage6_ref), config_refs=config_refs, producer=producer,
+        input_refs=(manifest_ref, stage6_ref, revision_ref), cache_context=cache_context,
         output=build_output, schema_path=ROOT / "config/runtime_run.schema.json", force=force,
         validate_input=lambda: _runtime_input_gate(manifest, settings),
         validate_output=lambda value: validate_candidates(value["candidates"], {(row["document_logical_id"], row["physical_page"]) for row in manifest["pages"] if row["page_status"] == "text_accepted"}),
-        legacy_refs=({"kind": "stage7_frozen_candidate", "path": "data/stage7/terminology_candidates.json"},),
     )
-    print(json.dumps({"status": run.status, "run_id": run.run_id, "cache_key": run.cache_key, "candidate_count": len(output["candidates"])}, ensure_ascii=False))
+    print(json.dumps({"status": run.status, "extraction_batch_id": run.extraction_batch_id, "candidate_count": len(output["candidates"])}, ensure_ascii=False))
 
 
 def _accepted_page_texts(manifest: dict, settings: Settings, stage6_rows: list[dict]) -> dict[str, str]:

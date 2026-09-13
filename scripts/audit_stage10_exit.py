@@ -1,4 +1,4 @@
-"""Minimal Stage 10 exit audit for runtime identity, cache and reproducibility."""
+"""Minimal Stage 10 exit audit for knowledge lifecycle and revision-scoped cache use."""
 
 from __future__ import annotations
 
@@ -42,7 +42,8 @@ def _run_tests() -> dict:
 def _audit() -> dict:
     sys.path.insert(0, str(ROOT / "src"))
     from turbine_kg.documents.identity import load_revision_catalog
-    from turbine_kg.observability.runtime import RunRecord, prov_o_mapping
+    from turbine_kg.observability.runtime import ExtractionBatch, KNOWLEDGE_STATUSES
+    from turbine_kg.observability.lifecycle import impacted_by_revision
     from turbine_kg.registry.identity import load_asset_revision_map
     from turbine_kg.stage3.llm import _evidence_payload
 
@@ -61,22 +62,24 @@ def _audit() -> dict:
     index_path = RUNTIME_ROOT / "cache_index.json"
     cache_index = json.loads(index_path.read_text(encoding="utf-8")) if index_path.exists() else {}
     for entry in cache_index.values():
-        run_path = RUNTIME_ROOT / entry["run_record"]
+        run_path = RUNTIME_ROOT / entry["batch_record"]
         output_path = RUNTIME_ROOT / entry["output"]
         if run_path.is_file() and output_path.is_file():
             runtime_runs.append((run_path, output_path))
     runtime_record = None
-    prov_ok = False
+    batch_shape_ok = False
     structured_output_ok = False
     if runtime_runs:
         run_payload = json.loads(runtime_runs[-1][0].read_text(encoding="utf-8"))
         output_payload = json.loads(runtime_runs[-1][1].read_text(encoding="utf-8"))
-        runtime_record = RunRecord(**{
-            key: tuple(value) if key in {"input_refs", "config_refs", "model_attempts", "review_refs", "legacy_refs"} else value
+        runtime_record = ExtractionBatch(**{
+            key: tuple(value) if key == "input_refs" else value
             for key, value in run_payload.items() if key != "schema_version"
         })
-        prov = prov_o_mapping(runtime_record)
-        prov_ok = {item["type"] for item in prov["relations"]} >= {"used", "wasGeneratedBy", "wasDerivedFrom"}
+        batch_shape_ok = bool(runtime_record.extraction_batch_id.startswith("batch-")) and all(
+            ref.get("kind") in {"input_manifest", "evidence_bundle", "revision_scope"}
+            for ref in runtime_record.input_refs
+        )
         structured_output_ok = output_payload.get("artifact_kind") == "terminology_candidates" and isinstance(output_payload.get("candidates"), list)
 
     payload = _evidence_payload([{
@@ -89,6 +92,11 @@ def _audit() -> dict:
     revisions = load_revision_catalog(ROOT / "config/revision_identity.tsv")
     asset_assignments = load_asset_revision_map(ROOT / "config/asset_revision_identity.tsv")
     registry_asset_count = sum(1 for line in (ROOT / "data/registry/source_assets.jsonl").read_text(encoding="utf-8").splitlines() if line.strip())
+    lifecycle_scope = impacted_by_revision(
+        "rev-fixture",
+        [{"evidence_id": "e-fixture", "revision_id": "rev-fixture", "status": "active"}],
+        [{"statement_id": "s-fixture", "evidence_ids": ["e-fixture"], "status": "active"}],
+    )
     checks = {
         "stage9_gate": stage9.get("status") == "complete" and stage9.get("next_stage_allowed") is True,
         "runtime_contract_and_schema": contract.get("stage") == "10" and schema.get("$schema", "").endswith("2020-12/schema"),
@@ -96,8 +104,11 @@ def _audit() -> dict:
         "stage8_original_confirmation_blocks_queue": len(queue) == 0,
         "llm_payload_minimal": payload_minimal_ok,
         "runtime_consumer_executed": runtime_result.returncode == 0 and bool(runtime_runs),
-        "runtime_structured_cache": structured_output_ok and all(json.loads(path.read_text(encoding="utf-8")).get("status") == "succeeded" for path, _ in runtime_runs),
-        "runtime_prov_mapping": prov_ok,
+        "runtime_structured_cache": structured_output_ok and all(json.loads(path.read_text(encoding="utf-8")).get("status") == "completed" for path, _ in runtime_runs),
+        "lightweight_extraction_batch": batch_shape_ok and set(schema["required"]) == {"schema_version", "extraction_batch_id", "operation", "status", "input_refs", "output_ref", "output_fingerprint"},
+        "formal_runtime_fields_removed": not (set(schema.get("properties", {})) & {"model", "prompt_hash", "started_at", "finished_at", "git_head", "producer_sha", "model_attempts", "cache_key", "prov_o"}),
+        "knowledge_lifecycle_statuses": set(contract.get("knowledge_lifecycle", {}).get("statuses", [])) == set(KNOWLEDGE_STATUSES),
+        "revision_scoped_dependency_helper": lifecycle_scope == {"evidence_ids": ["e-fixture"], "statement_ids": ["s-fixture"]},
         "revision_catalog_readable": len(revisions) >= 1 and all(record.revision_id.startswith("rev-") for record in revisions),
         "asset_revision_assignments_cover_registry": len(asset_assignments) == registry_asset_count and all(revision.startswith("rev-") for _, revision in asset_assignments.values()),
     }
@@ -121,6 +132,7 @@ def _audit() -> dict:
             "scripts/build_stage7_terminology.py", "src/turbine_kg/stage3/llm.py",
             "scripts/audit_stage10_exit.py", "data/project_state.json",
             "config/asset_revision_identity.tsv",
+            "src/turbine_kg/observability/lifecycle.py",
             "tests/stage10/test_stage10_runtime.py",
         )
     }
@@ -142,7 +154,7 @@ def _audit() -> dict:
         "zero_tolerance_errors": blockers,
         "blockers": blockers,
         "next_stage_allowed": not blockers,
-        "next_stage": "Stage 11 controlled Evidence/Statement preparation" if not blockers else "Stage 10 runtime provenance and reproducibility",
+        "next_stage": "Stage 11 controlled Evidence/Statement preparation" if not blockers else "Stage 10 knowledge lifecycle and revision maintenance",
     }
 
 
@@ -150,7 +162,7 @@ def main() -> int:
     try:
         audit = _audit()
     except Exception as error:
-        audit = {"schema_version": 1, "stage": "10", "artifact_kind": "stage10_exit_audit", "status": "blocked", "formal_release": False, "producer": "scripts/audit_stage10_exit.py", "checks": {"audit_completed": False}, "zero_tolerance_errors": ["audit_execution_failed"], "blockers": ["audit_execution_failed"], "failure": {"type": type(error).__name__, "message": str(error)}, "next_stage_allowed": False, "next_stage": "Stage 10 runtime provenance and reproducibility"}
+        audit = {"schema_version": 1, "stage": "10", "artifact_kind": "stage10_exit_audit", "status": "blocked", "formal_release": False, "producer": "scripts/audit_stage10_exit.py", "checks": {"audit_completed": False}, "zero_tolerance_errors": ["audit_execution_failed"], "blockers": ["audit_execution_failed"], "failure": {"type": type(error).__name__, "message": str(error)}, "next_stage_allowed": False, "next_stage": "Stage 10 knowledge lifecycle and revision maintenance"}
     STAGE10.mkdir(parents=True, exist_ok=True)
     (STAGE10 / "stage10_audit.json").write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": audit["status"], "blockers": audit["blockers"], "next_stage_allowed": audit["next_stage_allowed"]}, ensure_ascii=False))

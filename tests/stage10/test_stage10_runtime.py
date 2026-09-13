@@ -6,12 +6,13 @@ from pathlib import Path
 import pytest
 
 from turbine_kg.observability.runtime import (
-    RunRecord,
-    producer_ref,
-    prov_o_mapping,
+    ExtractionBatch,
+    KNOWLEDGE_STATUSES,
     run_with_cache,
     stable_content_fingerprint,
+    validate_knowledge_status,
 )
+from turbine_kg.observability.lifecycle import impacted_by_revision
 from turbine_kg.registry.identity import revision_id_for_source_path
 
 
@@ -19,19 +20,12 @@ ROOT = Path(__file__).resolve().parents[2]
 SCHEMA = ROOT / "config/runtime_run.schema.json"
 
 
-def _producer(tmp_path: Path) -> dict:
-    source = tmp_path / "producer.py"
-    source.write_text("producer = 1\n", encoding="utf-8")
-    return producer_ref(tmp_path, (source,), label="fixture-producer")
-
-
 def _run(tmp_path: Path, *, force: bool = False, output=None, validate_output=None):
     return run_with_cache(
         cache_root=tmp_path / "runs",
         operation="terminology_extraction",
-        input_refs=({"id": "input", "sha256": "a" * 64},),
-        config_refs=({"id": "config", "sha256": "b" * 64},),
-        producer=_producer(tmp_path),
+        input_refs=({"kind": "fixture", "id": "input", "sha256": "a" * 64},),
+        cache_context=({"implementation": "fixture"},),
         output=output or {"value": "stable"},
         schema_path=SCHEMA,
         force=force,
@@ -59,16 +53,16 @@ def test_run_cache_hit_reuses_structured_result_and_force_creates_new_run(tmp_pa
     forced, forced_output = _run(tmp_path, force=True, output=build)
 
     assert calls["count"] == 2
-    assert cached.run_id == first.run_id
+    assert cached.extraction_batch_id == first.extraction_batch_id
     assert cached_output == first_output
-    assert forced.run_id != first.run_id
+    assert forced.extraction_batch_id != first.extraction_batch_id
     assert forced_output == {"value": 2}
-    assert (tmp_path / "runs" / "runs" / first.run_id / "run.json").is_file()
+    assert (tmp_path / "runs" / "batches" / first.extraction_batch_id / "batch.json").is_file()
 
 
 def test_cache_corruption_is_rejected(tmp_path: Path):
     first, _ = _run(tmp_path)
-    output_path = tmp_path / "runs" / "runs" / first.run_id / "output.json"
+    output_path = tmp_path / "runs" / "batches" / first.extraction_batch_id / "output.json"
     output_path.write_text(json.dumps({"value": "tampered"}), encoding="utf-8")
     with pytest.raises(ValueError, match="fingerprint"):
         _run(tmp_path)
@@ -94,7 +88,7 @@ def test_failed_force_rerun_does_not_replace_successful_result(tmp_path: Path):
         _run(tmp_path, force=True, validate_output=reject)
     index = json.loads((tmp_path / "runs" / "cache_index.json").read_text(encoding="utf-8"))
     cached = next(iter(index.values()))
-    assert cached["run_record"].endswith(f"{first.run_id}/run.json")
+    assert cached["batch_record"].endswith(f"{first.extraction_batch_id}/batch.json")
 
 
 def test_cache_hit_rechecks_input_gate_and_input_change_misses(tmp_path: Path):
@@ -111,27 +105,38 @@ def test_cache_hit_rechecks_input_gate_and_input_change_misses(tmp_path: Path):
     kwargs = dict(
         cache_root=tmp_path / "runs",
         operation="terminology_extraction",
-        config_refs=({"id": "config", "sha256": "b" * 64},),
-        producer=_producer(tmp_path),
+        cache_context=({"implementation": "fixture"},),
         output=build,
         schema_path=SCHEMA,
         validate_input=gate,
     )
-    first, _ = run_with_cache(input_refs=({"id": "input-a", "sha256": "a" * 64},), **kwargs)
-    cached, _ = run_with_cache(input_refs=({"id": "input-a", "sha256": "a" * 64},), **kwargs)
-    changed, _ = run_with_cache(input_refs=({"id": "input-b", "sha256": "c" * 64},), **kwargs)
-    assert cached.run_id == first.run_id
-    assert changed.run_id != first.run_id
+    first, _ = run_with_cache(input_refs=({"kind": "fixture", "id": "input-a", "sha256": "a" * 64},), **kwargs)
+    cached, _ = run_with_cache(input_refs=({"kind": "fixture", "id": "input-a", "sha256": "a" * 64},), **kwargs)
+    changed, _ = run_with_cache(input_refs=({"kind": "fixture", "id": "input-b", "sha256": "c" * 64},), **kwargs)
+    assert cached.extraction_batch_id == first.extraction_batch_id
+    assert changed.extraction_batch_id != first.extraction_batch_id
     assert gate_calls["count"] == 3
     assert builds["count"] == 2
 
 
-def test_minimal_prov_view_contains_required_relations(tmp_path: Path):
-    record, _ = _run(tmp_path)
-    view = prov_o_mapping(record)
-    relation_types = {item["type"] for item in view["relations"]}
-    assert {"used", "wasGeneratedBy", "wasDerivedFrom"} <= relation_types
-    assert view["agent"]["associated_with"] == view["activity"]["id"]
+def test_knowledge_lifecycle_statuses_and_revision_scoping():
+    assert KNOWLEDGE_STATUSES == {"active", "superseded", "invalid", "replaced"}
+    assert validate_knowledge_status("superseded") == "superseded"
+    with pytest.raises(ValueError):
+        validate_knowledge_status("published")
+    impacted = impacted_by_revision(
+        "rev-a",
+        [
+            {"evidence_id": "e-a", "revision_id": "rev-a", "status": "active"},
+            {"evidence_id": "e-b", "revision_id": "rev-b", "status": "active"},
+        ],
+        [
+            {"statement_id": "s-a", "evidence_ids": ["e-a"], "status": "active"},
+            {"statement_id": "s-shared", "evidence_ids": ["e-a", "e-b"], "status": "active"},
+            {"statement_id": "s-b", "evidence_ids": ["e-b"], "status": "active"},
+        ],
+    )
+    assert impacted == {"evidence_ids": ["e-a"], "statement_ids": ["s-a", "s-shared"]}
 
 
 def test_multi_revision_asset_assignment_is_explicit_and_checked(tmp_path: Path):
@@ -153,9 +158,10 @@ def test_multi_revision_asset_assignment_is_explicit_and_checked(tmp_path: Path)
         revision_id_for_source_path("doc-" + "b" * 20, "old.pdf", mapping)
 
 
-def test_run_record_round_trips_through_schema(tmp_path: Path):
+def test_extraction_batch_round_trips_through_schema(tmp_path: Path):
     record, _ = _run(tmp_path)
     payload = record.as_dict()
     assert payload["schema_version"] == 1
     assert payload["output_ref"]["kind"] == "structured_result"
-    assert isinstance(record, RunRecord)
+    assert isinstance(record, ExtractionBatch)
+    assert set(payload) == {"schema_version", "extraction_batch_id", "operation", "status", "input_refs", "output_ref", "output_fingerprint"}

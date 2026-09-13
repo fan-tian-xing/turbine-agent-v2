@@ -6,7 +6,7 @@
 
 项目当前状态唯一以 [`data/project_state.json`](data/project_state.json) 为准；阶段退出审计是各阶段的证据记录，不再复制维护项目总状态。本文件不重复维护具体阶段状态。
 
-阶段 7 的术语和业务能力产物仍是 `candidate_only`，不得直接进入本体、正式词汇或 Release；当前项目状态唯一以 [`data/project_state.json`](data/project_state.json) 为准，阶段 7 的范围和硬门禁见 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json)。阶段 8 的最终映射只使用 `mapping_review_decision`，审核接受仍不等于知识批准或正式发布；阶段 9 的 OWL/SHACL 语义链已通过退出门。阶段 10 已接入 Stage 7 的隔离运行入口、运行合同、版本/指纹追溯、结构化缓存和最小 PROV 映射，证据见 [`data/stage10/stage10_audit.json`](data/stage10/stage10_audit.json)。阶段 6 的样本 Evidence、原始材料权威边界和表格隔离边界仍以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源；OCR 派生件可用于 Document IR、文字适配、候选发现和坐标辅助，但不替代原始材料作为 Evidence 真值。
+阶段 7 的术语和业务能力产物仍是 `candidate_only`，不得直接进入本体、正式词汇或 Release；当前项目状态唯一以 [`data/project_state.json`](data/project_state.json) 为准，阶段 7 的范围和硬门禁见 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json)。阶段 8 的最终映射只使用 `mapping_review_decision`，审核接受仍不等于知识批准或正式发布；阶段 9 的 OWL/SHACL 语义链已通过退出门。阶段 10 已接入 Stage 7 的隔离运行入口、稳定身份/Revision 生命周期合同、结构化缓存和局部影响范围辅助函数，证据见 [`data/stage10/stage10_audit.json`](data/stage10/stage10_audit.json)。阶段 6 的样本 Evidence、原始材料权威边界和表格隔离边界仍以 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 及其关联质量审计为准。原始材料始终是证据来源；OCR 派生件可用于 Document IR、文字适配、候选发现和坐标辅助，但不替代原始材料作为 Evidence 真值。
 
 阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
 
@@ -118,4 +118,4 @@ Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` �
 & $projectPython scripts/build_stage7_terminology.py --runtime --force
 ```
 
-运行结果写入 `var/model_runs/stage10` 的本地受控缓存；冻结的 Stage 7 正式候选文件不会被隔离运行覆盖。运行合同见 `config/runtime_contract.json`，路径到逻辑文档/Revision 的受控分配见 `config/asset_revision_identity.tsv`。
+运行结果写入 `var/model_runs/stage10` 的本地受控缓存；冻结的 Stage 7 正式候选文件不会被隔离运行覆盖。运行合同见 `config/runtime_contract.json`，路径到逻辑文档/Revision 的受控分配见 `config/asset_revision_identity.tsv`。正式知识沿 Document→Revision→Page/SourceSpan→Evidence→Statement 链追溯，Revision 替换只影响其依赖内容。

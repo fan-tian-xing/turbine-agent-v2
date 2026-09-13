@@ -8,11 +8,11 @@
   "inputs": {
     "config/runtime_contract.json": {
       "path": "config/runtime_contract.json",
-      "sha256": "40af4c7094ceb5739e164f970b52a7f32889d818d00200bfe74b9aa0e2cab5ab"
+      "sha256": "b524ce66f041351831c875d7460a1a8833f79c87ee5e9bdc4ee4ded9c0457e31"
     },
     "config/runtime_run.schema.json": {
       "path": "config/runtime_run.schema.json",
-      "sha256": "0a239b6c5ab1f1e5d5bb7a2c3ddb96d3063225684c6fabfe4fbdbb48cf1baae1"
+      "sha256": "0fda5ff6f49649f0b3985d3a3bd1f87189d5a9b5831709ac0c4be49e7fb98c4b"
     },
     "data/stage9/stage9_exit_audit.json": {
       "path": "data/stage9/stage9_exit_audit.json",
@@ -28,11 +28,11 @@
     },
     "src/turbine_kg/observability/runtime.py": {
       "path": "src/turbine_kg/observability/runtime.py",
-      "sha256": "10249ab7e19a2a174f6bc8fc80405ef4fffceb94bf32d5fcd30c394f01f2be31"
+      "sha256": "2741850a9fa6ddd09c21365ef73c5bcb27d7c2d1386dc590d4f13efa08720934"
     },
     "scripts/build_stage7_terminology.py": {
       "path": "scripts/build_stage7_terminology.py",
-      "sha256": "151861c6eebb2e5a4659c392a43af05f40b6121f86fced6ef93b413c36504a18"
+      "sha256": "db07fc5c55dda7ce2588955a406743a67a30cdee99e1bdc8d6cd00fd684e4515"
     },
     "src/turbine_kg/stage3/llm.py": {
       "path": "src/turbine_kg/stage3/llm.py",
@@ -40,19 +40,23 @@
     },
     "scripts/audit_stage10_exit.py": {
       "path": "scripts/audit_stage10_exit.py",
-      "sha256": "14135fc6a91e285bc0daf364abb6183ce5e834d2e3897c6e4f3271a77c117378"
+      "sha256": "c08a0f15e8203b8dd2bba938d49cfee70da1b63af7e0145dd43267a0c150c6d3"
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "71c3dc714da1e15e890461523761ff79e5d36979ec5eb6230a853ccf28022b5e"
+      "sha256": "58104db9d7fce6a44385ca4949114e20b898c4158b0180ecc3e3fc65e9f42cca"
     },
     "config/asset_revision_identity.tsv": {
       "path": "config/asset_revision_identity.tsv",
       "sha256": "3acd7af150321c6080b67d71334cab90a0fd0ed8523fbe2523e60706a3d4af94"
     },
+    "src/turbine_kg/observability/lifecycle.py": {
+      "path": "src/turbine_kg/observability/lifecycle.py",
+      "sha256": "90d517bb49012d98b9fac6ceceb21ea553b3397ead7ae324e0c387a362f8ecd0"
+    },
     "tests/stage10/test_stage10_runtime.py": {
       "path": "tests/stage10/test_stage10_runtime.py",
-      "sha256": "fa26ae6fd1ec8af4c434bcdae66e7a7a6f88a0db9a483bdfc56094cdc1c3b14f"
+      "sha256": "0e32be5965605ef69dccd9134056351c8051f413ab60627226339c3db589a01e"
     }
   },
   "outputs": {
@@ -62,7 +66,7 @@
     "exit_audit": "data/stage10/stage10_audit.json"
   },
   "counts": {
-    "runtime_cache_entries": 2,
+    "runtime_cache_entries": 1,
     "stage8_shortlist": 4,
     "stage8_queue": 0,
     "revision_records": 44
@@ -75,7 +79,10 @@
     "llm_payload_minimal": true,
     "runtime_consumer_executed": true,
     "runtime_structured_cache": true,
-    "runtime_prov_mapping": true,
+    "lightweight_extraction_batch": true,
+    "formal_runtime_fields_removed": true,
+    "knowledge_lifecycle_statuses": true,
+    "revision_scoped_dependency_helper": true,
     "revision_catalog_readable": true,
     "asset_revision_assignments_cover_registry": true,
     "targeted_tests": true,
@@ -88,7 +95,7 @@
       "--runtime"
     ],
     "returncode": 0,
-    "stdout_tail": "{\"status\": \"succeeded\", \"run_id\": \"run-6375a140c3164cb9a1a2\", \"cache_key\": \"adda1b67b2a4999af9146abd260eb82affbb71a25d0a4d7fcf447e9a035f3100\", \"candidate_count\": 19304}\n",
+    "stdout_tail": "{\"status\": \"completed\", \"extraction_batch_id\": \"batch-c0974461ee5e47b1b045\", \"candidate_count\": 19304}\n",
     "stderr_tail": ""
   },
   "test_result": {

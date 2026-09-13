@@ -420,7 +420,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": false,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -547,7 +546,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": false,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -610,7 +608,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": false,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -710,7 +707,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": false,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -761,7 +757,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "representative real Stage 7 candidate for modeling pattern alias",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -822,7 +817,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "representative real Stage 7 candidate for modeling pattern process_procedure",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -889,7 +883,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -956,7 +949,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "representative real Stage 7 candidate for modeling pattern process_procedure",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -1027,7 +1019,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -1092,7 +1083,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -1193,7 +1183,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "普通可测现象不自动拟映射 Situation；暂缓至 QuantityValue/参数方向或后续审核。",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -1246,7 +1235,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "representative real Stage 7 candidate for modeling pattern applicability",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -1351,7 +1339,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": false,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",
@@ -1407,7 +1394,6 @@
         "ocr_text"
       ],
       "requires_original_confirmation": true,
-      "review_status": "pending_manual_review",
       "selection_reason": "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
       "review_requirements": [
         "confirm candidate-to-class mapping",

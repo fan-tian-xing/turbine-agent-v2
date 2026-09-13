@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/turbine-v2/runtime-run.schema.json",
+  "title": "Stage 10 runtime run record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "operation", "status", "input_refs", "config_refs", "producer_ref", "output_ref", "output_fingerprint", "cache_key", "started_at", "finished_at", "failure_code", "model_attempts", "review_refs", "legacy_refs"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "pattern": "^run-[A-Za-z0-9_-]+$"},
+    "operation": {"type": "string", "enum": ["terminology_extraction", "answer", "parse", "ocr", "review", "publish"]},
+    "status": {"type": "string", "enum": ["succeeded", "failed", "cached"]},
+    "input_refs": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "config_refs": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "producer_ref": {"type": "object", "required": ["label", "files"], "additionalProperties": true, "properties": {"label": {"type": "string"}, "git_head": {"type": ["string", "null"]}, "files": {"type": "array"}}},
+    "output_ref": {"type": ["object", "null"], "additionalProperties": true},
+    "output_fingerprint": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "cache_key": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "failure_code": {"type": ["string", "null"]},
+    "model_attempts": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "review_refs": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "legacy_refs": {"type": "array", "items": {"type": "object", "additionalProperties": true}}
+  }
+}

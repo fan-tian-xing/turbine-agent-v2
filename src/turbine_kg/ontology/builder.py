@@ -286,7 +286,6 @@ def _build_mapping_row(
         "excluded_occurrence_count": len(row["occurrences"]) - len(review_occurrences),
         "source_text_origins": row["text_origins"],
         "requires_original_confirmation": requires_original_confirmation,
-        "review_status": contract["candidate_mapping"]["review_status"],
         "selection_reason": mapping_spec.get(
             "selection_reason",
             "capability coverage plus a deterministic Stage 7 source-page reference; Stage 6 Evidence is preferred, and equal-weight score is only a tie-break",
@@ -583,7 +582,7 @@ def build_review_queue(mapping_payload: dict) -> list[dict]:
             "normalized_form": row["normalized_form"],
             "proposed_class": row["mapped_class"],
             "mapping_kind": row["mapping_kind"],
-            "review_status": row["review_status"],
+            "review_status": "pending_manual_review",
             "mapping_review_decision": row.get("mapping_review_decision", "pending_manual_review"),
             "candidate_disposition": row.get(
                 "candidate_disposition", "defer" if row.get("mapping_kind") == "defer" else "class"

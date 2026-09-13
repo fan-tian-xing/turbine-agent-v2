@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "stage": "10",
+  "artifact_kind": "runtime_contract",
+  "status": "active_for_stage10",
+  "run_schema": "config/runtime_run.schema.json",
+  "authority": "runtime_run.schema.json defines fields; observability.runtime enforces behavior",
+  "required_provenance": ["input_refs", "config_refs", "producer_ref", "output_ref", "output_fingerprint", "cache_key"],
+  "operations": ["terminology_extraction", "answer", "parse", "ocr", "review", "publish"],
+  "version_policy": {
+    "producer_reference": "readable relative file path plus SHA-256 and repository revision when available",
+    "config_reference": "readable controlled config path plus SHA-256; one version may be shared by many Runs",
+    "per_run_source_snapshot": false,
+    "historical_runs": "retain immutable structured outputs and references; missing legacy details remain unknown"
+  },
+  "identity_policy": {
+    "evidence_id_formula": "inherit_stage6_documents.ids",
+    "statement_identity": "controlled opaque anchor supplied by its future producer; no Stage 10 business ledger",
+    "review_binding": "review references exact content/version fingerprint",
+    "stable_content_fingerprint_excludes": ["started_at", "finished_at", "imported_at", "reviewed_at", "run_at", "recorded_at"],
+    "stable_content_fingerprint_keeps": ["effective_time", "event_time", "observation_time", "validity", "applicability", "unknown_time_state"]
+  },
+  "cache_policy": {
+    "structured_result_required": true,
+    "raw_model_response_persisted": false,
+    "cache_hit_revalidates_input_and_output": true,
+    "force_rerun_creates_new_run": true,
+    "failed_result_enters_success_cache": false,
+    "cache_scope": "local_stage10_runtime_only"
+  },
+  "release_policy": {
+    "formal_release": false,
+    "mapping_accepted_is_not_knowledge_approval": true,
+    "stage17_owns_release_package": true
+  },
+  "legacy_policy": {
+    "missing_historical_fields": "unknown",
+    "rebuild_old_runs": false,
+    "rewrite_original_or_frozen_evidence": false
+  },
+  "prov_o": {
+    "storage": "derived in memory from the RunRecord and consumed by the Stage 10 exit audit",
+    "relations": ["used", "wasGeneratedBy", "wasDerivedFrom", "wasAssociatedWith"]
+  }
+}

@@ -16,6 +16,6 @@ Stage 7 candidate_only 候选 + 业务能力问题 + Ontology Contract
 
 Stage 8 短名单是“概念映射审核入口”，不是最终本体。候选资格来自 Stage 7 的完整候选集合和业务能力问题；已接受的 Stage 6 原页 Evidence 优先作为审核证据，但不是进入短名单的硬门槛。只有 Stage 7 页面出现而没有 Stage 6 Evidence 的候选，也可以进入短名单，并必须回原始页面确认。孤立数值、句子/适用范围片段、要求/核验活动词以及动作、缩写、同义/旧称和 OCR 变体不进入本轮短名单。数值只有在后续结构化参数抽取中与参数名、对象、条件和证据绑定后，才可能形成 QuantityValue 数据。
 
-ontology_mapping_review_overlay.jsonl 是独立的 Stage 8 审核记录，按候选指纹绑定用户的接受或暂缓决定，不修改 Stage 7 候选真源。“螺栓”已接受为 Component，并保留其与“地脚螺栓”的上位关系，原始页面已确认；普通“振动”已暂缓，不作为 Situation。数量和审核状态以 `stage8_exit_audit.json` 为准。任何接受决定仍保持 promotion_status=candidate_only，不会自动进入正式本体或运行词汇。构建脚本不签发退出审计，独立 `audit_stage8_exit.py` 是唯一退出记录 Producer。
+ontology_mapping_review_overlay.jsonl 是独立的 Stage 8 审核记录，按候选指纹绑定用户的接受或暂缓决定，不修改 Stage 7 候选真源。最终 shortlist 只保留 `mapping_review_decision`；`review_status` 仅存在于审核队列中表示待办任务，避免形成双状态。“螺栓”已接受为 Component，并保留其与“地脚螺栓”的上位关系，原始页面已确认；普通“振动”已暂缓，不作为 Situation。数量和审核状态以 `stage8_exit_audit.json` 为准。任何接受决定仍保持 promotion_status=candidate_only，不会自动进入正式本体或运行词汇。构建脚本不签发退出审计，独立 `audit_stage8_exit.py` 是唯一退出记录 Producer。
 
 本轮增加的是建模模式覆盖审计，不是批量扩充短名单。`modeling_pattern_coverage` 只从 Stage 7 的真实候选中为 Equipment、Component、Situation、Quantity Kind、Process/Procedure、层级、alias 和 Applicability 各保留 1～3 个代表样本；探针候选的 defer 只表示本轮不晋级正式类或运行词汇，仍用于验证最小本体能否承载该模式。普通“振动”按 Quantity Kind 方向记录，只有带异常状态的复合概念才考虑 Situation。

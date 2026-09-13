@@ -11,8 +11,10 @@ from .duplicates import duplicate_relations, materialize_duplicate_groups
 from .identity import (
     asset_id_for_path,
     load_derived_asset_links,
+    load_asset_revision_map,
     load_document_identity_map,
     revision_for_document,
+    revision_id_for_source_path,
 )
 from .inspection import inspect_pdf
 from .io import jsonl_write, load_manual_findings
@@ -58,6 +60,7 @@ def build_registry(settings: Settings) -> dict[str, int]:
         raise ValueError("allowlist expected_count does not match its rows")
     profiles, profile_assignments, default_profile_id = load_source_profiles()
     document_identity = load_document_identity_map(DOCUMENT_IDENTITY_PATH)
+    asset_revision_identity = load_asset_revision_map()
     derived_asset_links = load_derived_asset_links(DERIVED_ASSET_LINKS_PATH)
     structured_scopes = load_structured_applicability_scopes(STRUCTURED_SCOPE_PATH)
     allowlisted_paths = {entry["path"] for entry in entries}
@@ -70,6 +73,19 @@ def build_registry(settings: Settings) -> dict[str, int]:
         if extra:
             details.append(f"unallowlisted paths: {extra}")
         raise ValueError("document identity map does not match source allowlist (" + "; ".join(details) + ")")
+    if asset_revision_identity and set(asset_revision_identity) != allowlisted_paths:
+        missing = sorted(allowlisted_paths - set(asset_revision_identity))
+        extra = sorted(set(asset_revision_identity) - allowlisted_paths)
+        raise ValueError(f"asset Revision identity map does not match source allowlist; missing={missing}; extra={extra}")
+    for path, (assigned_document, assigned_revision) in asset_revision_identity.items():
+        if document_identity[path] != assigned_document:
+            raise ValueError(f"asset Revision identity disagrees with document identity for {path}")
+        controlled_document = revision_for_document(assigned_document)
+        if assigned_revision not in {controlled_document[0]}:
+            # A future multi-Revision catalog may contain this ID; validate
+            # that it is at least a well-formed controlled identifier here.
+            if not assigned_revision.startswith("rev-"):
+                raise ValueError(f"invalid controlled Revision for {path}: {assigned_revision}")
     input_errors = validate_source_allowlist(
         source_root=settings.source_root,
         ocr_derived_root=settings.ocr_derived_root,
@@ -190,7 +206,7 @@ def build_registry(settings: Settings) -> dict[str, int]:
         asset_record = {
             "asset_id": asset_id,
             "document_logical_id": document_id,
-            "revision_id": revision_for_document(document_id)[0],
+            "revision_id": revision_id_for_source_path(document_id, path),
             "source_root_id": inspected_asset["source_root_id"],
             "asset_kind": profile.asset_kind,
             "source_profile_id": profile.profile_id,

@@ -51,7 +51,6 @@ def _evidence_payload(hits: list[dict]) -> list[dict]:
                         ),
                         "logical_page": item["page"].get("logical_page"),
                         "title": hit["document"]["title"],
-                        "relative_path": hit["asset"]["relative_path"],
                     }
                     for item in sources
                 ],

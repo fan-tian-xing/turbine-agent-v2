@@ -79,7 +79,7 @@ def main() -> None:
             "shortlist_count": len(mapping["shortlist"]),
             "reviewed_accepted_count": mapping["review_summary"]["accepted_count"],
             "reviewed_deferred_count": mapping["review_summary"]["deferred_count"],
-            "review_pending_count": sum(row["review_status"] == "pending_manual_review" for row in queue),
+            "review_pending_count": len(queue),
             "original_page_confirmation_pending_count": sum(
                 row["review_gate"] == "original_page_confirmation" for row in queue
             ),

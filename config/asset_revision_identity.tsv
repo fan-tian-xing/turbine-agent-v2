@@ -1,0 +1,52 @@
+# schema_version=1
+# Controlled path-to-logical-document/Revision assignments. A future Revision
+# may reuse a logical document, but every allowlisted path must remain explicit.
+relative_path	document_logical_id	revision_id
+2.书籍/260824 扫描文件/大型汽轮发电机组典型故障案例分析.pdf	doc-002b22a718460a933d43	rev-77a8499f4c6d8de95f2c
+2.书籍/260824 扫描文件/电厂汽轮机原理及系统.pdf	doc-1e3db6d63a7742cbbf28	rev-afc54e5e4f282beec4fb
+2.书籍/260824 扫描文件/电气设备分册.pdf	doc-d37e028eaf233766238f	rev-4def446ac5217b44d04d
+2.书籍/260824 扫描文件/汽轮发电机组毁机事故及其失效分析.pdf	doc-1e3002ed1b7f789d658e	rev-91891d77b350ce02c651
+2.书籍/260824 扫描文件/汽轮发电机组振动故障诊断及案例.pdf	doc-4921d826cc280411b4d6	rev-f319d718bd866fce74a7
+2.书籍/260824 扫描文件/汽轮发电机组振动与处理.pdf	doc-58dd9a27234431e6fcc2	rev-19796afe7962a326436a
+2.书籍/260824 扫描文件/汽轮发电机组振动诊断技术问答.pdf	doc-e904369e8e2bc7a3a8e0	rev-e8020f1a8dbe209c1a44
+2.书籍/260824 扫描文件/汽轮机本体安装（第二版）.pdf	doc-416aeb405528d8d6936d	rev-0488cb2330fcccabe412
+2.书籍/260824 扫描文件/汽轮机调速安装（第二版）.pdf	doc-21f4a5ce091f35589202	rev-6b562209266969c3fd60
+2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf	doc-2e6846eb4bb57309a4ee	rev-a2a1d7444e558b2a813a
+2.书籍/260824 扫描文件/汽轮机设备安装与检修问题.pdf	doc-a177e1b74200b5375042	rev-1780def8f27fa9c2e5c4
+2.书籍/260824 扫描文件/汽轮机设备及运行（第三版）.pdf	doc-2e377191401c90f46b75	rev-d993532d34aceea9e203
+2.书籍/260824 扫描文件/汽轮机设备检修（第二版）.pdf	doc-263381d49aa5077b5b88	rev-21bca4388633e8d99b7d
+2.书籍/260824 扫描文件/汽轮机振动故障与现场诊断方法.pdf	doc-7b73a8c7cb307c8fac4d	rev-4db0f2709c1087804c59
+2.书籍/260824 扫描文件/压水堆核电厂系统与设备.pdf	doc-1b7cfada5c7d45e0fa42	rev-bf0968e7283caec5221f
+2.书籍/260824 扫描文件/油液监测与智能诊断.pdf	doc-700fed24a6604b941758	rev-365d0563c6dc3f99a116
+2.书籍/大功率汽轮发电机组转子与支撑系统振动 李录平，晋风华，张世海，陈向民 2017年版.pdf	doc-72a95a9847412e6b9832	rev-28152354e458ab1f4d18
+2.书籍/汽轮发电机组转子及结构振动 王延博 编 2016年版.pdf	doc-d52a47597bd38901451b	rev-2e2a53364be7fe28c39b
+标准法规/行业标准目录.pdf	doc-3063e05c673d1be9d39f	rev-a8507c5f2b6fd24c84e0
+标准法规/DL／T+1766.2—2019+水氢氢冷汽轮发电机检修导则+第2部分：定子检修.pdf	doc-86bf565b83bd94e6d164	rev-bf780aa3b86e446cc870
+标准法规/DL／T+1766.3—2019+水氢氢冷汽轮发电机检修导则+第3部分：转子检修.pdf	doc-b0ee4b9e6c0265bfb5a8	rev-2d3b29c04060dd25fb0f
+标准法规/DL／T+1766.4—2021　水氢氢冷汽轮发电机检修导则　第4部分：氢气冷却系统检修.pdf	doc-a4abd2c011bb4888fab5	rev-1f50d1bb32f95b292bec
+标准法规/DL／T+490—2024+发电机励磁系统及装置安装验收规程.pdf	doc-c73ce7e613b07ccfdee1	rev-41e470e9d7b7922324bf
+标准法规/DL／T+608—2019+300MW～+600MW级汽轮机运行导则（代替DL／T+608—1996、+DL／T+609—1996）.pdf	doc-ee7056bc95b312fcc488	rev-262fc8776d3984c281b1
+标准法规/DL／T+711—2019+汽轮机调节保安系统试验导则（代替DL／T+711—1999）.pdf	doc-420a1f74053932545010	rev-a4dac9420339bea31eef
+标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf	doc-24b25833ab82e212d1fb	rev-4c1c24a74e4b364652e3
+标准法规/DLT 5210.3-2018 电力建设施工质量验收规程 第3部分：汽轮发电机组.pdf	doc-0cda83291cb435814962	rev-9f1e9ac4a657e08e8031
+标准法规/DLT 863-2016汽轮机启动调试导则.pdf	doc-7a1d2e663bf13813d7b7	rev-a6ea5862f790a65e1dbf
+OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf	doc-7a1d2e663bf13813d7b7	rev-a6ea5862f790a65e1dbf
+OCR/汽轮机辅机安装（第二版）(OCR).pdf	doc-2e6846eb4bb57309a4ee	rev-a2a1d7444e558b2a813a
+OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf	doc-a1f2fbf6ee4b0277e46a	rev-be31e11d289998c918fa
+标准法规/DLT+1430—2025变电设备在线监测系统技术导则.pdf	doc-1aa97c7b48e3f06094c5	rev-c9fb8cdc4019ece820a2
+标准法规/DLT+1766.5—2021《水氢氢冷汽轮发电机检修导则++第5部分：内冷水系统检修》.pdf	doc-19384e8ed62b11adf57f	rev-5dc835dfa3f0203fedb2
+标准法规/DLT+1766.6-2023+水氢氢冷汽轮发电机检修导则+第6部分：励磁系统检修.pdf	doc-52a08ef4e4361819841c	rev-9897a0ea566e3f9bae5e
+标准法规/DLT+1766.7-2023+水氢氢冷汽轮发电机检修导则+第7部分：附属系统检修.pdf	doc-304c9923536e97dfc496	rev-c30816cf14ae3d63e6c4
+标准法规/DLT+2092—2020+火力发电机组电气启动试验规程.pdf	doc-3ac99b69b7c700157d14	rev-5c741d0b24aa34c073ea
+标准法规/DLT+970-2023+大型汽轮发电机非正常及特殊运行及维护导则.pdf	doc-108b53e5066cff95e7c1	rev-3963b2718bcd13696d84
+标准法规/DLT1164-2012汽轮发电机运行导则.pdf	doc-d2df3499f525b0045d84	rev-23c6303237a7d53cf158
+标准法规/HAD103核电厂调试程序续.pdf	doc-2d76f424651ef5c9125d	rev-379f7a0f091999246dad
+标准法规/HAF 003-1991及HAD 003汇编 核电厂质量保证法规和导则 .pdf	doc-9bd4b7750435ba4cd3bb	rev-52993bb173cd746569e8
+标准法规/HAF102核动力厂设计安全规定.pdf	doc-28be8d7b620a3276e5ed	rev-03cad557125d330c85b4
+标准法规/HAF103核动力厂调试和运行安全规定.pdf	doc-a1f2fbf6ee4b0277e46a	rev-be31e11d289998c918fa
+标准法规/NB／T+10933—2022+核电厂常规岛汽轮机技术监督导则.pdf	doc-d8941d2b344e903d4daa	rev-1dc8ffc2372f81fff672
+标准法规/NB／T+25105—2020+核电厂汽轮机保护系统调试导则_1_1_钱兴根_易维鑫_.pdf	doc-1f4f7c6029b5405bd892	rev-887a1132ca4d6f3e54f0
+标准法规/NBT 10604.2—2021 核电厂常规岛及辅助配套设施建设施工质量验收规程+第2部分：汽轮发电机组.pdf	doc-64d7101432c7912e14e4	rev-b28aeaf413dfc015977b
+标准法规/NBT+25103—2019压水堆核电厂发电机冷却系统调试导则_1_1_钱兴根.pdf	doc-14fabb7edaea01607c23	rev-90ea2f09bcb1427c38cb
+汽轮机说明书/汽轮机本体安装及维护说明书.pdf	doc-af7fa1738c5c89599e41	rev-c700c57426b967b2d2c9
+OCR/汽轮机本体安装及维护说明书(OCR).pdf	doc-af7fa1738c5c89599e41	rev-c700c57426b967b2d2c9

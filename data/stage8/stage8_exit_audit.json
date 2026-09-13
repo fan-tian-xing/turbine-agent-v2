@@ -16,7 +16,7 @@
     },
     "mapping_shortlist": {
       "path": "data/stage8/ontology_mapping_shortlist.json",
-      "sha256": "0b1da3152defdbe67e3a93d2c9aa0c315b1f89374f79b6717adb25639dc1ca34"
+      "sha256": "93a93d7aa8babad324bee979f3106b3776e99ac6bd76e58af171def3314b8474"
     },
     "review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",

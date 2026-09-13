@@ -168,7 +168,7 @@ def test_stage8_mapping_consumes_stage7_and_stops_at_manual_review():
     }
     assert all(row["candidate_type"] != "parameter" for row in payload["shortlist"])
     assert all(row["candidate_type"] != "applicability_condition" for row in standard_rows)
-    assert all(row["review_status"] == "pending_manual_review" for row in payload["shortlist"])
+    assert all(row.get("mapping_review_decision", "pending_manual_review") == "pending_manual_review" for row in payload["shortlist"])
     assert all(isinstance(row["requires_original_confirmation"], bool) for row in payload["shortlist"])
     assert all(row["source_occurrences"] for row in payload["shortlist"])
     assert all(row["candidate_content_fingerprint"] for row in payload["shortlist"])

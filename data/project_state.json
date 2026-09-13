@@ -2,11 +2,11 @@
   "schema_version": 1,
   "artifact_kind": "project_state",
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
-  "updated_at": "2026-09-12",
-  "current_stage": 9,
+  "updated_at": "2026-09-13",
+  "current_stage": 10,
   "current_stage_status": "complete",
-  "current_stage_scope": "owl_shacl_semantic_authority_and_runtime_validation",
-  "next_stage": 10,
+  "current_stage_scope": "runtime_provenance_versioning_and_reproducibility",
+  "next_stage": 11,
   "next_stage_status": "ready",
   "formal_release": false,
   "stages": {
@@ -68,6 +68,21 @@
       "runtime_schema": "config/semantic_runtime.schema.json",
       "review": "data/stage9/stage9_semantic_review.json",
       "runtime_module": "src/turbine_kg/ontology/semantic.py"
+    },
+    "10": {
+      "status": "complete",
+      "scope": "runtime_provenance_versioning_and_reproducibility",
+      "entry_record": "data/stage10/stage10_audit.json",
+      "exit_audit": "data/stage10/stage10_audit.json",
+      "runtime_contract": "config/runtime_contract.json",
+      "runtime_schema": "config/runtime_run.schema.json",
+      "runtime_consumer": "scripts/build_stage7_terminology.py --runtime",
+      "next_stage_inputs": {
+        "stage9_exit": "data/stage9/stage9_exit_audit.json",
+        "stage10_exit": "data/stage10/stage10_audit.json",
+        "controlled_registry": "data/registry/source_assets.jsonl",
+        "runtime_cache": "var/model_runs/stage10"
+      }
     }
   },
   "boundaries": [

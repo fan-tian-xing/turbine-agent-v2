@@ -12,4 +12,6 @@ Stage 9 工程语义权威由 `minimal_turbine.ttl` 和 `stage9_core.ttl` 的本
 
 项目阶段状态只见 `data/project_state.json`；运行验收和正式输入指纹只见 `data/stage9/stage9_exit_audit.json`。
 
+阶段 10 只在 OWL/SHACL 语义链之外增加运行追溯与可重验缓存。其运行字段由 `config/runtime_run.schema.json` 定义，跨模块约束由 `config/runtime_contract.json` 定义；缓存和最小 PROV 映射不会成为本体或知识真源。
+
 Stage 8 另有 `modeling_pattern_coverage` 覆盖审计：它只验证少量真实 Stage 7 candidate 能否代表八种后续建模模式，不扩大最小 OWL，不生成正式词汇。参数、过程、适用性和 alias 探针可以 defer；关键是每种模式都有真实候选、明确处置和来源证据。

@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "stage": "10",
+  "artifact_kind": "stage10_exit_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/audit_stage10_exit.py",
+  "inputs": {
+    "config/runtime_contract.json": {
+      "path": "config/runtime_contract.json",
+      "sha256": "40af4c7094ceb5739e164f970b52a7f32889d818d00200bfe74b9aa0e2cab5ab"
+    },
+    "config/runtime_run.schema.json": {
+      "path": "config/runtime_run.schema.json",
+      "sha256": "0a239b6c5ab1f1e5d5bb7a2c3ddb96d3063225684c6fabfe4fbdbb48cf1baae1"
+    },
+    "data/stage9/stage9_exit_audit.json": {
+      "path": "data/stage9/stage9_exit_audit.json",
+      "sha256": "2d1ea672a7ddfb926c72bb64ac9ed99e308364b6920d8bfc58c89b2d16bc9dad"
+    },
+    "data/stage8/ontology_mapping_shortlist.json": {
+      "path": "data/stage8/ontology_mapping_shortlist.json",
+      "sha256": "93a93d7aa8babad324bee979f3106b3776e99ac6bd76e58af171def3314b8474"
+    },
+    "data/stage8/ontology_mapping_review_queue.jsonl": {
+      "path": "data/stage8/ontology_mapping_review_queue.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/turbine_kg/observability/runtime.py": {
+      "path": "src/turbine_kg/observability/runtime.py",
+      "sha256": "10249ab7e19a2a174f6bc8fc80405ef4fffceb94bf32d5fcd30c394f01f2be31"
+    },
+    "scripts/build_stage7_terminology.py": {
+      "path": "scripts/build_stage7_terminology.py",
+      "sha256": "151861c6eebb2e5a4659c392a43af05f40b6121f86fced6ef93b413c36504a18"
+    },
+    "src/turbine_kg/stage3/llm.py": {
+      "path": "src/turbine_kg/stage3/llm.py",
+      "sha256": "859b07a49604c0ceac3bee4669624c38293f70b5715dae54140eedfe66d10d69"
+    },
+    "scripts/audit_stage10_exit.py": {
+      "path": "scripts/audit_stage10_exit.py",
+      "sha256": "14135fc6a91e285bc0daf364abb6183ce5e834d2e3897c6e4f3271a77c117378"
+    },
+    "data/project_state.json": {
+      "path": "data/project_state.json",
+      "sha256": "71c3dc714da1e15e890461523761ff79e5d36979ec5eb6230a853ccf28022b5e"
+    },
+    "config/asset_revision_identity.tsv": {
+      "path": "config/asset_revision_identity.tsv",
+      "sha256": "3acd7af150321c6080b67d71334cab90a0fd0ed8523fbe2523e60706a3d4af94"
+    },
+    "tests/stage10/test_stage10_runtime.py": {
+      "path": "tests/stage10/test_stage10_runtime.py",
+      "sha256": "fa26ae6fd1ec8af4c434bcdae66e7a7a6f88a0db9a483bdfc56094cdc1c3b14f"
+    }
+  },
+  "outputs": {
+    "runtime_cache": "var/model_runs/stage10",
+    "run_schema": "config/runtime_run.schema.json",
+    "runtime_contract": "config/runtime_contract.json",
+    "exit_audit": "data/stage10/stage10_audit.json"
+  },
+  "counts": {
+    "runtime_cache_entries": 2,
+    "stage8_shortlist": 4,
+    "stage8_queue": 0,
+    "revision_records": 44
+  },
+  "checks": {
+    "stage9_gate": true,
+    "runtime_contract_and_schema": true,
+    "stage8_single_review_state": true,
+    "stage8_original_confirmation_blocks_queue": true,
+    "llm_payload_minimal": true,
+    "runtime_consumer_executed": true,
+    "runtime_structured_cache": true,
+    "runtime_prov_mapping": true,
+    "revision_catalog_readable": true,
+    "asset_revision_assignments_cover_registry": true,
+    "targeted_tests": true,
+    "full_project_tests": true
+  },
+  "runtime_result": {
+    "command": [
+      "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+      "scripts/build_stage7_terminology.py",
+      "--runtime"
+    ],
+    "returncode": 0,
+    "stdout_tail": "{\"status\": \"succeeded\", \"run_id\": \"run-6375a140c3164cb9a1a2\", \"cache_key\": \"adda1b67b2a4999af9146abd260eb82affbb71a25d0a4d7fcf447e9a035f3100\", \"candidate_count\": 19304}\n",
+    "stderr_tail": ""
+  },
+  "test_result": {
+    "targeted": {
+      "command": [
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/stage10",
+        "tests/stage8",
+        "tests/stage3/test_llm_contract.py",
+        "tests/registry",
+        "tests/unit/test_project_state.py"
+      ],
+      "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+      "status": "passed",
+      "returncode": 0,
+      "stdout_tail": ".....................................................................    [100%]\n",
+      "stderr_tail": ""
+    },
+    "full_project": {
+      "command": [
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests"
+      ],
+      "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+      "status": "passed",
+      "returncode": 0,
+      "stdout_tail": "........................................................................ [ 29%]\n........................................................................ [ 58%]\n........................................................................ [ 87%]\n...............................                                          [100%]\n",
+      "stderr_tail": ""
+    }
+  },
+  "review": {
+    "mapping_acceptance_is_separate_from_knowledge_approval": true,
+    "formal_release": false,
+    "namespace": "research namespace retained; freeze before formal Release"
+  },
+  "failure_isolation": "缓存损坏、输入变化或失败运行不得替换已有成功结果；原始资料、冻结 Evidence、旧版目录和 Neo4j 均不写入。",
+  "zero_tolerance_errors": [],
+  "blockers": [],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 11 controlled Evidence/Statement preparation"
+}

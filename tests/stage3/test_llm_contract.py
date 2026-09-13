@@ -71,6 +71,14 @@ def _make_hit():
     }
 
 
+def test_evidence_payload_omits_local_relative_path() -> None:
+    hit = _make_hit()
+    from turbine_kg.stage3.llm import _evidence_payload
+    payload = json.dumps(_evidence_payload([hit]), ensure_ascii=False)
+    assert "relative_path" not in payload
+    assert hit["asset"]["relative_path"] not in payload
+
+
 def _valid_payload(hit, *, context_key="context", claim_type="fact"):
     statement = hit["statement"]
     evidence_id = statement["evidence_ids"][0]

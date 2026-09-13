@@ -14,6 +14,7 @@ from turbine_kg.observability.runtime import (
 )
 from turbine_kg.observability.lifecycle import impacted_by_revision
 from turbine_kg.registry.identity import revision_id_for_source_path
+from scripts.build_stage7_terminology import _stage7_cache_context
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -119,9 +120,37 @@ def test_cache_hit_rechecks_input_gate_and_input_change_misses(tmp_path: Path):
     assert builds["count"] == 2
 
 
+def test_stage7_contract_change_misses_cache_and_irrelevant_llm_settings_do_not_enter_context(tmp_path: Path):
+    refs = lambda contract_sha: (
+        {"kind": "input_manifest", "id": "manifest", "sha256": "a" * 64},
+        {"kind": "contract", "id": "terminology", "path": "config/terminology_contract.json", "sha256": contract_sha},
+    )
+    kwargs = dict(
+        cache_root=tmp_path / "runs",
+        operation="terminology_extraction",
+        cache_context=({"implementation": "stage7-fixture"},),
+        output={"value": "stable"},
+        schema_path=SCHEMA,
+    )
+    first, _ = run_with_cache(input_refs=refs("b" * 64), **kwargs)
+    cached, _ = run_with_cache(input_refs=refs("b" * 64), **kwargs)
+    changed, _ = run_with_cache(input_refs=refs("c" * 64), **kwargs)
+    assert cached.extraction_batch_id == first.extraction_batch_id
+    assert changed.extraction_batch_id != first.extraction_batch_id
+
+    context = _stage7_cache_context(ROOT)
+    serialized = json.dumps(context, ensure_ascii=False)
+    assert "terminology/models.py" in serialized
+    assert "documents/ids.py" in serialized
+    assert "llm_model" not in serialized
+    assert "llm_allow_evidence_send" not in serialized
+
+
 def test_knowledge_lifecycle_statuses_and_revision_scoping():
-    assert KNOWLEDGE_STATUSES == {"active", "superseded", "invalid", "replaced"}
+    assert KNOWLEDGE_STATUSES == {"active", "superseded", "invalid"}
     assert validate_knowledge_status("superseded") == "superseded"
+    with pytest.raises(ValueError):
+        validate_knowledge_status("replaced")
     with pytest.raises(ValueError):
         validate_knowledge_status("published")
     impacted = impacted_by_revision(

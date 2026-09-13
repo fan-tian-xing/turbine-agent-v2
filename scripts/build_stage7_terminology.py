@@ -58,6 +58,28 @@ def _runtime_input_gate(manifest: dict, settings: Settings) -> None:
             raise ValueError(f"runtime manifest asset fingerprint differs from Registry: {page['page_id']}")
 
 
+def _stage7_cache_context(root: Path) -> tuple[dict]:
+    """Return only direct producer dependencies that can change candidates.
+
+    Runtime settings such as the configured LLM are intentionally excluded:
+    this producer is deterministic and does not call an LLM.
+    """
+    dependencies = (
+        Path(__file__),
+        root / "src/turbine_kg/terminology/analyzer.py",
+        root / "src/turbine_kg/terminology/models.py",
+        root / "src/turbine_kg/terminology/validation.py",
+        root / "src/turbine_kg/documents/ids.py",
+    )
+    return ({
+        "implementation": "stage7-terminology-analyzer",
+        "files": [
+            {"path": str(path.relative_to(root)).replace("\\", "/"), "sha256": _sha(path)}
+            for path in dependencies
+        ],
+    },)
+
+
 def _runtime_run(manifest: dict, settings: Settings, *, force: bool) -> None:
     stage6_path = ROOT / "data/stage6/stage6_evidence_bundle.jsonl"
     manifest_ref = {"kind": "input_manifest", "id": "stage7-input-manifest", "path": "data/stage7/terminology_input_manifest.json", "sha256": _sha(STAGE7 / "terminology_input_manifest.json")}
@@ -73,19 +95,7 @@ def _runtime_run(manifest: dict, settings: Settings, *, force: bool) -> None:
     }
     config_path = ROOT / "config/terminology_contract.json"
     config_ref = {"kind": "contract", "id": "stage7-terminology-contract", "path": "config/terminology_contract.json", "sha256": _sha(config_path)}
-    runtime_settings = {
-        "source_root": str(settings.source_root),
-        "ocr_derived_root": str(settings.ocr_derived_root),
-        "llm_model": settings.llm_model,
-        "llm_allow_evidence_send": settings.llm_allow_evidence_send,
-    }
-    cache_context = (
-        {"implementation": "stage7-terminology-analyzer", "files": [
-            {"path": str(Path(__file__).relative_to(ROOT)).replace("\\", "/"), "sha256": _sha(Path(__file__))},
-            {"path": "src/turbine_kg/terminology/analyzer.py", "sha256": _sha(ROOT / "src/turbine_kg/terminology/analyzer.py")},
-            {"path": "src/turbine_kg/terminology/validation.py", "sha256": _sha(ROOT / "src/turbine_kg/terminology/validation.py")},
-        ], "settings": runtime_settings},
-    )
+    cache_context = _stage7_cache_context(ROOT)
 
     def build_output() -> dict:
         stage6_rows = load_stage6_evidence_bundle(stage6_path)
@@ -99,7 +109,7 @@ def _runtime_run(manifest: dict, settings: Settings, *, force: bool) -> None:
     run, output = run_with_cache(
         cache_root=ROOT / "var/model_runs/stage10",
         operation="terminology_extraction",
-        input_refs=(manifest_ref, stage6_ref, revision_ref), cache_context=cache_context,
+        input_refs=(manifest_ref, stage6_ref, revision_ref, config_ref), cache_context=cache_context,
         output=build_output, schema_path=ROOT / "config/runtime_run.schema.json", force=force,
         validate_input=lambda: _runtime_input_gate(manifest, settings),
         validate_output=lambda value: validate_candidates(value["candidates"], {(row["document_logical_id"], row["physical_page"]) for row in manifest["pages"] if row["page_status"] == "text_accepted"}),

@@ -81,8 +81,7 @@
       "next_stage_inputs": {
         "stage9_exit": "data/stage9/stage9_exit_audit.json",
         "stage10_exit": "data/stage10/stage10_audit.json",
-        "controlled_registry": "data/registry/source_assets.jsonl",
-        "runtime_cache": "var/model_runs/stage10"
+        "controlled_registry": "data/registry/source_assets.jsonl"
       }
     }
   },

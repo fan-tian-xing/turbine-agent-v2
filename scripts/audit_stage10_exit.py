@@ -40,12 +40,14 @@ def _run_tests() -> dict:
 
 
 def _audit() -> dict:
+    sys.path.insert(0, str(ROOT))
     sys.path.insert(0, str(ROOT / "src"))
     from turbine_kg.documents.identity import load_revision_catalog
     from turbine_kg.observability.runtime import ExtractionBatch, KNOWLEDGE_STATUSES
     from turbine_kg.observability.lifecycle import impacted_by_revision
     from turbine_kg.registry.identity import load_asset_revision_map
     from turbine_kg.stage3.llm import _evidence_payload
+    from scripts.build_stage7_terminology import _stage7_cache_context
 
     contract = _read("config/runtime_contract.json")
     schema = _read("config/runtime_run.schema.json")
@@ -69,6 +71,7 @@ def _audit() -> dict:
     runtime_record = None
     batch_shape_ok = False
     structured_output_ok = False
+    contract_input_ok = False
     if runtime_runs:
         run_payload = json.loads(runtime_runs[-1][0].read_text(encoding="utf-8"))
         output_payload = json.loads(runtime_runs[-1][1].read_text(encoding="utf-8"))
@@ -77,7 +80,11 @@ def _audit() -> dict:
             for key, value in run_payload.items() if key != "schema_version"
         })
         batch_shape_ok = bool(runtime_record.extraction_batch_id.startswith("batch-")) and all(
-            ref.get("kind") in {"input_manifest", "evidence_bundle", "revision_scope"}
+            ref.get("kind") in {"input_manifest", "evidence_bundle", "revision_scope", "contract"}
+            for ref in runtime_record.input_refs
+        )
+        contract_input_ok = any(
+            ref.get("kind") == "contract" and ref.get("path") == "config/terminology_contract.json"
             for ref in runtime_record.input_refs
         )
         structured_output_ok = output_payload.get("artifact_kind") == "terminology_candidates" and isinstance(output_payload.get("candidates"), list)
@@ -105,6 +112,11 @@ def _audit() -> dict:
         "llm_payload_minimal": payload_minimal_ok,
         "runtime_consumer_executed": runtime_result.returncode == 0 and bool(runtime_runs),
         "runtime_structured_cache": structured_output_ok and all(json.loads(path.read_text(encoding="utf-8")).get("status") == "completed" for path, _ in runtime_runs),
+        "stage7_contract_cache_dependency": contract_input_ok,
+        "stage7_cache_context_is_relevant": all(
+            key not in json.dumps(_stage7_cache_context(ROOT), ensure_ascii=False)
+            for key in ("llm_model", "llm_allow_evidence_send")
+        ),
         "lightweight_extraction_batch": batch_shape_ok and set(schema["required"]) == {"schema_version", "extraction_batch_id", "operation", "status", "input_refs", "output_ref", "output_fingerprint"},
         "formal_runtime_fields_removed": not (set(schema.get("properties", {})) & {"model", "prompt_hash", "started_at", "finished_at", "git_head", "producer_sha", "model_attempts", "cache_key", "prov_o"}),
         "knowledge_lifecycle_statuses": set(contract.get("knowledge_lifecycle", {}).get("statuses", [])) == set(KNOWLEDGE_STATUSES),

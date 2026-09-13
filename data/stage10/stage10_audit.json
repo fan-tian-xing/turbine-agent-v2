@@ -8,7 +8,7 @@
   "inputs": {
     "config/runtime_contract.json": {
       "path": "config/runtime_contract.json",
-      "sha256": "b524ce66f041351831c875d7460a1a8833f79c87ee5e9bdc4ee4ded9c0457e31"
+      "sha256": "4eb24dcf1f8201177975b32d956812b81891c4d5604243f331f2a00c2414b6a5"
     },
     "config/runtime_run.schema.json": {
       "path": "config/runtime_run.schema.json",
@@ -28,11 +28,11 @@
     },
     "src/turbine_kg/observability/runtime.py": {
       "path": "src/turbine_kg/observability/runtime.py",
-      "sha256": "2741850a9fa6ddd09c21365ef73c5bcb27d7c2d1386dc590d4f13efa08720934"
+      "sha256": "d142e62a0190ac2b3481f22d2838aa72df0b4949e13d523f6218eba8cec076c1"
     },
     "scripts/build_stage7_terminology.py": {
       "path": "scripts/build_stage7_terminology.py",
-      "sha256": "db07fc5c55dda7ce2588955a406743a67a30cdee99e1bdc8d6cd00fd684e4515"
+      "sha256": "f5ee12e26de9decee2e8d044629f6ee717cb84c48acc1bf5a708dc41c3093ebd"
     },
     "src/turbine_kg/stage3/llm.py": {
       "path": "src/turbine_kg/stage3/llm.py",
@@ -40,11 +40,11 @@
     },
     "scripts/audit_stage10_exit.py": {
       "path": "scripts/audit_stage10_exit.py",
-      "sha256": "c08a0f15e8203b8dd2bba938d49cfee70da1b63af7e0145dd43267a0c150c6d3"
+      "sha256": "74f2e3d35cf239bcae0966a02c6cb663206af158ebaaf50658beb32e640d3776"
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "58104db9d7fce6a44385ca4949114e20b898c4158b0180ecc3e3fc65e9f42cca"
+      "sha256": "b2092199af59527ba7c650ff2a161f9cef1771bf2ff64f750e0585e527b4f158"
     },
     "config/asset_revision_identity.tsv": {
       "path": "config/asset_revision_identity.tsv",
@@ -56,7 +56,7 @@
     },
     "tests/stage10/test_stage10_runtime.py": {
       "path": "tests/stage10/test_stage10_runtime.py",
-      "sha256": "0e32be5965605ef69dccd9134056351c8051f413ab60627226339c3db589a01e"
+      "sha256": "b1ece45624660f5efa5de9451a477444ed21a3cc929e2dd98288056f71f2a21c"
     }
   },
   "outputs": {
@@ -66,7 +66,7 @@
     "exit_audit": "data/stage10/stage10_audit.json"
   },
   "counts": {
-    "runtime_cache_entries": 1,
+    "runtime_cache_entries": 2,
     "stage8_shortlist": 4,
     "stage8_queue": 0,
     "revision_records": 44
@@ -79,6 +79,8 @@
     "llm_payload_minimal": true,
     "runtime_consumer_executed": true,
     "runtime_structured_cache": true,
+    "stage7_contract_cache_dependency": true,
+    "stage7_cache_context_is_relevant": true,
     "lightweight_extraction_batch": true,
     "formal_runtime_fields_removed": true,
     "knowledge_lifecycle_statuses": true,
@@ -95,7 +97,7 @@
       "--runtime"
     ],
     "returncode": 0,
-    "stdout_tail": "{\"status\": \"completed\", \"extraction_batch_id\": \"batch-c0974461ee5e47b1b045\", \"candidate_count\": 19304}\n",
+    "stdout_tail": "{\"status\": \"completed\", \"extraction_batch_id\": \"batch-ed4f924d872344b5999b\", \"candidate_count\": 19304}\n",
     "stderr_tail": ""
   },
   "test_result": {
@@ -116,7 +118,7 @@
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": ".....................................................................    [100%]\n",
+      "stdout_tail": "......................................................................   [100%]\n",
       "stderr_tail": ""
     },
     "full_project": {
@@ -132,7 +134,7 @@
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 29%]\n........................................................................ [ 58%]\n........................................................................ [ 87%]\n...............................                                          [100%]\n",
+      "stdout_tail": "........................................................................ [ 29%]\n........................................................................ [ 58%]\n........................................................................ [ 87%]\n................................                                         [100%]\n",
       "stderr_tail": ""
     }
   },

@@ -19,7 +19,7 @@ from jsonschema import Draft202012Validator
 
 
 SCHEMA_VERSION = 1
-KNOWLEDGE_STATUSES = frozenset({"active", "superseded", "invalid", "replaced"})
+KNOWLEDGE_STATUSES = frozenset({"active", "superseded", "invalid"})
 
 
 def canonical_json(value: Any) -> str:

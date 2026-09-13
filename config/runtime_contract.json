@@ -5,9 +5,10 @@
   "status": "active_for_stage10",
   "authority": "Document/Revision/Evidence/Statement contracts define knowledge identity; runtime_run.schema.json defines the optional extraction batch shape",
   "knowledge_lifecycle": {
-    "statuses": ["active", "superseded", "invalid", "replaced"],
+    "statuses": ["active", "superseded", "invalid"],
     "identity_chain": ["document_logical_id", "revision_id", "page_id", "source_span_id", "evidence_id", "statement_id"],
     "revision_replacement": "mark the old Revision superseded, invalidate or rebuild only dependent Evidence, Statements and derived relationships, and retain shared Entity records",
+    "invalidation_reason": "withdrawn is a reason for invalid, not a separate lifecycle status",
     "stable_ids": "unchanged source content keeps its existing Evidence and Statement identities when the owning producer contract permits it",
     "review_overlay": "manual decisions bind to the exact Evidence or Statement identity and content/version fingerprint; mapping acceptance is separate from knowledge approval"
   },

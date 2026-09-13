@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections import Counter
 
 from .models import PAGE_STATUSES, validate_candidate, validate_page_record
 
@@ -66,7 +65,3 @@ def validate_candidates(records: list[dict], accepted_page_keys: set[tuple[str, 
             if key not in accepted_page_keys:
                 raise ValueError("candidate references a non-text-accepted page")
     return {"candidate_count": len(records), "candidate_ids": ids}
-
-
-def count_occurrences(records: list[dict]) -> int:
-    return sum(int(row["occurrence_count"]) for row in records)

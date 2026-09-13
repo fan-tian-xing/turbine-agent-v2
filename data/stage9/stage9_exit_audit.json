@@ -36,7 +36,7 @@
     },
     "src/turbine_kg/stage3/corpus.py": {
       "path": "src/turbine_kg/stage3/corpus.py",
-      "sha256": "256d2c8ef1b5c823a6301e04faa324117402aa89835604337408f29147062a30"
+      "sha256": "5c5bf5ae4a5ae2672da5a1490934ae25734357c824b9a00cefbfb7dec69b831b"
     },
     "src/turbine_kg/stage3/models.py": {
       "path": "src/turbine_kg/stage3/models.py",
@@ -76,7 +76,7 @@
     },
     "scripts/audit_stage9_exit.py": {
       "path": "scripts/audit_stage9_exit.py",
-      "sha256": "4c4d2c501fe8d54de508ba6b5ef4eeb7e082c680a99640787c4c89068b091080"
+      "sha256": "eab095bf5ff2e8739e2b9c95084552641bd61645913ec5ba4758dd5b846d6a1b"
     },
     "var/stage3/real_trial_pages.json": {
       "path": "var/stage3/real_trial_pages.json",
@@ -194,6 +194,8 @@
         "-q",
         "-p",
         "no:cacheprovider",
+        "--basetemp",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-targeted-c763a92acc77",
         "tests/stage9",
         "tests/stage3",
         "tests/unit/test_project_state.py"
@@ -212,12 +214,14 @@
         "-q",
         "-p",
         "no:cacheprovider",
+        "--basetemp",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-full-780f8734240e",
         "tests"
       ],
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 29%]\n........................................................................ [ 58%]\n........................................................................ [ 88%]\n.............................                                            [100%]\n",
+      "stdout_tail": "........................................................................ [ 27%]\n........................................................................ [ 54%]\n........................................................................ [ 81%]\n..................................................                       [100%]\n",
       "stderr_tail": ""
     }
   },
@@ -226,7 +230,7 @@
   "failure_isolation": "Any schema, vocabulary, SHACL or research-adapter failure yields a nonconforming report and raises SemanticValidationError before Property Graph construction/Neo4j loading; retain the whole original batch unchanged.",
   "rollback": "Restore the previous verified OWL/SHACL/runtime authority package and rerun the same input batch; no bypass or database correction.",
   "next_stage_allowed": true,
-  "next_stage": "Stage 10 runtime provenance and reproducibility",
+  "next_stage": "Stage 10 stable identity, document revision and knowledge maintainability",
   "next_stage_inputs": {
     "owl": [
       "ontology/minimal_turbine.ttl",

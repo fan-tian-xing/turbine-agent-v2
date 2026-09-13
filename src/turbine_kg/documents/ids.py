@@ -35,10 +35,6 @@ def figure_id(block_version_id_value: str) -> str:
     return stable_id("figure", block_version_id_value)
 
 
-def correction_id(block_version_id_value: str, reviewer: str, corrected_text: str) -> str:
-    return stable_id("correction", block_version_id_value, reviewer, corrected_text)
-
-
 def evidence_id(
     revision_id_value: str,
     physical_pages: tuple[int, ...],

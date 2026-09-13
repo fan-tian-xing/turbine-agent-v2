@@ -7,6 +7,7 @@ import json
 import os
 import subprocess
 import sys
+import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,7 +26,8 @@ def _read(relative: str) -> dict:
 def _run_tests() -> dict:
     command = [
         sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
-        "tests/stage10", "tests/stage8", "tests/stage3/test_llm_contract.py",
+        "--basetemp", str(ROOT / "var/tmp" / f"stage10-audit-targeted-{uuid.uuid4().hex[:12]}"),
+        "tests/stage10", "tests/stage7", "tests/stage8", "tests/stage3/test_llm_contract.py",
         "tests/registry", "tests/unit/test_project_state.py",
     ]
     result = subprocess.run(command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
@@ -47,7 +49,7 @@ def _audit() -> dict:
     from turbine_kg.observability.lifecycle import impacted_by_revision
     from turbine_kg.registry.identity import load_asset_revision_map
     from turbine_kg.stage3.llm import _evidence_payload
-    from scripts.build_stage7_terminology import _stage7_cache_context
+    from scripts.build_stage7_terminology import _stage7_cache_context, _stage7_registry_ref
 
     contract = _read("config/runtime_contract.json")
     schema = _read("config/runtime_run.schema.json")
@@ -60,6 +62,8 @@ def _audit() -> dict:
     # input, Registry, output and fingerprint validation on every access.
     runtime_command = [sys.executable, "scripts/build_stage7_terminology.py", "--runtime"]
     runtime_result = subprocess.run(runtime_command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
+    runtime_summary = json.loads(runtime_result.stdout.strip().splitlines()[-1]) if runtime_result.returncode == 0 else {}
+    current_batch_id = runtime_summary.get("extraction_batch_id")
     runtime_runs = []
     index_path = RUNTIME_ROOT / "cache_index.json"
     cache_index = json.loads(index_path.read_text(encoding="utf-8")) if index_path.exists() else {}
@@ -72,21 +76,25 @@ def _audit() -> dict:
     batch_shape_ok = False
     structured_output_ok = False
     contract_input_ok = False
-    if runtime_runs:
-        run_payload = json.loads(runtime_runs[-1][0].read_text(encoding="utf-8"))
-        output_payload = json.loads(runtime_runs[-1][1].read_text(encoding="utf-8"))
+    current_runs = [(record, output) for record, output in runtime_runs if record.parent.name == current_batch_id]
+    registry_ref = _stage7_registry_ref(_read("data/stage7/terminology_input_manifest.json"))
+    registry_input_ok = False
+    if len(current_runs) == 1:
+        run_payload = json.loads(current_runs[0][0].read_text(encoding="utf-8"))
+        output_payload = json.loads(current_runs[0][1].read_text(encoding="utf-8"))
         runtime_record = ExtractionBatch(**{
             key: tuple(value) if key == "input_refs" else value
             for key, value in run_payload.items() if key != "schema_version"
         })
         batch_shape_ok = bool(runtime_record.extraction_batch_id.startswith("batch-")) and all(
-            ref.get("kind") in {"input_manifest", "evidence_bundle", "revision_scope", "contract"}
+            ref.get("kind") in {"input_manifest", "evidence_bundle", "revision_scope", "contract", "registry_scope"}
             for ref in runtime_record.input_refs
         )
         contract_input_ok = any(
             ref.get("kind") == "contract" and ref.get("path") == "config/terminology_contract.json"
             for ref in runtime_record.input_refs
         )
+        registry_input_ok = registry_ref in runtime_record.input_refs and output_payload.get("inputs", {}).get("registry_scope") == registry_ref
         structured_output_ok = output_payload.get("artifact_kind") == "terminology_candidates" and isinstance(output_payload.get("candidates"), list)
 
     payload = _evidence_payload([{
@@ -101,8 +109,14 @@ def _audit() -> dict:
     registry_asset_count = sum(1 for line in (ROOT / "data/registry/source_assets.jsonl").read_text(encoding="utf-8").splitlines() if line.strip())
     lifecycle_scope = impacted_by_revision(
         "rev-fixture",
-        [{"evidence_id": "e-fixture", "revision_id": "rev-fixture", "status": "active"}],
-        [{"statement_id": "s-fixture", "evidence_ids": ["e-fixture"], "status": "active"}],
+        [
+            {"evidence_id": "e-fixture", "revision_id": "rev-fixture", "knowledge_status": "active", "status": "completed"},
+            {"evidence_id": "e-invalid", "revision_id": "rev-fixture", "knowledge_status": "invalid", "publication_stage": "published"},
+        ],
+        [
+            {"statement_id": "s-fixture", "evidence_ids": ["e-fixture"], "knowledge_status": "active"},
+            {"statement_id": "s-invalid", "evidence_ids": ["e-fixture"], "knowledge_status": "invalid", "publication_stage": "published"},
+        ],
     )
     checks = {
         "stage9_gate": stage9.get("status") == "complete" and stage9.get("next_stage_allowed") is True,
@@ -113,6 +127,7 @@ def _audit() -> dict:
         "runtime_consumer_executed": runtime_result.returncode == 0 and bool(runtime_runs),
         "runtime_structured_cache": structured_output_ok and all(json.loads(path.read_text(encoding="utf-8")).get("status") == "completed" for path, _ in runtime_runs),
         "stage7_contract_cache_dependency": contract_input_ok,
+        "stage7_scoped_registry_cache_dependency": registry_input_ok,
         "stage7_cache_context_is_relevant": all(
             key not in json.dumps(_stage7_cache_context(ROOT), ensure_ascii=False)
             for key in ("llm_model", "llm_allow_evidence_send")
@@ -120,6 +135,7 @@ def _audit() -> dict:
         "lightweight_extraction_batch": batch_shape_ok and set(schema["required"]) == {"schema_version", "extraction_batch_id", "operation", "status", "input_refs", "output_ref", "output_fingerprint"},
         "formal_runtime_fields_removed": not (set(schema.get("properties", {})) & {"model", "prompt_hash", "started_at", "finished_at", "git_head", "producer_sha", "model_attempts", "cache_key", "prov_o"}),
         "knowledge_lifecycle_statuses": set(contract.get("knowledge_lifecycle", {}).get("statuses", [])) == set(KNOWLEDGE_STATUSES),
+        "knowledge_lifecycle_field": contract.get("knowledge_lifecycle", {}).get("field") == "knowledge_status",
         "revision_scoped_dependency_helper": lifecycle_scope == {"evidence_ids": ["e-fixture"], "statement_ids": ["s-fixture"]},
         "revision_catalog_readable": len(revisions) >= 1 and all(record.revision_id.startswith("rev-") for record in revisions),
         "asset_revision_assignments_cover_registry": len(asset_assignments) == registry_asset_count and all(revision.startswith("rev-") for _, revision in asset_assignments.values()),
@@ -128,7 +144,7 @@ def _audit() -> dict:
     checks["targeted_tests"] = targeted["status"] == "passed"
     full = {"status": "not_run"}
     if checks["targeted_tests"]:
-        command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"]
+        command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--basetemp", str(ROOT / "var/tmp" / f"stage10-audit-full-{uuid.uuid4().hex[:12]}"), "tests"]
         result = subprocess.run(command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
         full = {"command": command, "project_python": sys.executable, "status": "passed" if result.returncode == 0 else "failed", "returncode": result.returncode, "stdout_tail": result.stdout[-5000:], "stderr_tail": result.stderr[-2000:]}
         checks["full_project_tests"] = result.returncode == 0
@@ -142,7 +158,7 @@ def _audit() -> dict:
             "data/stage9/stage9_exit_audit.json", "data/stage8/ontology_mapping_shortlist.json",
             "data/stage8/ontology_mapping_review_queue.jsonl", "src/turbine_kg/observability/runtime.py",
             "scripts/build_stage7_terminology.py", "src/turbine_kg/stage3/llm.py",
-            "scripts/audit_stage10_exit.py", "data/project_state.json",
+            "scripts/audit_stage10_exit.py", "uv.lock",
             "config/asset_revision_identity.tsv",
             "src/turbine_kg/observability/lifecycle.py",
             "tests/stage10/test_stage10_runtime.py",
@@ -158,6 +174,7 @@ def _audit() -> dict:
         "inputs": inputs,
         "outputs": {"runtime_cache": "var/model_runs/stage10", "run_schema": "config/runtime_run.schema.json", "runtime_contract": "config/runtime_contract.json", "exit_audit": "data/stage10/stage10_audit.json"},
         "counts": {"runtime_cache_entries": len(runtime_runs), "stage8_shortlist": len(mapping.get("shortlist", [])), "stage8_queue": len(queue), "revision_records": len(revisions)},
+        "registry_dependency": registry_ref,
         "checks": checks,
         "runtime_result": {"command": runtime_command, "returncode": runtime_result.returncode, "stdout_tail": runtime_result.stdout[-2000:], "stderr_tail": runtime_result.stderr[-2000:]},
         "test_result": {"targeted": targeted, "full_project": full},
@@ -171,6 +188,10 @@ def _audit() -> dict:
 
 
 def main() -> int:
+    project_python = ROOT.parent / "runtime-python/turbine-kg-env/Scripts/python.exe"
+    if Path(sys.executable).resolve() != project_python.resolve():
+        raise RuntimeError("Stage 10 audit requires the dedicated project Python")
+    (ROOT / "var/tmp").mkdir(parents=True, exist_ok=True)
     try:
         audit = _audit()
     except Exception as error:

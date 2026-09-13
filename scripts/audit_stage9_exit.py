@@ -8,6 +8,7 @@ import os
 import subprocess
 import sys
 import tomllib
+import uuid
 from pathlib import Path
 from copy import deepcopy
 from dataclasses import replace
@@ -216,7 +217,10 @@ def _audit(*, run_tests: bool = True) -> dict:
         "invalid_batch_preserved_and_projection_blocked": not broken_report["conforms"] and blocked_projection and len(broken[0].statements) == len(corpus[0].statements),
         "independent_code_contract_review": manual_review_ok,
     }
-    command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/stage9", "tests/stage3", "tests/unit/test_project_state.py"]
+    temp_root = ROOT / "var/tmp"
+    if run_tests:
+        temp_root.mkdir(parents=True, exist_ok=True)
+    command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--basetemp", str(temp_root / f"stage9-audit-targeted-{uuid.uuid4().hex[:12]}"), "tests/stage9", "tests/stage3", "tests/unit/test_project_state.py"]
     test_result = {"command": command, "project_python": sys.executable, "status": "not_run"}
     if run_tests:
         result = subprocess.run(command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
@@ -224,7 +228,7 @@ def _audit(*, run_tests: bool = True) -> dict:
         test_result.update(status="passed" if result.returncode == 0 else "failed", returncode=result.returncode, stdout_tail=result.stdout[-4000:], stderr_tail=result.stderr[-2000:])
     else:
         checks["targeted_and_consumer_tests"] = False
-    full_command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests"]
+    full_command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--basetemp", str(temp_root / f"stage9-audit-full-{uuid.uuid4().hex[:12]}"), "tests"]
     full_test_result = {"command": full_command, "project_python": sys.executable, "status": "not_run"}
     if run_tests and checks["targeted_and_consumer_tests"]:
         full_result = subprocess.run(full_command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
@@ -250,12 +254,15 @@ def _audit(*, run_tests: bool = True) -> dict:
         "failure_isolation": "Any schema, vocabulary, SHACL or research-adapter failure yields a nonconforming report and raises SemanticValidationError before Property Graph construction/Neo4j loading; retain the whole original batch unchanged.",
         "rollback": "Restore the previous verified OWL/SHACL/runtime authority package and rerun the same input batch; no bypass or database correction.",
         "next_stage_allowed": not blockers,
-        "next_stage": "Stage 10 runtime provenance and reproducibility" if not blockers else "Stage 9 semantic chain completion",
+        "next_stage": "Stage 10 stable identity, document revision and knowledge maintainability" if not blockers else "Stage 9 semantic chain completion",
         "next_stage_inputs": {"owl": ["ontology/minimal_turbine.ttl", "ontology/stage9_core.ttl"], "shacl": "ontology/stage9_shapes.ttl", "runtime_contract": "src/turbine_kg/ontology/semantic.py:validate_runtime_payload", "research_consumer": "src/turbine_kg/ontology/research_adapter.py:validate_research_documents", "report_fields": ["conforms", "failures", "warnings", "counts", "report_text", "dataset_triple_count"]},
     }
 
 
 def main() -> int:
+    project_python = ROOT.parent / "runtime-python/turbine-kg-env/Scripts/python.exe"
+    if Path(sys.executable).resolve() != project_python.resolve():
+        raise RuntimeError("Stage 9 audit requires the dedicated project Python")
     try:
         audit = _audit()
     except Exception as error:

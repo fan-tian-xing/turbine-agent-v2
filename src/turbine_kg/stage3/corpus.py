@@ -203,17 +203,3 @@ def load_corpus(path: Path) -> tuple[FixtureDocument, ...]:
     if len({document.source_role for document in documents}) < 3:
         raise ValueError("Stage 3 corpus must contain three distinct source roles")
     return documents
-
-
-def index_corpus(documents: tuple[FixtureDocument, ...]) -> dict[str, Any]:
-    """Build the small JSON-like index used by both retrieval and graph checks."""
-
-    statements = [statement for document in documents for statement in document.statements]
-    evidence = [item for document in documents for item in document.evidence]
-    return {
-        "documents": {document.revision.document_logical_id: document for document in documents},
-        "statements": {statement.statement_id: (statement, document) for document in documents for statement in document.statements},
-        "evidence": {item.evidence_id: item for document in documents for item in document.evidence},
-        "statement_count": len(statements),
-        "evidence_count": len(evidence),
-    }

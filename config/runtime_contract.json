@@ -5,7 +5,10 @@
   "status": "active_for_stage10",
   "authority": "Document/Revision/Evidence/Statement contracts define knowledge identity; runtime_run.schema.json defines the optional extraction batch shape",
   "knowledge_lifecycle": {
+    "field": "knowledge_status",
+    "missing_status_policy": "reject; status and publication_stage are never fallbacks",
     "statuses": ["active", "superseded", "invalid"],
+    "revision_impact_scope": "active dependent Evidence and Statements only; superseded and invalid records remain historical, shared Entity records are retained",
     "identity_chain": ["document_logical_id", "revision_id", "page_id", "source_span_id", "evidence_id", "statement_id"],
     "revision_replacement": "mark the old Revision superseded, invalidate or rebuild only dependent Evidence, Statements and derived relationships, and retain shared Entity records",
     "invalidation_reason": "withdrawn is a reason for invalid, not a separate lifecycle status",
@@ -24,6 +27,8 @@
     "raw_model_response_persisted": false,
     "cache_key_and_implementation_context": "implementation-only; never a knowledge, Evidence, Statement or Release identity",
     "cache_hit_revalidates_input_and_output": true,
+    "stage7_registry_dependency": "fingerprint only the processing and authority assets consumed by text_accepted manifest pages; bind asset identity, path, file sha256 and Revision, and recheck current original admission",
+    "cache_batch_binding": "operation, input_refs and output_ref must match the current request and indexed batch",
     "force_rerun_creates_new_batch": true,
     "failed_result_enters_success_cache": false,
     "cache_scope": "local stage runtime; structured output is referenced rather than copied into formal knowledge"

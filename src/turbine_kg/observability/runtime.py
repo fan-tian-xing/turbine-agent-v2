@@ -45,7 +45,7 @@ def stable_content_fingerprint(value: Any) -> str:
 
 
 def validate_knowledge_status(status: str) -> str:
-    if status not in KNOWLEDGE_STATUSES:
+    if not isinstance(status, str) or status not in KNOWLEDGE_STATUSES:
         raise ValueError(f"unsupported knowledge lifecycle status: {status}")
     return status
 
@@ -116,6 +116,16 @@ def run_with_cache(
         record_payload = json.loads(record_path.read_text(encoding="utf-8"))
         cached_output = json.loads(output_path.read_text(encoding="utf-8"))
         _validate_shape(record_payload, schema_path)
+        if record_payload["operation"] != operation or record_payload["input_refs"] != list(inputs):
+            raise ValueError("cached extraction batch inputs or operation differ from the request")
+        expected_output = f"batches/{record_payload['extraction_batch_id']}/output.json"
+        expected_record = f"batches/{record_payload['extraction_batch_id']}/batch.json"
+        if (
+            entry["batch_record"] != expected_record
+            or entry["output"] != expected_output
+            or record_payload["output_ref"] != {"path": expected_output, "kind": "structured_result"}
+        ):
+            raise ValueError("cached extraction batch output binding does not match its index")
         if record_payload.get("status") != "completed":
             raise ValueError("cached extraction batch is not completed")
         if record_payload.get("output_fingerprint") != stable_content_fingerprint(cached_output):

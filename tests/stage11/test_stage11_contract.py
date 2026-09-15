@@ -22,24 +22,24 @@ def test_stage11_contract_has_task_specific_boundary_and_normalized_fields():
     assert contract["requirements"]["holdout_is_not_used_for_statement_tuning"] is True
 
 
-def test_stage11_exit_stays_blocked_until_semantic_gold_review():
+def test_stage11_exit_opens_after_semantic_gold_review():
     entry = _read("data/stage11/stage11_entry_audit.json")
-    assert entry["status"] == "in_progress"
-    assert entry["next_stage_allowed"] is False
-    assert entry["checks"]["stage12_entry_allowed"] is False
-    assert "holdout_semantic_review_complete" in entry["blockers"]
+    assert entry["status"] == "complete"
+    assert entry["next_stage_allowed"] is True
+    assert entry["checks"]["stage12_entry_allowed"] is True
+    assert entry["blockers"] == []
     assert entry["sample_registry"]["development_regression_golden"]["page_count"] == 36
     assert entry["sample_registry"]["acceptance_holdout"]["page_count"] == 15
-    assert "adjudication_complete" in entry["blockers"]
+    assert entry["checks"]["adjudication_complete"] is True
     assert entry["checks"]["review_independence"] is True
 
 
 def test_stage11_development_samples_are_source_grounded_and_cover_five_documents():
     rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl")
-    assert len(rows) >= 9
+    assert len({row["sample_id"] for row in rows}) == 10
     assert {row["document_key"] for row in rows} == {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"}
     assert len({row["statement_id"] for row in rows}) == len(rows)
-    assert all(row["review_status"] in {"accepted", "pending_manual_review"} and row["formal_release"] is False for row in rows)
+    assert all(row["review_status"] in {"accepted", "pending_manual_review", "isolated"} and row["formal_release"] is False for row in rows)
     assert all(row["evidence_bindings"] and row["subject_entity_id"] and row["source_text_sha256"] and row["object_value"] and row["applicability_scope"] for row in rows)
 
 
@@ -53,7 +53,7 @@ def test_stage11_holdout_is_fifteen_pages_three_per_document_and_disjoint():
     assert all(sum(page[0] == doc for page in selected_pages) == 3 for doc in {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"})
     assert statement_pages <= selected_pages
     assert not (selected_pages & {(row["document_key"], row["physical_page"]) for row in dev})
-    assert all(row["independent_for_statement"] is True and row["review_status"] in {"pending_manual_review", "isolated"} for row in rows)
+    assert all(row["independent_for_statement"] is True and row["review_status"] in {"accepted", "pending_manual_review", "isolated"} for row in rows)
     assert all(len(row["review_plan"]) == 2 and {item["round"] for item in row["review_plan"]} == {1, 2} for row in rows)
 
 
@@ -67,21 +67,36 @@ def test_stage11_registry_has_one_frozen_entrypoint_and_blind_is_unread():
     assert registry["blind_test"]["read_by_stage11"] is False
 
 
-def test_stage11_semantic_candidates_do_not_promote_numbers_or_entities():
+def test_stage11_gold_rows_preserve_numeric_and_entity_annotations():
     rows = _jsonl("data/stage11/stage11_statement_holdout.jsonl")
-    p13 = next(row for row in rows if row["document_key"] == "DLT863" and row["physical_page"] == 13)
-    assert p13["review_status"] == "pending_manual_review"
-    assert p13["value"] is None and p13["unit"] is None and p13["quantities"] == []
-    assert p13["entity_alignment"][0]["entity_class"] == "UnresolvedEntityCandidate"
+    p13 = [row for row in rows if row["document_key"] == "DLT863" and row["physical_page"] == 13]
+    assert len(p13) == 10
+    assert all(row["review_status"] == "accepted" and row["label_status"] == "gold" for row in p13)
+    assert any(row["quantities"] for row in p13)
     p429 = next(row for row in rows if row["document_key"] == "auxiliary_installation_book" and row["physical_page"] == 429)
     assert p429["review_status"] == "isolated"
     assert p429["review_status"] == "isolated"
+    p78 = [row for row in rows if row["document_key"] == "auxiliary_installation_book" and row["physical_page"] == 78]
+    assert len(p78) == 6
+    assert all(row["review_status"] == "accepted" and row["label_status"] == "gold" and row["answer_injection"]["selected_option"] for row in p78)
+    assert "下列四种形式中" in next(row for row in p78 if row["answer_injection"]["question_id"] == "Lb1A5327")["statement_text"]
+    assert p78[0]["quantities"] == [{"surface_form": "0.08~0.10 mm", "min": 0.08, "max": 0.10, "unit": "mm", "operator": "range"}]
+    assert {entity["surface_form"] for entity in p78[0]["entity_alignment"]} == {"大型立式循环水泵", "转子上导轴瓦"}
 
 
 def test_stage11_confirmed_development_rows_retain_numeric_and_negation_annotations():
     rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl")[:4]
     assert any(row["quantities"] for row in rows if row["value"] is not None)
     assert any(row["negation_scope"] for row in rows if "不入" in row["statement_text"])
+
+
+def test_stage11_accepted_new_gold_rows_bind_two_review_rounds():
+    rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl") + _jsonl("data/stage11/stage11_statement_holdout.jsonl")
+    accepted_new = [row for row in rows if row["review_status"] == "accepted" and row.get("review_basis") != "stage3_user_confirmation"]
+    assert accepted_new
+    assert all(len(row.get("review_rounds", [])) == 2 for row in accepted_new)
+    assert all({round_["reviewer_id"] for round_ in row["review_rounds"]} == {"reviewer_a", "reviewer-b"} for row in accepted_new)
+    assert all(all(round_["status"] == "accepted" and round_["input_sha256"] and round_["output_sha256"] for round_ in row["review_rounds"]) for row in accepted_new)
 
 
 def test_stage11_statement_classifier_does_not_use_single_character_hou_as_procedure():
@@ -96,7 +111,7 @@ def test_stage11_does_not_read_blind_or_legacy_inputs():
     assert entry["sample_registry"]["blind_test"]["read_by_stage11"] is False
 
 
-def test_stage11_two_review_rounds_are_independent_and_unresolved_until_adjudication():
+def test_stage11_two_review_rounds_are_independent_and_adjudicated():
     review_a = _jsonl("data/stage11/review_round_a.jsonl")
     review_b = _jsonl("data/stage11/review_round_b.jsonl")
     queue = _jsonl("data/stage11/stage11_adjudication_queue.jsonl")
@@ -104,7 +119,8 @@ def test_stage11_two_review_rounds_are_independent_and_unresolved_until_adjudica
     assert {row["reviewer_id"] for row in review_a} == {"reviewer_a"}
     assert {row["reviewer_id"] for row in review_b} == {"reviewer-b"}
     assert all((row.get("candidate_unchanged") is True or row.get("original_sample_untouched") is True) and row["input_sha256"] and row["output_sha256"] for row in review_a + review_b)
-    assert all(row["adjudication_status"] != "adjudicated" for row in queue)
+    assert all(row["adjudication_status"] == "adjudicated" for row in queue)
+    assert next(row for row in queue if row["sample_id"] == "stage11-holdout-e1af768dfb83126d80da")["adjudication_result"] == "accepted"
     target_ids = {row["sample_id"] for row in queue}
     assert target_ids <= {row["sample_id"] for row in review_a}
     assert target_ids <= {row["sample_id"] for row in review_b}

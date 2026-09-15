@@ -102,8 +102,9 @@ def audit() -> dict:
     holdout_ids = [r.get("statement_id") for r in holdout]
     dev_evidence_ids = [b.get("evidence_id") for r in dev for b in r.get("evidence_bindings", [])]
     holdout_evidence_ids = [b.get("evidence_id") for r in holdout for b in r.get("evidence_bindings", [])]
+    dev_sample_ids = {r.get("sample_id") for r in dev}
     dev_ok = (
-        len(dev) >= 9 and {r.get("document_key") for r in dev} == docs
+        len(dev_sample_ids) == 10 and {r.get("document_key") for r in dev} == docs
         and len(dev_ids) == len(set(dev_ids)) and all(_required_row_fields(r) for r in dev)
         and all(r.get("object_value") and r.get("applicability_scope") for r in dev)
         and all(r.get("review_status") in {"accepted", "pending_manual_review", "isolated"} and r.get("formal_release") is False for r in dev)
@@ -122,13 +123,6 @@ def audit() -> dict:
         and all(r.get("source_text_sha256") == holdout_canonical[eid].get("source_text_sha256") for r in holdout for eid in [b.get("evidence_id") for b in r.get("evidence_bindings", [])] if eid in holdout_canonical)
         and all(len(r.get("review_plan", [])) == 2 and all(plan.get("round") in {1, 2} and plan.get("reviewer_role") for plan in r["review_plan"]) for r in holdout)
     )
-    dev_semantic_review_complete = bool(dev) and all(
-        r.get("review_status") == "accepted"
-        and r.get("label_status") == "gold"
-        and r.get("reviewer_type") != "candidate_generation"
-        and r.get("review_basis") != "stage11_candidate_generation"
-        for r in dev
-    )
     def _has_two_independent_reviews(row: dict) -> bool:
         rounds = row.get("review_rounds")
         if not isinstance(rounds, list) or len(rounds) != 2:
@@ -140,11 +134,44 @@ def audit() -> dict:
             and all(item.get("sample_id", row.get("sample_id")) == row.get("sample_id") for item in rounds)
         )
 
-    holdout_semantic_review_complete = bool(holdout) and all(
+    def _has_final_semantic_provenance(row: dict) -> bool:
+        if row.get("review_basis") == "stage3_user_confirmation" and row.get("reviewer_type") == "user_confirmation":
+            return True
+        return _has_two_independent_reviews(row)
+
+    dev_semantic_review_complete = bool(dev) and all(
         r.get("review_status") == "accepted"
         and r.get("label_status") == "gold"
-        and _has_two_independent_reviews(r)
-        for r in holdout
+        and r.get("reviewer_type") != "candidate_generation"
+        and r.get("review_basis") != "stage11_candidate_generation"
+        and r.get("source_span_ids")
+        and _has_final_semantic_provenance(r)
+        for r in dev
+    )
+
+    holdout_semantic_review_complete = bool(holdout) and all(
+        (
+            any(
+                e.get("review_status") == "isolated"
+                and e.get("review_reason")
+                for e in holdout_evidence
+                if (e.get("document_key"), e.get("physical_page")) == page
+            )
+            and not any(
+                r.get("review_status") not in {"isolated", "rejected"}
+                for r in holdout
+                if (r.get("document_key"), r.get("physical_page")) == page
+            )
+        )
+        or any(
+            r.get("review_status") == "accepted"
+            and r.get("label_status") == "gold"
+            and r.get("source_span_ids")
+            and _has_two_independent_reviews(r)
+            for r in holdout
+            if (r.get("document_key"), r.get("physical_page")) == page
+        )
+        for page in registry_holdout_pages
     )
     semantic_checks = [validate_statement_semantics(row) for row in dev + holdout]
     semantic_negative_checks = {name: all(result[name] for result in semantic_checks) for name in semantic_checks[0]} if semantic_checks else {}
@@ -153,15 +180,17 @@ def audit() -> dict:
         for row in dev + holdout
     )
     evidence_candidate_boundary = all(
-        row.get("evidence_status") == "candidate"
-        and row.get("source_confirmation_status") in {"pending_manual_review", "isolated"}
+        row.get("evidence_status") in {"candidate", "accepted", "isolated"}
+        and row.get("source_confirmation_status") in {"pending_manual_review", "accepted", "isolated"}
+        and (row.get("review_status") != "accepted" or row.get("source_confirmation_status") == "accepted")
         for row in holdout_evidence
     )
     review_a_ids = [row.get("sample_id") for row in review_a]
     review_b_ids = [row.get("sample_id") for row in review_b]
     review_target_ids = {
         *(row.get("sample_id") for row in holdout),
-        *(row.get("sample_id") for row in dev if row.get("review_status") != "accepted" or row.get("label_status") != "gold"),
+        *(row.get("sample_id") for row in dev
+          if not (row.get("review_basis") == "stage3_user_confirmation" and row.get("reviewer_type") == "user_confirmation")),
     }
     review_a_by_id = {row.get("sample_id"): row for row in review_a}
     review_b_by_id = {row.get("sample_id"): row for row in review_b}
@@ -180,7 +209,19 @@ def audit() -> dict:
         and all(row.get("input_sha256") and row.get("output_sha256") for row in review_a + review_b)
         and review_coverage
     )
-    adjudication_complete = bool(adjudication) and all(row.get("adjudication_status") == "adjudicated" for row in adjudication)
+    adjudication_target_ids = review_target_ids
+    adjudication_complete = (
+        bool(adjudication)
+        and {row.get("sample_id") for row in adjudication} == adjudication_target_ids
+        and len(adjudication) == len({row.get("sample_id") for row in adjudication})
+        and all(
+            row.get("adjudication_status") == "adjudicated"
+            and row.get("adjudicator_id")
+            and row.get("adjudication_notes")
+            and row.get("adjudication_output_sha256")
+            for row in adjudication
+        )
+    )
     records = registry.get("records", [])
     registry_splits = {split: [r for r in records if r.get("split") == split] for split in {r.get("split") for r in records}}
     registry_ok = (

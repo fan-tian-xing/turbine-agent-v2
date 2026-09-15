@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "11",
   "artifact_kind": "stage11_entry_audit",
-  "status": "in_progress",
+  "status": "complete",
   "formal_release": false,
   "producer": "scripts/audit_stage11_exit.py",
   "inputs": {
@@ -23,24 +23,24 @@
   "input_sha256": {
     "statement_contract": "9892c129df311140b62654fa38017402336a93f9d4f6676125126fc2fb722fb3",
     "evaluation_sample_registry": "604f4d3bc50063915fbc5be81367658b7f4f863b01a179899afa5402eb32f1ab",
-    "development_statement_samples": "d112967d81d31989d3b47300f93245f041589a769b32f85b15d39378b3f1cf7f",
-    "holdout_statement_samples": "5131750ed4a882674b9d442c39410dd6eeeb57a1235c282778e92ac6cf77f9c0",
-    "holdout_evidence": "e1967b62637297f20159ed1b47a6ecf901ac30849ceaadac3345a5d6f1b774aa",
+    "development_statement_samples": "c4b8909dc886ec6c8e42bd1e27d7801c677eed3cf6f9c866669940bcf4b5d2ec",
+    "holdout_statement_samples": "5c323cfcb738ce5507bd5e9d02873278fb9b2c44f17e614c1f1573b113af9355",
+    "holdout_evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
     "review_round_a": "4497e43a9ba04a86747eaec38cf57a6f4eebfdf1757b49fc98ae5baec4e509d7",
     "review_round_b": "4d74f78611e50f19c3d929e949a8db8120263d75faea57abaf05a1835d83bf70",
-    "adjudication_queue": "39b4dbc981a20dc8d60c3432ee96ddb77dcbf012ce295d703aeb09939b08a349"
+    "adjudication_queue": "3408b4eb95df92c2f4a5781bbf9f4fa4c1e4f9d022e85bdf9e3c080f61ca75ab"
   },
   "sample_registry": {
     "development_regression_golden": {
       "page_count": 36,
       "trial_page_subset_count": 15,
-      "statement_sample_count": 10,
+      "statement_sample_count": 19,
       "source": "data/stage6/stage6_evidence_golden_sample.json"
     },
     "acceptance_holdout": {
       "page_count": 15,
       "pages_per_document": 3,
-      "statement_row_count": 15,
+      "statement_row_count": 50,
       "source": "data/stage7/terminology_input_manifest.json"
     },
     "blind_test": {
@@ -57,37 +57,34 @@
     "statement_contract_present": true,
     "development_statement_samples_frozen": true,
     "holdout_frozen": true,
-    "development_semantic_review_complete": false,
-    "holdout_semantic_review_complete": false,
+    "development_semantic_review_complete": true,
+    "holdout_semantic_review_complete": true,
     "semantic_negative_checks": true,
     "candidate_label_boundary": true,
     "evidence_candidate_boundary": true,
     "review_independence": true,
-    "adjudication_complete": false,
+    "adjudication_complete": true,
     "holdout_independence": true,
     "evidence_bindings_resolve": true,
     "source_hashes_match": true,
     "sample_registry_consistent": true,
     "registry_consumer_boundary": true,
     "blind_materials_excluded": true,
-    "stage12_entry_allowed": false
+    "stage12_entry_allowed": true
   },
   "counts": {
-    "development_statement_samples": 10,
-    "holdout_statement_samples": 15,
+    "development_statement_samples": 19,
+    "holdout_statement_samples": 50,
     "holdout_evidence": 15,
     "registry_records": 56,
     "stage6_development_pages": 36
   },
-  "blockers": [
-    "development_semantic_review_complete",
-    "holdout_semantic_review_complete",
-    "adjudication_complete"
-  ],
-  "next_stage_allowed": false,
-  "next_stage": "Stage 11 controlled Statement and entity sample review",
+  "blockers": [],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 12 representative chapter semantic extraction",
   "consumers": [
     "tests/stage11/test_stage11_contract.py",
-    "stage11_semantic_review"
+    "Stage 12 development loader",
+    "Stage 12 holdout evaluator"
   ]
 }

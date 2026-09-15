@@ -4,10 +4,10 @@
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
   "updated_at": "2026-09-15",
   "current_stage": 11,
-  "current_stage_status": "complete",
+  "current_stage_status": "in_progress",
   "current_stage_scope": "semantic_extraction_entry_gate",
-  "next_stage": 12,
-  "next_stage_status": "ready",
+  "next_stage": null,
+  "next_stage_status": "blocked",
   "formal_release": false,
   "stages": {
     "0": {
@@ -86,7 +86,7 @@
       }
     },
     "11": {
-      "status": "complete",
+      "status": "in_progress",
       "scope": "semantic_extraction_entry_gate",
       "entry_record": "data/stage11/stage11_entry_audit.json",
       "exit_audit": "data/stage11/stage11_entry_audit.json",
@@ -96,7 +96,7 @@
       "acceptance_holdout": "data/stage11/stage11_statement_holdout.jsonl",
       "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
       "next_stage": 12,
-      "next_stage_status": "ready"
+      "next_stage_status": "blocked"
     }
   },
   "boundaries": [

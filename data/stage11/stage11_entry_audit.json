@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "11",
   "artifact_kind": "stage11_entry_audit",
-  "status": "complete",
+  "status": "in_progress",
   "formal_release": false,
   "producer": "scripts/audit_stage11_exit.py",
   "inputs": {
@@ -15,14 +15,20 @@
     "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl",
     "holdout_statement_samples": "data/stage11/stage11_statement_holdout.jsonl",
     "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
-    "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json"
+    "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json",
+    "review_round_a": "data/stage11/review_round_a.jsonl",
+    "review_round_b": "data/stage11/review_round_b.jsonl",
+    "adjudication_queue": "data/stage11/stage11_adjudication_queue.jsonl"
   },
   "input_sha256": {
-    "statement_contract": "368acb5fec7aa8da9d3184628b2d7396274e04380b887e7ae686c85bfcda95fe",
-    "evaluation_sample_registry": "33f7cbefd7ca62d324ec1fbe5a15dd3409e9b50fb7a4a81d25ca3d57515b4684",
-    "development_statement_samples": "2f8788e96ae8ec4521253b8d947df4f2d439042c8c6c20621aa1c16565fef805",
-    "holdout_statement_samples": "91328b23329a2b1e28e39ed4a983e37e459ea264aa7226fef73410108918c092",
-    "holdout_evidence": "b38177dee2eeb40b3eb21b0adee4a5e5ed6d92d618471b396ea52ead76917db5"
+    "statement_contract": "9892c129df311140b62654fa38017402336a93f9d4f6676125126fc2fb722fb3",
+    "evaluation_sample_registry": "604f4d3bc50063915fbc5be81367658b7f4f863b01a179899afa5402eb32f1ab",
+    "development_statement_samples": "d112967d81d31989d3b47300f93245f041589a769b32f85b15d39378b3f1cf7f",
+    "holdout_statement_samples": "5131750ed4a882674b9d442c39410dd6eeeb57a1235c282778e92ac6cf77f9c0",
+    "holdout_evidence": "e1967b62637297f20159ed1b47a6ecf901ac30849ceaadac3345a5d6f1b774aa",
+    "review_round_a": "4497e43a9ba04a86747eaec38cf57a6f4eebfdf1757b49fc98ae5baec4e509d7",
+    "review_round_b": "4d74f78611e50f19c3d929e949a8db8120263d75faea57abaf05a1835d83bf70",
+    "adjudication_queue": "39b4dbc981a20dc8d60c3432ee96ddb77dcbf012ce295d703aeb09939b08a349"
   },
   "sample_registry": {
     "development_regression_golden": {
@@ -51,12 +57,20 @@
     "statement_contract_present": true,
     "development_statement_samples_frozen": true,
     "holdout_frozen": true,
+    "development_semantic_review_complete": false,
+    "holdout_semantic_review_complete": false,
+    "semantic_negative_checks": true,
+    "candidate_label_boundary": true,
+    "evidence_candidate_boundary": true,
+    "review_independence": true,
+    "adjudication_complete": false,
     "holdout_independence": true,
     "evidence_bindings_resolve": true,
     "source_hashes_match": true,
     "sample_registry_consistent": true,
+    "registry_consumer_boundary": true,
     "blind_materials_excluded": true,
-    "stage12_entry_allowed": true
+    "stage12_entry_allowed": false
   },
   "counts": {
     "development_statement_samples": 10,
@@ -65,12 +79,15 @@
     "registry_records": 56,
     "stage6_development_pages": 36
   },
-  "blockers": [],
-  "next_stage_allowed": true,
-  "next_stage": "Stage 12 representative chapter semantic extraction",
+  "blockers": [
+    "development_semantic_review_complete",
+    "holdout_semantic_review_complete",
+    "adjudication_complete"
+  ],
+  "next_stage_allowed": false,
+  "next_stage": "Stage 11 controlled Statement and entity sample review",
   "consumers": [
     "tests/stage11/test_stage11_contract.py",
-    "Stage 12 development loader",
-    "Stage 12 holdout evaluator"
+    "stage11_semantic_review"
   ]
 }

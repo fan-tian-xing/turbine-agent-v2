@@ -7,7 +7,7 @@
   "producer": "scripts/build_stage11_holdout.py",
   "consumers": [
     "scripts/audit_stage11_exit.py",
-    "Stage 12 development/evaluation loaders"
+    "stage11_semantic_review"
   ],
   "development": {
     "source": "data/stage6/stage6_evidence_golden_sample.json",
@@ -46,7 +46,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -72,7 +72,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -98,7 +98,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -124,7 +124,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -150,7 +150,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -176,7 +176,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -202,7 +202,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -228,7 +228,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -254,7 +254,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -280,7 +280,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -306,7 +306,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -332,7 +332,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -358,7 +358,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -384,7 +384,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -410,7 +410,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -436,7 +436,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -462,7 +462,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -488,7 +488,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -514,7 +514,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -540,7 +540,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -566,7 +566,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -592,7 +592,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -618,7 +618,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -644,7 +644,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -670,7 +670,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -696,7 +696,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -722,7 +722,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -748,7 +748,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -774,7 +774,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -800,7 +800,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -826,7 +826,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -852,7 +852,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -878,7 +878,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -904,7 +904,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -930,7 +930,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -956,7 +956,7 @@
       "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_development_loader"
+        "stage11_semantic_review"
       ],
       "review_status": "frozen",
       "frozen": true
@@ -970,6 +970,8 @@
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 24,
       "source_text_sha256": "040111fe129a7beb27ae6f0dcf6a7b907aa43eb4a40c18d7db9541ae27aaaf11",
+      "page_analysis_text_sha256": "6b93aaf2d5aaa6f037efd1699291c1669d7b980b2b73c6bb9023576d0a1b1229",
+      "evidence_text_sha256": "040111fe129a7beb27ae6f0dcf6a7b907aa43eb4a40c18d7db9541ae27aaaf11",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -984,9 +986,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -998,6 +1000,8 @@
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 50,
       "source_text_sha256": "08f9452eae89503db9c4db3bc9ad9ed6969688386dc254ed3b70e77c2c8b1003",
+      "page_analysis_text_sha256": "bb6047c4133530a05a485729519ae720f85f76e01e51b6842ab84785d62dc795",
+      "evidence_text_sha256": "08f9452eae89503db9c4db3bc9ad9ed6969688386dc254ed3b70e77c2c8b1003",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1012,9 +1016,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1026,6 +1030,8 @@
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 92,
       "source_text_sha256": "477f0b55d99adf8ce48a936f80edcdd65965e8d84ae9a257cfda0b51119d8470",
+      "page_analysis_text_sha256": "0f97f98cea57ba63c4bcb2814175f6e3c567390e9bb55da9399d83f47dd1e8b5",
+      "evidence_text_sha256": "477f0b55d99adf8ce48a936f80edcdd65965e8d84ae9a257cfda0b51119d8470",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1040,9 +1046,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1079,6 +1085,8 @@
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 6,
       "source_text_sha256": "77894335bcc4152199b3fa22c4c07d7f1254d06fd266a9e31fd5aa85593fa3f7",
+      "page_analysis_text_sha256": "0d0351b59efb36ee0dadf537c0d8d7530003560d90868bc4e7ec15ade8122d31",
+      "evidence_text_sha256": "77894335bcc4152199b3fa22c4c07d7f1254d06fd266a9e31fd5aa85593fa3f7",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1093,9 +1101,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1107,6 +1115,8 @@
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 32,
       "source_text_sha256": "274e641f05b5a61413da3bf51e2a05e194d5586a372b7ae42e9ae7955ef409dd",
+      "page_analysis_text_sha256": "5448d9bf6643cb8378b1a9bd5fe796318a3dd5f64f64612f12583210098111b1",
+      "evidence_text_sha256": "274e641f05b5a61413da3bf51e2a05e194d5586a372b7ae42e9ae7955ef409dd",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1121,9 +1131,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1135,6 +1145,8 @@
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 61,
       "source_text_sha256": "8e1fed902891870e79ae2de8980ad169546443b0c72ff8e7cb3620bdef9cc8d9",
+      "page_analysis_text_sha256": "184f957539097c08b6a945abec867e4409f660dca374a70354dab7bf1bec0c32",
+      "evidence_text_sha256": "8e1fed902891870e79ae2de8980ad169546443b0c72ff8e7cb3620bdef9cc8d9",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1149,9 +1161,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1188,6 +1200,8 @@
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 7,
       "source_text_sha256": "099aea5c1f4a4bdbb8976099e4ce57f10281a786b827d381638b09d19f151b7e",
+      "page_analysis_text_sha256": "89facef1383812d870f636f9e191abefd7f092db943392c0a371f75aa2440c8b",
+      "evidence_text_sha256": "099aea5c1f4a4bdbb8976099e4ce57f10281a786b827d381638b09d19f151b7e",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1202,9 +1216,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1216,6 +1230,8 @@
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 13,
       "source_text_sha256": "1489b3406e4cbb622e5cc9c3fb8958969046d9e1fe27e29e30e6431d2af2851b",
+      "page_analysis_text_sha256": "02761815d0f55412b2f36d6f078bd6bb7869ae5d43f54bf37d9e8e6c720dcbff",
+      "evidence_text_sha256": "1489b3406e4cbb622e5cc9c3fb8958969046d9e1fe27e29e30e6431d2af2851b",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1230,9 +1246,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1244,6 +1260,8 @@
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 19,
       "source_text_sha256": "a2db4c0f7377c8e3db5ec5242b5736a84eb569fca3e6405105759881ef38608d",
+      "page_analysis_text_sha256": "53b3ae4468d9ddcc8cde175865c39ad5ee191c2af9a6ef482157a891426da3f2",
+      "evidence_text_sha256": "a2db4c0f7377c8e3db5ec5242b5736a84eb569fca3e6405105759881ef38608d",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1258,9 +1276,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1297,6 +1315,8 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 2,
       "source_text_sha256": "ac0b8e8800ff69e535e4a679d29f5fdfd6da6e2a19207af4c1ba9e884099fc47",
+      "page_analysis_text_sha256": "d2ff839a3a0fb6c420b91cad33f0b070e69f1ccbf7108b8e2af8a7a0033fef02",
+      "evidence_text_sha256": "ac0b8e8800ff69e535e4a679d29f5fdfd6da6e2a19207af4c1ba9e884099fc47",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1311,9 +1331,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1325,6 +1345,8 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 14,
       "source_text_sha256": "8ac4b1937816e381813a58db617c007392758ca75c1028e0d36364e0ba691577",
+      "page_analysis_text_sha256": "e87e80377a6dee48eb738983a40d69df65e1c6b03e381e9368437188f25977f5",
+      "evidence_text_sha256": "8ac4b1937816e381813a58db617c007392758ca75c1028e0d36364e0ba691577",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1339,9 +1361,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1353,6 +1375,8 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 21,
       "source_text_sha256": "e1bcdc6fd6c3b1fc8d695db9fead30b8b037ed365dce995d5b9da5ce0cffd6f0",
+      "page_analysis_text_sha256": "8e9114152a5b7a844ab15f77373e840fc50e143800242372ddc978190f280812",
+      "evidence_text_sha256": "e1bcdc6fd6c3b1fc8d695db9fead30b8b037ed365dce995d5b9da5ce0cffd6f0",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1367,9 +1391,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1406,6 +1430,8 @@
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 78,
       "source_text_sha256": "64d5596f75fea35772f8ff7f56531d002c5095f6dadd6829897df5826612bf59",
+      "page_analysis_text_sha256": "de2fbd87ae8281c7941310f8dc12be0101970ec2d6b8892b118d6498113e9733",
+      "evidence_text_sha256": "64d5596f75fea35772f8ff7f56531d002c5095f6dadd6829897df5826612bf59",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1420,9 +1446,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1434,6 +1460,8 @@
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 229,
       "source_text_sha256": "abb780617a2e476861f024b092d3e58bb724cc27a75edd11c30857d99e11bdee",
+      "page_analysis_text_sha256": "acac14c483c734172c06a394153b0917672eb2becec38d0e33a7f5997e1d7dd3",
+      "evidence_text_sha256": "abb780617a2e476861f024b092d3e58bb724cc27a75edd11c30857d99e11bdee",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1448,9 +1476,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "pending_manual_review",
       "frozen": true
     },
     {
@@ -1462,6 +1490,8 @@
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 429,
       "source_text_sha256": "6d01cf9f4546606ec73fa33d880f96c0772df5003cae04c8522e7357c989da5e",
+      "page_analysis_text_sha256": "0f3089a885bdc7e4dcc7ec35d47ab7c6115d1246ce60775c7f547aecccc08e76",
+      "evidence_text_sha256": "6d01cf9f4546606ec73fa33d880f96c0772df5003cae04c8522e7357c989da5e",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1476,9 +1506,9 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage12_holdout_evaluator"
+        "stage11_semantic_review"
       ],
-      "review_status": "accepted",
+      "review_status": "isolated",
       "frozen": true
     },
     {

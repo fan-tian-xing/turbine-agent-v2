@@ -26,6 +26,19 @@ def _sha(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
+def _quantity_candidates(text: str, value, unit: str | None, quantities: list | None) -> list[dict]:
+    if quantities:
+        return quantities
+    if value is not None and unit:
+        return [{"value": value, "operator": "gte" if "不小于" in text else "gt" if "大于" in text else "eq", "unit": unit, "surface_form": f"{value}{unit}"}]
+    return []
+
+
+def _negation_candidates(text: str) -> list[dict]:
+    tokens = [token for token in ("不得", "不应", "不小于", "不大于", "无", "未", "不入") if token in text]
+    return [{"surface_form": token, "polarity": "negative", "scope_type": "statement"} for token in tokens]
+
+
 def _canonical_type(statement_type: str, text: str) -> str:
     mapping = {
         "inspection_requirement": "requirement",
@@ -54,13 +67,13 @@ def _predicate(statement_type: str) -> str:
     }.get(statement_type, "describes")
 
 
-def _entity_alignment(entity_id: str, surface: str, *, reviewer_type: str) -> list[dict]:
+def _entity_alignment(entity_id: str, surface: str, *, reviewer_type: str, review_status: str) -> list[dict]:
     return [{
         "surface_form": surface,
         "entity_id": entity_id,
-        "entity_class": "EngineeringEntity",
-        "match_type": "confirmed" if reviewer_type == "user_confirmation" else "exact_source_span",
-        "review_status": "accepted",
+        "entity_class": "EngineeringEntity" if review_status == "accepted" else "UnresolvedEntityCandidate",
+        "match_type": "confirmed" if reviewer_type == "user_confirmation" else "candidate_source_span",
+        "review_status": review_status,
     }]
 
 
@@ -91,7 +104,8 @@ def _row_from_evidence(evidence: dict, *, sample_id: str, source_statement_type:
                        document_key: str | None = None,
                        applicability_scope: dict | None = None, value=None, unit=None,
                        quantities: list | None = None, reviewer_type: str = "ai_cross_review",
-                       review_basis: str = "stage6_original_page_review") -> dict:
+                       review_basis: str = "stage6_original_page_review",
+                       review_status: str = "pending_manual_review") -> dict:
     text = statement_text or evidence["source_text"]
     statement_type = _canonical_type(source_statement_type or "fact", text)
     subject = object_id or f"entity-{hashlib.sha1((evidence['evidence_id'] + text[:80]).encode('utf-8')).hexdigest()[:16]}"
@@ -100,6 +114,7 @@ def _row_from_evidence(evidence: dict, *, sample_id: str, source_statement_type:
         "sample_id": sample_id,
         "split": "development_regression_golden",
         "task": "statement",
+        "label_status": "gold" if review_status == "accepted" else "candidate_only",
         "entity_alignment_task": "development_only",
         "independent_for_acceptance": False,
         "document_logical_id": evidence["document_logical_id"],
@@ -115,19 +130,19 @@ def _row_from_evidence(evidence: dict, *, sample_id: str, source_statement_type:
         "statement_text": text,
         "subject_entity_id": subject,
         "object_value": {"kind": "source_assertion", "value": text},
-        "entity_alignment": _entity_alignment(subject, subject if object_id else text[:24], reviewer_type=reviewer_type),
+        "entity_alignment": _entity_alignment(subject, subject if object_id else text[:24], reviewer_type=reviewer_type, review_status=review_status),
         "applicability_scope": applicability_scope or {
             "document_key": document_key or evidence.get("document_logical_id"),
             "physical_page": location["physical_page"],
         },
         "value": value,
         "unit": unit,
-        "quantities": quantities or [],
+        "quantities": _quantity_candidates(text, value, unit, quantities),
         "normative_modality": "shall" if statement_type == "requirement" else "descriptive",
-        "negation_scope": [],
-        "review_status": "accepted",
+        "negation_scope": _negation_candidates(text),
+        "review_status": review_status,
         "review_basis": review_basis,
-        "reviewer": "user_confirmation" if reviewer_type == "user_confirmation" else "Codex_stage11_cross_review",
+        "reviewer": "user_confirmation" if reviewer_type == "user_confirmation" else "stage11_candidate_builder",
         "reviewer_type": reviewer_type,
         "review_reason": "Source text and page identity are traceable to the original-material Evidence.",
         "formal_release": False,
@@ -156,7 +171,7 @@ def build() -> list[dict]:
                 document_key=logical_to_key[evidence["document_logical_id"]],
                 applicability_scope=item["applicability"],
                 value=item.get("value"), unit=item.get("unit"), quantities=item.get("quantities", []),
-                reviewer_type="user_confirmation", review_basis="stage3_user_confirmation",
+                reviewer_type="user_confirmation", review_basis="stage3_user_confirmation", review_status="accepted",
             )
             row["statement_id"] = item["statement_id"]
             row["document_key"] = logical_to_key[evidence["document_logical_id"]]

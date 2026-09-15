@@ -26,7 +26,17 @@
     "ai_self_review_is_not_independent_review": true,
     "blind_materials_are_never_read_by_stage11": true,
     "holdout_isolation_is_task_specific": true,
-    "holdout_is_not_used_for_statement_tuning": true
+    "holdout_is_not_used_for_statement_tuning": true,
+    "candidate_labels_are_not_stage12_inputs": true,
+    "accepted_evidence_requires_original_page_confirmation": true,
+    "accepted_review_rounds_require_independent_provenance": true
+  },
+  "stage12_input_gate": {
+    "sample_tier": "gold",
+    "label_status": "gold",
+    "review_status": "accepted",
+    "independent_review_required": true,
+    "disallowed_statuses": ["candidate", "candidate_only", "pending", "pending_manual_review", "isolated", "rejected"]
   },
   "provenance": {
     "required": ["document_logical_id", "revision_id", "physical_page", "evidence_id", "source_text_sha256"],

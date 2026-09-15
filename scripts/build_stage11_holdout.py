@@ -54,13 +54,19 @@ def _normalise(value: str) -> str:
 
 
 def _statement_type(text: str) -> str:
-    if any(token in text for token in ("步骤", "再将", "然后", "先", "后")):
+    if any(token in text for token in ("应", "必须", "不得", "要求")):
+        return "requirement"
+    if any(token in text for token in ("步骤", "首先", "然后", "再将", "依次")):
         return "procedure"
     if any(token in text for token in ("检查", "验收", "验证")):
         return "verification"
-    if any(token in text for token in ("应", "必须", "不得", "要求")):
-        return "requirement"
     return "fact"
+
+
+def _requires_isolation(page_text: str) -> bool:
+    """Conservatively isolate pages whose OCR ordering looks like a table/metadata mix."""
+    metadata_markers = ("等级：", "工种：", "行业：", "行为领域编号", "题分")
+    return sum(marker in page_text for marker in metadata_markers) >= 2
 
 
 def _select_quote(page_text: str) -> str | None:
@@ -139,7 +145,7 @@ def build() -> tuple[list[dict], list[dict], dict]:
             "independence": {"statement": False, "entity_alignment_algorithm": False},
             "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
             "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
-            "allowed_consumers": ["stage11_exit_audit", "stage12_development_loader"],
+            "allowed_consumers": ["stage11_exit_audit", "stage11_semantic_review"],
             "review_status": "frozen",
             "frozen": True,
         })
@@ -173,6 +179,9 @@ def build() -> tuple[list[dict], list[dict], dict]:
             sample_id = _id("stage11-holdout", document_key, physical_page)
             subject_id = _id("stage11-entity", document_key, physical_page, quote[:40])
             statement_type = _statement_type(quote)
+            isolated = _requires_isolation(pdf_page.get_text("text"))
+            sample_review_status = "isolated" if isolated else "pending_manual_review"
+            evidence_review_status = "isolated" if isolated else "pending_manual_review"
             evidence_rows.append({
                 "sample_id": sample_id,
                 "evidence_id": evidence_id,
@@ -187,15 +196,19 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "source_span_id": source_span_id,
                 "bbox": bbox,
                 "source_text": quote,
+                "evidence_status": "candidate",
+                "source_confirmation_status": evidence_review_status,
+                "page_analysis_text_sha256": page_meta.get("analysis_text_sha256"),
+                "evidence_text_sha256": source_hash,
                 "source_text_sha256": source_hash,
                 "effective_text": quote,
-                "review_status": "accepted",
-                "reviewer": "Codex_stage11_cross_review",
-                "reviewer_type": "ai_cross_review",
-                "review_reason": "Processing text was checked against the original-material page identity and source span.",
-                "review_rounds": [
-                    {"round": 1, "reviewer_type": "ai_cross_review", "scope": "original_page_and_source_span", "status": "accepted"},
-                    {"round": 2, "reviewer_type": "ai_cross_review", "scope": "numeric_unit_negation_scope", "status": "accepted"},
+                "review_status": evidence_review_status,
+                "reviewer": "stage11_candidate_builder",
+                "reviewer_type": "candidate_generation",
+                "review_reason": "Evidence candidate requires independent source and layout review before acceptance." if not isolated else "OCR reading order or table metadata is uncertain; isolated pending page-level review.",
+                "review_plan": [
+                    {"round": 1, "reviewer_role": "independent_source_reviewer", "scope": "original_page_and_source_span"},
+                    {"round": 2, "reviewer_role": "independent_semantic_reviewer", "scope": "numeric_unit_negation_scope"},
                 ],
                 "support_type": "direct",
                 "formal_release": False,
@@ -204,6 +217,7 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "sample_id": sample_id,
                 "split": "acceptance_holdout",
                 "task": "statement",
+                "label_status": "candidate_only",
                 "entity_alignment_task": "entity_alignment_algorithm",
                 "independent_for_statement": True,
                 "independent_for_entity_alignment_algorithm": True,
@@ -214,6 +228,8 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "revision_id": revision_id,
                 "physical_page": physical_page,
                 "logical_page": page_meta.get("logical_page"),
+                "page_analysis_text_sha256": page_meta.get("analysis_text_sha256"),
+                "evidence_text_sha256": source_hash,
                 "source_text_sha256": source_hash,
                 "evidence_bindings": [{"evidence_id": evidence_id, "support_type": "direct"}],
                 "statement_id": _id("stage11-statement", logical_id, revision_id, physical_page, quote),
@@ -225,9 +241,9 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "entity_alignment": [{
                     "surface_form": quote[:24],
                     "entity_id": subject_id,
-                    "entity_class": "EngineeringEntity",
-                    "match_type": "exact_source_span",
-                    "review_status": "accepted",
+                    "entity_class": "UnresolvedEntityCandidate",
+                    "match_type": "candidate_source_span",
+                    "review_status": sample_review_status,
                 }],
                 "applicability_scope": {"document_key": document_key},
                 "value": None,
@@ -235,14 +251,15 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "quantities": [],
                 "normative_modality": "shall" if statement_type == "requirement" else "descriptive",
                 "negation_scope": [],
-                "review_status": "accepted",
-                "review_basis": "stage11_ai_cross_review",
-                "reviewer": "Codex_stage11_cross_review",
-                "reviewer_type": "ai_cross_review",
-                "review_reason": "Statement text is an immutable source-span quote; entity alignment is scoped to this sample.",
-                "review_rounds": [
-                    {"round": 1, "reviewer_type": "ai_cross_review", "scope": "statement_semantics", "status": "accepted"},
-                    {"round": 2, "reviewer_type": "ai_cross_review", "scope": "entity_alignment_and_applicability", "status": "accepted"},
+                "review_status": sample_review_status,
+                "review_basis": "stage11_candidate_generation",
+                "reviewer": "stage11_candidate_builder",
+                "reviewer_type": "candidate_generation",
+                "review_reason": "Statement candidate awaits independent semantic annotation; no accepted gold label is generated by the builder.",
+                "semantic_review_required": True,
+                "review_plan": [
+                    {"round": 1, "reviewer_role": "independent_statement_reviewer", "scope": "statement_semantics"},
+                    {"round": 2, "reviewer_role": "independent_entity_reviewer", "scope": "entity_alignment_and_applicability"},
                 ],
                 "formal_release": False,
             })
@@ -255,6 +272,8 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "revision_id": revision_id,
                 "physical_page": physical_page,
                 "source_text_sha256": source_hash,
+                "page_analysis_text_sha256": page_meta.get("analysis_text_sha256"),
+                "evidence_text_sha256": source_hash,
                 "prior_exposure": ["stage7_terminology_discovery", "stage8_candidate_ontology_review"],
                 "independence": {
                     "statement": True,
@@ -264,8 +283,8 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 },
                 "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
                 "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
-                "allowed_consumers": ["stage11_exit_audit", "stage12_holdout_evaluator"],
-                "review_status": "accepted",
+                "allowed_consumers": ["stage11_exit_audit", "stage11_semantic_review"],
+                "review_status": sample_review_status,
                 "frozen": True,
             })
         pdf.close()
@@ -298,7 +317,7 @@ def build() -> tuple[list[dict], list[dict], dict]:
         "status": "frozen_for_stage11",
         "formal_release": False,
         "producer": "scripts/build_stage11_holdout.py",
-        "consumers": ["scripts/audit_stage11_exit.py", "Stage 12 development/evaluation loaders"],
+        "consumers": ["scripts/audit_stage11_exit.py", "stage11_semantic_review"],
         "development": {"source": "data/stage6/stage6_evidence_golden_sample.json", "page_count": 36, "trial_page_subset_count": 15},
         "acceptance_holdout": {"page_count": 15, "pages_per_document": 3, "reserve_page_count": 5},
         "blind_test": {"status": "excluded", "read_by_stage11": False, "owner": "user-held evaluation boundary"},

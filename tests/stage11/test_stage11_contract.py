@@ -20,6 +20,8 @@ def test_stage11_contract_has_task_specific_boundary_and_normalized_fields():
     assert {"statement_id", "statement_text", "subject_entity_id", "predicate", "object_value", "evidence_bindings", "applicability_scope", "review_status", "source_text_sha256"} <= set(contract["statement_fields"])
     assert contract["requirements"]["holdout_isolation_is_task_specific"] is True
     assert contract["requirements"]["holdout_is_not_used_for_statement_tuning"] is True
+    assert contract["requirements"]["adjudication_hash_matches_final_gold"] is True
+    assert contract["requirements"]["adjudication_statement_count_matches_final_gold"] is True
 
 
 def test_stage11_exit_opens_after_semantic_gold_review():
@@ -124,6 +126,17 @@ def test_stage11_two_review_rounds_are_independent_and_adjudicated():
     target_ids = {row["sample_id"] for row in queue}
     assert target_ids <= {row["sample_id"] for row in review_a}
     assert target_ids <= {row["sample_id"] for row in review_b}
+
+
+def test_stage11_adjudication_hash_and_count_match_final_gold_rows():
+    from scripts.audit_stage11_exit import _final_gold_hash, _final_gold_rows
+
+    statements = _jsonl("data/stage11/stage11_statement_development_samples.jsonl") + _jsonl("data/stage11/stage11_statement_holdout.jsonl")
+    queue = _jsonl("data/stage11/stage11_adjudication_queue.jsonl")
+    for item in queue:
+        sample_id = item["sample_id"]
+        assert item["adjudicated_statement_count"] == len(_final_gold_rows(statements, sample_id))
+        assert item["adjudication_output_sha256"] == _final_gold_hash(statements, sample_id)
 
 
 def test_stage12_input_gate_is_fail_closed():

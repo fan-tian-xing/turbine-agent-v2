@@ -1,6 +1,6 @@
 # 阶段 11：语义抽取入口门
 
-阶段 11 冻结 Engineering Statement 合同和唯一 Evaluation Sample Registry，样本仍属于研究/评价边界，不产生正式 Release 或运行词汇。开发样本和留出集已完成逐条语义标注、独立复核与用户裁决；辅机第 78 页按原页实际标示的 A、A、C、B、D、A 回填为 6 条 Gold。D300N 第 32 页和辅机第 429 页因版面/表格无法可靠回查而保持隔离。退出审计已通过，阶段 12 可以读取明确的 Gold 开发输入。
+阶段 11 冻结 Engineering Statement 合同和唯一 Evaluation Sample Registry，样本仍属于研究/评价边界，不产生正式 Release 或运行词汇。开发样本和留出集已完成逐条语义标注、两轮独立复核与最终裁决；其中辅机第 78 页经过用户确认，按原页实际标示的 A、A、C、B、D、A 回填为 6 条 Gold。D300N 第 32 页和辅机第 429 页因版面/表格无法可靠回查而保持隔离。退出审计已通过，阶段 12 可以读取明确的 Gold 开发输入。
 
 - `stage11_statement_development_samples.jsonl`：36 页开发/回归 Golden 的最小 Statement 样本，包含 4 条阶段 3 用户确认记录及五份资料的补充记录。阶段 3 的 15 个试点页是这 36 页的子集；当前文件按语义单元保存 19 条 Statement。
 - `stage11_statement_holdout.jsonl` 与 `stage11_holdout_evidence.jsonl`：五份资料各 3 页、共 15 页的 Statement 任务留出；页是抽样单位，Statement 数量按语义拆分为多条。13 页已确认并标为 Gold，D300N 第 32 页和辅机第 429 页隔离；辅机第 78 页保留 6 道完整题目，按原页标示答案回填并去除选择题格式，跨页的 Lc5A1332 不纳入。另有每份资料 1 页固定替补登记在 Registry 中。

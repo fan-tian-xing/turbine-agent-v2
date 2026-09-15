@@ -29,7 +29,9 @@
     "holdout_is_not_used_for_statement_tuning": true,
     "candidate_labels_are_not_stage12_inputs": true,
     "accepted_evidence_requires_original_page_confirmation": true,
-    "accepted_review_rounds_require_independent_provenance": true
+    "accepted_review_rounds_require_independent_provenance": true,
+    "adjudication_hash_matches_final_gold": true,
+    "adjudication_statement_count_matches_final_gold": true
   },
   "stage12_input_gate": {
     "sample_tier": "gold",

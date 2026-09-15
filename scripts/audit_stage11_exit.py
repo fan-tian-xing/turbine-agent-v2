@@ -30,6 +30,30 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def _final_gold_rows(rows: list[dict], sample_id: str) -> list[dict]:
+    """Return the accepted Gold rows for a sample in deterministic statement order."""
+    return sorted(
+        [
+            row for row in rows
+            if row.get("sample_id") == sample_id
+            and row.get("review_status") == "accepted"
+            and row.get("label_status") == "gold"
+        ],
+        key=lambda row: row.get("statement_id", ""),
+    )
+
+
+def _final_gold_hash(rows: list[dict], sample_id: str) -> str:
+    """Hash the complete canonical JSON representation of a sample's final Gold rows."""
+    payload = json.dumps(
+        _final_gold_rows(rows, sample_id),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
+
+
 def _required_row_fields(row: dict) -> bool:
     required = {
         "statement_id", "statement_type", "statement_text", "subject_entity_id", "predicate",
@@ -92,6 +116,8 @@ def audit() -> dict:
             "candidate_labels_are_not_stage12_inputs",
             "accepted_evidence_requires_original_page_confirmation",
             "accepted_review_rounds_require_independent_provenance",
+            "adjudication_hash_matches_final_gold",
+            "adjudication_statement_count_matches_final_gold",
         } <= set(contract.get("requirements", {}))
         and contract.get("stage12_input_gate", {}).get("sample_tier") == "gold"
         and contract.get("stage12_input_gate", {}).get("label_status") == "gold"
@@ -219,6 +245,8 @@ def audit() -> dict:
             and row.get("adjudicator_id")
             and row.get("adjudication_notes")
             and row.get("adjudication_output_sha256")
+            and row.get("adjudicated_statement_count") == len(_final_gold_rows(dev + holdout, row.get("sample_id")))
+            and row.get("adjudication_output_sha256") == _final_gold_hash(dev + holdout, row.get("sample_id"))
             for row in adjudication
         )
     )

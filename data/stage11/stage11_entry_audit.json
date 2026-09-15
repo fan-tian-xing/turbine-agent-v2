@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "stage": "11",
+  "artifact_kind": "stage11_entry_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/audit_stage11_exit.py",
+  "inputs": {
+    "stage6_exit_audit": "data/stage6/stage6_exit_audit.json",
+    "stage6_canonical_bundle": "data/stage6/stage6_evidence_bundle.jsonl",
+    "stage7_input_manifest": "data/stage7/terminology_input_manifest.json",
+    "stage9_exit_audit": "data/stage9/stage9_exit_audit.json",
+    "stage10_exit_audit": "data/stage10/stage10_audit.json",
+    "statement_contract": "config/stage11_statement_contract.json",
+    "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl",
+    "holdout_statement_samples": "data/stage11/stage11_statement_holdout.jsonl",
+    "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
+    "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json"
+  },
+  "input_sha256": {
+    "statement_contract": "368acb5fec7aa8da9d3184628b2d7396274e04380b887e7ae686c85bfcda95fe",
+    "evaluation_sample_registry": "33f7cbefd7ca62d324ec1fbe5a15dd3409e9b50fb7a4a81d25ca3d57515b4684",
+    "development_statement_samples": "2f8788e96ae8ec4521253b8d947df4f2d439042c8c6c20621aa1c16565fef805",
+    "holdout_statement_samples": "91328b23329a2b1e28e39ed4a983e37e459ea264aa7226fef73410108918c092",
+    "holdout_evidence": "b38177dee2eeb40b3eb21b0adee4a5e5ed6d92d618471b396ea52ead76917db5"
+  },
+  "sample_registry": {
+    "development_regression_golden": {
+      "page_count": 36,
+      "trial_page_subset_count": 15,
+      "statement_sample_count": 10,
+      "source": "data/stage6/stage6_evidence_golden_sample.json"
+    },
+    "acceptance_holdout": {
+      "page_count": 15,
+      "pages_per_document": 3,
+      "reserve_page_count": 5,
+      "source": "data/stage7/terminology_input_manifest.json"
+    },
+    "blind_test": {
+      "status": "excluded",
+      "read_by_stage11": false,
+      "owner": "user-held evaluation boundary"
+    }
+  },
+  "checks": {
+    "stage6_boundary_preserved": true,
+    "stage7_and_case_isolation_preserved": true,
+    "stage9_gate": true,
+    "stage10_gate": true,
+    "statement_contract_present": true,
+    "development_statement_samples_frozen": true,
+    "holdout_frozen": true,
+    "holdout_independence": true,
+    "evidence_bindings_resolve": true,
+    "source_hashes_match": true,
+    "sample_registry_consistent": true,
+    "blind_materials_excluded": true,
+    "stage12_entry_allowed": true
+  },
+  "counts": {
+    "development_statement_samples": 10,
+    "holdout_statement_samples": 15,
+    "holdout_evidence": 15,
+    "registry_records": 56,
+    "stage6_development_pages": 36
+  },
+  "blockers": [],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 12 representative chapter semantic extraction",
+  "consumers": [
+    "tests/stage11/test_stage11_contract.py",
+    "Stage 12 development loader",
+    "Stage 12 holdout evaluator"
+  ]
+}

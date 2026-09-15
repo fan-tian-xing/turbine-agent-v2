@@ -2,11 +2,11 @@
   "schema_version": 1,
   "artifact_kind": "project_state",
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
-  "updated_at": "2026-09-13",
-  "current_stage": 10,
+  "updated_at": "2026-09-15",
+  "current_stage": 11,
   "current_stage_status": "complete",
-  "current_stage_scope": "stable_identity_document_revision_and_knowledge_maintainability",
-  "next_stage": 11,
+  "current_stage_scope": "semantic_extraction_entry_gate",
+  "next_stage": 12,
   "next_stage_status": "ready",
   "formal_release": false,
   "stages": {
@@ -25,7 +25,8 @@
     },
     "3": {
       "status": "complete",
-      "exit_audit": "data/stage3/stage3_exit_audit.json"
+      "exit_audit": "data/stage3/stage3_exit_audit.json",
+      "repair_audit": "data/stage3/stage3_claim_validation_repair_audit.json"
     },
     "4": {
       "status": "pass",
@@ -83,6 +84,19 @@
         "stage10_exit": "data/stage10/stage10_audit.json",
         "controlled_registry": "data/registry/source_assets.jsonl"
       }
+    },
+    "11": {
+      "status": "complete",
+      "scope": "semantic_extraction_entry_gate",
+      "entry_record": "data/stage11/stage11_entry_audit.json",
+      "exit_audit": "data/stage11/stage11_entry_audit.json",
+      "statement_contract": "config/stage11_statement_contract.json",
+      "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json",
+      "development_samples": "data/stage11/stage11_statement_development_samples.jsonl",
+      "acceptance_holdout": "data/stage11/stage11_statement_holdout.jsonl",
+      "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
+      "next_stage": 12,
+      "next_stage_status": "ready"
     }
   },
   "boundaries": [

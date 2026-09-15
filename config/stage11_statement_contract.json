@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "stage": "11",
+  "artifact_kind": "engineering_statement_golden_sample_contract",
+  "status": "active_for_stage11",
+  "formal_release": false,
+  "authority": "This contract defines the sample annotation boundary; it does not publish Engineering Statements.",
+  "sample_split": ["development_regression_golden", "acceptance_holdout", "blind_test"],
+  "task_types": ["statement", "entity_alignment", "page", "ocr", "evidence"],
+  "statement_fields": [
+    "statement_id", "statement_type", "statement_text", "subject_entity_id", "predicate",
+    "object_value", "evidence_bindings", "applicability_scope", "value", "unit",
+    "quantities", "normative_modality", "negation_scope", "entity_alignment",
+    "review_status", "reviewer", "reviewer_type", "review_reason", "source_text_sha256"
+  ],
+  "statement_types": ["fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"],
+  "evidence_support_types": ["direct", "partial", "context"],
+  "review_statuses": ["pending_manual_review", "accepted", "corrected", "rejected", "isolated"],
+  "requirements": {
+    "statement_requires_evidence": true,
+    "statement_requires_object_and_scope": true,
+    "evidence_must_be_source_grounded": true,
+    "evidence_support_types_are_explicit": true,
+    "source_quote_is_immutable": true,
+    "action_authorization_is_research_compatible_only": true,
+    "ai_self_review_is_not_independent_review": true,
+    "blind_materials_are_never_read_by_stage11": true,
+    "holdout_isolation_is_task_specific": true,
+    "holdout_is_not_used_for_statement_tuning": true
+  },
+  "provenance": {
+    "required": ["document_logical_id", "revision_id", "physical_page", "evidence_id", "source_text_sha256"],
+    "stable_identity_source": "Document -> Revision -> Page/SourceSpan -> Evidence -> Statement"
+  },
+  "producer": "scripts/audit_stage11_exit.py",
+  "consumers": ["tests/stage11/test_stage11_contract.py", "Stage 12 statement extraction entry gate"]
+}

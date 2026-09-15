@@ -3,13 +3,36 @@
 from __future__ import annotations
 
 import re
+import unicodedata
+from decimal import Decimal
 
 from .applicability import match_scope
 from .models import Claim, FixtureDocument, ValidationResult
 
 
 ALLOWED_CLAIM_TYPES = {"fact", "conditioned_inference", "candidate_recommendation", "action_authorization"}
-NUMBER_PATTERN = re.compile(r"(?<![A-Za-z0-9])(?P<number>\d+(?:\.\d+)?)\s*(?P<unit>mm|cm|mw|kw|m|s|c|%)?(?=$|[^A-Za-z0-9])", re.IGNORECASE)
+_NUMBER = r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
+_UNIT = r"(?:[A-Za-zµμ°%]+|[\u3400-\u9fff]+)(?:[0-9²³]+)?(?:[/·*](?:[A-Za-zµμ°%]+|[\u3400-\u9fff]+)(?:[0-9²³]+)?)?"
+NUMBER_PATTERN = re.compile(
+    rf"(?<![A-Za-z0-9_.+-])(?P<number>{_NUMBER})\s*(?P<unit>{_UNIT})?(?![A-Za-z0-9_]|\.\d)",
+    re.IGNORECASE,
+)
+_RANGE = re.compile(
+    rf"(?<![A-Za-z0-9_.+-])(?P<first>{_NUMBER})\s*(?:～|~|–|—|至|到|-)\s*(?P<last>{_NUMBER})\s*(?P<unit>{_UNIT})(?![A-Za-z0-9_])",
+    re.IGNORECASE,
+)
+_UNIT_ALIASES = {"毫米": "mm", "厘米": "cm", "微米": "um", "μm": "um", "兆瓦": "mw", "千瓦": "kw", "摄氏度": "c", "°c": "c", "秒": "s", "inch": "in"}
+_NON_UNITS = {"and", "or", "to", "is", "are", "was", "must", "should", "limit", "value", "baseline", "threshold"}
+
+
+def _normalize_unit(unit: str | None) -> str | None:
+    if unit is None:
+        return None
+    normalized = unicodedata.normalize("NFKC", unit).lower()
+    normalized = "/".join(_UNIT_ALIASES.get(part, part) for part in re.split(r"[/·*]", normalized))
+    if normalized in _NON_UNITS:
+        return None
+    return _UNIT_ALIASES.get(normalized, normalized)
 
 
 def _text_tokens(value: str) -> set[str]:
@@ -32,19 +55,38 @@ def _text_supported(needle: str, source: str, *, minimum_overlap: float = 0.6) -
     return len(needle_tokens & source_tokens) / len(needle_tokens) >= minimum_overlap
 
 
-def _numeric_mentions(value: str) -> set[tuple[float, str | None]]:
-    value = value.replace("％", "%")
-    return {
-        (round(float(match.group("number")), 6), match.group("unit").lower() if match.group("unit") else None)
+def _numeric_mentions(value: str) -> set[tuple[Decimal, str | None]]:
+    value = unicodedata.normalize("NFKC", value).replace("−", "-")
+    mentions = {
+        (Decimal(match.group("number")), _normalize_unit(match.group("unit")))
         for match in NUMBER_PATTERN.finditer(value)
     }
+    # A trailing unit applies to both endpoints of a written range.
+    for match in _RANGE.finditer(value):
+        unit = _normalize_unit(match.group("unit"))
+        mentions.discard((Decimal(match.group("first")), None))
+        mentions.update((Decimal(match.group(endpoint)), unit) for endpoint in ("first", "last"))
+    return mentions
+
+
+def _numbers_supported(text: str, source: str) -> bool:
+    """Check prose quantities even when the model omits numeric metadata.
+
+    Unitless restatements may omit a stored unit; a stated unit must match.
+    This research validator does not authorize conversions or calculations.
+    """
+    supported = _numeric_mentions(source)
+    return all(
+        (number, unit) in supported or (unit is None and any(number == candidate for candidate, _ in supported))
+        for number, unit in _numeric_mentions(text)
+    )
 
 
 def _quantity_supported(text: str, value: float | None, unit: str | None) -> bool:
     if value is None:
         return True
-    expected_value = round(float(value), 6)
-    expected_unit = unit.lower() if unit else None
+    expected_value = Decimal(str(value))
+    expected_unit = _normalize_unit(unit)
     return any(
         mention_value == expected_value and (expected_unit is None or mention_unit == expected_unit)
         for mention_value, mention_unit in _numeric_mentions(text)
@@ -54,15 +96,15 @@ def _quantity_supported(text: str, value: float | None, unit: str | None) -> boo
 def _quantities_supported(text: str, quantities: tuple[tuple[float | None, float | None, str], ...]) -> bool:
     mentions = _numeric_mentions(text)
     for minimum, maximum, unit in quantities:
-        expected_unit = unit.lower()
+        expected_unit = _normalize_unit(unit)
         expected = {
             number
             for number, mentioned_unit in mentions
-            if mentioned_unit in {expected_unit, None}
+            if mentioned_unit == expected_unit
         }
-        if minimum is not None and round(float(minimum), 6) not in expected:
+        if minimum is not None and Decimal(str(minimum)) not in expected:
             return False
-        if maximum is not None and round(float(maximum), 6) not in expected:
+        if maximum is not None and Decimal(str(maximum)) not in expected:
             return False
     return True
 
@@ -108,6 +150,8 @@ def validate_claim(claim: Claim, documents: tuple[FixtureDocument, ...]) -> Vali
             )
             if not _text_supported(evidence.text, source_text):
                 failures.append(f"evidence_text_not_supported:{evidence_id}")
+            if not _numbers_supported(evidence.text, source_text):
+                failures.append(f"evidence_prose_quantity_not_supported:{evidence_id}")
             if not _quantity_supported(evidence.text, evidence.value, evidence.unit):
                 failures.append(f"evidence_quantity_not_in_text:{evidence_id}")
             if not _quantity_supported(source_text, evidence.value, evidence.unit):
@@ -140,6 +184,16 @@ def validate_claim(claim: Claim, documents: tuple[FixtureDocument, ...]) -> Vali
     )
     if not _text_supported(claim.text, supporting_text):
         failures.append("claim_text_not_supported")
+    bound_evidence_text = " ".join(
+        evidence_by_id[item].text for item in claim.evidence_ids
+        if item in evidence_by_id and evidence_by_id[item].statement_id == claim.statement_id
+    )
+    if not _numbers_supported(claim.text, bound_evidence_text):
+        failures.append("claim_prose_quantity_not_supported")
+    if not _quantity_supported(bound_evidence_text, claim.value, claim.unit):
+        failures.append("claim_quantity_not_in_evidence")
+    if not _quantities_supported(bound_evidence_text, claim.quantities):
+        failures.append("claim_ranges_not_in_evidence")
     if _has_negation(claim.text) != _has_negation(statement.text):
         failures.append("negation_mismatch")
     scope_result = match_scope(statement.scope, claim.context)

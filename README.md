@@ -94,3 +94,7 @@ Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` �
 ```
 
 运行结果写入本地受控缓存，使用范围、输入门禁及生命周期字段见 [`data/stage10/README.md`](data/stage10/README.md)；运行合同见 [`config/runtime_contract.json`](config/runtime_contract.json)。
+
+阶段 11 冻结 Engineering Statement 合同和唯一 Evaluation Sample Registry。36 页开发/回归 Golden（其中包含阶段 3 的 15 页试点子集）与五份资料各 3 页的 15 页 Statement 留出集分开登记；留出集只由评价入口读取，盲测内容不由本项目读取。构建和退出检查见 [`data/stage11/README.md`](data/stage11/README.md)。
+
+阶段 15 的目标是按 Registry 身份对五份资料 775 个唯一物理页完成全文 Evidence、Engineering Statement 和 candidate 图谱处理。开发页、试点页及阶段 14 candidate 都要迁移对账后只处理一次；OCR 仅为派生资产，视觉页、隔离页和非内容页均需有明确处置，正式 candidate 还需通过覆盖、审核、重复加载和隔离 Neo4j 对账门禁。

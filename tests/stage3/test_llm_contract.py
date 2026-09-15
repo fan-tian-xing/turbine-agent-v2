@@ -261,3 +261,16 @@ def test_model_answer_draft_never_reaches_the_user_visible_answer():
     answer, _, _ = _validate_llm_payload(payload, [hit])
     assert "real-evidence-dl5190-p86-contact" not in answer
     assert "未验证动作" not in answer
+
+
+@pytest.mark.parametrize("replacement", ["0.15mm", "0.05inch", "0.05ft", "-0.05mm"])
+def test_llm_prose_numeric_error_is_rejected_when_metadata_is_omitted(replacement):
+    hit = _make_hit()
+    payload = _valid_payload(hit)
+    claim = payload["claims"][0]
+    claim["text"] = claim["text"].replace("0.05mm", replacement)
+    claim.pop("value")
+    claim.pop("unit")
+    claim.pop("quantities")
+    with pytest.raises(ValueError, match="claim_prose_quantity_not_supported"):
+        _validate_llm_payload(payload, [hit])

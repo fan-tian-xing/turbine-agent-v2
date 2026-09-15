@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "stage": "3",
+  "artifact_kind": "stage3_claim_validation_repair_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "tests/stage3/test_numeric_prose.py and tests/stage3/test_llm_contract.py",
+  "scope": "claim prose numeric/unit support and bound Evidence quantity checks",
+  "inputs": {
+    "validator": "src/turbine_kg/stage3/validation.py",
+    "llm_contract_test": "tests/stage3/test_llm_contract.py",
+    "numeric_regression_test": "tests/stage3/test_numeric_prose.py",
+    "public_fixture": "tests/fixtures/stage3/corpus.json"
+  },
+  "changes": [
+    "Claim prose numbers and stated units must be supported by bound Evidence text.",
+    "Range endpoints inherit a trailing unit and range metadata requires exact unit support.",
+    "Signed, scientific, Unicode-normalized, compound and unknown unit tokens fail closed when unsupported.",
+    "Missing value/unit/quantities metadata can no longer bypass prose quantity validation."
+  ],
+  "test_result": {
+    "command": "runtime-python/turbine-kg-env/Scripts/python.exe -m pytest -q -p no:cacheprovider tests/stage3",
+    "status": "passed",
+    "test_count": 66,
+    "project_python": "D:/本体/汽轮机安调项目/项目初期demo/runtime-python/turbine-kg-env/Scripts/python.exe"
+  },
+  "negative_coverage": ["changed numeric value", "wrong Latin unit", "unknown Chinese unit", "compound unit", "extra number", "signed value", "range unit mismatch", "omitted LLM numeric metadata"],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 11 semantic extraction entry gate"
+}

@@ -1,0 +1,1510 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "evaluation_sample_registry",
+  "stage": "11",
+  "status": "frozen_for_stage11",
+  "formal_release": false,
+  "producer": "scripts/build_stage11_holdout.py",
+  "consumers": [
+    "scripts/audit_stage11_exit.py",
+    "Stage 12 development/evaluation loaders"
+  ],
+  "development": {
+    "source": "data/stage6/stage6_evidence_golden_sample.json",
+    "page_count": 36,
+    "trial_page_subset_count": 15
+  },
+  "acceptance_holdout": {
+    "page_count": 15,
+    "pages_per_document": 3,
+    "reserve_page_count": 5
+  },
+  "blind_test": {
+    "status": "excluded",
+    "read_by_stage11": false,
+    "owner": "user-held evaluation boundary"
+  },
+  "records": [
+    {
+      "sample_id": "stage11-dev-page-3f39a3405dedb4a6d33b",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 1,
+      "source_text_sha256": "10f5d5bafea9ff881e12aa70377e92eba9d1b9fd3db0a52b552b07d6e5926b98",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-ef02c2ae397ab73a2311",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 2,
+      "source_text_sha256": "d65ee9d2cac3ac555be9fda5adb5067cd7424b28034076890b84018d0817b820",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-2f63d76033c90909e54f",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 38,
+      "source_text_sha256": "0a833f3a23d11dfedfc246d7a94eef1ac85e49a44be4f021e2087a447afe0449",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-7f6298f977977c50558a",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 50,
+      "source_text_sha256": "10be17b68657148f9bb34bdd7aafa8a74d1f1d3229eadd735297c063af689e28",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-bb4450c0531dbaaf8491",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 73,
+      "source_text_sha256": "249481e4cbc243d5e01bdbcca2174fed0f301317e6ce6110dbd2878ca10b11be",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-36862cdf7380564066da",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 94,
+      "source_text_sha256": "f52b541d042d5640462f10f331975fcf2d5cccc0e6d81789a708baf3c842f461",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-10d4c6752c95b31983ce",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 1,
+      "source_text_sha256": "f9e84fbd63869d12cf194657f067e62d9966877ac2e0af4c158226f507dedb3e",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-8b854674f3f14c5f1c5c",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 14,
+      "source_text_sha256": "61fa8e6e9a5ed66a626eee5c6b465c0525f3ad6ddde16e1bf5fc5c5777daff0b",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-f28a687506868dd7ba24",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 25,
+      "source_text_sha256": "edce4023236fc6fc5c2104a68321d89fcdb4d7036c3050d02a898aabd8beb09a",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-22dd89ad5a88b34454dd",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 42,
+      "source_text_sha256": "d577a8e88bf92adc4758276e80233e06d50274d1269d4bad1585f9c68f242c75",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-d003aaf29f5e5c2e18c1",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 86,
+      "source_text_sha256": "7da7ca0a928703bdff251b9d527670e4ef885cea923843ce12171086a31a2a6c",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-2773da86bc7d1a39cbec",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 113,
+      "source_text_sha256": "a98b27d8f401ab09872ce1e114b9ab931911fd7ed27c72d250269ca8922b3aae",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-c41de3ebe8d23c709a58",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 1,
+      "source_text_sha256": "f734b31e1e4d79990d5ba69e6d86f78518edd811006559c39a1b91e93562dc87",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-ed2435382491051492a1",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 2,
+      "source_text_sha256": "497163780f364fe92cd740c355d1badde1dd562baad92ba35b64457d0b512785",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-65f95026a4eb6f5bb0df",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 14,
+      "source_text_sha256": "a7075b2baf8b9446d582c07fab2f2175dfdb5275edbf17470df5733bd0d299f0",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-e9bf60a259a296d9c12c",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 15,
+      "source_text_sha256": "bf7010586cf2f3ec44a41fd51cf66d15f03fdd0108bd7e7c97b2eeeca721a596",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-14454914af6f46993371",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 27,
+      "source_text_sha256": "6198003e4662c7000aea5097382365faade74ebadeeb92e035f8ebd7b28eb4b9",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-94c4687d3ec6bb34f8b3",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 28,
+      "source_text_sha256": "2aa205cfd2d6da34b9d6587b2fcff9343404d49e365d9077c4798497a1b721fb",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-db9c77013fb70b836d78",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 1,
+      "source_text_sha256": "b540a72394fa32f5ece7c4fd7f8ba008d5817b182c0b944f2d8fafb531f4f004",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-28b2ad3500593137d711",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 11,
+      "source_text_sha256": "ea43f91710e7073c804cfaa2524597a7b885c444d8725c0346267360d6958a2f",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-100a72a87e4b4fa7f2cb",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 12,
+      "source_text_sha256": "cefc4e6a639843d96face0367c07ecc1480a772ddb08ba97efc062461cad7515",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-f64bda52e97e50fd2e04",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 16,
+      "source_text_sha256": "0e76749b6ee8b4907d39c3e187f75b0d4b67175baf10703002b48d2522ff9d48",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-3d3a628e241f41498993",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 29,
+      "source_text_sha256": "bea595bcd831c5c1a9503be9905c6a2630358912bb5348eb51cc83564efe021b",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-d7c6ce53cdeeda9a3626",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 32,
+      "source_text_sha256": "c572b1e739d9d5c24f68a69da4e26c876f216b4d048297b6f4925462ef029b61",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-18fe39e5bb6ee0287b33",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 1,
+      "source_text_sha256": "0871655d762372f2106e9c9b5ff7f11f535e4dc2883c5b70655db301d65290c4",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-50656105913f853eaaa6",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 12,
+      "source_text_sha256": "47685c684763398654ab43b8d315d1151c97159ca6fe9096c02f6cccf4ce91ce",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-cdd7d396f5a4b27e6ff1",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 31,
+      "source_text_sha256": null,
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-a91a94a587c5970d0945",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 32,
+      "source_text_sha256": "39c9d13e5a28f10faa919b597756f7052daa01fda916a239ac547ae9b3e014a0",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-49abeb6a8e4095c2ea75",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 64,
+      "source_text_sha256": "ff86009dba1f87fded5c1ac1a395be96ffe5888d93128b4d7adc954676b7574c",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-6cf2f5329fd4fa4fe7f6",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 120,
+      "source_text_sha256": "b904bebd5128971dc725b98e0ae92159fd6814eaa10739dafda945aa106bd4dd",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-c086590b73ed6996a070",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 180,
+      "source_text_sha256": "a7eab3e11a8570d0bad4eb816831b016413a9ef43c9f8fe6039c833fd9f817d5",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-7309aa6f66c7dcdffb79",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 244,
+      "source_text_sha256": "0bf8319e094c30d0e72209105167a44e6b5d2cbb8fdfb78d7d8d35e53334c6fb",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-2872e2428c2bdb800681",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 300,
+      "source_text_sha256": "2470c0686e35d32eb22d937bc45e58bd22afaa8ea3d4c7067fe4609f86e42175",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-7c86e24f10a00381d388",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 360,
+      "source_text_sha256": "cf03327477909a27b96f3b24b6a2595e5bef3d00a6a7eeaf4e3f74e80fe2a886",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-f2b84d9f1840e519cdcd",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 468,
+      "source_text_sha256": "c76eece9de5507f3f52cbd5ca63efd40caab8bb2208e714ee6b65a8f327699bb",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-dev-page-0ef5e6f501a86c99c0d8",
+      "split": "development_regression_golden",
+      "task": "page_ocr_evidence_statement_entity_alignment",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 480,
+      "source_text_sha256": "222571332c6476d6b1f4812fc972309ef3a5fb33ce44b5623a9beaeb454ded2b",
+      "prior_exposure": [
+        "stage5_ocr_layout_selection",
+        "stage6_evidence_contract_and_quality"
+      ],
+      "independence": {
+        "statement": false,
+        "entity_alignment_algorithm": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+      "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_development_loader"
+      ],
+      "review_status": "frozen",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-7604aa04100712705f94",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 24,
+      "source_text_sha256": "040111fe129a7beb27ae6f0dcf6a7b907aa43eb4a40c18d7db9541ae27aaaf11",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-3a05c1d30f894a9bfe8a",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 50,
+      "source_text_sha256": "08f9452eae89503db9c4db3bc9ad9ed6969688386dc254ed3b70e77c2c8b1003",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-cbf4df3198a21557b66e",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 92,
+      "source_text_sha256": "477f0b55d99adf8ce48a936f80edcdd65965e8d84ae9a257cfda0b51119d8470",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-reserve-0c1fe9669eac8bf0102d",
+      "split": "acceptance_holdout_reserve",
+      "task": "statement",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "physical_page": 26,
+      "source_text_sha256": "9ed8338f2821c6ea1f9141f1a806834ee92df5fde45a82daf32ca1085b4e7af0",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true
+      },
+      "label_artifact": null,
+      "evidence_artifact": null,
+      "allowed_consumers": [
+        "stage11_holdout_selector"
+      ],
+      "review_status": "reserved",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-ba375fd5b61403c990be",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 6,
+      "source_text_sha256": "77894335bcc4152199b3fa22c4c07d7f1254d06fd266a9e31fd5aa85593fa3f7",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-61539a6d8b70459ae662",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 32,
+      "source_text_sha256": "274e641f05b5a61413da3bf51e2a05e194d5586a372b7ae42e9ae7955ef409dd",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-0b653fc82c2c9b00c87a",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 61,
+      "source_text_sha256": "8e1fed902891870e79ae2de8980ad169546443b0c72ff8e7cb3620bdef9cc8d9",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-reserve-f807c1f708b2a49d909d",
+      "split": "acceptance_holdout_reserve",
+      "task": "statement",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_page": 8,
+      "source_text_sha256": "598752c93962bdefa024c775e8513405cc8d866413a2dd0a1f55af92e6fe3bc1",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true
+      },
+      "label_artifact": null,
+      "evidence_artifact": null,
+      "allowed_consumers": [
+        "stage11_holdout_selector"
+      ],
+      "review_status": "reserved",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-af7f2ccd60188bc18e44",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 7,
+      "source_text_sha256": "099aea5c1f4a4bdbb8976099e4ce57f10281a786b827d381638b09d19f151b7e",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-6f245c1647c6c681cb97",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 13,
+      "source_text_sha256": "1489b3406e4cbb622e5cc9c3fb8958969046d9e1fe27e29e30e6431d2af2851b",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-61071908700d363312ec",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 19,
+      "source_text_sha256": "a2db4c0f7377c8e3db5ec5242b5736a84eb569fca3e6405105759881ef38608d",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-reserve-3b37991bd99cb566bafc",
+      "split": "acceptance_holdout_reserve",
+      "task": "statement",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_page": 8,
+      "source_text_sha256": "3998b1dd9ea94bfa16854da6ca2e94996a8f5e7f8dced3603467c50a18205997",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true
+      },
+      "label_artifact": null,
+      "evidence_artifact": null,
+      "allowed_consumers": [
+        "stage11_holdout_selector"
+      ],
+      "review_status": "reserved",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-f9b70155ca751545a1d3",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 2,
+      "source_text_sha256": "ac0b8e8800ff69e535e4a679d29f5fdfd6da6e2a19207af4c1ba9e884099fc47",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-f1df0b3610d617d2db6b",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 14,
+      "source_text_sha256": "8ac4b1937816e381813a58db617c007392758ca75c1028e0d36364e0ba691577",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-4e02be43053e1aab1424",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 21,
+      "source_text_sha256": "e1bcdc6fd6c3b1fc8d695db9fead30b8b037ed365dce995d5b9da5ce0cffd6f0",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-reserve-e31d2bb0fea947a7fdcd",
+      "split": "acceptance_holdout_reserve",
+      "task": "statement",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 4,
+      "source_text_sha256": "ddcf828d6ab1dc92cf254ce99084a11d4c4ea656d826422c2bb5e8e84c4c95ee",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true
+      },
+      "label_artifact": null,
+      "evidence_artifact": null,
+      "allowed_consumers": [
+        "stage11_holdout_selector"
+      ],
+      "review_status": "reserved",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-e1af768dfb83126d80da",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 78,
+      "source_text_sha256": "64d5596f75fea35772f8ff7f56531d002c5095f6dadd6829897df5826612bf59",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-50e3ac62cfd719e7749a",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 229,
+      "source_text_sha256": "abb780617a2e476861f024b092d3e58bb724cc27a75edd11c30857d99e11bdee",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-holdout-0e127c9d602faa21b7f3",
+      "split": "acceptance_holdout",
+      "task": "statement",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 429,
+      "source_text_sha256": "6d01cf9f4546606ec73fa33d880f96c0772df5003cae04c8522e7357c989da5e",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true,
+        "terminology": false,
+        "ontology_vocabulary": false
+      },
+      "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
+      "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
+      "allowed_consumers": [
+        "stage11_exit_audit",
+        "stage12_holdout_evaluator"
+      ],
+      "review_status": "accepted",
+      "frozen": true
+    },
+    {
+      "sample_id": "stage11-reserve-834760feafba5fbc58bd",
+      "split": "acceptance_holdout_reserve",
+      "task": "statement",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "physical_page": 80,
+      "source_text_sha256": "35150a6af794323f4e3ce7257cec4a9799a2c5aae7ffc76d688f2b70c52b505c",
+      "prior_exposure": [
+        "stage7_terminology_discovery",
+        "stage8_candidate_ontology_review"
+      ],
+      "independence": {
+        "statement": true,
+        "entity_alignment_algorithm": true
+      },
+      "label_artifact": null,
+      "evidence_artifact": null,
+      "allowed_consumers": [
+        "stage11_holdout_selector"
+      ],
+      "review_status": "reserved",
+      "frozen": true
+    }
+  ]
+}

@@ -40,7 +40,7 @@
     "acceptance_holdout": {
       "page_count": 15,
       "pages_per_document": 3,
-      "reserve_page_count": 5,
+      "statement_row_count": 15,
       "source": "data/stage7/terminology_input_manifest.json"
     },
     "blind_test": {

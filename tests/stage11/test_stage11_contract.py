@@ -31,6 +31,7 @@ def test_stage11_exit_stays_blocked_until_semantic_gold_review():
     assert entry["sample_registry"]["development_regression_golden"]["page_count"] == 36
     assert entry["sample_registry"]["acceptance_holdout"]["page_count"] == 15
     assert "adjudication_complete" in entry["blockers"]
+    assert entry["checks"]["review_independence"] is True
 
 
 def test_stage11_development_samples_are_source_grounded_and_cover_five_documents():
@@ -45,10 +46,13 @@ def test_stage11_development_samples_are_source_grounded_and_cover_five_document
 def test_stage11_holdout_is_fifteen_pages_three_per_document_and_disjoint():
     rows = _jsonl("data/stage11/stage11_statement_holdout.jsonl")
     dev = _jsonl("data/stage11/stage11_statement_development_samples.jsonl")
-    assert len(rows) == 15
-    assert {row["document_key"] for row in rows} == {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"}
-    assert all(sum(row["document_key"] == doc for row in rows) == 3 for doc in {row["document_key"] for row in rows})
-    assert not ({(row["document_key"], row["physical_page"]) for row in rows} & {(row["document_key"], row["physical_page"]) for row in dev})
+    registry = _read("data/stage11/evaluation_sample_registry.json")
+    selected_pages = {(row["document_key"], row["physical_page"]) for row in registry["records"] if row["split"] == "acceptance_holdout"}
+    statement_pages = {(row["document_key"], row["physical_page"]) for row in rows}
+    assert len(selected_pages) == 15
+    assert all(sum(page[0] == doc for page in selected_pages) == 3 for doc in {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"})
+    assert statement_pages <= selected_pages
+    assert not (selected_pages & {(row["document_key"], row["physical_page"]) for row in dev})
     assert all(row["independent_for_statement"] is True and row["review_status"] in {"pending_manual_review", "isolated"} for row in rows)
     assert all(len(row["review_plan"]) == 2 and {item["round"] for item in row["review_plan"]} == {1, 2} for row in rows)
 
@@ -101,6 +105,9 @@ def test_stage11_two_review_rounds_are_independent_and_unresolved_until_adjudica
     assert {row["reviewer_id"] for row in review_b} == {"reviewer-b"}
     assert all((row.get("candidate_unchanged") is True or row.get("original_sample_untouched") is True) and row["input_sha256"] and row["output_sha256"] for row in review_a + review_b)
     assert all(row["adjudication_status"] != "adjudicated" for row in queue)
+    target_ids = {row["sample_id"] for row in queue}
+    assert target_ids <= {row["sample_id"] for row in review_a}
+    assert target_ids <= {row["sample_id"] for row in review_b}
 
 
 def test_stage12_input_gate_is_fail_closed():

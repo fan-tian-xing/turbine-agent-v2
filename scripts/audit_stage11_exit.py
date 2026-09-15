@@ -75,7 +75,9 @@ def audit() -> dict:
     holdout_canonical = {row["evidence_id"]: row for row in holdout_evidence}
     docs = {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"}
     dev_pages = {(r.get("document_key"), r.get("physical_page")) for r in registry["records"] if r.get("split") == "development_regression_golden"}
-    holdout_pages = {(r.get("document_key"), r.get("physical_page")) for r in holdout if r.get("split") == "acceptance_holdout"}
+    registry_holdout_pages = {(r.get("document_key"), r.get("physical_page")) for r in registry.get("records", []) if r.get("split") == "acceptance_holdout"}
+    evidence_holdout_pages = {(r.get("document_key"), r.get("physical_page")) for r in holdout_evidence}
+    holdout_statement_pages = {(r.get("document_key"), r.get("physical_page")) for r in holdout if r.get("split") == "acceptance_holdout"}
     excluded = stage7.get("input_boundary", {}).get("excluded_source_classes", {})
     isolation = set(excluded) == {"formal_case_materials", "holdout_materials", "blind_test_materials"}
     stage9_gate = stage9.get("status") == "complete" and stage9.get("next_stage_allowed") is True
@@ -109,9 +111,10 @@ def audit() -> dict:
         and all(r.get("source_text_sha256") == canonical[eid].get("source_text_sha256") for r in dev for eid in [b.get("evidence_id") for b in r.get("evidence_bindings", [])] if eid in canonical)
     )
     holdout_ok = (
-        len(holdout) == 15 and len(holdout_pages) == 15 and {r.get("document_key") for r in holdout} == docs
-        and all(sum(r.get("document_key") == d for r in holdout) == 3 for d in docs)
-        and not (dev_pages & holdout_pages) and len(holdout_ids) == len(set(holdout_ids))
+        len(registry_holdout_pages) == 15 and evidence_holdout_pages == registry_holdout_pages
+        and holdout_statement_pages <= registry_holdout_pages
+        and all(sum(page[0] == d for page in registry_holdout_pages) == 3 for d in docs)
+        and not (dev_pages & registry_holdout_pages) and len(holdout_ids) == len(set(holdout_ids))
         and all(_required_row_fields(r) for r in holdout)
         and all(r.get("object_value") and r.get("applicability_scope") for r in holdout)
         and all(r.get("review_status") in {"accepted", "pending_manual_review", "isolated"} and r.get("formal_release") is False and r.get("independent_for_statement") is True for r in holdout)
@@ -126,15 +129,21 @@ def audit() -> dict:
         and r.get("review_basis") != "stage11_candidate_generation"
         for r in dev
     )
+    def _has_two_independent_reviews(row: dict) -> bool:
+        rounds = row.get("review_rounds")
+        if not isinstance(rounds, list) or len(rounds) != 2:
+            return False
+        reviewer_ids = [item.get("reviewer_id") for item in rounds]
+        return (
+            len(set(reviewer_ids)) == 2
+            and all(item.get("status") == "accepted" and item.get("reviewer_id") and item.get("input_sha256") and item.get("output_sha256") for item in rounds)
+            and all(item.get("sample_id", row.get("sample_id")) == row.get("sample_id") for item in rounds)
+        )
+
     holdout_semantic_review_complete = bool(holdout) and all(
         r.get("review_status") == "accepted"
         and r.get("label_status") == "gold"
-        and all(
-            round_.get("status") == "accepted"
-            and round_.get("reviewer_id")
-            and round_.get("input_sha256")
-            for round_ in r.get("review_rounds", [])
-        )
+        and _has_two_independent_reviews(r)
         for r in holdout
     )
     semantic_checks = [validate_statement_semantics(row) for row in dev + holdout]
@@ -148,12 +157,28 @@ def audit() -> dict:
         and row.get("source_confirmation_status") in {"pending_manual_review", "isolated"}
         for row in holdout_evidence
     )
+    review_a_ids = [row.get("sample_id") for row in review_a]
+    review_b_ids = [row.get("sample_id") for row in review_b]
+    review_target_ids = {
+        *(row.get("sample_id") for row in holdout),
+        *(row.get("sample_id") for row in dev if row.get("review_status") != "accepted" or row.get("label_status") != "gold"),
+    }
+    review_a_by_id = {row.get("sample_id"): row for row in review_a}
+    review_b_by_id = {row.get("sample_id"): row for row in review_b}
+    review_coverage = (
+        review_target_ids <= set(review_a_ids)
+        and review_target_ids <= set(review_b_ids)
+        and len(review_a_ids) == len(set(review_a_ids))
+        and len(review_b_ids) == len(set(review_b_ids))
+        and all(review_a_by_id[sample_id].get("input_sha256") == review_b_by_id[sample_id].get("input_sha256") for sample_id in review_target_ids)
+    )
     review_independence = (
         bool(review_a) and bool(review_b)
         and {row.get("reviewer_id") for row in review_a} == {"reviewer_a"}
         and {row.get("reviewer_id") for row in review_b} == {"reviewer-b"}
         and all((row.get("candidate_unchanged") is True or row.get("original_sample_untouched") is True) for row in review_a + review_b)
         and all(row.get("input_sha256") and row.get("output_sha256") for row in review_a + review_b)
+        and review_coverage
     )
     adjudication_complete = bool(adjudication) and all(row.get("adjudication_status") == "adjudicated" for row in adjudication)
     records = registry.get("records", [])
@@ -201,7 +226,7 @@ def audit() -> dict:
             "stage6_exit_audit": "data/stage6/stage6_exit_audit.json", "stage6_canonical_bundle": "data/stage6/stage6_evidence_bundle.jsonl", "stage7_input_manifest": "data/stage7/terminology_input_manifest.json", "stage9_exit_audit": "data/stage9/stage9_exit_audit.json", "stage10_exit_audit": "data/stage10/stage10_audit.json", "statement_contract": "config/stage11_statement_contract.json", "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl", "holdout_statement_samples": "data/stage11/stage11_statement_holdout.jsonl", "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl", "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json", "review_round_a": "data/stage11/review_round_a.jsonl", "review_round_b": "data/stage11/review_round_b.jsonl", "adjudication_queue": "data/stage11/stage11_adjudication_queue.jsonl",
         },
         "input_sha256": {"statement_contract": _sha256(ROOT / "config/stage11_statement_contract.json"), "evaluation_sample_registry": _sha256(REGISTRY_PATH), "development_statement_samples": _sha256(DEV_PATH), "holdout_statement_samples": _sha256(HOLDOUT_PATH), "holdout_evidence": _sha256(HOLDOUT_EVIDENCE_PATH), "review_round_a": _sha256(REVIEW_A_PATH) if REVIEW_A_PATH.exists() else None, "review_round_b": _sha256(REVIEW_B_PATH) if REVIEW_B_PATH.exists() else None, "adjudication_queue": _sha256(ADJUDICATION_PATH) if ADJUDICATION_PATH.exists() else None},
-        "sample_registry": {"development_regression_golden": {"page_count": 36, "trial_page_subset_count": 15, "statement_sample_count": len(dev), "source": "data/stage6/stage6_evidence_golden_sample.json"}, "acceptance_holdout": {"page_count": len(holdout), "pages_per_document": 3, "reserve_page_count": 5, "source": "data/stage7/terminology_input_manifest.json"}, "blind_test": {"status": "excluded", "read_by_stage11": False, "owner": "user-held evaluation boundary"}},
+        "sample_registry": {"development_regression_golden": {"page_count": 36, "trial_page_subset_count": 15, "statement_sample_count": len(dev), "source": "data/stage6/stage6_evidence_golden_sample.json"}, "acceptance_holdout": {"page_count": len(registry_holdout_pages), "pages_per_document": 3, "statement_row_count": len(holdout), "source": "data/stage7/terminology_input_manifest.json"}, "blind_test": {"status": "excluded", "read_by_stage11": False, "owner": "user-held evaluation boundary"}},
         "checks": checks, "counts": {"development_statement_samples": len(dev), "holdout_statement_samples": len(holdout), "holdout_evidence": len(holdout_evidence), "registry_records": len(records), "stage6_development_pages": len(dev_pages)}, "blockers": blockers,
         "next_stage_allowed": not blockers, "next_stage": "Stage 12 representative chapter semantic extraction" if not blockers else "Stage 11 controlled Statement and entity sample review", "consumers": ["tests/stage11/test_stage11_contract.py", "stage11_semantic_review"] if blockers else ["tests/stage11/test_stage11_contract.py", "Stage 12 development loader", "Stage 12 holdout evaluator"],
     }

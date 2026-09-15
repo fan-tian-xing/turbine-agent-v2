@@ -86,6 +86,20 @@ def test_stage11_gold_rows_preserve_numeric_and_entity_annotations():
     assert {entity["surface_form"] for entity in p78[0]["entity_alignment"]} == {"大型立式循环水泵", "转子上导轴瓦"}
 
 
+def test_stage11_comparison_direction_matches_chinese_bound_semantics():
+    from scripts.audit_stage11_exit import validate_statement_semantics
+
+    rows = _jsonl("data/stage11/stage11_statement_holdout.jsonl")
+    row = next(row for row in rows if row["document_key"] == "D300N" and row["physical_page"] == 61)
+    bounds = {item["surface_form"]: item for item in row["quantities"]}
+    assert bounds["不小于工作齿长的60%"]["operator"] == "gte"
+    assert {item["polarity"] for item in row["negation_scope"] if item["surface_form"] == "不小于工作齿长的60%"} == {"lower_bound"}
+    broken = json.loads(json.dumps(row, ensure_ascii=False))
+    broken["quantities"][0]["operator"] = "lte"
+    broken["negation_scope"][0]["polarity"] = "upper_bound"
+    assert validate_statement_semantics(broken)["comparison_direction_matches_text"] is False
+
+
 def test_stage11_confirmed_development_rows_retain_numeric_and_negation_annotations():
     rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl")[:4]
     assert any(row["quantities"] for row in rows if row["value"] is not None)

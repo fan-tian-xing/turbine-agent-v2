@@ -73,11 +73,36 @@ def validate_statement_semantics(row: dict) -> dict[str, bool]:
     has_enumeration = bool(re.search(r"(?:^|\s)(?:[1-9][、.]|[a-z]\))", text))
     entity = (row.get("entity_alignment") or [{}])[0]
     placeholder_entity = entity.get("entity_class") == "UnresolvedEntityCandidate" or entity.get("surface_form", "") == text[:24]
+
+    def comparison_expectation(surface_form: str):
+        if any(token in surface_form for token in ("不小于", "不少于", "不低于", "至少", "不得低于")):
+            return {"gte", "gt"}, "lower_bound"
+        if any(token in surface_form for token in ("不大于", "不超过", "不高于", "至多", "不得高于")):
+            return {"lte", "lt"}, "upper_bound"
+        if any(token in surface_form for token in ("大于", "超过")):
+            return {"gt"}, "lower_bound"
+        if "小于" in surface_form:
+            return {"lt"}, "upper_bound"
+        return None
+
+    comparison_direction_ok = True
+    for quantity in row.get("quantities", []):
+        expectation = comparison_expectation(quantity.get("surface_form", ""))
+        if not expectation:
+            continue
+        operators, polarity = expectation
+        surface_form = quantity.get("surface_form", "")
+        matching_negation = next(
+            (item for item in row.get("negation_scope", []) if item.get("surface_form") == surface_form),
+            None,
+        )
+        comparison_direction_ok = comparison_direction_ok and quantity.get("operator") in operators and bool(matching_negation) and matching_negation.get("polarity") == polarity
     return {
         "numeric_fields_present_when_accepted": not (accepted and has_number and not row.get("quantities")),
         "negation_scope_present_when_accepted": not (accepted and has_negative and not row.get("negation_scope")),
         "enumerated_text_requires_split_review": not (accepted and has_enumeration and not row.get("semantic_split_reviewed")),
         "entity_is_not_placeholder_when_accepted": not (accepted and placeholder_entity),
+        "comparison_direction_matches_text": not (accepted and not comparison_direction_ok),
     }
 
 

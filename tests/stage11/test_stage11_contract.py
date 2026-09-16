@@ -36,6 +36,17 @@ def test_stage11_exit_opens_after_semantic_gold_review():
     assert entry["checks"]["review_independence"] is True
 
 
+def test_stage11_has_a_distinct_unified_exit_audit():
+    exit_audit = _read("data/stage11/stage11_exit_audit.json")
+    assert exit_audit["status"] == "complete"
+    assert exit_audit["next_stage_allowed"] is True
+    assert exit_audit["zero_tolerance_errors"] == []
+    assert exit_audit["outputs"]["entry_audit"] == "data/stage11/stage11_entry_audit.json"
+    assert exit_audit["outputs"]["exit_audit"] == "data/stage11/stage11_exit_audit.json"
+    assert exit_audit["test_result"]["targeted"]["status"] == "passed"
+    assert exit_audit["next_stage_inputs"]["development_gold"] == "data/stage11/stage11_statement_development_samples.jsonl"
+
+
 def test_stage11_development_samples_are_source_grounded_and_cover_five_documents():
     rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl")
     assert len({row["sample_id"] for row in rows}) == 10

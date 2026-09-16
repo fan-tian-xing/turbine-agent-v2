@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "stage": "11",
+  "artifact_kind": "stage11_exit_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/audit_stage11_exit.py",
+  "inputs": {
+    "stage6_exit_audit": "data/stage6/stage6_exit_audit.json",
+    "stage6_canonical_bundle": "data/stage6/stage6_evidence_bundle.jsonl",
+    "stage7_input_manifest": "data/stage7/terminology_input_manifest.json",
+    "stage9_exit_audit": "data/stage9/stage9_exit_audit.json",
+    "stage10_exit_audit": "data/stage10/stage10_audit.json",
+    "statement_contract": "config/stage11_statement_contract.json",
+    "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl",
+    "holdout_statement_samples": "data/stage11/stage11_statement_holdout.jsonl",
+    "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
+    "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json",
+    "review_round_a": "data/stage11/review_round_a.jsonl",
+    "review_round_b": "data/stage11/review_round_b.jsonl",
+    "adjudication_queue": "data/stage11/stage11_adjudication_queue.jsonl"
+  },
+  "input_sha256": {
+    "statement_contract": "d30424f390e8c40f47b2e219a1befe00d02337bbe8a9dedbbb926252fedbb42a",
+    "evaluation_sample_registry": "604f4d3bc50063915fbc5be81367658b7f4f863b01a179899afa5402eb32f1ab",
+    "development_statement_samples": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
+    "holdout_statement_samples": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0",
+    "holdout_evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
+    "review_round_a": "4497e43a9ba04a86747eaec38cf57a6f4eebfdf1757b49fc98ae5baec4e509d7",
+    "review_round_b": "4d74f78611e50f19c3d929e949a8db8120263d75faea57abaf05a1835d83bf70",
+    "adjudication_queue": "431b1574118a1a363fb4191a1b34500628dd051c932f55179c71058f82c7d587"
+  },
+  "sample_registry": {
+    "development_regression_golden": {
+      "page_count": 36,
+      "trial_page_subset_count": 15,
+      "statement_sample_count": 19,
+      "source": "data/stage6/stage6_evidence_golden_sample.json"
+    },
+    "acceptance_holdout": {
+      "page_count": 15,
+      "pages_per_document": 3,
+      "statement_row_count": 50,
+      "source": "data/stage7/terminology_input_manifest.json"
+    },
+    "blind_test": {
+      "status": "excluded",
+      "read_by_stage11": false,
+      "owner": "user-held evaluation boundary"
+    }
+  },
+  "checks": {
+    "stage6_boundary_preserved": true,
+    "stage7_and_case_isolation_preserved": true,
+    "stage9_gate": true,
+    "stage10_gate": true,
+    "statement_contract_present": true,
+    "development_statement_samples_frozen": true,
+    "holdout_frozen": true,
+    "development_semantic_review_complete": true,
+    "holdout_semantic_review_complete": true,
+    "semantic_negative_checks": true,
+    "candidate_label_boundary": true,
+    "evidence_candidate_boundary": true,
+    "review_independence": true,
+    "adjudication_complete": true,
+    "holdout_independence": true,
+    "evidence_bindings_resolve": true,
+    "source_hashes_match": true,
+    "sample_registry_consistent": true,
+    "registry_consumer_boundary": true,
+    "blind_materials_excluded": true,
+    "targeted_tests": true,
+    "stage12_entry_allowed": true
+  },
+  "counts": {
+    "development_statement_samples": 19,
+    "holdout_statement_samples": 50,
+    "holdout_evidence": 15,
+    "registry_records": 56,
+    "stage6_development_pages": 36
+  },
+  "blockers": [],
+  "outputs": {
+    "statement_contract": "config/stage11_statement_contract.json",
+    "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json",
+    "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl",
+    "acceptance_holdout": "data/stage11/stage11_statement_holdout.jsonl",
+    "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
+    "entry_audit": "data/stage11/stage11_entry_audit.json",
+    "exit_audit": "data/stage11/stage11_exit_audit.json"
+  },
+  "test_result": {
+    "targeted": {
+      "command": [
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/stage11",
+        "tests/unit/test_project_state.py"
+      ],
+      "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
+      "status": "passed",
+      "returncode": 0,
+      "stdout_tail": ".................                                                        [100%]\n",
+      "stderr_tail": ""
+    }
+  },
+  "failure_isolation": "Candidate, pending and isolated annotations remain outside accepted Gold; blind content, Original materials and olddemo are not written. A failed gate does not replace the previous entry or Gold artifacts.",
+  "rollback": "Restore the previous verified Stage 11 entry/exit audit pair and rerun this audit; never rewrite Gold or bypass the input gate.",
+  "zero_tolerance_errors": [],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 12 representative chapter semantic extraction",
+  "next_stage_inputs": {
+    "stage11_entry_audit": "data/stage11/stage11_entry_audit.json",
+    "development_gold": "data/stage11/stage11_statement_development_samples.jsonl",
+    "holdout_gold": "data/stage11/stage11_statement_holdout.jsonl",
+    "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
+    "evaluation_registry": "data/stage11/evaluation_sample_registry.json",
+    "statement_contract": "config/stage11_statement_contract.json"
+  },
+  "consumers": [
+    "tests/stage11/test_stage11_contract.py",
+    "Stage 12 development loader",
+    "Stage 12 holdout evaluator"
+  ]
+}

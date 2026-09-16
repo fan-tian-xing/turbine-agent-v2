@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_development_input_manifest",
+  "status": "frozen",
+  "formal_release": false,
+  "producer": "scripts/build_stage12_input_manifest.py",
+  "source_split": "development_regression_golden",
+  "label_free_extractor_view": true,
+  "holdout_used_for_tuning": false,
+  "blind_read": false,
+  "representative_criteria": [
+    "condition",
+    "enumeration",
+    "multi_object_or_step",
+    "negation",
+    "numeric_unit",
+    "range"
+  ],
+  "pages": [
+    {
+      "document_key": "D300N",
+      "physical_page": 73,
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "evidence_ids": [
+        "evidence-93fb6fefbfccb828c68c"
+      ],
+      "source_text_sha256": [
+        "88df64fd7623fea1c342af33478a79beea3a72a1e094b19e1106d9b79caf6895"
+      ],
+      "coverage": [
+        "numeric_unit",
+        "range",
+        "condition",
+        "multi_object_or_step"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 14,
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "evidence_ids": [
+        "evidence-111e9dc5263ec94003bb",
+        "evidence-cbce7568bef677f62bac"
+      ],
+      "source_text_sha256": [
+        "26a8828b97439bd08b057d1e5a508824daa9d361ec3846f2649164e6f0d0fe45",
+        "3e741023f67915c00a30cd6fe79956f4da35884708cf1361d1a3a52da7e1b040"
+      ],
+      "coverage": [
+        "condition",
+        "multi_object_or_step",
+        "enumeration"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "evidence_ids": [
+        "evidence-08795eed23203e43aa25",
+        "evidence-44dd2f79786c9a998c97"
+      ],
+      "source_text_sha256": [
+        "7d4f89ef26c3c24b13ef50be70d2a923e3d0b3a231ea2b321db78bd525de6cb7",
+        "f4150c619198ccea8324ccbca86f4f93920ca686b8ac2271a794d18185474fe0"
+      ],
+      "coverage": [
+        "numeric_unit",
+        "negation",
+        "multi_object_or_step",
+        "enumeration"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "evidence_ids": [
+        "evidence-cd924809c0b4d4b4acc5"
+      ],
+      "source_text_sha256": [
+        "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c"
+      ],
+      "coverage": [
+        "condition",
+        "multi_object_or_step"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "evidence_ids": [
+        "evidence-be6509fd8df673522604"
+      ],
+      "source_text_sha256": [
+        "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c"
+      ],
+      "coverage": [
+        "range",
+        "multi_object_or_step",
+        "enumeration"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "evidence_ids": [
+        "evidence-bb9c008b78e12b735d94"
+      ],
+      "source_text_sha256": [
+        "429869e1bf7e077a3f1e83070392ec6d59b9239a68c4c64c1021f02257bbaa2e"
+      ],
+      "coverage": [
+        "condition",
+        "multi_object_or_step",
+        "enumeration"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "evidence_ids": [
+        "evidence-97d1de6c7b49cdea31f8"
+      ],
+      "source_text_sha256": [
+        "9038d7e2a19aab6c95a41dd73cd56aebf803b7976adf6c73fea9d621703e1d6a"
+      ],
+      "coverage": [
+        "condition",
+        "multi_object_or_step",
+        "enumeration"
+      ],
+      "section_path": "chapter_unknown"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "evidence_ids": [
+        "evidence-aa97a9ec78cf7cc57dc5"
+      ],
+      "source_text_sha256": [
+        "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca"
+      ],
+      "coverage": [
+        "numeric_unit",
+        "condition",
+        "multi_object_or_step"
+      ],
+      "section_path": "chapter_unknown"
+    }
+  ],
+  "inputs": {
+    "stage11_exit_audit": "eed59ec98859d8f48d752273afa3cc4ff60c99c1a3c7d400eaf9618114087826",
+    "stage11_development_selector": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
+    "stage6_evidence_bundle": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9"
+  },
+  "consumers": [
+    "scripts/build_stage12_candidates.py"
+  ]
+}

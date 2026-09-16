@@ -1,0 +1,223 @@
+{
+  "gold_statement_count": 19,
+  "candidate_count": 25,
+  "field_totals": {
+    "statement_boundary": 19,
+    "statement_type": 19,
+    "entity": 19,
+    "relation": 19,
+    "quantity": 19,
+    "negation": 19,
+    "condition": 19,
+    "applicability": 19,
+    "evidence_grounding": 19
+  },
+  "field_correct": {
+    "statement_boundary": 18,
+    "statement_type": 18,
+    "entity": 18,
+    "relation": 12,
+    "quantity": 19,
+    "negation": 19,
+    "condition": 19,
+    "applicability": 19,
+    "evidence_grounding": 19
+  },
+  "field_accuracy": {
+    "statement_boundary": 0.9473684210526315,
+    "statement_type": 0.9473684210526315,
+    "entity": 0.9473684210526315,
+    "relation": 0.631578947368421,
+    "quantity": 1.0,
+    "negation": 1.0,
+    "condition": 1.0,
+    "applicability": 1.0,
+    "evidence_grounding": 1.0
+  },
+  "error_counts": {
+    "boundary_error": 1,
+    "statement_type_error": 1,
+    "entity_error": 1,
+    "relation_error": 7,
+    "quantity_error": 0,
+    "negation_error": 0,
+    "condition_loss": 0,
+    "applicability_error": 0,
+    "unsupported_claim": 0
+  },
+  "errors": [
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
+      "candidate_id": "stage12-candidate-bf9f67b53147b7745015",
+      "error_types": [
+        "entity_error",
+        "relation_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
+      "candidate_id": "stage12-candidate-931239d11cd852ecbf42",
+      "error_types": [
+        "boundary_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
+      "candidate_id": "stage12-candidate-be8dfa40badb96b6cedc",
+      "error_types": [
+        "relation_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06",
+      "candidate_id": "stage12-candidate-3296d354130fd3988834",
+      "error_types": [
+        "statement_type_error",
+        "relation_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
+      "candidate_id": "stage12-candidate-d3fe7bd502d069489572",
+      "error_types": [
+        "relation_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
+      "candidate_id": "stage12-candidate-8afd37af9d59599ab2c2",
+      "error_types": [
+        "relation_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813",
+      "candidate_id": "stage12-candidate-06da0fd38d6389925ec1",
+      "error_types": [
+        "relation_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
+      "candidate_id": "stage12-candidate-a7cdf873ab81c413f595",
+      "error_types": [
+        "relation_error"
+      ]
+    }
+  ],
+  "matched_pairs": [
+    {
+      "statement_id": "real-statement-dl5190-p86-feeler",
+      "candidate_id": "stage12-candidate-00e32ccdfd8802dd79f5",
+      "score": 1.0
+    },
+    {
+      "statement_id": "real-statement-dl5190-p86-contact",
+      "candidate_id": "stage12-candidate-85d6e31c957e73461023",
+      "score": 0.9583333333333334
+    },
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance",
+      "candidate_id": "stage12-candidate-76819e32e24cea194e2b",
+      "score": 1.0
+    },
+    {
+      "statement_id": "real-statement-haf103-p1-scope",
+      "candidate_id": "stage12-candidate-93312180daf079e0544d",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f",
+      "candidate_id": "stage12-candidate-8dd66a126e576b24e356",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
+      "candidate_id": "stage12-candidate-d21a0c03032ce3d21c03",
+      "score": 0.9454545454545454
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c",
+      "candidate_id": "stage12-candidate-c16f6515985ce5dfd67b",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
+      "candidate_id": "stage12-candidate-5c64de16b663eaa790b4",
+      "score": 0.926829268292683
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
+      "candidate_id": "stage12-candidate-bf9f67b53147b7745015",
+      "score": 0.9491525423728815
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
+      "candidate_id": "stage12-candidate-931239d11cd852ecbf42",
+      "score": 0.6956521739130435
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
+      "candidate_id": "stage12-candidate-be8dfa40badb96b6cedc",
+      "score": 0.9454545454545454
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
+      "candidate_id": "stage12-candidate-92f5205f028324950488",
+      "score": 0.9629629629629629
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06",
+      "candidate_id": "stage12-candidate-3296d354130fd3988834",
+      "score": 0.9642857142857143
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
+      "candidate_id": "stage12-candidate-6c01acb1f19b5a85b19d",
+      "score": 0.9777777777777777
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
+      "candidate_id": "stage12-candidate-074a98242b7ab3acdafa",
+      "score": 0.9583333333333334
+    },
+    {
+      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
+      "candidate_id": "stage12-candidate-d3fe7bd502d069489572",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
+      "candidate_id": "stage12-candidate-8afd37af9d59599ab2c2",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813",
+      "candidate_id": "stage12-candidate-06da0fd38d6389925ec1",
+      "score": 0.9615384615384616
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
+      "candidate_id": "stage12-candidate-a7cdf873ab81c413f595",
+      "score": 0.9743589743589743
+    }
+  ],
+  "unmatched_gold": [],
+  "unmatched_candidates": [
+    "stage12-candidate-7a040042e07c2bde313d",
+    "stage12-candidate-1d6635387a050f99afc6",
+    "stage12-candidate-2e8fc2d13e03774ccb9a",
+    "stage12-candidate-baec369be4a41a70bb04",
+    "stage12-candidate-d1628c2d259b0ace7a16",
+    "stage12-candidate-63e434ea210adaf0d75c"
+  ],
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_development_evaluation",
+  "status": "completed",
+  "formal_release": false,
+  "holdout_used_for_tuning": false,
+  "blind_read": false,
+  "candidate_artifact": "data/stage12/stage12_development_candidates.json",
+  "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl"
+}

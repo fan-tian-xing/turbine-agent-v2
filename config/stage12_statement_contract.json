@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "engineering_statement_candidate_contract",
+  "status": "active_for_stage12",
+  "formal_release": false,
+  "authority": "This contract governs candidate extraction and evaluation; it does not publish Engineering Statements.",
+  "input": {
+    "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
+    "development_selector": "data/stage12/stage12_input_manifest.json",
+    "stage11_gate": "data/stage11/stage11_exit_audit.json",
+    "allowed_split": "development_regression_golden",
+    "holdout_policy": "The development builder must never read acceptance_holdout, acceptance_holdout_reserve or blind_test content."
+  },
+  "extraction_order": ["entity_or_process", "state_phenomenon_parameter", "requirement_constraint_step", "applicability", "evidence_binding"],
+  "profiles": {
+    "manufacturer_manual": {"source_profile_ids": ["book"], "default_statement_type": "fact"},
+    "construction_standard": {"source_profile_ids": ["standard_or_regulation"], "default_statement_type": "requirement"},
+    "commissioning_guideline": {"source_profile_ids": ["standard_or_regulation"], "default_statement_type": "procedure"},
+    "nuclear_safety_regulation": {"source_profile_ids": ["standard_or_regulation"], "default_statement_type": "requirement"},
+    "textbook": {"source_profile_ids": ["book"], "default_statement_type": "fact"},
+    "later_case": {"source_profile_ids": [], "default_statement_type": "fact", "admission": "deferred"}
+  },
+  "statement_types": ["fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"],
+  "evidence_support_types": ["direct", "partial", "context"],
+  "candidate_status": "candidate_only",
+  "required_candidate_fields": ["candidate_id", "statement_text", "statement_type", "predicate", "subject_entities", "object_value", "applicability_scope", "evidence_bindings", "evidence_version_id", "document_logical_id", "revision_id", "physical_page", "source_text_sha256", "review_status"],
+  "forbidden_outputs": ["authorized_action", "formal_release", "neo4j_write", "blind_test_content", "holdout_gold_fields"],
+  "runtime": {
+    "operation": "statement_extraction",
+    "cache_root": "var/model_runs/stage12",
+    "schema": "config/runtime_run.schema.json",
+    "semantic_gate": "Stage 9 validate_runtime_payload",
+    "raw_model_response_persisted": false
+  },
+  "evaluation": {
+    "fields": ["statement_boundary", "statement_type", "entity", "relation", "quantity", "negation", "condition", "applicability", "evidence_grounding"],
+    "error_types": ["boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "negation_error", "condition_loss", "applicability_error", "unsupported_claim"],
+    "holdout_entrypoint": "scripts/evaluate_stage12_holdout.py",
+    "development_entrypoint": "scripts/build_stage12_candidates.py --evaluate-development",
+    "promotion": "No candidate is promoted by evaluation; Stage 13 review and later Release stages own approval.",
+    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0}
+    ,"development_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9}
+  },
+  "consumers": ["scripts/build_stage12_candidates.py", "scripts/evaluate_stage12_holdout.py", "scripts/audit_stage12_exit.py", "tests/stage12"]
+}

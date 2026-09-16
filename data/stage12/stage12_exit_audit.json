@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_exit_audit",
+  "status": "complete",
+  "formal_release": false,
+  "producer": "scripts/audit_stage12_exit.py",
+  "inputs": {
+    "data/stage11/stage11_exit_audit.json": {
+      "path": "data/stage11/stage11_exit_audit.json",
+      "sha256": "3bdb0760b21f8182a54cde6d745170e60d9fe003f8f5a15fd5e8342cb851c68c"
+    },
+    "data/stage12/stage12_input_manifest.json": {
+      "path": "data/stage12/stage12_input_manifest.json",
+      "sha256": "205d08f291c4b78c87d9efe5b47c37854e2ba57e59736ff1111fbb6246981449"
+    },
+    "data/stage6/stage6_evidence_bundle.jsonl": {
+      "path": "data/stage6/stage6_evidence_bundle.jsonl",
+      "sha256": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9"
+    },
+    "config/stage12_statement_contract.json": {
+      "path": "config/stage12_statement_contract.json",
+      "sha256": "0ed82ff0b13480e09eae7b5a94f89663e7c8172df4dfc4e84503e52ac5286e09"
+    },
+    "config/stage12_candidate.schema.json": {
+      "path": "config/stage12_candidate.schema.json",
+      "sha256": "fee0ce5e91e69faa0c2d41e4c7523910bb2cd438f29f6d4ae083edcedefc3dd2"
+    },
+    "data/stage12/stage12_development_candidates.json": {
+      "path": "data/stage12/stage12_development_candidates.json",
+      "sha256": "2413ea1f8485e95353af65f39109ee8036102f79248f0200880f64326ea7ac8c"
+    },
+    "data/stage12/stage12_development_evaluation.json": {
+      "path": "data/stage12/stage12_development_evaluation.json",
+      "sha256": "47aae313d07cb1498e49ec42d83d71b1a9054d115d5734e11f1e5681f6273443"
+    },
+    "data/stage12/stage12_holdout_evaluation.json": {
+      "path": "data/stage12/stage12_holdout_evaluation.json",
+      "sha256": "94a85e39b416244b620648d3912f8b7ee026429a74b7a053cb7d8ac03339f172"
+    }
+  },
+  "outputs": {
+    "input_manifest": "data/stage12/stage12_input_manifest.json",
+    "development_candidates": "data/stage12/stage12_development_candidates.json",
+    "development_evaluation": "data/stage12/stage12_development_evaluation.json",
+    "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
+    "exit_audit": "data/stage12/stage12_exit_audit.json",
+    "runtime_cache": "var/model_runs/stage12"
+  },
+  "checks": {
+    "stage11_exit_gate": true,
+    "label_free_development_manifest": true,
+    "five_documents_represented": true,
+    "representative_coverage": true,
+    "candidate_only_boundary": true,
+    "no_holdout_or_blind_in_candidate": true,
+    "candidate_schema_and_stage9_gate": true,
+    "canonical_evidence_consumed": true,
+    "development_evaluation_present": true,
+    "independent_holdout_evaluation_present": true,
+    "holdout_result_not_written_to_development": true,
+    "grounding_zero_tolerance": true,
+    "development_quality_gate": true,
+    "no_ontology_or_release_write": true
+  },
+  "counts": {
+    "representative_pages": 8,
+    "documents": 5,
+    "candidates": 25,
+    "development_gold_statements": 19,
+    "holdout_gold_statements_evaluated": 48
+  },
+  "quality_observation": {
+    "development_field_accuracy": {
+      "statement_boundary": 0.9473684210526315,
+      "statement_type": 0.9473684210526315,
+      "entity": 0.9473684210526315,
+      "relation": 0.631578947368421,
+      "quantity": 1.0,
+      "negation": 1.0,
+      "condition": 1.0,
+      "applicability": 1.0,
+      "evidence_grounding": 1.0
+    },
+    "holdout_field_accuracy": {
+      "statement_boundary": 0.875,
+      "statement_type": 0.6458333333333334,
+      "entity": 0.8541666666666666,
+      "relation": 0.3125,
+      "quantity": 0.7708333333333334,
+      "negation": 0.8541666666666666,
+      "condition": 0.8541666666666666,
+      "applicability": 0.8958333333333334,
+      "evidence_grounding": 1.0
+    },
+    "development_thresholds": {
+      "statement_boundary": 0.9,
+      "statement_type": 0.9,
+      "entity": 0.9,
+      "quantity": 0.9,
+      "negation": 1.0,
+      "condition": 0.9
+    },
+    "scale_gate": true,
+    "interpretation": "field metrics are evaluated independently; holdout results never tune the extractor and no candidate is promoted by Stage 12"
+  },
+  "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
+  "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
+  "zero_tolerance_errors": [],
+  "blockers": [],
+  "next_stage_allowed": true,
+  "next_stage": "Stage 13 double-layer review and static review interface",
+  "next_stage_inputs": {
+    "development_candidates": "data/stage12/stage12_development_candidates.json",
+    "development_evaluation": "data/stage12/stage12_development_evaluation.json",
+    "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json"
+  },
+  "consumers": [
+    "tests/stage12",
+    "Stage 13 review interface"
+  ]
+}

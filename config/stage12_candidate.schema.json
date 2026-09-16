@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/turbine-v2/stage12-candidate.schema.json",
+  "title": "Stage 12 Engineering Statement candidate",
+  "type": "object",
+  "required": ["schema_version", "stage", "artifact_kind", "status", "formal_release", "producer", "inputs", "extraction_profile", "candidates"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1}, "stage": {"const": "12"}, "artifact_kind": {"const": "engineering_statement_candidates"},
+    "status": {"const": "candidate_only"}, "formal_release": {"const": false}, "producer": {"type": "string", "minLength": 1},
+    "inputs": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}}, "extraction_profile": {"type": "string", "minLength": 1},
+    "candidates": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/candidate"}},
+    "runtime_projection": {"type": "object"}, "extraction_batch_id": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "candidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "split", "task", "statement_text", "statement_type", "predicate", "subject_entities", "object_value", "value", "unit", "quantities", "normative_modality", "negation_scope", "conditions", "applicability_scope", "evidence_bindings", "source_span_ids", "evidence_version_id", "document_logical_id", "revision_id", "physical_page", "logical_page", "source_text_sha256", "evidence_quote", "review_status", "formal_release", "extraction_profile"],
+      "properties": {
+        "candidate_id": {"type": "string", "pattern": "^stage12-candidate-[a-f0-9]{20}$"}, "split": {"const": "development_regression_golden"}, "task": {"const": "statement"},
+        "statement_text": {"type": "string", "minLength": 1}, "statement_type": {"enum": ["fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"]}, "predicate": {"type": "string", "minLength": 1},
+        "subject_entities": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["surface_form", "role", "entity_class"], "additionalProperties": false, "properties": {"surface_form": {"type": "string", "minLength": 1}, "role": {"type": "string"}, "entity_class": {"type": "string"}}}},
+        "object_value": {"type": "object", "required": ["kind", "value"], "additionalProperties": false, "properties": {"kind": {"const": "source_assertion"}, "value": {"type": "string", "minLength": 1}}},
+        "value": {"type": ["number", "null"]}, "unit": {"type": ["string", "null"]}, "quantities": {"type": "array", "items": {"type": "object", "required": ["surface_form", "unit", "operator"], "additionalProperties": false, "properties": {"surface_form": {"type": "string"}, "value": {"type": "number"}, "min": {"type": "number"}, "max": {"type": "number"}, "unit": {"type": "string"}, "operator": {"type": "string"}}}},
+        "normative_modality": {"enum": ["shall", "must", "descriptive"]}, "negation_scope": {"type": "array", "items": {"type": "object", "required": ["surface_form", "polarity", "scope_type"], "additionalProperties": false, "properties": {"surface_form": {"type": "string"}, "polarity": {"type": "string"}, "scope_type": {"type": "string"}}}},
+        "conditions": {"type": "array", "items": {"type": "object", "required": ["surface_form", "kind"], "additionalProperties": false, "properties": {"surface_form": {"type": "string"}, "kind": {"const": "condition"}}}},
+        "applicability_scope": {"type": "object", "required": ["document_key", "physical_page"], "additionalProperties": false, "properties": {"document_key": {"type": "string"}, "physical_page": {"type": "integer", "minimum": 1}, "logical_page": {"type": "string"}, "condition": {"type": "string"}}},
+        "evidence_bindings": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["evidence_id", "support_type"], "additionalProperties": false, "properties": {"evidence_id": {"type": "string"}, "support_type": {"enum": ["direct", "partial", "context"]}}}},
+        "source_span_ids": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, "evidence_version_id": {"type": "string", "minLength": 1}, "document_logical_id": {"type": "string"}, "revision_id": {"type": "string"}, "physical_page": {"type": "integer", "minimum": 1}, "logical_page": {"type": ["string", "null"]}, "source_text_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}, "evidence_quote": {"type": "string", "minLength": 1}, "review_status": {"const": "candidate_only"}, "formal_release": {"const": false}, "extraction_profile": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

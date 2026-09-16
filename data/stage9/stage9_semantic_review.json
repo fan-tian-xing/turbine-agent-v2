@@ -7,8 +7,8 @@
   "knowledge_approval": false,
   "reviewed_inputs": {
     "ontology/minimal_turbine.ttl": "c513ddbc2c5c167f3ec7d6af1b2d13349a432a318e00c014d06fb96724a25d34",
-    "ontology/stage9_core.ttl": "0d28b5c2d68035227632836b720ac617467f6b9aa93cd0e763f8ba691d01deaf",
-    "ontology/stage9_shapes.ttl": "9ad12df7b748ec6301e7b7c40126de68da1e0bcfab4289eacb4aabf97628bf74",
+    "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
+    "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56",
     "src/turbine_kg/ontology/semantic.py": "90f6620373c8cd7cc2818e25fce631c2b15369af3dcaad0c6127e9667164d5de",
     "src/turbine_kg/ontology/research_adapter.py": "feb977eec2a913ffcf3474bff5bfa4de8f66342bf3cc6eae9896c329749330a6",
     "src/turbine_kg/stage3/projection.py": "12f604808acb763721a24d90c437490842b84c1fe749ac146d32076e6d0c8005",

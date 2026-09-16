@@ -9,12 +9,17 @@
     "evidence_artifact": "data/stage6/stage6_evidence_bundle.jsonl",
     "development_selector": "data/stage12/stage12_input_manifest.json",
     "stage11_gate": "data/stage11/stage11_exit_audit.json",
+    "stage9_gate": "data/stage9/stage9_exit_audit.json",
+    "stage10_runtime_gate": "data/stage10/stage10_audit.json",
     "allowed_split": "development_regression_golden",
-    "holdout_policy": "The development builder must never read acceptance_holdout, acceptance_holdout_reserve or blind_test content."
+    "holdout_policy": "The development builder must never read acceptance_holdout, acceptance_holdout_reserve or blind_test content.",
+    "forbidden_splits_for_development": ["acceptance_holdout", "acceptance_holdout_reserve", "blind_test"],
+    "profile_routing_manifest": "config/stage12_profile_routing.json",
+    "representative_baseline": "data/stage12/stage12_representative_baseline.json"
   },
   "extraction_order": ["entity_or_process", "state_phenomenon_parameter", "requirement_constraint_step", "applicability", "evidence_binding"],
   "profiles": {
-    "manufacturer_manual": {"source_profile_ids": ["book"], "default_statement_type": "fact"},
+    "manufacturer_manual": {"source_profile_ids": ["manufacturer_manual"], "default_statement_type": "fact"},
     "construction_standard": {"source_profile_ids": ["standard_or_regulation"], "default_statement_type": "requirement"},
     "commissioning_guideline": {"source_profile_ids": ["standard_or_regulation"], "default_statement_type": "procedure"},
     "nuclear_safety_regulation": {"source_profile_ids": ["standard_or_regulation"], "default_statement_type": "requirement"},
@@ -39,8 +44,17 @@
     "holdout_entrypoint": "scripts/evaluate_stage12_holdout.py",
     "development_entrypoint": "scripts/build_stage12_candidates.py --evaluate-development",
     "promotion": "No candidate is promoted by evaluation; Stage 13 review and later Release stages own approval.",
-    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0}
-    ,"development_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9}
+    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0},
+    "development_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
+    "acceptance_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
+    "unsupported_claim_count": 0,
+    "acceptance_lifecycle": {
+      "current_holdout_status": "historical_exposed",
+      "current_holdout_eligible_for_final_acceptance": false,
+      "reserve_requires_independent_gold": true,
+      "reserve_gold_must_not_be_generated_by_development_builder": true,
+      "blind_test_status": "unknown_to_stage12"
+    }
   },
   "consumers": ["scripts/build_stage12_candidates.py", "scripts/evaluate_stage12_holdout.py", "scripts/audit_stage12_exit.py", "tests/stage12"]
 }

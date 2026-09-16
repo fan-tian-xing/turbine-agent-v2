@@ -283,7 +283,7 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 },
                 "label_artifact": "data/stage11/stage11_statement_holdout.jsonl",
                 "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
-                "allowed_consumers": ["stage11_exit_audit", "stage11_semantic_review"],
+                "allowed_consumers": ["stage11_exit_audit", "stage11_semantic_review", "stage12_holdout_evaluator"],
                 "review_status": sample_review_status,
                 "frozen": True,
             })
@@ -317,7 +317,7 @@ def build() -> tuple[list[dict], list[dict], dict]:
         "status": "frozen_for_stage11",
         "formal_release": False,
         "producer": "scripts/build_stage11_holdout.py",
-        "consumers": ["scripts/audit_stage11_exit.py", "stage11_semantic_review"],
+        "consumers": ["scripts/audit_stage11_exit.py", "stage11_semantic_review", "scripts/evaluate_stage12_holdout.py"],
         "development": {"source": "data/stage6/stage6_evidence_golden_sample.json", "page_count": 36, "trial_page_subset_count": 15},
         "acceptance_holdout": {"page_count": 15, "pages_per_document": 3, "reserve_page_count": 5},
         "blind_test": {"status": "excluded", "read_by_stage11": False, "owner": "user-held evaluation boundary"},

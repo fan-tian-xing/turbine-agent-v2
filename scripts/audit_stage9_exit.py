@@ -256,6 +256,7 @@ def _audit(*, run_tests: bool = True) -> dict:
         "next_stage_allowed": not blockers,
         "next_stage": "Stage 10 stable identity, document revision and knowledge maintainability" if not blockers else "Stage 9 semantic chain completion",
         "next_stage_inputs": {"owl": ["ontology/minimal_turbine.ttl", "ontology/stage9_core.ttl"], "shacl": "ontology/stage9_shapes.ttl", "runtime_contract": "src/turbine_kg/ontology/semantic.py:validate_runtime_payload", "research_consumer": "src/turbine_kg/ontology/research_adapter.py:validate_research_documents", "report_fields": ["conforms", "failures", "warnings", "counts", "report_text", "dataset_triple_count"]},
+        "consumers": ["scripts/audit_stage9_exit.py", "scripts/audit_stage10_exit.py", "tests/stage9", "Stage 10 runtime gate"],
     }
 
 

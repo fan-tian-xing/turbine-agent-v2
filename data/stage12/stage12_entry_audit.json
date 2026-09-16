@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_entry_audit",
+  "status": "in_progress",
+  "formal_release": false,
+  "basis": "Stage 11 exit gate is complete; Stage 12 implementation is being repaired under a frozen development page baseline.",
+  "scope": "representative_page_baseline",
+  "next_stage_allowed": false,
+  "stage13_formal_entry": "blocked",
+  "stage13_parallel_tooling": "allowed_without_formal_stage_dependency",
+  "blockers": [
+    "development_quality_gate",
+    "acceptance_holdout_exposed",
+    "reserve_independent_gold_not_ready",
+    "representative_chapter_scope_resolved"
+  ],
+  "inputs": {
+    "stage11_exit_audit": "data/stage11/stage11_exit_audit.json",
+    "stage12_statement_contract": "config/stage12_statement_contract.json",
+    "stage12_representative_baseline": "data/stage12/stage12_representative_baseline.json"
+  },
+  "consumer": "data/project_state.json"
+}

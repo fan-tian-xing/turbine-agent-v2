@@ -19,7 +19,7 @@ def test_project_state_is_the_current_state_source():
     if state["next_stage_status"] == "ready":
         assert state["next_stage"] == state["current_stage"] + 1
     else:
-        assert state["next_stage"] is None
+        assert state["next_stage"] in (None, state["current_stage"] + 1)
 
     boundaries = state["boundaries"]
     assert any("阶段 7 候选不得自动 promotion" in item for item in boundaries)

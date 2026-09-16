@@ -16,11 +16,11 @@
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
-      "sha256": "0d28b5c2d68035227632836b720ac617467f6b9aa93cd0e763f8ba691d01deaf"
+      "sha256": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249"
     },
     "ontology/stage9_shapes.ttl": {
       "path": "ontology/stage9_shapes.ttl",
-      "sha256": "9ad12df7b748ec6301e7b7c40126de68da1e0bcfab4289eacb4aabf97628bf74"
+      "sha256": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56"
     },
     "src/turbine_kg/ontology/semantic.py": {
       "path": "src/turbine_kg/ontology/semantic.py",
@@ -76,7 +76,7 @@
     },
     "scripts/audit_stage9_exit.py": {
       "path": "scripts/audit_stage9_exit.py",
-      "sha256": "eab095bf5ff2e8739e2b9c95084552641bd61645913ec5ba4758dd5b846d6a1b"
+      "sha256": "d270132adfeabf12f85141176698617b1607191b16d56da90d6d04c826c11eed"
     },
     "var/stage3/real_trial_pages.json": {
       "path": "var/stage3/real_trial_pages.json",
@@ -84,7 +84,7 @@
     },
     "data/stage9/stage9_semantic_review.json": {
       "path": "data/stage9/stage9_semantic_review.json",
-      "sha256": "15292fd8cd0f3a79eaf92cb769f8051ec5d3a6c8c6b07bc8bbfddb8a49a92b44"
+      "sha256": "7800f00cb00c1404da9114df949fd3f1b220577c395a2b75c16a4cfbae25dc26"
     }
   },
   "input_scope": "Existing Stage 8 frozen ontology plus public synthetic corpus and already admitted, user-confirmed real research sample; research-only, not formal knowledge or Release. Only confirmed/runtime/Registry artifacts are read, no original materials, case data or blind-test inputs.",
@@ -195,7 +195,7 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-targeted-c763a92acc77",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-targeted-efe3dcac6e94",
         "tests/stage9",
         "tests/stage3",
         "tests/unit/test_project_state.py"
@@ -203,7 +203,7 @@
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 75%]\n.......................                                                  [100%]\n",
+      "stdout_tail": "........................................................................ [ 59%]\n.................................................                        [100%]\n",
       "stderr_tail": ""
     },
     "full_project": {
@@ -215,13 +215,13 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-full-780f8734240e",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-full-1aec67fec1de",
         "tests"
       ],
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 27%]\n........................................................................ [ 54%]\n........................................................................ [ 81%]\n..................................................                       [100%]\n",
+      "stdout_tail": "........................................................................ [ 22%]\n........................................................................ [ 44%]\n........................................................................ [ 66%]\n........................................................................ [ 89%]\n...................................                                      [100%]\n",
       "stderr_tail": ""
     }
   },
@@ -247,5 +247,11 @@
       "report_text",
       "dataset_triple_count"
     ]
-  }
+  },
+  "consumers": [
+    "scripts/audit_stage9_exit.py",
+    "scripts/audit_stage10_exit.py",
+    "tests/stage9",
+    "Stage 10 runtime gate"
+  ]
 }

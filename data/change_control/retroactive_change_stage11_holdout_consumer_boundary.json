@@ -1,0 +1,23 @@
+{
+  "change_id": "retro-stage11-holdout-consumer-boundary-20260916",
+  "discovery_stage": "12",
+  "affected_stage": "11",
+  "discovered_problem": "The frozen Evaluation Sample Registry exposed the acceptance split to Stage 12 evaluation in the top-level consumer contract but did not grant the evaluator at record level, leaving the declared Producer-to-Consumer boundary contradictory and making the Stage 11 audit hash stale after the boundary repair.",
+  "evidence": [
+    {"kind": "contract", "detail": "Stage 12 requires an independent holdout entrypoint and the Registry is the single split-consumer authority."},
+    {"kind": "cross_stage", "detail": "The Stage 12 evaluator could not be reconciled with the acceptance record allowlist without a Registry change."},
+    {"kind": "hash", "detail": "Stage 11 exit input hash changed when the Registry consumer boundary was corrected and required downstream rebuild."}
+  ],
+  "why_change_is_required": "This is a consumer-permission consistency defect; it is required to make the independent holdout evaluator explicit without granting development or reserve access.",
+  "alternatives_considered": ["Ignore record-level permissions", "Grant the evaluator access to all Registry splits", "Grant only acceptance_holdout records and declare forbidden splits"],
+  "reason_alternatives_rejected": ["Ignoring the contradiction leaves the Registry non-authoritative", "Broad access violates split isolation", "The narrow allowlist matches the Stage 12 holdout contract"],
+  "files_changed": ["data/stage11/evaluation_sample_registry.json", "scripts/build_stage11_holdout.py"],
+  "old_sha256": {"data/stage11/evaluation_sample_registry.json": "197e9e325e09751e0a60ea2a249d686b03bbd0899aede6af1e2baded6e0b0cb3"},
+  "new_sha256": {"data/stage11/evaluation_sample_registry.json": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a"},
+  "downstream_dependents": ["data/stage11/stage11_exit_audit.json", "data/stage12/stage12_input_manifest.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_exit_audit.json"],
+  "invalidated_artifacts": ["data/stage11/stage11_exit_audit.json", "data/stage12/stage12_input_manifest.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_exit_audit.json"],
+  "rebuild_order": ["Stage 11 audit and tests", "Stage 12 manifest", "Stage 12 holdout historical receipt", "Stage 12 exit audit", "project_state"],
+  "regression_result": "stage11_passed; stage12_holdout_receipt_and_lineage_passed; stage12_quality_gate_blocked",
+  "reviewer": "cross_stage_audit",
+  "review_status": "recorded_and_regressed"
+}

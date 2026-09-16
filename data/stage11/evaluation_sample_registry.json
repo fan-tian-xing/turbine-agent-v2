@@ -7,8 +7,19 @@
   "producer": "scripts/build_stage11_holdout.py",
   "consumers": [
     "scripts/audit_stage11_exit.py",
-    "stage11_semantic_review"
+    "stage11_semantic_review",
+    "scripts/evaluate_stage12_holdout.py"
   ],
+  "consumer_permissions": {
+    "stage12_holdout_evaluator": {
+      "entrypoint": "scripts/evaluate_stage12_holdout.py",
+      "allowed_splits": ["acceptance_holdout"],
+      "forbidden_splits": ["development_regression_golden", "acceptance_holdout_reserve", "blind_test"],
+      "allowed_tasks": ["statement"],
+      "writes": ["data/stage12/stage12_holdout_evaluation.json"],
+      "must_not_write": ["data/stage12/stage12_development_candidates.json", "var/model_runs/stage12"]
+    }
+  },
   "development": {
     "source": "data/stage6/stage6_evidence_golden_sample.json",
     "page_count": 36,
@@ -986,7 +997,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1016,7 +1028,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1046,7 +1059,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1101,7 +1115,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1131,7 +1146,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1161,7 +1177,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1216,7 +1233,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1246,7 +1264,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1276,7 +1295,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1331,7 +1351,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1361,7 +1382,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1391,7 +1413,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1446,7 +1469,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1476,7 +1500,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "pending_manual_review",
       "frozen": true
@@ -1506,7 +1531,8 @@
       "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
       "allowed_consumers": [
         "stage11_exit_audit",
-        "stage11_semantic_review"
+        "stage11_semantic_review",
+        "stage12_holdout_evaluator"
       ],
       "review_status": "isolated",
       "frozen": true

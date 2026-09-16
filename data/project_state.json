@@ -4,10 +4,10 @@
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
   "updated_at": "2026-09-16",
   "current_stage": 12,
-  "current_stage_status": "complete",
-  "current_stage_scope": "representative_chapter_semantic_extraction",
+  "current_stage_status": "in_progress",
+  "current_stage_scope": "representative_page_baseline_semantic_extraction",
   "next_stage": 13,
-  "next_stage_status": "ready",
+  "next_stage_status": "blocked",
   "formal_release": false,
   "stages": {
     "0": {
@@ -102,8 +102,9 @@
       "next_stage_status": "ready"
     },
     "12": {
-      "status": "complete",
-      "scope": "representative_chapter_semantic_extraction",
+      "status": "in_progress",
+      "scope": "representative_page_baseline_semantic_extraction",
+      "entry_record": "data/stage12/stage12_entry_audit.json",
       "exit_audit": "data/stage12/stage12_exit_audit.json",
       "statement_contract": "config/stage12_statement_contract.json",
       "input_manifest": "data/stage12/stage12_input_manifest.json",
@@ -111,7 +112,8 @@
       "development_evaluation": "data/stage12/stage12_development_evaluation.json",
       "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
       "next_stage": 13,
-      "next_stage_status": "ready"
+      "next_stage_status": "blocked",
+      "parallel_stage_13_tooling": "allowed_without_formal_stage_dependency"
     }
   },
   "boundaries": [

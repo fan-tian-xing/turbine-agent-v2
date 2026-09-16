@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_profile_routing",
+  "status": "frozen_for_representative_page_baseline",
+  "authority": "Stable document and revision identities are the routing key; this file does not replace Registry source truth.",
+  "source_registry": "data/registry/source_assets.jsonl",
+  "entries": [
+    {
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "source_profile_id": "manufacturer_manual",
+      "semantic_role": "manufacturer_manual",
+      "extraction_profile_id": "manufacturer_manual_v1"
+    },
+    {
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "source_profile_id": "standard_or_regulation",
+      "semantic_role": "construction_standard",
+      "extraction_profile_id": "construction_standard_v1"
+    },
+    {
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "source_profile_id": "standard_or_regulation",
+      "semantic_role": "commissioning_guideline",
+      "extraction_profile_id": "commissioning_guideline_v1"
+    },
+    {
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "source_profile_id": "standard_or_regulation",
+      "semantic_role": "nuclear_safety_regulation",
+      "extraction_profile_id": "nuclear_safety_regulation_v1"
+    },
+    {
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "source_profile_id": "book",
+      "semantic_role": "textbook",
+      "extraction_profile_id": "textbook_v1"
+    }
+  ],
+  "deferred_roles": {
+    "later_case": {
+      "status": "deferred_until_stage21",
+      "extraction_profile_id": null
+    }
+  },
+  "consumers": [
+    "scripts/build_stage12_input_manifest.py",
+    "scripts/build_stage12_candidates.py",
+    "scripts/evaluate_stage12_holdout.py",
+    "scripts/audit_stage12_exit.py",
+    "tests/stage12"
+  ]
+}

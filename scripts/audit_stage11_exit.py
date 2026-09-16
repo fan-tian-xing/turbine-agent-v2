@@ -348,12 +348,25 @@ def audit() -> dict:
     checks["targeted_tests"] = test_result["status"] == "passed"
     blockers = [name for name, passed in checks.items() if not passed]
     checks["stage12_entry_allowed"] = not blockers
+    input_paths = {
+        "stage6_exit_audit": "data/stage6/stage6_exit_audit.json",
+        "stage6_canonical_bundle": "data/stage6/stage6_evidence_bundle.jsonl",
+        "stage7_input_manifest": "data/stage7/terminology_input_manifest.json",
+        "stage9_exit_audit": "data/stage9/stage9_exit_audit.json",
+        "stage10_exit_audit": "data/stage10/stage10_audit.json",
+        "statement_contract": "config/stage11_statement_contract.json",
+        "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl",
+        "holdout_statement_samples": "data/stage11/stage11_statement_holdout.jsonl",
+        "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
+        "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json",
+        "review_round_a": "data/stage11/review_round_a.jsonl",
+        "review_round_b": "data/stage11/review_round_b.jsonl",
+        "adjudication_queue": "data/stage11/stage11_adjudication_queue.jsonl",
+    }
     return {
         "schema_version": 1, "stage": "11", "artifact_kind": "stage11_exit_audit", "status": "complete" if not blockers else "in_progress", "formal_release": False,
         "producer": "scripts/audit_stage11_exit.py",
-        "inputs": {
-            "stage6_exit_audit": "data/stage6/stage6_exit_audit.json", "stage6_canonical_bundle": "data/stage6/stage6_evidence_bundle.jsonl", "stage7_input_manifest": "data/stage7/terminology_input_manifest.json", "stage9_exit_audit": "data/stage9/stage9_exit_audit.json", "stage10_exit_audit": "data/stage10/stage10_audit.json", "statement_contract": "config/stage11_statement_contract.json", "development_statement_samples": "data/stage11/stage11_statement_development_samples.jsonl", "holdout_statement_samples": "data/stage11/stage11_statement_holdout.jsonl", "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl", "evaluation_sample_registry": "data/stage11/evaluation_sample_registry.json", "review_round_a": "data/stage11/review_round_a.jsonl", "review_round_b": "data/stage11/review_round_b.jsonl", "adjudication_queue": "data/stage11/stage11_adjudication_queue.jsonl",
-        },
+        "inputs": {name: {"path": path, "sha256": _sha256(ROOT / path)} for name, path in input_paths.items()},
         "input_sha256": {"statement_contract": _sha256(ROOT / "config/stage11_statement_contract.json"), "evaluation_sample_registry": _sha256(REGISTRY_PATH), "development_statement_samples": _sha256(DEV_PATH), "holdout_statement_samples": _sha256(HOLDOUT_PATH), "holdout_evidence": _sha256(HOLDOUT_EVIDENCE_PATH), "review_round_a": _sha256(REVIEW_A_PATH) if REVIEW_A_PATH.exists() else None, "review_round_b": _sha256(REVIEW_B_PATH) if REVIEW_B_PATH.exists() else None, "adjudication_queue": _sha256(ADJUDICATION_PATH) if ADJUDICATION_PATH.exists() else None},
         "sample_registry": {"development_regression_golden": {"page_count": 36, "trial_page_subset_count": 15, "statement_sample_count": len(dev), "source": "data/stage6/stage6_evidence_golden_sample.json"}, "acceptance_holdout": {"page_count": len(registry_holdout_pages), "pages_per_document": 3, "statement_row_count": len(holdout), "source": "data/stage7/terminology_input_manifest.json"}, "blind_test": {"status": "excluded", "read_by_stage11": False, "owner": "user-held evaluation boundary"}},
         "checks": checks,

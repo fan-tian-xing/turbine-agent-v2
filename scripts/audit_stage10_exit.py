@@ -44,6 +44,7 @@ def _run_tests() -> dict:
 def _audit() -> dict:
     sys.path.insert(0, str(ROOT))
     sys.path.insert(0, str(ROOT / "src"))
+    from turbine_kg.observability.lineage import verify_input_hashes
     from turbine_kg.documents.identity import load_revision_catalog
     from turbine_kg.observability.runtime import ExtractionBatch, KNOWLEDGE_STATUSES
     from turbine_kg.observability.lifecycle import impacted_by_revision
@@ -128,6 +129,7 @@ def _audit() -> dict:
     )
     checks = {
         "stage9_gate": stage9.get("status") == "complete" and stage9.get("next_stage_allowed") is True,
+        "stage9_internal_lineage_current": not verify_input_hashes(ROOT, stage9.get("inputs", {})),
         "runtime_contract_and_schema": contract.get("stage") == "10" and schema.get("$schema", "").endswith("2020-12/schema"),
         "stage8_single_review_state": all("review_status" not in row and row.get("mapping_review_decision") in {"accepted", "deferred"} for row in mapping.get("shortlist", []) + mapping.get("deferred_candidates", [])),
         "stage8_original_confirmation_blocks_queue": len(queue) == 0,
@@ -198,6 +200,7 @@ def _audit() -> dict:
         "blockers": blockers,
         "next_stage_allowed": not blockers,
         "next_stage": "Stage 11 controlled Evidence/Statement preparation" if not blockers else "Stage 10 knowledge lifecycle and revision maintenance",
+        "consumers": ["scripts/audit_stage10_exit.py", "scripts/audit_stage11_exit.py", "tests/stage10", "Stage 11 entry gate"],
     }
 
 

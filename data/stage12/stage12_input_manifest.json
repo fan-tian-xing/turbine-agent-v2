@@ -9,6 +9,8 @@
   "label_free_extractor_view": true,
   "holdout_used_for_tuning": false,
   "blind_read": false,
+  "scope_kind": "representative_page_baseline",
+  "representative_chapter_claim_allowed": false,
   "representative_criteria": [
     "condition",
     "enumeration",
@@ -23,6 +25,7 @@
       "physical_page": 73,
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
+      "logical_page": "3-5-1",
       "evidence_ids": [
         "evidence-93fb6fefbfccb828c68c"
       ],
@@ -35,13 +38,17 @@
         "condition",
         "multi_object_or_step"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "manufacturer_manual_v1",
+      "semantic_role": "manufacturer_manual"
     },
     {
       "document_key": "DL5190.3",
       "physical_page": 14,
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
+      "logical_page": "3",
       "evidence_ids": [
         "evidence-111e9dc5263ec94003bb",
         "evidence-cbce7568bef677f62bac"
@@ -55,13 +62,17 @@
         "multi_object_or_step",
         "enumeration"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "construction_standard_v1",
+      "semantic_role": "construction_standard"
     },
     {
       "document_key": "DL5190.3",
       "physical_page": 86,
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
+      "logical_page": "75",
       "evidence_ids": [
         "evidence-08795eed23203e43aa25",
         "evidence-44dd2f79786c9a998c97"
@@ -76,13 +87,17 @@
         "multi_object_or_step",
         "enumeration"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "construction_standard_v1",
+      "semantic_role": "construction_standard"
     },
     {
       "document_key": "DLT863",
       "physical_page": 14,
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "logical_page": "10",
       "evidence_ids": [
         "evidence-cd924809c0b4d4b4acc5"
       ],
@@ -93,13 +108,17 @@
         "condition",
         "multi_object_or_step"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "commissioning_guideline_v1",
+      "semantic_role": "commissioning_guideline"
     },
     {
       "document_key": "HAF103",
       "physical_page": 1,
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
+      "logical_page": "3",
       "evidence_ids": [
         "evidence-be6509fd8df673522604"
       ],
@@ -111,13 +130,17 @@
         "multi_object_or_step",
         "enumeration"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "nuclear_safety_regulation_v1",
+      "semantic_role": "nuclear_safety_regulation"
     },
     {
       "document_key": "HAF103",
       "physical_page": 11,
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
+      "logical_page": "13",
       "evidence_ids": [
         "evidence-bb9c008b78e12b735d94"
       ],
@@ -129,13 +152,17 @@
         "multi_object_or_step",
         "enumeration"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "nuclear_safety_regulation_v1",
+      "semantic_role": "nuclear_safety_regulation"
     },
     {
       "document_key": "HAF103",
       "physical_page": 12,
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
+      "logical_page": "14",
       "evidence_ids": [
         "evidence-97d1de6c7b49cdea31f8"
       ],
@@ -147,13 +174,17 @@
         "multi_object_or_step",
         "enumeration"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "nuclear_safety_regulation_v1",
+      "semantic_role": "nuclear_safety_regulation"
     },
     {
       "document_key": "auxiliary_installation_book",
       "physical_page": 360,
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "351",
       "evidence_ids": [
         "evidence-aa97a9ec78cf7cc57dc5"
       ],
@@ -165,13 +196,20 @@
         "condition",
         "multi_object_or_step"
       ],
-      "section_path": "chapter_unknown"
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
     }
   ],
   "inputs": {
-    "stage11_exit_audit": "eed59ec98859d8f48d752273afa3cc4ff60c99c1a3c7d400eaf9618114087826",
-    "stage11_development_selector": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
-    "stage6_evidence_bundle": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9"
+    "stage9_exit_audit": "3b3316ad4e35d1877ebcd9136d63bc22f6465c7c94ba16982248c640ff0d3e17",
+    "stage10_audit": "c800febcd8c23969ebecb709620d057b4f3ccff73e2228055161922868ca15c9",
+    "stage11_exit_audit": "b01d73767c2482b481ada136053f53059c6f02f3e1059a17124f324880a21245",
+    "stage6_evidence_bundle": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
+    "stage11_evaluation_sample_registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
+    "stage12_representative_baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
+    "stage12_profile_routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff"
   },
   "consumers": [
     "scripts/build_stage12_candidates.py"

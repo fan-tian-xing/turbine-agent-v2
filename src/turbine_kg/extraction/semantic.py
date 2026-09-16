@@ -14,6 +14,7 @@ import json
 import re
 import unicodedata
 from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Protocol
@@ -27,6 +28,7 @@ from turbine_kg.ontology.semantic import validate_runtime_payload
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT_PATH = ROOT / "config/stage12_statement_contract.json"
 SCHEMA_PATH = ROOT / "config/stage12_candidate.schema.json"
+PROFILE_ROUTING_PATH = ROOT / "config/stage12_profile_routing.json"
 STAGE9_TYPE = {
     "fact": "fact",
     "requirement": "acceptance_requirement",
@@ -66,6 +68,60 @@ class StatementExtractor(Protocol):
         """Extract candidate statements from one Evidence record."""
 
 
+class ProfileRoutingError(ValueError):
+    """Raised when a source cannot be mapped to exactly one Stage 12 profile."""
+
+
+@dataclass(frozen=True)
+class ExtractionProfile:
+    semantic_role: str
+    extraction_profile_id: str
+    source_profile_id: str
+
+
+class ProfileRouter:
+    """Resolve profiles by stable Document/Revision identity, never filenames."""
+
+    def __init__(self, path: Path = PROFILE_ROUTING_PATH):
+        self.path = path
+        config = json.loads(path.read_text(encoding="utf-8"))
+        entries = config.get("entries", [])
+        if not entries:
+            raise ProfileRoutingError("Stage 12 profile routing manifest is empty")
+        self._entries: dict[tuple[str, str], ExtractionProfile] = {}
+        for entry in entries:
+            key = (str(entry.get("document_logical_id", "")), str(entry.get("revision_id", "")))
+            profile = ExtractionProfile(
+                semantic_role=str(entry.get("semantic_role", "")),
+                extraction_profile_id=str(entry.get("extraction_profile_id", "")),
+                source_profile_id=str(entry.get("source_profile_id", "")),
+            )
+            if not all((key[0], key[1], profile.semantic_role, profile.extraction_profile_id, profile.source_profile_id)):
+                raise ProfileRoutingError("profile routing entry is incomplete")
+            if key in self._entries:
+                raise ProfileRoutingError(f"ambiguous Stage 12 profile route: {key}")
+            self._entries[key] = profile
+
+    def route(self, evidence: Mapping[str, Any]) -> ExtractionProfile:
+        key = (str(evidence.get("document_logical_id", "")), str(evidence.get("revision_id", "")))
+        try:
+            profile = self._entries[key]
+        except KeyError as error:
+            raise ProfileRoutingError(f"no Stage 12 profile route for {key}") from error
+        declared = evidence.get("source_profile_id")
+        if declared and str(declared) != profile.source_profile_id:
+            raise ProfileRoutingError(f"source profile mismatch for {key}: {declared} != {profile.source_profile_id}")
+        return profile
+
+    def extractor_for(self, evidence: Mapping[str, Any], *, split: str) -> "HeuristicSemanticExtractor":
+        profile = self.route(evidence)
+        return HeuristicSemanticExtractor(
+            profile_id=profile.extraction_profile_id,
+            semantic_role=profile.semantic_role,
+            split=split,
+        )
+
+
 def load_contract(path: Path = CONTRACT_PATH) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -82,8 +138,13 @@ def _sha(value: Any) -> str:
 
 
 def _text(evidence: Mapping[str, Any]) -> str:
-    value = evidence.get("effective_text") or evidence.get("source_text") or ""
+    value = _canonical_evidence_text(evidence)
     return re.sub(r"[ \t\f\r]+", " ", str(value)).strip()
+
+
+def _canonical_evidence_text(evidence: Mapping[str, Any]) -> str:
+    """Return canonical Evidence text without NLP whitespace normalization."""
+    return str(evidence.get("effective_text") or evidence.get("source_text") or "")
 
 
 def _location(evidence: Mapping[str, Any]) -> dict[str, Any]:
@@ -311,6 +372,11 @@ class HeuristicSemanticExtractor:
 
     profile_id = "heuristic_semantic_v1"
 
+    def __init__(self, *, profile_id: str | None = None, semantic_role: str | None = None, split: str = "development_regression_golden"):
+        self.profile_id = profile_id or type(self).profile_id
+        self.semantic_role = semantic_role
+        self.split = split
+
     def extract(self, evidence: Mapping[str, Any]) -> list[dict[str, Any]]:
         text = _text(evidence)
         location = _location(evidence)
@@ -326,7 +392,7 @@ class HeuristicSemanticExtractor:
             }
             rows.append({
                 "candidate_id": "stage12-candidate-" + hashlib.sha1(_sha(candidate_basis).encode()).hexdigest()[:20],
-                "split": "development_regression_golden",
+                "split": self.split,
                 "task": "statement",
                 "statement_text": clause,
                 "statement_type": statement_type,
@@ -353,7 +419,7 @@ class HeuristicSemanticExtractor:
                 "physical_page": location["physical_page"],
                 "logical_page": location["logical_page"],
                 "source_text_sha256": evidence["source_text_sha256"],
-                "evidence_quote": text,
+                 "evidence_quote": _canonical_evidence_text(evidence),
                 "review_status": "candidate_only",
                 "formal_release": False,
                 "extraction_profile": self.profile_id,
@@ -362,7 +428,8 @@ class HeuristicSemanticExtractor:
 
 
 def to_stage9_runtime_payload(candidates: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
-    """Project candidates into the existing Stage 9 transport gate in memory."""
+    """Project validated candidates into the existing Stage 9 gate in memory."""
+    candidates = list(candidates)
     nodes: dict[str, dict[str, Any]] = {}
     relations: set[tuple[str, str, str]] = set()
 
@@ -385,23 +452,48 @@ def to_stage9_runtime_payload(candidates: Iterable[Mapping[str, Any]]) -> dict[s
         # the projection does not redefine the Stage 6 Evidence identity.
         bindings = candidate["evidence_bindings"]
         span_ids = candidate["source_span_ids"]
-        entity = iri("entity", _sha(candidate["subject_entities"][0]["surface_form"])[:20])
+        stage9_statement_type = STAGE9_TYPE[candidate["statement_type"]]
+        validate_candidate_semantics(candidate)
+        entities = []
+        for subject in candidate["subject_entities"]:
+            entity = iri("entity", _sha({"surface_form": subject["surface_form"], "entity_class": subject["entity_class"]})[:20])
+            add(entity, "PhysicalEntity", {"objectKey": subject["surface_form"], "entityRole": subject["role"], "entityClass": subject["entity_class"]})
+            entities.append(entity)
+        entity = entities[0]
         scope = iri("scope", cid)
-        add(entity, "PhysicalEntity", {"objectKey": candidate["subject_entities"][0]["surface_form"]})
-        add(sid, "EngineeringStatement", {"statementText": candidate["statement_text"], "statementType": STAGE9_TYPE[candidate["statement_type"]]})
-        add(scope, "ApplicabilityScope", {key: value for key, value in candidate["applicability_scope"].items() if key in {"model", "equipment", "lifecycle_stage", "activity", "operating_state", "condition"} and value is not None})
+        statement_properties = {
+            "statementText": candidate["statement_text"],
+            "statementType": stage9_statement_type,
+            "predicateLabel": candidate["predicate"],
+            "objectAssertion": candidate["object_value"]["value"],
+            "normativeModality": candidate["normative_modality"],
+            "subjectEntityLabels": canonical_json(candidate["subject_entities"]),
+        }
+        if candidate["negation_scope"]:
+            statement_properties["negationScope"] = canonical_json(candidate["negation_scope"])
+        if candidate["conditions"]:
+            statement_properties["conditionText"] = canonical_json(candidate["conditions"])
+        add(sid, "EngineeringStatement", statement_properties)
+        scope_keys = {"model": "model", "equipment": "equipment", "lifecycle_stage": "lifecycleStage", "activity": "activity", "operating_state": "operatingState", "condition": "condition", "document_key": "documentKey", "physical_page": "physicalPageScope", "logical_page": "logicalPageScope"}
+        add(scope, "ApplicabilityScope", {scope_keys[key]: value for key, value in candidate["applicability_scope"].items() if key in scope_keys and value is not None})
         relations.update({(sid, "aboutEntity", entity), (sid, "hasApplicabilityScope", scope)})
+        relations.update((sid, "relatedEntity", item) for item in entities[1:])
         for binding in bindings:
             eid = iri("evidence", f"{binding['evidence_id']}:{cid}")
-            add(eid, "Evidence", {"evidenceText": candidate["evidence_quote"]})
+            add(eid, "Evidence", {"evidenceText": candidate["evidence_quote"], "evidenceId": binding["evidence_id"], "evidenceVersionId": candidate["evidence_version_id"], "supportType": binding["support_type"]})
             relations.update({(sid, "supportedBy", eid), (eid, "evidenceAboutEntity", entity)})
             for span_id in span_ids:
                 span = iri("span", span_id)
-                add(span, "SourceSpan", {"spanText": candidate["evidence_quote"], "physicalPage": candidate["physical_page"], "pageId": f"page-{candidate['physical_page']}", "revisionId": candidate["revision_id"], "documentId": candidate["document_logical_id"]})
+                span_properties = {"spanId": span_id, "spanText": candidate["evidence_quote"], "physicalPage": candidate["physical_page"], "pageId": f"page-{candidate['physical_page']}", "revisionId": candidate["revision_id"], "documentId": candidate["document_logical_id"]}
+                if candidate.get("logical_page") is not None:
+                    span_properties["logicalPage"] = candidate["logical_page"]
+                add(span, "SourceSpan", span_properties)
                 relations.add((eid, "sourceSpan", span))
         for index, quantity in enumerate(candidate["quantities"]):
             qid = iri("quantity", f"{cid}:{index}")
             properties = {"unitSymbol": quantity["unit"]}
+            properties["quantitySurfaceForm"] = quantity["surface_form"]
+            properties["comparisonOperator"] = quantity["operator"]
             if "value" in quantity:
                 properties["numericValue"] = quantity["value"]
             if "min" in quantity:
@@ -414,7 +506,129 @@ def to_stage9_runtime_payload(candidates: Iterable[Mapping[str, Any]]) -> dict[s
     report = validate_runtime_payload(payload)
     if not report["conforms"]:
         raise ValueError("Stage 12 candidate runtime projection failed Stage 9 validation: " + report["report_text"])
+    validate_stage12_runtime_projection(candidates, payload)
     return payload
+
+
+def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
+    """Check semantic fields that JSON Schema alone cannot relate to text."""
+    text = str(candidate.get("statement_text", ""))
+    if not text.strip() or not str(candidate.get("predicate", "")).strip():
+        raise ValueError("candidate statement text and predicate are required")
+    if candidate.get("object_value", {}).get("value") != text:
+        raise ValueError("candidate object_value must preserve statement_text")
+    if not candidate.get("subject_entities"):
+        raise ValueError("candidate must retain at least one subject entity")
+    if candidate.get("normative_modality") not in {"shall", "must", "descriptive"}:
+        raise ValueError("unsupported normative modality")
+    for item in [*candidate.get("conditions", []), *candidate.get("negation_scope", [])]:
+        if item.get("surface_form") and item["surface_form"] not in text:
+            raise ValueError("candidate semantic scope is not grounded in statement text")
+    for quantity in candidate.get("quantities", []):
+        if quantity.get("surface_form") and quantity["surface_form"] not in text:
+            raise ValueError("candidate quantity is not grounded in statement text")
+    if _quantity_fields(text)[0] and not candidate.get("quantities"):
+        raise ValueError("candidate dropped quantities present in statement text")
+    if _negation_fields(text) and not candidate.get("negation_scope"):
+        raise ValueError("candidate dropped negation present in statement text")
+    if CONDITION_RE.search(text) and not candidate.get("conditions"):
+        raise ValueError("candidate dropped condition present in statement text")
+
+
+def validate_stage12_runtime_projection(candidates: Iterable[Mapping[str, Any]], payload: Mapping[str, Any]) -> None:
+    """Verify that the Stage 9 projection retains every Stage 12 semantic field."""
+    nodes = {node["id"]: node for node in payload.get("nodes", [])}
+    links = payload.get("relations", [])
+    for candidate in candidates:
+        sid = f"urn:turbine-v2:stage12:statement:{candidate['candidate_id']}"
+        statement = nodes.get(sid)
+        if statement is None:
+            raise ValueError("Stage 12 runtime projection dropped EngineeringStatement")
+        properties = statement.get("properties", {})
+        expected_properties = {
+            "statementText": candidate["statement_text"],
+            "statementType": STAGE9_TYPE[candidate["statement_type"]],
+            "predicateLabel": candidate["predicate"],
+            "objectAssertion": candidate["object_value"]["value"],
+            "normativeModality": candidate["normative_modality"],
+            "subjectEntityLabels": canonical_json(candidate["subject_entities"]),
+        }
+        if any(properties.get(key) != value for key, value in expected_properties.items()):
+            raise ValueError(f"Stage 12 semantic field was lost in runtime projection: {candidate['candidate_id']}")
+        for field, source in (("negationScope", "negation_scope"), ("conditionText", "conditions")):
+            if source in candidate and bool(candidate[source]) != (field in properties):
+                raise ValueError(f"Stage 12 optional semantic field was lost in runtime projection: {candidate['candidate_id']}")
+            if candidate.get(source) and properties.get(field) != canonical_json(candidate[source]):
+                raise ValueError(f"Stage 12 semantic field changed in runtime projection: {candidate['candidate_id']}")
+        expected_entities = []
+        for subject in candidate["subject_entities"]:
+            entity = f"urn:turbine-v2:stage12:entity:{_sha({'surface_form': subject['surface_form'], 'entity_class': subject['entity_class']})[:20]}"
+            expected_entities.append(entity)
+            node = nodes.get(entity)
+            if not node or node["properties"] != {"objectKey": subject["surface_form"], "entityRole": subject["role"], "entityClass": subject["entity_class"]}:
+                raise ValueError(f"Stage 12 entity role/class was lost in runtime projection: {candidate['candidate_id']}")
+        about = {link["target"] for link in links if link["source"] == sid and link["predicate"] == "aboutEntity"}
+        related = {link["target"] for link in links if link["source"] == sid and link["predicate"] == "relatedEntity"}
+        if about != {expected_entities[0]} or related != set(expected_entities[1:]):
+            raise ValueError(f"Stage 12 multi-entity projection is incomplete: {candidate['candidate_id']}")
+        scope_id = f"urn:turbine-v2:stage12:scope:{candidate['candidate_id']}"
+        scope = nodes.get(scope_id)
+        scope_keys = {"model": "model", "equipment": "equipment", "lifecycle_stage": "lifecycleStage", "activity": "activity", "operating_state": "operatingState", "condition": "condition", "document_key": "documentKey", "physical_page": "physicalPageScope", "logical_page": "logicalPageScope"}
+        expected_scope = {scope_keys[key]: value for key, value in candidate["applicability_scope"].items() if key in scope_keys and value is not None}
+        if not scope or scope.get("properties") != expected_scope:
+            raise ValueError(f"Stage 12 applicability was lost in runtime projection: {candidate['candidate_id']}")
+        evidence_links = [link for link in links if link["source"] == sid and link["predicate"] == "supportedBy"]
+        if len(evidence_links) != len(candidate["evidence_bindings"]):
+            raise ValueError(f"Stage 12 Evidence bindings were lost in runtime projection: {candidate['candidate_id']}")
+        for binding in candidate["evidence_bindings"]:
+            evidence_id = f"urn:turbine-v2:stage12:evidence:{binding['evidence_id']}:{candidate['candidate_id']}"
+            evidence = nodes.get(evidence_id)
+            if not evidence or evidence["properties"] != {"evidenceText": candidate["evidence_quote"], "evidenceId": binding["evidence_id"], "evidenceVersionId": candidate["evidence_version_id"], "supportType": binding["support_type"]}:
+                raise ValueError(f"Stage 12 Evidence lineage was lost in runtime projection: {candidate['candidate_id']}")
+            span_targets = {link["target"] for link in links if link["source"] == evidence_id and link["predicate"] == "sourceSpan"}
+            expected_spans = set(candidate["source_span_ids"])
+            if span_targets != {f"urn:turbine-v2:stage12:span:{span_id}" for span_id in expected_spans}:
+                raise ValueError(f"Stage 12 source spans were lost in runtime projection: {candidate['candidate_id']}")
+            for span_id in expected_spans:
+                span = nodes[f"urn:turbine-v2:stage12:span:{span_id}"]
+                expected_span = {"spanId": span_id, "spanText": candidate["evidence_quote"], "physicalPage": candidate["physical_page"], "pageId": f"page-{candidate['physical_page']}", "revisionId": candidate["revision_id"], "documentId": candidate["document_logical_id"]}
+                if candidate.get("logical_page") is not None:
+                    expected_span["logicalPage"] = candidate["logical_page"]
+                if span.get("properties") != expected_span:
+                    raise ValueError(f"Stage 12 source span lineage changed in runtime projection: {candidate['candidate_id']}")
+        quantity_links = [link["target"] for link in links if link["source"] == sid and link["predicate"] == "hasQuantityValue"]
+        if len(quantity_links) != len(candidate["quantities"]):
+            raise ValueError(f"Stage 12 quantities were lost in runtime projection: {candidate['candidate_id']}")
+        for index, quantity in enumerate(candidate["quantities"]):
+            quantity_node = nodes.get(f"urn:turbine-v2:stage12:quantity:{candidate['candidate_id']}:{index}")
+            expected_quantity = {"unitSymbol": quantity["unit"], "quantitySurfaceForm": quantity["surface_form"], "comparisonOperator": quantity["operator"]}
+            for key in ("value", "min", "max"):
+                if key in quantity:
+                    expected_quantity[{"value": "numericValue", "min": "minimumValue", "max": "maximumValue"}[key]] = quantity[key]
+            if not quantity_node or quantity_node.get("properties") != expected_quantity:
+                raise ValueError(f"Stage 12 quantity semantics changed in runtime projection: {candidate['candidate_id']}")
+
+
+def validate_candidate_evidence_binding(candidate: Mapping[str, Any], evidence: Mapping[str, Any]) -> None:
+    """Validate candidate lineage against the canonical Stage 6 Evidence row."""
+    if candidate.get("document_logical_id") != evidence.get("document_logical_id") or candidate.get("revision_id") != evidence.get("revision_id"):
+        raise ValueError("candidate Document/Revision identity does not match canonical Evidence")
+    location = _location(evidence)
+    if candidate.get("physical_page") != location["physical_page"] or candidate.get("logical_page") != location.get("logical_page"):
+        raise ValueError("candidate page identity does not match canonical Evidence")
+    if candidate.get("evidence_version_id") != _evidence_version_id(evidence):
+        raise ValueError("candidate Evidence version does not match canonical Evidence")
+    if candidate.get("source_text_sha256") != evidence.get("source_text_sha256"):
+        raise ValueError("candidate source hash does not match canonical Evidence")
+    expected_spans = set(location.get("source_span_ids") or [])
+    actual_spans = set(candidate.get("source_span_ids") or [])
+    if not expected_spans <= actual_spans:
+        raise ValueError("candidate source spans do not cover canonical Evidence")
+    if candidate.get("evidence_quote") != _canonical_evidence_text(evidence):
+        raise ValueError("candidate Evidence quote is not the canonical Evidence text")
+    bindings = {binding.get("evidence_id") for binding in candidate.get("evidence_bindings", [])}
+    if evidence.get("evidence_id") not in bindings:
+        raise ValueError("candidate does not bind the canonical Evidence id")
 
 
 def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapping[str, Any]]) -> dict[str, Any]:
@@ -451,15 +665,18 @@ def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapp
             "statement_boundary": bool(candidate and boundary_score >= 0.8),
             "statement_type": bool(candidate and candidate["statement_type"] == gold["statement_type"]),
             "entity": _entity_match(candidate, gold),
-            "relation": bool(candidate and _overlap(str(gold.get("predicate", "")), candidate.get("predicate", "")) >= 0.4),
+            # Predicate labels are controlled semantic values, not free text.
+            # Character overlap would turn an almost-correct relation into a
+            # pass and hide the error type we need Stage 12 to expose.
+            "relation": bool(candidate and _normalized_text(gold.get("predicate")) == _normalized_text(candidate.get("predicate"))),
             "quantity": bool(candidate and _quantities_match(candidate.get("quantities", []), gold.get("quantities", []))),
-            "negation": bool(candidate and bool(candidate.get("negation_scope")) == bool(gold.get("negation_scope"))),
+            "negation": _negation_match(candidate, gold),
             "condition": _condition_match(candidate, gold),
-            "applicability": bool(candidate and candidate.get("physical_page") == gold.get("physical_page") and candidate.get("document_logical_id") == gold.get("document_logical_id")),
+            "applicability": _applicability_match(candidate, gold),
             # An absent candidate is a recall/matching failure, not an
             # unsupported claim.  Grounding is zero-tolerance only when a
             # candidate exists and cites the wrong Evidence.
-            "evidence_grounding": bool(not candidate or evidence_ids <= {b["evidence_id"] for b in candidate.get("evidence_bindings", [])}),
+            "evidence_grounding": bool(candidate and evidence_ids <= {b["evidence_id"] for b in candidate.get("evidence_bindings", [])}),
         }
         for field, passed in checks.items():
             totals[field] += 1
@@ -474,9 +691,16 @@ def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapp
             if not checks["negation"]: error_types.append("negation_error")
             if not checks["condition"]: error_types.append("condition_loss")
             if not checks["applicability"]: error_types.append("applicability_error")
-            if not checks["evidence_grounding"]: error_types.append("unsupported_claim")
+            # A missing candidate is a recall failure, not a fabricated claim.
+            # Keep grounding false for the field metric, but reserve the
+            # zero-tolerance unsupported_claim counter for an emitted
+            # candidate that cites the wrong Evidence.
+            if candidate is not None and not checks["evidence_grounding"]: error_types.append("unsupported_claim")
             errors.append({"statement_id": gold.get("statement_id"), "candidate_id": candidate.get("candidate_id") if candidate else None, "error_types": error_types})
-    return {"gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "field_totals": totals, "field_correct": correct, "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields}, "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in ("boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "negation_error", "condition_loss", "applicability_error", "unsupported_claim")}, "errors": errors, "matched_pairs": [{"statement_id": gold_rows[index].get("statement_id"), "candidate_id": candidate.get("candidate_id"), "score": _text_similarity(gold_rows[index]["statement_text"], candidate["statement_text"])} for index, candidate in sorted(matches.items())], "unmatched_gold": [gold_rows[index].get("statement_id") for index in range(len(gold_rows)) if index not in matches], "unmatched_candidates": [candidate.get("candidate_id") for candidate in candidates if candidate.get("candidate_id") not in assigned_candidates]}
+    unmatched_gold = [gold_rows[index].get("statement_id") for index in range(len(gold_rows)) if index not in matches]
+    unmatched_candidates = [candidate.get("candidate_id") for candidate in candidates if candidate.get("candidate_id") not in assigned_candidates]
+    error_names = ("boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "negation_error", "condition_loss", "applicability_error", "unsupported_claim")
+    return {"gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0), "field_totals": totals, "field_correct": correct, "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields}, "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in error_names}, "errors": errors, "matched_pairs": [{"statement_id": gold_rows[index].get("statement_id"), "candidate_id": candidate.get("candidate_id"), "score": _text_similarity(gold_rows[index]["statement_text"], candidate["statement_text"])} for index, candidate in sorted(matches.items())], "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates)}
 
 
 def _overlap(left: str, right: str) -> float:
@@ -542,6 +766,36 @@ def _condition_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any
     if not expected:
         return all(_overlap(item.get("surface_form", ""), candidate.get("statement_text", "")) >= 0.6 for item in actual)
     return all(any(_overlap(item.get("surface_form", ""), other.get("surface_form", "")) >= 0.6 for other in actual) for item in expected)
+
+
+def _negation_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) -> bool:
+    if not candidate:
+        return False
+    expected = gold.get("negation_scope") or []
+    actual = candidate.get("negation_scope") or []
+    if len(expected) != len(actual):
+        return False
+    return all(
+        any(
+            _normalized_text(item.get("surface_form")) == _normalized_text(other.get("surface_form"))
+            and item.get("polarity") == other.get("polarity")
+            for other in actual
+        )
+        for item in expected
+    )
+
+
+def _applicability_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) -> bool:
+    if not candidate:
+        return False
+    if candidate.get("document_logical_id") != gold.get("document_logical_id") or candidate.get("physical_page") != gold.get("physical_page"):
+        return False
+    expected = gold.get("applicability_scope") or {}
+    actual = candidate.get("applicability_scope") or {}
+    # Applicability is a structured contract.  A document/page coincidence is
+    # not sufficient when Gold carries equipment, lifecycle, activity, or a
+    # condition that the candidate failed to preserve.
+    return all(_normalized_text(actual.get(key)) == _normalized_text(value) for key, value in expected.items())
 
 
 def _quantities_match(candidate: list[Mapping[str, Any]], gold: list[Mapping[str, Any]]) -> bool:

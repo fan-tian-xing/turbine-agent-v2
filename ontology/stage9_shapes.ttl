@@ -11,6 +11,12 @@ tv2:EngineeringStatementShape a sh:NodeShape ;
   sh:property [ sh:path tv2:supportedBy ; sh:minCount 1 ] ;
   sh:property [ sh:path tv2:hasApplicabilityScope ; sh:minCount 1 ; sh:maxCount 1 ] ;
   sh:property [ sh:path tv2:statementText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:predicateLabel ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:objectAssertion ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:normativeModality ; sh:maxCount 1 ; sh:in ("shall" "must" "descriptive") ] ;
+  sh:property [ sh:path tv2:subjectEntityLabels ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:negationScope ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:conditionText ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:statementType ; sh:minCount 1 ; sh:maxCount 1 ;
     sh:in ("fact" "conditioned_inference" "candidate_recommendation" "action_authorization"
            "acceptance_requirement" "inspection_requirement" "scope_definition" "maintenance_procedure") ] ;
@@ -26,10 +32,14 @@ tv2:EngineeringStatementShape a sh:NodeShape ;
 
 tv2:EvidenceShape a sh:NodeShape ; sh:targetClass tv2:Evidence ;
   sh:property [ sh:path tv2:evidenceText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:evidenceId ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:evidenceVersionId ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:supportType ; sh:maxCount 1 ; sh:in ("direct" "partial" "context") ] ;
   sh:property [ sh:path tv2:evidenceAboutEntity ; sh:minCount 1 ; sh:maxCount 1 ] ;
   sh:property [ sh:path tv2:sourceSpan ; sh:minCount 1 ] .
 
 tv2:SourceSpanShape a sh:NodeShape ; sh:targetClass tv2:SourceSpan ;
+  sh:property [ sh:path tv2:spanId ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:physicalPage ; sh:minCount 1 ; sh:maxCount 1 ; sh:minInclusive 1 ] ;
   sh:property [ sh:path tv2:logicalPage ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:pageId ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
@@ -38,9 +48,14 @@ tv2:SourceSpanShape a sh:NodeShape ; sh:targetClass tv2:SourceSpan ;
   sh:property [ sh:path tv2:spanText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] .
 
 tv2:PhysicalEntityShape a sh:NodeShape ; sh:targetClass tv2:PhysicalEntity ;
-  sh:property [ sh:path tv2:objectKey ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] .
+  sh:property [ sh:path tv2:objectKey ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:entityRole ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:entityClass ; sh:maxCount 1 ; sh:pattern "\\S" ] .
 
 tv2:ApplicabilityScopeShape a sh:NodeShape ; sh:targetClass tv2:ApplicabilityScope ;
+  sh:property [ sh:path tv2:documentKey ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:physicalPageScope ; sh:maxCount 1 ; sh:minInclusive 1 ] ;
+  sh:property [ sh:path tv2:logicalPageScope ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:model ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:equipment ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:lifecycleStage ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
@@ -51,6 +66,8 @@ tv2:ApplicabilityScopeShape a sh:NodeShape ; sh:targetClass tv2:ApplicabilitySco
   sh:property [ sh:path tv2:capacityMaximum ; sh:maxCount 1 ; sh:minInclusive 0 ] .
 
 tv2:QuantityValueShape a sh:NodeShape ; sh:targetClass tv2:QuantityValue ;
+  sh:property [ sh:path tv2:quantitySurfaceForm ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
+  sh:property [ sh:path tv2:comparisonOperator ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:numericValue ; sh:maxCount 1 ] ;
   sh:property [ sh:path tv2:minimumValue ; sh:maxCount 1 ; sh:lessThanOrEquals tv2:maximumValue ] ;
   sh:property [ sh:path tv2:maximumValue ; sh:maxCount 1 ] ;

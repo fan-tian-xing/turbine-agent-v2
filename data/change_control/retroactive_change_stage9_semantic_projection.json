@@ -1,0 +1,29 @@
+{
+  "change_id": "retro-stage9-semantic-projection-20260916",
+  "discovery_stage": "12",
+  "affected_stage": "9",
+  "discovered_problem": "Stage 12 candidates carried predicate, object assertion, modality, multiple entities, conditions, negation, applicability and Evidence lineage, while the Stage 9 runtime projection and recorded Stage 9 ontology/SHACL audit did not provide a lossless validated representation.",
+  "evidence": [
+    {"kind": "contract", "detail": "总计划 requires Stage 9 OWL/SHACL runtime gating and Stage 12 complete Engineering Statement semantics."},
+    {"kind": "runtime", "detail": "In-memory projection inspection showed the previous representation retained only a subset of candidate semantics while validation still passed."},
+    {"kind": "cross_stage", "detail": "Stage 12 could not prove predicate/object/modality/multi-entity/condition preservation through the Stage 9 consumer."}
+  ],
+  "why_change_is_required": "This is a verified cross-stage semantic compatibility defect, not a naming or convenience change; dropping the fields would make a passing runtime gate misleading.",
+  "alternatives_considered": ["Keep Stage 9 optional fields and rely on the Stage 12 adapter only", "Delete the extra Stage 12 fields", "Add the minimum Stage 9 vocabulary and runtime projection checks"],
+  "reason_alternatives_rejected": ["Adapter-only checks would not make the Stage 9 consumer representation auditable", "Deleting fields violates the lossless semantic requirement", "The minimum vocabulary and projection extension preserves existing Stage 9 inputs while covering the proven downstream need"],
+  "files_changed": ["ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "src/turbine_kg/extraction/semantic.py", "tests/stage12/test_stage12_contract.py"],
+  "old_sha256": {
+    "ontology/stage9_core.ttl": "0d28b5c2d68035227632836b720ac617467f6b9aa93ec0cd0e763f8ba691d01deaf",
+    "ontology/stage9_shapes.ttl": "9ad12df7b748ec6301e7b7c40126de68da1e0bcfab4289eacb4aabf97628bf74"
+  },
+  "new_sha256": {
+    "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
+    "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56"
+  },
+  "downstream_dependents": ["data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage12/stage12_input_manifest.json", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_exit_audit.json"],
+  "invalidated_artifacts": ["data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage12/stage12_input_manifest.json", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_exit_audit.json"],
+  "rebuild_order": ["Stage 9 audit and tests", "Stage 10 audit and tests", "Stage 11 audit and tests", "Stage 12 manifest", "Stage 12 candidates and development evaluation", "Stage 12 holdout historical receipt", "Stage 12 exit audit", "project_state"],
+  "regression_result": "stage9_stage10_stage11_passed; stage12_pipeline_passed; stage12_quality_gate_blocked",
+  "reviewer": "cross_stage_audit",
+  "review_status": "recorded_and_regressed"
+}

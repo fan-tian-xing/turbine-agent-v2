@@ -18,6 +18,22 @@ tv2:evidenceAboutEntity a owl:ObjectProperty ; rdfs:domain tv2:Evidence ; rdfs:r
 
 tv2:statementType a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "断言类型"@zh-CN ; rdfs:comment "当前研发运行断言的语义类型，合法值由 SHACL 唯一约束。"@zh-CN .
 tv2:statementText a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "断言文本"@zh-CN ; rdfs:comment "中等粒度完整工程断言的文本。"@zh-CN .
+tv2:predicateLabel a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "关系标签"@zh-CN ; rdfs:comment "Stage 12 候选关系的文本化语义标签。"@zh-CN .
+tv2:objectAssertion a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "客体断言"@zh-CN ; rdfs:comment "候选客体的来源断言文本，不是执行授权。"@zh-CN .
+tv2:normativeModality a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "规范模态"@zh-CN ; rdfs:comment "候选断言的描述、应当或必须模态。"@zh-CN .
+tv2:subjectEntityLabels a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "主体对象集合"@zh-CN ; rdfs:comment "所有文本锚定主体对象的稳定序列化。"@zh-CN .
+tv2:negationScope a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "否定范围"@zh-CN ; rdfs:comment "候选否定标记及其范围的稳定序列化。"@zh-CN .
+tv2:conditionText a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "条件文本"@zh-CN ; rdfs:comment "候选条件的稳定序列化。"@zh-CN .
+tv2:relatedEntity a owl:ObjectProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range tv2:PhysicalEntity ; rdfs:label "相关对象"@zh-CN ; rdfs:comment "除主对象外仍被候选保留的文本锚定对象。"@zh-CN .
+tv2:entityRole a owl:DatatypeProperty ; rdfs:domain tv2:PhysicalEntity ; rdfs:range xsd:string ; rdfs:label "对象角色"@zh-CN ; rdfs:comment "候选实体在 Statement 中的文本角色。"@zh-CN .
+tv2:entityClass a owl:DatatypeProperty ; rdfs:domain tv2:PhysicalEntity ; rdfs:range xsd:string ; rdfs:label "对象类别"@zh-CN ; rdfs:comment "候选实体的未承诺类别。"@zh-CN .
+tv2:evidenceId a owl:DatatypeProperty ; rdfs:domain tv2:Evidence ; rdfs:range xsd:string ; rdfs:label "证据标识"@zh-CN ; rdfs:comment "Stage 6 Evidence 稳定标识。"@zh-CN .
+tv2:evidenceVersionId a owl:DatatypeProperty ; rdfs:domain tv2:Evidence ; rdfs:range xsd:string ; rdfs:label "证据版本标识"@zh-CN ; rdfs:comment "Evidence 版本身份。"@zh-CN .
+tv2:supportType a owl:DatatypeProperty ; rdfs:domain tv2:Evidence ; rdfs:range xsd:string ; rdfs:label "证据支持类型"@zh-CN ; rdfs:comment "direct、partial 或 context。"@zh-CN .
+tv2:spanId a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "片段标识"@zh-CN ; rdfs:comment "SourceSpan 稳定标识。"@zh-CN .
+tv2:documentKey a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "资料键"@zh-CN ; rdfs:comment "候选适用范围的资料身份。"@zh-CN .
+tv2:physicalPageScope a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:integer ; rdfs:label "适用物理页"@zh-CN ; rdfs:comment "候选适用范围的物理页。"@zh-CN .
+tv2:logicalPageScope a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:string ; rdfs:label "适用逻辑页"@zh-CN ; rdfs:comment "候选适用范围的逻辑页。"@zh-CN .
 tv2:evidenceText a owl:DatatypeProperty ; rdfs:domain tv2:Evidence ; rdfs:range xsd:string ; rdfs:label "研发证据文本"@zh-CN ; rdfs:comment "保持当前研发合同的存储文本。真实已审核输入必须是绑定片段中的原文；公开合成 Fixture 的描述性 Evidence 不被重标为正式原文，逐字来源文本见 SourceSpan.spanText。"@zh-CN .
 tv2:objectKey a owl:DatatypeProperty ; rdfs:domain tv2:PhysicalEntity ; rdfs:range xsd:string ; rdfs:label "对象标识"@zh-CN ; rdfs:comment "既有运行输入的对象标识，不合并相似对象。"@zh-CN .
 tv2:spanText a owl:DatatypeProperty ; rdfs:domain tv2:SourceSpan ; rdfs:range xsd:string ; rdfs:label "片段原文"@zh-CN ; rdfs:comment "来源片段的存储文本。"@zh-CN .
@@ -36,6 +52,8 @@ tv2:capacityMinimum a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope 
 tv2:capacityMaximum a owl:DatatypeProperty ; rdfs:domain tv2:ApplicabilityScope ; rdfs:range xsd:decimal ; rdfs:label "容量上界"@zh-CN ; rdfs:comment "以 MW 表达的既有范围容量上界。"@zh-CN .
 tv2:minimumValue a owl:DatatypeProperty ; rdfs:domain tv2:QuantityValue ; rdfs:range xsd:decimal ; rdfs:label "量值下界"@zh-CN ; rdfs:comment "允许单边区间的工程量下界。"@zh-CN .
 tv2:maximumValue a owl:DatatypeProperty ; rdfs:domain tv2:QuantityValue ; rdfs:range xsd:decimal ; rdfs:label "量值上界"@zh-CN ; rdfs:comment "允许单边区间的工程量上界。"@zh-CN .
+tv2:quantitySurfaceForm a owl:DatatypeProperty ; rdfs:domain tv2:QuantityValue ; rdfs:range xsd:string ; rdfs:label "量值原文"@zh-CN ; rdfs:comment "量值在候选 Statement 中的原文表面形式。"@zh-CN .
+tv2:comparisonOperator a owl:DatatypeProperty ; rdfs:domain tv2:QuantityValue ; rdfs:range xsd:string ; rdfs:label "比较关系"@zh-CN ; rdfs:comment "量值的等于、上下界或区间关系。"@zh-CN .
 
 # Complete definitions for the Stage 8 property IRIs without redefining their
 # classes, identifiers, domains or ranges.

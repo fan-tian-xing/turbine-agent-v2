@@ -16,7 +16,7 @@
     },
     "data/stage9/stage9_exit_audit.json": {
       "path": "data/stage9/stage9_exit_audit.json",
-      "sha256": "9c56ad16f0ef7ff1fde11377aeb724f1e4f666a01d25bc4c5ed63fc788fc18b7"
+      "sha256": "3b3316ad4e35d1877ebcd9136d63bc22f6465c7c94ba16982248c640ff0d3e17"
     },
     "data/stage8/ontology_mapping_shortlist.json": {
       "path": "data/stage8/ontology_mapping_shortlist.json",
@@ -44,7 +44,7 @@
     },
     "scripts/audit_stage10_exit.py": {
       "path": "scripts/audit_stage10_exit.py",
-      "sha256": "ae0a1fdd89a36c2c23d253f44ead47da5e1aeaf66b91e99609d7c5c6e23991be"
+      "sha256": "3277b978ab309b1ce53ed31d31c489f10d8191966684012c3e27d75d0d9f3a68"
     },
     "uv.lock": {
       "path": "uv.lock",
@@ -97,6 +97,7 @@
   },
   "checks": {
     "stage9_gate": true,
+    "stage9_internal_lineage_current": true,
     "runtime_contract_and_schema": true,
     "stage8_single_review_state": true,
     "stage8_original_confirmation_blocks_queue": true,
@@ -136,7 +137,7 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-targeted-d13e54de9227",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-targeted-8fcc044fab72",
         "tests/stage10",
         "tests/stage7",
         "tests/stage8",
@@ -147,7 +148,7 @@
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 68%]\n.................................                                        [100%]\n",
+      "stdout_tail": "........................................................................ [ 66%]\n.....................................                                    [100%]\n",
       "stderr_tail": ""
     },
     "full_project": {
@@ -159,13 +160,13 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-full-49e152e4d891",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-full-7ed7d4e6d928",
         "tests"
       ],
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 26%]\n........................................................................ [ 53%]\n........................................................................ [ 80%]\n......................................................                   [100%]\n",
+      "stdout_tail": "........................................................................ [ 22%]\n........................................................................ [ 44%]\n........................................................................ [ 66%]\n........................................................................ [ 89%]\n...................................                                      [100%]\n",
       "stderr_tail": ""
     }
   },
@@ -178,5 +179,11 @@
   "zero_tolerance_errors": [],
   "blockers": [],
   "next_stage_allowed": true,
-  "next_stage": "Stage 11 controlled Evidence/Statement preparation"
+  "next_stage": "Stage 11 controlled Evidence/Statement preparation",
+  "consumers": [
+    "scripts/audit_stage10_exit.py",
+    "scripts/audit_stage11_exit.py",
+    "tests/stage10",
+    "Stage 11 entry gate"
+  ]
 }

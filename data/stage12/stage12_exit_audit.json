@@ -2,17 +2,42 @@
   "schema_version": 1,
   "stage": "12",
   "artifact_kind": "stage12_exit_audit",
-  "status": "complete",
+  "status": "in_progress",
+  "implementation_status": "in_progress",
+  "quality_status": "quality_not_accepted",
+  "pipeline_ready": false,
+  "quality_accepted": false,
+  "reserve_ready": false,
   "formal_release": false,
   "producer": "scripts/audit_stage12_exit.py",
   "inputs": {
+    "data/stage9/stage9_exit_audit.json": {
+      "path": "data/stage9/stage9_exit_audit.json",
+      "sha256": "3b3316ad4e35d1877ebcd9136d63bc22f6465c7c94ba16982248c640ff0d3e17"
+    },
+    "data/stage10/stage10_audit.json": {
+      "path": "data/stage10/stage10_audit.json",
+      "sha256": "c800febcd8c23969ebecb709620d057b4f3ccff73e2228055161922868ca15c9"
+    },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "3bdb0760b21f8182a54cde6d745170e60d9fe003f8f5a15fd5e8342cb851c68c"
+      "sha256": "b01d73767c2482b481ada136053f53059c6f02f3e1059a17124f324880a21245"
+    },
+    "data/stage11/evaluation_sample_registry.json": {
+      "path": "data/stage11/evaluation_sample_registry.json",
+      "sha256": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a"
+    },
+    "data/stage12/stage12_representative_baseline.json": {
+      "path": "data/stage12/stage12_representative_baseline.json",
+      "sha256": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836"
+    },
+    "config/stage12_profile_routing.json": {
+      "path": "config/stage12_profile_routing.json",
+      "sha256": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff"
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "205d08f291c4b78c87d9efe5b47c37854e2ba57e59736ff1111fbb6246981449"
+      "sha256": "febada9885520557bfb488ab6b7f37f2256859a10ac5a83c55de8ec52d414d56"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
@@ -20,23 +45,31 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "0ed82ff0b13480e09eae7b5a94f89663e7c8172df4dfc4e84503e52ac5286e09"
+      "sha256": "f15e0733101353490cebb7a0455b89ab98f21d76c2933d5276ce05906fdd61b6"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "fee0ce5e91e69faa0c2d41e4c7523910bb2cd438f29f6d4ae083edcedefc3dd2"
+      "sha256": "1ad346436ebfb5679d1f73bf893dc49b3bde11374a2aa2086a4a4896e2aa477d"
+    },
+    "ontology/stage9_core.ttl": {
+      "path": "ontology/stage9_core.ttl",
+      "sha256": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249"
+    },
+    "ontology/stage9_shapes.ttl": {
+      "path": "ontology/stage9_shapes.ttl",
+      "sha256": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56"
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "2413ea1f8485e95353af65f39109ee8036102f79248f0200880f64326ea7ac8c"
+      "sha256": "55baf49bb263e6a7949538048ca186f2ed74524f404a4db4a4fa32224aba9fc6"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "47aae313d07cb1498e49ec42d83d71b1a9054d115d5734e11f1e5681f6273443"
+      "sha256": "e4e947c7d869f8816cc351844044553c0bfa89730e7fff75cf5fa3d6e63e40d7"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "94a85e39b416244b620648d3912f8b7ee026429a74b7a053cb7d8ac03339f172"
+      "sha256": "e1b69f86117c34ea080b6de64206006868aa0842cad9fe56af506e04e92defd1"
     }
   },
   "outputs": {
@@ -49,19 +82,27 @@
   },
   "checks": {
     "stage11_exit_gate": true,
+    "stage11_internal_lineage_current": true,
     "label_free_development_manifest": true,
+    "manifest_input_lineage_current": true,
+    "representative_baseline_frozen": true,
+    "representative_chapter_scope_resolved": false,
     "five_documents_represented": true,
     "representative_coverage": true,
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
+    "candidate_pages_are_manifest_pages": true,
     "candidate_schema_and_stage9_gate": true,
+    "candidate_input_lineage_current": true,
     "canonical_evidence_consumed": true,
+    "profile_routes_are_unique_and_consumed": true,
     "development_evaluation_present": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "grounding_zero_tolerance": true,
-    "development_quality_gate": true,
-    "no_ontology_or_release_write": true
+    "no_ontology_or_release_write": true,
+    "development_quality_gate": false,
+    "acceptance_quality_gate": false
   },
   "counts": {
     "representative_pages": 8,
@@ -75,48 +116,82 @@
       "statement_boundary": 0.9473684210526315,
       "statement_type": 0.9473684210526315,
       "entity": 0.9473684210526315,
-      "relation": 0.631578947368421,
+      "relation": 0.21052631578947367,
       "quantity": 1.0,
-      "negation": 1.0,
+      "negation": 0.9473684210526315,
       "condition": 1.0,
-      "applicability": 1.0,
+      "applicability": 0.0,
       "evidence_grounding": 1.0
     },
     "holdout_field_accuracy": {
       "statement_boundary": 0.875,
       "statement_type": 0.6458333333333334,
       "entity": 0.8541666666666666,
-      "relation": 0.3125,
+      "relation": 0.0,
       "quantity": 0.7708333333333334,
-      "negation": 0.8541666666666666,
+      "negation": 0.5,
       "condition": 0.8541666666666666,
-      "applicability": 0.8958333333333334,
-      "evidence_grounding": 1.0
+      "applicability": 0.0,
+      "evidence_grounding": 0.8958333333333334
     },
     "development_thresholds": {
       "statement_boundary": 0.9,
       "statement_type": 0.9,
       "entity": 0.9,
+      "relation": 0.9,
       "quantity": 0.9,
       "negation": 1.0,
-      "condition": 0.9
+      "condition": 0.9,
+      "applicability": 0.9,
+      "evidence_grounding": 1.0
     },
-    "scale_gate": true,
-    "interpretation": "field metrics are evaluated independently; holdout results never tune the extractor and no candidate is promoted by Stage 12"
+    "acceptance_thresholds": {
+      "statement_boundary": 0.9,
+      "statement_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.9,
+      "quantity": 0.9,
+      "negation": 1.0,
+      "condition": 0.9,
+      "applicability": 0.9,
+      "evidence_grounding": 1.0
+    },
+    "development_recomputed": {
+      "statement_boundary": 0.9473684210526315,
+      "statement_type": 0.9473684210526315,
+      "entity": 0.9473684210526315,
+      "relation": 0.21052631578947367,
+      "quantity": 1.0,
+      "negation": 0.9473684210526315,
+      "condition": 1.0,
+      "applicability": 0.0,
+      "evidence_grounding": 1.0
+    },
+    "scale_gate": false,
+    "interpretation": "development metrics may guide extractor work; the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"
   },
   "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
   "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
   "zero_tolerance_errors": [],
-  "blockers": [],
-  "next_stage_allowed": true,
-  "next_stage": "Stage 13 double-layer review and static review interface",
+  "blockers": [
+    "acceptance_holdout_exposed",
+    "acceptance_quality_gate",
+    "development_quality_gate",
+    "representative_chapter_scope_resolved",
+    "reserve_independent_gold_not_ready"
+  ],
+  "next_stage_allowed": false,
+  "next_stage": "Stage 13 double-layer review and static review interface (formal entry blocked; tooling preparation only)",
   "next_stage_inputs": {
     "development_candidates": "data/stage12/stage12_development_candidates.json",
     "development_evaluation": "data/stage12/stage12_development_evaluation.json",
-    "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json"
+    "canonical_evidence": "data/stage6/stage6_evidence_bundle.jsonl",
+    "representative_baseline": "data/stage12/stage12_representative_baseline.json",
+    "profile_routing": "config/stage12_profile_routing.json"
   },
+  "stage13_formal_entry": "blocked",
+  "stage13_parallel_tooling": "allowed_without_formal_stage_dependency",
   "consumers": [
-    "tests/stage12",
-    "Stage 13 review interface"
+    "tests/stage12"
   ]
 }

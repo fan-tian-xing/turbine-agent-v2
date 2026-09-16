@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_development_robustness_cases",
+  "status": "frozen_development_only",
+  "source": "development_semantics_only",
+  "holdout_used_for_tuning": false,
+  "cases": [
+    {"case_id": "metamorphic-lifecycle-01", "text": "冲转之前，汽轮机必须建立规定的凝汽器真空。", "expected_predicate": "requires", "expected_direction": "subject_to_object", "expected_applicability_text": "冲转之前"},
+    {"case_id": "metamorphic-lifecycle-02", "text": "在开始升速前，应先满足真空要求。", "expected_predicate": "requires", "expected_direction": "subject_to_object", "expected_applicability_text": "在开始升速前"},
+    {"case_id": "metamorphic-condition-01", "text": "若油压低于规定值，应停止下一步调试。", "expected_predicate": "requires", "expected_direction": "condition_to_consequence", "expected_condition": "若油压低于规定值"},
+    {"case_id": "metamorphic-causality-01", "text": "真空过低可能造成凝汽器汽侧形成正压。", "expected_predicate": "causes", "expected_direction": "cause_to_effect"},
+    {"case_id": "metamorphic-negation-01", "text": "检查结果未发现振动异常。", "expected_predicate": "verifies", "expected_direction": "subject_to_object", "expected_negation": "未"},
+    {"case_id": "metamorphic-comparison-01", "text": "接触面积不小于75%。", "expected_predicate": "requires", "expected_direction": "subject_to_object", "expected_operator": "gte", "expected_quantity": "75%"}
+  ]
+}

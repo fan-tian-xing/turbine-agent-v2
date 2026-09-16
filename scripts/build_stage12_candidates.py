@@ -11,7 +11,9 @@ from turbine_kg.extraction.semantic import (
     ProfileRouter,
     compare_candidates,
     load_contract,
+    provider_from_config,
     to_stage9_runtime_payload,
+    validate_candidate_against_evidence,
     validate_candidate_evidence_binding,
     validate_candidate_payload,
 )
@@ -60,6 +62,7 @@ def _gate(manifest: dict) -> None:
 def _build(manifest: dict) -> dict:
     evidence_by_id = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     router = ProfileRouter()
+    provider = provider_from_config()
     candidates = []
     for page in manifest["pages"]:
         for evidence_id in page["evidence_ids"]:
@@ -69,7 +72,7 @@ def _build(manifest: dict) -> dict:
             profile = router.route(evidence)
             if page.get("extraction_profile_id") != profile.extraction_profile_id or page.get("semantic_role") != profile.semantic_role:
                 raise ValueError(f"manifest Profile route does not match Evidence: {evidence_id}")
-            candidates.extend(router.extractor_for(evidence, split=manifest["source_split"]).extract(evidence))
+            candidates.extend(router.extractor_for(evidence, split=manifest["source_split"], provider=provider).extract(evidence))
     payload = {
         "schema_version": 1,
         "stage": "12",
@@ -88,11 +91,15 @@ def _build(manifest: dict) -> dict:
             "stage12_representative_baseline": "data/stage12/stage12_representative_baseline.json",
         },
         "extraction_profile": "profile_routing_v1",
+        "provider_id": provider.provider_id,
+        "prompt_version": "stage12-candidate-prompt-v1",
         "input_sha256": {path: _sha(ROOT / path) for path in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",
             "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl",
             "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
             "config/stage12_profile_routing.json", "data/stage12/stage12_representative_baseline.json",
+            "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json",
+            "src/turbine_kg/extraction/semantic.py",
         )},
         "candidates": candidates,
     }
@@ -103,6 +110,7 @@ def _build(manifest: dict) -> dict:
             if evidence is None:
                 raise ValueError(f"candidate binds unknown Evidence: {binding.get('evidence_id')}")
             validate_candidate_evidence_binding(candidate, evidence)
+            validate_candidate_against_evidence(candidate, evidence)
     to_stage9_runtime_payload(candidates)
     return payload
 
@@ -118,13 +126,15 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
             "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json",
             "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
             "config/stage12_profile_routing.json", "data/stage12/stage12_representative_baseline.json",
+            "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json",
+            "src/turbine_kg/extraction/semantic.py",
         )
     )
     batch, payload = run_with_cache(
         cache_root=ROOT / contract["runtime"]["cache_root"],
         operation=contract["runtime"]["operation"],
         input_refs=input_refs,
-        cache_context=({"extractor": "profile_routing_v1"}, {"contract": _sha(ROOT / "config/stage12_statement_contract.json"), "profile_routing": _sha(ROOT / "config/stage12_profile_routing.json")}),
+        cache_context=({"extractor": "profile_routing_v1", "provider": provider_from_config().provider_id}, {"contract": _sha(ROOT / "config/stage12_statement_contract.json"), "profile_routing": _sha(ROOT / "config/stage12_profile_routing.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "extractor_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py")} ),
         output=lambda: _build(manifest),
         schema_path=ROOT / "config/runtime_run.schema.json",
         force=force,
@@ -138,8 +148,15 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
 
 def evaluate_development(payload: dict) -> dict:
     gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
-    report = compare_candidates(payload["candidates"], gold)
-    report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v2", "holdout_used_for_tuning": False, "blind_read": False, "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "evaluator": "stage12-field-evaluator-v2"}})
+    report = compare_candidates(payload["candidates"], gold, gold_exhaustive=False)
+    robustness_path = STAGE12 / "stage12_robustness_evaluation.json"
+    report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v3", "holdout_used_for_tuning": False, "blind_read": False, "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"), "evaluator": "stage12-field-evaluator-v3"}})
+    report["coverage_matrix"] = "data/stage12/stage12_semantic_coverage_matrix.json"
+    report["robustness_artifact"] = "data/stage12/stage12_robustness_evaluation.json"
+    report["robustness_executed"] = robustness_path.exists()
+    if robustness_path.exists():
+        robustness = json.loads(robustness_path.read_text(encoding="utf-8"))
+        report["robustness"] = {"case_count": robustness.get("case_count", 0), "passed_count": robustness.get("passed_count", 0), "failed_count": robustness.get("failed_count", 0)}
     (STAGE12 / "stage12_development_evaluation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return report
 

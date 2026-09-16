@@ -9,7 +9,9 @@ from pathlib import Path
 from turbine_kg.extraction.semantic import (
     ProfileRouter,
     compare_candidates,
+    provider_from_config,
     to_stage9_runtime_payload,
+    validate_candidate_against_evidence,
     validate_candidate_evidence_binding,
     validate_candidate_payload,
 )
@@ -31,6 +33,18 @@ def _jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def _reexecute_development(manifest: dict, canonical_evidence: dict[str, dict]) -> list[dict]:
+    """Re-run the provider path in memory; loading an old artifact is insufficient."""
+    router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
+    provider = provider_from_config(ROOT / "config/stage12_provider.json")
+    rows = []
+    for page in manifest.get("pages", []):
+        for evidence_id in page.get("evidence_ids", []):
+            evidence = dict(canonical_evidence[evidence_id], document_key=page.get("document_key"))
+            rows.extend(router.extractor_for(evidence, split=manifest["source_split"], provider=provider).extract(evidence))
+    return rows
+
+
 def audit() -> dict:
     contract = _read(ROOT / "config/stage12_statement_contract.json")
     manifest = _read(STAGE12 / "stage12_input_manifest.json")
@@ -44,6 +58,12 @@ def audit() -> dict:
     stage11 = _read(ROOT / "data/stage11/stage11_exit_audit.json")
     canonical_evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     dev_gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
+    reexecuted_candidates = []
+    reexecution_error = None
+    try:
+        reexecuted_candidates = _reexecute_development(manifest, canonical_evidence)
+    except (ValueError, KeyError, TypeError) as error:
+        reexecution_error = str(error)
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
 
     runtime_report = {"conforms": False, "failures": [], "counts": {}}
@@ -72,6 +92,7 @@ def audit() -> dict:
                 if evidence.get("review_status") != "accepted":
                     raise ValueError("candidate is bound to non-accepted canonical Evidence")
                 validate_candidate_evidence_binding(item, evidence)
+                validate_candidate_against_evidence(item, evidence)
                 profile = router.route(evidence)
                 profile_ok = profile_ok and item.get("extraction_profile") == profile.extraction_profile_id
             except (ValueError, KeyError, TypeError):
@@ -83,7 +104,7 @@ def audit() -> dict:
     acceptance_thresholds = contract["evaluation"]["acceptance_quality_gate"]
     development_quality = development.get("field_accuracy", {})
     holdout_quality = holdout.get("field_accuracy", {})
-    dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold)
+    dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False)
     stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "error_counts", "unmatched_gold", "unmatched_candidates"))
     dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
@@ -92,6 +113,9 @@ def audit() -> dict:
         "routing": ROOT / "config/stage12_profile_routing.json",
         "baseline": STAGE12 / "stage12_representative_baseline.json",
         "contract": ROOT / "config/stage12_statement_contract.json",
+        "provider_config": ROOT / "config/stage12_provider.json",
+        "prompt": ROOT / "config/stage12_prompt.txt",
+        "response_schema": ROOT / "config/stage12_extraction_response.schema.json",
     }.items())
     holdout_input_hashes_match = all(holdout.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "registry": ROOT / "data/stage11/evaluation_sample_registry.json",
@@ -152,19 +176,23 @@ def audit() -> dict:
         "no_holdout_or_blind_in_candidate": "acceptance_holdout" not in forbidden and "acceptance_holdout_reserve" not in forbidden and "blind_test" not in forbidden,
         "candidate_pages_are_manifest_pages": {(item.get("document_logical_id"), int(item.get("physical_page"))) for item in candidate.get("candidates", [])} <= set(manifest_pages) and candidate_evidence_ids <= accepted_manifest_evidence,
         "candidate_schema_and_stage9_gate": runtime_report["conforms"],
+        "producer_reexecution_current": reexecution_error is None and reexecuted_candidates == candidate.get("candidates", []),
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
-        "development_evaluation_present": development.get("status") == "completed" and development.get("holdout_used_for_tuning") is False and stored_eval_matches and dev_input_hashes_match,
-        "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v2" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
+        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v3" and development.get("holdout_used_for_tuning") is False and stored_eval_matches and dev_input_hashes_match,
+        "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v3" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
+        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True,
+        "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
         "stage13_frozen_by_user": stage13_frozen_by_user,
     }
     quality_checks = {
         "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
+        "robustness_quality_gate": (lambda report: report.get("status") == "completed" and report.get("case_count", 0) > 0 and report.get("failed_count") == 0)(_read(STAGE12 / "stage12_robustness_evaluation.json") if (STAGE12 / "stage12_robustness_evaluation.json").exists() else {}),
         "acceptance_quality_gate": holdout.get("eligible_for_final_acceptance") is True and all(holdout_quality.get(field, 0.0) >= threshold for field, threshold in acceptance_thresholds.items()) and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
     }
     checks = {**implementation_checks, **quality_checks}
@@ -188,13 +216,13 @@ def audit() -> dict:
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/project_state.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/project_state.json",
         )},
         "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
         "execution_evidence": {
             "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
-            "stage12_production_like_pipeline": {"status": "executed", "scope": "representative_page_baseline", "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_holdout.py", "scripts/audit_stage12_exit.py"]},
+            "stage12_production_like_pipeline": {"status": "executed", "scope": "representative_page_baseline", "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "provider and validator re-executed in memory"},
             "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
             "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
         },

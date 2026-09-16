@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_semantic_coverage_matrix",
+  "status": "development_audit",
+  "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
+  "gold_statement_count": 19,
+  "gold_exhaustive": false,
+  "coverage": {
+    "source_role": {"covered": ["manufacturer_manual", "construction_standard", "commissioning_guideline", "nuclear_safety_regulation", "textbook"], "status": "covered_on_representative_pages"},
+    "modality": {"covered": ["requirement", "procedure", "fact", "verification", "limitation", "condition"], "status": "covered"},
+    "negation": {"covered": true, "note": "single Development negation example; broader negative constructions remain a gap"},
+    "causal_relation": {"covered": true, "status": "one Development example"},
+    "quantity_unit": {"covered": true, "status": "scalar, range and percentage examples"},
+    "comparison_operator": {"covered": ["eq", "gt", "gte", "range", "approximately"], "missing": ["lt", "lte"], "status": "partial"},
+    "condition": {"covered": true, "status": "explicit conditional clauses"},
+    "applicability": {"covered": true, "status": "source-bounded structured scope plus original wording; fine-grained canonical labels remain unresolved"},
+    "multi_entity": {"covered": "partial", "note": "Evidence contains multi-object language; candidate fixture keeps a conservative subject anchor"},
+    "procedure_steps": {"covered": true, "status": "conservative step grouping"},
+    "exception_disposition": {"covered": false, "status": "not represented in current 19 Gold"},
+    "ordinary_prose": {"covered": "partial", "status": "representative pages are requirement-heavy"},
+    "table_source": {"covered": "partial", "status": "Evidence lineage is retained; table-specific semantic coverage is not exhaustive"},
+    "expression_variation": {"covered": true, "status": "separate metamorphic cases"}
+  },
+  "gaps": ["limited exhaustive coverage", "single-example negation/causality", "lt/lte comparison variants", "exception disposition", "table semantics"],
+  "consumer": "scripts/audit_stage12_exit.py"
+}

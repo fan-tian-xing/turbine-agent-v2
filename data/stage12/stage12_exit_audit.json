@@ -45,11 +45,27 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "f15e0733101353490cebb7a0455b89ab98f21d76c2933d5276ce05906fdd61b6"
+      "sha256": "31688bb1971053473aec4ee4095ddb48f100c3a150015042c488cf38c793f794"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "1ad346436ebfb5679d1f73bf893dc49b3bde11374a2aa2086a4a4896e2aa477d"
+      "sha256": "6f27b769e59d5e8614d9f7ac903023a8036771e49fd7e075f128260a9c88ded2"
+    },
+    "config/stage12_provider.json": {
+      "path": "config/stage12_provider.json",
+      "sha256": "76b680169626802aa62b6327f3cae2d70a8c55ada0702b218849d210ab1061d6"
+    },
+    "config/stage12_prompt.txt": {
+      "path": "config/stage12_prompt.txt",
+      "sha256": "142e24ec5fd3edcf4fde7ea78a2998db3910ae68de6047f136ef9d91208d8e7a"
+    },
+    "config/stage12_extraction_response.schema.json": {
+      "path": "config/stage12_extraction_response.schema.json",
+      "sha256": "2b537f0c077ca6b9062c0d0e92f8a20091d41bf4a28a4428dcfaf2c2d95cae14"
+    },
+    "src/turbine_kg/extraction/semantic.py": {
+      "path": "src/turbine_kg/extraction/semantic.py",
+      "sha256": "835bdd88d434637438d411d2d949f35c3c9d8516544704a168fdd6eaa8abbf99"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -61,19 +77,31 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "f85a0a4bad6d9b4c7824c638a44faf60b391e591c05fb21630f8271eae51fda4"
+      "sha256": "0c4d5e6ab74378dc5b8f255d4d7199faea73956db73c3320a186eff0382eb277"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "4219a0ebeb9342b3aac8599ee32a11e43640fca704a71feb6cc23a3e5aa3abd8"
+      "sha256": "6fa7282f45ad6fc63fbfe2d4bb1d82b02786a69fac84599046f0d5225ee14d15"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "6cf40667cbd9b36671ebfa545a28b06e43b74f03dcf14dd889f0bc2aaaf5b127"
+      "sha256": "301c9c82e71a53392bcc254c30782a5436e91b1ed2f8659966e6ea626c96d6dd"
+    },
+    "data/stage12/stage12_semantic_coverage_matrix.json": {
+      "path": "data/stage12/stage12_semantic_coverage_matrix.json",
+      "sha256": "821ec5524b08a4c22a685eacf298507ddd3c145473a7acab6e9db42c1e7e4303"
+    },
+    "data/stage12/stage12_robustness_cases.json": {
+      "path": "data/stage12/stage12_robustness_cases.json",
+      "sha256": "5c98c5a0f151131472234287fd1ecff836993df0f211427f3a0da99caa2a3765"
+    },
+    "data/stage12/stage12_robustness_evaluation.json": {
+      "path": "data/stage12/stage12_robustness_evaluation.json",
+      "sha256": "45d4a7215a3dd8798b098c917b65173a286177a8fe64c0b6a1c36fb10dcd7640"
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "55533e066123ca57aadedf142512bd00c62a5711f4b87b1baec32162f63feaea"
+      "sha256": "5652f5e0885f0b55b031809e2886fef8b47e7cfa694cb0ec109ac8fcf9531fbb"
     }
   },
   "outputs": {
@@ -97,6 +125,7 @@
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
     "candidate_schema_and_stage9_gate": true,
+    "producer_reexecution_current": true,
     "candidate_input_lineage_current": true,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
@@ -104,10 +133,13 @@
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
-    "grounding_zero_tolerance": true,
+    "grounding_zero_tolerance": false,
     "no_ontology_or_release_write": true,
+    "robustness_evaluation_present": true,
+    "semantic_coverage_matrix_present": true,
     "stage13_frozen_by_user": true,
     "development_quality_gate": false,
+    "robustness_quality_gate": true,
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
@@ -117,9 +149,10 @@
       "scope": "representative_page_baseline",
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
-        "scripts/evaluate_stage12_holdout.py",
+        "scripts/evaluate_stage12_robustness.py",
         "scripts/audit_stage12_exit.py"
-      ]
+      ],
+      "audit_reexecution": "provider and validator re-executed in memory"
     },
     "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
     "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible"
@@ -197,23 +230,33 @@
     "development_field_accuracy": {
       "statement_boundary": 0.9473684210526315,
       "statement_type": 0.9473684210526315,
-      "entity": 0.9473684210526315,
-      "relation": 1.0,
+      "entity": 0.8947368421052632,
+      "relation": 0.7368421052631579,
       "quantity": 1.0,
+      "unit": 1.0,
+      "comparison": 0.9473684210526315,
       "negation": 0.9473684210526315,
       "condition": 1.0,
-      "applicability": 1.0,
+      "applicability": 0.15789473684210525,
+      "applicability_meaning": 0.15789473684210525,
+      "relation_direction": 0.9473684210526315,
+      "unsupported_addition": 0.8421052631578947,
       "evidence_grounding": 1.0
     },
     "holdout_field_accuracy": {
       "statement_boundary": 0.875,
       "statement_type": 0.6458333333333334,
-      "entity": 0.8541666666666666,
-      "relation": 0.0,
+      "entity": 0.7083333333333334,
+      "relation": 0.7083333333333334,
       "quantity": 0.7708333333333334,
+      "unit": 0.8333333333333334,
+      "comparison": 0.7916666666666666,
       "negation": 0.5,
       "condition": 0.8541666666666666,
-      "applicability": 0.0,
+      "applicability": 0.4166666666666667,
+      "applicability_meaning": 0.4166666666666667,
+      "relation_direction": 0.8958333333333334,
+      "unsupported_addition": 0.9166666666666666,
       "evidence_grounding": 0.8958333333333334
     },
     "development_thresholds": {
@@ -241,12 +284,17 @@
     "development_recomputed": {
       "statement_boundary": 0.9473684210526315,
       "statement_type": 0.9473684210526315,
-      "entity": 0.9473684210526315,
-      "relation": 1.0,
+      "entity": 0.8947368421052632,
+      "relation": 0.7368421052631579,
       "quantity": 1.0,
+      "unit": 1.0,
+      "comparison": 0.9473684210526315,
       "negation": 0.9473684210526315,
       "condition": 1.0,
-      "applicability": 1.0,
+      "applicability": 0.15789473684210525,
+      "applicability_meaning": 0.15789473684210525,
+      "relation_direction": 0.9473684210526315,
+      "unsupported_addition": 0.8421052631578947,
       "evidence_grounding": 1.0
     },
     "scale_gate": false,
@@ -254,11 +302,15 @@
   },
   "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
   "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
-  "zero_tolerance_errors": [],
+  "zero_tolerance_errors": [
+    "development_unsupported_claim",
+    "holdout_unsupported_claim"
+  ],
   "blockers": [
     "acceptance_holdout_exposed",
     "acceptance_quality_gate",
     "development_quality_gate",
+    "grounding_zero_tolerance",
     "representative_chapter_scope_resolved",
     "reserve_independent_gold_not_ready"
   ],

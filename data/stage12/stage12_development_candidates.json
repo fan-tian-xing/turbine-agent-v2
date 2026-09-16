@@ -16,55 +16,37 @@
     "stage12_representative_baseline": "data/stage12/stage12_representative_baseline.json"
   },
   "extraction_profile": "profile_routing_v1",
+  "provider_id": "deterministic_fixture_v1",
+  "prompt_version": "stage12-candidate-prompt-v1",
   "input_sha256": {
     "data/stage9/stage9_exit_audit.json": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483",
     "data/stage10/stage10_audit.json": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d",
     "data/stage11/stage11_exit_audit.json": "de5281f5202e4bb2a5942b91d93624cb98cf242b8f6e5afcc3b5799e5bb93028",
     "data/stage12/stage12_input_manifest.json": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "data/stage6/stage6_evidence_bundle.jsonl": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
-    "config/stage12_statement_contract.json": "f15e0733101353490cebb7a0455b89ab98f21d76c2933d5276ce05906fdd61b6",
-    "config/stage12_candidate.schema.json": "1ad346436ebfb5679d1f73bf893dc49b3bde11374a2aa2086a4a4896e2aa477d",
+    "config/stage12_statement_contract.json": "31688bb1971053473aec4ee4095ddb48f100c3a150015042c488cf38c793f794",
+    "config/stage12_candidate.schema.json": "6f27b769e59d5e8614d9f7ac903023a8036771e49fd7e075f128260a9c88ded2",
     "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
     "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56",
     "config/stage12_profile_routing.json": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
-    "data/stage12/stage12_representative_baseline.json": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836"
+    "data/stage12/stage12_representative_baseline.json": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
+    "config/stage12_provider.json": "76b680169626802aa62b6327f3cae2d70a8c55ada0702b218849d210ab1061d6",
+    "config/stage12_prompt.txt": "142e24ec5fd3edcf4fde7ea78a2998db3910ae68de6047f136ef9d91208d8e7a",
+    "config/stage12_extraction_response.schema.json": "2b537f0c077ca6b9062c0d0e92f8a20091d41bf4a28a4428dcfaf2c2d95cae14",
+    "src/turbine_kg/extraction/semantic.py": "835bdd88d434637438d411d2d949f35c3c9d8516544704a168fdd6eaa8abbf99"
   },
   "candidates": [
     {
-      "candidate_id": "stage12-candidate-76819e32e24cea194e2b",
+      "candidate_id": "stage12-candidate-80c3aa9794be9930db47",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪 下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块， 清洗干净。清理好滑块槽后再将滑块复位。",
       "statement_type": "procedure",
-      "predicate": "describes_procedure",
+      "predicate": "describes",
+      "relation_direction": "procedure_order",
       "subject_entities": [
         {
-          "surface_form": "检查",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "可在大修时",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "在半空缸状态下",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "向上微微抬起高中压外缸前猫爪",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "使猫爪",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "下垫片脱开0",
+          "surface_form": "若需检查",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -108,14 +90,11 @@
         }
       ],
       "applicability_scope": {
+        "status": "known",
+        "applicability_text": "在半空缸状态下",
         "document_key": "D300N",
         "physical_page": 73,
-        "logical_page": "3-5-1",
-        "model": "N-300-16.7/537/537-8",
-        "equipment": "front_box_sliding_block",
-        "lifecycle_stage": "overhaul",
-        "activity": "lubrication_and_cleaning",
-        "condition": "half_cylinder_state"
+        "logical_page": "3-5-1"
       },
       "evidence_bindings": [
         {
@@ -140,30 +119,16 @@
       "extraction_profile": "manufacturer_manual_v1"
     },
     {
-      "candidate_id": "stage12-candidate-8dd66a126e576b24e356",
+      "candidate_id": "stage12-candidate-396d9dafa05a84c74ffe",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "3.1.1 汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。",
       "statement_type": "requirement",
-      "predicate": "requires_drawing_review",
+      "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "汽轮发电机组基础施工前",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "应按DL/T",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "电力建设工程监理规范",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "的规定进行图纸会检",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -179,11 +144,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "foundation_construction",
-        "condition": "施工前"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -206,40 +170,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-d21a0c03032ce3d21c03",
+      "candidate_id": "stage12-candidate-9adef32d607215d6da88",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "3.1.2 基础施工期间，安装专业应做下列配合工作： 1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、 地脚螺栓孔位置等重要几何尺寸",
       "statement_type": "verification",
-      "predicate": "requires_dimension_check",
+      "predicate": "verifies",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "基础施工期间",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "安装专业应做下列配合工作",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "施工准备时",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "应校核预留孔洞",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "预埋件",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "汽轮发电机组基座及主要附属设备基础等标高",
+          "surface_form": "基础施工期间，安装专业",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -255,11 +195,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "foundation_construction",
-        "condition": "施工准备时"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -282,35 +221,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-c16f6515985ce5dfd67b",
+      "candidate_id": "stage12-candidate-c5efde4595c096621c38",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "4 因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施 工单位等有关单位确认。",
       "statement_type": "requirement",
-      "predicate": "requires_preconstruction_confirmation",
+      "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "因吊装大型设备而预留的钢结构",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "基础或墙体",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "应在土建施工前由设计单位",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "监理单位和土建施",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "工单位等有关单位确认",
+          "surface_form": "因吊装大型设备而预留的钢结构、基础或墙体",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -326,11 +246,11 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "known",
+        "applicability_text": "在土建施工前",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "civil_construction",
-        "condition": "土建施工前"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -353,35 +273,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-5c64de16b663eaa790b4",
+      "candidate_id": "stage12-candidate-a7b3d256db54122676f0",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "3.1.3 交付安装的土建工程应具备下列条件： 1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格",
       "statement_type": "condition",
-      "predicate": "has_delivery_condition",
+      "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "交付安装的土建工程",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "具备下列条件",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "行车轨道安装完毕",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "二次灌浆的混凝土已达到设计强度",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "并经验收合格",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -397,10 +298,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "installation_handover"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -423,30 +324,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-bf9f67b53147b7745015",
+      "candidate_id": "stage12-candidate-55fb8a004d69ebc6706e",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除",
       "statement_type": "requirement",
-      "predicate": "requires_foundation_strength",
+      "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "主辅设备基础",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "基座混凝土已达到设计强度的70",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "以上",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "模板已拆除",
+          "surface_form": "主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -469,10 +356,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "installation_handover"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -495,20 +382,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-931239d11cd852ecbf42",
+      "candidate_id": "stage12-candidate-761be78ae5ed6cc8627d",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "3 厂房封闭，屋面止水",
       "statement_type": "condition",
-      "predicate": "requires_building_enclosure",
+      "predicate": "describes",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "厂房封闭",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "屋面止水",
+          "surface_form": "厂房封闭，屋面止水",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -524,10 +407,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "installation_handover"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -550,25 +433,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-be8dfa40badb96b6cedc",
+      "candidate_id": "stage12-candidate-2b8dd3d9923b2ce163c1",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全",
       "statement_type": "requirement",
-      "predicate": "requires_foundation_reference_marks",
+      "predicate": "describes",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "厂房内的各基础纵横中心线",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "标高标识和基础沉降观测点清晰",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "齐全",
+          "surface_form": "厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -584,10 +458,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "installation_handover"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -610,40 +484,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-92f5205f028324950488",
+      "candidate_id": "stage12-candidate-f71167d6e4c3a143f13f",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或 围栏",
       "statement_type": "requirement",
-      "predicate": "requires_access_and_opening_protection",
+      "predicate": "describes",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "各层平台",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "通道",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "梯子",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "栏杆",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "踢脚板装设完毕且焊接牢固",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "主机周边孔洞有可靠的临时盖板或",
+          "surface_form": "各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -659,10 +509,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 14,
-        "logical_page": "3",
-        "lifecycle_stage": "installation_handover"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -685,40 +535,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-7a040042e07c2bde313d",
+      "candidate_id": "stage12-candidate-4437b11743ad619faed1",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "各垂直结合面",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "光洁",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "油室",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "油孔应清洁",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "畅通",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "无铁屑",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -740,10 +566,10 @@
       ],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -766,30 +592,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-1d6635387a050f99afc6",
+      "candidate_id": "stage12-candidate-9ba90678994e3b4324b2",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "密封瓦座垫片",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "无破损",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "规格尺寸应与密封瓦座相匹配",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "材质应符合制造厂技术要求",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -811,11 +623,10 @@
       ],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation",
-        "equipment": "seal_bearing_seat"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -838,25 +649,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-2e8fc2d13e03774ccb9a",
+      "candidate_id": "stage12-candidate-030b02355100478ecfba",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "5 密封瓦座上的丝扣接头应经试装，确认紧固密封。",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "密封瓦座上的丝扣接头",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "经试装",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "确认紧固密封",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -872,11 +674,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation",
-        "equipment": "seal_bearing_seat"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -899,35 +700,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-85d6e31c957e73461023",
+      "candidate_id": "stage12-candidate-d0acf778be3df30d1ba4",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "9.7.2 密封瓦检查应符合下列规定： 1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "密封瓦检查",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "符合下列规定",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "密封瓦水平结合面应接触良好",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "接触面积应大于结合面面积的75",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "且分布均匀",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -950,13 +732,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation",
-        "equipment": "seal_bearing",
-        "activity": "inspection",
-        "condition": "horizontal_joint_contact"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -979,40 +758,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-baec369be4a41a70bb04",
+      "candidate_id": "stage12-candidate-a24daa35b16c6c3813cd",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙 应符合制造厂技术要求",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "用千分尺测量密封瓦厚度",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "孔径",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "密封瓦槽宽度及与密封瓦相对",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "处的大轴直径",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "各部配合间隙",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "应符合制造厂技术要求",
+          "surface_form": "用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1028,11 +783,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation",
-        "equipment": "seal_bearing"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -1055,40 +809,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-00e32ccdfd8802dd79f5",
+      "candidate_id": "stage12-candidate-5949e54d5dcd719204bc",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的 垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "紧好水平结合面螺栓的情况下",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "密封瓦与密封瓦座配合的环形垂直面",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "密封瓦座与端盖配合的",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "垂直结合面应平整",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "无错口",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "在水平结合面处检查外部接口",
+          "surface_form": "在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的 垂直结合面",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1122,13 +852,10 @@
       ],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation",
-        "equipment": "seal_bearing_seat",
-        "activity": "inspection",
-        "condition": "horizontal_joint_external_interface"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -1151,35 +878,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-d1628c2d259b0ace7a16",
+      "candidate_id": "stage12-candidate-235530c89aecf5ab8902",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "密封瓦座内轴 向两侧面应做涂色检查，接触面应均匀、连续",
       "statement_type": "requirement",
       "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "密封瓦座内轴",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "向两侧面",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "做涂色检查",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "接触面应均匀",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "连续",
+          "surface_form": "密封瓦座内轴 向两侧面",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1195,11 +903,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DL5190.3",
         "physical_page": 86,
-        "logical_page": "75",
-        "lifecycle_stage": "installation",
-        "equipment": "seal_bearing_seat"
+        "logical_page": "75"
       },
       "evidence_bindings": [
         {
@@ -1222,20 +929,16 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-3296d354130fd3988834",
+      "candidate_id": "stage12-candidate-13ec3d5b9d2b27e5f9c9",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "b） 控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，",
       "statement_type": "requirement",
-      "predicate": "adjust_control_oil_pressure",
+      "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "控制油压力调整时",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "先缓慢调节油泵出口溢流阀提高系统压力",
+          "surface_form": "b） 控制油压力调整时",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1251,11 +954,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DLT863",
         "physical_page": 14,
-        "logical_page": "10",
-        "lifecycle_stage": "commissioning",
-        "activity": "pressure_adjustment"
+        "logical_page": "10"
       },
       "evidence_bindings": [
         {
@@ -1280,20 +982,16 @@
       "extraction_profile": "commissioning_guideline_v1"
     },
     {
-      "candidate_id": "stage12-candidate-6c01acb1f19b5a85b19d",
+      "candidate_id": "stage12-candidate-f18daff7e3b7f13a0f91",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "然后调整出口母管泄压阀， 确保系统安全泄压阀正常动作，",
       "statement_type": "procedure",
-      "predicate": "verify_safety_relief_action",
+      "predicate": "describes",
+      "relation_direction": "procedure_order",
       "subject_entities": [
         {
-          "surface_form": "然后调整出口母管泄压阀",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "确保系统安全泄压阀正常动作",
+          "surface_form": "然后调整出口母管泄压阀， 确保系统安全泄压阀正常动作",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1309,11 +1007,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DLT863",
         "physical_page": 14,
-        "logical_page": "10",
-        "lifecycle_stage": "commissioning",
-        "activity": "pressure_adjustment"
+        "logical_page": "10"
       },
       "evidence_bindings": [
         {
@@ -1338,20 +1035,16 @@
       "extraction_profile": "commissioning_guideline_v1"
     },
     {
-      "candidate_id": "stage12-candidate-074a98242b7ab3acdafa",
+      "candidate_id": "stage12-candidate-f7b975ad633f8b6601ff",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "再调节油泵出口溢流阀，确认系统压力满足设计要求；",
       "statement_type": "verification",
-      "predicate": "verifies_design_pressure",
+      "predicate": "verifies",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "再调节油泵出口溢流阀",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "确认系统压力满足设计要求",
+          "surface_form": "再调节油泵出口溢流阀，确认系统压力满足设计要求；",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1367,11 +1060,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "DLT863",
         "physical_page": 14,
-        "logical_page": "10",
-        "lifecycle_stage": "commissioning",
-        "activity": "pressure_adjustment"
+        "logical_page": "10"
       },
       "evidence_bindings": [
         {
@@ -1396,40 +1088,16 @@
       "extraction_profile": "commissioning_guideline_v1"
     },
     {
-      "candidate_id": "stage12-candidate-93312180daf079e0544d",
+      "candidate_id": "stage12-candidate-4c63e8c002edd15aca5c",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "1.2范围 本规定适用于陆上固定式核动力厂的管理、调试和运行（含退 役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和 由核动力厂运行所引起的非放射性影响。",
       "statement_type": "limitation",
-      "predicate": "limits_scope",
+      "predicate": "causes",
+      "relation_direction": "cause_to_effect",
       "subject_entities": [
         {
-          "surface_form": "范围",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "本规定适用于陆上固定式核动力厂的管理",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "调试和运行",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "含退",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "役准备",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "中有关核安全的方面",
+          "surface_form": "范围 本规定适用于陆上固定式核动力厂的管理、调试和运行（含退 役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和 由核动力厂运行所引起的非放射性影响。",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1445,12 +1113,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "HAF103",
         "physical_page": 1,
-        "logical_page": "3",
-        "equipment": "land_based_fixed_nuclear_power_plant",
-        "lifecycle_stage": "commissioning_and_operation",
-        "activity": "nuclear_safety_management"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -1477,25 +1143,16 @@
       "extraction_profile": "nuclear_safety_regulation_v1"
     },
     {
-      "candidate_id": "stage12-candidate-63e434ea210adaf0d75c",
+      "candidate_id": "stage12-candidate-4431d1c5098093b571b3",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "其他类型核动力厂可参照 本规定执行。",
       "statement_type": "requirement",
       "predicate": "describes",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "其他类型核动力厂",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "参照",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "本规定执行",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1511,11 +1168,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "HAF103",
         "physical_page": 1,
-        "logical_page": "3",
-        "equipment": "land_based_fixed_nuclear_power_plant",
-        "lifecycle_stage": "commissioning_and_operation"
+        "logical_page": "3"
       },
       "evidence_bindings": [
         {
@@ -1542,40 +1198,16 @@
       "extraction_profile": "nuclear_safety_regulation_v1"
     },
     {
-      "candidate_id": "stage12-candidate-d3fe7bd502d069489572",
+      "candidate_id": "stage12-candidate-8dcc66b89ece0efe3390",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对 前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全 部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
       "statement_type": "requirement",
-      "predicate": "controls_next_commissioning_stage",
+      "predicate": "requires",
+      "relation_direction": "condition_to_consequence",
       "subject_entities": [
         {
-          "surface_form": "当调试活动分阶段实施时",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "营运单位应当确保在完成对",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "前阶段调试试验结果的评价和监查",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "并确认调试结果评价满足了全",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "部核安全管理要求之后",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "才允许进行下一阶段的调试试验工作",
+          "surface_form": "当调试活动分阶段实施时，营运单位",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1596,13 +1228,11 @@
         }
       ],
       "applicability_scope": {
+        "status": "known",
+        "applicability_text": "当调试活动分阶段实施时",
         "document_key": "HAF103",
         "physical_page": 11,
-        "logical_page": "13",
-        "equipment": "land_based_fixed_nuclear_power_plant",
-        "lifecycle_stage": "commissioning",
-        "activity": "staged_commissioning",
-        "condition": "前阶段评价和监查完成且满足全部核安全管理要求"
+        "logical_page": "13"
       },
       "evidence_bindings": [
         {
@@ -1627,35 +1257,16 @@
       "extraction_profile": "nuclear_safety_regulation_v1"
     },
     {
-      "candidate_id": "stage12-candidate-8afd37af9d59599ab2c2",
+      "candidate_id": "stage12-candidate-3c8031c0c2fb2664d377",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应 当保存运行和维修记录，并收集和保存系统及设备的基准数据，以 有利于确保核动力厂的安全和后续的安全评价。",
       "statement_type": "requirement",
-      "predicate": "requires_operating_records_and_baseline_data",
+      "predicate": "requires",
+      "relation_direction": "condition_to_consequence",
       "subject_entities": [
         {
-          "surface_form": "从核动力厂每个系统初始通电和运行开始",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "营运单位应",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "当保存运行和维修记录",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "并收集和保存系统及设备的基准数据",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "有利于确保核动力厂的安全和后续的安全评价",
+          "surface_form": "从核动力厂每个系统初始通电和运行开始，营运单位",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1671,11 +1282,10 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "HAF103",
         "physical_page": 12,
-        "logical_page": "14",
-        "equipment": "nuclear_power_plant_system",
-        "lifecycle_stage": "initial_energization_and_operation"
+        "logical_page": "14"
       },
       "evidence_bindings": [
         {
@@ -1700,25 +1310,16 @@
       "extraction_profile": "nuclear_safety_regulation_v1"
     },
     {
-      "candidate_id": "stage12-candidate-06da0fd38d6389925ec1",
+      "candidate_id": "stage12-candidate-b34c9ee46780ffed898c",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右",
       "statement_type": "requirement",
-      "predicate": "requires_condenser_vacuum_before_roll",
+      "predicate": "requires",
+      "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "汽轮机冲转前",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "须有一定的真空",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "一般为60kPa左右",
+          "surface_form": "答：汽轮机冲转前",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1741,11 +1342,11 @@
       "negation_scope": [],
       "conditions": [],
       "applicability_scope": {
+        "status": "known",
+        "applicability_text": "冲转前",
         "document_key": "auxiliary_installation_book",
         "physical_page": 360,
-        "logical_page": "351",
-        "lifecycle_stage": "initial_roll",
-        "condition": "冲转前"
+        "logical_page": "351"
       },
       "evidence_bindings": [
         {
@@ -1772,40 +1373,16 @@
       "extraction_profile": "textbook_v1"
     },
     {
-      "candidate_id": "stage12-candidate-a7cdf873ab81c413f595",
+      "candidate_id": "stage12-candidate-d02e059e6dad60e468fa",
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突 然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器 汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和 转子造成较大的热冲击。",
       "statement_type": "fact",
-      "predicate": "low_vacuum_causes_condenser_pressure_risk",
+      "predicate": "causes",
+      "relation_direction": "cause_to_effect",
       "subject_entities": [
         {
-          "surface_form": "若真空过低",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "转子转动就需要较多的新蒸汽",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "而过多的乏汽突",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "然排至凝汽器",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "凝汽器汽侧压力瞬间升高过多",
-          "role": "subject",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "可能使凝汽器",
+          "surface_form": "转子转动就",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -1826,11 +1403,10 @@
         }
       ],
       "applicability_scope": {
+        "status": "unknown",
         "document_key": "auxiliary_installation_book",
         "physical_page": 360,
-        "logical_page": "351",
-        "lifecycle_stage": "initial_roll",
-        "condition": "真空过低"
+        "logical_page": "351"
       },
       "evidence_bindings": [
         {

@@ -15,7 +15,17 @@
     "holdout_policy": "The development builder must never read acceptance_holdout, acceptance_holdout_reserve or blind_test content.",
     "forbidden_splits_for_development": ["acceptance_holdout", "acceptance_holdout_reserve", "blind_test"],
     "profile_routing_manifest": "config/stage12_profile_routing.json",
-    "representative_baseline": "data/stage12/stage12_representative_baseline.json"
+    "representative_baseline": "data/stage12/stage12_representative_baseline.json",
+    "provider_config": "config/stage12_provider.json",
+    "prompt": "config/stage12_prompt.txt",
+    "provider_response_schema": "config/stage12_extraction_response.schema.json"
+  },
+  "architecture": {
+    "pipeline": ["Evidence", "extraction_provider", "strict_structured_response", "Candidate Engineering Statement", "deterministic_validation", "Stage 12 Candidate Output"],
+    "provider_boundary": "Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
+    "relation_vocabulary": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"],
+    "unknown_applicability_policy": "known = computable; unknown is not not_applicable; absent values are omitted or marked unknown",
+    "gold_exhaustive": false
   },
   "extraction_order": ["entity_or_process", "state_phenomenon_parameter", "requirement_constraint_step", "applicability", "evidence_binding"],
   "profiles": {
@@ -29,22 +39,29 @@
   "statement_types": ["fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"],
   "evidence_support_types": ["direct", "partial", "context"],
   "candidate_status": "candidate_only",
-  "required_candidate_fields": ["candidate_id", "statement_text", "statement_type", "predicate", "subject_entities", "object_value", "applicability_scope", "evidence_bindings", "evidence_version_id", "document_logical_id", "revision_id", "physical_page", "source_text_sha256", "review_status"],
+    "required_candidate_fields": ["candidate_id", "statement_text", "statement_type", "predicate", "relation_direction", "subject_entities", "object_value", "applicability_scope", "evidence_bindings", "evidence_version_id", "document_logical_id", "revision_id", "physical_page", "source_text_sha256", "review_status"],
   "forbidden_outputs": ["authorized_action", "formal_release", "neo4j_write", "blind_test_content", "holdout_gold_fields"],
   "runtime": {
     "operation": "statement_extraction",
     "cache_root": "var/model_runs/stage12",
     "schema": "config/runtime_run.schema.json",
     "semantic_gate": "Stage 9 validate_runtime_payload",
-    "raw_model_response_persisted": false
+    "raw_model_response_persisted": false,
+    "strict_response_parser": "config/stage12_extraction_response.schema.json",
+    "provider_failure_is_distinct_from_validation_failure": true,
+    "max_retry_attempts": 2,
+    "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints."
   },
   "evaluation": {
-    "fields": ["statement_boundary", "statement_type", "entity", "relation", "quantity", "negation", "condition", "applicability", "evidence_grounding"],
-    "error_types": ["boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "negation_error", "condition_loss", "applicability_error", "unsupported_claim"],
+    "fields": ["statement_semantic_correctness", "statement_boundary", "statement_type", "entity", "quantity", "unit", "comparison", "negation", "condition", "applicability_meaning", "relation", "relation_direction", "unsupported_addition", "evidence_grounding", "candidate_coverage"],
+    "error_types": ["boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "unit_error", "comparison_error", "negation_error", "condition_loss", "applicability_error", "relation_direction_error", "unsupported_claim", "duplicate_candidate", "over_split", "unmatched_candidate_review"],
     "holdout_entrypoint": "scripts/evaluate_stage12_holdout.py",
     "development_entrypoint": "scripts/build_stage12_candidates.py --evaluate-development",
+    "robustness_entrypoint": "scripts/evaluate_stage12_robustness.py",
+    "coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
+    "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json",
     "promotion": "No candidate is promoted by evaluation; Stage 13 review and later Release stages own approval.",
-    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0},
+    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0, "provider_parse_failures_are_explicit": true},
     "development_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
     "acceptance_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
     "unsupported_claim_count": 0,

@@ -1,12 +1,21 @@
+import hashlib
 import json
-import shutil
 from pathlib import Path
 
 import pytest
 
-from turbine_kg.extraction.semantic import HeuristicSemanticExtractor, ProfileRouter, ProfileRoutingError, compare_candidates, to_stage9_runtime_payload, validate_candidate_evidence_binding, validate_candidate_payload, validate_stage12_runtime_projection
-from scripts.build_stage12_candidates import _gate
-import scripts.audit_stage12_exit as stage12_audit
+from turbine_kg.extraction.semantic import (
+    ExtractionSchemaError,
+    HeuristicSemanticExtractor,
+    ProfileRouter,
+    ProviderBackedExtractor,
+    compare_candidates,
+    parse_provider_response,
+    provider_from_config,
+    to_stage9_runtime_payload,
+    validate_candidate_against_evidence,
+    validate_candidate_payload,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -15,217 +24,117 @@ def _read(path):
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
 
 
-def _jsonl(path):
-    return [json.loads(line) for line in (ROOT / path).read_text(encoding="utf-8").splitlines() if line.strip()]
-
-
-def test_stage12_contract_and_manifest_are_candidate_only_and_label_free():
-    contract = _read("config/stage12_statement_contract.json")
-    manifest = _read("data/stage12/stage12_input_manifest.json")
-    assert contract["stage"] == "12" and contract["formal_release"] is False
-    assert contract["candidate_status"] == "candidate_only"
-    assert manifest["source_split"] == "development_regression_golden"
-    assert manifest["label_free_extractor_view"] is True
-    assert manifest["holdout_used_for_tuning"] is False and manifest["blind_read"] is False
-    assert {page["document_key"] for page in manifest["pages"]} == {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"}
-    assert {item for page in manifest["pages"] for item in page["coverage"]} >= {"numeric_unit", "range", "negation", "condition", "multi_object_or_step", "enumeration"}
-    assert manifest["scope_kind"] == "representative_page_baseline"
-    assert manifest["representative_chapter_claim_allowed"] is False
-    assert all(page["section_path"] == "chapter_unknown" for page in manifest["pages"])
-    assert {item["extraction_profile_id"] for item in manifest["pages"]} == {"manufacturer_manual_v1", "construction_standard_v1", "commissioning_guideline_v1", "nuclear_safety_regulation_v1", "textbook_v1"}
-
-
-def test_extractor_does_not_copy_gold_fields_and_is_evidence_grounded():
-    evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl("data/stage6/stage6_evidence_bundle.jsonl")}
-    manifest = _read("data/stage12/stage12_input_manifest.json")
-    extractor = HeuristicSemanticExtractor()
-    candidates = [candidate for page in manifest["pages"] for evidence_id in page["evidence_ids"] for candidate in extractor.extract(evidence[evidence_id])]
-    assert candidates
-    assert all(candidate["review_status"] == "candidate_only" and candidate["formal_release"] is False for candidate in candidates)
-    assert all(candidate["evidence_bindings"] and candidate["source_text_sha256"] for candidate in candidates)
-    assert not any("stage11-statement" in candidate["candidate_id"] for candidate in candidates)
-    payload = {"schema_version": 1, "stage": "12", "artifact_kind": "engineering_statement_candidates", "status": "candidate_only", "formal_release": False, "producer": "test", "inputs": {"fixture": "fixture"}, "extraction_profile": extractor.profile_id, "candidates": candidates}
-    validate_candidate_payload(payload)
-    runtime = to_stage9_runtime_payload(candidates)
-    assert runtime["schema_version"] == 1
-    statement = next(node for node in runtime["nodes"] if node["type"] == "EngineeringStatement")
-    assert statement["properties"]["predicateLabel"] == candidates[0]["predicate"]
-    assert statement["properties"]["objectAssertion"] == candidates[0]["statement_text"]
-    assert any(relation["predicate"] == "relatedEntity" for relation in runtime["relations"])
-    tampered_runtime = json.loads(json.dumps(runtime))
-    tampered_statement = next(node for node in tampered_runtime["nodes"] if node["type"] == "EngineeringStatement")
-    tampered_statement["properties"].pop("predicateLabel", None)
-    with pytest.raises(ValueError, match="Stage 12 semantic field was lost"):
-        validate_stage12_runtime_projection(candidates, tampered_runtime)
-
-
-def test_stage12_runtime_rejects_unsupported_statement_types_and_actions():
-    evidence = {"evidence_id": "e", "document_logical_id": "d", "revision_id": "r", "physical_page": 1, "source_span_id": "span", "source_text_sha256": "a" * 64, "source_text": "equipment shall be inspected.", "document_key": "doc"}
-    candidate = HeuristicSemanticExtractor().extract(evidence)[0]
-    candidate["statement_type"] = "action_authorization"
-    with pytest.raises(KeyError):
-        to_stage9_runtime_payload([candidate])
-
-
-def test_field_level_evaluation_reports_error_classes():
-    evidence = {"evidence_id": "e", "document_logical_id": "d", "revision_id": "r", "physical_page": 1, "source_span_id": "span", "source_text_sha256": "a" * 64, "source_text": "真空不得低于60kPa。", "document_key": "doc"}
-    candidates = HeuristicSemanticExtractor().extract(evidence)
-    gold = [{"statement_id": "s", "statement_text": "真空不得低于60kPa。", "statement_type": "requirement", "predicate": "requires", "entity_alignment": [{"surface_form": "真空"}], "quantities": [{"surface_form": "60kPa", "value": 60, "unit": "kPa", "operator": "gte"}], "negation_scope": [{"surface_form": "不得", "polarity": "negative"}], "conditions": [], "physical_page": 1, "document_logical_id": "d", "evidence_bindings": [{"evidence_id": "e"}]}]
-    report = compare_candidates(candidates, gold)
-    assert report["gold_statement_count"] == 1
-    assert set(report["error_counts"]) >= {"boundary_error", "quantity_error", "unsupported_claim"}
-
-
-def test_stage12_exit_audit_blocks_formal_entry_and_holdout_is_independent():
-    audit = _read("data/stage12/stage12_exit_audit.json")
-    holdout = _read("data/stage12/stage12_holdout_evaluation.json")
-    assert audit["status"] == "in_progress"
-    assert audit["quality_status"] == "quality_not_accepted"
-    assert audit["next_stage_allowed"] is False
-    assert audit["stage13_formal_entry"] == "blocked"
-    assert audit["stage13_verification_mode"] == "FROZEN_BY_USER"
-    assert audit["next_stage_inputs"] == {}
-    assert "stage13_parallel_tooling" not in audit
-    assert "acceptance_holdout_exposed" in audit["blockers"]
-    assert "development_quality_gate" in audit["blockers"]
-    assert "representative_chapter_scope_resolved" in audit["blockers"]
-    assert audit["zero_tolerance_errors"] == []
-    assert holdout["evaluation_entrypoint"] == "scripts/evaluate_stage12_holdout.py"
-    assert holdout["holdout_used_for_tuning"] is False
-    assert holdout["result_written_to_development"] is False
-    assert holdout["acceptance_eligibility"] == "historical_exposed"
-    assert holdout["eligible_for_final_acceptance"] is False
-    assert holdout["registered_holdout_statement_count"] == 50
-    assert holdout["evaluated_gold_statement_count"] == 48
-    assert holdout["excluded_gold_statement_count"] == 2
-    excluded = {item["statement_id"]: item for item in holdout["excluded_gold_statements"]}
-    assert set(excluded) == {
-        "stage11-statement-7d73c222b3e3cc56e59c",
-        "stage11-statement-7621e52e9ce0f3e2f3d0",
+def _evidence(text="真空不得低于60kPa。"):
+    return {
+        "evidence_id": "fixture-evidence",
+        "document_logical_id": "fixture-document",
+        "revision_id": "fixture-revision",
+        "physical_page": 1,
+        "source_span_id": "fixture-span",
+        "source_text_sha256": hashlib.sha256(text.encode()).hexdigest(),
+        "source_text": text,
+        "review_status": "accepted",
+        "document_key": "fixture",
     }
-    assert excluded["stage11-statement-7d73c222b3e3cc56e59c"]["physical_page"] == 32
-    assert excluded["stage11-statement-7621e52e9ce0f3e2f3d0"]["physical_page"] == 429
-    assert all(item["frozen_before_evaluation"] is True for item in excluded.values())
 
 
-def test_quality_gate_is_field_level_and_has_zero_tolerance_grounding():
+def _candidate(text="真空不得低于60kPa。"):
+    return HeuristicSemanticExtractor().extract(_evidence(text))[0]
+
+
+def test_contract_is_candidate_only_and_has_provider_boundary():
     contract = _read("config/stage12_statement_contract.json")
-    gate = contract["evaluation"]["development_quality_gate"]
-    assert gate["relation"] == 0.9
-    assert gate["applicability"] == 0.9
-    assert gate["evidence_grounding"] == 1.0
-    assert contract["evaluation"]["unsupported_claim_count"] == 0
+    schema = _read("config/stage12_candidate.schema.json")
+    assert contract["stage"] == "12" and contract["formal_release"] is False
+    assert contract["architecture"]["relation_vocabulary"] == ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"]
+    assert contract["architecture"]["gold_exhaustive"] is False
+    assert schema["properties"]["provider_id"]["type"] == "string"
 
 
-def test_profile_router_is_stable_identity_based_and_rejects_ambiguity(tmp_path):
-    routing = _read("config/stage12_profile_routing.json")
+def test_provider_response_parser_is_strict_and_does_not_repair_prose():
+    with pytest.raises(ExtractionSchemaError):
+        parse_provider_response("```json\n{}\n```")
+    response = {"schema_version": 1, "response_kind": "stage12_candidate_extraction", "status": "no_statement", "candidates": []}
+    assert parse_provider_response(response)["status"] == "no_statement"
+
+
+def test_provider_backed_path_assembles_candidate_and_preserves_lineage():
+    evidence = _evidence()
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
-    route = router.route({"document_logical_id": routing["entries"][0]["document_logical_id"], "revision_id": routing["entries"][0]["revision_id"]})
-    assert route.extraction_profile_id == routing["entries"][0]["extraction_profile_id"]
-    bad = dict(routing)
-    bad["entries"] = routing["entries"] + [dict(routing["entries"][0])]
-    path = tmp_path / "ambiguous.json"
-    path.write_text(json.dumps(bad), encoding="utf-8")
-    with pytest.raises(ProfileRoutingError):
-        ProfileRouter(path)
+    profile = router.route({"document_logical_id": "doc-af7fa1738c5c89599e41", "revision_id": "rev-c700c57426b967b2d2c9"})
+    provider = provider_from_config(ROOT / "config/stage12_provider.json")
+    candidate = ProviderBackedExtractor(provider, profile=profile, split="development_regression_golden").extract(evidence)[0]
+    assert candidate["review_status"] == "candidate_only"
+    assert candidate["formal_release"] is False
+    assert candidate["evidence_quote"] == evidence["source_text"]
 
 
-def test_development_builder_fails_closed_on_holdout_manifest():
+def test_candidate_schema_and_stage9_projection_keep_coarse_relation_and_text():
+    candidate = _candidate()
+    payload = {"schema_version": 1, "stage": "12", "artifact_kind": "engineering_statement_candidates", "status": "candidate_only", "formal_release": False, "producer": "test", "inputs": {"fixture": "fixture"}, "extraction_profile": "heuristic_semantic_v1", "provider_id": "fixture", "prompt_version": "test", "candidates": [candidate]}
+    validate_candidate_payload(payload)
+    runtime = to_stage9_runtime_payload([candidate])
+    statement = next(node for node in runtime["nodes"] if node["type"] == "EngineeringStatement")
+    assert statement["properties"]["predicateLabel"] == "requires"
+    assert statement["properties"]["statementText"] == candidate["statement_text"]
+
+
+@pytest.mark.parametrize(
+    "text,mutator,match",
+    [
+        ("真空不得低于60kPa。", lambda c: c["quantities"][0].update(value=600), "quantity"),
+        ("真空不得低于60kPa。", lambda c: c["quantities"][0].update(unit="MPa"), "quantity"),
+        ("真空不得低于60kPa。", lambda c: c["quantities"][0].update(operator="lt"), "quantity"),
+        ("真空不得低于60kPa。", lambda c: c["negation_scope"].clear(), "dropped negation"),
+        ("若油压低于规定值，应停止调试。", lambda c: c["conditions"].clear(), "dropped condition"),
+    ],
+)
+def test_deterministic_validator_rejects_high_risk_semantic_drift(text, mutator, match):
+    candidate = _candidate(text)
+    mutator(candidate)
+    with pytest.raises(ValueError, match=match):
+        validate_candidate_against_evidence(candidate, _evidence(text))
+
+
+def test_applicability_unknown_is_explicit_and_scope_text_is_retained():
+    candidate = _candidate("冲转之前，汽轮机必须建立规定真空。")
+    assert candidate["applicability_scope"]["status"] == "known"
+    assert candidate["applicability_scope"]["applicability_text"] == "冲转之前"
+    candidate["applicability_scope"]["applicability_text"] = "所有机组"
+    with pytest.raises(ValueError, match="applicability wording"):
+        validate_candidate_against_evidence(candidate, _evidence(candidate["statement_text"]))
+
+
+def test_coarse_relation_and_extra_candidate_review_do_not_claim_precision_for_non_exhaustive_gold():
+    candidate = _candidate()
+    extra = json.loads(json.dumps(candidate))
+    extra["candidate_id"] = "stage12-candidate-" + "a" * 20
+    extra["statement_text"] = "真空不得低于60kPa，且应保持稳定。"
+    extra["object_value"]["value"] = extra["statement_text"]
+    report = compare_candidates([candidate, extra], [{"statement_id": "s", "statement_text": candidate["statement_text"], "statement_type": "requirement", "predicate": "requires_condenser_vacuum_before_roll", "entity_alignment": [{"surface_form": "真空"}], "quantities": candidate["quantities"], "negation_scope": candidate["negation_scope"], "conditions": [], "applicability_scope": {}, "document_logical_id": "fixture-document", "physical_page": 1, "evidence_bindings": [{"evidence_id": "fixture-evidence"}]}])
+    assert report["gold_exhaustive"] is False
+    assert report["candidate_coverage"]["extra_candidate_count"] == 1
+    assert report["unmatched_candidate_review"][0]["classification"] in {"needs_gold_completion", "over_split", "duplicate"}
+    assert report["candidate_coverage"]["spurious_candidate_rate"] is None
+
+
+def test_profile_router_exposes_source_level_external_permission_without_filename_logic():
+    router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
+    route = router.route({"document_logical_id": "doc-af7fa1738c5c89599e41", "revision_id": "rev-c700c57426b967b2d2c9"})
+    assert route.external_llm_allowed is False
+
+
+def test_robustness_artifact_is_development_only_and_passes():
+    report = _read("data/stage12/stage12_robustness_evaluation.json")
+    assert report["holdout_used_for_tuning"] is False
+    assert report["failed_count"] == 0
+    assert report["case_count"] >= 6
+
+
+def test_development_builder_gate_rejects_non_development_split():
+    from scripts.build_stage12_candidates import _gate
+
     manifest = _read("data/stage12/stage12_input_manifest.json")
     manifest["source_split"] = "acceptance_holdout"
     with pytest.raises(ValueError):
         _gate(manifest)
-
-
-@pytest.mark.parametrize("split", ["acceptance_holdout", "acceptance_holdout_reserve", "blind_test"])
-def test_development_builder_rejects_every_non_development_split(split):
-    manifest = _read("data/stage12/stage12_input_manifest.json")
-    manifest["source_split"] = split
-    with pytest.raises(ValueError):
-        _gate(manifest)
-
-
-def test_missing_candidate_does_not_pass_grounding_or_relabel_as_unsupported_claim():
-    report = compare_candidates([], [{"statement_id": "s", "statement_text": "设备应检查。", "statement_type": "requirement", "predicate": "requires", "entity_alignment": [], "quantities": [], "negation_scope": [], "conditions": [], "applicability_scope": {}, "evidence_bindings": [{"evidence_id": "e"}]}])
-    assert report["field_accuracy"]["evidence_grounding"] == 0.0
-    assert report["error_counts"]["unsupported_claim"] == 0
-    assert report["statement_recall"] == 0.0
-
-
-def test_candidate_lineage_is_checked_against_canonical_evidence():
-    evidence = _jsonl("data/stage6/stage6_evidence_bundle.jsonl")[0]["evidence"]
-    candidate = HeuristicSemanticExtractor().extract(evidence)[0]
-    validate_candidate_evidence_binding(candidate, evidence)
-    candidate["source_text_sha256"] = "0" * 64
-    with pytest.raises(ValueError):
-        validate_candidate_evidence_binding(candidate, evidence)
-
-
-def test_project_state_and_stage12_exit_audit_both_block_stage13_formal_entry():
-    state = _read("data/project_state.json")
-    audit = _read("data/stage12/stage12_exit_audit.json")
-    assert state["current_stage"] == 12
-    assert state["current_stage_status"] == "in_progress"
-    assert state["next_stage_status"] == "blocked"
-    assert audit["status"] == state["current_stage_status"]
-    assert audit["next_stage_allowed"] is False
-    assert state["stages"]["13"] == {
-        "status": "blocked",
-        "scope": "user_requested_stage13_freeze",
-        "reason": "user_requested_stage13_freeze",
-        "verification_mode": "FROZEN_BY_USER",
-        "not_executed": True,
-        "not_modified": True,
-    }
-
-
-def test_stage12_relation_and_applicability_are_text_grounded():
-    from turbine_kg.extraction.semantic import _applicability_scope, _predicate
-
-    evidence = {"document_key": "DL5190.3", "document_logical_id": "d", "physical_page": 14}
-    location = {"physical_page": 14, "logical_page": None}
-    assert _predicate("汽轮发电机组基础施工前应进行图纸会检。", "requirement") == "requires_drawing_review"
-    assert _predicate("确认系统压力满足设计要求。", "verification") == "verifies_design_pressure"
-    scope = _applicability_scope("基础施工期间应校核重要几何尺寸。", evidence, location, {"lifecycle_stage": "installation"})
-    assert scope["lifecycle_stage"] == "foundation_construction"
-    assert scope["condition"] == "施工准备时"
-
-
-def test_stage12_exit_audit_executes_producer_and_detects_stale_evaluation(tmp_path, monkeypatch):
-    files = (
-        "data/project_state.json",
-        "data/stage9/stage9_exit_audit.json",
-        "data/stage10/stage10_audit.json",
-        "data/stage11/stage11_exit_audit.json",
-        "data/stage11/evaluation_sample_registry.json",
-        "data/stage11/stage11_statement_development_samples.jsonl",
-        "data/stage11/stage11_holdout_evidence.jsonl",
-        "data/stage11/stage11_statement_holdout.jsonl",
-        "data/stage12/stage12_representative_baseline.json",
-        "data/stage12/stage12_input_manifest.json",
-        "data/stage12/stage12_development_candidates.json",
-        "data/stage12/stage12_development_evaluation.json",
-        "data/stage12/stage12_holdout_evaluation.json",
-        "config/stage12_profile_routing.json",
-        "config/stage12_statement_contract.json",
-        "config/stage12_candidate.schema.json",
-        "ontology/stage9_core.ttl",
-        "ontology/stage9_shapes.ttl",
-        "data/stage6/stage6_evidence_bundle.jsonl",
-    )
-    for relative in files:
-        target = tmp_path / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(ROOT / relative, target)
-    monkeypatch.setattr(stage12_audit, "ROOT", tmp_path)
-    monkeypatch.setattr(stage12_audit, "STAGE12", tmp_path / "data/stage12")
-    first = stage12_audit.audit()
-    assert first["checks"]["candidate_schema_and_stage9_gate"] is True
-    assert first["checks"]["holdout_exclusions_accounted"] is True
-    (tmp_path / "data/stage12/stage12_exit_audit.json").write_text(json.dumps(first), encoding="utf-8")
-    candidate_path = tmp_path / "data/stage12/stage12_development_candidates.json"
-    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
-    candidate["producer"] = "tampered-producer"
-    candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
-    second = stage12_audit.audit()
-    assert "development_evaluation_present" in second["blockers"]

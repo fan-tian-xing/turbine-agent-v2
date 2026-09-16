@@ -11,13 +11,13 @@ import hashlib
 import json
 from pathlib import Path
 
-from turbine_kg.extraction.semantic import ProfileRouter, compare_candidates, to_stage9_runtime_payload, validate_candidate_evidence_binding, validate_candidate_payload
+from turbine_kg.extraction.semantic import ProfileRouter, compare_candidates, to_stage9_runtime_payload, validate_candidate_against_evidence, validate_candidate_evidence_binding, validate_candidate_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data/stage12/stage12_holdout_evaluation.json"
 REGISTRY = ROOT / "data/stage11/evaluation_sample_registry.json"
 ROUTING = ROOT / "config/stage12_profile_routing.json"
-EVALUATOR_VERSION = "stage12-holdout-evaluator-v2"
+EVALUATOR_VERSION = "stage12-holdout-evaluator-v3"
 
 
 def _rows(path: Path) -> list[dict]:
@@ -109,6 +109,7 @@ def evaluate() -> dict:
             if evidence is None:
                 raise ValueError(f"holdout candidate binds unknown Evidence: {binding.get('evidence_id')}")
             validate_candidate_evidence_binding(candidate, evidence)
+            validate_candidate_against_evidence(candidate, evidence)
     candidate_payload = {
         "schema_version": 1,
         "stage": "12",
@@ -118,6 +119,8 @@ def evaluate() -> dict:
         "producer": "scripts/evaluate_stage12_holdout.py",
         "inputs": {"stage11_registry": "data/stage11/evaluation_sample_registry.json", "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl", "holdout_gold": "data/stage11/stage11_statement_holdout.jsonl", "stage12_profile_routing": "config/stage12_profile_routing.json"},
         "extraction_profile": "profile_routing_v1",
+        "provider_id": "historical_observation_fixture_v1",
+        "prompt_version": "stage12-candidate-prompt-v1",
         "candidates": candidates,
     }
     validate_candidate_payload(candidate_payload)

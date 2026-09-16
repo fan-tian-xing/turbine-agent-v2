@@ -1,206 +1,376 @@
 {
   "gold_statement_count": 19,
   "candidate_count": 25,
+  "gold_exhaustive": false,
   "statement_recall": 1.0,
+  "statement_semantic_correctness": 0.15789473684210525,
   "field_totals": {
     "statement_boundary": 19,
     "statement_type": 19,
     "entity": 19,
     "relation": 19,
     "quantity": 19,
+    "unit": 19,
+    "comparison": 19,
     "negation": 19,
     "condition": 19,
     "applicability": 19,
+    "applicability_meaning": 19,
+    "relation_direction": 19,
+    "unsupported_addition": 19,
     "evidence_grounding": 19
   },
   "field_correct": {
     "statement_boundary": 18,
     "statement_type": 18,
-    "entity": 18,
-    "relation": 19,
+    "entity": 17,
+    "relation": 14,
     "quantity": 19,
+    "unit": 19,
+    "comparison": 18,
     "negation": 18,
     "condition": 19,
-    "applicability": 19,
+    "applicability": 3,
+    "applicability_meaning": 3,
+    "relation_direction": 18,
+    "unsupported_addition": 16,
     "evidence_grounding": 19
   },
   "field_accuracy": {
     "statement_boundary": 0.9473684210526315,
     "statement_type": 0.9473684210526315,
-    "entity": 0.9473684210526315,
-    "relation": 1.0,
+    "entity": 0.8947368421052632,
+    "relation": 0.7368421052631579,
     "quantity": 1.0,
+    "unit": 1.0,
+    "comparison": 0.9473684210526315,
     "negation": 0.9473684210526315,
     "condition": 1.0,
-    "applicability": 1.0,
+    "applicability": 0.15789473684210525,
+    "applicability_meaning": 0.15789473684210525,
+    "relation_direction": 0.9473684210526315,
+    "unsupported_addition": 0.8421052631578947,
     "evidence_grounding": 1.0
   },
   "error_counts": {
     "boundary_error": 1,
     "statement_type_error": 1,
-    "entity_error": 1,
-    "relation_error": 0,
+    "entity_error": 2,
+    "relation_error": 5,
     "quantity_error": 0,
+    "unit_error": 0,
+    "comparison_error": 1,
     "negation_error": 1,
     "condition_loss": 0,
-    "applicability_error": 0,
-    "unsupported_claim": 0
+    "applicability_error": 16,
+    "relation_direction_error": 1,
+    "unsupported_claim": 3
   },
   "errors": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-00e32ccdfd8802dd79f5",
+      "candidate_id": "stage12-candidate-5949e54d5dcd719204bc",
       "error_types": [
-        "negation_error"
+        "entity_error",
+        "negation_error",
+        "applicability_error",
+        "unsupported_claim"
+      ]
+    },
+    {
+      "statement_id": "real-statement-dl5190-p86-contact",
+      "candidate_id": "stage12-candidate-d0acf778be3df30d1ba4",
+      "error_types": [
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance",
+      "candidate_id": "stage12-candidate-80c3aa9794be9930db47",
+      "error_types": [
+        "entity_error",
+        "comparison_error",
+        "applicability_error",
+        "unsupported_claim"
+      ]
+    },
+    {
+      "statement_id": "real-statement-haf103-p1-scope",
+      "candidate_id": "stage12-candidate-4c63e8c002edd15aca5c",
+      "error_types": [
+        "relation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f",
+      "candidate_id": "stage12-candidate-396d9dafa05a84c74ffe",
+      "error_types": [
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
+      "candidate_id": "stage12-candidate-9adef32d607215d6da88",
+      "error_types": [
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
+      "candidate_id": "stage12-candidate-a7b3d256db54122676f0",
+      "error_types": [
+        "applicability_error"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
-      "candidate_id": "stage12-candidate-bf9f67b53147b7745015",
+      "candidate_id": "stage12-candidate-55fb8a004d69ebc6706e",
       "error_types": [
-        "entity_error"
+        "applicability_error",
+        "unsupported_claim"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
-      "candidate_id": "stage12-candidate-931239d11cd852ecbf42",
+      "candidate_id": "stage12-candidate-761be78ae5ed6cc8627d",
       "error_types": [
-        "boundary_error"
+        "boundary_error",
+        "relation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
+      "candidate_id": "stage12-candidate-2b8dd3d9923b2ce163c1",
+      "error_types": [
+        "relation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
+      "candidate_id": "stage12-candidate-f71167d6e4c3a143f13f",
+      "error_types": [
+        "relation_error",
+        "applicability_error"
       ]
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-3296d354130fd3988834",
+      "candidate_id": "stage12-candidate-13ec3d5b9d2b27e5f9c9",
       "error_types": [
-        "statement_type_error"
+        "statement_type_error",
+        "relation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
+      "candidate_id": "stage12-candidate-f18daff7e3b7f13a0f91",
+      "error_types": [
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
+      "candidate_id": "stage12-candidate-f7b975ad633f8b6601ff",
+      "error_types": [
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
+      "candidate_id": "stage12-candidate-3c8031c0c2fb2664d377",
+      "error_types": [
+        "applicability_error",
+        "relation_direction_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
+      "candidate_id": "stage12-candidate-d02e059e6dad60e468fa",
+      "error_types": [
+        "applicability_error"
       ]
     }
   ],
   "matched_pairs": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-00e32ccdfd8802dd79f5",
+      "candidate_id": "stage12-candidate-5949e54d5dcd719204bc",
       "score": 1.0
     },
     {
       "statement_id": "real-statement-dl5190-p86-contact",
-      "candidate_id": "stage12-candidate-85d6e31c957e73461023",
+      "candidate_id": "stage12-candidate-d0acf778be3df30d1ba4",
       "score": 0.9583333333333334
     },
     {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
-      "candidate_id": "stage12-candidate-76819e32e24cea194e2b",
+      "candidate_id": "stage12-candidate-80c3aa9794be9930db47",
       "score": 1.0
     },
     {
       "statement_id": "real-statement-haf103-p1-scope",
-      "candidate_id": "stage12-candidate-93312180daf079e0544d",
+      "candidate_id": "stage12-candidate-4c63e8c002edd15aca5c",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f",
-      "candidate_id": "stage12-candidate-8dd66a126e576b24e356",
+      "candidate_id": "stage12-candidate-396d9dafa05a84c74ffe",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
-      "candidate_id": "stage12-candidate-d21a0c03032ce3d21c03",
+      "candidate_id": "stage12-candidate-9adef32d607215d6da88",
       "score": 0.9454545454545454
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c",
-      "candidate_id": "stage12-candidate-c16f6515985ce5dfd67b",
+      "candidate_id": "stage12-candidate-c5efde4595c096621c38",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
-      "candidate_id": "stage12-candidate-5c64de16b663eaa790b4",
+      "candidate_id": "stage12-candidate-a7b3d256db54122676f0",
       "score": 0.926829268292683
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
-      "candidate_id": "stage12-candidate-bf9f67b53147b7745015",
+      "candidate_id": "stage12-candidate-55fb8a004d69ebc6706e",
       "score": 0.9491525423728815
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
-      "candidate_id": "stage12-candidate-931239d11cd852ecbf42",
+      "candidate_id": "stage12-candidate-761be78ae5ed6cc8627d",
       "score": 0.6956521739130435
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
-      "candidate_id": "stage12-candidate-be8dfa40badb96b6cedc",
+      "candidate_id": "stage12-candidate-2b8dd3d9923b2ce163c1",
       "score": 0.9454545454545454
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
-      "candidate_id": "stage12-candidate-92f5205f028324950488",
+      "candidate_id": "stage12-candidate-f71167d6e4c3a143f13f",
       "score": 0.9629629629629629
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-3296d354130fd3988834",
+      "candidate_id": "stage12-candidate-13ec3d5b9d2b27e5f9c9",
       "score": 0.9642857142857143
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
-      "candidate_id": "stage12-candidate-6c01acb1f19b5a85b19d",
+      "candidate_id": "stage12-candidate-f18daff7e3b7f13a0f91",
       "score": 0.9777777777777777
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
-      "candidate_id": "stage12-candidate-074a98242b7ab3acdafa",
+      "candidate_id": "stage12-candidate-f7b975ad633f8b6601ff",
       "score": 0.9583333333333334
     },
     {
       "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-d3fe7bd502d069489572",
+      "candidate_id": "stage12-candidate-8dcc66b89ece0efe3390",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-8afd37af9d59599ab2c2",
+      "candidate_id": "stage12-candidate-3c8031c0c2fb2664d377",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813",
-      "candidate_id": "stage12-candidate-06da0fd38d6389925ec1",
+      "candidate_id": "stage12-candidate-b34c9ee46780ffed898c",
       "score": 0.9615384615384616
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-a7cdf873ab81c413f595",
+      "candidate_id": "stage12-candidate-d02e059e6dad60e468fa",
       "score": 0.9743589743589743
     }
   ],
   "unmatched_gold": [],
   "unmatched_candidates": [
-    "stage12-candidate-7a040042e07c2bde313d",
-    "stage12-candidate-1d6635387a050f99afc6",
-    "stage12-candidate-2e8fc2d13e03774ccb9a",
-    "stage12-candidate-baec369be4a41a70bb04",
-    "stage12-candidate-d1628c2d259b0ace7a16",
-    "stage12-candidate-63e434ea210adaf0d75c"
+    "stage12-candidate-4437b11743ad619faed1",
+    "stage12-candidate-9ba90678994e3b4324b2",
+    "stage12-candidate-030b02355100478ecfba",
+    "stage12-candidate-a24daa35b16c6c3813cd",
+    "stage12-candidate-235530c89aecf5ab8902",
+    "stage12-candidate-4431d1c5098093b571b3"
   ],
   "unmatched_gold_count": 0,
   "unmatched_candidate_count": 6,
+  "unmatched_candidate_review": [
+    {
+      "candidate_id": "stage12-candidate-4437b11743ad619faed1",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-9ba90678994e3b4324b2",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-030b02355100478ecfba",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-a24daa35b16c6c3813cd",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-235530c89aecf5ab8902",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-4431d1c5098093b571b3",
+      "classification": "needs_gold_completion"
+    }
+  ],
+  "unmatched_candidate_review_counts": {
+    "valid_extra": 0,
+    "duplicate": 0,
+    "over_split": 0,
+    "unsupported": 0,
+    "needs_gold_completion": 6
+  },
+  "candidate_coverage": {
+    "matched_candidate_count": 19,
+    "extra_candidate_count": 6,
+    "duplicate_candidate_rate": 0.0,
+    "over_split_rate": 0.0,
+    "spurious_candidate_rate": null
+  },
   "schema_version": 1,
   "stage": "12",
   "artifact_kind": "stage12_development_evaluation",
   "status": "completed",
   "formal_release": false,
-  "evaluator_version": "stage12-field-evaluator-v2",
+  "evaluator_version": "stage12-field-evaluator-v3",
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "f85a0a4bad6d9b4c7824c638a44faf60b391e591c05fb21630f8271eae51fda4",
+    "candidate": "0c4d5e6ab74378dc5b8f255d4d7199faea73956db73c3320a186eff0382eb277",
     "gold": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
     "manifest": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
-    "contract": "f15e0733101353490cebb7a0455b89ab98f21d76c2933d5276ce05906fdd61b6",
-    "evaluator": "stage12-field-evaluator-v2"
+    "contract": "31688bb1971053473aec4ee4095ddb48f100c3a150015042c488cf38c793f794",
+    "provider_config": "76b680169626802aa62b6327f3cae2d70a8c55ada0702b218849d210ab1061d6",
+    "prompt": "142e24ec5fd3edcf4fde7ea78a2998db3910ae68de6047f136ef9d91208d8e7a",
+    "response_schema": "2b537f0c077ca6b9062c0d0e92f8a20091d41bf4a28a4428dcfaf2c2d95cae14",
+    "evaluator": "stage12-field-evaluator-v3"
+  },
+  "coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
+  "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json",
+  "robustness_executed": true,
+  "robustness": {
+    "case_count": 6,
+    "passed_count": 6,
+    "failed_count": 0
   }
 }

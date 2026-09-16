@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_extraction_provider_config",
+  "status": "active_for_stage12",
+  "default_provider": "fixture",
+  "prompt": {
+    "version": "stage12-candidate-prompt-v1",
+    "path": "config/stage12_prompt.txt"
+  },
+  "providers": {
+    "fixture": {
+      "kind": "deterministic_fixture",
+      "enabled": true,
+      "max_attempts": 1
+    },
+    "external_llm": {
+      "kind": "external_llm",
+      "enabled": false,
+      "credential_env": "STAGE12_LLM_CREDENTIAL",
+      "endpoint_env": "STAGE12_LLM_ENDPOINT",
+      "model_env": "STAGE12_LLM_MODEL",
+      "max_attempts": 2
+    }
+  },
+  "source_permission": {
+    "authority": "data/registry/source_assets.jsonl",
+    "allowed_values": ["external_allowed"],
+    "denied_values": ["local_only", "not_assessed"],
+    "missing_policy": "deny"
+  },
+  "consumers": [
+    "scripts/build_stage12_candidates.py",
+    "tests/stage12"
+  ]
+}

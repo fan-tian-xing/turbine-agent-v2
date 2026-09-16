@@ -40,6 +40,7 @@ def audit() -> dict:
     candidate = _read(STAGE12 / "stage12_development_candidates.json")
     development = _read(STAGE12 / "stage12_development_evaluation.json")
     holdout = _read(STAGE12 / "stage12_holdout_evaluation.json")
+    project_state = _read(ROOT / "data/project_state.json")
     stage11 = _read(ROOT / "data/stage11/stage11_exit_audit.json")
     canonical_evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     dev_gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
@@ -115,6 +116,28 @@ def audit() -> dict:
     representative_chapter_resolved = baseline.get("scope_kind") == "representative_chapter" and baseline.get("representative_chapter_claim_allowed") is True and baseline.get("section_identity_status") == "resolved"
     reserve_gold_path = STAGE12 / "stage12_reserve_acceptance.json"
     reserve_gold_ready = reserve_gold_path.exists() and _read(reserve_gold_path).get("status") == "independently_reviewed_gold"
+    stage13 = project_state.get("stages", {}).get("13", {})
+    stage13_frozen_by_user = (
+        stage13.get("status") == "blocked"
+        and stage13.get("reason") == "user_requested_stage13_freeze"
+        and stage13.get("verification_mode") == "FROZEN_BY_USER"
+        and stage13.get("not_executed") is True
+        and stage13.get("not_modified") is True
+    )
+    holdout_exclusions = holdout.get("excluded_gold_statements", [])
+    holdout_exclusions_accounted = (
+        holdout.get("registered_holdout_statement_count") == holdout.get("gold_statement_count", 0) + holdout.get("excluded_gold_statement_count", 0)
+        and holdout.get("registered_holdout_statement_count") == 50
+        and holdout.get("gold_statement_count") == 48
+        and holdout.get("excluded_gold_statement_count") == 2
+        and all(
+            item.get("statement_id") and item.get("sample_id") and item.get("document_logical_id")
+            and item.get("physical_page") and item.get("exclusion_reason")
+            and item.get("exclusion_rule") == holdout.get("excluded_gold_contract")
+            and item.get("frozen_before_evaluation") is True
+            for item in holdout_exclusions
+        )
+    )
 
     implementation_checks = {
         "stage11_exit_gate": stage11.get("status") == "complete" and stage11.get("next_stage_allowed") is True,
@@ -135,8 +158,10 @@ def audit() -> dict:
         "development_evaluation_present": development.get("status") == "completed" and development.get("holdout_used_for_tuning") is False and stored_eval_matches and dev_input_hashes_match,
         "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v2" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
+        "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
+        "stage13_frozen_by_user": stage13_frozen_by_user,
     }
     quality_checks = {
         "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
@@ -163,22 +188,44 @@ def audit() -> dict:
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/project_state.json",
         )},
         "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
-        "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development.get("gold_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0)},
+        "execution_evidence": {
+            "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
+            "stage12_production_like_pipeline": {"status": "executed", "scope": "representative_page_baseline", "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_holdout.py", "scripts/audit_stage12_exit.py"]},
+            "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
+            "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
+        },
+        "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development.get("gold_statement_count", 0), "holdout_gold_statements_registered": holdout.get("registered_holdout_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0), "holdout_gold_statements_excluded": holdout.get("excluded_gold_statement_count", 0)},
+        "regression_matrix": {
+            "0": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/project_state.json v2 boundary"},
+            "1": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/project_state.json stage 1 state"},
+            "2": {"verification_mode": "LINEAGE_VERIFIED", "evidence": "data/project_state.json and Stage 2 exit audit"},
+            "3": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage3/real_trial_execution.json"},
+            "4": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage4/stage4_full_parse_audit_2026-09-12.json"},
+            "5": {"verification_mode": "LINEAGE_VERIFIED", "evidence": "data/stage5/stage5_exit_audit_2026-09-12.json; frozen outputs not rerun"},
+            "6": {"verification_mode": "LINEAGE_VERIFIED", "evidence": "data/stage6/stage6_exit_audit.json"},
+            "7": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage7/stage7_exit_audit.json"},
+            "8": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/stage8/stage8_exit_audit.json"},
+            "9": {"verification_mode": "EXECUTED", "evidence": "data/stage9/stage9_exit_audit.json and current Stage 9 gate"},
+            "10": {"verification_mode": "EXECUTED", "evidence": "data/stage10/stage10_audit.json runtime consumer"},
+            "11": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage11/stage11_exit_audit.json"},
+            "12": {"verification_mode": "EXECUTED", "scope": "representative_page_baseline only", "evidence": "Stage 12 manifest, candidates, evaluations and exit audit"},
+            "13": {"verification_mode": "FROZEN_BY_USER", "not_executed": True, "not_modified": True},
+        },
         "quality_observation": {"development_field_accuracy": development_quality, "holdout_field_accuracy": holdout_quality, "development_thresholds": quality_thresholds, "acceptance_thresholds": acceptance_thresholds, "development_recomputed": dev_recomputed.get("field_accuracy", {}), "scale_gate": quality_checks["development_quality_gate"], "interpretation": "development metrics may guide extractor work; the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"},
         "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
         "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
         "zero_tolerance_errors": [name for name, count in {"development_unsupported_claim": development.get("error_counts", {}).get("unsupported_claim", 0), "holdout_unsupported_claim": holdout.get("error_counts", {}).get("unsupported_claim", 0)}.items() if count],
         "blockers": blockers,
         "next_stage_allowed": False,
-        "next_stage": "Stage 13 double-layer review and static review interface (formal entry blocked; tooling preparation only)" if status != "complete" else "Stage 13 double-layer review and static review interface",
-        "next_stage_inputs": {"development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "canonical_evidence": "data/stage6/stage6_evidence_bundle.jsonl", "representative_baseline": "data/stage12/stage12_representative_baseline.json", "profile_routing": "config/stage12_profile_routing.json"},
-        "stage13_formal_entry": "blocked" if status != "complete" else "allowed",
-        "stage13_parallel_tooling": "allowed_without_formal_stage_dependency",
-        "consumers": ["tests/stage12"] if status != "complete" else ["tests/stage12", "Stage 13 review interface"],
+        "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",
+        "next_stage_inputs": {},
+        "stage13_formal_entry": "blocked",
+        "stage13_verification_mode": "FROZEN_BY_USER",
+        "consumers": ["tests/stage12"],
     }
 
 

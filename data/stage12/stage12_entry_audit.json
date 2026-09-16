@@ -8,7 +8,7 @@
   "scope": "representative_page_baseline",
   "next_stage_allowed": false,
   "stage13_formal_entry": "blocked",
-  "stage13_parallel_tooling": "allowed_without_formal_stage_dependency",
+  "stage13_verification_mode": "FROZEN_BY_USER",
   "blockers": [
     "development_quality_gate",
     "acceptance_holdout_exposed",

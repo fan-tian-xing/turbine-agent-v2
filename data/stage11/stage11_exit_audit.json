@@ -20,11 +20,11 @@
     },
     "stage9_exit_audit": {
       "path": "data/stage9/stage9_exit_audit.json",
-      "sha256": "3b3316ad4e35d1877ebcd9136d63bc22f6465c7c94ba16982248c640ff0d3e17"
+      "sha256": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483"
     },
     "stage10_exit_audit": {
       "path": "data/stage10/stage10_audit.json",
-      "sha256": "c800febcd8c23969ebecb709620d057b4f3ccff73e2228055161922868ca15c9"
+      "sha256": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d"
     },
     "statement_contract": {
       "path": "config/stage11_statement_contract.json",

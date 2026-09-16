@@ -63,7 +63,7 @@ def _build(manifest: dict) -> dict:
     candidates = []
     for page in manifest["pages"]:
         for evidence_id in page["evidence_ids"]:
-            evidence = evidence_by_id[evidence_id]
+            evidence = dict(evidence_by_id[evidence_id], document_key=page["document_key"])
             if evidence.get("review_status") != "accepted":
                 raise ValueError(f"development Evidence is not accepted: {evidence_id}")
             profile = router.route(evidence)

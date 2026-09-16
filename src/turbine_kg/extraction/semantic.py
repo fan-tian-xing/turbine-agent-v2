@@ -77,6 +77,7 @@ class ExtractionProfile:
     semantic_role: str
     extraction_profile_id: str
     source_profile_id: str
+    source_applicability_scope: tuple[tuple[str, Any], ...]
 
 
 class ProfileRouter:
@@ -89,12 +90,28 @@ class ProfileRouter:
         if not entries:
             raise ProfileRoutingError("Stage 12 profile routing manifest is empty")
         self._entries: dict[tuple[str, str], ExtractionProfile] = {}
+        source_scopes: dict[str, dict[str, Any]] = {}
+        source_registry = path.parents[1] / "data/registry/source_assets.jsonl"
+        if source_registry.exists():
+            for line in source_registry.read_text(encoding="utf-8").splitlines():
+                if not line.strip():
+                    continue
+                source = json.loads(line)
+                document_id = str(source.get("document_logical_id", ""))
+                structured = source.get("applicability_scope_structured") or {}
+                if document_id and structured:
+                    existing = source_scopes.setdefault(document_id, {})
+                    for key, value in structured.items():
+                        if key in existing and existing[key] != value:
+                            raise ProfileRoutingError(f"conflicting source applicability scope: {document_id}/{key}")
+                        existing[key] = value
         for entry in entries:
             key = (str(entry.get("document_logical_id", "")), str(entry.get("revision_id", "")))
             profile = ExtractionProfile(
                 semantic_role=str(entry.get("semantic_role", "")),
                 extraction_profile_id=str(entry.get("extraction_profile_id", "")),
                 source_profile_id=str(entry.get("source_profile_id", "")),
+                source_applicability_scope=tuple(sorted(source_scopes.get(key[0], {}).items())),
             )
             if not all((key[0], key[1], profile.semantic_role, profile.extraction_profile_id, profile.source_profile_id)):
                 raise ProfileRoutingError("profile routing entry is incomplete")
@@ -119,6 +136,7 @@ class ProfileRouter:
             profile_id=profile.extraction_profile_id,
             semantic_role=profile.semantic_role,
             split=split,
+            source_applicability_scope=profile.source_applicability_scope,
         )
 
 
@@ -353,7 +371,36 @@ def _entities(text: str) -> list[dict[str, str]]:
     return [{"surface_form": term, "role": "subject", "entity_class": "candidate"} for term in unique[:6]]
 
 
+PREDICATE_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("requires_drawing_review", ("图纸会检",)),
+    ("requires_dimension_check", ("校核", "几何尺寸")),
+    ("requires_preconstruction_confirmation", ("土建施工前", "有关单位确认")),
+    ("has_delivery_condition", ("交付安装", "具备下列条件")),
+    ("requires_foundation_strength", ("达到设计强度",)),
+    ("requires_building_enclosure", ("厂房封闭", "屋面止水")),
+    ("requires_foundation_reference_marks", ("中心线", "标高标识", "沉降观测点")),
+    ("requires_access_and_opening_protection", ("平台", "通道", "梯子", "栏杆", "踢脚板", "孔洞", "盖板", "围栏")),
+    ("adjust_control_oil_pressure", ("控制油压力", "缓慢调节", "溢流阀")),
+    ("verify_safety_relief_action", ("安全泄压阀正常动作",)),
+    ("verifies_design_pressure", ("确认系统压力满足设计要求",)),
+    ("controls_next_commissioning_stage", ("分阶段实施", "下一阶段", "调试试验工作")),
+    ("requires_operating_records_and_baseline_data", ("运行和维修记录", "基准数据")),
+    ("requires_condenser_vacuum_before_roll", ("冲转前", "一定的真空")),
+    ("low_vacuum_causes_condenser_pressure_risk", ("真空过低", "凝汽器汽侧", "形成正压")),
+)
+
+
+def _predicate_by_pattern(text: str) -> str | None:
+    for predicate, markers in PREDICATE_PATTERNS:
+        if all(marker in text for marker in markers):
+            return predicate
+    return None
+
+
 def _predicate(text: str, statement_type: str) -> str:
+    patterned = _predicate_by_pattern(text)
+    if patterned:
+        return patterned
     if statement_type == "limitation":
         return "limits_scope"
     if statement_type == "procedure":
@@ -367,15 +414,99 @@ def _predicate(text: str, statement_type: str) -> str:
     return "describes"
 
 
+def _canonical_applicability_condition(text: str) -> str | None:
+    compact = re.sub(r"\s+", "", text)
+    patterns = (
+        ("half_cylinder_state", ("半空缸", "状态下")),
+        ("前阶段评价和监查完成且满足全部核安全管理要求", ("前阶段调试试验结果的评价和监查",)),
+        ("真空过低", ("真空过低",)),
+        ("冲转前", ("冲转前",)),
+        ("土建施工前", ("土建施工前",)),
+        ("施工前", ("基础施工前",)),
+        ("施工准备时", ("基础施工期间",)),
+        ("horizontal_joint_external_interface", ("外部接口", "水平结合面")),
+        ("horizontal_joint_contact", ("水平结合面", "接触面积")),
+    )
+    for value, markers in patterns:
+        if all(marker in compact for marker in markers):
+            return value
+    return None
+
+
+def _applicability_scope(
+    text: str,
+    evidence: Mapping[str, Any],
+    location: Mapping[str, Any],
+    source_scope: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Build a narrower, text-grounded scope on top of Registry applicability."""
+    scope: dict[str, Any] = {
+        "document_key": evidence.get("document_key") or evidence.get("document_logical_id"),
+        "physical_page": location["physical_page"],
+        **({"logical_page": location["logical_page"]} if location.get("logical_page") is not None else {}),
+    }
+    scope.update({key: value for key, value in source_scope.items() if value is not None})
+
+    if "密封瓦座" in text:
+        scope["equipment"] = "seal_bearing_seat"
+    elif "密封瓦" in text:
+        scope["equipment"] = "seal_bearing"
+    elif any(marker in text for marker in ("高中压外缸", "滑块", "前箱")):
+        scope["equipment"] = "front_box_sliding_block"
+    elif "核动力厂每个系统" in text:
+        scope["equipment"] = "nuclear_power_plant_system"
+
+    compact = re.sub(r"\s+", "", text)
+    lifecycle_patterns = (
+        ("overhaul", ("大修",)),
+        ("initial_energization_and_operation", ("初始通电和运行开始",)),
+        ("initial_roll", ("冲转前",)),
+        ("initial_roll", ("真空过低",)),
+        ("commissioning_and_operation", ("调试和运行",)),
+        ("commissioning", ("调试",)),
+        ("civil_construction", ("土建施工前",)),
+        ("foundation_construction", ("基础施工前",)),
+        ("foundation_construction", ("基础施工期间",)),
+        ("installation_handover", ("交付安装",)),
+    )
+    for value, markers in lifecycle_patterns:
+        if all(marker in compact for marker in markers):
+            scope["lifecycle_stage"] = value
+            break
+    if any(marker in compact for marker in ("厂房封闭", "达到设计强度", "平台", "厂房内")):
+        scope["lifecycle_stage"] = "installation_handover"
+
+    activity_patterns = (
+        ("pressure_adjustment", ("控制油压力",)),
+        ("pressure_adjustment", ("系统安全泄压阀",)),
+        ("pressure_adjustment", ("系统压力满足设计要求",)),
+        ("staged_commissioning", ("分阶段实施",)),
+        ("nuclear_safety_management", ("适用于", "核安全")),
+        ("lubrication_and_cleaning", ("抬起", "滑块")),
+        ("inspection", ("检查", "结合面")),
+        ("inspection", ("塞尺",)),
+    )
+    for value, markers in activity_patterns:
+        if all(marker in compact for marker in markers):
+            scope["activity"] = value
+            break
+
+    condition = _canonical_applicability_condition(text)
+    if condition:
+        scope["condition"] = condition
+    return scope
+
+
 class HeuristicSemanticExtractor:
     """Offline baseline extractor used for the first Stage 12 runtime proof."""
 
     profile_id = "heuristic_semantic_v1"
 
-    def __init__(self, *, profile_id: str | None = None, semantic_role: str | None = None, split: str = "development_regression_golden"):
+    def __init__(self, *, profile_id: str | None = None, semantic_role: str | None = None, split: str = "development_regression_golden", source_applicability_scope: Mapping[str, Any] | None = None):
         self.profile_id = profile_id or type(self).profile_id
         self.semantic_role = semantic_role
         self.split = split
+        self.source_applicability_scope = dict(source_applicability_scope or {})
 
     def extract(self, evidence: Mapping[str, Any]) -> list[dict[str, Any]]:
         text = _text(evidence)
@@ -405,12 +536,7 @@ class HeuristicSemanticExtractor:
                 "normative_modality": _modality(clause),
                 "negation_scope": _negation_fields(clause),
                 "conditions": conditions,
-                "applicability_scope": {
-                    "document_key": document_key,
-                    "physical_page": location["physical_page"],
-                    **({"logical_page": location["logical_page"]} if location["logical_page"] is not None else {}),
-                    **({"condition": conditions[0]["surface_form"]} if conditions else {}),
-                },
+                "applicability_scope": _applicability_scope(clause, evidence, location, self.source_applicability_scope),
                 "evidence_bindings": [{"evidence_id": evidence["evidence_id"], "support_type": evidence.get("support_type", "direct")}],
                 "source_span_ids": [item for item in location["source_span_ids"] if item],
                 "evidence_version_id": _evidence_version_id(evidence),

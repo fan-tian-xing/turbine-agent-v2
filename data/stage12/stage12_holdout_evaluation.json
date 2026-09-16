@@ -750,6 +750,43 @@
   "exposure_reason": "The detailed result was exposed before this strict repair; it is retained for historical hard-case analysis and cannot be reused as final acceptance for the repaired version.",
   "blind_read": false,
   "isolated_pages_excluded": 2,
+  "registered_holdout_statement_count": 50,
+  "evaluated_gold_statement_count": 48,
+  "excluded_gold_statement_count": 2,
+  "excluded_gold_statements": [
+    {
+      "sample_id": "stage11-holdout-61539a6d8b70459ae662",
+      "statement_id": "stage11-statement-7d73c222b3e3cc56e59c",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "physical_page": 32,
+      "evidence_ids": [
+        "stage11-evidence-ad17f1e04af70447784b"
+      ],
+      "review_status": "isolated",
+      "exclusion_reason": "D300N 第32页为表格/列布局，当前 Evidence 阅读顺序无法逐句可靠回查。",
+      "exclusion_rule": "Only accepted Gold rows whose bound Evidence rows are accepted are evaluated; isolated Evidence/Gold is excluded before comparison.",
+      "frozen_before_evaluation": true,
+      "selection_bias_assessment": "The pre-specified isolation rule excludes tabular hard cases from this metric; treat this as a coverage limitation, not a tuning signal."
+    },
+    {
+      "sample_id": "stage11-holdout-0e127c9d602faa21b7f3",
+      "statement_id": "stage11-statement-7621e52e9ce0f3e2f3d0",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "physical_page": 429,
+      "evidence_ids": [
+        "stage11-evidence-6d53cf30798030e2f722"
+      ],
+      "review_status": "isolated",
+      "exclusion_reason": "辅机第429页为复杂题库表格，当前 Evidence 阅读顺序和题干边界无法可靠回查。",
+      "exclusion_rule": "Only accepted Gold rows whose bound Evidence rows are accepted are evaluated; isolated Evidence/Gold is excluded before comparison.",
+      "frozen_before_evaluation": true,
+      "selection_bias_assessment": "The pre-specified isolation rule excludes tabular hard cases from this metric; treat this as a coverage limitation, not a tuning signal."
+    }
+  ],
+  "excluded_gold_contract": "Only accepted Gold rows whose bound Evidence rows are accepted are evaluated; isolated Evidence/Gold is excluded before comparison.",
+  "selection_bias_assessment": "The pre-specified isolation rule excludes tabular hard cases from this metric; treat this as a coverage limitation, not a tuning signal.",
   "accepted_evidence_count": 13,
   "gold_artifact": "data/stage11/stage11_statement_holdout.jsonl",
   "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",

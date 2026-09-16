@@ -1,10 +1,12 @@
 import json
+import shutil
 from pathlib import Path
 
 import pytest
 
 from turbine_kg.extraction.semantic import HeuristicSemanticExtractor, ProfileRouter, ProfileRoutingError, compare_candidates, to_stage9_runtime_payload, validate_candidate_evidence_binding, validate_candidate_payload, validate_stage12_runtime_projection
 from scripts.build_stage12_candidates import _gate
+import scripts.audit_stage12_exit as stage12_audit
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -81,6 +83,9 @@ def test_stage12_exit_audit_blocks_formal_entry_and_holdout_is_independent():
     assert audit["quality_status"] == "quality_not_accepted"
     assert audit["next_stage_allowed"] is False
     assert audit["stage13_formal_entry"] == "blocked"
+    assert audit["stage13_verification_mode"] == "FROZEN_BY_USER"
+    assert audit["next_stage_inputs"] == {}
+    assert "stage13_parallel_tooling" not in audit
     assert "acceptance_holdout_exposed" in audit["blockers"]
     assert "development_quality_gate" in audit["blockers"]
     assert "representative_chapter_scope_resolved" in audit["blockers"]
@@ -90,6 +95,17 @@ def test_stage12_exit_audit_blocks_formal_entry_and_holdout_is_independent():
     assert holdout["result_written_to_development"] is False
     assert holdout["acceptance_eligibility"] == "historical_exposed"
     assert holdout["eligible_for_final_acceptance"] is False
+    assert holdout["registered_holdout_statement_count"] == 50
+    assert holdout["evaluated_gold_statement_count"] == 48
+    assert holdout["excluded_gold_statement_count"] == 2
+    excluded = {item["statement_id"]: item for item in holdout["excluded_gold_statements"]}
+    assert set(excluded) == {
+        "stage11-statement-7d73c222b3e3cc56e59c",
+        "stage11-statement-7621e52e9ce0f3e2f3d0",
+    }
+    assert excluded["stage11-statement-7d73c222b3e3cc56e59c"]["physical_page"] == 32
+    assert excluded["stage11-statement-7621e52e9ce0f3e2f3d0"]["physical_page"] == 429
+    assert all(item["frozen_before_evaluation"] is True for item in excluded.values())
 
 
 def test_quality_gate_is_field_level_and_has_zero_tolerance_grounding():
@@ -121,6 +137,14 @@ def test_development_builder_fails_closed_on_holdout_manifest():
         _gate(manifest)
 
 
+@pytest.mark.parametrize("split", ["acceptance_holdout", "acceptance_holdout_reserve", "blind_test"])
+def test_development_builder_rejects_every_non_development_split(split):
+    manifest = _read("data/stage12/stage12_input_manifest.json")
+    manifest["source_split"] = split
+    with pytest.raises(ValueError):
+        _gate(manifest)
+
+
 def test_missing_candidate_does_not_pass_grounding_or_relabel_as_unsupported_claim():
     report = compare_candidates([], [{"statement_id": "s", "statement_text": "设备应检查。", "statement_type": "requirement", "predicate": "requires", "entity_alignment": [], "quantities": [], "negation_scope": [], "conditions": [], "applicability_scope": {}, "evidence_bindings": [{"evidence_id": "e"}]}])
     assert report["field_accuracy"]["evidence_grounding"] == 0.0
@@ -145,3 +169,63 @@ def test_project_state_and_stage12_exit_audit_both_block_stage13_formal_entry():
     assert state["next_stage_status"] == "blocked"
     assert audit["status"] == state["current_stage_status"]
     assert audit["next_stage_allowed"] is False
+    assert state["stages"]["13"] == {
+        "status": "blocked",
+        "scope": "user_requested_stage13_freeze",
+        "reason": "user_requested_stage13_freeze",
+        "verification_mode": "FROZEN_BY_USER",
+        "not_executed": True,
+        "not_modified": True,
+    }
+
+
+def test_stage12_relation_and_applicability_are_text_grounded():
+    from turbine_kg.extraction.semantic import _applicability_scope, _predicate
+
+    evidence = {"document_key": "DL5190.3", "document_logical_id": "d", "physical_page": 14}
+    location = {"physical_page": 14, "logical_page": None}
+    assert _predicate("汽轮发电机组基础施工前应进行图纸会检。", "requirement") == "requires_drawing_review"
+    assert _predicate("确认系统压力满足设计要求。", "verification") == "verifies_design_pressure"
+    scope = _applicability_scope("基础施工期间应校核重要几何尺寸。", evidence, location, {"lifecycle_stage": "installation"})
+    assert scope["lifecycle_stage"] == "foundation_construction"
+    assert scope["condition"] == "施工准备时"
+
+
+def test_stage12_exit_audit_executes_producer_and_detects_stale_evaluation(tmp_path, monkeypatch):
+    files = (
+        "data/project_state.json",
+        "data/stage9/stage9_exit_audit.json",
+        "data/stage10/stage10_audit.json",
+        "data/stage11/stage11_exit_audit.json",
+        "data/stage11/evaluation_sample_registry.json",
+        "data/stage11/stage11_statement_development_samples.jsonl",
+        "data/stage11/stage11_holdout_evidence.jsonl",
+        "data/stage11/stage11_statement_holdout.jsonl",
+        "data/stage12/stage12_representative_baseline.json",
+        "data/stage12/stage12_input_manifest.json",
+        "data/stage12/stage12_development_candidates.json",
+        "data/stage12/stage12_development_evaluation.json",
+        "data/stage12/stage12_holdout_evaluation.json",
+        "config/stage12_profile_routing.json",
+        "config/stage12_statement_contract.json",
+        "config/stage12_candidate.schema.json",
+        "ontology/stage9_core.ttl",
+        "ontology/stage9_shapes.ttl",
+        "data/stage6/stage6_evidence_bundle.jsonl",
+    )
+    for relative in files:
+        target = tmp_path / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / relative, target)
+    monkeypatch.setattr(stage12_audit, "ROOT", tmp_path)
+    monkeypatch.setattr(stage12_audit, "STAGE12", tmp_path / "data/stage12")
+    first = stage12_audit.audit()
+    assert first["checks"]["candidate_schema_and_stage9_gate"] is True
+    assert first["checks"]["holdout_exclusions_accounted"] is True
+    (tmp_path / "data/stage12/stage12_exit_audit.json").write_text(json.dumps(first), encoding="utf-8")
+    candidate_path = tmp_path / "data/stage12/stage12_development_candidates.json"
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    candidate["producer"] = "tampered-producer"
+    candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+    second = stage12_audit.audit()
+    assert "development_evaluation_present" in second["blockers"]

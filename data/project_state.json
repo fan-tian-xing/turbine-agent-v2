@@ -112,8 +112,15 @@
       "development_evaluation": "data/stage12/stage12_development_evaluation.json",
       "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
       "next_stage": 13,
-      "next_stage_status": "blocked",
-      "parallel_stage_13_tooling": "allowed_without_formal_stage_dependency"
+      "next_stage_status": "blocked"
+    },
+    "13": {
+      "status": "blocked",
+      "scope": "user_requested_stage13_freeze",
+      "reason": "user_requested_stage13_freeze",
+      "verification_mode": "FROZEN_BY_USER",
+      "not_executed": true,
+      "not_modified": true
     }
   },
   "boundaries": [
@@ -121,6 +128,7 @@
     "阶段 5 隔离边界继续保留；未逐格确认的表格数值不得进入结构化 Claim。",
     "阶段 15A/15B 才是首批五份资料的全文 Evidence 与正式准入处理门。",
     "当前没有正式 Release；阶段 3 的试验投影和阶段 6 的样本 Evidence 不等于正式发布。",
-    "阶段 7 候选不得自动 promotion。阶段 8 根据业务能力问题筛选 ontology mapping shortlist；被选中的高风险、缩写、OCR-only、同义/旧称候选必须完成相应审核，审核通过前不得进入正式本体或运行词汇。"
+    "阶段 7 候选不得自动 promotion。阶段 8 根据业务能力问题筛选 ontology mapping shortlist；被选中的高风险、缩写、OCR-only、同义/旧称候选必须完成相应审核，审核通过前不得进入正式本体或运行词汇。",
+    "阶段 13 在用户明确解冻前保持 blocked；本状态及其冻结原因优先于任何自动 readiness 推导，Stage 13 不执行、不重放、不修改。"
   ]
 }

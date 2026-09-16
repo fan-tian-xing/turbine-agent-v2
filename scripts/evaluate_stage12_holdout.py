@@ -43,7 +43,7 @@ def evaluate() -> dict:
     if permission.get("entrypoint") != "scripts/evaluate_stage12_holdout.py" or "acceptance_holdout" not in permission.get("allowed_splits", []):
         raise ValueError("Stage 12 holdout evaluator is not authorized by the Evaluation Sample Registry")
     evidence_rows = _rows(ROOT / "data/stage11/stage11_holdout_evidence.jsonl")
-    gold = _rows(ROOT / "data/stage11/stage11_statement_holdout.jsonl")
+    all_gold = _rows(ROOT / "data/stage11/stage11_statement_holdout.jsonl")
     holdout_pages = {
         (row["document_logical_id"], int(row["physical_page"]))
         for row in registry.get("records", [])
@@ -67,11 +67,34 @@ def evaluate() -> dict:
         if row.get("review_status") == "accepted" and row.get("evidence_status") == "accepted":
             accepted_evidence.append(row)
     accepted_ids = {row["evidence_id"] for row in accepted_evidence}
-    gold = [row for row in gold if row.get("split") == "acceptance_holdout" and row.get("task") == "statement" and row.get("review_status") == "accepted" and {item["evidence_id"] for item in row.get("evidence_bindings", [])} <= accepted_ids]
+    gold = [row for row in all_gold if row.get("split") == "acceptance_holdout" and row.get("task") == "statement" and row.get("review_status") == "accepted" and {item["evidence_id"] for item in row.get("evidence_bindings", [])} <= accepted_ids]
+    excluded_gold = [row for row in all_gold if row not in gold]
+    exclusion_rule = "Only accepted Gold rows whose bound Evidence rows are accepted are evaluated; isolated Evidence/Gold is excluded before comparison."
+    excluded_gold_details = []
+    for row in excluded_gold:
+        evidence_ids = [item.get("evidence_id") for item in row.get("evidence_bindings", [])]
+        linked_isolation_reasons = [
+            evidence.get("review_reason")
+            for evidence in evidence_rows
+            if evidence.get("evidence_id") in evidence_ids and evidence.get("review_status") == "isolated"
+        ]
+        excluded_gold_details.append({
+            "sample_id": row.get("sample_id"),
+            "statement_id": row.get("statement_id"),
+            "document_key": row.get("document_key"),
+            "document_logical_id": row.get("document_logical_id"),
+            "physical_page": row.get("physical_page"),
+            "evidence_ids": evidence_ids,
+            "review_status": row.get("review_status"),
+            "exclusion_reason": row.get("review_reason") or "; ".join(linked_isolation_reasons) or "Gold row did not satisfy the frozen accepted-Evidence eligibility rule.",
+            "exclusion_rule": exclusion_rule,
+            "frozen_before_evaluation": True,
+            "selection_bias_assessment": "The pre-specified isolation rule excludes tabular hard cases from this metric; treat this as a coverage limitation, not a tuning signal.",
+        })
     router = ProfileRouter(ROUTING)
     candidates = []
     for evidence in accepted_evidence:
-        source = _input(evidence)
+        source = {**_input(evidence), "document_key": evidence["document_key"]}
         candidates.extend(router.extractor_for(source, split="acceptance_holdout").extract(source))
     evidence_by_id = {row["evidence_id"]: row for row in accepted_evidence}
     for candidate in candidates:
@@ -106,6 +129,10 @@ def evaluate() -> dict:
         "acceptance_eligibility": "historical_exposed", "eligible_for_final_acceptance": False,
         "exposure_reason": "The detailed result was exposed before this strict repair; it is retained for historical hard-case analysis and cannot be reused as final acceptance for the repaired version.",
         "blind_read": False, "isolated_pages_excluded": sum(row.get("review_status") == "isolated" for row in evidence_rows),
+        "registered_holdout_statement_count": len(all_gold), "evaluated_gold_statement_count": len(gold),
+        "excluded_gold_statement_count": len(excluded_gold), "excluded_gold_statements": excluded_gold_details,
+        "excluded_gold_contract": exclusion_rule,
+        "selection_bias_assessment": "The pre-specified isolation rule excludes tabular hard cases from this metric; treat this as a coverage limitation, not a tuning signal.",
         "accepted_evidence_count": len(accepted_evidence), "gold_artifact": "data/stage11/stage11_statement_holdout.jsonl", "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
         "input_sha256": {"registry": _sha(REGISTRY), "routing": _sha(ROUTING), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "evidence": _sha(ROOT / "data/stage11/stage11_holdout_evidence.jsonl"), "gold": _sha(ROOT / "data/stage11/stage11_statement_holdout.jsonl")},
         "candidate_artifact_written": False, "runtime_cache_written": False, "development_artifact_unchanged": True,

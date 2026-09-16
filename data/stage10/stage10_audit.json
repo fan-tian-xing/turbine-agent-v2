@@ -16,7 +16,7 @@
     },
     "data/stage9/stage9_exit_audit.json": {
       "path": "data/stage9/stage9_exit_audit.json",
-      "sha256": "3b3316ad4e35d1877ebcd9136d63bc22f6465c7c94ba16982248c640ff0d3e17"
+      "sha256": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483"
     },
     "data/stage8/ontology_mapping_shortlist.json": {
       "path": "data/stage8/ontology_mapping_shortlist.json",
@@ -137,7 +137,7 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-targeted-8fcc044fab72",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-targeted-f309e9048469",
         "tests/stage10",
         "tests/stage7",
         "tests/stage8",
@@ -160,13 +160,13 @@
         "-p",
         "no:cacheprovider",
         "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-full-7ed7d4e6d928",
+        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage10-audit-full-37a66576429b",
         "tests"
       ],
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 22%]\n........................................................................ [ 44%]\n........................................................................ [ 66%]\n........................................................................ [ 89%]\n...................................                                      [100%]\n",
+      "stdout_tail": "........................................................................ [ 21%]\n........................................................................ [ 43%]\n........................................................................ [ 65%]\n........................................................................ [ 87%]\n........................................                                 [100%]\n",
       "stderr_tail": ""
     }
   },

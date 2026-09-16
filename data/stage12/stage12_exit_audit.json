@@ -13,15 +13,15 @@
   "inputs": {
     "data/stage9/stage9_exit_audit.json": {
       "path": "data/stage9/stage9_exit_audit.json",
-      "sha256": "3b3316ad4e35d1877ebcd9136d63bc22f6465c7c94ba16982248c640ff0d3e17"
+      "sha256": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483"
     },
     "data/stage10/stage10_audit.json": {
       "path": "data/stage10/stage10_audit.json",
-      "sha256": "c800febcd8c23969ebecb709620d057b4f3ccff73e2228055161922868ca15c9"
+      "sha256": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d"
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "b01d73767c2482b481ada136053f53059c6f02f3e1059a17124f324880a21245"
+      "sha256": "de5281f5202e4bb2a5942b91d93624cb98cf242b8f6e5afcc3b5799e5bb93028"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
@@ -37,7 +37,7 @@
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "febada9885520557bfb488ab6b7f37f2256859a10ac5a83c55de8ec52d414d56"
+      "sha256": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
@@ -61,15 +61,19 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "55baf49bb263e6a7949538048ca186f2ed74524f404a4db4a4fa32224aba9fc6"
+      "sha256": "f85a0a4bad6d9b4c7824c638a44faf60b391e591c05fb21630f8271eae51fda4"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "e4e947c7d869f8816cc351844044553c0bfa89730e7fff75cf5fa3d6e63e40d7"
+      "sha256": "4219a0ebeb9342b3aac8599ee32a11e43640fca704a71feb6cc23a3e5aa3abd8"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "e1b69f86117c34ea080b6de64206006868aa0842cad9fe56af506e04e92defd1"
+      "sha256": "6cf40667cbd9b36671ebfa545a28b06e43b74f03dcf14dd889f0bc2aaaf5b127"
+    },
+    "data/project_state.json": {
+      "path": "data/project_state.json",
+      "sha256": "55533e066123ca57aadedf142512bd00c62a5711f4b87b1baec32162f63feaea"
     }
   },
   "outputs": {
@@ -99,28 +103,106 @@
     "development_evaluation_present": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
+    "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": true,
     "no_ontology_or_release_write": true,
+    "stage13_frozen_by_user": true,
     "development_quality_gate": false,
     "acceptance_quality_gate": false
+  },
+  "execution_evidence": {
+    "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
+    "stage12_production_like_pipeline": {
+      "status": "executed",
+      "scope": "representative_page_baseline",
+      "entrypoints": [
+        "scripts/build_stage12_candidates.py --force --evaluate-development",
+        "scripts/evaluate_stage12_holdout.py",
+        "scripts/audit_stage12_exit.py"
+      ]
+    },
+    "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
+    "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible"
   },
   "counts": {
     "representative_pages": 8,
     "documents": 5,
     "candidates": 25,
     "development_gold_statements": 19,
-    "holdout_gold_statements_evaluated": 48
+    "holdout_gold_statements_registered": 50,
+    "holdout_gold_statements_evaluated": 48,
+    "holdout_gold_statements_excluded": 2
+  },
+  "regression_matrix": {
+    "0": {
+      "verification_mode": "STATICALLY_VERIFIED",
+      "evidence": "data/project_state.json v2 boundary"
+    },
+    "1": {
+      "verification_mode": "STATICALLY_VERIFIED",
+      "evidence": "data/project_state.json stage 1 state"
+    },
+    "2": {
+      "verification_mode": "LINEAGE_VERIFIED",
+      "evidence": "data/project_state.json and Stage 2 exit audit"
+    },
+    "3": {
+      "verification_mode": "REPLAY_VERIFIED",
+      "evidence": "data/stage3/real_trial_execution.json"
+    },
+    "4": {
+      "verification_mode": "REPLAY_VERIFIED",
+      "evidence": "data/stage4/stage4_full_parse_audit_2026-09-12.json"
+    },
+    "5": {
+      "verification_mode": "LINEAGE_VERIFIED",
+      "evidence": "data/stage5/stage5_exit_audit_2026-09-12.json; frozen outputs not rerun"
+    },
+    "6": {
+      "verification_mode": "LINEAGE_VERIFIED",
+      "evidence": "data/stage6/stage6_exit_audit.json"
+    },
+    "7": {
+      "verification_mode": "REPLAY_VERIFIED",
+      "evidence": "data/stage7/stage7_exit_audit.json"
+    },
+    "8": {
+      "verification_mode": "STATICALLY_VERIFIED",
+      "evidence": "data/stage8/stage8_exit_audit.json"
+    },
+    "9": {
+      "verification_mode": "EXECUTED",
+      "evidence": "data/stage9/stage9_exit_audit.json and current Stage 9 gate"
+    },
+    "10": {
+      "verification_mode": "EXECUTED",
+      "evidence": "data/stage10/stage10_audit.json runtime consumer"
+    },
+    "11": {
+      "verification_mode": "REPLAY_VERIFIED",
+      "evidence": "data/stage11/stage11_exit_audit.json"
+    },
+    "12": {
+      "verification_mode": "EXECUTED",
+      "scope": "representative_page_baseline only",
+      "evidence": "Stage 12 manifest, candidates, evaluations and exit audit"
+    },
+    "13": {
+      "verification_mode": "FROZEN_BY_USER",
+      "not_executed": true,
+      "not_modified": true
+    }
   },
   "quality_observation": {
     "development_field_accuracy": {
       "statement_boundary": 0.9473684210526315,
       "statement_type": 0.9473684210526315,
       "entity": 0.9473684210526315,
-      "relation": 0.21052631578947367,
+      "relation": 1.0,
       "quantity": 1.0,
       "negation": 0.9473684210526315,
       "condition": 1.0,
-      "applicability": 0.0,
+      "applicability": 1.0,
       "evidence_grounding": 1.0
     },
     "holdout_field_accuracy": {
@@ -160,11 +242,11 @@
       "statement_boundary": 0.9473684210526315,
       "statement_type": 0.9473684210526315,
       "entity": 0.9473684210526315,
-      "relation": 0.21052631578947367,
+      "relation": 1.0,
       "quantity": 1.0,
       "negation": 0.9473684210526315,
       "condition": 1.0,
-      "applicability": 0.0,
+      "applicability": 1.0,
       "evidence_grounding": 1.0
     },
     "scale_gate": false,
@@ -181,16 +263,10 @@
     "reserve_independent_gold_not_ready"
   ],
   "next_stage_allowed": false,
-  "next_stage": "Stage 13 double-layer review and static review interface (formal entry blocked; tooling preparation only)",
-  "next_stage_inputs": {
-    "development_candidates": "data/stage12/stage12_development_candidates.json",
-    "development_evaluation": "data/stage12/stage12_development_evaluation.json",
-    "canonical_evidence": "data/stage6/stage6_evidence_bundle.jsonl",
-    "representative_baseline": "data/stage12/stage12_representative_baseline.json",
-    "profile_routing": "config/stage12_profile_routing.json"
-  },
+  "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",
+  "next_stage_inputs": {},
   "stage13_formal_entry": "blocked",
-  "stage13_parallel_tooling": "allowed_without_formal_stage_dependency",
+  "stage13_verification_mode": "FROZEN_BY_USER",
   "consumers": [
     "tests/stage12"
   ]

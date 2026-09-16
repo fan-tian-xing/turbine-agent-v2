@@ -6,9 +6,9 @@
 - `stage12_development_candidates.json` 是唯一候选输出，Producer 为 `build_stage12_candidates.py`，消费者为开发评测、Stage 12 审计和后续审核阶段。
 - `stage12_development_evaluation.json` 按边界、类型、实体、关系、量值、否定、条件、适用范围和 Evidence grounding 分字段记录开发结果，并分类错误。
 - `stage12_holdout_evaluation.json` 只能由 `evaluate_stage12_holdout.py` 生成；它读取留出 Evidence/Gold 后只写评测指标，不写回开发候选、Profile、规则或 runtime cache。
-- `stage12_exit_audit.json` 是本阶段退出证据记录；项目当前状态唯一以 `data/project_state.json` 为准。最新退出审计已确认 runtime、来源绑定、隔离、OWL/SHACL 和开发质量门禁全部通过，Stage 13 入口已开放。
+- `stage12_exit_audit.json` 是本阶段退出证据记录；项目当前状态唯一以 `data/project_state.json` 为准。当前 runtime、来源绑定、隔离和 OWL/SHACL 投影检查已通过，但开发集关系/适用范围质量门仍需修复，且代表页尚未具备章节级身份；Stage 13 按用户要求保持冻结，不执行、不重放、不修改。
 
-当前观测：开发集合同门禁字段均达到冻结阈值，Evidence grounding 为 1.0；关系等未设为本阶段退出阈值的字段仍完整保留在评测报告中，供后续审核阶段使用。留出结果仅用于独立验收记录，不能用于本轮调参。
+当前观测：开发集 Evidence grounding 为 1.0，但关系和适用范围字段仍按冻结阈值单独计量；Holdout 注册 50 条、其中 48 条按冻结的 accepted-Evidence 规则评测，2 条隔离表格行在比较前排除，详细行号、页码和原因以评测产物为准。留出结果历史上已暴露，只能作为不可用于调参的独立验收记录。
 
 运行方式：
 

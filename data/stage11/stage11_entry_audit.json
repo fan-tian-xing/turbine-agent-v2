@@ -24,11 +24,11 @@
     "statement_contract": "d30424f390e8c40f47b2e219a1befe00d02337bbe8a9dedbbb926252fedbb42a",
     "evaluation_sample_registry": "604f4d3bc50063915fbc5be81367658b7f4f863b01a179899afa5402eb32f1ab",
     "development_statement_samples": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
-    "holdout_statement_samples": "9d4fae255bc404092653d79f0b06784d146184c71faf52d14b20a0e7d9f7049c",
+    "holdout_statement_samples": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0",
     "holdout_evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
     "review_round_a": "4497e43a9ba04a86747eaec38cf57a6f4eebfdf1757b49fc98ae5baec4e509d7",
     "review_round_b": "4d74f78611e50f19c3d929e949a8db8120263d75faea57abaf05a1835d83bf70",
-    "adjudication_queue": "124ed2ad6573376bf3e65ba23f17832fb88a85b98cc2994b4a42b585925abdd4"
+    "adjudication_queue": "431b1574118a1a363fb4191a1b34500628dd051c932f55179c71058f82c7d587"
   },
   "sample_registry": {
     "development_regression_golden": {

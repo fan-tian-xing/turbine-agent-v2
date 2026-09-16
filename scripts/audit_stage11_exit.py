@@ -96,7 +96,13 @@ def validate_statement_semantics(row: dict) -> dict[str, bool]:
             (item for item in row.get("negation_scope", []) if item.get("surface_form") == surface_form),
             None,
         )
-        comparison_direction_ok = comparison_direction_ok and quantity.get("operator") in operators and bool(matching_negation) and matching_negation.get("polarity") == polarity
+        scope_text = (matching_negation or {}).get("scope", "")
+        scope_direction_ok = (
+            ("下限" in scope_text) if polarity == "lower_bound"
+            else ("上限" in scope_text) if polarity == "upper_bound"
+            else True
+        )
+        comparison_direction_ok = comparison_direction_ok and quantity.get("operator") in operators and bool(matching_negation) and matching_negation.get("polarity") == polarity and scope_direction_ok
     return {
         "numeric_fields_present_when_accepted": not (accepted and has_number and not row.get("quantities")),
         "negation_scope_present_when_accepted": not (accepted and has_negative and not row.get("negation_scope")),

@@ -93,10 +93,15 @@ def test_stage11_comparison_direction_matches_chinese_bound_semantics():
     row = next(row for row in rows if row["document_key"] == "D300N" and row["physical_page"] == 61)
     bounds = {item["surface_form"]: item for item in row["quantities"]}
     assert bounds["不小于工作齿长的60%"]["operator"] == "gte"
-    assert {item["polarity"] for item in row["negation_scope"] if item["surface_form"] == "不小于工作齿长的60%"} == {"lower_bound"}
+    first_bound = next(item for item in row["negation_scope"] if item["surface_form"] == "不小于工作齿长的60%")
+    assert first_bound["polarity"] == "lower_bound"
+    assert first_bound["scope"] == "对应参数下限"
     broken = json.loads(json.dumps(row, ensure_ascii=False))
     broken["quantities"][0]["operator"] = "lte"
     broken["negation_scope"][0]["polarity"] = "upper_bound"
+    assert validate_statement_semantics(broken)["comparison_direction_matches_text"] is False
+    broken = json.loads(json.dumps(row, ensure_ascii=False))
+    broken["negation_scope"][0]["scope"] = "对应参数上限"
     assert validate_statement_semantics(broken)["comparison_direction_matches_text"] is False
 
 

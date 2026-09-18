@@ -9,6 +9,7 @@ from pathlib import Path
 
 from turbine_kg.extraction.semantic import (
     ProfileRouter,
+    ProviderBackedExtractor,
     compare_candidates,
     load_contract,
     provider_from_config,
@@ -17,10 +18,59 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_evidence_binding,
     validate_candidate_payload,
 )
-from turbine_kg.observability.runtime import run_with_cache
+from turbine_kg.observability.runtime import canonical_json, run_with_cache
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE12 = ROOT / "data/stage12"
+
+
+def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
+    material = {
+        "evidence": evidence,
+        "profile": {
+            "semantic_role": profile.semantic_role,
+            "extraction_profile_id": profile.extraction_profile_id,
+            "source_profile_id": profile.source_profile_id,
+            "source_applicability_scope": list(profile.source_applicability_scope),
+            "external_llm_allowed": profile.external_llm_allowed,
+        },
+        "split": split,
+        "provider_id": provider.provider_id,
+        "provider_metadata": getattr(provider, "metadata", {}),
+        "prompt_sha256": _sha(ROOT / "config/stage12_prompt.txt"),
+        "response_schema_sha256": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "semantic_source_sha256": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+    }
+    return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
+
+
+def _extract_with_evidence_cache(evidence: dict, profile, provider, split: str, cache_root: Path) -> list[dict]:
+    """Reuse only fully validated structured candidates; never persist raw model text."""
+    if getattr(provider, "metadata", {}).get("mode") != "real_llm":
+        return ProviderBackedExtractor(provider, profile=profile, split=split).extract(evidence)
+    cache_key = _evidence_cache_key(evidence, profile, provider, split)
+    cache_path = cache_root / "evidence" / f"{cache_key}.json"
+    if cache_path.exists():
+        try:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+            if cached.get("schema_version") == 1 and cached.get("cache_key") == cache_key and cached.get("provider_id") == provider.provider_id:
+                candidates = cached.get("candidates") or []
+                for candidate in candidates:
+                    validate_candidate_evidence_binding(candidate, evidence)
+                    validate_candidate_against_evidence(candidate, evidence)
+                return candidates
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+            pass
+    candidates = ProviderBackedExtractor(provider, profile=profile, split=split).extract(evidence)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps({
+        "schema_version": 1,
+        "cache_key": cache_key,
+        "provider_id": provider.provider_id,
+        "provider_mode": "real_llm",
+        "candidates": candidates,
+    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return candidates
 
 
 def _sha(path: Path) -> str:
@@ -59,7 +109,7 @@ def _gate(manifest: dict) -> None:
             raise ValueError(f"Stage 12 manifest input hash is stale: {path}")
 
 
-def _build(manifest: dict) -> dict:
+def _build(manifest: dict, cache_root: Path) -> dict:
     evidence_by_id = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     router = ProfileRouter()
     provider = provider_from_config()
@@ -72,7 +122,7 @@ def _build(manifest: dict) -> dict:
             profile = router.route(evidence)
             if page.get("extraction_profile_id") != profile.extraction_profile_id or page.get("semantic_role") != profile.semantic_role:
                 raise ValueError(f"manifest Profile route does not match Evidence: {evidence_id}")
-            candidates.extend(router.extractor_for(evidence, split=manifest["source_split"], provider=provider).extract(evidence))
+            candidates.extend(_extract_with_evidence_cache(evidence, profile, provider, manifest["source_split"], cache_root))
     payload = {
         "schema_version": 1,
         "stage": "12",
@@ -92,7 +142,7 @@ def _build(manifest: dict) -> dict:
         },
         "extraction_profile": "profile_routing_v1",
         "provider_id": provider.provider_id,
-        "prompt_version": "stage12-candidate-prompt-v4",
+        "prompt_version": "stage12-candidate-prompt-v5",
         "provider_metadata": provider.metadata,
         "input_sha256": {path: _sha(ROOT / path) for path in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",
@@ -138,7 +188,7 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
         operation=contract["runtime"]["operation"],
         input_refs=input_refs,
         cache_context=({"extractor": "profile_routing_v1", "provider": provider_from_config().provider_id}, {"contract": _sha(ROOT / "config/stage12_statement_contract.json"), "profile_routing": _sha(ROOT / "config/stage12_profile_routing.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "extractor_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py")} ),
-        output=lambda: _build(manifest),
+        output=lambda: _build(manifest, ROOT / contract["runtime"]["cache_root"]),
         schema_path=ROOT / "config/runtime_run.schema.json",
         force=force,
         validate_input=lambda: _gate(manifest),

@@ -126,8 +126,6 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         "top_level_required": response_schema["required"],
         "candidate_required": candidate_schema["required"],
         "candidate_predicate_enum": candidate_schema["properties"]["predicate"]["enum"],
-        "candidate_statement_type_enum": candidate_schema["properties"]["statement_type"]["enum"],
-        "candidate_relation_direction_enum": candidate_schema["properties"]["relation_direction"]["enum"],
     }
     system = PROMPT_PATH.read_text(encoding="utf-8")
     system += (
@@ -138,7 +136,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v4",
+        "version": "stage12-candidate-prompt-v5",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -171,8 +169,8 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v4",
-        "response_schema_version": 1,
+        "prompt_version": "stage12-candidate-prompt-v5",
+        "response_schema_version": 2,
     }
 
     def extract(self, evidence: Mapping[str, Any], profile: ExtractionProfile) -> Mapping[str, Any]:
@@ -187,11 +185,13 @@ class FixtureExtractionProvider:
             "schema_version": 1,
             "response_kind": "stage12_candidate_extraction",
             "status": "ok" if rows else "no_statement",
-            "candidates": [{key: row[key] for key in (
-                "statement_text", "statement_type", "predicate", "subject_entities", "object_value",
-                "value", "unit", "quantities", "normative_modality", "negation_scope", "conditions",
-                "applicability_scope", "relation_direction",
-            )} | {"applicability_scope": {key: value for key, value in row["applicability_scope"].items() if key not in {"document_key", "physical_page", "logical_page"}}} for row in rows],
+            "candidates": [{
+                "statement_text": row["statement_text"],
+                "predicate": row["predicate"],
+                "subject_entities": [{"surface_form": entity["surface_form"]} for entity in row["subject_entities"]],
+                "conditions": [{"surface_form": condition["surface_form"]} for condition in row["conditions"]],
+                "applicability_scope": {key: value for key, value in row["applicability_scope"].items() if key in {"status", "applicability_text"}},
+            } for row in rows],
             "provider_metadata": self.metadata,
         })
 
@@ -210,8 +210,8 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v4",
-            "response_schema_version": 1,
+            "prompt_version": "stage12-candidate-prompt-v5",
+            "response_schema_version": 2,
         }
 
     def extract(
@@ -291,7 +291,10 @@ def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvide
         model = configured_value(provider.get("model_env", "LLM_MODEL"))
         credential = configured_value(provider.get("credential_env", "LLM_API_KEY"))
         timeout = float(configured_value(provider.get("timeout_env", "LLM_TIMEOUT_SECONDS")) or "60")
-        max_attempts = int(provider.get("max_attempts", 2))
+        transport_attempts = int(provider.get("transport_max_attempts", provider.get("max_attempts", 2)))
+        response_attempts = int(provider.get("response_max_attempts", provider.get("max_attempts", 2)))
+        backoff_base_seconds = float(provider.get("backoff_base_seconds", 1.0))
+        max_backoff_seconds = float(provider.get("max_backoff_seconds", 30.0))
         model_config_identifier = hashlib.sha256(
             canonical_json({"endpoint": endpoint, "model": model}).encode("utf-8")
         ).hexdigest()[:16]
@@ -301,15 +304,17 @@ def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvide
                 model=model,
                 api_key=credential,
                 timeout_seconds=timeout,
-                max_attempts=max_attempts,
+                max_attempts=transport_attempts,
                 json_mode=True,
+                backoff_base_seconds=backoff_base_seconds,
+                max_backoff_seconds=max_backoff_seconds,
             )
         except LLMTransportError as error:
             raise ExtractionProviderError("external LLM transport configuration is invalid") from error
         return ExternalLLMProvider(
             transport=transport,
             model_config_identifier=model_config_identifier,
-            max_attempts=max_attempts,
+            max_attempts=response_attempts,
         )
     raise ExtractionProviderError(f"unsupported Stage 12 provider kind: {provider.get('kind')}")
 
@@ -650,7 +655,8 @@ def _predicate(text: str, statement_type: str) -> str:
 
 
 def _has_causal_marker(text: str) -> bool:
-    return any(token in text for token in ("导致", "造成", "引起")) or bool(re.search(r"可能使[^，。；]{1,24}(?:形成|损坏|升高|产生)", text))
+    direct_cause = bool(re.search(r"(?<!所)(?:导致|造成|引起)", text))
+    return direct_cause or bool(re.search(r"可能使[^，。；]{1,24}(?:形成|损坏|升高|产生)", text))
 
 
 def _relation_direction(text: str, predicate: str) -> str:
@@ -755,10 +761,38 @@ class HeuristicSemanticExtractor:
 def _assemble_candidate(
     item: Mapping[str, Any], evidence: Mapping[str, Any], profile: ExtractionProfile, split: str, index: int,
 ) -> dict[str, Any]:
-    """Bind provider semantics to canonical Evidence without repairing meaning."""
+    """Bind LLM semantics to Evidence and derive reliable fields deterministically."""
     location = _location(evidence)
     statement_text = str(item["statement_text"])
-    applicability = dict(item.get("applicability_scope") or {})
+    statement_type = _statement_type(statement_text, str(evidence.get("evidence_role") or ""))
+    predicate = str(item["predicate"])
+    quantities, value, unit = _quantity_fields(statement_text)
+    raw_entities = item.get("subject_entities") or []
+    subject_entities = []
+    for entity in raw_entities:
+        surface_form = str(entity.get("surface_form", "")).strip()
+        if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
+            raise ValueError("candidate entity is not grounded in statement text")
+        subject_entities.append({"surface_form": surface_form, "role": "subject", "entity_class": "candidate"})
+    raw_conditions = item.get("conditions") or []
+    conditions = []
+    for condition in raw_conditions:
+        surface_form = str(condition.get("surface_form", "")).strip()
+        if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
+            raise ValueError("candidate condition is not grounded in statement text")
+        conditions.append({"surface_form": surface_form, "kind": "condition"})
+    raw_scope = dict(item.get("applicability_scope") or {})
+    scope_status = raw_scope.get("status")
+    scope_text = raw_scope.get("applicability_text")
+    if scope_status == "known" and not scope_text:
+        raise ValueError("known applicability must preserve exact wording")
+    if scope_status == "unknown" and scope_text:
+        raise ValueError("unknown applicability must omit applicability_text")
+    if scope_text and _normalized_text(str(scope_text)) not in _normalized_text(statement_text):
+        raise ValueError("candidate applicability wording is not grounded in statement text")
+    applicability = {"status": scope_status}
+    if scope_text:
+        applicability["applicability_text"] = str(scope_text)
     # The profile scope is routing metadata.  It remains available to the
     # provider/profile, but must not be copied into statement applicability
     # unless the provider explicitly returned that fact from the Evidence.
@@ -771,17 +805,17 @@ def _assemble_candidate(
         "split": split,
         "task": "statement",
         "statement_text": statement_text,
-        "statement_type": item["statement_type"],
-        "predicate": item["predicate"],
-        "relation_direction": item["relation_direction"],
-        "subject_entities": item["subject_entities"],
-        "object_value": item["object_value"],
-        "value": item.get("value"),
-        "unit": item.get("unit"),
-        "quantities": item.get("quantities", []),
-        "normative_modality": item["normative_modality"],
-        "negation_scope": item.get("negation_scope", []),
-        "conditions": item.get("conditions", []),
+        "statement_type": statement_type,
+        "predicate": predicate,
+        "relation_direction": _relation_direction(statement_text, predicate),
+        "subject_entities": subject_entities,
+        "object_value": {"kind": "source_assertion", "value": statement_text},
+        "value": value,
+        "unit": unit,
+        "quantities": quantities,
+        "normative_modality": _modality(statement_text),
+        "negation_scope": _negation_fields(statement_text),
+        "conditions": conditions,
         "applicability_scope": applicability,
         "evidence_bindings": [{"evidence_id": evidence["evidence_id"], "support_type": evidence.get("support_type", "direct")}],
         "source_span_ids": [item for item in location["source_span_ids"] if item],
@@ -888,12 +922,14 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("candidate statement text and predicate are required")
     if candidate.get("predicate") not in COARSE_RELATIONS:
         raise ValueError("candidate predicate is outside the Stage 12 coarse relation vocabulary")
-    if candidate.get("relation_direction") not in {"subject_to_object", "cause_to_effect", "condition_to_consequence", "procedure_order", "scope_to_subject"}:
+    if candidate.get("relation_direction") != _relation_direction(text, str(candidate.get("predicate", ""))):
         raise ValueError("candidate relation direction is required")
     if candidate.get("object_value", {}).get("value") != text:
         raise ValueError("candidate object_value must preserve statement_text")
     if not candidate.get("subject_entities"):
         raise ValueError("candidate must retain at least one subject entity")
+    if any(_normalized_text(entity.get("surface_form")) not in _normalized_text(text) for entity in candidate.get("subject_entities", [])):
+        raise ValueError("candidate entity is not grounded in statement text")
     if candidate.get("normative_modality") not in {"shall", "must", "descriptive"}:
         raise ValueError("unsupported normative modality")
     for item in [*candidate.get("conditions", []), *candidate.get("negation_scope", [])]:
@@ -911,6 +947,10 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
     scope = candidate.get("applicability_scope") or {}
     if scope.get("status") not in {"known", "unknown"}:
         raise ValueError("candidate applicability must explicitly be known or unknown")
+    if scope.get("status") == "known" and not scope.get("applicability_text"):
+        raise ValueError("known applicability must preserve wording")
+    if scope.get("status") == "unknown" and scope.get("applicability_text"):
+        raise ValueError("unknown applicability must omit wording")
     if scope.get("applicability_text") and _normalized_text(scope["applicability_text"]) not in _normalized_text(text):
         raise ValueError("candidate applicability wording is not grounded in statement text")
     if candidate.get("predicate") == "causes" and candidate.get("relation_direction") != "cause_to_effect":
@@ -936,6 +976,9 @@ def validate_candidate_against_evidence(candidate: Mapping[str, Any], evidence: 
         raise ValueError("candidate Evidence quote is not canonical")
     if _text_similarity(candidate.get("statement_text"), evidence_text) < 0.45:
         raise ValueError("candidate statement is not grounded in Evidence context")
+    for entity in candidate.get("subject_entities", []):
+        if _normalized_text(entity.get("surface_form")) not in _normalized_text(evidence_text):
+            raise ValueError("candidate entity is not grounded in Evidence")
     expected_quantities = _quantity_fields(evidence_text)[0]
     actual_quantities = candidate.get("quantities", [])
     if any(not _quantity_is_supported(item, expected_quantities) for item in actual_quantities):

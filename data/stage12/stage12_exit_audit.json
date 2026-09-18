@@ -45,7 +45,7 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "a7d3e19a3e33ad69b867af1db43a4d15291522e270e6b7fc1cbdbf7143112397"
+      "sha256": "79b15ce8e598a3abcd4140ce4b80ea313027d59703250cf479035d57100f123c"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
@@ -53,19 +53,19 @@
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "f16dcd80ed7398c9481c58d280ad796a3c15190a70b980863931da33df013b10"
+      "sha256": "08b0a602e93531972f0fe6e4b44c75fbd530c653323fdc2e4543fc5130a21873"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "efb41455db6b133b743e7d622b5100cb6beb113aad962d7408be18401a375607"
+      "sha256": "41d4578f614778453bdbe9500c0928a2e865168fb01572d03522f3b9a6cd7ef3"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
-      "sha256": "2b537f0c077ca6b9062c0d0e92f8a20091d41bf4a28a4428dcfaf2c2d95cae14"
+      "sha256": "0eee0690e97804813c1ab7136db85af41e5636daa46fc4fa810ed359f2484d65"
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "5d99bbefea60ce388ed64ea609e261b41f4086514c91b3c453937536dbe9a83e"
+      "sha256": "d52d5acd1d1005cf769eed9b23fb3555c4f94b4c307c474574ee7c44cffb90bb"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -77,15 +77,15 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "0c4d5e6ab74378dc5b8f255d4d7199faea73956db73c3320a186eff0382eb277"
+      "sha256": "1abcba46fb283698ffd202d107adc5d126569e67c34176b0ef951a16a9a4cdf3"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "6fa7282f45ad6fc63fbfe2d4bb1d82b02786a69fac84599046f0d5225ee14d15"
+      "sha256": "3518b7db44f85b69c29f84f52b5f888ee34bece95165f06f9c4c12472db0d1e4"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "3078d93a1bb13291a5a622f94681631531ab83028a9c1626ac1e6cf98e8b531d"
+      "sha256": "6311f6e3a378a0beddaf0477c0fee671cece15b12a4ec13083d1be27caebf235"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -97,7 +97,7 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "6c6ce4f544691ad404f7adc063f2f3930b32c5f8064891577985a570f2475807"
+      "sha256": "2193bdd657cb59dc7f8aac275ba347696524f25839ffed66d2d6a5a5299350a8"
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
@@ -136,20 +136,20 @@
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": false,
+    "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": false,
-    "producer_reexecution_current": false,
-    "candidate_input_lineage_current": false,
+    "real_llm_execution_verified": true,
+    "producer_reexecution_current": true,
+    "candidate_input_lineage_current": true,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": false,
+    "development_evaluation_present": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": false,
     "no_ontology_or_release_write": true,
-    "robustness_evaluation_present": false,
+    "robustness_evaluation_present": true,
     "semantic_coverage_matrix_present": true,
     "stage13_frozen_by_user": true,
     "development_quality_gate": false,
@@ -157,13 +157,19 @@
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
+    "PRODUCTION_LLM_PIPELINE_READY": false,
+    "DEVELOPMENT_QUALITY_GATE": false,
+    "STAGE12_EXIT": false,
+    "validated_real_evidence_cache_count": 10,
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "blocked",
+      "status": "executed",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
-      "real_llm_execution_verified": false,
-      "failure": "external LLM provider failed",
+      "real_llm_execution_verified": true,
+      "failure": null,
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -177,7 +183,7 @@
   "counts": {
     "representative_pages": 8,
     "documents": 5,
-    "candidates": 25,
+    "candidates": 24,
     "development_gold_statements": 19,
     "holdout_gold_statements_registered": 50,
     "holdout_gold_statements_evaluated": 48,
@@ -245,20 +251,20 @@
   },
   "quality_observation": {
     "development_field_accuracy": {
-      "statement_boundary": 0.9473684210526315,
-      "statement_type": 0.9473684210526315,
-      "entity": 0.8947368421052632,
+      "statement_boundary": 0.8421052631578947,
+      "statement_type": 0.6842105263157895,
+      "entity": 0.6842105263157895,
       "relation": 0.7368421052631579,
-      "quantity": 1.0,
-      "unit": 1.0,
-      "comparison": 0.9473684210526315,
-      "negation": 0.9473684210526315,
-      "condition": 1.0,
-      "applicability": 0.15789473684210525,
-      "applicability_meaning": 0.15789473684210525,
-      "relation_direction": 0.9473684210526315,
-      "unsupported_addition": 0.8421052631578947,
-      "evidence_grounding": 1.0
+      "quantity": 0.8947368421052632,
+      "unit": 0.8947368421052632,
+      "comparison": 0.8421052631578947,
+      "negation": 0.8947368421052632,
+      "condition": 0.8947368421052632,
+      "applicability": 0.05263157894736842,
+      "applicability_meaning": 0.05263157894736842,
+      "relation_direction": 0.7894736842105263,
+      "unsupported_addition": 0.5263157894736842,
+      "evidence_grounding": 0.8947368421052632
     },
     "holdout_field_accuracy": {
       "statement_boundary": 0.875,
@@ -299,20 +305,20 @@
       "evidence_grounding": 1.0
     },
     "development_recomputed": {
-      "statement_boundary": 0.9473684210526315,
-      "statement_type": 0.9473684210526315,
-      "entity": 0.8947368421052632,
+      "statement_boundary": 0.8421052631578947,
+      "statement_type": 0.6842105263157895,
+      "entity": 0.6842105263157895,
       "relation": 0.7368421052631579,
-      "quantity": 1.0,
-      "unit": 1.0,
-      "comparison": 0.9473684210526315,
-      "negation": 0.9473684210526315,
-      "condition": 1.0,
-      "applicability": 0.15789473684210525,
-      "applicability_meaning": 0.15789473684210525,
-      "relation_direction": 0.9473684210526315,
-      "unsupported_addition": 0.8421052631578947,
-      "evidence_grounding": 1.0
+      "quantity": 0.8947368421052632,
+      "unit": 0.8947368421052632,
+      "comparison": 0.8421052631578947,
+      "negation": 0.8947368421052632,
+      "condition": 0.8947368421052632,
+      "applicability": 0.05263157894736842,
+      "applicability_meaning": 0.05263157894736842,
+      "relation_direction": 0.7894736842105263,
+      "unsupported_addition": 0.5263157894736842,
+      "evidence_grounding": 0.8947368421052632
     },
     "scale_gate": false,
     "interpretation": "development metrics may guide extractor work; the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"
@@ -326,16 +332,10 @@
   "blockers": [
     "acceptance_holdout_exposed",
     "acceptance_quality_gate",
-    "candidate_input_lineage_current",
-    "candidate_schema_and_stage9_gate",
-    "development_evaluation_present",
     "development_quality_gate",
     "grounding_zero_tolerance",
-    "producer_reexecution_current",
-    "real_llm_execution_verified",
     "representative_chapter_scope_resolved",
     "reserve_independent_gold_not_ready",
-    "robustness_evaluation_present",
     "robustness_quality_gate"
   ],
   "next_stage_allowed": false,
@@ -346,8 +346,15 @@
   "provider_contract_ready": true,
   "fixture_pipeline_ready": true,
   "production_llm_pipeline_ready": false,
-  "real_llm_execution": false,
-  "real_llm_reexecution_error": "external LLM provider failed",
+  "real_llm_execution": true,
+  "stage12_status_summary": {
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
+    "PRODUCTION_LLM_PIPELINE_READY": false,
+    "DEVELOPMENT_QUALITY_GATE": false,
+    "STAGE12_EXIT": false
+  },
+  "real_llm_reexecution_error": null,
   "consumers": [
     "tests/stage12"
   ]

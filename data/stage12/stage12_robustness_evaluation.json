@@ -2,49 +2,49 @@
   "schema_version": 1,
   "stage": "12",
   "artifact_kind": "stage12_development_robustness_evaluation",
-  "status": "blocked",
+  "status": "completed",
   "formal_release": false,
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "cases_artifact": "data/stage12/stage12_robustness_cases.json",
   "provider_id": "external_llm_openai_compatible_v1",
   "execution_kind": "real_llm",
-  "real_llm_execution": false,
-  "provider_call_count": 2,
-  "provider_failure_count": 4,
+  "real_llm_execution": true,
+  "provider_call_count": 6,
+  "provider_failure_count": 0,
   "case_count": 6,
-  "passed_count": 0,
-  "failed_count": 6,
+  "passed_count": 2,
+  "failed_count": 4,
   "results": [
     {
       "case_id": "metamorphic-lifecycle-01",
       "passed": false,
-      "failure": "external LLM provider failed"
+      "failure": null
     },
     {
       "case_id": "metamorphic-lifecycle-02",
       "passed": false,
-      "failure": "external LLM provider failed"
+      "failure": null
     },
     {
       "case_id": "metamorphic-condition-01",
       "passed": false,
-      "failure": "external LLM provider failed"
+      "failure": null
     },
     {
       "case_id": "metamorphic-causality-01",
-      "passed": false,
-      "failure": "external LLM provider failed"
+      "passed": true,
+      "failure": null
     },
     {
       "case_id": "metamorphic-negation-01",
       "passed": false,
-      "failure": "candidate contains an unsupported negation"
+      "failure": null
     },
     {
       "case_id": "metamorphic-comparison-01",
-      "passed": false,
-      "failure": "candidate contains an unsupported quantity, unit, or comparison operator"
+      "passed": true,
+      "failure": null
     }
   ]
 }

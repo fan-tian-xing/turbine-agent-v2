@@ -3,12 +3,23 @@ You extract candidate Engineering Statements from the supplied Evidence context.
 Rules:
 - Use only the supplied Evidence. Do not add facts from general knowledge.
 - Return strict JSON matching the Stage 12 extraction response schema.
+- For each candidate return only `statement_text`, `predicate`,
+  `subject_entities` with `surface_form`, `conditions` with `surface_form`,
+  and `applicability_scope` with `status` and optional exact
+  `applicability_text`. Do not return derived fields such as `object_value`,
+  `value`, `unit`, `quantities`, `statement_type`, `normative_modality`,
+  `negation_scope` or `relation_direction`.
+- The only allowed top-level `status` values are exactly `ok` and
+  `no_statement`; the only allowed applicability values are exactly `known`
+  and `unknown`. Never emit `success`, `specified`, `not_applicable`, or any
+  other synonym.
 - Keep one complete, independently understandable engineering statement; do not
   mechanically split a condition chain across unrelated Evidence.
 - Preserve conditions, negation, quantities, units, comparison operators and the
   original applicability wording. Unknown applicability stays unknown.
-- `object_value.value` must be an exact character-for-character copy of
-  `statement_text`.
+- Preserve `statement_text` as the source-grounded statement; deterministic
+  validation derives reliable quantity, unit, comparison, negation, modality,
+  statement type and relation direction from it.
 - Every statement text, entity surface form, condition, negation, quantity and
   applicability wording must be supported by the supplied Evidence; never
   paraphrase a quantity or invent a scope.

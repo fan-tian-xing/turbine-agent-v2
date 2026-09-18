@@ -1,6 +1,8 @@
 import hashlib
 import json
+from email.message import Message
 from pathlib import Path
+from urllib.error import HTTPError
 
 import pytest
 
@@ -19,6 +21,7 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_against_evidence,
     validate_candidate_payload,
 )
+from turbine_kg.llm_client import OpenAICompatibleChatTransport
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -152,7 +155,7 @@ def test_external_provider_uses_strict_transport_without_fixture_fallback():
 def test_external_provider_retries_deterministic_semantic_feedback_without_repairing():
     valid = FixtureExtractionProvider().extract(_evidence(), _external_profile())
     invalid = json.loads(json.dumps(valid, ensure_ascii=False))
-    invalid["candidates"][0]["object_value"]["value"] = "未经证据支持的改写"
+    invalid["candidates"][0]["applicability_scope"] = {"status": "known", "applicability_text": "未经证据支持的范围"}
     responses = iter([json.dumps(invalid, ensure_ascii=False), json.dumps(valid, ensure_ascii=False)])
     prompts = []
 
@@ -193,6 +196,66 @@ def test_external_provider_surfaces_timeout_without_fixture_fallback():
     provider = ExternalLLMProvider(transport=lambda prompt: (_ for _ in ()).throw(TimeoutError()), max_attempts=1)
     with pytest.raises(ExtractionProviderError, match="provider failed"):
         provider.extract(_evidence(), _external_profile())
+
+
+def test_transport_retries_retry_after_without_logging_or_fallback():
+    calls = []
+    sleeps = []
+    headers = Message()
+    headers["Retry-After"] = "0"
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            return False
+
+        def read(self):
+            return json.dumps({"choices": [{"message": {"content": "{}"}}]}).encode()
+
+    def opener(request, timeout):
+        calls.append(timeout)
+        if len(calls) == 1:
+            raise HTTPError("https://example.invalid", 503, "busy", headers, None)
+        return Response()
+
+    transport = OpenAICompatibleChatTransport(
+        endpoint="https://example.invalid/v1",
+        model="test",
+        api_key="secret-for-test",
+        timeout_seconds=3,
+        max_attempts=2,
+        backoff_base_seconds=9,
+        sleeper=sleeps.append,
+        opener=opener,
+    )
+    assert transport({"system": "system", "user": "user"}) == "{}"
+    assert len(calls) == 2
+    assert sleeps == [0.0]
+
+
+def test_real_evidence_cache_reuses_only_validated_candidates(tmp_path):
+    from scripts.build_stage12_candidates import _extract_with_evidence_cache
+
+    response = FixtureExtractionProvider().extract(_evidence(), _external_profile())
+    calls = []
+
+    def transport(prompt):
+        calls.append(prompt)
+        return json.dumps(response, ensure_ascii=False)
+
+    provider = ExternalLLMProvider(transport=transport, model_config_identifier="test-model", max_attempts=1)
+    first = _extract_with_evidence_cache(_evidence(), _external_profile(), provider, "development_regression_golden", tmp_path)
+    second = _extract_with_evidence_cache(
+        _evidence(),
+        _external_profile(),
+        ExternalLLMProvider(transport=lambda prompt: (_ for _ in ()).throw(AssertionError("cache miss")), model_config_identifier="test-model", max_attempts=1),
+        "development_regression_golden",
+        tmp_path,
+    )
+    assert len(first) == len(second) == 1
+    assert len(calls) == 1
 
 
 def test_robustness_artifact_is_development_only_and_passes():

@@ -2,27 +2,29 @@
 
 The extractor consumes reviewed Evidence text and emits candidates only.  It
 does not read Gold labels, create formal Statements, or write a graph.  The
-small rule backend is deliberately an interchangeable extractor implementation
-so a JSON-only LLM backend can be injected later without changing the runtime
-or evaluation contract.
+production provider is an LLM-backed JSON extractor; the small rule backend is
+available only as an explicit fixture for tests and offline pipeline checks.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import unicodedata
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 
 from jsonschema import Draft202012Validator
 
 from turbine_kg.observability.runtime import canonical_json
 from turbine_kg.ontology.semantic import validate_runtime_payload
+from turbine_kg.settings import Settings
+from turbine_kg.llm_client import LLMTransportError, OpenAICompatibleChatTransport
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -89,6 +91,9 @@ class ExtractionSchemaError(ValueError):
     """Provider returned a response that does not satisfy the strict schema."""
 
 
+OpenAICompatibleTransport = OpenAICompatibleChatTransport
+
+
 def parse_provider_response(raw: str | Mapping[str, Any], schema_path: Path = RESPONSE_SCHEMA_PATH) -> dict[str, Any]:
     """Parse only strict JSON; never recover JSON from prose or Markdown fences."""
     if isinstance(raw, str):
@@ -115,9 +120,26 @@ def parse_provider_response(raw: str | Mapping[str, Any], schema_path: Path = RE
 
 def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") -> dict[str, str]:
     """Build a traceable prompt envelope without embedding source-specific rules."""
+    response_schema = json.loads(RESPONSE_SCHEMA_PATH.read_text(encoding="utf-8"))
+    candidate_schema = response_schema["$defs"]["candidate"]
+    schema_summary = {
+        "top_level_required": response_schema["required"],
+        "candidate_required": candidate_schema["required"],
+        "candidate_predicate_enum": candidate_schema["properties"]["predicate"]["enum"],
+        "candidate_statement_type_enum": candidate_schema["properties"]["statement_type"]["enum"],
+        "candidate_relation_direction_enum": candidate_schema["properties"]["relation_direction"]["enum"],
+    }
+    system = PROMPT_PATH.read_text(encoding="utf-8")
+    system += (
+        "\n\nThe following required-field summary is authoritative. Return an object "
+        "that validates against the local machine-readable JSON Schema exactly; "
+        "do not use legacy fields such as relation, statement, applicability, "
+        "or evidence_ids:\n"
+        + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
+    )
     return {
-        "version": "stage12-candidate-prompt-v1",
-        "system": PROMPT_PATH.read_text(encoding="utf-8"),
+        "version": "stage12-candidate-prompt-v4",
+        "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
 
@@ -145,6 +167,14 @@ class FixtureExtractionProvider:
 
     provider_id = "deterministic_fixture_v1"
 
+    metadata = {
+        "provider_id": provider_id,
+        "mode": "fixture",
+        "model_config_identifier": "deterministic-fixture-v1",
+        "prompt_version": "stage12-candidate-prompt-v4",
+        "response_schema_version": 1,
+    }
+
     def extract(self, evidence: Mapping[str, Any], profile: ExtractionProfile) -> Mapping[str, Any]:
         fixture = HeuristicSemanticExtractor(
             profile_id=profile.extraction_profile_id,
@@ -162,26 +192,75 @@ class FixtureExtractionProvider:
                 "value", "unit", "quantities", "normative_modality", "negation_scope", "conditions",
                 "applicability_scope", "relation_direction",
             )} | {"applicability_scope": {key: value for key, value in row["applicability_scope"].items() if key not in {"document_key", "physical_page", "logical_page"}}} for row in rows],
-            "provider_metadata": {"provider_id": self.provider_id, "mode": "fixture"},
+            "provider_metadata": self.metadata,
         })
 
 
 class ExternalLLMProvider:
-    """Provider shell for a future configured adapter; no vendor is embedded."""
+    """Configured LLM Provider with strict response handling and no fallback."""
 
-    provider_id = "external_llm_unconfigured"
+    provider_id = "external_llm_openai_compatible_v1"
 
-    def __init__(self, transport: Any = None):
+    def __init__(self, transport: Any = None, *, model_config_identifier: str = "", max_attempts: int = 2):
         self.transport = transport
+        self.model_config_identifier = model_config_identifier
+        self.max_attempts = max_attempts
+        self.metadata = {
+            "provider_id": self.provider_id,
+            "mode": "real_llm",
+            "transport": "openai_compatible_chat_completions",
+            "model_config_identifier": model_config_identifier,
+            "prompt_version": "stage12-candidate-prompt-v4",
+            "response_schema_version": 1,
+        }
 
-    def extract(self, evidence: Mapping[str, Any], profile: ExtractionProfile) -> Mapping[str, Any]:
+    def extract(
+        self,
+        evidence: Mapping[str, Any],
+        profile: ExtractionProfile,
+        *,
+        response_validator: Callable[[Mapping[str, Any]], None] | None = None,
+    ) -> Mapping[str, Any]:
         if self.transport is None:
             raise ExtractionProviderError("external LLM provider has no configured transport")
-        try:
-            raw = self.transport(stage12_prompt(evidence, profile))
-        except Exception as error:  # provider failures must not look like validation failures
-            raise ExtractionProviderError(f"external LLM provider failed: {error}") from error
-        return parse_provider_response(raw)
+        prompt = stage12_prompt(evidence, profile)
+        last_schema_error: ExtractionSchemaError | None = None
+        for attempt in range(self.max_attempts):
+            try:
+                raw = self.transport(prompt)
+                response = parse_provider_response(raw)
+                if response_validator is not None:
+                    response_validator(response)
+                return response | {"provider_metadata": self.metadata}
+            except ExtractionSchemaError as error:
+                last_schema_error = error
+                if attempt + 1 >= self.max_attempts:
+                    raise ExtractionProviderError(
+                        f"external LLM response failed Stage 12 schema after {self.max_attempts} attempts"
+                    ) from error
+                prompt = prompt | {
+                    "system": prompt["system"]
+                    + "\n\nYour previous response failed strict validation. Correct these validation errors and return only corrected JSON:\n"
+                    + str(error)
+                }
+            except ExtractionProviderError:
+                raise
+            except LLMTransportError as error:
+                raise ExtractionProviderError("external LLM provider failed") from error
+            except ValueError as error:
+                last_schema_error = None
+                if attempt + 1 >= self.max_attempts:
+                    raise ExtractionProviderError(
+                        f"external LLM response failed Stage 12 semantic validation after {self.max_attempts} attempts"
+                    ) from error
+                prompt = prompt | {
+                    "system": prompt["system"]
+                    + "\n\nYour previous response failed deterministic Evidence validation. Correct the semantic fields and return only corrected JSON:\n"
+                    + str(error)
+                }
+            except Exception as error:  # provider failures must not look like validation failures
+                raise ExtractionProviderError("external LLM provider failed") from error
+        raise ExtractionProviderError("external LLM response failed strict parsing") from last_schema_error
 
 
 def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvider:
@@ -193,7 +272,45 @@ def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvide
     if provider.get("kind") == "deterministic_fixture":
         return FixtureExtractionProvider()
     if provider.get("kind") == "external_llm":
-        return ExternalLLMProvider()
+        settings = Settings.from_environment()
+        env_to_value = {
+            "LLM_BASE_URL": settings.llm_base_url,
+            "LLM_MODEL": settings.llm_model,
+            "LLM_API_KEY": settings.llm_api_key,
+            "LLM_ALLOW_EVIDENCE_SEND": str(settings.llm_allow_evidence_send).lower(),
+            "LLM_TIMEOUT_SECONDS": str(settings.llm_timeout_seconds),
+        }
+
+        def configured_value(name: str) -> str:
+            return str(env_to_value.get(name, os.environ.get(name, "")))
+
+        permission_env = provider.get("permission_env", "LLM_ALLOW_EVIDENCE_SEND")
+        if configured_value(permission_env).lower() != "true":
+            raise ExtractionProviderError(f"external LLM evidence-send permission is not enabled: {permission_env}")
+        endpoint = configured_value(provider.get("endpoint_env", "LLM_BASE_URL"))
+        model = configured_value(provider.get("model_env", "LLM_MODEL"))
+        credential = configured_value(provider.get("credential_env", "LLM_API_KEY"))
+        timeout = float(configured_value(provider.get("timeout_env", "LLM_TIMEOUT_SECONDS")) or "60")
+        max_attempts = int(provider.get("max_attempts", 2))
+        model_config_identifier = hashlib.sha256(
+            canonical_json({"endpoint": endpoint, "model": model}).encode("utf-8")
+        ).hexdigest()[:16]
+        try:
+            transport = OpenAICompatibleTransport(
+                endpoint=endpoint,
+                model=model,
+                api_key=credential,
+                timeout_seconds=timeout,
+                max_attempts=max_attempts,
+                json_mode=True,
+            )
+        except LLMTransportError as error:
+            raise ExtractionProviderError("external LLM transport configuration is invalid") from error
+        return ExternalLLMProvider(
+            transport=transport,
+            model_config_identifier=model_config_identifier,
+            max_attempts=max_attempts,
+        )
     raise ExtractionProviderError(f"unsupported Stage 12 provider kind: {provider.get('kind')}")
 
 
@@ -224,7 +341,7 @@ class ProfileRouter:
                             raise ProfileRoutingError(f"conflicting source applicability scope: {document_id}/{key}")
                         existing[key] = value
                 explicit = source.get("external_llm_allowed")
-                source_permissions[document_id] = bool(explicit) if isinstance(explicit, bool) else source.get("external_processing_status") == "external_allowed"
+                source_permissions[document_id] = bool(explicit) if isinstance(explicit, bool) else source.get("external_processing_status") == "allowed"
         for entry in entries:
             key = (str(entry.get("document_logical_id", "")), str(entry.get("revision_id", "")))
             profile = ExtractionProfile(
@@ -275,7 +392,16 @@ class ProviderBackedExtractor:
     def extract(self, evidence: Mapping[str, Any]) -> list[dict[str, Any]]:
         if isinstance(self.provider, ExternalLLMProvider) and not self.profile.external_llm_allowed:
             raise ExtractionProviderError("source-level permission denies sending Evidence to an external LLM")
-        response = parse_provider_response(self.provider.extract(evidence, self.profile))
+        if isinstance(self.provider, ExternalLLMProvider):
+            def response_validator(response: Mapping[str, Any]) -> None:
+                for index, item in enumerate(response["candidates"], start=1):
+                    candidate = _assemble_candidate(item, evidence, self.profile, self.split, index)
+                    validate_candidate_against_evidence(candidate, evidence)
+
+            raw_response = self.provider.extract(evidence, self.profile, response_validator=response_validator)
+        else:
+            raw_response = self.provider.extract(evidence, self.profile)
+        response = parse_provider_response(raw_response)
         rows = []
         for index, item in enumerate(response["candidates"], start=1):
             rows.append(_assemble_candidate(item, evidence, self.profile, self.split, index))

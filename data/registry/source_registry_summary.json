@@ -12,11 +12,11 @@
   "manual_finding_count": 13,
   "admission_status_counts": {
     "metadata_review_required": 35,
-    "reference_only": 1,
-    "excluded_private_evaluation": 0,
     "duplicate_or_derivative": 4,
+    "reference_only": 1,
+    "admitted": 5,
     "quarantined": 3,
-    "admitted": 5
+    "excluded_private_evaluation": 0
   },
   "text_layer_status_counts": {
     "mixed_or_low_quality": 1,

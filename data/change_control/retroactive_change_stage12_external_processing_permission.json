@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "retroactive_change_control",
+  "change_id": "stage12-external-processing-permission-2026-09-17",
+  "discovery_stage": 12,
+  "affected_completed_stages": [5, 6, 7, 8, 9, 10, 11],
+  "reason": "Stage 12 formal semantic extraction requires an LLM, while the selected reviewed Sources were still marked local_only. The user-authorized processing decision is recorded through the existing Registry manual-review input and regenerated Registry outputs.",
+  "authoritative_path": {
+    "review_input": "data/registry/source_manual_findings.jsonl",
+    "producer": "scripts/build_source_registry.py",
+    "derived_registry": "data/registry/source_assets.jsonl"
+  },
+  "scope": {
+    "logical_documents": [
+      "doc-af7fa1738c5c89599e41",
+      "doc-24b25833ab82e212d1fb",
+      "doc-7a1d2e663bf13813d7b7",
+      "doc-a1f2fbf6ee4b0277e46a",
+      "doc-2e6846eb4bb57309a4ee"
+    ],
+    "physical_assets_updated": 9,
+    "old_status": "local_only",
+    "new_status": "allowed",
+    "semantic_source_text_changed": false,
+    "original_materials_changed": false
+  },
+  "sha256": {
+    "data/registry/source_manual_findings.jsonl": {
+      "old": "5cebd1064a8116769a91940100a00137b31464c464f4bbc3071641c0d705f059",
+      "new": "026e5c6ba78d2b736b4e71e6290cf76766919401ad79d646a3e86124e8ea3762"
+    },
+    "data/registry/source_assets.jsonl": {
+      "old": "7544f3437806971b3fe25f7e91c31aa20f2c378618f761adb3217d5e979ed8b8",
+      "new": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf"
+    }
+  },
+  "downstream_invalidation": {
+    "stale_inputs": ["Stage 9, Stage 10 and Stage 11 audit input hashes that referenced the prior Registry artifact"],
+    "stage12_manifest": "retained frozen; Stage 12 candidate builder now binds the current Registry hash",
+    "stage12_candidates": "stale until a real LLM Development run succeeds",
+    "stage12_evaluation": "stale until a real LLM Development run succeeds",
+    "stage12_exit_audit": "regenerated and remains in_progress"
+  },
+  "rebuild_order": [
+    "scripts/build_source_registry.py",
+    "scripts/build_stage12_candidates.py --force --evaluate-development",
+    "scripts/evaluate_stage12_robustness.py",
+    "scripts/audit_stage12_exit.py",
+    "runtime-python/turbine-kg-env/Scripts/python.exe -m pytest -q"
+  ],
+  "verification": {
+    "registry_status": "regenerated; 9 selected assets are allowed",
+    "offline_provider_and_validator_tests": "passed",
+    "full_pytest": "passed",
+    "real_llm_execution": "attempted_after_explicit_approval; blocked_by_provider_timeout_and_invalid_semantic_response",
+    "no_silent_fixture_fallback": true
+  },
+  "status": "open_until_stage12_real_llm_development_rebuild"
+}

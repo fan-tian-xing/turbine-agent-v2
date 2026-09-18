@@ -3,7 +3,7 @@
   "candidate_count": 46,
   "gold_exhaustive": false,
   "statement_recall": 0.8958333333333334,
-  "statement_semantic_correctness": 0.08333333333333333,
+  "statement_semantic_correctness": 0.0,
   "field_totals": {
     "statement_boundary": 48,
     "statement_type": 48,
@@ -30,8 +30,8 @@
     "comparison": 38,
     "negation": 24,
     "condition": 41,
-    "applicability": 20,
-    "applicability_meaning": 20,
+    "applicability": 3,
+    "applicability_meaning": 3,
     "relation_direction": 43,
     "unsupported_addition": 44,
     "evidence_grounding": 43
@@ -46,8 +46,8 @@
     "comparison": 0.7916666666666666,
     "negation": 0.5,
     "condition": 0.8541666666666666,
-    "applicability": 0.4166666666666667,
-    "applicability_meaning": 0.4166666666666667,
+    "applicability": 0.0625,
+    "applicability_meaning": 0.0625,
     "relation_direction": 0.8958333333333334,
     "unsupported_addition": 0.9166666666666666,
     "evidence_grounding": 0.8958333333333334
@@ -62,30 +62,47 @@
     "comparison_error": 10,
     "negation_error": 24,
     "condition_loss": 7,
-    "applicability_error": 28,
+    "applicability_error": 45,
     "relation_direction_error": 5,
     "unsupported_claim": 4
   },
   "errors": [
     {
+      "statement_id": "stage11-statement-fe16fd2c0ddf82659111",
+      "candidate_id": "stage12-candidate-aea5156c0b18f83a97e3",
+      "error_types": [
+        "applicability_error"
+      ]
+    },
+    {
       "statement_id": "stage11-statement-fe16fd2c0ddf82659111-s2",
       "candidate_id": "stage12-candidate-68eb8b329120b8a54646",
       "error_types": [
-        "negation_error"
+        "negation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-fe16fd2c0ddf82659111-s3",
+      "candidate_id": "stage12-candidate-35a391375e8f9c8b085a",
+      "error_types": [
+        "applicability_error"
       ]
     },
     {
       "statement_id": "stage11-statement-fe16fd2c0ddf82659111-s4",
       "candidate_id": "stage12-candidate-7e20c5240dbec69bd93f",
       "error_types": [
-        "negation_error"
+        "negation_error",
+        "applicability_error"
       ]
     },
     {
       "statement_id": "stage11-statement-fe16fd2c0ddf82659111-s5",
       "candidate_id": "stage12-candidate-649bd6dc513f5deec5df",
       "error_types": [
-        "statement_type_error"
+        "statement_type_error",
+        "applicability_error"
       ]
     },
     {
@@ -93,7 +110,8 @@
       "candidate_id": "stage12-candidate-ca4e8ed67b3be93d9385",
       "error_types": [
         "boundary_error",
-        "negation_error"
+        "negation_error",
+        "applicability_error"
       ]
     },
     {
@@ -130,6 +148,7 @@
         "quantity_error",
         "comparison_error",
         "negation_error",
+        "applicability_error",
         "unsupported_claim"
       ]
     },
@@ -137,7 +156,8 @@
       "statement_id": "stage11-statement-984577961d918cdbc6ff-s2",
       "candidate_id": "stage12-candidate-07e7c62caa9758090b43",
       "error_types": [
-        "negation_error"
+        "negation_error",
+        "applicability_error"
       ]
     },
     {
@@ -198,7 +218,8 @@
       "error_types": [
         "statement_type_error",
         "entity_error",
-        "relation_error"
+        "relation_error",
+        "applicability_error"
       ]
     },
     {
@@ -207,7 +228,8 @@
       "error_types": [
         "statement_type_error",
         "relation_error",
-        "negation_error"
+        "negation_error",
+        "applicability_error"
       ]
     },
     {
@@ -233,7 +255,8 @@
       "error_types": [
         "statement_type_error",
         "entity_error",
-        "relation_error"
+        "relation_error",
+        "applicability_error"
       ]
     },
     {
@@ -245,6 +268,7 @@
         "comparison_error",
         "negation_error",
         "condition_loss",
+        "applicability_error",
         "unsupported_claim"
       ]
     },
@@ -255,7 +279,15 @@
         "statement_type_error",
         "entity_error",
         "relation_error",
-        "negation_error"
+        "negation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-63a328bae825a87cbffe-s3",
+      "candidate_id": "stage12-candidate-38014e703c417f97f6a3",
+      "error_types": [
+        "applicability_error"
       ]
     },
     {
@@ -263,14 +295,23 @@
       "candidate_id": "stage12-candidate-6e8a6e60335d5a38c34d",
       "error_types": [
         "statement_type_error",
-        "relation_error"
+        "relation_error",
+        "applicability_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-63a328bae825a87cbffe-s5",
+      "candidate_id": "stage12-candidate-9866c1eb61cc03f4d8c0",
+      "error_types": [
+        "applicability_error"
       ]
     },
     {
       "statement_id": "stage11-statement-63a328bae825a87cbffe-s6",
       "candidate_id": "stage12-candidate-092eee1766a61e03cf81",
       "error_types": [
-        "entity_error"
+        "entity_error",
+        "applicability_error"
       ]
     },
     {
@@ -281,6 +322,7 @@
         "quantity_error",
         "unit_error",
         "negation_error",
+        "applicability_error",
         "unsupported_claim"
       ]
     },
@@ -289,7 +331,8 @@
       "candidate_id": "stage12-candidate-4e1abd4ec5ccfb61c00b",
       "error_types": [
         "statement_type_error",
-        "negation_error"
+        "negation_error",
+        "applicability_error"
       ]
     },
     {
@@ -304,8 +347,7 @@
       "candidate_id": "stage12-candidate-d17f812db2491dded672",
       "error_types": [
         "statement_type_error",
-        "relation_error",
-        "applicability_error"
+        "relation_error"
       ]
     },
     {
@@ -383,8 +425,7 @@
       "statement_id": "stage11-statement-088e53f7910f38f3998c",
       "candidate_id": "stage12-candidate-1fd141972d3a6eaf90c2",
       "error_types": [
-        "entity_error",
-        "applicability_error"
+        "entity_error"
       ]
     },
     {
@@ -797,7 +838,7 @@
   "input_sha256": {
     "registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
-    "contract": "31688bb1971053473aec4ee4095ddb48f100c3a150015042c488cf38c793f794",
+    "contract": "a7d3e19a3e33ad69b867af1db43a4d15291522e270e6b7fc1cbdbf7143112397",
     "evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
     "gold": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0"
   },

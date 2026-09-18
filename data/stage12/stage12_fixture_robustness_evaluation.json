@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_development_robustness_evaluation",
+  "status": "completed",
+  "formal_release": false,
+  "holdout_used_for_tuning": false,
+  "blind_read": false,
+  "cases_artifact": "data/stage12/stage12_robustness_cases.json",
+  "provider_id": "deterministic_fixture_v1",
+  "execution_kind": "fixture",
+  "real_llm_execution": false,
+  "provider_call_count": 6,
+  "provider_failure_count": 0,
+  "case_count": 6,
+  "passed_count": 6,
+  "failed_count": 0,
+  "results": [
+    {
+      "case_id": "metamorphic-lifecycle-01",
+      "passed": true,
+      "failure": null
+    },
+    {
+      "case_id": "metamorphic-lifecycle-02",
+      "passed": true,
+      "failure": null
+    },
+    {
+      "case_id": "metamorphic-condition-01",
+      "passed": true,
+      "failure": null
+    },
+    {
+      "case_id": "metamorphic-causality-01",
+      "passed": true,
+      "failure": null
+    },
+    {
+      "case_id": "metamorphic-negation-01",
+      "passed": true,
+      "failure": null
+    },
+    {
+      "case_id": "metamorphic-comparison-01",
+      "passed": true,
+      "failure": null
+    }
+  ]
+}

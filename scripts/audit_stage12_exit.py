@@ -47,6 +47,7 @@ def _reexecute_development(manifest: dict, canonical_evidence: dict[str, dict]) 
 
 def audit() -> dict:
     contract = _read(ROOT / "config/stage12_statement_contract.json")
+    provider_config = _read(ROOT / "config/stage12_provider.json")
     manifest = _read(STAGE12 / "stage12_input_manifest.json")
     baseline = _read(STAGE12 / "stage12_representative_baseline.json")
     routing = _read(ROOT / "config/stage12_profile_routing.json")
@@ -105,6 +106,15 @@ def audit() -> dict:
     development_quality = development.get("field_accuracy", {})
     holdout_quality = holdout.get("field_accuracy", {})
     dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False)
+    provider_contract_ready = (
+        provider_config.get("default_provider") == "external_llm"
+        and provider_config.get("providers", {}).get("external_llm", {}).get("enabled") is True
+    )
+    real_llm_artifact = (
+        candidate.get("provider_id") == "external_llm_openai_compatible_v1"
+        and candidate.get("provider_metadata", {}).get("mode") == "real_llm"
+        and development.get("real_llm_execution") is True
+    )
     stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "error_counts", "unmatched_gold", "unmatched_candidates"))
     dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
@@ -116,6 +126,7 @@ def audit() -> dict:
         "provider_config": ROOT / "config/stage12_provider.json",
         "prompt": ROOT / "config/stage12_prompt.txt",
         "response_schema": ROOT / "config/stage12_extraction_response.schema.json",
+        "registry": ROOT / "data/registry/source_assets.jsonl",
     }.items())
     holdout_input_hashes_match = all(holdout.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "registry": ROOT / "data/stage11/evaluation_sample_registry.json",
@@ -176,17 +187,19 @@ def audit() -> dict:
         "no_holdout_or_blind_in_candidate": "acceptance_holdout" not in forbidden and "acceptance_holdout_reserve" not in forbidden and "blind_test" not in forbidden,
         "candidate_pages_are_manifest_pages": {(item.get("document_logical_id"), int(item.get("physical_page"))) for item in candidate.get("candidates", [])} <= set(manifest_pages) and candidate_evidence_ids <= accepted_manifest_evidence,
         "candidate_schema_and_stage9_gate": runtime_report["conforms"],
+        "provider_contract_ready": provider_contract_ready,
+        "real_llm_execution_verified": real_llm_artifact and reexecution_error is None,
         "producer_reexecution_current": reexecution_error is None and reexecuted_candidates == candidate.get("candidates", []),
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
-        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v3" and development.get("holdout_used_for_tuning") is False and stored_eval_matches and dev_input_hashes_match,
+        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v3" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and stored_eval_matches and dev_input_hashes_match,
         "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v3" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
-        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True,
+        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True and _read(STAGE12 / "stage12_robustness_evaluation.json").get("real_llm_execution") is True,
         "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
         "stage13_frozen_by_user": stage13_frozen_by_user,
     }
@@ -216,13 +229,13 @@ def audit() -> dict:
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/project_state.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
         )},
         "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
         "execution_evidence": {
             "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
-            "stage12_production_like_pipeline": {"status": "executed", "scope": "representative_page_baseline", "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "provider and validator re-executed in memory"},
+            "stage12_production_like_pipeline": {"status": "blocked" if reexecution_error else "executed", "scope": "representative_page_baseline", "configured_provider": provider_config.get("default_provider"), "real_llm_execution_verified": checks["real_llm_execution_verified"], "failure": reexecution_error, "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "provider and validator re-executed in memory"},
             "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
             "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
         },
@@ -253,6 +266,11 @@ def audit() -> dict:
         "next_stage_inputs": {},
         "stage13_formal_entry": "blocked",
         "stage13_verification_mode": "FROZEN_BY_USER",
+        "provider_contract_ready": checks["provider_contract_ready"],
+        "fixture_pipeline_ready": (STAGE12 / "stage12_fixture_robustness_evaluation.json").exists() and _read(STAGE12 / "stage12_fixture_robustness_evaluation.json").get("execution_kind") == "fixture" and _read(STAGE12 / "stage12_fixture_robustness_evaluation.json").get("failed_count") == 0,
+        "production_llm_pipeline_ready": checks["real_llm_execution_verified"],
+        "real_llm_execution": development.get("real_llm_execution") is True,
+        "real_llm_reexecution_error": reexecution_error,
         "consumers": ["tests/stage12"],
     }
 

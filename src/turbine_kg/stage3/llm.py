@@ -5,9 +5,9 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import urlopen
 
+from turbine_kg.llm_client import LLMTransportError, OpenAICompatibleChatTransport
 from turbine_kg.settings import Settings
 from .models import Claim, ScopeContext
 from .validation import ALLOWED_CLAIM_TYPES, validate_claim
@@ -22,11 +22,6 @@ class LLMResult:
     error: str = ""
     claim_count: int = 0
     claim_validation: str = ""
-
-
-def _endpoint_url(base_url: str) -> str:
-    base = base_url.rstrip("/")
-    return base if base.endswith("/chat/completions") else base + "/chat/completions"
 
 
 def _evidence_payload(hits: list[dict]) -> list[dict]:
@@ -255,26 +250,16 @@ def generate_answer(question: str, hits: list[dict], settings: Settings) -> LLMR
     for base_url, model, api_key, timeout in endpoints:
         if not base_url or not model or not api_key:
             continue
-        body = json.dumps(
-            {
-                "model": model,
-                "temperature": 0,
-                "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            },
-            ensure_ascii=False,
-        ).encode("utf-8")
-        request = Request(
-            _endpoint_url(base_url),
-            data=body,
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-            method="POST",
-        )
         try:
-            with urlopen(request, timeout=timeout) as response:
-                payload = json.loads(response.read().decode("utf-8"))
-            raw_text = payload["choices"][0]["message"]["content"]
-            if not isinstance(raw_text, str) or not raw_text.strip():
-                raise ValueError("LLM returned empty content")
+            transport = OpenAICompatibleChatTransport(
+                endpoint=base_url,
+                model=model,
+                api_key=api_key,
+                timeout_seconds=timeout,
+                max_attempts=1,
+                opener=urlopen,
+            )
+            raw_text = transport({"system": system, "user": user})
             answer_payload = _parse_json_response(raw_text)
             text, claim_count, claim_validation = _validate_llm_payload(answer_payload, hits)
             return LLMResult(
@@ -285,7 +270,7 @@ def generate_answer(question: str, hits: list[dict], settings: Settings) -> LLMR
                 claim_count=claim_count,
                 claim_validation=claim_validation,
             )
-        except (HTTPError, URLError, TimeoutError) as error:
+        except LLMTransportError as error:
             failures.append(f"{type(error).__name__}: {error}")
             continue
         except (ValueError, KeyError, TypeError, AttributeError, json.JSONDecodeError) as error:

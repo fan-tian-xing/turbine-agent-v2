@@ -5,13 +5,16 @@ from pathlib import Path
 import pytest
 
 from turbine_kg.extraction.semantic import (
+    ExtractionProfile,
+    ExtractionProviderError,
     ExtractionSchemaError,
+    ExternalLLMProvider,
+    FixtureExtractionProvider,
     HeuristicSemanticExtractor,
     ProfileRouter,
     ProviderBackedExtractor,
     compare_candidates,
     parse_provider_response,
-    provider_from_config,
     to_stage9_runtime_payload,
     validate_candidate_against_evidence,
     validate_candidate_payload,
@@ -62,7 +65,7 @@ def test_provider_backed_path_assembles_candidate_and_preserves_lineage():
     evidence = _evidence()
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
     profile = router.route({"document_logical_id": "doc-af7fa1738c5c89599e41", "revision_id": "rev-c700c57426b967b2d2c9"})
-    provider = provider_from_config(ROOT / "config/stage12_provider.json")
+    provider = FixtureExtractionProvider()
     candidate = ProviderBackedExtractor(provider, profile=profile, split="development_regression_golden").extract(evidence)[0]
     assert candidate["review_status"] == "candidate_only"
     assert candidate["formal_release"] is False
@@ -71,7 +74,7 @@ def test_provider_backed_path_assembles_candidate_and_preserves_lineage():
 
 def test_candidate_schema_and_stage9_projection_keep_coarse_relation_and_text():
     candidate = _candidate()
-    payload = {"schema_version": 1, "stage": "12", "artifact_kind": "engineering_statement_candidates", "status": "candidate_only", "formal_release": False, "producer": "test", "inputs": {"fixture": "fixture"}, "extraction_profile": "heuristic_semantic_v1", "provider_id": "fixture", "prompt_version": "test", "candidates": [candidate]}
+    payload = {"schema_version": 1, "stage": "12", "artifact_kind": "engineering_statement_candidates", "status": "candidate_only", "formal_release": False, "producer": "test", "inputs": {"fixture": "fixture"}, "extraction_profile": "heuristic_semantic_v1", "provider_id": "fixture", "prompt_version": "test", "provider_metadata": {"mode": "fixture"}, "candidates": [candidate]}
     validate_candidate_payload(payload)
     runtime = to_stage9_runtime_payload([candidate])
     statement = next(node for node in runtime["nodes"] if node["type"] == "EngineeringStatement")
@@ -121,14 +124,89 @@ def test_coarse_relation_and_extra_candidate_review_do_not_claim_precision_for_n
 def test_profile_router_exposes_source_level_external_permission_without_filename_logic():
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
     route = router.route({"document_logical_id": "doc-af7fa1738c5c89599e41", "revision_id": "rev-c700c57426b967b2d2c9"})
-    assert route.external_llm_allowed is False
+    assert route.external_llm_allowed is True
+
+
+def _external_profile(allowed=True):
+    return ExtractionProfile(
+        semantic_role="test",
+        extraction_profile_id="test_v1",
+        source_profile_id="test",
+        source_applicability_scope=(),
+        external_llm_allowed=allowed,
+    )
+
+
+def test_external_provider_uses_strict_transport_without_fixture_fallback():
+    fixture_response = FixtureExtractionProvider().extract(_evidence(), _external_profile())
+    provider = ExternalLLMProvider(
+        transport=lambda prompt: json.dumps(fixture_response, ensure_ascii=False),
+        model_config_identifier="test-model",
+        max_attempts=1,
+    )
+    response = provider.extract(_evidence(), _external_profile())
+    assert response["provider_metadata"]["mode"] == "real_llm"
+    assert response["candidates"]
+
+
+def test_external_provider_retries_deterministic_semantic_feedback_without_repairing():
+    valid = FixtureExtractionProvider().extract(_evidence(), _external_profile())
+    invalid = json.loads(json.dumps(valid, ensure_ascii=False))
+    invalid["candidates"][0]["object_value"]["value"] = "未经证据支持的改写"
+    responses = iter([json.dumps(invalid, ensure_ascii=False), json.dumps(valid, ensure_ascii=False)])
+    prompts = []
+
+    def transport(prompt):
+        prompts.append(prompt["system"])
+        return next(responses)
+
+    extractor = ProviderBackedExtractor(
+        ExternalLLMProvider(transport=transport, model_config_identifier="test-model", max_attempts=2),
+        profile=_external_profile(),
+        split="development_regression_golden",
+    )
+    candidates = extractor.extract(_evidence())
+    assert len(candidates) == 1
+    assert len(prompts) == 2
+    assert "deterministic Evidence validation" in prompts[1]
+
+
+def test_external_provider_rejects_missing_transport_without_fallback():
+    with pytest.raises(ExtractionProviderError, match="no configured transport"):
+        ExternalLLMProvider().extract(_evidence(), _external_profile())
+
+
+def test_external_provider_path_rejects_local_only_profile_before_send():
+    provider = ExternalLLMProvider(transport=lambda prompt: "never-called", max_attempts=1)
+    with pytest.raises(ExtractionProviderError, match="permission"):
+        ProviderBackedExtractor(provider, profile=_external_profile(False), split="development_regression_golden").extract(_evidence())
+
+
+@pytest.mark.parametrize("raw", ["not-json", json.dumps({"schema_version": 1})])
+def test_external_provider_rejects_malformed_or_schema_invalid_response(raw):
+    provider = ExternalLLMProvider(transport=lambda prompt: raw, max_attempts=1)
+    with pytest.raises(ExtractionProviderError, match="schema"):
+        provider.extract(_evidence(), _external_profile())
+
+
+def test_external_provider_surfaces_timeout_without_fixture_fallback():
+    provider = ExternalLLMProvider(transport=lambda prompt: (_ for _ in ()).throw(TimeoutError()), max_attempts=1)
+    with pytest.raises(ExtractionProviderError, match="provider failed"):
+        provider.extract(_evidence(), _external_profile())
 
 
 def test_robustness_artifact_is_development_only_and_passes():
-    report = _read("data/stage12/stage12_robustness_evaluation.json")
+    report = _read("data/stage12/stage12_fixture_robustness_evaluation.json")
     assert report["holdout_used_for_tuning"] is False
     assert report["failed_count"] == 0
     assert report["case_count"] >= 6
+    assert report["execution_kind"] == "fixture"
+
+
+def test_real_robustness_artifact_is_not_fixture_labeled():
+    report = _read("data/stage12/stage12_robustness_evaluation.json")
+    assert report["execution_kind"] == "real_llm"
+    assert report["provider_id"] == "external_llm_openai_compatible_v1"
 
 
 def test_development_builder_gate_rejects_non_development_split():

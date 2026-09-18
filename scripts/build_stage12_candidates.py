@@ -92,13 +92,15 @@ def _build(manifest: dict) -> dict:
         },
         "extraction_profile": "profile_routing_v1",
         "provider_id": provider.provider_id,
-        "prompt_version": "stage12-candidate-prompt-v1",
+        "prompt_version": "stage12-candidate-prompt-v4",
+        "provider_metadata": provider.metadata,
         "input_sha256": {path: _sha(ROOT / path) for path in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",
             "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl",
             "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
             "config/stage12_profile_routing.json", "data/stage12/stage12_representative_baseline.json",
             "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json",
+            "data/registry/source_assets.jsonl",
             "src/turbine_kg/extraction/semantic.py",
         )},
         "candidates": candidates,
@@ -127,6 +129,7 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
             "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
             "config/stage12_profile_routing.json", "data/stage12/stage12_representative_baseline.json",
             "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json",
+            "data/registry/source_assets.jsonl",
             "src/turbine_kg/extraction/semantic.py",
         )
     )
@@ -150,7 +153,7 @@ def evaluate_development(payload: dict) -> dict:
     gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
     report = compare_candidates(payload["candidates"], gold, gold_exhaustive=False)
     robustness_path = STAGE12 / "stage12_robustness_evaluation.json"
-    report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v3", "holdout_used_for_tuning": False, "blind_read": False, "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"), "evaluator": "stage12-field-evaluator-v3"}})
+    report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v3", "holdout_used_for_tuning": False, "blind_read": False, "real_llm_execution": payload.get("provider_metadata", {}).get("mode") == "real_llm", "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"), "registry": _sha(ROOT / "data/registry/source_assets.jsonl"), "evaluator": "stage12-field-evaluator-v3"}})
     report["coverage_matrix"] = "data/stage12/stage12_semantic_coverage_matrix.json"
     report["robustness_artifact"] = "data/stage12/stage12_robustness_evaluation.json"
     report["robustness_executed"] = robustness_path.exists()

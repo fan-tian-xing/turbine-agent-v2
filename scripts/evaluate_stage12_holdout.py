@@ -120,7 +120,8 @@ def evaluate() -> dict:
         "inputs": {"stage11_registry": "data/stage11/evaluation_sample_registry.json", "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl", "holdout_gold": "data/stage11/stage11_statement_holdout.jsonl", "stage12_profile_routing": "config/stage12_profile_routing.json"},
         "extraction_profile": "profile_routing_v1",
         "provider_id": "historical_observation_fixture_v1",
-        "prompt_version": "stage12-candidate-prompt-v1",
+        "prompt_version": "stage12-candidate-prompt-v4",
+        "provider_metadata": {"provider_id": "historical_observation_fixture_v1", "mode": "fixture", "model_config_identifier": "historical-observation-only", "prompt_version": "stage12-candidate-prompt-v4", "response_schema_version": 1},
         "candidates": candidates,
     }
     validate_candidate_payload(candidate_payload)

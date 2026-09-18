@@ -45,19 +45,19 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "31688bb1971053473aec4ee4095ddb48f100c3a150015042c488cf38c793f794"
+      "sha256": "a7d3e19a3e33ad69b867af1db43a4d15291522e270e6b7fc1cbdbf7143112397"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "6f27b769e59d5e8614d9f7ac903023a8036771e49fd7e075f128260a9c88ded2"
+      "sha256": "ba691434646a247bf0773fa5a2f6642140b25f3817d0ca508a5ae8ad2604e68e"
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "76b680169626802aa62b6327f3cae2d70a8c55ada0702b218849d210ab1061d6"
+      "sha256": "f16dcd80ed7398c9481c58d280ad796a3c15190a70b980863931da33df013b10"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "142e24ec5fd3edcf4fde7ea78a2998db3910ae68de6047f136ef9d91208d8e7a"
+      "sha256": "efb41455db6b133b743e7d622b5100cb6beb113aad962d7408be18401a375607"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -65,7 +65,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "835bdd88d434637438d411d2d949f35c3c9d8516544704a168fdd6eaa8abbf99"
+      "sha256": "5d99bbefea60ce388ed64ea609e261b41f4086514c91b3c453937536dbe9a83e"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -85,7 +85,7 @@
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "301c9c82e71a53392bcc254c30782a5436e91b1ed2f8659966e6ea626c96d6dd"
+      "sha256": "3078d93a1bb13291a5a622f94681631531ab83028a9c1626ac1e6cf98e8b531d"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -97,11 +97,23 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "45d4a7215a3dd8798b098c917b65173a286177a8fe64c0b6a1c36fb10dcd7640"
+      "sha256": "6c6ce4f544691ad404f7adc063f2f3930b32c5f8064891577985a570f2475807"
+    },
+    "data/stage12/stage12_fixture_robustness_evaluation.json": {
+      "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
+      "sha256": "7538750792d8b1d3516a1b54d12009203549948ec5f6bda38efb368ab44e68c3"
+    },
+    "data/registry/source_assets.jsonl": {
+      "path": "data/registry/source_assets.jsonl",
+      "sha256": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf"
+    },
+    "data/registry/source_manual_findings.jsonl": {
+      "path": "data/registry/source_manual_findings.jsonl",
+      "sha256": "026e5c6ba78d2b736b4e71e6290cf76766919401ad79d646a3e86124e8ea3762"
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "5652f5e0885f0b55b031809e2886fef8b47e7cfa694cb0ec109ac8fcf9531fbb"
+      "sha256": "be0710a5def1c96023236df6c5e3ea98f5d15b81f84666a3de5087c5ce04d695"
     }
   },
   "outputs": {
@@ -124,29 +136,34 @@
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": true,
-    "producer_reexecution_current": true,
-    "candidate_input_lineage_current": true,
+    "candidate_schema_and_stage9_gate": false,
+    "provider_contract_ready": true,
+    "real_llm_execution_verified": false,
+    "producer_reexecution_current": false,
+    "candidate_input_lineage_current": false,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": true,
+    "development_evaluation_present": false,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": false,
     "no_ontology_or_release_write": true,
-    "robustness_evaluation_present": true,
+    "robustness_evaluation_present": false,
     "semantic_coverage_matrix_present": true,
     "stage13_frozen_by_user": true,
     "development_quality_gate": false,
-    "robustness_quality_gate": true,
+    "robustness_quality_gate": false,
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "executed",
+      "status": "blocked",
       "scope": "representative_page_baseline",
+      "configured_provider": "external_llm",
+      "real_llm_execution_verified": false,
+      "failure": "external LLM provider failed",
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -253,8 +270,8 @@
       "comparison": 0.7916666666666666,
       "negation": 0.5,
       "condition": 0.8541666666666666,
-      "applicability": 0.4166666666666667,
-      "applicability_meaning": 0.4166666666666667,
+      "applicability": 0.0625,
+      "applicability_meaning": 0.0625,
       "relation_direction": 0.8958333333333334,
       "unsupported_addition": 0.9166666666666666,
       "evidence_grounding": 0.8958333333333334
@@ -309,16 +326,28 @@
   "blockers": [
     "acceptance_holdout_exposed",
     "acceptance_quality_gate",
+    "candidate_input_lineage_current",
+    "candidate_schema_and_stage9_gate",
+    "development_evaluation_present",
     "development_quality_gate",
     "grounding_zero_tolerance",
+    "producer_reexecution_current",
+    "real_llm_execution_verified",
     "representative_chapter_scope_resolved",
-    "reserve_independent_gold_not_ready"
+    "reserve_independent_gold_not_ready",
+    "robustness_evaluation_present",
+    "robustness_quality_gate"
   ],
   "next_stage_allowed": false,
   "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",
   "next_stage_inputs": {},
   "stage13_formal_entry": "blocked",
   "stage13_verification_mode": "FROZEN_BY_USER",
+  "provider_contract_ready": true,
+  "fixture_pipeline_ready": true,
+  "production_llm_pipeline_ready": false,
+  "real_llm_execution": false,
+  "real_llm_reexecution_error": "external LLM provider failed",
   "consumers": [
     "tests/stage12"
   ]

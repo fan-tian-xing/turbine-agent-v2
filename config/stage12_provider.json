@@ -3,9 +3,9 @@
   "stage": "12",
   "artifact_kind": "stage12_extraction_provider_config",
   "status": "active_for_stage12",
-  "default_provider": "fixture",
+  "default_provider": "external_llm",
   "prompt": {
-    "version": "stage12-candidate-prompt-v1",
+    "version": "stage12-candidate-prompt-v4",
     "path": "config/stage12_prompt.txt"
   },
   "providers": {
@@ -16,17 +16,20 @@
     },
     "external_llm": {
       "kind": "external_llm",
-      "enabled": false,
-      "credential_env": "STAGE12_LLM_CREDENTIAL",
-      "endpoint_env": "STAGE12_LLM_ENDPOINT",
-      "model_env": "STAGE12_LLM_MODEL",
+      "enabled": true,
+      "transport": "openai_compatible_chat_completions",
+      "credential_env": "LLM_API_KEY",
+      "endpoint_env": "LLM_BASE_URL",
+      "model_env": "LLM_MODEL",
+      "permission_env": "LLM_ALLOW_EVIDENCE_SEND",
+      "timeout_env": "LLM_TIMEOUT_SECONDS",
       "max_attempts": 2
     }
   },
   "source_permission": {
     "authority": "data/registry/source_assets.jsonl",
-    "allowed_values": ["external_allowed"],
-    "denied_values": ["local_only", "not_assessed"],
+    "allowed_values": ["allowed"],
+    "denied_values": ["not_allowed", "local_only", "not_assessed"],
     "missing_policy": "deny"
   },
   "consumers": [

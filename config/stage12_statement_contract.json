@@ -18,11 +18,15 @@
     "representative_baseline": "data/stage12/stage12_representative_baseline.json",
     "provider_config": "config/stage12_provider.json",
     "prompt": "config/stage12_prompt.txt",
-    "provider_response_schema": "config/stage12_extraction_response.schema.json"
+    "provider_response_schema": "config/stage12_extraction_response.schema.json",
+    "source_registry": "data/registry/source_assets.jsonl",
+    "permission_change_control": "data/change_control/retroactive_change_stage12_external_processing_permission.json"
   },
   "architecture": {
     "pipeline": ["Evidence", "extraction_provider", "strict_structured_response", "Candidate Engineering Statement", "deterministic_validation", "Stage 12 Candidate Output"],
-    "provider_boundary": "Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
+    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
+    "production_provider": "external_llm",
+    "fixture_policy": "Fixture is test/offline-only and cannot satisfy the formal Stage 12 extraction or quality gate.",
     "relation_vocabulary": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"],
     "unknown_applicability_policy": "known = computable; unknown is not not_applicable; absent values are omitted or marked unknown",
     "gold_exhaustive": false
@@ -50,7 +54,8 @@
     "strict_response_parser": "config/stage12_extraction_response.schema.json",
     "provider_failure_is_distinct_from_validation_failure": true,
     "max_retry_attempts": 2,
-    "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints."
+    "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints.",
+    "no_silent_fixture_fallback": true
   },
   "evaluation": {
     "fields": ["statement_semantic_correctness", "statement_boundary", "statement_type", "entity", "quantity", "unit", "comparison", "negation", "condition", "applicability_meaning", "relation", "relation_direction", "unsupported_addition", "evidence_grounding", "candidate_coverage"],
@@ -60,8 +65,9 @@
     "robustness_entrypoint": "scripts/evaluate_stage12_robustness.py",
     "coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
     "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json",
+    "fixture_robustness_artifact": "data/stage12/stage12_fixture_robustness_evaluation.json",
     "promotion": "No candidate is promoted by evaluation; Stage 13 review and later Release stages own approval.",
-    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0, "provider_parse_failures_are_explicit": true},
+    "minimum_observability": {"evidence_grounding_accuracy": 1.0, "unsupported_claim_count": 0, "provider_parse_failures_are_explicit": true, "real_llm_execution_required": true},
     "development_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
     "acceptance_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
     "unsupported_claim_count": 0,

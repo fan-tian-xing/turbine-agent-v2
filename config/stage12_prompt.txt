@@ -7,6 +7,14 @@ Rules:
   mechanically split a condition chain across unrelated Evidence.
 - Preserve conditions, negation, quantities, units, comparison operators and the
   original applicability wording. Unknown applicability stays unknown.
+- `object_value.value` must be an exact character-for-character copy of
+  `statement_text`.
+- Every statement text, entity surface form, condition, negation, quantity and
+  applicability wording must be supported by the supplied Evidence; never
+  paraphrase a quantity or invent a scope.
+- Set `applicability_scope.status` to `unknown` and omit
+  `applicability_text` unless the exact wording appears in both
+  `statement_text` and the supplied Evidence.
 - Use a small coarse relation vocabulary: requires, prohibits, describes, causes,
   verifies, limits_scope.
 - This is a candidate only. Do not approve, publish, authorize, resolve conflicts,

@@ -51,6 +51,7 @@ def audit() -> dict:
     candidate = _read(STAGE12 / "stage12_development_candidates.json")
     development = _read(STAGE12 / "stage12_development_evaluation.json")
     holdout = _read(STAGE12 / "stage12_holdout_evaluation.json")
+    failure_summary = _read(STAGE12 / "stage12_real_llm_failure_summary.json") if (STAGE12 / "stage12_real_llm_failure_summary.json").exists() else {}
     project_state = _read(ROOT / "data/project_state.json")
     stage11 = _read(ROOT / "data/stage11/stage11_exit_audit.json")
     canonical_evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
@@ -209,6 +210,7 @@ def audit() -> dict:
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
         "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True and _read(STAGE12 / "stage12_robustness_evaluation.json").get("real_llm_execution") is True,
+        "real_llm_failure_summary_current": failure_summary.get("artifact_kind") == "stage12_real_llm_failure_summary" and failure_summary.get("source_split") == "development_regression_golden" and failure_summary.get("holdout_used_for_tuning") is False and failure_summary.get("blind_read") is False,
         "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
         "stage13_frozen_by_user": stage13_frozen_by_user,
     }
@@ -247,9 +249,9 @@ def audit() -> dict:
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/stage12/stage12_real_llm_failure_summary.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
         )},
-        "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
+        "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
         "execution_evidence": {
             "REAL_LLM_SINGLE_CALL_VERIFIED": real_llm_single_call_verified,
@@ -258,6 +260,7 @@ def audit() -> dict:
             "DEVELOPMENT_QUALITY_GATE": development_quality_gate,
             "STAGE12_EXIT": status == "complete",
             "validated_real_evidence_cache_count": validated_real_cache_count,
+            "failure_summary_counts": failure_summary.get("counts", {}),
             "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
             "stage12_production_like_pipeline": {"status": "blocked" if reexecution_error else "executed", "scope": "representative_page_baseline", "configured_provider": provider_config.get("default_provider"), "real_llm_execution_verified": checks["real_llm_execution_verified"], "failure": reexecution_error, "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "provider and validator re-executed in memory"},
             "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",

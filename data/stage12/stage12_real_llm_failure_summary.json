@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_real_llm_failure_summary",
+  "status": "completed",
+  "run_kind": "controlled_development_diagnostic",
+  "source_split": "development_regression_golden",
+  "formal_release": false,
+  "holdout_used_for_tuning": false,
+  "blind_read": false,
+  "evidence_ids": [
+    "evidence-be6509fd8df673522604",
+    "evidence-aa97a9ec78cf7cc57dc5"
+  ],
+  "counts": {
+    "transport_failure": 0,
+    "schema_failure": 2,
+    "semantic_validation_failure": 0,
+    "success": 2,
+    "attempts": 4,
+    "retry_recovered": 2
+  },
+  "failures": [
+    {
+      "evidence_id": "evidence-be6509fd8df673522604",
+      "attempt": 1,
+      "outcome": "failure",
+      "failure_type": "schema_failure",
+      "field": "schema",
+      "validator_reason": "invalid Stage 12 provider response: 'stage12_candidate_extraction' was expected; 1 was expected",
+      "evidence_value_or_text": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面"
+            }
+          },
+          {
+            "statement_text": "本规定不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响"
+            }
+          },
+          {
+            "statement_text": "其他类型核动力厂可参照本规定执行。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "其他类型核动力厂"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "其他类型核动力厂"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "attempt": 1,
+      "outcome": "failure",
+      "failure_type": "schema_failure",
+      "field": "schema",
+      "validator_reason": "invalid Stage 12 provider response: 'stage12_candidate_extraction' was expected; 1 was expected",
+      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "汽轮机冲转"
+              },
+              {
+                "surface_form": "真空"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "汽轮机冲转前"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击。",
+            "predicate": "causes",
+            "subject_entities": [
+              {
+                "surface_form": "真空过低"
+              },
+              {
+                "surface_form": "转子转动"
+              },
+              {
+                "surface_form": "新蒸汽"
+              },
+              {
+                "surface_form": "乏汽"
+              },
+              {
+                "surface_form": "凝汽器"
+              },
+              {
+                "surface_form": "凝汽器汽侧"
+              },
+              {
+                "surface_form": "排大气安全薄膜"
+              },
+              {
+                "surface_form": "汽缸和转子"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若真空过低"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "attempts": [
+    {
+      "evidence_id": "evidence-be6509fd8df673522604",
+      "attempt": 1,
+      "outcome": "failure",
+      "failure_type": "schema_failure",
+      "field": "schema",
+      "validator_reason": "invalid Stage 12 provider response: 'stage12_candidate_extraction' was expected; 1 was expected",
+      "evidence_value_or_text": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面"
+            }
+          },
+          {
+            "statement_text": "本规定不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响"
+            }
+          },
+          {
+            "statement_text": "其他类型核动力厂可参照本规定执行。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "其他类型核动力厂"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "其他类型核动力厂"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-be6509fd8df673522604",
+      "attempt": 2,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "evidence_value_or_text": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照本规定执行。",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面"
+              },
+              {
+                "surface_form": "不影响核安全的工业安全"
+              },
+              {
+                "surface_form": "由核动力厂运行所引起的非放射性影响"
+              },
+              {
+                "surface_form": "其他类型核动力厂"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "陆上固定式核动力厂"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "attempt": 1,
+      "outcome": "failure",
+      "failure_type": "schema_failure",
+      "field": "schema",
+      "validator_reason": "invalid Stage 12 provider response: 'stage12_candidate_extraction' was expected; 1 was expected",
+      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "汽轮机冲转"
+              },
+              {
+                "surface_form": "真空"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "汽轮机冲转前"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击。",
+            "predicate": "causes",
+            "subject_entities": [
+              {
+                "surface_form": "真空过低"
+              },
+              {
+                "surface_form": "转子转动"
+              },
+              {
+                "surface_form": "新蒸汽"
+              },
+              {
+                "surface_form": "乏汽"
+              },
+              {
+                "surface_form": "凝汽器"
+              },
+              {
+                "surface_form": "凝汽器汽侧"
+              },
+              {
+                "surface_form": "排大气安全薄膜"
+              },
+              {
+                "surface_form": "汽缸和转子"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若真空过低"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "attempt": 2,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "汽轮机冲转"
+              },
+              {
+                "surface_form": "真空"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "汽轮机冲转前"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击。",
+            "predicate": "causes",
+            "subject_entities": [
+              {
+                "surface_form": "真空"
+              },
+              {
+                "surface_form": "转子"
+              },
+              {
+                "surface_form": "新蒸汽"
+              },
+              {
+                "surface_form": "乏汽"
+              },
+              {
+                "surface_form": "凝汽器"
+              },
+              {
+                "surface_form": "凝汽器汽侧"
+              },
+              {
+                "surface_form": "排大气安全薄膜"
+              },
+              {
+                "surface_form": "汽缸"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若真空过低"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "cache_maintenance": {
+    "current_valid": 10,
+    "stale_deleted": 0,
+    "legacy_migrated": 0,
+    "batch_records_deleted": 34
+  },
+  "raw_model_response_persisted": false,
+  "sensitive_transport_data_persisted": false,
+  "producer": "scripts/stage12_failure_summary.py"
+}

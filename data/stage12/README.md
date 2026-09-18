@@ -8,6 +8,8 @@
 - `config/stage12_provider.json`、`config/stage12_prompt.txt` 和 `config/stage12_extraction_response.schema.json` 定义 Provider、Prompt 版本和严格 JSON 响应边界；正式主路径为配置的 external LLM，deterministic fixture 只能通过显式 fixture 模式用于测试和离线管线验证。
 - Provider 只接收 statement text、coarse relation、Evidence 原文中的 entity/condition/applicability wording；数量、单位、比较符、否定、statement type、modality 和 relation direction 由确定性代码从 statement text 推导。传输层对 timeout、429、5xx 使用有界指数退避并尊重 `Retry-After`。
 - 完成的真实 Evidence 候选会写入 `var/model_runs/stage12/evidence` 的结构化缓存；缓存键绑定 Evidence、Profile、Provider、Prompt、Schema 和语义源码指纹，缓存命中仍重新执行确定性校验，且不保存 raw model response。
+- `stage12_real_llm_failure_summary.json` 是唯一当前真实 LLM 失败摘要；每次受控诊断直接覆盖，按 Evidence/attempt 区分 transport、schema 和 semantic validation，并保留 retry 后成功事件，不保存请求头、API Key 或 raw response。
+- `diagnose_stage12_real_llm.py --limit 2` 只对少量 Development Evidence 绕过 success cache；只有完整通过 Schema、语义和 Evidence binding 的结果才替换 cache。普通 Development 运行会按当前缓存键迁移可复验结果、删除 stale cache，并只保留最新 batch 运行记录。
 - `stage12_semantic_coverage_matrix.json` 明确 19 条 Development Gold 的覆盖范围和缺口；Gold 未被声明为 exhaustive。
 - `stage12_robustness_cases.json` 与 `stage12_robustness_evaluation.json` 保存真实 LLM 鲁棒性结果；`stage12_fixture_robustness_evaluation.json` 单独保存 fixture 结果，二者不得混用。
 - `stage12_holdout_evaluation.json` 只能由 `evaluate_stage12_holdout.py` 生成；它读取留出 Evidence/Gold 后只写评测指标，不写回开发候选、Profile、规则或 runtime cache。
@@ -15,11 +17,12 @@
 
 当前观测：开发集 Evidence grounding 为 1.0，但关系和适用范围字段仍按冻结阈值单独计量；Holdout 注册 50 条、其中 48 条按冻结的 accepted-Evidence 规则评测，2 条隔离表格行在比较前排除，详细行号、页码和原因以评测产物为准。留出结果历史上已暴露，只能作为不可用于调参的独立验收记录。
 
-当前实现检查已通过；真实 LLM 已在获准后实际尝试，但 endpoint 先后出现超时和不符合严格语义约束的响应，未形成可消费的正式 Development 候选，因此质量/独立验收仍未通过；Exit Audit 的 blocker 才是阶段状态依据。运行方式：
+当前真实 LLM 单条验证和 Development 批量执行均已完成，10 条 Development Evidence 均有可消费的真实验证缓存；failure summary 当前受控样本记录了 2 次 schema failure，均在 retry 后成功，未记录 transport 或 semantic failure。质量门、真实 robustness 和独立验收仍未全部通过；Exit Audit 的 blocker 才是阶段状态依据。运行方式：
 
 ```powershell
 $projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
 & $projectPython scripts/build_stage12_candidates.py --force --evaluate-development
+& $projectPython scripts/diagnose_stage12_real_llm.py --limit 2  # 少量 Development 诊断，覆盖当前 failure summary
 & $projectPython scripts/evaluate_stage12_robustness.py  # 正式真实 LLM 模式
 & $projectPython scripts/evaluate_stage12_robustness.py --fixture  # 仅离线 fixture 模式
 & $projectPython scripts/audit_stage12_exit.py

@@ -45,7 +45,7 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "79b15ce8e598a3abcd4140ce4b80ea313027d59703250cf479035d57100f123c"
+      "sha256": "67ffb2213358966421f7d5c3e87168204d1045ffa7ced5a28abc965d33eeac2a"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
@@ -65,7 +65,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "d52d5acd1d1005cf769eed9b23fb3555c4f94b4c307c474574ee7c44cffb90bb"
+      "sha256": "cc61a158a18e893e3d9a279b81effd202fb14a631d69d7d771bcc8ceb2dc9ea4"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -77,15 +77,15 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "1abcba46fb283698ffd202d107adc5d126569e67c34176b0ef951a16a9a4cdf3"
+      "sha256": "73debf5b6abb9b336b073ed5a470aa484a14a84d242316323da026c8696a1da5"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "3518b7db44f85b69c29f84f52b5f888ee34bece95165f06f9c4c12472db0d1e4"
+      "sha256": "f4aad205b3072b318a9fe5b83a0d666e8e3a94aaf0d69ca0c974c74b554c5573"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "6311f6e3a378a0beddaf0477c0fee671cece15b12a4ec13083d1be27caebf235"
+      "sha256": "ce6c56b4ebe6909ce5a8f8ddb0fe9c6fd18b0f349418cbe4ae4c20cdebf4118e"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -102,6 +102,10 @@
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
       "sha256": "7538750792d8b1d3516a1b54d12009203549948ec5f6bda38efb368ab44e68c3"
+    },
+    "data/stage12/stage12_real_llm_failure_summary.json": {
+      "path": "data/stage12/stage12_real_llm_failure_summary.json",
+      "sha256": "f0a6e97372af61acd06070f7c72459e31bb780be7b96e499e29a775894f2471e"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -121,6 +125,7 @@
     "development_candidates": "data/stage12/stage12_development_candidates.json",
     "development_evaluation": "data/stage12/stage12_development_evaluation.json",
     "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
+    "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json",
     "exit_audit": "data/stage12/stage12_exit_audit.json",
     "runtime_cache": "var/model_runs/stage12"
   },
@@ -150,6 +155,7 @@
     "grounding_zero_tolerance": false,
     "no_ontology_or_release_write": true,
     "robustness_evaluation_present": true,
+    "real_llm_failure_summary_current": true,
     "semantic_coverage_matrix_present": true,
     "stage13_frozen_by_user": true,
     "development_quality_gate": false,
@@ -163,6 +169,14 @@
     "DEVELOPMENT_QUALITY_GATE": false,
     "STAGE12_EXIT": false,
     "validated_real_evidence_cache_count": 10,
+    "failure_summary_counts": {
+      "transport_failure": 0,
+      "schema_failure": 2,
+      "semantic_validation_failure": 0,
+      "success": 2,
+      "attempts": 4,
+      "retry_recovered": 2
+    },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
       "status": "executed",
@@ -183,7 +197,7 @@
   "counts": {
     "representative_pages": 8,
     "documents": 5,
-    "candidates": 24,
+    "candidates": 23,
     "development_gold_statements": 19,
     "holdout_gold_statements_registered": 50,
     "holdout_gold_statements_evaluated": 48,
@@ -254,7 +268,7 @@
       "statement_boundary": 0.8421052631578947,
       "statement_type": 0.6842105263157895,
       "entity": 0.6842105263157895,
-      "relation": 0.7368421052631579,
+      "relation": 0.7894736842105263,
       "quantity": 0.8947368421052632,
       "unit": 0.8947368421052632,
       "comparison": 0.8421052631578947,
@@ -262,8 +276,8 @@
       "condition": 0.8947368421052632,
       "applicability": 0.05263157894736842,
       "applicability_meaning": 0.05263157894736842,
-      "relation_direction": 0.7894736842105263,
-      "unsupported_addition": 0.5263157894736842,
+      "relation_direction": 0.8421052631578947,
+      "unsupported_addition": 0.47368421052631576,
       "evidence_grounding": 0.8947368421052632
     },
     "holdout_field_accuracy": {
@@ -308,7 +322,7 @@
       "statement_boundary": 0.8421052631578947,
       "statement_type": 0.6842105263157895,
       "entity": 0.6842105263157895,
-      "relation": 0.7368421052631579,
+      "relation": 0.7894736842105263,
       "quantity": 0.8947368421052632,
       "unit": 0.8947368421052632,
       "comparison": 0.8421052631578947,
@@ -316,8 +330,8 @@
       "condition": 0.8947368421052632,
       "applicability": 0.05263157894736842,
       "applicability_meaning": 0.05263157894736842,
-      "relation_direction": 0.7894736842105263,
-      "unsupported_addition": 0.5263157894736842,
+      "relation_direction": 0.8421052631578947,
+      "unsupported_addition": 0.47368421052631576,
       "evidence_grounding": 0.8947368421052632
     },
     "scale_gate": false,

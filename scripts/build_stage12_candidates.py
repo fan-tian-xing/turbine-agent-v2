@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 from turbine_kg.extraction.semantic import (
     ProfileRouter,
@@ -19,6 +20,10 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_payload,
 )
 from turbine_kg.observability.runtime import canonical_json, run_with_cache
+try:
+    from scripts.stage12_failure_summary import decorate_event, write_failure_summary
+except ModuleNotFoundError:  # direct execution from the scripts directory
+    from stage12_failure_summary import decorate_event, write_failure_summary
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE12 = ROOT / "data/stage12"
@@ -44,13 +49,37 @@ def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
     return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
 
 
-def _extract_with_evidence_cache(evidence: dict, profile, provider, split: str, cache_root: Path) -> list[dict]:
+def _cache_path(evidence: dict, profile, provider, split: str, cache_root: Path) -> Path:
+    return cache_root / "evidence" / f"{_evidence_cache_key(evidence, profile, provider, split)}.json"
+
+
+def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict]) -> None:
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text(json.dumps({
+        "schema_version": 1,
+        "cache_key": cache_path.stem,
+        "provider_id": provider.provider_id,
+        "provider_mode": "real_llm",
+        "candidates": candidates,
+    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def _extract_with_evidence_cache(
+    evidence: dict,
+    profile,
+    provider,
+    split: str,
+    cache_root: Path,
+    *,
+    force: bool = False,
+    attempt_observer=None,
+) -> list[dict]:
     """Reuse only fully validated structured candidates; never persist raw model text."""
     if getattr(provider, "metadata", {}).get("mode") != "real_llm":
         return ProviderBackedExtractor(provider, profile=profile, split=split).extract(evidence)
     cache_key = _evidence_cache_key(evidence, profile, provider, split)
     cache_path = cache_root / "evidence" / f"{cache_key}.json"
-    if cache_path.exists():
+    if cache_path.exists() and not force:
         try:
             cached = json.loads(cache_path.read_text(encoding="utf-8"))
             if cached.get("schema_version") == 1 and cached.get("cache_key") == cache_key and cached.get("provider_id") == provider.provider_id:
@@ -61,15 +90,9 @@ def _extract_with_evidence_cache(evidence: dict, profile, provider, split: str, 
                 return candidates
         except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
             pass
-    candidates = ProviderBackedExtractor(provider, profile=profile, split=split).extract(evidence)
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    cache_path.write_text(json.dumps({
-        "schema_version": 1,
-        "cache_key": cache_key,
-        "provider_id": provider.provider_id,
-        "provider_mode": "real_llm",
-        "candidates": candidates,
-    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    extractor = ProviderBackedExtractor(provider, profile=profile, split=split)
+    candidates = extractor.extract(evidence, attempt_observer=attempt_observer)
+    _write_evidence_cache(cache_path, provider, candidates)
     return candidates
 
 
@@ -79,6 +102,106 @@ def _sha(path: Path) -> str:
 
 def _jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, int]:
+    """Keep only current, revalidated Development Evidence cache entries."""
+    evidence_by_id = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
+    router = ProfileRouter()
+    provider = provider_from_config()
+    current: dict[str, tuple[dict, Any]] = {}
+    for page in manifest.get("pages", []):
+        for evidence_id in page.get("evidence_ids", []):
+            evidence = dict(evidence_by_id[evidence_id], document_key=page["document_key"])
+            profile = router.route(evidence)
+            current[_evidence_cache_key(evidence, profile, provider, manifest["source_split"])] = (evidence, profile)
+    evidence_dir = cache_root / "evidence"
+    evidence_dir.mkdir(parents=True, exist_ok=True)
+    files = list(evidence_dir.glob("*.json"))
+    deleted = 0
+    migrated = 0
+    kept = set()
+    for key, (evidence, profile) in current.items():
+        target = evidence_dir / f"{key}.json"
+        if target.exists():
+            try:
+                cached = json.loads(target.read_text(encoding="utf-8"))
+                candidates = cached.get("candidates") or []
+                if cached.get("cache_key") == key and cached.get("provider_id") == provider.provider_id:
+                    for candidate in candidates:
+                        validate_candidate_evidence_binding(candidate, evidence)
+                        validate_candidate_against_evidence(candidate, evidence)
+                    kept.add(target.name)
+                    continue
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+                pass
+            target.unlink()
+            deleted += 1
+        for legacy in files:
+            if legacy == target or not legacy.exists():
+                continue
+            try:
+                cached = json.loads(legacy.read_text(encoding="utf-8"))
+                candidates = cached.get("candidates") or []
+                if cached.get("provider_id") != provider.provider_id or not candidates:
+                    continue
+                for candidate in candidates:
+                    validate_candidate_evidence_binding(candidate, evidence)
+                    validate_candidate_against_evidence(candidate, evidence)
+                _write_evidence_cache(target, provider, candidates)
+                legacy.unlink()
+                migrated += 1
+                kept.add(target.name)
+                break
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+                continue
+    for path in files:
+        if path.exists() and path.name not in kept and path.stem not in current:
+            path.unlink()
+            deleted += 1
+    return {"current_valid": len(kept), "stale_deleted": deleted, "legacy_migrated": migrated}
+
+
+def prune_stale_batch_records(cache_root: Path, keep_batch_id: str) -> int:
+    """Retain the current completed batch record and remove superseded runtime records."""
+    batches_root = cache_root / "batches"
+    index_path = cache_root / "cache_index.json"
+    if not batches_root.exists() or not index_path.exists():
+        return 0
+    raw_index = json.loads(index_path.read_text(encoding="utf-8"))
+    kept_index = {}
+    for key, entry in raw_index.items():
+        if entry.get("batch_record") == f"batches/{keep_batch_id}/batch.json":
+            kept_index[key] = entry
+    deleted = 0
+    for batch_dir in batches_root.iterdir():
+        if batch_dir.is_dir() and batch_dir.name != keep_batch_id:
+            for child in batch_dir.iterdir():
+                if child.is_file():
+                    child.unlink()
+            batch_dir.rmdir()
+            deleted += 1
+    index_path.write_text(json.dumps(kept_index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return deleted
+
+
+def latest_completed_batch_id(cache_root: Path) -> str | None:
+    batches_root = cache_root / "batches"
+    candidates = []
+    if not batches_root.exists():
+        return None
+    for batch_dir in batches_root.iterdir():
+        record_path = batch_dir / "batch.json"
+        if not batch_dir.is_dir() or not record_path.exists():
+            continue
+        try:
+            record = json.loads(record_path.read_text(encoding="utf-8"))
+            if record.get("status") == "completed":
+                candidates.append((record_path.stat().st_mtime, record.get("extraction_batch_id")))
+        except (OSError, json.JSONDecodeError, TypeError):
+            continue
+    candidates = [(mtime, batch_id) for mtime, batch_id in candidates if batch_id]
+    return max(candidates, default=(0, None))[1]
 
 
 def _gate(manifest: dict) -> None:
@@ -109,7 +232,7 @@ def _gate(manifest: dict) -> None:
             raise ValueError(f"Stage 12 manifest input hash is stale: {path}")
 
 
-def _build(manifest: dict, cache_root: Path) -> dict:
+def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
     evidence_by_id = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     router = ProfileRouter()
     provider = provider_from_config()
@@ -122,7 +245,8 @@ def _build(manifest: dict, cache_root: Path) -> dict:
             profile = router.route(evidence)
             if page.get("extraction_profile_id") != profile.extraction_profile_id or page.get("semantic_role") != profile.semantic_role:
                 raise ValueError(f"manifest Profile route does not match Evidence: {evidence_id}")
-            candidates.extend(_extract_with_evidence_cache(evidence, profile, provider, manifest["source_split"], cache_root))
+            observer = None if attempt_observer is None else lambda event, item=evidence: attempt_observer(item, event)
+            candidates.extend(_extract_with_evidence_cache(evidence, profile, provider, manifest["source_split"], cache_root, attempt_observer=observer))
     payload = {
         "schema_version": 1,
         "stage": "12",
@@ -171,6 +295,11 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
     manifest = json.loads((STAGE12 / "stage12_input_manifest.json").read_text(encoding="utf-8"))
     _gate(manifest)
     contract = load_contract()
+    cache_root = ROOT / contract["runtime"]["cache_root"]
+    cache_maintenance = prune_stale_evidence_cache(manifest, cache_root)
+    events = []
+    evidence_ids = [evidence_id for page in manifest.get("pages", []) for evidence_id in page.get("evidence_ids", [])]
+    observer = lambda evidence, event: events.append(decorate_event(evidence, dict(event)))
     input_refs = tuple(
         {"kind": "file", "path": path, "sha256": _sha(ROOT / path)}
         for path in (
@@ -183,17 +312,25 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
             "src/turbine_kg/extraction/semantic.py",
         )
     )
-    batch, payload = run_with_cache(
-        cache_root=ROOT / contract["runtime"]["cache_root"],
+    try:
+        batch, payload = run_with_cache(
+        cache_root=cache_root,
         operation=contract["runtime"]["operation"],
         input_refs=input_refs,
         cache_context=({"extractor": "profile_routing_v1", "provider": provider_from_config().provider_id}, {"contract": _sha(ROOT / "config/stage12_statement_contract.json"), "profile_routing": _sha(ROOT / "config/stage12_profile_routing.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "extractor_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py")} ),
-        output=lambda: _build(manifest, ROOT / contract["runtime"]["cache_root"]),
+        output=lambda: _build(manifest, cache_root, attempt_observer=observer),
         schema_path=ROOT / "config/runtime_run.schema.json",
         force=force,
         validate_input=lambda: _gate(manifest),
         validate_output=lambda result: (validate_candidate_payload(result), to_stage9_runtime_payload(result["candidates"])),
-    )
+        )
+    except Exception:
+        if events:
+            write_failure_summary(events, run_kind="development_batch", evidence_ids=evidence_ids, cache_maintenance=cache_maintenance, status="failed")
+        raise
+    cache_maintenance["batch_records_deleted"] = prune_stale_batch_records(cache_root, batch.extraction_batch_id)
+    if events:
+        write_failure_summary(events, run_kind="development_batch", evidence_ids=evidence_ids, cache_maintenance=cache_maintenance)
     STAGE12.mkdir(parents=True, exist_ok=True)
     (STAGE12 / "stage12_development_candidates.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return batch.as_dict(), payload

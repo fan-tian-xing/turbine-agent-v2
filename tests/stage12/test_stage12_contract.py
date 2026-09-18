@@ -22,6 +22,7 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_payload,
 )
 from turbine_kg.llm_client import OpenAICompatibleChatTransport
+from scripts import stage12_failure_summary
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -158,6 +159,7 @@ def test_external_provider_retries_deterministic_semantic_feedback_without_repai
     invalid["candidates"][0]["applicability_scope"] = {"status": "known", "applicability_text": "未经证据支持的范围"}
     responses = iter([json.dumps(invalid, ensure_ascii=False), json.dumps(valid, ensure_ascii=False)])
     prompts = []
+    events = []
 
     def transport(prompt):
         prompts.append(prompt["system"])
@@ -168,10 +170,40 @@ def test_external_provider_retries_deterministic_semantic_feedback_without_repai
         profile=_external_profile(),
         split="development_regression_golden",
     )
-    candidates = extractor.extract(_evidence())
+    candidates = extractor.extract(_evidence(), attempt_observer=events.append)
     assert len(candidates) == 1
     assert len(prompts) == 2
     assert "deterministic Evidence validation" in prompts[1]
+    assert events[0]["failure_type"] == "semantic_validation_failure"
+    assert events[0]["field"] == "applicability"
+    assert events[-1]["outcome"] == "success"
+
+
+def test_failure_summary_keeps_retry_failure_and_recovery_without_raw_response(tmp_path, monkeypatch):
+    summary_path = tmp_path / "stage12_real_llm_failure_summary.json"
+    monkeypatch.setattr(stage12_failure_summary, "SUMMARY_PATH", summary_path)
+    summary = stage12_failure_summary.write_failure_summary([
+        {
+            "evidence_id": "E001",
+            "attempt": 1,
+            "outcome": "failure",
+            "failure_type": "semantic_validation_failure",
+            "field": "applicability",
+            "validator_reason": "scope expansion",
+            "evidence_value_or_text": "原文",
+            "model_value_or_text": {"applicability_scope": {"status": "known"}},
+        },
+        {
+            "evidence_id": "E001",
+            "attempt": 2,
+            "outcome": "success",
+            "model_value_or_text": {"status": "ok"},
+        },
+    ], run_kind="controlled_development_diagnostic", evidence_ids=["E001"])
+    assert summary["counts"]["semantic_validation_failure"] == 1
+    assert summary["counts"]["retry_recovered"] == 1
+    assert summary["raw_model_response_persisted"] is False
+    assert json.loads(summary_path.read_text(encoding="utf-8"))["attempts"][0]["field"] == "applicability"
 
 
 def test_external_provider_rejects_missing_transport_without_fallback():

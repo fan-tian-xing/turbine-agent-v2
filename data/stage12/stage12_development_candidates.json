@@ -32,7 +32,7 @@
     "data/stage11/stage11_exit_audit.json": "de5281f5202e4bb2a5942b91d93624cb98cf242b8f6e5afcc3b5799e5bb93028",
     "data/stage12/stage12_input_manifest.json": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "data/stage6/stage6_evidence_bundle.jsonl": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
-    "config/stage12_statement_contract.json": "79b15ce8e598a3abcd4140ce4b80ea313027d59703250cf479035d57100f123c",
+    "config/stage12_statement_contract.json": "67ffb2213358966421f7d5c3e87168204d1045ffa7ced5a28abc965d33eeac2a",
     "config/stage12_candidate.schema.json": "ba691434646a247bf0773fa5a2f6642140b25f3817d0ca508a5ae8ad2604e68e",
     "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
     "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56",
@@ -42,7 +42,7 @@
     "config/stage12_prompt.txt": "41d4578f614778453bdbe9500c0928a2e865168fb01572d03522f3b9a6cd7ef3",
     "config/stage12_extraction_response.schema.json": "0eee0690e97804813c1ab7136db85af41e5636daa46fc4fa810ed359f2484d65",
     "data/registry/source_assets.jsonl": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf",
-    "src/turbine_kg/extraction/semantic.py": "d52d5acd1d1005cf769eed9b23fb3555c4f94b4c307c474574ee7c44cffb90bb"
+    "src/turbine_kg/extraction/semantic.py": "cc61a158a18e893e3d9a279b81effd202fb14a631d69d7d771bcc8ceb2dc9ea4"
   },
   "candidates": [
     {
@@ -51,8 +51,8 @@
       "task": "statement",
       "statement_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，清洗干净。清理好滑块槽后再将滑块复位。",
       "statement_type": "procedure",
-      "predicate": "requires",
-      "relation_direction": "condition_to_consequence",
+      "predicate": "describes",
+      "relation_direction": "procedure_order",
       "subject_entities": [
         {
           "surface_form": "高中压外缸前猫爪",
@@ -161,7 +161,7 @@
       "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "汽轮发电机组基础",
+          "surface_form": "汽轮发电机组基础施工",
           "role": "subject",
           "entity_class": "candidate"
         }
@@ -177,11 +177,7 @@
       "negation_scope": [],
       "conditions": [
         {
-          "surface_form": "基础施工前",
-          "kind": "condition"
-        },
-        {
-          "surface_form": "按DL/T 5434《电力建设工程监理规范》的规定",
+          "surface_form": "汽轮发电机组基础施工前",
           "kind": "condition"
         }
       ],
@@ -212,10 +208,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-6354d64e4594ea49999a",
+      "candidate_id": "stage12-candidate-3d8c534cff26ed6c8532",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "施工准备时，安装专业应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸。",
+      "statement_text": "基础施工期间，安装专业应做下列配合工作：施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸；",
       "statement_type": "verification",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -224,11 +220,31 @@
           "surface_form": "安装专业",
           "role": "subject",
           "entity_class": "candidate"
+        },
+        {
+          "surface_form": "预留孔洞",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "预埋件",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "汽轮发电机组基座",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "主要附属设备基础",
+          "role": "subject",
+          "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "施工准备时，安装专业应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸。"
+        "value": "基础施工期间，安装专业应做下列配合工作：施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸；"
       },
       "value": null,
       "unit": null,
@@ -236,6 +252,10 @@
       "normative_modality": "shall",
       "negation_scope": [],
       "conditions": [
+        {
+          "surface_form": "基础施工期间",
+          "kind": "condition"
+        },
         {
           "surface_form": "施工准备时",
           "kind": "condition"
@@ -1196,10 +1216,10 @@
       "extraction_profile": "commissioning_guideline_v1"
     },
     {
-      "candidate_id": "stage12-candidate-46f575388f76df6da106",
+      "candidate_id": "stage12-candidate-8b9f75790332db067c2f",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。",
+      "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照本规定执行。",
       "statement_type": "limitation",
       "predicate": "limits_scope",
       "relation_direction": "scope_to_subject",
@@ -1212,7 +1232,7 @@
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。"
+        "value": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照本规定执行。"
       },
       "value": null,
       "unit": null,
@@ -1223,67 +1243,23 @@
         {
           "surface_form": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
           "kind": "condition"
-        }
-      ],
-      "applicability_scope": {
-        "status": "known",
-        "applicability_text": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
-        "document_key": "HAF103",
-        "physical_page": 1,
-        "logical_page": "3"
-      },
-      "evidence_bindings": [
+        },
         {
-          "evidence_id": "evidence-be6509fd8df673522604",
-          "support_type": "direct"
-        }
-      ],
-      "source_span_ids": [
-        "span-de74b8674d912cbab928",
-        "span-7ee3d359d31d1f50b60e",
-        "span-78bf1d1bb60598e23967",
-        "span-68be67cab1947da6a617",
-        "span-739c0ed988bf5bfcf47e"
-      ],
-      "evidence_version_id": "evver-4f973fdf335e8ed5ff69",
-      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
-      "revision_id": "rev-be31e11d289998c918fa",
-      "physical_page": 1,
-      "logical_page": "3",
-      "source_text_sha256": "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c",
-      "evidence_quote": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
-      "review_status": "candidate_only",
-      "formal_release": false,
-      "extraction_profile": "nuclear_safety_regulation_v1"
-    },
-    {
-      "candidate_id": "stage12-candidate-fd9728c7099de79a2cbb",
-      "split": "development_regression_golden",
-      "task": "statement",
-      "statement_text": "其他类型核动力厂可参照本规定执行。",
-      "statement_type": "requirement",
-      "predicate": "limits_scope",
-      "relation_direction": "scope_to_subject",
-      "subject_entities": [
+          "surface_form": "不影响核安全的工业安全",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "由核动力厂运行所引起的非放射性影响",
+          "kind": "condition"
+        },
         {
           "surface_form": "其他类型核动力厂",
-          "role": "subject",
-          "entity_class": "candidate"
+          "kind": "condition"
         }
       ],
-      "object_value": {
-        "kind": "source_assertion",
-        "value": "其他类型核动力厂可参照本规定执行。"
-      },
-      "value": null,
-      "unit": null,
-      "quantities": [],
-      "normative_modality": "descriptive",
-      "negation_scope": [],
-      "conditions": [],
       "applicability_scope": {
         "status": "known",
-        "applicability_text": "其他类型核动力厂",
+        "applicability_text": "陆上固定式核动力厂",
         "document_key": "HAF103",
         "physical_page": 1,
         "logical_page": "3"
@@ -1449,6 +1425,11 @@
           "surface_form": "汽轮机冲转",
           "role": "subject",
           "entity_class": "candidate"
+        },
+        {
+          "surface_form": "真空",
+          "role": "subject",
+          "entity_class": "candidate"
         }
       ],
       "object_value": {
@@ -1504,23 +1485,58 @@
       "extraction_profile": "textbook_v1"
     },
     {
-      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
+      "candidate_id": "stage12-candidate-243c5e4d62b1d487f11c",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击",
+      "statement_text": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击。",
       "statement_type": "fact",
       "predicate": "causes",
       "relation_direction": "cause_to_effect",
       "subject_entities": [
         {
-          "surface_form": "真空过低",
+          "surface_form": "真空",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "转子",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "新蒸汽",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "乏汽",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "凝汽器",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "凝汽器汽侧",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "排大气安全薄膜",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "汽缸",
           "role": "subject",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击"
+        "value": "若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和转子造成较大的热冲击。"
       },
       "value": null,
       "unit": null,

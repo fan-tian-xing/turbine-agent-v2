@@ -70,7 +70,12 @@ NOISE_PREFIXES = ("编制审核", "录入员", "目录", "目次", "题库", "�
 class StatementExtractor(Protocol):
     profile_id: str
 
-    def extract(self, evidence: Mapping[str, Any]) -> list[dict[str, Any]]:
+    def extract(
+        self,
+        evidence: Mapping[str, Any],
+        *,
+        attempt_observer: Callable[[Mapping[str, Any]], None] | None = None,
+    ) -> list[dict[str, Any]]:
         """Extract candidate statements from one Evidence record."""
 
 
@@ -220,17 +225,49 @@ class ExternalLLMProvider:
         profile: ExtractionProfile,
         *,
         response_validator: Callable[[Mapping[str, Any]], None] | None = None,
+        attempt_observer: Callable[[Mapping[str, Any]], None] | None = None,
     ) -> Mapping[str, Any]:
         if self.transport is None:
             raise ExtractionProviderError("external LLM provider has no configured transport")
         prompt = stage12_prompt(evidence, profile)
         last_schema_error: ExtractionSchemaError | None = None
         for attempt in range(self.max_attempts):
+            attempt_number = attempt + 1
             try:
                 raw = self.transport(prompt)
-                response = parse_provider_response(raw)
+                try:
+                    response = parse_provider_response(raw)
+                except ExtractionSchemaError as error:
+                    if attempt_observer is not None:
+                        attempt_observer({
+                            "attempt": attempt_number,
+                            "outcome": "failure",
+                            "failure_type": "schema_failure",
+                            "field": _diagnostic_failure_field(str(error), schema=True),
+                            "validator_reason": str(error),
+                            "model_value_or_text": _diagnostic_response_snapshot(raw),
+                        })
+                    raise
                 if response_validator is not None:
-                    response_validator(response)
+                    try:
+                        response_validator(response)
+                    except ValueError as error:
+                        if attempt_observer is not None:
+                            attempt_observer({
+                                "attempt": attempt_number,
+                                "outcome": "failure",
+                                "failure_type": "semantic_validation_failure",
+                                "field": _diagnostic_failure_field(str(error)),
+                                "validator_reason": str(error),
+                                "model_value_or_text": _diagnostic_response_snapshot(response),
+                            })
+                        raise
+                if attempt_observer is not None:
+                    attempt_observer({
+                        "attempt": attempt_number,
+                        "outcome": "success",
+                        "model_value_or_text": _diagnostic_response_snapshot(response),
+                    })
                 return response | {"provider_metadata": self.metadata}
             except ExtractionSchemaError as error:
                 last_schema_error = error
@@ -246,6 +283,15 @@ class ExternalLLMProvider:
             except ExtractionProviderError:
                 raise
             except LLMTransportError as error:
+                if attempt_observer is not None:
+                    attempt_observer({
+                        "attempt": attempt_number,
+                        "outcome": "failure",
+                        "failure_type": "transport_failure",
+                        "field": None,
+                        "validator_reason": str(error),
+                        "model_value_or_text": None,
+                    })
                 raise ExtractionProviderError("external LLM provider failed") from error
             except ValueError as error:
                 last_schema_error = None
@@ -261,6 +307,69 @@ class ExternalLLMProvider:
             except Exception as error:  # provider failures must not look like validation failures
                 raise ExtractionProviderError("external LLM provider failed") from error
         raise ExtractionProviderError("external LLM response failed strict parsing") from last_schema_error
+
+
+def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
+    """Return a bounded provider-field snapshot without persisting raw output."""
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw)
+        except json.JSONDecodeError:
+            return {"raw_type": "non_json_text"}
+    if not isinstance(raw, Mapping):
+        return {"raw_type": type(raw).__name__}
+    snapshot: dict[str, Any] = {"status": raw.get("status")}
+    candidates = []
+    for item in list(raw.get("candidates") or [])[:3]:
+        if not isinstance(item, Mapping):
+            continue
+        candidate = {
+            "statement_text": str(item.get("statement_text", ""))[:1200],
+            "predicate": item.get("predicate"),
+            "subject_entities": [
+                {"surface_form": str(entity.get("surface_form", ""))[:240]}
+                for entity in list(item.get("subject_entities") or [])[:10]
+                if isinstance(entity, Mapping)
+            ],
+            "conditions": [
+                {"surface_form": str(condition.get("surface_form", ""))[:240]}
+                for condition in list(item.get("conditions") or [])[:10]
+                if isinstance(condition, Mapping)
+            ],
+            "applicability_scope": {
+                key: str(value)[:500]
+                for key, value in dict(item.get("applicability_scope") or {}).items()
+                if key in {"status", "applicability_text"}
+            },
+        }
+        candidates.append(candidate)
+    snapshot["candidates"] = candidates
+    return snapshot
+
+
+def _diagnostic_failure_field(reason: str, *, schema: bool = False) -> str:
+    text = reason.lower()
+    if "applicability" in text or "specified" in text or "not_applicable" in text:
+        return "applicability"
+    if "statement text" in text or "boundary" in text:
+        return "statement_boundary"
+    if "statement type" in text:
+        return "statement_type"
+    if "entity" in text:
+        return "entity"
+    if "causal" in text or "relation" in text:
+        return "relation_direction" if "direction" in text else "relation"
+    if "quantity" in text or "unit" in text or "comparison" in text:
+        return "quantity"
+    if "negation" in text:
+        return "negation"
+    if "condition" in text:
+        return "condition"
+    if "unsupported" in text:
+        return "unsupported_addition"
+    if schema and "status" in text:
+        return "status"
+    return "schema" if schema else "semantic"
 
 
 def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvider:
@@ -394,7 +503,12 @@ class ProviderBackedExtractor:
         self.split = split
         self.profile_id = profile.extraction_profile_id
 
-    def extract(self, evidence: Mapping[str, Any]) -> list[dict[str, Any]]:
+    def extract(
+        self,
+        evidence: Mapping[str, Any],
+        *,
+        attempt_observer: Callable[[Mapping[str, Any]], None] | None = None,
+    ) -> list[dict[str, Any]]:
         if isinstance(self.provider, ExternalLLMProvider) and not self.profile.external_llm_allowed:
             raise ExtractionProviderError("source-level permission denies sending Evidence to an external LLM")
         if isinstance(self.provider, ExternalLLMProvider):
@@ -403,7 +517,12 @@ class ProviderBackedExtractor:
                     candidate = _assemble_candidate(item, evidence, self.profile, self.split, index)
                     validate_candidate_against_evidence(candidate, evidence)
 
-            raw_response = self.provider.extract(evidence, self.profile, response_validator=response_validator)
+            raw_response = self.provider.extract(
+                evidence,
+                self.profile,
+                response_validator=response_validator,
+                attempt_observer=attempt_observer,
+            )
         else:
             raw_response = self.provider.extract(evidence, self.profile)
         response = parse_provider_response(raw_response)

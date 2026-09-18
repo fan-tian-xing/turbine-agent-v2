@@ -58,7 +58,11 @@
     "transport_max_attempts": 3,
     "per_evidence_cache": "var/model_runs/stage12/evidence; stores only fully validated structured candidates keyed by Evidence, profile, provider, prompt, response schema and semantic source fingerprints; raw model responses are never persisted",
     "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints.",
-    "no_silent_fixture_fallback": true
+    "no_silent_fixture_fallback": true,
+    "stale_cache_pruning": "scripts/build_stage12_candidates.py retains only current Development Evidence cache keys, migrates revalidated structured candidates when only diagnostic instrumentation changed, and removes invalid or unreachable JSON entries",
+    "run_record_pruning": "Only the latest completed Stage 12 batch record is retained under var/model_runs/stage12/batches",
+    "failure_summary": "data/stage12/stage12_real_llm_failure_summary.json; one current overwritten summary containing bounded transport, schema and semantic attempt events",
+    "diagnostic_entrypoint": "scripts/diagnose_stage12_real_llm.py --limit 2"
   },
   "evaluation": {
     "fields": ["statement_semantic_correctness", "statement_boundary", "statement_type", "entity", "quantity", "unit", "comparison", "negation", "condition", "applicability_meaning", "relation", "relation_direction", "unsupported_addition", "evidence_grounding", "candidate_coverage"],
@@ -82,5 +86,5 @@
       "blind_test_status": "unknown_to_stage12"
     }
   },
-  "consumers": ["scripts/build_stage12_candidates.py", "scripts/evaluate_stage12_holdout.py", "scripts/audit_stage12_exit.py", "tests/stage12"]
+  "consumers": ["scripts/build_stage12_candidates.py", "scripts/diagnose_stage12_real_llm.py", "scripts/evaluate_stage12_holdout.py", "scripts/audit_stage12_exit.py", "tests/stage12"]
 }

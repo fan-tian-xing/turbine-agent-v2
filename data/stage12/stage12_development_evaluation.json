@@ -1,9 +1,9 @@
 {
   "gold_statement_count": 19,
-  "candidate_count": 24,
+  "candidate_count": 23,
   "gold_exhaustive": false,
   "statement_recall": 0.8947368421052632,
-  "statement_semantic_correctness": 0.05263157894736842,
+  "statement_semantic_correctness": 0.0,
   "field_totals": {
     "statement_boundary": 19,
     "statement_type": 19,
@@ -24,7 +24,7 @@
     "statement_boundary": 16,
     "statement_type": 13,
     "entity": 13,
-    "relation": 14,
+    "relation": 15,
     "quantity": 17,
     "unit": 17,
     "comparison": 16,
@@ -32,15 +32,15 @@
     "condition": 17,
     "applicability": 1,
     "applicability_meaning": 1,
-    "relation_direction": 15,
-    "unsupported_addition": 10,
+    "relation_direction": 16,
+    "unsupported_addition": 9,
     "evidence_grounding": 17
   },
   "field_accuracy": {
     "statement_boundary": 0.8421052631578947,
     "statement_type": 0.6842105263157895,
     "entity": 0.6842105263157895,
-    "relation": 0.7368421052631579,
+    "relation": 0.7894736842105263,
     "quantity": 0.8947368421052632,
     "unit": 0.8947368421052632,
     "comparison": 0.8421052631578947,
@@ -48,23 +48,23 @@
     "condition": 0.8947368421052632,
     "applicability": 0.05263157894736842,
     "applicability_meaning": 0.05263157894736842,
-    "relation_direction": 0.7894736842105263,
-    "unsupported_addition": 0.5263157894736842,
+    "relation_direction": 0.8421052631578947,
+    "unsupported_addition": 0.47368421052631576,
     "evidence_grounding": 0.8947368421052632
   },
   "error_counts": {
     "boundary_error": 3,
     "statement_type_error": 6,
     "entity_error": 6,
-    "relation_error": 5,
+    "relation_error": 4,
     "quantity_error": 2,
     "unit_error": 2,
     "comparison_error": 3,
     "negation_error": 2,
     "condition_loss": 2,
     "applicability_error": 18,
-    "relation_direction_error": 4,
-    "unsupported_claim": 9
+    "relation_direction_error": 3,
+    "unsupported_claim": 10
   },
   "errors": [
     {
@@ -86,10 +86,15 @@
       "statement_id": "real-statement-d300n-p73-lift-clearance",
       "candidate_id": "stage12-candidate-deb9dc9a9bedb1990545",
       "error_types": [
-        "relation_error",
         "comparison_error",
         "applicability_error",
-        "relation_direction_error",
+        "unsupported_claim"
+      ]
+    },
+    {
+      "statement_id": "real-statement-haf103-p1-scope",
+      "candidate_id": "stage12-candidate-8b9f75790332db067c2f",
+      "error_types": [
         "unsupported_claim"
       ]
     },
@@ -102,7 +107,7 @@
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
-      "candidate_id": "stage12-candidate-6354d64e4594ea49999a",
+      "candidate_id": "stage12-candidate-3d8c534cff26ed6c8532",
       "error_types": [
         "relation_error",
         "applicability_error",
@@ -232,7 +237,7 @@
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
+      "candidate_id": "stage12-candidate-243c5e4d62b1d487f11c",
       "error_types": [
         "applicability_error"
       ]
@@ -256,7 +261,7 @@
     },
     {
       "statement_id": "real-statement-haf103-p1-scope",
-      "candidate_id": "stage12-candidate-46f575388f76df6da106",
+      "candidate_id": "stage12-candidate-8b9f75790332db067c2f",
       "score": 1.0
     },
     {
@@ -266,8 +271,8 @@
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
-      "candidate_id": "stage12-candidate-6354d64e4594ea49999a",
-      "score": 0.9444444444444444
+      "candidate_id": "stage12-candidate-3d8c534cff26ed6c8532",
+      "score": 0.9454545454545454
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c",
@@ -321,8 +326,8 @@
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
-      "score": 0.9487179487179487
+      "candidate_id": "stage12-candidate-243c5e4d62b1d487f11c",
+      "score": 0.9743589743589743
     }
   ],
   "unmatched_gold": [
@@ -335,11 +340,10 @@
     "stage12-candidate-03b3364ba28494cd88f6",
     "stage12-candidate-b6ce226a6d7c1d88fbb0",
     "stage12-candidate-b7f852777d9e5b11e390",
-    "stage12-candidate-82f685268286b674568f",
-    "stage12-candidate-fd9728c7099de79a2cbb"
+    "stage12-candidate-82f685268286b674568f"
   ],
   "unmatched_gold_count": 2,
-  "unmatched_candidate_count": 7,
+  "unmatched_candidate_count": 6,
   "unmatched_candidate_review": [
     {
       "candidate_id": "stage12-candidate-9f2bc77bec9ddd9cab84",
@@ -364,10 +368,6 @@
     {
       "candidate_id": "stage12-candidate-82f685268286b674568f",
       "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-fd9728c7099de79a2cbb",
-      "classification": "needs_gold_completion"
     }
   ],
   "unmatched_candidate_review_counts": {
@@ -375,11 +375,11 @@
     "duplicate": 0,
     "over_split": 0,
     "unsupported": 0,
-    "needs_gold_completion": 7
+    "needs_gold_completion": 6
   },
   "candidate_coverage": {
     "matched_candidate_count": 17,
-    "extra_candidate_count": 7,
+    "extra_candidate_count": 6,
     "duplicate_candidate_rate": 0.0,
     "over_split_rate": 0.0,
     "spurious_candidate_rate": null
@@ -396,12 +396,12 @@
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "1abcba46fb283698ffd202d107adc5d126569e67c34176b0ef951a16a9a4cdf3",
+    "candidate": "73debf5b6abb9b336b073ed5a470aa484a14a84d242316323da026c8696a1da5",
     "gold": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
     "manifest": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
-    "contract": "79b15ce8e598a3abcd4140ce4b80ea313027d59703250cf479035d57100f123c",
+    "contract": "67ffb2213358966421f7d5c3e87168204d1045ffa7ced5a28abc965d33eeac2a",
     "provider_config": "08b0a602e93531972f0fe6e4b44c75fbd530c653323fdc2e4543fc5130a21873",
     "prompt": "41d4578f614778453bdbe9500c0928a2e865168fb01572d03522f3b9a6cd7ef3",
     "response_schema": "0eee0690e97804813c1ab7136db85af41e5636daa46fc4fa810ed359f2484d65",
@@ -413,7 +413,7 @@
   "robustness_executed": true,
   "robustness": {
     "case_count": 6,
-    "passed_count": 0,
-    "failed_count": 6
+    "passed_count": 2,
+    "failed_count": 4
   }
 }

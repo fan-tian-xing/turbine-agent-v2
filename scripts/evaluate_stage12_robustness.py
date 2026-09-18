@@ -45,7 +45,16 @@ def _semantic_failure_reasons(candidate: dict, case: dict) -> tuple[list[str], l
     for field, passed in checks.items():
         if not passed:
             fields.append(field)
-            expected = case.get(f"expected_{field}")
+            expected_key = {
+                "relation": "expected_predicate",
+                "relation_direction": "expected_direction",
+                "applicability": "expected_applicability_text",
+                "condition": "expected_condition",
+                "negation": "expected_negation",
+                "comparison": "expected_operator",
+                "quantity": "expected_quantity",
+            }[field]
+            expected = case.get(expected_key)
             actual = candidate.get({"relation": "predicate", "relation_direction": "relation_direction", "applicability": "applicability_scope", "condition": "conditions", "negation": "negation_scope", "comparison": "quantities", "quantity": "quantities"}[field])
             reasons.append(f"{field}: expected={expected!r}, actual={actual!r}")
     return reasons, fields

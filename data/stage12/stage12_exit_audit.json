@@ -57,7 +57,7 @@
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "88a153500d56689c5bace687466e719e2ed4c99c3cd3ce0c15e69cf609c64583"
+      "sha256": "a5be2a377f4acdacbddc34438c450233728810a7386bcfb2a65cc44fa7d09d99"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -65,7 +65,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "0a7f22e44e071ea300adfcbba9ec0ec9bc54fef3617b79aef30945d0e27d3c89"
+      "sha256": "85a2b0624ae46c2f4e57fa1b31f63acfef0342dd3a772e992b0e5a65fba1c3b8"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -77,15 +77,15 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "73debf5b6abb9b336b073ed5a470aa484a14a84d242316323da026c8696a1da5"
+      "sha256": "d26a83acac710fe14feae616acbb64e5bdaad5c825984ff51c9d3bd369f1ed06"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "f4aad205b3072b318a9fe5b83a0d666e8e3a94aaf0d69ca0c974c74b554c5573"
+      "sha256": "e9d104c6cec2a5c59d1f05f2c2a2eb8ba5284640647abc4f39ab69368307511e"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "ce6c56b4ebe6909ce5a8f8ddb0fe9c6fd18b0f349418cbe4ae4c20cdebf4118e"
+      "sha256": "aae44f39c140de507642ab05733a585abe7305b3243f50e21d884a1c94a9454f"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -97,7 +97,7 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "2193bdd657cb59dc7f8aac275ba347696524f25839ffed66d2d6a5a5299350a8"
+      "sha256": "9ed457888f5b1f3a172dc2e2c2d33dcecdd43655a1ab7c929e57fb2d9aa73b61"
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
@@ -105,7 +105,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "f0a6e97372af61acd06070f7c72459e31bb780be7b96e499e29a775894f2471e"
+      "sha256": "08b9e53644fd8d43e4ee322f460a07190a77080f47a8a8df3a4ea6f7ac5c2744"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -117,7 +117,7 @@
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "76cf98bc17354bd17ec5c1f1dae1b5116bed4dd162d61fc7662cb3a950552f8e"
+      "sha256": "75ddf7476f98c33a05ea1dc7c1e9ffa80d55e8ca288d0236b6e4e9ba41c5f9a8"
     }
   },
   "outputs": {
@@ -143,13 +143,13 @@
     "candidate_pages_are_manifest_pages": true,
     "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": false,
-    "producer_reexecution_current": false,
-    "candidate_input_lineage_current": false,
+    "real_llm_execution_verified": true,
+    "producer_reexecution_current": true,
+    "candidate_input_lineage_current": true,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": false,
-    "independent_holdout_evaluation_present": false,
+    "development_evaluation_present": true,
+    "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": false,
@@ -159,31 +159,31 @@
     "semantic_coverage_matrix_present": true,
     "stage13_frozen_by_user": true,
     "development_quality_gate": false,
-    "robustness_quality_gate": false,
+    "robustness_quality_gate": true,
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 0,
+    "validated_real_evidence_cache_count": 10,
     "failure_summary_counts": {
       "transport_failure": 0,
       "schema_failure": 2,
-      "semantic_validation_failure": 0,
-      "success": 2,
-      "attempts": 4,
-      "retry_recovered": 2
+      "semantic_validation_failure": 2,
+      "success": 10,
+      "attempts": 14,
+      "retry_recovered": 3
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "blocked",
+      "status": "executed",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
-      "real_llm_execution_verified": false,
-      "failure": "external LLM provider failed",
+      "real_llm_execution_verified": true,
+      "failure": null,
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -197,7 +197,7 @@
   "counts": {
     "representative_pages": 8,
     "documents": 5,
-    "candidates": 23,
+    "candidates": 25,
     "development_gold_statements": 19,
     "holdout_gold_statements_registered": 50,
     "holdout_gold_statements_evaluated": 48,
@@ -266,18 +266,18 @@
   "quality_observation": {
     "development_field_accuracy": {
       "statement_boundary": 0.8421052631578947,
-      "statement_type": 0.6842105263157895,
-      "entity": 0.6842105263157895,
+      "statement_type": 0.631578947368421,
+      "entity": 0.8947368421052632,
       "relation": 0.7894736842105263,
       "quantity": 0.8947368421052632,
       "unit": 0.8947368421052632,
       "comparison": 0.8421052631578947,
       "negation": 0.8947368421052632,
       "condition": 0.8947368421052632,
-      "applicability": 0.05263157894736842,
-      "applicability_meaning": 0.05263157894736842,
+      "applicability": 0.7894736842105263,
+      "applicability_meaning": 0.7894736842105263,
       "relation_direction": 0.8421052631578947,
-      "unsupported_addition": 0.47368421052631576,
+      "unsupported_addition": 0.5263157894736842,
       "evidence_grounding": 0.8947368421052632
     },
     "holdout_field_accuracy": {
@@ -290,8 +290,8 @@
       "comparison": 0.7916666666666666,
       "negation": 0.5,
       "condition": 0.8541666666666666,
-      "applicability": 0.0625,
-      "applicability_meaning": 0.0625,
+      "applicability": 0.8958333333333334,
+      "applicability_meaning": 0.8958333333333334,
       "relation_direction": 0.8958333333333334,
       "unsupported_addition": 0.9166666666666666,
       "evidence_grounding": 0.8958333333333334
@@ -320,18 +320,18 @@
     },
     "development_recomputed": {
       "statement_boundary": 0.8421052631578947,
-      "statement_type": 0.6842105263157895,
-      "entity": 0.6842105263157895,
+      "statement_type": 0.631578947368421,
+      "entity": 0.8947368421052632,
       "relation": 0.7894736842105263,
       "quantity": 0.8947368421052632,
       "unit": 0.8947368421052632,
       "comparison": 0.8421052631578947,
       "negation": 0.8947368421052632,
       "condition": 0.8947368421052632,
-      "applicability": 0.8421052631578947,
-      "applicability_meaning": 0.8421052631578947,
+      "applicability": 0.7894736842105263,
+      "applicability_meaning": 0.7894736842105263,
       "relation_direction": 0.8421052631578947,
-      "unsupported_addition": 0.47368421052631576,
+      "unsupported_addition": 0.5263157894736842,
       "evidence_grounding": 0.8947368421052632
     },
     "scale_gate": false,
@@ -346,16 +346,10 @@
   "blockers": [
     "acceptance_holdout_exposed",
     "acceptance_quality_gate",
-    "candidate_input_lineage_current",
-    "development_evaluation_present",
     "development_quality_gate",
     "grounding_zero_tolerance",
-    "independent_holdout_evaluation_present",
-    "producer_reexecution_current",
-    "real_llm_execution_verified",
     "representative_chapter_scope_resolved",
-    "reserve_independent_gold_not_ready",
-    "robustness_quality_gate"
+    "reserve_independent_gold_not_ready"
   ],
   "next_stage_allowed": false,
   "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",
@@ -367,13 +361,13 @@
   "production_llm_pipeline_ready": false,
   "real_llm_execution": true,
   "stage12_status_summary": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "STAGE12_EXIT": false
   },
-  "real_llm_reexecution_error": "external LLM provider failed",
+  "real_llm_reexecution_error": null,
   "consumers": [
     "tests/stage12"
   ]

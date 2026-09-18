@@ -1,9 +1,9 @@
 {
   "gold_statement_count": 19,
-  "candidate_count": 23,
+  "candidate_count": 25,
   "gold_exhaustive": false,
   "statement_recall": 0.8947368421052632,
-  "statement_semantic_correctness": 0.0,
+  "statement_semantic_correctness": 0.2631578947368421,
   "field_totals": {
     "statement_boundary": 19,
     "statement_type": 19,
@@ -22,69 +22,63 @@
   },
   "field_correct": {
     "statement_boundary": 16,
-    "statement_type": 13,
-    "entity": 13,
+    "statement_type": 12,
+    "entity": 17,
     "relation": 15,
     "quantity": 17,
     "unit": 17,
     "comparison": 16,
     "negation": 17,
     "condition": 17,
-    "applicability": 1,
-    "applicability_meaning": 1,
+    "applicability": 15,
+    "applicability_meaning": 15,
     "relation_direction": 16,
-    "unsupported_addition": 9,
+    "unsupported_addition": 10,
     "evidence_grounding": 17
   },
   "field_accuracy": {
     "statement_boundary": 0.8421052631578947,
-    "statement_type": 0.6842105263157895,
-    "entity": 0.6842105263157895,
+    "statement_type": 0.631578947368421,
+    "entity": 0.8947368421052632,
     "relation": 0.7894736842105263,
     "quantity": 0.8947368421052632,
     "unit": 0.8947368421052632,
     "comparison": 0.8421052631578947,
     "negation": 0.8947368421052632,
     "condition": 0.8947368421052632,
-    "applicability": 0.05263157894736842,
-    "applicability_meaning": 0.05263157894736842,
+    "applicability": 0.7894736842105263,
+    "applicability_meaning": 0.7894736842105263,
     "relation_direction": 0.8421052631578947,
-    "unsupported_addition": 0.47368421052631576,
+    "unsupported_addition": 0.5263157894736842,
     "evidence_grounding": 0.8947368421052632
   },
   "error_counts": {
     "boundary_error": 3,
-    "statement_type_error": 6,
-    "entity_error": 6,
+    "statement_type_error": 7,
+    "entity_error": 2,
     "relation_error": 4,
     "quantity_error": 2,
     "unit_error": 2,
     "comparison_error": 3,
     "negation_error": 2,
     "condition_loss": 2,
-    "applicability_error": 18,
+    "applicability_error": 4,
     "relation_direction_error": 3,
-    "unsupported_claim": 10
+    "unsupported_claim": 9
   },
   "errors": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
       "candidate_id": "stage12-candidate-2f0b520d99a9fd845950",
       "error_types": [
+        "statement_type_error",
         "applicability_error",
         "unsupported_claim"
       ]
     },
     {
-      "statement_id": "real-statement-dl5190-p86-contact",
-      "candidate_id": "stage12-candidate-6f9302ac3ecc9d471c2e",
-      "error_types": [
-        "applicability_error"
-      ]
-    },
-    {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
-      "candidate_id": "stage12-candidate-deb9dc9a9bedb1990545",
+      "candidate_id": "stage12-candidate-b1854668f08d056ae9c0",
       "error_types": [
         "comparison_error",
         "applicability_error",
@@ -92,40 +86,19 @@
       ]
     },
     {
-      "statement_id": "real-statement-haf103-p1-scope",
-      "candidate_id": "stage12-candidate-8b9f75790332db067c2f",
-      "error_types": [
-        "unsupported_claim"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f",
-      "candidate_id": "stage12-candidate-30615ba66c17d02bc71b",
-      "error_types": [
-        "applicability_error"
-      ]
-    },
-    {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
-      "candidate_id": "stage12-candidate-3d8c534cff26ed6c8532",
+      "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
       "error_types": [
+        "statement_type_error",
         "relation_error",
-        "applicability_error",
         "unsupported_claim"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-090cfb6b41999cdd681c",
-      "candidate_id": "stage12-candidate-ff4e937308a8231a140d",
-      "error_types": [
-        "applicability_error"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
       "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
       "error_types": [
-        "applicability_error",
+        "statement_type_error",
         "unsupported_claim"
       ]
     },
@@ -133,9 +106,6 @@
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
       "candidate_id": "stage12-candidate-bc52a9b3a2fc31f886da",
       "error_types": [
-        "statement_type_error",
-        "entity_error",
-        "applicability_error",
         "unsupported_claim"
       ]
     },
@@ -144,8 +114,7 @@
       "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
       "error_types": [
         "boundary_error",
-        "entity_error",
-        "applicability_error",
+        "statement_type_error",
         "unsupported_claim"
       ]
     },
@@ -153,9 +122,6 @@
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
       "candidate_id": "stage12-candidate-e6cc6f6d2cebeac9252a",
       "error_types": [
-        "statement_type_error",
-        "entity_error",
-        "applicability_error",
         "unsupported_claim"
       ]
     },
@@ -163,9 +129,6 @@
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
       "candidate_id": "stage12-candidate-07549d808a5a3c6f0337",
       "error_types": [
-        "statement_type_error",
-        "entity_error",
-        "applicability_error",
         "unsupported_claim"
       ]
     },
@@ -173,9 +136,7 @@
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
       "candidate_id": "stage12-candidate-68f226f353533491f864",
       "error_types": [
-        "statement_type_error",
-        "relation_error",
-        "applicability_error"
+        "relation_error"
       ]
     },
     {
@@ -214,32 +175,23 @@
     },
     {
       "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-5a00cbef8b96974873ed",
+      "candidate_id": "stage12-candidate-edeba7f5592e1facbc9e",
       "error_types": [
-        "applicability_error",
         "unsupported_claim"
       ]
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-7a7d7577cfe9e26b4cdc",
+      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
       "error_types": [
-        "applicability_error",
         "relation_direction_error"
       ]
     },
     {
-      "statement_id": "stage11-statement-a9ff60d2526222447813",
-      "candidate_id": "stage12-candidate-7b4d6f9e00c8a7ca560a",
-      "error_types": [
-        "applicability_error"
-      ]
-    },
-    {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-243c5e4d62b1d487f11c",
+      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
       "error_types": [
-        "applicability_error"
+        "statement_type_error"
       ]
     }
   ],
@@ -251,17 +203,17 @@
     },
     {
       "statement_id": "real-statement-dl5190-p86-contact",
-      "candidate_id": "stage12-candidate-6f9302ac3ecc9d471c2e",
-      "score": 1.0
+      "candidate_id": "stage12-candidate-2469cfb6b8df11353404",
+      "score": 0.9583333333333334
     },
     {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
-      "candidate_id": "stage12-candidate-deb9dc9a9bedb1990545",
+      "candidate_id": "stage12-candidate-b1854668f08d056ae9c0",
       "score": 1.0
     },
     {
       "statement_id": "real-statement-haf103-p1-scope",
-      "candidate_id": "stage12-candidate-8b9f75790332db067c2f",
+      "candidate_id": "stage12-candidate-3c6eedbb1d7aa0db5411",
       "score": 1.0
     },
     {
@@ -271,7 +223,7 @@
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
-      "candidate_id": "stage12-candidate-3d8c534cff26ed6c8532",
+      "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
       "score": 0.9454545454545454
     },
     {
@@ -311,12 +263,12 @@
     },
     {
       "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-5a00cbef8b96974873ed",
+      "candidate_id": "stage12-candidate-edeba7f5592e1facbc9e",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-7a7d7577cfe9e26b4cdc",
+      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
       "score": 1.0
     },
     {
@@ -326,8 +278,8 @@
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-243c5e4d62b1d487f11c",
-      "score": 0.9743589743589743
+      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
+      "score": 0.9487179487179487
     }
   ],
   "unmatched_gold": [
@@ -335,38 +287,48 @@
     "stage11-statement-5ef7104eda31c3578f06-s3"
   ],
   "unmatched_candidates": [
-    "stage12-candidate-9f2bc77bec9ddd9cab84",
-    "stage12-candidate-ddf92f3716a1998bfc72",
-    "stage12-candidate-03b3364ba28494cd88f6",
-    "stage12-candidate-b6ce226a6d7c1d88fbb0",
-    "stage12-candidate-b7f852777d9e5b11e390",
-    "stage12-candidate-82f685268286b674568f"
+    "stage12-candidate-8f5bd086e5c285e8bb5f",
+    "stage12-candidate-d568a59cb172251b252c",
+    "stage12-candidate-8e423d55819111100034",
+    "stage12-candidate-08a12a35e76146fd0462",
+    "stage12-candidate-d65ef49b57bc1bfe7003",
+    "stage12-candidate-bc3733aeaf7275c4eef5",
+    "stage12-candidate-36e378235612bf316599",
+    "stage12-candidate-7bf87e69237e4e984ff3"
   ],
   "unmatched_gold_count": 2,
-  "unmatched_candidate_count": 6,
+  "unmatched_candidate_count": 8,
   "unmatched_candidate_review": [
     {
-      "candidate_id": "stage12-candidate-9f2bc77bec9ddd9cab84",
+      "candidate_id": "stage12-candidate-8f5bd086e5c285e8bb5f",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-ddf92f3716a1998bfc72",
+      "candidate_id": "stage12-candidate-d568a59cb172251b252c",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-03b3364ba28494cd88f6",
+      "candidate_id": "stage12-candidate-8e423d55819111100034",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-b6ce226a6d7c1d88fbb0",
+      "candidate_id": "stage12-candidate-08a12a35e76146fd0462",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-b7f852777d9e5b11e390",
+      "candidate_id": "stage12-candidate-d65ef49b57bc1bfe7003",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-82f685268286b674568f",
+      "candidate_id": "stage12-candidate-bc3733aeaf7275c4eef5",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-36e378235612bf316599",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-7bf87e69237e4e984ff3",
       "classification": "needs_gold_completion"
     }
   ],
@@ -375,14 +337,17 @@
     "duplicate": 0,
     "over_split": 0,
     "unsupported": 0,
-    "needs_gold_completion": 6
+    "needs_gold_completion": 8
   },
   "candidate_coverage": {
     "matched_candidate_count": 17,
-    "extra_candidate_count": 6,
+    "extra_candidate_count": 8,
     "duplicate_candidate_rate": 0.0,
     "over_split_rate": 0.0,
     "spurious_candidate_rate": null
+  },
+  "evaluator_adapters": {
+    "applicability": "statement-level applicability text is compared when Gold provides it; source/document-level scope metadata alone does not imply not_applicable or a known statement scope"
   },
   "schema_version": 1,
   "stage": "12",
@@ -396,15 +361,15 @@
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "73debf5b6abb9b336b073ed5a470aa484a14a84d242316323da026c8696a1da5",
+    "candidate": "d26a83acac710fe14feae616acbb64e5bdaad5c825984ff51c9d3bd369f1ed06",
     "gold": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
     "manifest": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
-    "contract": "67ffb2213358966421f7d5c3e87168204d1045ffa7ced5a28abc965d33eeac2a",
-    "provider_config": "08b0a602e93531972f0fe6e4b44c75fbd530c653323fdc2e4543fc5130a21873",
-    "prompt": "41d4578f614778453bdbe9500c0928a2e865168fb01572d03522f3b9a6cd7ef3",
-    "response_schema": "0eee0690e97804813c1ab7136db85af41e5636daa46fc4fa810ed359f2484d65",
+    "contract": "acc300e50970a3c1c4a7a648493a6f0545768aeee9c25943a77de444d86754f0",
+    "provider_config": "89dc2d33a13a3d7f203fe84295508c184cd04979367cdb939d2dc766d1ec11b1",
+    "prompt": "a5be2a377f4acdacbddc34438c450233728810a7386bcfb2a65cc44fa7d09d99",
+    "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
     "registry": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf",
     "evaluator": "stage12-field-evaluator-v3"
   },

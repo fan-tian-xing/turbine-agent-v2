@@ -357,14 +357,14 @@ def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
 
 def _diagnostic_failure_field(reason: str, *, schema: bool = False) -> str:
     text = reason.lower()
+    if "entity" in text:
+        return "entity"
     if "applicability" in text or "specified" in text or "not_applicable" in text:
         return "applicability"
     if "statement text" in text or "boundary" in text:
         return "statement_boundary"
     if "statement type" in text:
         return "statement_type"
-    if "entity" in text:
-        return "entity"
     if "causal" in text or "relation" in text:
         return "relation_direction" if "direction" in text else "relation"
     if "quantity" in text or "unit" in text or "comparison" in text:
@@ -995,7 +995,11 @@ def to_stage9_runtime_payload(candidates: Iterable[Mapping[str, Any]]) -> dict[s
         validate_candidate_semantics(candidate)
         entities = []
         for subject in candidate["subject_entities"]:
-            entity = iri("entity", _sha({"surface_form": subject["surface_form"], "entity_class": subject["entity_class"]})[:20])
+            # The same grounded surface may be a subject in one statement and
+            # an object/related entity in another.  Role is part of this
+            # candidate projection identity so runtime validation cannot merge
+            # incompatible role assertions.
+            entity = iri("entity", _sha({"surface_form": subject["surface_form"], "entity_class": subject["entity_class"], "role": subject["role"]})[:20])
             add(entity, "PhysicalEntity", {"objectKey": subject["surface_form"], "entityRole": subject["role"], "entityClass": subject["entity_class"]})
             entities.append(entity)
         entity = entities[0]
@@ -1172,7 +1176,7 @@ def validate_stage12_runtime_projection(candidates: Iterable[Mapping[str, Any]],
                 raise ValueError(f"Stage 12 semantic field changed in runtime projection: {candidate['candidate_id']}")
         expected_entities = []
         for subject in candidate["subject_entities"]:
-            entity = f"urn:turbine-v2:stage12:entity:{_sha({'surface_form': subject['surface_form'], 'entity_class': subject['entity_class']})[:20]}"
+            entity = f"urn:turbine-v2:stage12:entity:{_sha({'surface_form': subject['surface_form'], 'entity_class': subject['entity_class'], 'role': subject['role']})[:20]}"
             expected_entities.append(entity)
             node = nodes.get(entity)
             if not node or node["properties"] != {"objectKey": subject["surface_form"], "entityRole": subject["role"], "entityClass": subject["entity_class"]}:

@@ -35,6 +35,8 @@ PROVIDER_CONFIG_PATH = ROOT / "config/stage12_provider.json"
 PROMPT_PATH = ROOT / "config/stage12_prompt.txt"
 RESPONSE_SCHEMA_PATH = ROOT / "config/stage12_extraction_response.schema.json"
 COARSE_RELATIONS = frozenset({"requires", "prohibits", "describes", "causes", "verifies", "limits_scope"})
+STATEMENT_TYPES = frozenset({"fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"})
+ENTITY_ROLES = frozenset({"subject", "object", "related", "quantity_target"})
 STAGE9_TYPE = {
     "fact": "fact",
     "requirement": "acceptance_requirement",
@@ -100,7 +102,7 @@ OpenAICompatibleTransport = OpenAICompatibleChatTransport
 
 
 def parse_provider_response(raw: str | Mapping[str, Any], schema_path: Path = RESPONSE_SCHEMA_PATH) -> dict[str, Any]:
-    """Parse only strict JSON; never recover JSON from prose or Markdown fences."""
+    """Parse strict semantic JSON and supply fixed protocol metadata locally."""
     if isinstance(raw, str):
         try:
             parsed = json.loads(raw)
@@ -110,6 +112,10 @@ def parse_provider_response(raw: str | Mapping[str, Any], schema_path: Path = RE
         parsed = dict(raw)
     else:
         raise ExtractionSchemaError("provider response must be a JSON object")
+    # These identify the local adapter contract, not model semantics.  Supply
+    # them here so a protocol formatting slip cannot consume a semantic retry.
+    parsed["schema_version"] = 1
+    parsed["response_kind"] = "stage12_candidate_extraction"
     errors = sorted(
         Draft202012Validator(json.loads(schema_path.read_text(encoding="utf-8"))).iter_errors(parsed),
         key=lambda error: list(error.path),
@@ -128,9 +134,11 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
     response_schema = json.loads(RESPONSE_SCHEMA_PATH.read_text(encoding="utf-8"))
     candidate_schema = response_schema["$defs"]["candidate"]
     schema_summary = {
-        "top_level_required": response_schema["required"],
+        "adapter_supplied_protocol_fields": ["schema_version", "response_kind"],
         "candidate_required": candidate_schema["required"],
         "candidate_predicate_enum": candidate_schema["properties"]["predicate"]["enum"],
+        "candidate_statement_type_enum": candidate_schema["properties"]["statement_type"]["enum"],
+        "entity_role_enum": response_schema["$defs"]["entity"]["properties"]["role"]["enum"],
     }
     system = PROMPT_PATH.read_text(encoding="utf-8")
     system += (
@@ -141,7 +149,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v5",
+        "version": "stage12-candidate-prompt-v6",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -174,7 +182,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v5",
+        "prompt_version": "stage12-candidate-prompt-v6",
         "response_schema_version": 2,
     }
 
@@ -187,13 +195,12 @@ class FixtureExtractionProvider:
         )
         rows = fixture.extract(evidence)
         return parse_provider_response({
-            "schema_version": 1,
-            "response_kind": "stage12_candidate_extraction",
             "status": "ok" if rows else "no_statement",
             "candidates": [{
                 "statement_text": row["statement_text"],
+                "statement_type": row["statement_type"],
                 "predicate": row["predicate"],
-                "subject_entities": [{"surface_form": entity["surface_form"]} for entity in row["subject_entities"]],
+                "subject_entities": [{"surface_form": entity["surface_form"], "role": entity["role"]} for entity in row["subject_entities"]],
                 "conditions": [{"surface_form": condition["surface_form"]} for condition in row["conditions"]],
                 "applicability_scope": {key: value for key, value in row["applicability_scope"].items() if key in {"status", "applicability_text"}},
             } for row in rows],
@@ -215,7 +222,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v5",
+            "prompt_version": "stage12-candidate-prompt-v6",
             "response_schema_version": 2,
         }
 
@@ -325,9 +332,10 @@ def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
             continue
         candidate = {
             "statement_text": str(item.get("statement_text", ""))[:1200],
+            "statement_type": item.get("statement_type"),
             "predicate": item.get("predicate"),
             "subject_entities": [
-                {"surface_form": str(entity.get("surface_form", ""))[:240]}
+                {"surface_form": str(entity.get("surface_form", ""))[:240], "role": entity.get("role")}
                 for entity in list(item.get("subject_entities") or [])[:10]
                 if isinstance(entity, Mapping)
             ],
@@ -883,7 +891,9 @@ def _assemble_candidate(
     """Bind LLM semantics to Evidence and derive reliable fields deterministically."""
     location = _location(evidence)
     statement_text = str(item["statement_text"])
-    statement_type = _statement_type(statement_text, str(evidence.get("evidence_role") or ""))
+    statement_type = str(item.get("statement_type", "")).strip()
+    if statement_type not in STATEMENT_TYPES:
+        raise ValueError("candidate statement_type is not in the Stage 12 vocabulary")
     predicate = str(item["predicate"])
     quantities, value, unit = _quantity_fields(statement_text)
     raw_entities = item.get("subject_entities") or []
@@ -892,7 +902,12 @@ def _assemble_candidate(
         surface_form = str(entity.get("surface_form", "")).strip()
         if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
             raise ValueError("candidate entity is not grounded in statement text")
-        subject_entities.append({"surface_form": surface_form, "role": "subject", "entity_class": "candidate"})
+        role = str(entity.get("role", "")).strip()
+        if role not in ENTITY_ROLES:
+            raise ValueError("candidate entity role is not in the Stage 12 vocabulary")
+        subject_entities.append({"surface_form": surface_form, "role": role, "entity_class": "candidate"})
+    if not subject_entities or subject_entities[0]["role"] != "subject":
+        raise ValueError("candidate must provide a subject entity first")
     raw_conditions = item.get("conditions") or []
     conditions = []
     for condition in raw_conditions:
@@ -1302,7 +1317,7 @@ def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapp
     unmatched_review = [{"candidate_id": candidate_id, "classification": _classify_unmatched_candidate(candidate_id, candidates, matches, gold_rows)} for candidate_id in unmatched_candidates]
     review_counts = {name: sum(item["classification"] == name for item in unmatched_review) for name in ("valid_extra", "duplicate", "over_split", "unsupported", "needs_gold_completion")}
     semantic_correct = len(gold_rows) - len(errors)
-    return {"gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive, "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0), "statement_semantic_correctness": (semantic_correct / len(gold_rows) if gold_rows else 0.0), "field_totals": totals, "field_correct": correct, "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields}, "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in error_names}, "errors": errors, "matched_pairs": [{"statement_id": gold_rows[index].get("statement_id"), "candidate_id": candidate.get("candidate_id"), "score": _text_similarity(gold_rows[index]["statement_text"], candidate["statement_text"])} for index, candidate in sorted(matches.items())], "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates), "unmatched_candidate_review": unmatched_review, "unmatched_candidate_review_counts": review_counts, "candidate_coverage": {"matched_candidate_count": len(assigned_candidates), "extra_candidate_count": len(unmatched_candidates), "duplicate_candidate_rate": review_counts["duplicate"] / len(candidates) if candidates else 0.0, "over_split_rate": review_counts["over_split"] / len(candidates) if candidates else 0.0, "spurious_candidate_rate": len(unmatched_candidates) / len(candidates) if gold_exhaustive and candidates else None}}
+    return {"gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive, "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0), "statement_semantic_correctness": (semantic_correct / len(gold_rows) if gold_rows else 0.0), "field_totals": totals, "field_correct": correct, "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields}, "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in error_names}, "errors": errors, "matched_pairs": [{"statement_id": gold_rows[index].get("statement_id"), "candidate_id": candidate.get("candidate_id"), "score": _text_similarity(gold_rows[index]["statement_text"], candidate["statement_text"])} for index, candidate in sorted(matches.items())], "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates), "unmatched_candidate_review": unmatched_review, "unmatched_candidate_review_counts": review_counts, "candidate_coverage": {"matched_candidate_count": len(assigned_candidates), "extra_candidate_count": len(unmatched_candidates), "duplicate_candidate_rate": review_counts["duplicate"] / len(candidates) if candidates else 0.0, "over_split_rate": review_counts["over_split"] / len(candidates) if candidates else 0.0, "spurious_candidate_rate": len(unmatched_candidates) / len(candidates) if gold_exhaustive and candidates else None}, "evaluator_adapters": {"applicability": "statement-level applicability text is compared when Gold provides it; source/document-level scope metadata alone does not imply not_applicable or a known statement scope"}}
 
 
 def _units_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) -> bool:
@@ -1439,10 +1454,18 @@ def _applicability_match(candidate: Mapping[str, Any] | None, gold: Mapping[str,
         return False
     expected = gold.get("applicability_scope") or {}
     actual = candidate.get("applicability_scope") or {}
-    # Legacy Gold may contain canonical labels that were created before the
-    # Stage 12 coarse contract.  Evaluation checks non-broadening and preserves
-    # unknown instead of requiring the fixture extractor to recreate labels.
-    if actual.get("status") == "unknown" and expected:
+    # Stage 11 Gold currently carries document/source routing scope (equipment,
+    # lifecycle, activity, condition), not a sentence-level applicability
+    # wording.  It is not valid to score candidate ``unknown`` as wrong merely
+    # because that metadata exists; unknown remains distinct from
+    # not_applicable.  Only an explicit Gold wording can require known scope.
+    expected_text = expected.get("applicability_text")
+    if expected_text:
+        if actual.get("status") != "known" or _normalized_text(actual.get("applicability_text")) != _normalized_text(expected_text):
+            return False
+    elif actual.get("status") not in {"unknown", "known"}:
+        return False
+    elif actual.get("status") == "known" and not actual.get("applicability_text"):
         return False
     for key, value in actual.items():
         if key in {"document_key", "physical_page", "logical_page", "status", "applicability_text"}:

@@ -6,10 +6,10 @@
 - `stage12_development_candidates.json` 是唯一候选输出，Producer 为 `build_stage12_candidates.py`，消费者为开发评测、Stage 12 审计和后续审核阶段。
 - `stage12_development_evaluation.json` 按边界、类型、实体、关系、量值、否定、条件、适用范围和 Evidence grounding 分字段记录开发结果，并分类错误。
 - `config/stage12_provider.json`、`config/stage12_prompt.txt` 和 `config/stage12_extraction_response.schema.json` 定义 Provider、Prompt 版本和严格 JSON 响应边界；正式主路径为配置的 external LLM，deterministic fixture 只能通过显式 fixture 模式用于测试和离线管线验证。
-- Provider 只接收 statement text、coarse relation、Evidence 原文中的 entity/condition/applicability wording；数量、单位、比较符、否定、statement type、modality 和 relation direction 由确定性代码从 statement text 推导。传输层对 timeout、429、5xx 使用有界指数退避并尊重 `Retry-After`。
+- Provider 只接收 statement text、bounded statement type、coarse relation、带角色的 Evidence 原文 entity、condition/applicability wording；数量、单位、比较符、否定、modality 和 relation direction 由确定性代码从 statement text 推导，协议常量和 entity class 由适配器补齐。传输层对 timeout、429、5xx 使用有界指数退避并尊重 `Retry-After`。
 - 完成的真实 Evidence 候选会写入 `var/model_runs/stage12/evidence` 的结构化缓存；缓存键绑定 Evidence、Profile、Provider、Prompt、Schema 和语义源码指纹，缓存命中仍重新执行确定性校验，且不保存 raw model response。
 - `stage12_real_llm_failure_summary.json` 是唯一当前真实 LLM 失败摘要；每次受控诊断直接覆盖，按 Evidence/attempt 区分 transport、schema 和 semantic validation，并保留 retry 后成功事件，不保存请求头、API Key 或 raw response。
-- `diagnose_stage12_real_llm.py --limit 2` 只对少量 Development Evidence 绕过 success cache；只有完整通过 Schema、语义和 Evidence binding 的结果才替换 cache。普通 Development 运行会按当前缓存键迁移可复验结果、删除 stale cache，并只保留最新 batch 运行记录。
+- `diagnose_stage12_real_llm.py --limit 2` 只对少量 Development Evidence 绕过 success cache；只有完整通过 Schema、语义和 Evidence binding 的结果才替换 cache。Prompt、Schema 或 semantic source 变化后的旧 cache 只会被删除，不会改 key 迁移；普通运行只保留最新 batch 运行记录。
 - `stage12_semantic_coverage_matrix.json` 明确 19 条 Development Gold 的覆盖范围和缺口；Gold 未被声明为 exhaustive。
 - `stage12_robustness_cases.json` 与 `stage12_robustness_evaluation.json` 保存真实 LLM 鲁棒性结果；`stage12_fixture_robustness_evaluation.json` 单独保存 fixture 结果，二者不得混用。
 - `stage12_holdout_evaluation.json` 只能由 `evaluate_stage12_holdout.py` 生成；它读取留出 Evidence/Gold 后只写评测指标，不写回开发候选、Profile、规则或 runtime cache。

@@ -24,6 +24,33 @@ REAL_OUT = ROOT / "data/stage12/stage12_robustness_evaluation.json"
 FIXTURE_OUT = ROOT / "data/stage12/stage12_fixture_robustness_evaluation.json"
 
 
+def _semantic_failure_reasons(candidate: dict, case: dict) -> tuple[list[str], list[str]]:
+    """Explain each deterministic mismatch without case-specific repair logic."""
+    reasons: list[str] = []
+    fields: list[str] = []
+    checks = {
+        "relation": candidate.get("predicate") == case["expected_predicate"],
+        "relation_direction": candidate.get("relation_direction") == case["expected_direction"],
+    }
+    if case.get("expected_applicability_text"):
+        checks["applicability"] = candidate.get("applicability_scope", {}).get("applicability_text") == case["expected_applicability_text"]
+    if case.get("expected_condition"):
+        checks["condition"] = any(item.get("surface_form") == case["expected_condition"] for item in candidate.get("conditions", []))
+    if case.get("expected_negation"):
+        checks["negation"] = any(item.get("surface_form") == case["expected_negation"] for item in candidate.get("negation_scope", []))
+    if case.get("expected_operator"):
+        checks["comparison"] = bool(candidate.get("quantities")) and candidate["quantities"][0].get("operator") == case["expected_operator"]
+    if case.get("expected_quantity"):
+        checks["quantity"] = bool(candidate.get("quantities")) and candidate["quantities"][0].get("surface_form") == case["expected_quantity"]
+    for field, passed in checks.items():
+        if not passed:
+            fields.append(field)
+            expected = case.get(f"expected_{field}")
+            actual = candidate.get({"relation": "predicate", "relation_direction": "relation_direction", "applicability": "applicability_scope", "condition": "conditions", "negation": "negation_scope", "comparison": "quantities", "quantity": "quantities"}[field])
+            reasons.append(f"{field}: expected={expected!r}, actual={actual!r}")
+    return reasons, fields
+
+
 def evaluate(*, fixture: bool = False) -> dict:
     source = json.loads(CASES.read_text(encoding="utf-8"))
     provider = FixtureExtractionProvider() if fixture else provider_from_config()
@@ -55,6 +82,8 @@ def evaluate(*, fixture: bool = False) -> dict:
         candidates = []
         passed = len(candidates) == 1
         failure = None
+        failure_type = None
+        failure_fields = []
         try:
             candidates = extractor.extract(evidence)
             provider_call_count += 1
@@ -63,24 +92,23 @@ def evaluate(*, fixture: bool = False) -> dict:
                 candidate = candidates[0]
                 validate_candidate_semantics(candidate)
                 validate_candidate_against_evidence(candidate, evidence)
-                passed = candidate["predicate"] == case["expected_predicate"] and candidate["relation_direction"] == case["expected_direction"]
-                if case.get("expected_applicability_text"):
-                    passed = passed and candidate["applicability_scope"].get("applicability_text") == case["expected_applicability_text"]
-                if case.get("expected_condition"):
-                    passed = passed and any(item["surface_form"] == case["expected_condition"] for item in candidate["conditions"])
-                if case.get("expected_negation"):
-                    passed = passed and any(item["surface_form"] == case["expected_negation"] for item in candidate["negation_scope"])
-                if case.get("expected_operator"):
-                    passed = passed and candidate["quantities"][0]["operator"] == case["expected_operator"]
-                if case.get("expected_quantity"):
-                    passed = passed and candidate["quantities"][0]["surface_form"] == case["expected_quantity"]
+                failure_reasons, failure_fields = _semantic_failure_reasons(candidate, case)
+                passed = not failure_reasons
+                if failure_reasons:
+                    failure_type = "semantic_mismatch"
+                    failure = "; ".join(failure_reasons)
             else:
+                failure_type = "cardinality_failure"
                 failure = f"expected one candidate, got {len(candidates)}"
         except (ExtractionProviderError, ValueError, KeyError, IndexError) as error:
             if isinstance(error, ExtractionProviderError):
                 provider_failure_count += 1
+                failure_type = "provider_failure"
+            else:
+                failure_type = "semantic_validation_failure"
             passed, failure = False, str(error)
-        results.append({"case_id": case["case_id"], "passed": passed, "failure": failure})
+            failure_fields = []
+        results.append({"case_id": case["case_id"], "passed": passed, "failure_type": failure_type, "failure_fields": failure_fields, "failure": failure})
     execution_kind = "fixture" if fixture else "real_llm"
     return {
         "schema_version": 1,

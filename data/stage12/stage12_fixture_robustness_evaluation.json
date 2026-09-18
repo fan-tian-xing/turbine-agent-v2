@@ -19,31 +19,43 @@
     {
       "case_id": "metamorphic-lifecycle-01",
       "passed": true,
+      "failure_type": null,
+      "failure_fields": [],
       "failure": null
     },
     {
       "case_id": "metamorphic-lifecycle-02",
       "passed": true,
+      "failure_type": null,
+      "failure_fields": [],
       "failure": null
     },
     {
       "case_id": "metamorphic-condition-01",
       "passed": true,
+      "failure_type": null,
+      "failure_fields": [],
       "failure": null
     },
     {
       "case_id": "metamorphic-causality-01",
       "passed": true,
+      "failure_type": null,
+      "failure_fields": [],
       "failure": null
     },
     {
       "case_id": "metamorphic-negation-01",
       "passed": true,
+      "failure_type": null,
+      "failure_fields": [],
       "failure": null
     },
     {
       "case_id": "metamorphic-comparison-01",
       "passed": true,
+      "failure_type": null,
+      "failure_fields": [],
       "failure": null
     }
   ]

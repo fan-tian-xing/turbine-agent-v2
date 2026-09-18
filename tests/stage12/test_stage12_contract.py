@@ -65,6 +65,13 @@ def test_provider_response_parser_is_strict_and_does_not_repair_prose():
     assert parse_provider_response(response)["status"] == "no_statement"
 
 
+def test_provider_adapter_supplies_protocol_constants_without_semantic_retry():
+    response = {"schema_version": 999, "response_kind": "wrong", "status": "no_statement", "candidates": []}
+    parsed = parse_provider_response(response)
+    assert parsed["schema_version"] == 1
+    assert parsed["response_kind"] == "stage12_candidate_extraction"
+
+
 def test_provider_backed_path_assembles_candidate_and_preserves_lineage():
     evidence = _evidence()
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
@@ -74,6 +81,8 @@ def test_provider_backed_path_assembles_candidate_and_preserves_lineage():
     assert candidate["review_status"] == "candidate_only"
     assert candidate["formal_release"] is False
     assert candidate["evidence_quote"] == evidence["source_text"]
+    assert candidate["statement_type"] in {"fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"}
+    assert candidate["subject_entities"][0]["role"] == "subject"
 
 
 def test_candidate_schema_and_stage9_projection_keep_coarse_relation_and_text():
@@ -123,6 +132,26 @@ def test_coarse_relation_and_extra_candidate_review_do_not_claim_precision_for_n
     assert report["candidate_coverage"]["extra_candidate_count"] == 1
     assert report["unmatched_candidate_review"][0]["classification"] in {"needs_gold_completion", "over_split", "duplicate"}
     assert report["candidate_coverage"]["spurious_candidate_rate"] is None
+
+
+def test_applicability_evaluator_does_not_turn_source_scope_into_not_applicable():
+    candidate = _candidate()
+    report = compare_candidates([candidate], [{
+        "statement_id": "s",
+        "statement_text": candidate["statement_text"],
+        "statement_type": candidate["statement_type"],
+        "predicate": candidate["predicate"],
+        "entity_alignment": [{"surface_form": "真空"}],
+        "quantities": candidate["quantities"],
+        "negation_scope": candidate["negation_scope"],
+        "conditions": [],
+        "applicability_scope": {"equipment": "condenser"},
+        "document_logical_id": "fixture-document",
+        "physical_page": 1,
+        "evidence_bindings": [{"evidence_id": "fixture-evidence"}],
+    }])
+    assert report["field_accuracy"]["applicability"] == 1.0
+    assert report["field_accuracy"]["applicability_meaning"] == 1.0
 
 
 def test_profile_router_exposes_source_level_external_permission_without_filename_logic():

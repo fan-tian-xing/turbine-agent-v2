@@ -15,8 +15,8 @@
   "$defs": {
     "entity": {
       "type": "object", "additionalProperties": false,
-      "required": ["surface_form"],
-      "properties": {"surface_form": {"type": "string", "minLength": 1}}
+      "required": ["surface_form", "role"],
+      "properties": {"surface_form": {"type": "string", "minLength": 1}, "role": {"enum": ["subject", "object", "related", "quantity_target"]}}
     },
     "condition": {
       "type": "object", "additionalProperties": false,
@@ -25,9 +25,10 @@
     },
     "candidate": {
       "type": "object", "additionalProperties": false,
-      "required": ["statement_text", "predicate", "subject_entities", "conditions", "applicability_scope"],
+      "required": ["statement_text", "statement_type", "predicate", "subject_entities", "conditions", "applicability_scope"],
       "properties": {
         "statement_text": {"type": "string", "minLength": 1},
+        "statement_type": {"enum": ["fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"]},
         "predicate": {"enum": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"]},
         "subject_entities": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/entity"}},
         "conditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}},

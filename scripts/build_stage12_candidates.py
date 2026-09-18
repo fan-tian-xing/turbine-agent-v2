@@ -119,47 +119,32 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
     evidence_dir.mkdir(parents=True, exist_ok=True)
     files = list(evidence_dir.glob("*.json"))
     deleted = 0
-    migrated = 0
     kept = set()
     for key, (evidence, profile) in current.items():
         target = evidence_dir / f"{key}.json"
-        if target.exists():
-            try:
-                cached = json.loads(target.read_text(encoding="utf-8"))
-                candidates = cached.get("candidates") or []
-                if cached.get("cache_key") == key and cached.get("provider_id") == provider.provider_id:
-                    for candidate in candidates:
-                        validate_candidate_evidence_binding(candidate, evidence)
-                        validate_candidate_against_evidence(candidate, evidence)
-                    kept.add(target.name)
-                    continue
-            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
-                pass
-            target.unlink()
-            deleted += 1
-        for legacy in files:
-            if legacy == target or not legacy.exists():
-                continue
-            try:
-                cached = json.loads(legacy.read_text(encoding="utf-8"))
-                candidates = cached.get("candidates") or []
-                if cached.get("provider_id") != provider.provider_id or not candidates:
-                    continue
+        if not target.exists():
+            continue
+        try:
+            cached = json.loads(target.read_text(encoding="utf-8"))
+            candidates = cached.get("candidates") or []
+            if cached.get("cache_key") == key and cached.get("provider_id") == provider.provider_id:
                 for candidate in candidates:
                     validate_candidate_evidence_binding(candidate, evidence)
                     validate_candidate_against_evidence(candidate, evidence)
-                _write_evidence_cache(target, provider, candidates)
-                legacy.unlink()
-                migrated += 1
                 kept.add(target.name)
-                break
-            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
                 continue
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+            pass
+        # A cache file whose key is no longer current is stale.  Never re-key
+        # or migrate it: a Prompt/Schema/semantic-contract change requires a
+        # fresh real-provider extraction before a new cache can be trusted.
+        target.unlink()
+        deleted += 1
     for path in files:
-        if path.exists() and path.name not in kept and path.stem not in current:
+        if path.exists() and path.name not in kept:
             path.unlink()
             deleted += 1
-    return {"current_valid": len(kept), "stale_deleted": deleted, "legacy_migrated": migrated}
+    return {"current_valid": len(kept), "stale_deleted": deleted}
 
 
 def prune_stale_batch_records(cache_root: Path, keep_batch_id: str) -> int:
@@ -266,7 +251,7 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
         },
         "extraction_profile": "profile_routing_v1",
         "provider_id": provider.provider_id,
-        "prompt_version": "stage12-candidate-prompt-v5",
+        "prompt_version": "stage12-candidate-prompt-v6",
         "provider_metadata": provider.metadata,
         "input_sha256": {path: _sha(ROOT / path) for path in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",

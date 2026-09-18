@@ -24,12 +24,12 @@
   },
   "architecture": {
     "pipeline": ["Evidence", "extraction_provider", "strict_structured_response", "Candidate Engineering Statement", "deterministic_validation", "Stage 12 Candidate Output"],
-    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. The LLM returns statement text, coarse relation, source-grounded entity/condition wording and applicability wording only. Deterministic code derives quantity, unit, comparison, negation, statement type, modality and relation direction from the returned statement text. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
+    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. The LLM returns statement text, bounded statement type, coarse relation, source-grounded entity wording with roles, condition wording and applicability wording only. Deterministic code derives quantity, unit, comparison, negation, modality and relation direction from the returned statement text; it supplies fixed protocol constants and candidate entity class. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
     "production_provider": "external_llm",
     "fixture_policy": "Fixture is test/offline-only and cannot satisfy the formal Stage 12 extraction or quality gate.",
     "relation_vocabulary": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"],
     "unknown_applicability_policy": "known = exact wording is present in the statement and Evidence; unknown is not not_applicable; absent values are omitted or marked unknown",
-    "deterministic_field_derivation": ["statement_type", "quantity", "unit", "comparison", "normative_modality", "negation", "relation_direction"],
+  "deterministic_field_derivation": ["quantity", "unit", "comparison", "normative_modality", "negation", "relation_direction", "protocol_constants", "entity_class"],
     "gold_exhaustive": false
   },
   "extraction_order": ["entity_or_process", "state_phenomenon_parameter", "requirement_constraint_step", "applicability", "evidence_binding"],
@@ -59,7 +59,7 @@
     "per_evidence_cache": "var/model_runs/stage12/evidence; stores only fully validated structured candidates keyed by Evidence, profile, provider, prompt, response schema and semantic source fingerprints; raw model responses are never persisted",
     "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints.",
     "no_silent_fixture_fallback": true,
-    "stale_cache_pruning": "scripts/build_stage12_candidates.py retains only current Development Evidence cache keys, migrates revalidated structured candidates when only diagnostic instrumentation changed, and removes invalid or unreachable JSON entries",
+    "stale_cache_pruning": "scripts/build_stage12_candidates.py retains only current Development Evidence cache keys and removes stale or invalid JSON entries; changed Prompt, Schema or semantic source fingerprints require fresh real-provider extraction and are never re-keyed",
     "run_record_pruning": "Only the latest completed Stage 12 batch record is retained under var/model_runs/stage12/batches",
     "failure_summary": "data/stage12/stage12_real_llm_failure_summary.json; one current overwritten summary containing bounded transport, schema and semantic attempt events",
     "diagnostic_entrypoint": "scripts/diagnose_stage12_real_llm.py --limit 2"

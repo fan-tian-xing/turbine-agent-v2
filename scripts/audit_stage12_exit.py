@@ -117,11 +117,16 @@ def audit() -> dict:
     )
     evidence_cache_dir = ROOT / "var/model_runs/stage12/evidence"
     validated_real_cache_count = 0
+    current_cache_fingerprints = {
+        "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+        "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+    }
     if evidence_cache_dir.exists():
         for cache_path in evidence_cache_dir.glob("*.json"):
             try:
                 cached = _read(cache_path)
-                if cached.get("provider_mode") == "real_llm" and cached.get("candidates"):
+                if cached.get("provider_mode") == "real_llm" and cached.get("contract_fingerprints") == current_cache_fingerprints and cached.get("candidates"):
                     validated_real_cache_count += 1
             except (OSError, json.JSONDecodeError, TypeError):
                 continue
@@ -220,7 +225,10 @@ def audit() -> dict:
         "acceptance_quality_gate": holdout.get("eligible_for_final_acceptance") is True and all(holdout_quality.get(field, 0.0) >= threshold for field, threshold in acceptance_thresholds.items()) and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
     }
     checks = {**implementation_checks, **quality_checks}
-    real_llm_single_call_verified = validated_real_cache_count > 0 or real_llm_artifact
+    # A prior real run under an invalidated contract is historical evidence
+    # only.  Current single-call verification requires either a cache carrying
+    # current contract fingerprints or a successful current producer replay.
+    real_llm_single_call_verified = validated_real_cache_count > 0 or (real_llm_artifact and reexecution_error is None)
     real_llm_batch_execution = (
         real_llm_artifact
         and development.get("status") == "completed"

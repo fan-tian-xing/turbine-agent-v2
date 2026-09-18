@@ -45,27 +45,27 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "67ffb2213358966421f7d5c3e87168204d1045ffa7ced5a28abc965d33eeac2a"
+      "sha256": "acc300e50970a3c1c4a7a648493a6f0545768aeee9c25943a77de444d86754f0"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "ba691434646a247bf0773fa5a2f6642140b25f3817d0ca508a5ae8ad2604e68e"
+      "sha256": "fdda198ef21b2e3fc04584019f9593a5f21dd84ba66013f0734e9a0ff8bd632e"
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "08b0a602e93531972f0fe6e4b44c75fbd530c653323fdc2e4543fc5130a21873"
+      "sha256": "89dc2d33a13a3d7f203fe84295508c184cd04979367cdb939d2dc766d1ec11b1"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "41d4578f614778453bdbe9500c0928a2e865168fb01572d03522f3b9a6cd7ef3"
+      "sha256": "88a153500d56689c5bace687466e719e2ed4c99c3cd3ce0c15e69cf609c64583"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
-      "sha256": "0eee0690e97804813c1ab7136db85af41e5636daa46fc4fa810ed359f2484d65"
+      "sha256": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f"
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "cc61a158a18e893e3d9a279b81effd202fb14a631d69d7d771bcc8ceb2dc9ea4"
+      "sha256": "0a7f22e44e071ea300adfcbba9ec0ec9bc54fef3617b79aef30945d0e27d3c89"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -101,7 +101,7 @@
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
-      "sha256": "7538750792d8b1d3516a1b54d12009203549948ec5f6bda38efb368ab44e68c3"
+      "sha256": "f25e5c4eebc77e8a2d84b430ff43841935a3b806038cd4c54d6a8eb35c3163c2"
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
@@ -117,7 +117,7 @@
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "be0710a5def1c96023236df6c5e3ea98f5d15b81f84666a3de5087c5ce04d695"
+      "sha256": "76cf98bc17354bd17ec5c1f1dae1b5116bed4dd162d61fc7662cb3a950552f8e"
     }
   },
   "outputs": {
@@ -143,13 +143,13 @@
     "candidate_pages_are_manifest_pages": true,
     "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": true,
-    "producer_reexecution_current": true,
-    "candidate_input_lineage_current": true,
+    "real_llm_execution_verified": false,
+    "producer_reexecution_current": false,
+    "candidate_input_lineage_current": false,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": true,
-    "independent_holdout_evaluation_present": true,
+    "development_evaluation_present": false,
+    "independent_holdout_evaluation_present": false,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": false,
@@ -163,12 +163,12 @@
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": true,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
+    "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 10,
+    "validated_real_evidence_cache_count": 0,
     "failure_summary_counts": {
       "transport_failure": 0,
       "schema_failure": 2,
@@ -179,11 +179,11 @@
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "executed",
+      "status": "blocked",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
-      "real_llm_execution_verified": true,
-      "failure": null,
+      "real_llm_execution_verified": false,
+      "failure": "external LLM provider failed",
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -328,8 +328,8 @@
       "comparison": 0.8421052631578947,
       "negation": 0.8947368421052632,
       "condition": 0.8947368421052632,
-      "applicability": 0.05263157894736842,
-      "applicability_meaning": 0.05263157894736842,
+      "applicability": 0.8421052631578947,
+      "applicability_meaning": 0.8421052631578947,
       "relation_direction": 0.8421052631578947,
       "unsupported_addition": 0.47368421052631576,
       "evidence_grounding": 0.8947368421052632
@@ -346,8 +346,13 @@
   "blockers": [
     "acceptance_holdout_exposed",
     "acceptance_quality_gate",
+    "candidate_input_lineage_current",
+    "development_evaluation_present",
     "development_quality_gate",
     "grounding_zero_tolerance",
+    "independent_holdout_evaluation_present",
+    "producer_reexecution_current",
+    "real_llm_execution_verified",
     "representative_chapter_scope_resolved",
     "reserve_independent_gold_not_ready",
     "robustness_quality_gate"
@@ -362,13 +367,13 @@
   "production_llm_pipeline_ready": false,
   "real_llm_execution": true,
   "stage12_status_summary": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": true,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
+    "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "STAGE12_EXIT": false
   },
-  "real_llm_reexecution_error": null,
+  "real_llm_reexecution_error": "external LLM provider failed",
   "consumers": [
     "tests/stage12"
   ]

@@ -60,6 +60,11 @@ def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict]) ->
         "cache_key": cache_path.stem,
         "provider_id": provider.provider_id,
         "provider_mode": "real_llm",
+        "contract_fingerprints": {
+            "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+            "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+            "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        },
         "candidates": candidates,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -83,6 +88,13 @@ def _extract_with_evidence_cache(
         try:
             cached = json.loads(cache_path.read_text(encoding="utf-8"))
             if cached.get("schema_version") == 1 and cached.get("cache_key") == cache_key and cached.get("provider_id") == provider.provider_id:
+                expected_fingerprints = {
+                    "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+                    "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+                    "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+                }
+                if cached.get("contract_fingerprints") != expected_fingerprints:
+                    raise ValueError("Stage 12 cache contract fingerprints are stale")
                 candidates = cached.get("candidates") or []
                 for candidate in candidates:
                     validate_candidate_evidence_binding(candidate, evidence)
@@ -120,6 +132,11 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
     files = list(evidence_dir.glob("*.json"))
     deleted = 0
     kept = set()
+    expected_fingerprints = {
+        "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+        "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+    }
     for key, (evidence, profile) in current.items():
         target = evidence_dir / f"{key}.json"
         if not target.exists():
@@ -127,7 +144,7 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
         try:
             cached = json.loads(target.read_text(encoding="utf-8"))
             candidates = cached.get("candidates") or []
-            if cached.get("cache_key") == key and cached.get("provider_id") == provider.provider_id:
+            if cached.get("cache_key") == key and cached.get("provider_id") == provider.provider_id and cached.get("contract_fingerprints") == expected_fingerprints:
                 for candidate in candidates:
                     validate_candidate_evidence_binding(candidate, evidence)
                     validate_candidate_against_evidence(candidate, evidence)

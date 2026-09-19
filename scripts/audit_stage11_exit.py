@@ -210,6 +210,15 @@ def audit() -> dict:
     def _has_final_semantic_provenance(row: dict) -> bool:
         if row.get("review_basis") == "stage3_user_confirmation" and row.get("reviewer_type") == "user_confirmation":
             return True
+        if (
+            row.get("review_basis") == "stage12_manual_adjudication_update"
+            and row.get("reviewer") == "user_manual_adjudication"
+            and row.get("reviewer_type") == "human_user"
+            and row.get("stage12_review_mode") == "manual_only"
+            and row.get("review_provenance") == "stage12_user_manual_adjudication_only; independent_reviewer_ab_not_claimed"
+            and row.get("manual_adjudication_ids")
+        ):
+            return True
         return _has_two_independent_reviews(row)
 
     dev_semantic_review_complete = bool(dev) and all(
@@ -263,7 +272,8 @@ def audit() -> dict:
     review_target_ids = {
         *(row.get("sample_id") for row in holdout),
         *(row.get("sample_id") for row in dev
-          if not (row.get("review_basis") == "stage3_user_confirmation" and row.get("reviewer_type") == "user_confirmation")),
+          if row.get("review_basis") != "stage3_user_confirmation"
+          and row.get("review_basis") != "stage12_manual_adjudication_update"),
     }
     review_a_by_id = {row.get("sample_id"): row for row in review_a}
     review_b_by_id = {row.get("sample_id"): row for row in review_b}
@@ -282,7 +292,17 @@ def audit() -> dict:
         and all(row.get("input_sha256") and row.get("output_sha256") for row in review_a + review_b)
         and review_coverage
     )
-    adjudication_target_ids = review_target_ids
+    # Development rows adjudicated by the user in Stage 12 are not part of
+    # the independent A/B review target, but they still require a truthful
+    # adjudication record. Holdout rows retain the original Stage 11 queue
+    # requirement.
+    adjudication_target_ids = {
+        row.get("sample_id") for row in adjudication
+        if row.get("split") == "acceptance_holdout"
+    } | {
+        row.get("sample_id") for row in dev
+        if row.get("review_basis") == "stage12_manual_adjudication_update"
+    }
     adjudication_complete = (
         bool(adjudication)
         and {row.get("sample_id") for row in adjudication} == adjudication_target_ids

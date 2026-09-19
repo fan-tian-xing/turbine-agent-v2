@@ -38,6 +38,7 @@ class IncompleteDevelopmentError(RuntimeError):
 
 
 def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
+    provider_key_metadata = provider.cache_key_metadata() if hasattr(provider, "cache_key_metadata") else getattr(provider, "metadata", {})
     material = {
         "evidence": evidence,
         "profile": {
@@ -49,13 +50,14 @@ def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
         },
         "split": split,
         "provider_id": provider.provider_id,
-        "provider_metadata": getattr(provider, "metadata", {}),
+        # Routing policy is deliberately excluded.  A Primary-generated cache
+        # remains reusable when only a Backup endpoint is added.
+        "provider_metadata": provider_key_metadata,
         "prompt_sha256": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema_sha256": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
         "contract_sha256": _sha(ROOT / "config/stage12_statement_contract.json"),
         "candidate_schema_sha256": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source_sha256": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
-        "provider_config_sha256": _sha(ROOT / "config/stage12_provider.json"),
     }
     return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
 
@@ -71,13 +73,13 @@ def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict], re
         "cache_key": cache_path.stem,
         "provider_id": provider.provider_id,
         "provider_mode": "real_llm",
+        "provider_metadata": getattr(provider, "last_result_metadata", getattr(provider, "metadata", {})),
         "contract_fingerprints": {
             "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
             "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
             "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
             "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
             "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
-            "provider_config": _sha(ROOT / "config/stage12_provider.json"),
         },
         "response_status": response_status,
         "candidates": candidates,
@@ -109,10 +111,13 @@ def _extract_with_evidence_cache(
                     "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
                     "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
                     "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
-                    "provider_config": _sha(ROOT / "config/stage12_provider.json"),
                 }
-                if cached.get("contract_fingerprints") != expected_fingerprints:
+                cached_fingerprints = cached.get("contract_fingerprints") or {}
+                if any(cached_fingerprints.get(key) != value for key, value in expected_fingerprints.items()):
                     raise ValueError("Stage 12 cache contract fingerprints are stale")
+                cache_provider_matches = provider.cache_provider_matches(cached) if hasattr(provider, "cache_provider_matches") else bool(cached.get("provider_metadata"))
+                if not cache_provider_matches:
+                    raise ValueError("Stage 12 cache provider configuration is stale")
                 candidates = cached.get("candidates")
                 response_status = cached.get("response_status")
                 if not isinstance(candidates, list) or response_status not in {"ok", "no_statement"}:
@@ -163,7 +168,6 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
         "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
-        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     for key, (evidence, profile) in current.items():
         target = evidence_dir / f"{key}.json"
@@ -177,7 +181,8 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
                 cached.get("schema_version") == 2
                 and cached.get("cache_key") == key
                 and cached.get("provider_id") == provider.provider_id
-                and cached.get("contract_fingerprints") == expected_fingerprints
+                and all((cached.get("contract_fingerprints") or {}).get(key) == value for key, value in expected_fingerprints.items())
+                and (provider.cache_provider_matches(cached) if hasattr(provider, "cache_provider_matches") else bool(cached.get("provider_metadata")))
                 and isinstance(candidates, list)
                 and response_status in {"ok", "no_statement"}
                 and ((response_status == "no_statement" and not candidates) or (response_status == "ok" and candidates))
@@ -282,7 +287,6 @@ def _current_valid_evidence_ids(manifest: dict, cache_root: Path) -> set[str]:
         "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
-        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     valid = set()
     for page in manifest.get("pages", []):
@@ -301,7 +305,8 @@ def _current_valid_evidence_ids(manifest: dict, cache_root: Path) -> set[str]:
                     cached.get("schema_version") == 2
                     and cached.get("cache_key") == key
                     and cached.get("provider_id") == provider.provider_id
-                    and cached.get("contract_fingerprints") == expected_fingerprints
+                    and all((cached.get("contract_fingerprints") or {}).get(key) == value for key, value in expected_fingerprints.items())
+                    and (provider.cache_provider_matches(cached) if hasattr(provider, "cache_provider_matches") else bool(cached.get("provider_metadata")))
                     and isinstance(candidates, list)
                     and response_status in {"ok", "no_statement"}
                     and ((response_status == "no_statement" and not candidates) or (response_status == "ok" and candidates))
@@ -353,15 +358,17 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
         failed_evidence_ids.append(evidence_id)
         attempted_evidence_ids.append(evidence_id)
         if attempt_observer is not None:
+            details = getattr(error, "details", {}) or {}
             attempt_observer(evidence, {
                 "attempt": 1,
                 "outcome": "failure",
-                "failure_type": "semantic_validation_failure" if "semantic" in str(error).lower() else "transport_failure",
+                "failure_type": getattr(error, "failure_type", "semantic_validation_failure" if "semantic" in str(error).lower() else "transport_failure"),
                 "field": None,
                 "validator_reason": str(error),
                 "exception_type": type(error).__name__,
                 "message": str(error)[:1600],
                 "model_value_or_text": None,
+                **details,
             })
     if failed_evidence_ids:
         valid_ids = _current_valid_evidence_ids(manifest, cache_root)
@@ -430,10 +437,16 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
     evidence_ids = [evidence_id for page in manifest.get("pages", []) for evidence_id in page.get("evidence_ids", [])]
     def observer(evidence, event):
         decorated = decorate_event(evidence, dict(event))
+        details = event.get("details") or event
+        # Provider-level events already contain the Primary and Backup
+        # attempts. Do not append a duplicate aggregate failure event.
+        if isinstance(details, dict) and details.get("primary") and details.get("backup"):
+            return
         if decorated.get("outcome") == "failure":
             previous = [item for item in events if item.get("evidence_id") == decorated.get("evidence_id") and item.get("outcome") == "failure"]
-            if previous:
-                previous[-1].update({key: decorated[key] for key in ("exception_type", "message") if decorated.get(key) is not None})
+            previous_provider = previous[-1].get("provider_alias") if previous else None
+            if previous and not decorated.get("fallback_triggered") and previous_provider == decorated.get("provider_alias"):
+                previous[-1].update({key: decorated[key] for key in ("exception_type", "message", "root_cause", "status_code", "elapsed_seconds", "fallback_eligible", "fallback_triggered", "fallback_provider") if decorated.get(key) is not None})
                 return
         events.append(decorated)
     input_refs = tuple(

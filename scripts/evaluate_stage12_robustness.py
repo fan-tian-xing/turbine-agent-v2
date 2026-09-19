@@ -24,6 +24,22 @@ REAL_OUT = ROOT / "data/stage12/stage12_robustness_evaluation.json"
 FIXTURE_OUT = ROOT / "data/stage12/stage12_fixture_robustness_evaluation.json"
 
 
+def _sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _input_hashes() -> dict[str, str]:
+    return {
+        "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
+        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
+        "cases": _sha(CASES),
+    }
+
+
 def _semantic_failure_reasons(candidate: dict, case: dict) -> tuple[list[str], list[str]]:
     """Explain each deterministic mismatch without case-specific repair logic."""
     reasons: list[str] = []
@@ -133,6 +149,8 @@ def evaluate(*, fixture: bool = False) -> dict:
         "real_llm_execution": not fixture and provider_call_count > 0 and provider_failure_count == 0,
         "provider_call_count": provider_call_count,
         "provider_failure_count": provider_failure_count,
+        "input_sha256": _input_hashes(),
+        "provider_metadata": dict(getattr(provider, "metadata", {})),
         "case_count": len(results),
         "passed_count": sum(item["passed"] for item in results),
         "failed_count": sum(not item["passed"] for item in results),

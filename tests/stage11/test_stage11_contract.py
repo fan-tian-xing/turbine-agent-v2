@@ -126,9 +126,14 @@ def test_stage11_accepted_new_gold_rows_bind_two_review_rounds():
     rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl") + _jsonl("data/stage11/stage11_statement_holdout.jsonl")
     accepted_new = [row for row in rows if row["review_status"] == "accepted" and row.get("review_basis") != "stage3_user_confirmation"]
     assert accepted_new
-    assert all(len(row.get("review_rounds", [])) == 2 for row in accepted_new)
-    assert all({round_["reviewer_id"] for round_ in row["review_rounds"]} == {"reviewer_a", "reviewer-b"} for row in accepted_new)
-    assert all(all(round_["status"] == "accepted" and round_["input_sha256"] and round_["output_sha256"] for round_ in row["review_rounds"]) for row in accepted_new)
+    manual = [row for row in accepted_new if row.get("review_basis") == "stage12_manual_adjudication_update"]
+    independently_reviewed = [row for row in accepted_new if row.get("review_basis") != "stage12_manual_adjudication_update"]
+    assert manual
+    assert all(row.get("stage12_review_mode") == "manual_only" and row.get("reviewer") == "user_manual_adjudication" for row in manual)
+    assert all(row.get("review_provenance") == "stage12_user_manual_adjudication_only; independent_reviewer_ab_not_claimed" for row in manual)
+    assert all(len(row.get("review_rounds", [])) == 2 for row in independently_reviewed)
+    assert all({round_["reviewer_id"] for round_ in row["review_rounds"]} == {"reviewer_a", "reviewer-b"} for row in independently_reviewed)
+    assert all(all(round_["status"] == "accepted" and round_["input_sha256"] and round_["output_sha256"] for round_ in row["review_rounds"]) for row in independently_reviewed)
 
 
 def test_stage11_statement_classifier_does_not_use_single_character_hou_as_procedure():

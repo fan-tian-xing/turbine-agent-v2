@@ -30,25 +30,14 @@ def _entity(surface: str, role: str, entity_class: str = "engineering_object") -
 
 
 def _mark(row: dict, item_ids: list[str], reason: str) -> dict:
-    prior_basis = row.get("review_basis")
     row["stage12_manual_adjudication"] = {"item_ids": item_ids, "reason": reason, "artifact": "data/stage12/stage12_development_gold_adjudication.json"}
-    if prior_basis == "stage3_user_confirmation":
-        # These four early rows were already user-confirmed in Stage 3.  Keep
-        # their original Stage 3 review identity; the Stage 12 adjudication
-        # is recorded in the dedicated current artifact and this annotation.
-        row["formal_release"] = False
-        row["review_status"] = "accepted"
-        row["label_status"] = "gold"
-        return row
     row["review_basis"] = "stage12_manual_adjudication_update"
     row["reviewer"] = "user_manual_adjudication"
     row["reviewer_type"] = "human_user"
     row["review_reason"] = reason
     row["manual_adjudication_ids"] = item_ids
-    # Stage 11's two independent review rounds remain the review provenance;
-    # Stage 12 adjudication provenance is recorded in the dedicated artifact
-    # and on this row, without pretending there was a third Stage 11 reviewer.
-    row["review_rounds"] = list(row.get("review_rounds") or [])[:2]
+    row["stage12_review_mode"] = "manual_only"
+    row["review_provenance"] = "stage12_user_manual_adjudication_only; independent_reviewer_ab_not_claimed"
     row["formal_release"] = False
     row["review_status"] = "accepted"
     row["label_status"] = "gold"

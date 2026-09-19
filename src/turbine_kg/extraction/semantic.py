@@ -94,6 +94,12 @@ class ExtractionProvider(Protocol):
 class ExtractionProviderError(ValueError):
     """Provider transport/configuration failure, distinct from semantic validation."""
 
+    def __init__(self, message: str, *, failure_type: str = "transport_failure", fallback_eligible: bool = False, details: Mapping[str, Any] | None = None):
+        super().__init__(message)
+        self.failure_type = failure_type
+        self.fallback_eligible = fallback_eligible
+        self.details = dict(details or {})
+
 
 class ExtractionSchemaError(ValueError):
     """Provider returned a response that does not satisfy the strict schema."""
@@ -210,22 +216,58 @@ class FixtureExtractionProvider:
 
 
 class ExternalLLMProvider:
-    """Configured LLM Provider with strict response handling and no fallback."""
+    """One configured LLM endpoint with strict response handling."""
 
     provider_id = "external_llm_openai_compatible_v1"
 
-    def __init__(self, transport: Any = None, *, model_config_identifier: str = "", max_attempts: int = 2):
+    def __init__(self, transport: Any = None, *, model_config_identifier: str = "", max_attempts: int = 2, provider_alias: str = "primary", endpoint_alias: str = "primary"):
         self.transport = transport
         self.model_config_identifier = model_config_identifier
         self.max_attempts = max_attempts
+        self.provider_alias = provider_alias
+        self.endpoint_alias = endpoint_alias
+        self.stats = {"success": 0, "transport_failure": 0, "schema_failure": 0, "semantic_validation_failure": 0}
+        self.last_result_metadata: dict[str, Any] = {}
         self.metadata = {
             "provider_id": self.provider_id,
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": model_config_identifier,
+            "provider_alias": provider_alias,
+            "endpoint_alias": endpoint_alias,
+            "generated_by": provider_alias,
+            "model": getattr(transport, "model", None),
+            "config_fingerprint": model_config_identifier,
             "prompt_version": "stage12-candidate-prompt-v7",
             "response_schema_version": 2,
         }
+        self.last_result_metadata = dict(self.metadata)
+
+    def cache_key_metadata(self) -> dict[str, Any]:
+        return {
+            "provider_id": self.provider_id,
+            "mode": "real_llm",
+            "transport": "openai_compatible_chat_completions",
+            "model_config_identifier": self.model_config_identifier,
+            "prompt_version": "stage12-candidate-prompt-v7",
+            "response_schema_version": 2,
+        }
+
+    def cache_provider_matches(self, cached: Mapping[str, Any]) -> bool:
+        metadata = cached.get("provider_metadata") or {}
+        return metadata.get("config_fingerprint") == self.model_config_identifier or metadata.get("model_config_identifier") == self.model_config_identifier
+
+    def _record(self, name: str) -> None:
+        self.stats[name] = self.stats.get(name, 0) + 1
+
+    def _event(self, event: Mapping[str, Any]) -> dict[str, Any]:
+        result = dict(event)
+        result.setdefault("provider_alias", self.provider_alias)
+        result.setdefault("endpoint_alias", self.endpoint_alias)
+        result.setdefault("fallback_triggered", False)
+        result.setdefault("fallback_provider", None)
+        result.setdefault("fallback_eligible", False)
+        return result
 
     def extract(
         self,
@@ -246,42 +288,47 @@ class ExternalLLMProvider:
                 try:
                     response = parse_provider_response(raw)
                 except ExtractionSchemaError as error:
+                    self._record("schema_failure")
                     if attempt_observer is not None:
-                        attempt_observer({
+                        attempt_observer(self._event({
                             "attempt": attempt_number,
                             "outcome": "failure",
                             "failure_type": "schema_failure",
                             "field": _diagnostic_failure_field(str(error), schema=True),
                             "validator_reason": str(error),
                             "model_value_or_text": _diagnostic_response_snapshot(raw),
-                        })
+                        }))
                     raise
                 if response_validator is not None:
                     try:
                         response_validator(response)
                     except ValueError as error:
+                        self._record("semantic_validation_failure")
                         if attempt_observer is not None:
-                            attempt_observer({
+                            attempt_observer(self._event({
                                 "attempt": attempt_number,
                                 "outcome": "failure",
                                 "failure_type": "semantic_validation_failure",
                                 "field": _diagnostic_failure_field(str(error)),
                                 "validator_reason": str(error),
                                 "model_value_or_text": _diagnostic_response_snapshot(response),
-                            })
+                            }))
                         raise
+                self._record("success")
+                self.last_result_metadata = dict(self.metadata)
                 if attempt_observer is not None:
-                    attempt_observer({
+                    attempt_observer(self._event({
                         "attempt": attempt_number,
                         "outcome": "success",
                         "model_value_or_text": _diagnostic_response_snapshot(response),
-                    })
+                    }))
                 return response | {"provider_metadata": self.metadata}
             except ExtractionSchemaError as error:
                 last_schema_error = error
                 if attempt + 1 >= self.max_attempts:
                     raise ExtractionProviderError(
-                        f"external LLM response failed Stage 12 schema after {self.max_attempts} attempts"
+                        f"external LLM response failed Stage 12 schema after {self.max_attempts} attempts",
+                        failure_type="schema_failure",
                     ) from error
                 prompt = prompt | {
                     "system": prompt["system"]
@@ -291,21 +338,32 @@ class ExternalLLMProvider:
             except ExtractionProviderError:
                 raise
             except LLMTransportError as error:
+                self._record("transport_failure")
+                details = {
+                    "exception_type": type(error).__name__,
+                    "root_cause": error.root_cause,
+                    "status_code": error.status_code,
+                    "elapsed_seconds": error.elapsed_seconds,
+                    "fallback_eligible": error.fallback_eligible,
+                    "attempts": error.attempts,
+                }
                 if attempt_observer is not None:
-                    attempt_observer({
+                    attempt_observer(self._event({
                         "attempt": attempt_number,
                         "outcome": "failure",
                         "failure_type": "transport_failure",
                         "field": None,
                         "validator_reason": str(error),
                         "model_value_or_text": None,
-                    })
-                raise ExtractionProviderError("external LLM provider failed") from error
+                        **details,
+                    }))
+                raise ExtractionProviderError("external LLM provider failed", fallback_eligible=error.fallback_eligible, details=details) from error
             except ValueError as error:
                 last_schema_error = None
                 if attempt + 1 >= self.max_attempts:
                     raise ExtractionProviderError(
-                        f"external LLM response failed Stage 12 semantic validation after {self.max_attempts} attempts"
+                        f"external LLM response failed Stage 12 semantic validation after {self.max_attempts} attempts",
+                        failure_type="semantic_validation_failure",
                     ) from error
                 prompt = prompt | {
                     "system": prompt["system"]
@@ -315,6 +373,107 @@ class ExternalLLMProvider:
             except Exception as error:  # provider failures must not look like validation failures
                 raise ExtractionProviderError("external LLM provider failed") from error
         raise ExtractionProviderError("external LLM response failed strict parsing") from last_schema_error
+
+
+class FailoverExternalLLMProvider(ExternalLLMProvider):
+    """Explicit availability-only Primary -> Backup provider failover."""
+
+    def __init__(self, primary: ExternalLLMProvider, backup: ExternalLLMProvider, *, policy_fingerprint: str):
+        self.primary = primary
+        self.backup = backup
+        self.fallback_count = 0
+        self.policy_fingerprint = policy_fingerprint
+        self.provider_alias = "failover"
+        self.endpoint_alias = "primary_then_backup"
+        self.stats = {}
+        self.last_result_metadata = dict(primary.metadata)
+        self.metadata = {
+            "provider_id": self.provider_id,
+            "mode": "real_llm",
+            "transport": "openai_compatible_chat_completions",
+            "provider_alias": "failover",
+            "endpoint_alias": "primary_then_backup",
+            "generated_by": "mixed",
+            "primary_alias": primary.provider_alias,
+            "backup_alias": backup.provider_alias,
+            "primary_model": primary.metadata.get("model"),
+            "backup_model": backup.metadata.get("model"),
+            "failover_policy_fingerprint": policy_fingerprint,
+            "prompt_version": "stage12-candidate-prompt-v7",
+            "response_schema_version": 2,
+            "failover_enabled": True,
+        }
+        self._refresh_metadata()
+
+    def _refresh_metadata(self) -> None:
+        self.metadata.update({
+            "primary_success_count": self.primary.stats.get("success", 0),
+            "backup_success_count": self.backup.stats.get("success", 0),
+            "fallback_count": self.fallback_count,
+            "primary_transport_failure_count": self.primary.stats.get("transport_failure", 0),
+            "backup_transport_failure_count": self.backup.stats.get("transport_failure", 0),
+            "primary_schema_failure_count": self.primary.stats.get("schema_failure", 0),
+            "backup_schema_failure_count": self.backup.stats.get("schema_failure", 0),
+        })
+
+    @staticmethod
+    def _flush(events: list[dict[str, Any]], observer: Callable[[Mapping[str, Any]], None] | None, *, fallback_triggered: bool, fallback_provider: str | None) -> None:
+        if observer is None:
+            return
+        for event in events:
+            item = dict(event)
+            item["fallback_triggered"] = fallback_triggered
+            item["fallback_provider"] = fallback_provider
+            if fallback_triggered:
+                if item.get("outcome") == "success":
+                    item["fallback_result"] = "backup_success"
+                elif item.get("provider_alias") == fallback_provider:
+                    item["fallback_result"] = "backup_failure"
+                else:
+                    item["fallback_result"] = "backup_attempted"
+            observer(item)
+
+    def cache_provider_matches(self, cached: Mapping[str, Any]) -> bool:
+        metadata = cached.get("provider_metadata") or cached.get("provider_provenance") or {}
+        fingerprint = metadata.get("config_fingerprint")
+        aliases = {
+            (self.primary.provider_alias, self.primary.metadata.get("config_fingerprint")),
+            (self.backup.provider_alias, self.backup.metadata.get("config_fingerprint")),
+        }
+        return (metadata.get("provider_alias"), fingerprint) in aliases
+
+    def cache_key_metadata(self) -> dict[str, Any]:
+        return self.primary.cache_key_metadata()
+
+    def extract(self, evidence: Mapping[str, Any], profile: ExtractionProfile, *, response_validator: Callable[[Mapping[str, Any]], None] | None = None, attempt_observer: Callable[[Mapping[str, Any]], None] | None = None) -> Mapping[str, Any]:
+        primary_events: list[dict[str, Any]] = []
+        try:
+            result = self.primary.extract(evidence, profile, response_validator=response_validator, attempt_observer=primary_events.append)
+            self._flush(primary_events, attempt_observer, fallback_triggered=False, fallback_provider=None)
+            self.last_result_metadata = dict(result.get("provider_metadata") or self.primary.metadata)
+            self._refresh_metadata()
+            return result
+        except ExtractionProviderError as primary_error:
+            self._refresh_metadata()
+            if not primary_error.fallback_eligible:
+                self._flush(primary_events, attempt_observer, fallback_triggered=False, fallback_provider=None)
+                raise
+            self.fallback_count += 1
+            self._flush(primary_events, attempt_observer, fallback_triggered=True, fallback_provider=self.backup.provider_alias)
+            backup_events: list[dict[str, Any]] = []
+            try:
+                result = self.backup.extract(evidence, profile, response_validator=response_validator, attempt_observer=backup_events.append)
+                self._flush(backup_events, attempt_observer, fallback_triggered=True, fallback_provider=self.backup.provider_alias)
+                chosen = dict(result.get("provider_metadata") or self.backup.metadata)
+                chosen.update({"failover_used": True, "fallback_from": self.primary.provider_alias})
+                self.last_result_metadata = chosen
+                self._refresh_metadata()
+                return result | {"provider_metadata": chosen}
+            except ExtractionProviderError as backup_error:
+                self._flush(backup_events, attempt_observer, fallback_triggered=True, fallback_provider=self.backup.provider_alias)
+                self._refresh_metadata()
+                details = {"primary": primary_error.details, "backup": backup_error.details, "fallback_eligible": False}
+                raise ExtractionProviderError("primary and backup LLM providers failed", details=details) from backup_error
 
 
 def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
@@ -397,6 +556,10 @@ def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvide
             "LLM_API_KEY": settings.llm_api_key,
             "LLM_ALLOW_EVIDENCE_SEND": str(settings.llm_allow_evidence_send).lower(),
             "LLM_TIMEOUT_SECONDS": str(settings.llm_timeout_seconds),
+            "LLM_FALLBACK_BASE_URL": settings.llm_fallback_base_url,
+            "LLM_FALLBACK_MODEL": settings.llm_fallback_model,
+            "LLM_FALLBACK_API_KEY": settings.llm_fallback_api_key,
+            "LLM_FALLBACK_TIMEOUT_SECONDS": str(settings.llm_fallback_timeout_seconds),
         }
 
         def configured_value(name: str) -> str:
@@ -413,27 +576,50 @@ def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvide
         response_attempts = int(provider.get("response_max_attempts", provider.get("max_attempts", 2)))
         backoff_base_seconds = float(provider.get("backoff_base_seconds", 1.0))
         max_backoff_seconds = float(provider.get("max_backoff_seconds", 30.0))
-        model_config_identifier = hashlib.sha256(
-            canonical_json({"endpoint": endpoint, "model": model}).encode("utf-8")
-        ).hexdigest()[:16]
-        try:
-            transport = OpenAICompatibleTransport(
-                endpoint=endpoint,
-                model=model,
-                api_key=credential,
-                timeout_seconds=timeout,
-                max_attempts=transport_attempts,
-                json_mode=True,
-                backoff_base_seconds=backoff_base_seconds,
-                max_backoff_seconds=max_backoff_seconds,
+        def build_endpoint(alias: str, endpoint_value: str, model_value: str, credential_value: str, timeout_value: float) -> ExternalLLMProvider:
+            model_config_identifier = hashlib.sha256(
+                canonical_json({"endpoint": endpoint_value, "model": model_value}).encode("utf-8")
+            ).hexdigest()[:16]
+            try:
+                transport = OpenAICompatibleTransport(
+                    endpoint=endpoint_value,
+                    model=model_value,
+                    api_key=credential_value,
+                    timeout_seconds=timeout_value,
+                    max_attempts=transport_attempts,
+                    json_mode=True,
+                    backoff_base_seconds=backoff_base_seconds,
+                    max_backoff_seconds=max_backoff_seconds,
+                    transient_max_attempts=int(provider.get("transient_max_attempts", 2)),
+                    timeout_max_attempts=int(provider.get("timeout_max_attempts", 1)),
+                )
+            except LLMTransportError as error:
+                raise ExtractionProviderError("external LLM transport configuration is invalid", failure_type="configuration_error", details={"provider_alias": alias}) from error
+            return ExternalLLMProvider(
+                transport=transport,
+                model_config_identifier=model_config_identifier,
+                max_attempts=response_attempts,
+                provider_alias=alias,
+                endpoint_alias=alias,
             )
-        except LLMTransportError as error:
-            raise ExtractionProviderError("external LLM transport configuration is invalid") from error
-        return ExternalLLMProvider(
-            transport=transport,
-            model_config_identifier=model_config_identifier,
-            max_attempts=response_attempts,
-        )
+
+        backup_cfg = provider.get("backup") or {}
+        backup_endpoint = configured_value(backup_cfg.get("endpoint_env", "LLM_FALLBACK_BASE_URL"))
+        backup_model = configured_value(backup_cfg.get("model_env", "LLM_FALLBACK_MODEL"))
+        backup_credential = configured_value(backup_cfg.get("credential_env", "LLM_FALLBACK_API_KEY"))
+        backup_timeout = float(configured_value(backup_cfg.get("timeout_env", "LLM_FALLBACK_TIMEOUT_SECONDS")) or "60")
+        backup_available = bool(backup_cfg.get("enabled", True) and backup_endpoint and backup_model and backup_credential)
+        if backup_available:
+            # A configured 180-second read timeout remains the ordinary upper
+            # bound, but a failover route gets a shorter availability budget so
+            # a dead endpoint cannot stall the whole batch.
+            failover_timeout = min(timeout, float(provider.get("failover_timeout_seconds", timeout)))
+            primary = build_endpoint("primary", endpoint, model, credential, min(timeout, failover_timeout))
+            backup = build_endpoint("backup", backup_endpoint, backup_model, backup_credential, min(backup_timeout, failover_timeout))
+            policy_fingerprint = hashlib.sha256(canonical_json(backup_cfg).encode("utf-8")).hexdigest()[:16]
+            return FailoverExternalLLMProvider(primary, backup, policy_fingerprint=policy_fingerprint)
+        primary = build_endpoint("primary", endpoint, model, credential, timeout)
+        return primary
     raise ExtractionProviderError(f"unsupported Stage 12 provider kind: {provider.get('kind')}")
 
 
@@ -523,7 +709,7 @@ class ProviderBackedExtractor:
         if isinstance(self.provider, ExternalLLMProvider):
             def response_validator(response: Mapping[str, Any]) -> None:
                 for index, item in enumerate(response["candidates"], start=1):
-                    candidate = _assemble_candidate(item, evidence, self.profile, self.split, index)
+                    candidate = _assemble_candidate(item, evidence, self.profile, self.split, index, response.get("provider_metadata"))
                     validate_candidate_against_evidence(candidate, evidence)
 
             raw_response = self.provider.extract(
@@ -537,7 +723,7 @@ class ProviderBackedExtractor:
         response = parse_provider_response(raw_response)
         rows = []
         for index, item in enumerate(response["candidates"], start=1):
-            rows.append(_assemble_candidate(item, evidence, self.profile, self.split, index))
+            rows.append(_assemble_candidate(item, evidence, self.profile, self.split, index, response.get("provider_metadata")))
         return rows
 
 
@@ -878,7 +1064,7 @@ class HeuristicSemanticExtractor:
 
 
 def _assemble_candidate(
-    item: Mapping[str, Any], evidence: Mapping[str, Any], profile: ExtractionProfile, split: str, index: int,
+    item: Mapping[str, Any], evidence: Mapping[str, Any], profile: ExtractionProfile, split: str, index: int, provider_metadata: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Bind LLM semantics to Evidence and derive reliable fields deterministically."""
     location = _location(evidence)
@@ -926,7 +1112,7 @@ def _assemble_candidate(
     if location.get("logical_page") is not None:
         applicability["logical_page"] = location["logical_page"]
     basis = {"evidence_id": evidence["evidence_id"], "index": index, "text": statement_text, "provider": profile.extraction_profile_id}
-    return {
+    candidate = {
         "candidate_id": "stage12-candidate-" + hashlib.sha1(_sha(basis).encode()).hexdigest()[:20],
         "split": split,
         "task": "statement",
@@ -956,6 +1142,13 @@ def _assemble_candidate(
         "formal_release": False,
         "extraction_profile": profile.extraction_profile_id,
     }
+    if provider_metadata:
+        candidate["provider_provenance"] = {
+            key: provider_metadata.get(key)
+            for key in ("provider_alias", "endpoint_alias", "generated_by", "model", "config_fingerprint", "failover_used", "fallback_from")
+            if provider_metadata.get(key) is not None
+        }
+    return candidate
 
 
 def to_stage9_runtime_payload(candidates: Iterable[Mapping[str, Any]]) -> dict[str, Any]:

@@ -2,61 +2,93 @@
   "schema_version": 1,
   "stage": "12",
   "artifact_kind": "stage12_development_robustness_evaluation",
-  "status": "completed",
+  "status": "blocked",
   "formal_release": false,
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "cases_artifact": "data/stage12/stage12_robustness_cases.json",
   "provider_id": "external_llm_openai_compatible_v1",
   "execution_kind": "real_llm",
-  "real_llm_execution": true,
-  "provider_call_count": 6,
-  "provider_failure_count": 0,
+  "real_llm_execution": false,
+  "provider_call_count": 0,
+  "provider_failure_count": 6,
+  "input_sha256": {
+    "prompt": "560b6bdfcb6573966dec45d84c93837fe15e2738ade70af12669c81623724d1f",
+    "contract": "af66cef5e76f5d0ac769cd34da2d2536b73fe5c5ede4ed21e9d61182d9b37c53",
+    "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
+    "candidate_schema": "531b31f7386d44ee33c5f3d952986c7825a1273b74e2f6582d618ee661a22c59",
+    "semantic_source": "fa0c3aa40afc547c96fda27a11e22b79eca75029d7b345b12a1288fb5cf02a52",
+    "provider_config": "1942adeff2b45d69ddc2b3a7a1a84d55db6a5df22f464d186b0eed808916e049",
+    "cases": "5c98c5a0f151131472234287fd1ecff836993df0f211427f3a0da99caa2a3765"
+  },
+  "provider_metadata": {
+    "provider_id": "external_llm_openai_compatible_v1",
+    "mode": "real_llm",
+    "transport": "openai_compatible_chat_completions",
+    "provider_alias": "failover",
+    "endpoint_alias": "primary_then_backup",
+    "generated_by": "mixed",
+    "primary_alias": "primary",
+    "backup_alias": "backup",
+    "primary_model": "gpt-5.6-luna",
+    "backup_model": "gpt-5.6-terra",
+    "failover_policy_fingerprint": "0c33d7c548af96f8",
+    "prompt_version": "stage12-candidate-prompt-v7",
+    "response_schema_version": 2,
+    "failover_enabled": true,
+    "primary_success_count": 0,
+    "backup_success_count": 0,
+    "fallback_count": 6,
+    "primary_transport_failure_count": 6,
+    "backup_transport_failure_count": 6,
+    "primary_schema_failure_count": 2,
+    "backup_schema_failure_count": 2
+  },
   "case_count": 6,
-  "passed_count": 6,
-  "failed_count": 0,
+  "passed_count": 0,
+  "failed_count": 6,
   "results": [
     {
       "case_id": "metamorphic-lifecycle-01",
-      "passed": true,
-      "failure_type": null,
+      "passed": false,
+      "failure_type": "provider_failure",
       "failure_fields": [],
-      "failure": null
+      "failure": "primary and backup LLM providers failed"
     },
     {
       "case_id": "metamorphic-lifecycle-02",
-      "passed": true,
-      "failure_type": null,
+      "passed": false,
+      "failure_type": "provider_failure",
       "failure_fields": [],
-      "failure": null
+      "failure": "primary and backup LLM providers failed"
     },
     {
       "case_id": "metamorphic-condition-01",
-      "passed": true,
-      "failure_type": null,
+      "passed": false,
+      "failure_type": "provider_failure",
       "failure_fields": [],
-      "failure": null
+      "failure": "primary and backup LLM providers failed"
     },
     {
       "case_id": "metamorphic-causality-01",
-      "passed": true,
-      "failure_type": null,
+      "passed": false,
+      "failure_type": "provider_failure",
       "failure_fields": [],
-      "failure": null
+      "failure": "primary and backup LLM providers failed"
     },
     {
       "case_id": "metamorphic-negation-01",
-      "passed": true,
-      "failure_type": null,
+      "passed": false,
+      "failure_type": "provider_failure",
       "failure_fields": [],
-      "failure": null
+      "failure": "primary and backup LLM providers failed"
     },
     {
       "case_id": "metamorphic-comparison-01",
-      "passed": true,
-      "failure_type": null,
+      "passed": false,
+      "failure_type": "provider_failure",
       "failure_fields": [],
-      "failure": null
+      "failure": "primary and backup LLM providers failed"
     }
   ]
 }

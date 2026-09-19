@@ -49,6 +49,7 @@ def audit() -> dict:
     stage11 = _read(ROOT / "data/stage11/stage11_exit_audit.json")
     canonical_evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     dev_gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
+    development_gold_count = len(dev_gold)
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
 
     runtime_report = {"conforms": False, "failures": [], "counts": {}}
@@ -155,6 +156,16 @@ def audit() -> dict:
         "gold": ROOT / "data/stage11/stage11_statement_holdout.jsonl",
         "contract": ROOT / "config/stage12_statement_contract.json",
     }.items())
+    robustness = _read(STAGE12 / "stage12_robustness_evaluation.json") if (STAGE12 / "stage12_robustness_evaluation.json").exists() else {}
+    robustness_input_hashes_match = all(robustness.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
+        "prompt": ROOT / "config/stage12_prompt.txt",
+        "contract": ROOT / "config/stage12_statement_contract.json",
+        "response_schema": ROOT / "config/stage12_extraction_response.schema.json",
+        "candidate_schema": ROOT / "config/stage12_candidate.schema.json",
+        "semantic_source": ROOT / "src/turbine_kg/extraction/semantic.py",
+        "provider_config": ROOT / "config/stage12_provider.json",
+        "cases": STAGE12 / "stage12_robustness_cases.json",
+    }.items())
     candidate_input_refs = {key: {"path": key, "sha256": value} for key, value in candidate.get("input_sha256", {}).items() if key != "evaluator"}
     candidate_lineage_current = not verify_input_hashes(ROOT, candidate_input_refs)
     manifest_paths = {
@@ -218,20 +229,20 @@ def audit() -> dict:
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
-        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v4" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and stored_eval_matches and dev_input_hashes_match,
+        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v4" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and development.get("gold_statement_count") == development_gold_count and stored_eval_matches and dev_input_hashes_match,
         "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v4" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
-        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True and _read(STAGE12 / "stage12_robustness_evaluation.json").get("real_llm_execution") is True,
+        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True and robustness.get("real_llm_execution") is True and robustness_input_hashes_match,
         "real_llm_failure_summary_current": failure_summary.get("artifact_kind") == "stage12_real_llm_failure_summary" and failure_summary.get("source_split") == "development_regression_golden" and failure_summary.get("holdout_used_for_tuning") is False and failure_summary.get("blind_read") is False,
         "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
         "reserve_registry_ready_for_independent_preparation": reserve_registry_ready,
     }
     quality_checks = {
         "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
-        "robustness_quality_gate": (lambda report: report.get("status") == "completed" and report.get("case_count", 0) > 0 and report.get("failed_count") == 0)(_read(STAGE12 / "stage12_robustness_evaluation.json") if (STAGE12 / "stage12_robustness_evaluation.json").exists() else {}),
+        "robustness_quality_gate": robustness_input_hashes_match and robustness.get("status") == "completed" and robustness.get("case_count", 0) > 0 and robustness.get("failed_count") == 0,
         "acceptance_quality_gate": (
             reserve_gold_ready
             and reserve_acceptance.get("status") == "completed"
@@ -302,7 +313,7 @@ def audit() -> dict:
             "reserve": "independent Reserve Gold and one-time acceptance evaluation are required; no reserve result is accepted from the development builder",
             "stage13": "Stage 13 state is informational and does not participate in the Stage 12 exit decision",
         },
-        "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development.get("gold_statement_count", 0), "holdout_gold_statements_registered": holdout.get("registered_holdout_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0), "holdout_gold_statements_excluded": holdout.get("excluded_gold_statement_count", 0)},
+        "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development_gold_count, "historical_development_gold_statements_in_evaluation": development.get("gold_statement_count", 0), "holdout_gold_statements_registered": holdout.get("registered_holdout_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0), "holdout_gold_statements_excluded": holdout.get("excluded_gold_statement_count", 0)},
         "regression_matrix": {
             "0": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/project_state.json v2 boundary"},
             "1": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/project_state.json stage 1 state"},

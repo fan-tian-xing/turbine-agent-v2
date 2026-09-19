@@ -28,6 +28,15 @@ def decorate_event(evidence: dict[str, Any], event: dict[str, Any]) -> dict[str,
         "validator_reason": _clip(event.get("validator_reason")),
         "exception_type": event.get("exception_type"),
         "message": _clip(event.get("message")),
+        "provider_alias": event.get("provider_alias"),
+        "endpoint_alias": event.get("endpoint_alias"),
+        "root_cause": event.get("root_cause"),
+        "status_code": event.get("status_code"),
+        "elapsed_seconds": event.get("elapsed_seconds"),
+        "fallback_eligible": event.get("fallback_eligible", False),
+        "fallback_triggered": event.get("fallback_triggered", False),
+        "fallback_provider": event.get("fallback_provider"),
+        "fallback_result": event.get("fallback_result"),
         "evidence_value_or_text": _clip(evidence.get("effective_text") or evidence.get("source_text") or ""),
         "model_value_or_text": event.get("model_value_or_text"),
     }
@@ -61,6 +70,16 @@ def write_failure_summary(
         "success": len(successes),
         "attempts": len(events),
         "retry_recovered": retry_recovered,
+        "fallback_triggered": sum(bool(item.get("fallback_triggered")) for item in events),
+        "fallback_success": sum(item.get("outcome") == "success" and bool(item.get("fallback_triggered")) for item in successes),
+        "provider_counts": {
+            str(provider): sum(item.get("provider_alias") == provider for item in events)
+            for provider in sorted({item.get("provider_alias") for item in events if item.get("provider_alias")})
+        },
+        "root_cause_counts": {
+            str(root_cause): sum(item.get("root_cause") == root_cause for item in failures)
+            for root_cause in sorted({item.get("root_cause") for item in failures if item.get("root_cause")})
+        },
     }
     summary = {
         "schema_version": 1,

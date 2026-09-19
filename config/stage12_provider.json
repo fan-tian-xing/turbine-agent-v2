@@ -25,8 +25,19 @@
       "timeout_env": "LLM_TIMEOUT_SECONDS",
       "transport_max_attempts": 3,
       "response_max_attempts": 3,
+      "transient_max_attempts": 2,
+      "timeout_max_attempts": 1,
       "backoff_base_seconds": 1.0,
-      "max_backoff_seconds": 20.0
+      "max_backoff_seconds": 20.0,
+      "failover_timeout_seconds": 10,
+      "backup": {
+        "enabled": true,
+        "endpoint_env": "LLM_FALLBACK_BASE_URL",
+        "model_env": "LLM_FALLBACK_MODEL",
+        "credential_env": "LLM_FALLBACK_API_KEY",
+        "timeout_env": "LLM_FALLBACK_TIMEOUT_SECONDS",
+        "auth_level_fallback": false
+      }
     }
   },
   "source_permission": {

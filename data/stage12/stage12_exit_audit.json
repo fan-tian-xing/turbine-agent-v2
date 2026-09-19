@@ -57,11 +57,11 @@
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "5dd8799f0e07106f1f71969a393084cca21b3b8b8ecaf7e5fe3b088373dc4e41"
+      "sha256": "a1e986db54ac95cf14195dd7aecb0963be56ed75bd32f3c6435f92308291af4b"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "357b336e1510e67033865166d759752d3cef6131c773e083f066f391760511fb"
+      "sha256": "aee3f2efa845b4cdd0bc1154814ac837cae853464dd55d999d5997691e130d41"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "e00b598a72e2b0a63eab0769ca36bafcdc713da066011f1c586435ea670620fb"
+      "sha256": "fef007eedc7085a85c33f49a0407c1b5acc083eab3e5fa013561f8cb45e95cc4"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -81,11 +81,11 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "903e0e85e38eab12b3ae9852e7a8efadd0f5b401a2677ec9d92f35441a6637f4"
+      "sha256": "bb92b754c18e93350fcacd7f1c5e44f6f13931565514c41e3243c131992b3a17"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "cd049bf016ed7ea3f0c8c6c0f7b57ae3d0cd2f86539c1a1a4dbe5e97cf556083"
+      "sha256": "cfc51e72b9c3f7f8aae8a451ecf9651cb0f00d3947c89a84b0077f42418b5564"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
@@ -109,7 +109,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "e2d271c55435f9cea00dac0f8dd16634537a93d470af6bdec05e3b80bfa5f88a"
+      "sha256": "dc036a321b219c398dee186e12dbdbb80ac02d9c6f2766bd140ed519a4fe3350"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -148,13 +148,13 @@
     "candidate_pages_are_manifest_pages": true,
     "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": false,
-    "producer_reexecution_current": false,
+    "real_llm_execution_verified": true,
+    "producer_reexecution_current": true,
     "stale_cache_zero": true,
-    "candidate_input_lineage_current": false,
+    "candidate_input_lineage_current": true,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": false,
+    "development_evaluation_present": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
@@ -170,33 +170,137 @@
   },
   "execution_evidence": {
     "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 1,
+    "validated_real_evidence_cache_count": 10,
     "failure_summary_counts": {
       "transport_failure": 0,
       "schema_failure": 0,
-      "semantic_validation_failure": 0,
-      "success": 1,
-      "attempts": 1,
-      "retry_recovered": 0,
+      "semantic_validation_failure": 1,
+      "success": 9,
+      "attempts": 10,
+      "retry_recovered": 1,
       "fallback_triggered": 0,
       "fallback_success": 0,
       "provider_counts": {
-        "primary": 1
+        "primary": 10
       },
       "root_cause_counts": {}
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "not_currently_verified",
+      "status": "executed",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
-      "real_llm_execution_verified": false,
-      "failure": [],
+      "real_llm_execution_verified": true,
+      "failure": [
+        {
+          "evidence_id": "evidence-93fb6fefbfccb828c68c",
+          "attempt": 1,
+          "outcome": "failure",
+          "failure_type": "semantic_validation_failure",
+          "field": "relation",
+          "validator_reason": "candidate causal relation is not expressed by Evidence",
+          "exception_type": null,
+          "message": null,
+          "provider_alias": "primary",
+          "endpoint_alias": "primary",
+          "root_cause": null,
+          "status_code": null,
+          "elapsed_seconds": null,
+          "fallback_eligible": false,
+          "fallback_triggered": false,
+          "fallback_provider": null,
+          "fallback_result": null,
+          "semantic_attempts": null,
+          "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
+          "model_value_or_text": {
+            "status": "ok",
+            "candidates": [
+              {
+                "statement_text": "若需检查，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪下垫片脱开0.2～0.5mm。",
+                "statement_type": "procedure",
+                "predicate": "causes",
+                "subject_entities": [
+                  {
+                    "surface_form": "高中压外缸前猫爪",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "猫爪下垫片",
+                    "role": "object"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若需检查"
+                  },
+                  {
+                    "surface_form": "半空缸状态下"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "大修时"
+                }
+              },
+              {
+                "statement_text": "若需检查，在半空缸状态下，再将前箱微微抬起0.1～0.15mm，与滑块脱开。",
+                "statement_type": "procedure",
+                "predicate": "causes",
+                "subject_entities": [
+                  {
+                    "surface_form": "前箱",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "滑块",
+                    "role": "object"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若需检查"
+                  },
+                  {
+                    "surface_form": "半空缸状态下"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "大修时"
+                }
+              },
+              {
+                "statement_text": "若需检查，在半空缸状态下，抽出基架上滑块。",
+                "statement_type": "procedure",
+                "predicate": "describes",
+                "subject_entities": [
+                  {
+                    "surface_form": "基架上滑块",
+                    "role": "subject"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若需检查"
+                  },
+                  {
+                    "surface_form": "半空缸状态下"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "大修时"
+                }
+              }
+            ]
+          }
+        }
+      ],
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -215,9 +319,9 @@
   "counts": {
     "representative_pages": 8,
     "documents": 5,
-    "candidates": 25,
+    "candidates": 47,
     "development_gold_statements": 42,
-    "historical_development_gold_statements_in_evaluation": 19,
+    "historical_development_gold_statements_in_evaluation": 42,
     "holdout_gold_statements_registered": 50,
     "holdout_gold_statements_evaluated": 48,
     "holdout_gold_statements_excluded": 2
@@ -284,18 +388,18 @@
   },
   "quality_observation": {
     "development_field_accuracy": {
-      "statement_boundary": 0.8421052631578947,
-      "statement_type": 0.6842105263157895,
-      "entity": 0.8947368421052632,
-      "relation": 0.7894736842105263,
-      "quantity": 0.8947368421052632,
-      "unit": 0.8947368421052632,
-      "comparison": 0.8421052631578947,
-      "negation": 0.8947368421052632,
-      "condition": 0.8947368421052632,
-      "applicability": 0.8947368421052632,
-      "applicability_meaning": 0.8947368421052632,
-      "relation_direction": 0.8421052631578947,
+      "statement_boundary": 0.8333333333333334,
+      "statement_type": 0.9523809523809523,
+      "entity": 0.9047619047619048,
+      "relation": 0.9523809523809523,
+      "quantity": 0.9523809523809523,
+      "unit": 0.9523809523809523,
+      "comparison": 0.9523809523809523,
+      "negation": 0.9047619047619048,
+      "condition": 0.8571428571428571,
+      "applicability": 0.9047619047619048,
+      "applicability_meaning": 0.9047619047619048,
+      "relation_direction": 0.9285714285714286,
       "unsupported_addition": 1.0,
       "evidence_grounding": 1.0
     },
@@ -338,33 +442,33 @@
       "evidence_grounding": 1.0
     },
     "development_recomputed": {
-      "statement_boundary": 0.5476190476190477,
-      "statement_type": 0.5238095238095238,
-      "entity": 0.5714285714285714,
-      "relation": 0.5476190476190477,
-      "quantity": 0.5476190476190477,
-      "unit": 0.5714285714285714,
-      "comparison": 0.5476190476190477,
-      "negation": 0.5238095238095238,
-      "condition": 0.19047619047619047,
-      "applicability": 0.47619047619047616,
-      "applicability_meaning": 0.47619047619047616,
-      "relation_direction": 0.5476190476190477,
+      "statement_boundary": 0.8333333333333334,
+      "statement_type": 0.9523809523809523,
+      "entity": 0.9047619047619048,
+      "relation": 0.9523809523809523,
+      "quantity": 0.9523809523809523,
+      "unit": 0.9523809523809523,
+      "comparison": 0.9523809523809523,
+      "negation": 0.9047619047619048,
+      "condition": 0.8571428571428571,
+      "applicability": 0.9047619047619048,
+      "applicability_meaning": 0.9047619047619048,
+      "relation_direction": 0.9285714285714286,
       "unsupported_addition": 1.0,
       "evidence_grounding": 1.0
     },
     "evidence_binding": {
-      "total": 24,
-      "correct": 24,
+      "total": 40,
+      "correct": 40,
       "accuracy": 1.0
     },
     "evidence_semantic_support": {
-      "total": 24,
-      "correct": 24,
+      "total": 40,
+      "correct": 40,
       "accuracy": 1.0,
       "source": "canonical Evidence validator"
     },
-    "gold_mismatch_count": 21,
+    "gold_mismatch_count": 13,
     "scale_gate": false,
     "interpretation": "development metrics may guide extractor work; evidence support is evaluated against canonical Evidence, Gold agreement is reported separately, the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"
   },
@@ -373,11 +477,7 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
-    "candidate_input_lineage_current",
-    "development_evaluation_present",
     "development_quality_gate",
-    "producer_reexecution_current",
-    "real_llm_execution_verified",
     "robustness_evaluation_present",
     "robustness_quality_gate",
     "upstream_reserve_gold_not_ready"
@@ -393,7 +493,7 @@
   "real_llm_execution": true,
   "stage12_status_summary": {
     "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,

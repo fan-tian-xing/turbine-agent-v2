@@ -156,7 +156,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v8",
+        "version": "stage12-candidate-prompt-v13",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -189,7 +189,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v8",
+        "prompt_version": "stage12-candidate-prompt-v13",
         "response_schema_version": 2,
     }
 
@@ -238,7 +238,7 @@ class ExternalLLMProvider:
             "generated_by": provider_alias,
             "model": getattr(transport, "model", None),
             "config_fingerprint": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v8",
+            "prompt_version": "stage12-candidate-prompt-v13",
             "response_schema_version": 2,
         }
         self.last_result_metadata = dict(self.metadata)
@@ -249,7 +249,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": self.model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v8",
+            "prompt_version": "stage12-candidate-prompt-v13",
             "response_schema_version": 2,
         }
 
@@ -419,7 +419,7 @@ class FailoverExternalLLMProvider(ExternalLLMProvider):
             "primary_model": primary.metadata.get("model"),
             "backup_model": backup.metadata.get("model"),
             "failover_policy_fingerprint": policy_fingerprint,
-            "prompt_version": "stage12-candidate-prompt-v8",
+            "prompt_version": "stage12-candidate-prompt-v13",
             "response_schema_version": 2,
             "failover_enabled": True,
         }
@@ -989,7 +989,9 @@ def _predicate(text: str, statement_type: str) -> str:
 
 def _has_causal_marker(text: str) -> bool:
     direct_cause = bool(re.search(r"(?<!所)(?:导致|造成|引起)", text))
-    return direct_cause or bool(re.search(r"可能使[^，。；]{1,24}(?:形成|损坏|升高|产生)", text))
+    explicit_effect = bool(re.search(r"(?:可能使|会使|可能形成|会形成)[^，。；]{1,32}(?:形成|损坏|升高|产生|正压)", text))
+    conditional_effect = bool(re.search(r"(?:若|如果)[^，。；]{1,40}[，,][^。；]{1,80}(?:需要|会|可能|升高|降低|形成|损坏|排至|热冲击)", text))
+    return direct_cause or explicit_effect or conditional_effect
 
 
 def _relation_direction(text: str, predicate: str) -> str:
@@ -999,7 +1001,8 @@ def _relation_direction(text: str, predicate: str) -> str:
         return "scope_to_subject"
     if predicate == "describes" and any(token in text for token in ("然后", "再", "首先", "依次")):
         return "procedure_order"
-    if any(token in text for token in ("当", "若", "如果")) and predicate in {"requires", "prohibits"}:
+    has_true_condition = bool(re.search(r"(?:若|如果)|(?<!应)当[^，。；,]{1,36}(?:时|情况下|条件)", text))
+    if has_true_condition and predicate in {"requires", "prohibits"}:
         return "condition_to_consequence"
     return "subject_to_object"
 
@@ -1032,6 +1035,17 @@ def _applicability_scope(
         scope["applicability_text"] = applicability_markers[0]
         scope["status"] = "known"
     return scope
+
+
+def _single_evidence_applicability_marker(text: str) -> str | None:
+    """Return one unambiguous applicability marker from the whole Evidence."""
+    compact = re.sub(r"\s+", "", text)
+    markers = re.findall(
+        r"(?:冲转前|冲转之前|(?:在|于)[^。；，,]{1,28}(?:前|期间|开始|时)|当[^。；，,]{1,36}时)",
+        compact,
+    )
+    unique = list(dict.fromkeys(markers))
+    return unique[0] if len(unique) == 1 else None
 
 
 class HeuristicSemanticExtractor:
@@ -1135,12 +1149,19 @@ def _assemble_candidate(
     raw_scope = dict(raw_scope_value)
     scope_status = raw_scope.get("status")
     scope_text = raw_scope.get("applicability_text")
+    if scope_status == "unknown" and not scope_text and predicate == "causes":
+        inherited_scope = _single_evidence_applicability_marker(_canonical_evidence_text(evidence))
+        if inherited_scope:
+            scope_status = "known"
+            scope_text = inherited_scope
     if scope_status == "known" and not scope_text:
         raise ValueError("known applicability must preserve exact wording")
     if scope_status == "unknown" and scope_text:
         raise ValueError("unknown applicability must omit applicability_text")
-    if scope_text and _normalized_text(str(scope_text)) not in _normalized_text(statement_text):
-        raise ValueError("candidate applicability wording is not grounded in statement text")
+    if scope_text:
+        evidence_text = _canonical_evidence_text(evidence)
+        if _normalized_text(str(scope_text)) not in _normalized_text(statement_text) and _normalized_text(str(scope_text)) not in _normalized_text(evidence_text):
+            raise ValueError("candidate applicability wording is not grounded in Evidence")
     applicability = {"status": scope_status}
     if scope_text:
         applicability["applicability_text"] = str(scope_text)
@@ -1313,8 +1334,10 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("known applicability must preserve wording")
     if scope.get("status") == "unknown" and scope.get("applicability_text"):
         raise ValueError("unknown applicability must omit wording")
-    if scope.get("applicability_text") and _normalized_text(scope["applicability_text"]) not in _normalized_text(text):
-        raise ValueError("candidate applicability wording is not grounded in statement text")
+    if scope.get("applicability_text"):
+        evidence_quote = str(candidate.get("evidence_quote", ""))
+        if _normalized_text(scope["applicability_text"]) not in _normalized_text(text) and _normalized_text(scope["applicability_text"]) not in _normalized_text(evidence_quote):
+            raise ValueError("candidate applicability wording is not grounded in Evidence")
     if candidate.get("predicate") == "causes" and candidate.get("relation_direction") != "cause_to_effect":
         raise ValueError("causal relation direction is inconsistent")
 

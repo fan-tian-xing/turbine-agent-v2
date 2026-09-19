@@ -21,6 +21,7 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_against_evidence,
     validate_candidate_payload,
 )
+from turbine_kg.extraction.semantic import _single_evidence_applicability_marker
 from turbine_kg.llm_client import OpenAICompatibleChatTransport
 from scripts import stage12_failure_summary
 from scripts.audit_stage12_exit import _reserve_acceptance_gate
@@ -119,6 +120,29 @@ def test_candidate_schema_and_stage9_projection_keep_coarse_relation_and_text():
     statement = next(node for node in runtime["nodes"] if node["type"] == "EngineeringStatement")
     assert statement["properties"]["predicateLabel"] == "requires"
     assert statement["properties"]["statementText"] == candidate["statement_text"]
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "若真空过低，转子转动需要较多的新蒸汽。",
+        "若真空过低，乏汽突然排至凝汽器，会使凝汽器汽侧压力升高。",
+    ],
+)
+def test_conditional_causal_wording_is_classified_as_causes(text):
+    candidate = HeuristicSemanticExtractor().extract(_evidence(text))[0]
+    assert candidate["predicate"] == "causes"
+    assert candidate["relation_direction"] == "cause_to_effect"
+
+
+def test_only_one_evidence_scope_marker_is_eligible_for_causal_inheritance():
+    assert _single_evidence_applicability_marker("汽轮机冲转前必须有真空；若真空过低会造成热冲击。") == "冲转前"
+    assert _single_evidence_applicability_marker("基础施工期间，施工准备时应校核尺寸。") is None
+
+
+def test_normative_yingdang_is_not_a_condition_marker():
+    candidate = _candidate("营运单位应当保存运行和维修记录。")
+    assert candidate["relation_direction"] == "subject_to_object"
 
 
 @pytest.mark.parametrize(

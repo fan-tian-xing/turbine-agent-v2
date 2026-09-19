@@ -32,7 +32,7 @@
     "data/stage11/stage11_exit_audit.json": "de5281f5202e4bb2a5942b91d93624cb98cf242b8f6e5afcc3b5799e5bb93028",
     "data/stage12/stage12_input_manifest.json": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "data/stage6/stage6_evidence_bundle.jsonl": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
-    "config/stage12_statement_contract.json": "2d89a2e3ca349468738137eddbbec24e9b24af71e0f5fbca465d54bc8dd98e84",
+    "config/stage12_statement_contract.json": "e5ea32d4b5f09edaa620867ddba60a6fcb18abba384d230b9654ffb1bae57923",
     "config/stage12_candidate.schema.json": "fdda198ef21b2e3fc04584019f9593a5f21dd84ba66013f0734e9a0ff8bd632e",
     "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
     "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56",
@@ -42,7 +42,7 @@
     "config/stage12_prompt.txt": "a5be2a377f4acdacbddc34438c450233728810a7386bcfb2a65cc44fa7d09d99",
     "config/stage12_extraction_response.schema.json": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
     "data/registry/source_assets.jsonl": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf",
-    "src/turbine_kg/extraction/semantic.py": "c29034314aa9c3241b815819ccf1e0ac79a2bcba7d82d1324efe7138171271ea"
+    "src/turbine_kg/extraction/semantic.py": "b8ea7c20344924bdd5437cd44ec53ffadb40a934d3041697036428be55399196"
   },
   "candidates": [
     {
@@ -172,17 +172,17 @@
       "relation_direction": "subject_to_object",
       "subject_entities": [
         {
-          "surface_form": "汽轮发电机组基础施工",
+          "surface_form": "图纸会检",
           "role": "subject",
           "entity_class": "candidate"
         },
         {
-          "surface_form": "图纸会检",
-          "role": "object",
+          "surface_form": "DL/T 5434《电力建设工程监理规范》",
+          "role": "related",
           "entity_class": "candidate"
         },
         {
-          "surface_form": "DL/T 5434《电力建设工程监理规范》",
+          "surface_form": "汽轮发电机组基础施工",
           "role": "related",
           "entity_class": "candidate"
         }
@@ -260,6 +260,10 @@
       "negation_scope": [],
       "conditions": [
         {
+          "surface_form": "基础施工期间",
+          "kind": "condition"
+        },
+        {
           "surface_form": "施工准备时",
           "kind": "condition"
         }
@@ -292,10 +296,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-ff4e937308a8231a140d",
+      "candidate_id": "stage12-candidate-e6213804c54ee29dad8c",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施工单位等有关单位确认。",
+      "statement_text": "因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -306,14 +310,24 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "设计单位、监理单位和土建施工单位等有关单位",
-          "role": "object",
+          "surface_form": "设计单位",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "监理单位",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "有关单位",
+          "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施工单位等有关单位确认。"
+        "value": "因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。"
       },
       "value": null,
       "unit": null,
@@ -322,13 +336,13 @@
       "negation_scope": [],
       "conditions": [
         {
-          "surface_form": "土建施工前",
+          "surface_form": "在土建施工前",
           "kind": "condition"
         }
       ],
       "applicability_scope": {
         "status": "known",
-        "applicability_text": "土建施工前",
+        "applicability_text": "在土建施工前",
         "document_key": "DL5190.3",
         "physical_page": 14,
         "logical_page": "3"
@@ -354,10 +368,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
+      "candidate_id": "stage12-candidate-f440851c6143f813e9a5",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "交付安装的土建工程应具备下列条件：行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格；",
+      "statement_text": "交付安装的土建工程应具备下列条件：\n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -368,21 +382,39 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格",
-          "role": "object",
+          "surface_form": "行车轨道",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "二次灌浆的混凝土",
+          "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "交付安装的土建工程应具备下列条件：行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格；"
+        "value": "交付安装的土建工程应具备下列条件：\n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格；"
       },
       "value": null,
       "unit": null,
       "quantities": [],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "行车轨道安装完毕",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "二次灌浆的混凝土已达到设计强度",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "经验收合格",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -410,10 +442,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-bc52a9b3a2fc31f886da",
+      "candidate_id": "stage12-candidate-587fd0f1279557c3b9ec",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "交付安装的土建工程应具备下列条件：主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除；",
+      "statement_text": "交付安装的土建工程应具备下列条件：\n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -425,12 +457,7 @@
         },
         {
           "surface_form": "主辅设备基础、基座混凝土",
-          "role": "object",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "70％以上",
-          "role": "quantity_target",
+          "role": "related",
           "entity_class": "candidate"
         },
         {
@@ -441,7 +468,7 @@
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "交付安装的土建工程应具备下列条件：主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除；"
+        "value": "交付安装的土建工程应具备下列条件：\n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除；"
       },
       "value": 70,
       "unit": "%",
@@ -455,7 +482,16 @@
       ],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "主辅设备基础、基座混凝土已达到设计强度的70％以上",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "模板已拆除",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -483,10 +519,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
+      "candidate_id": "stage12-candidate-120752c4100e7e78d28a",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "交付安装的土建工程应具备下列条件：厂房封闭，屋面止水；",
+      "statement_text": "交付安装的土建工程应具备下列条件：\n3 厂房封闭，屋面止水；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -497,21 +533,35 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "厂房封闭，屋面止水",
-          "role": "object",
+          "surface_form": "厂房",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "屋面",
+          "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "交付安装的土建工程应具备下列条件：厂房封闭，屋面止水；"
+        "value": "交付安装的土建工程应具备下列条件：\n3 厂房封闭，屋面止水；"
       },
       "value": null,
       "unit": null,
       "quantities": [],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "厂房封闭",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "屋面止水",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -539,10 +589,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-e6cc6f6d2cebeac9252a",
+      "candidate_id": "stage12-candidate-516432d3728615825da8",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "交付安装的土建工程应具备下列条件：厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全；",
+      "statement_text": "交付安装的土建工程应具备下列条件：\n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -554,20 +604,25 @@
         },
         {
           "surface_form": "厂房内的各基础纵横中心线、标高标识和基础沉降观测点",
-          "role": "object",
+          "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "交付安装的土建工程应具备下列条件：厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全；"
+        "value": "交付安装的土建工程应具备下列条件：\n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全；"
       },
       "value": null,
       "unit": null,
       "quantities": [],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -595,10 +650,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-07549d808a5a3c6f0337",
+      "candidate_id": "stage12-candidate-0b6edfccd3d4de1cec3b",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "交付安装的土建工程应具备下列条件：各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或围栏；",
+      "statement_text": "交付安装的土建工程应具备下列条件：\n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -610,30 +665,34 @@
         },
         {
           "surface_form": "各层平台、通道、梯子、栏杆、踢脚板",
-          "role": "object",
+          "role": "related",
           "entity_class": "candidate"
         },
         {
           "surface_form": "主机周边孔洞",
           "role": "related",
           "entity_class": "candidate"
-        },
-        {
-          "surface_form": "可靠的临时盖板或围栏",
-          "role": "related",
-          "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "交付安装的土建工程应具备下列条件：各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或围栏；"
+        "value": "交付安装的土建工程应具备下列条件：\n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；"
       },
       "value": null,
       "unit": null,
       "quantities": [],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "主机周边孔洞有可靠的临时盖板或\n围栏",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -661,10 +720,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-8f5bd086e5c285e8bb5f",
+      "candidate_id": "stage12-candidate-ecd9693894dcdb53d61d",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物",
+      "statement_text": "各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -676,23 +735,18 @@
         },
         {
           "surface_form": "油室、油孔",
-          "role": "related",
+          "role": "subject",
           "entity_class": "candidate"
         },
         {
-          "surface_form": "铁屑",
-          "role": "related",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "锈皮",
-          "role": "related",
+          "surface_form": "铁屑、无锈皮等杂物",
+          "role": "object",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物"
+        "value": "各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；"
       },
       "value": null,
       "unit": null,
@@ -733,16 +787,26 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-d568a59cb172251b252c",
+      "candidate_id": "stage12-candidate-9b4a4a1154a7a45d6036",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求",
+      "statement_text": "密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
       "subject_entities": [
         {
           "surface_form": "密封瓦座垫片",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "规格尺寸",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "材质",
           "role": "subject",
           "entity_class": "candidate"
         },
@@ -759,7 +823,7 @@
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求"
+        "value": "密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求；"
       },
       "value": null,
       "unit": null,
@@ -804,8 +868,8 @@
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "密封瓦座上的丝扣接头应经试装，确认紧固密封。",
-      "statement_type": "verification",
-      "predicate": "verifies",
+      "statement_type": "requirement",
+      "predicate": "requires",
       "relation_direction": "subject_to_object",
       "subject_entities": [
         {
@@ -828,7 +892,12 @@
       "quantities": [],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "确认紧固密封",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -856,10 +925,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-2469cfb6b8df11353404",
+      "candidate_id": "stage12-candidate-e346330f9538d19578d2",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀",
+      "statement_text": "密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -882,7 +951,7 @@
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀"
+        "value": "密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；"
       },
       "value": 75,
       "unit": "%",
@@ -896,7 +965,12 @@
       ],
       "normative_modality": "shall",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "且分布均匀",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "unknown",
         "document_key": "DL5190.3",
@@ -928,7 +1002,7 @@
       "split": "development_regression_golden",
       "task": "statement",
       "statement_text": "用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙应符合制造厂技术要求；",
-      "statement_type": "procedure",
+      "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
       "subject_entities": [
@@ -1026,7 +1100,8 @@
         }
       ],
       "applicability_scope": {
-        "status": "unknown",
+        "status": "known",
+        "applicability_text": "在紧好水平结合面螺栓的情况下",
         "document_key": "DL5190.3",
         "physical_page": 86,
         "logical_page": "75"
@@ -1052,12 +1127,12 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-2f0b520d99a9fd845950",
+      "candidate_id": "stage12-candidate-2d7ac5646ec3489aae1b",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "在紧好水平结合面螺栓的情况下，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。",
-      "statement_type": "requirement",
-      "predicate": "requires",
+      "statement_text": "在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。",
+      "statement_type": "verification",
+      "predicate": "verifies",
       "relation_direction": "subject_to_object",
       "subject_entities": [
         {
@@ -1066,19 +1141,14 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "水平结合面",
-          "role": "related",
-          "entity_class": "candidate"
-        },
-        {
           "surface_form": "0.05mm 塞尺",
-          "role": "quantity_target",
+          "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "在紧好水平结合面螺栓的情况下，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。"
+        "value": "在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。"
       },
       "value": 0.05,
       "unit": "mm",
@@ -1100,16 +1170,13 @@
       ],
       "conditions": [
         {
-          "surface_form": "在紧好水平结合面螺栓的情况下",
-          "kind": "condition"
-        },
-        {
           "surface_form": "在水平结合面处",
           "kind": "condition"
         }
       ],
       "applicability_scope": {
-        "status": "unknown",
+        "status": "known",
+        "applicability_text": "在水平结合面处",
         "document_key": "DL5190.3",
         "physical_page": 86,
         "logical_page": "75"
@@ -1191,10 +1258,10 @@
       "extraction_profile": "construction_standard_v1"
     },
     {
-      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
+      "candidate_id": "stage12-candidate-68f226f353533491f864",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
+      "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
       "statement_type": "procedure",
       "predicate": "requires",
       "relation_direction": "subject_to_object",
@@ -1210,24 +1277,24 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "系统压力",
-          "role": "related",
-          "entity_class": "candidate"
-        },
-        {
           "surface_form": "出口母管泄压阀",
           "role": "object",
           "entity_class": "candidate"
         },
         {
           "surface_form": "系统安全泄压阀",
-          "role": "object",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "系统压力",
+          "role": "quantity_target",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；"
+        "value": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；"
       },
       "value": null,
       "unit": null,
@@ -1236,12 +1303,29 @@
       "negation_scope": [],
       "conditions": [
         {
-          "surface_form": "控制油压力调整时",
+          "surface_form": "先缓慢调节油泵出口溢流阀提高系统压力",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "然后调整出口母管泄压阀",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "确保系统安全泄压阀正常动作",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "再调节油泵出口溢流阀",
+          "kind": "condition"
+        },
+        {
+          "surface_form": "确认系统压力满足设计要求",
           "kind": "condition"
         }
       ],
       "applicability_scope": {
-        "status": "unknown",
+        "status": "known",
+        "applicability_text": "控制油压力调整时",
         "document_key": "DLT863",
         "physical_page": 14,
         "logical_page": "10"
@@ -1269,10 +1353,10 @@
       "extraction_profile": "commissioning_guideline_v1"
     },
     {
-      "candidate_id": "stage12-candidate-05e58312c190754b335d",
+      "candidate_id": "stage12-candidate-dac33640eb60f13af38d",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "1.2范围 本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照本规定执行。",
+      "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
       "statement_type": "limitation",
       "predicate": "limits_scope",
       "relation_direction": "scope_to_subject",
@@ -1288,41 +1372,26 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "管理、调试和运行（含退役准备）",
-          "role": "related",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "核安全",
-          "role": "related",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "不影响核安全的工业安全",
-          "role": "object",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "由核动力厂运行所引起的非放射性影响",
-          "role": "object",
-          "entity_class": "candidate"
-        },
-        {
-          "surface_form": "其他类型核动力厂",
+          "surface_form": "有关核安全的方面",
           "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "1.2范围 本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照本规定执行。"
+        "value": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面"
       },
       "value": null,
       "unit": null,
       "quantities": [],
       "normative_modality": "descriptive",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "管理、调试和运行（含退役准备）中",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "known",
         "applicability_text": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
@@ -1355,10 +1424,137 @@
       "extraction_profile": "nuclear_safety_regulation_v1"
     },
     {
-      "candidate_id": "stage12-candidate-67cc52b572d5004d2f71",
+      "candidate_id": "stage12-candidate-653d6edd4615a8a90072",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
+      "statement_text": "本规定不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响",
+      "statement_type": "limitation",
+      "predicate": "limits_scope",
+      "relation_direction": "scope_to_subject",
+      "subject_entities": [
+        {
+          "surface_form": "本规定",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "不影响核安全的工业安全",
+          "role": "object",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "由核动力厂运行所引起的非放射性影响",
+          "role": "object",
+          "entity_class": "candidate"
+        }
+      ],
+      "object_value": {
+        "kind": "source_assertion",
+        "value": "本规定不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响"
+      },
+      "value": null,
+      "unit": null,
+      "quantities": [],
+      "normative_modality": "descriptive",
+      "negation_scope": [],
+      "conditions": [],
+      "applicability_scope": {
+        "status": "known",
+        "applicability_text": "不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响",
+        "document_key": "HAF103",
+        "physical_page": 1,
+        "logical_page": "3"
+      },
+      "evidence_bindings": [
+        {
+          "evidence_id": "evidence-be6509fd8df673522604",
+          "support_type": "direct"
+        }
+      ],
+      "source_span_ids": [
+        "span-de74b8674d912cbab928",
+        "span-7ee3d359d31d1f50b60e",
+        "span-78bf1d1bb60598e23967",
+        "span-68be67cab1947da6a617",
+        "span-739c0ed988bf5bfcf47e"
+      ],
+      "evidence_version_id": "evver-4f973fdf335e8ed5ff69",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 1,
+      "logical_page": "3",
+      "source_text_sha256": "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c",
+      "evidence_quote": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
+      "review_status": "candidate_only",
+      "formal_release": false,
+      "extraction_profile": "nuclear_safety_regulation_v1"
+    },
+    {
+      "candidate_id": "stage12-candidate-aab735c403d1aa7cb81d",
+      "split": "development_regression_golden",
+      "task": "statement",
+      "statement_text": "其他类型核动力厂可参照本规定执行",
+      "statement_type": "limitation",
+      "predicate": "limits_scope",
+      "relation_direction": "scope_to_subject",
+      "subject_entities": [
+        {
+          "surface_form": "其他类型核动力厂",
+          "role": "subject",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "本规定",
+          "role": "related",
+          "entity_class": "candidate"
+        }
+      ],
+      "object_value": {
+        "kind": "source_assertion",
+        "value": "其他类型核动力厂可参照本规定执行"
+      },
+      "value": null,
+      "unit": null,
+      "quantities": [],
+      "normative_modality": "descriptive",
+      "negation_scope": [],
+      "conditions": [],
+      "applicability_scope": {
+        "status": "known",
+        "applicability_text": "其他类型核动力厂",
+        "document_key": "HAF103",
+        "physical_page": 1,
+        "logical_page": "3"
+      },
+      "evidence_bindings": [
+        {
+          "evidence_id": "evidence-be6509fd8df673522604",
+          "support_type": "direct"
+        }
+      ],
+      "source_span_ids": [
+        "span-de74b8674d912cbab928",
+        "span-7ee3d359d31d1f50b60e",
+        "span-78bf1d1bb60598e23967",
+        "span-68be67cab1947da6a617",
+        "span-739c0ed988bf5bfcf47e"
+      ],
+      "evidence_version_id": "evver-4f973fdf335e8ed5ff69",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "physical_page": 1,
+      "logical_page": "3",
+      "source_text_sha256": "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c",
+      "evidence_quote": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
+      "review_status": "candidate_only",
+      "formal_release": false,
+      "extraction_profile": "nuclear_safety_regulation_v1"
+    },
+    {
+      "candidate_id": "stage12-candidate-edeba7f5592e1facbc9e",
+      "split": "development_regression_golden",
+      "task": "statement",
+      "statement_text": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对\n前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全\n部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "condition_to_consequence",
@@ -1391,7 +1587,7 @@
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后，才允许进行下一阶段的调试试验工作。"
+        "value": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对\n前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全\n部核安全管理要求之后，才允许进行下一阶段的调试试验工作。"
       },
       "value": null,
       "unit": null,
@@ -1404,11 +1600,7 @@
           "kind": "condition"
         },
         {
-          "surface_form": "完成对前阶段调试试验结果的评价和监查",
-          "kind": "condition"
-        },
-        {
-          "surface_form": "确认调试结果评价满足了全部核安全管理要求",
+          "surface_form": "在完成对\n前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全\n部核安全管理要求之后",
           "kind": "condition"
         }
       ],
@@ -1442,10 +1634,10 @@
       "extraction_profile": "nuclear_safety_regulation_v1"
     },
     {
-      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
+      "candidate_id": "stage12-candidate-7a7d7577cfe9e26b4cdc",
       "split": "development_regression_golden",
       "task": "statement",
-      "statement_text": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应当保存运行和维修记录，并收集和保存系统及设备的基准数据，以有利于确保核动力厂的安全和后续的安全评价。",
+      "statement_text": "从核动力厂每个系统初始通电和运行开始，营运单位应当保存运行和维修记录，并收集和保存系统及设备的基准数据，以有利于确保核动力厂的安全和后续的安全评价。",
       "statement_type": "requirement",
       "predicate": "requires",
       "relation_direction": "condition_to_consequence",
@@ -1466,14 +1658,14 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "核动力厂",
+          "surface_form": "核动力厂的安全和后续的安全评价",
           "role": "related",
           "entity_class": "candidate"
         }
       ],
       "object_value": {
         "kind": "source_assertion",
-        "value": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应当保存运行和维修记录，并收集和保存系统及设备的基准数据，以有利于确保核动力厂的安全和后续的安全评价。"
+        "value": "从核动力厂每个系统初始通电和运行开始，营运单位应当保存运行和维修记录，并收集和保存系统及设备的基准数据，以有利于确保核动力厂的安全和后续的安全评价。"
       },
       "value": null,
       "unit": null,
@@ -1530,7 +1722,7 @@
           "entity_class": "candidate"
         },
         {
-          "surface_form": "一定的真空",
+          "surface_form": "真空",
           "role": "object",
           "entity_class": "candidate"
         },
@@ -1556,7 +1748,12 @@
       ],
       "normative_modality": "must",
       "negation_scope": [],
-      "conditions": [],
+      "conditions": [
+        {
+          "surface_form": "汽轮机冲转前",
+          "kind": "condition"
+        }
+      ],
       "applicability_scope": {
         "status": "known",
         "applicability_text": "汽轮机冲转前",
@@ -1598,7 +1795,7 @@
       "relation_direction": "cause_to_effect",
       "subject_entities": [
         {
-          "surface_form": "真空过低",
+          "surface_form": "真空",
           "role": "subject",
           "entity_class": "candidate"
         },
@@ -1618,8 +1815,23 @@
           "entity_class": "candidate"
         },
         {
+          "surface_form": "凝汽器",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
           "surface_form": "凝汽器汽侧压力",
           "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "凝汽器汽侧",
+          "role": "related",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "正压",
+          "role": "object",
           "entity_class": "candidate"
         },
         {
@@ -1629,6 +1841,11 @@
         },
         {
           "surface_form": "汽缸和转子",
+          "role": "object",
+          "entity_class": "candidate"
+        },
+        {
+          "surface_form": "较大的热冲击",
           "role": "object",
           "entity_class": "candidate"
         }

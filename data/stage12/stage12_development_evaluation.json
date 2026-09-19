@@ -1,9 +1,9 @@
 {
   "gold_statement_count": 19,
-  "candidate_count": 23,
+  "candidate_count": 25,
   "gold_exhaustive": false,
   "statement_recall": 0.8947368421052632,
-  "statement_semantic_correctness": 0.5789473684210527,
+  "statement_semantic_correctness": 0.5263157894736842,
   "field_totals": {
     "statement_boundary": 19,
     "statement_type": 19,
@@ -22,7 +22,7 @@
   },
   "field_correct": {
     "statement_boundary": 16,
-    "statement_type": 14,
+    "statement_type": 13,
     "entity": 17,
     "relation": 15,
     "quantity": 17,
@@ -38,7 +38,7 @@
   },
   "field_accuracy": {
     "statement_boundary": 0.8421052631578947,
-    "statement_type": 0.7368421052631579,
+    "statement_type": 0.6842105263157895,
     "entity": 0.8947368421052632,
     "relation": 0.7894736842105263,
     "quantity": 0.8947368421052632,
@@ -54,7 +54,7 @@
   },
   "error_counts": {
     "boundary_error": 3,
-    "statement_type_error": 5,
+    "statement_type_error": 6,
     "entity_error": 2,
     "relation_error": 4,
     "quantity_error": 2,
@@ -68,6 +68,14 @@
   },
   "errors": [
     {
+      "statement_id": "real-statement-dl5190-p86-feeler",
+      "candidate_id": "stage12-candidate-2d7ac5646ec3489aae1b",
+      "error_types": [
+        "statement_type_error",
+        "relation_error"
+      ]
+    },
+    {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
       "candidate_id": "stage12-candidate-b1854668f08d056ae9c0",
       "error_types": [
@@ -78,20 +86,19 @@
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
       "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
       "error_types": [
-        "statement_type_error",
-        "relation_error"
+        "statement_type_error"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
-      "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
+      "candidate_id": "stage12-candidate-f440851c6143f813e9a5",
       "error_types": [
         "statement_type_error"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
-      "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
+      "candidate_id": "stage12-candidate-120752c4100e7e78d28a",
       "error_types": [
         "boundary_error",
         "statement_type_error"
@@ -99,7 +106,7 @@
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
+      "candidate_id": "stage12-candidate-68f226f353533491f864",
       "error_types": [
         "relation_error"
       ]
@@ -140,14 +147,22 @@
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
+      "candidate_id": "stage12-candidate-7a7d7577cfe9e26b4cdc",
       "error_types": [
         "relation_direction_error"
       ]
     }
   ],
-  "gold_mismatch_count": 6,
+  "gold_mismatch_count": 7,
   "gold_mismatch_details": [
+    {
+      "statement_id": "real-statement-dl5190-p86-feeler",
+      "candidate_id": "stage12-candidate-2d7ac5646ec3489aae1b",
+      "fields": [
+        "statement_type",
+        "relation"
+      ]
+    },
     {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
       "candidate_id": "stage12-candidate-b1854668f08d056ae9c0",
@@ -159,20 +174,19 @@
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
       "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
       "fields": [
-        "statement_type",
-        "relation"
+        "statement_type"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
-      "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
+      "candidate_id": "stage12-candidate-f440851c6143f813e9a5",
       "fields": [
         "statement_type"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
-      "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
+      "candidate_id": "stage12-candidate-120752c4100e7e78d28a",
       "fields": [
         "statement_boundary",
         "statement_type"
@@ -180,14 +194,14 @@
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
+      "candidate_id": "stage12-candidate-68f226f353533491f864",
       "fields": [
         "relation"
       ]
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
+      "candidate_id": "stage12-candidate-7a7d7577cfe9e26b4cdc",
       "fields": [
         "relation_direction"
       ]
@@ -207,12 +221,12 @@
   "matched_pairs": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-2f0b520d99a9fd845950",
-      "score": 0.91538462
+      "candidate_id": "stage12-candidate-2d7ac5646ec3489aae1b",
+      "score": 0.7745098
     },
     {
       "statement_id": "real-statement-dl5190-p86-contact",
-      "candidate_id": "stage12-candidate-2469cfb6b8df11353404",
+      "candidate_id": "stage12-candidate-e346330f9538d19578d2",
       "score": 0.97708333
     },
     {
@@ -222,8 +236,8 @@
     },
     {
       "statement_id": "real-statement-haf103-p1-scope",
-      "candidate_id": "stage12-candidate-05e58312c190754b335d",
-      "score": 1.0
+      "candidate_id": "stage12-candidate-dac33640eb60f13af38d",
+      "score": 0.99320988
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f",
@@ -233,51 +247,51 @@
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
       "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
-      "score": 0.82
+      "score": 0.97
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c",
-      "candidate_id": "stage12-candidate-ff4e937308a8231a140d",
+      "candidate_id": "stage12-candidate-e6213804c54ee29dad8c",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
-      "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
+      "candidate_id": "stage12-candidate-f440851c6143f813e9a5",
       "score": 0.9597561
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
-      "candidate_id": "stage12-candidate-bc52a9b3a2fc31f886da",
+      "candidate_id": "stage12-candidate-587fd0f1279557c3b9ec",
       "score": 0.98166667
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
-      "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
+      "candidate_id": "stage12-candidate-120752c4100e7e78d28a",
       "score": 0.83076923
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
-      "candidate_id": "stage12-candidate-e6cc6f6d2cebeac9252a",
+      "candidate_id": "stage12-candidate-516432d3728615825da8",
       "score": 0.98035714
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
-      "candidate_id": "stage12-candidate-07549d808a5a3c6f0337",
+      "candidate_id": "stage12-candidate-0b6edfccd3d4de1cec3b",
       "score": 0.98658537
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
+      "candidate_id": "stage12-candidate-68f226f353533491f864",
       "score": 0.83035714
     },
     {
       "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-67cc52b572d5004d2f71",
+      "candidate_id": "stage12-candidate-edeba7f5592e1facbc9e",
       "score": 1.0
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
+      "candidate_id": "stage12-candidate-7a7d7577cfe9e26b4cdc",
       "score": 1.0
     },
     {
@@ -296,22 +310,24 @@
     "stage11-statement-5ef7104eda31c3578f06-s3"
   ],
   "unmatched_candidates": [
-    "stage12-candidate-8f5bd086e5c285e8bb5f",
-    "stage12-candidate-d568a59cb172251b252c",
+    "stage12-candidate-ecd9693894dcdb53d61d",
+    "stage12-candidate-9b4a4a1154a7a45d6036",
     "stage12-candidate-03b3364ba28494cd88f6",
     "stage12-candidate-b463a37e086a622e8e51",
     "stage12-candidate-b7f852777d9e5b11e390",
-    "stage12-candidate-7418d2ac6aea4e5394bb"
+    "stage12-candidate-7418d2ac6aea4e5394bb",
+    "stage12-candidate-653d6edd4615a8a90072",
+    "stage12-candidate-aab735c403d1aa7cb81d"
   ],
   "unmatched_gold_count": 2,
-  "unmatched_candidate_count": 6,
+  "unmatched_candidate_count": 8,
   "unmatched_candidate_review": [
     {
-      "candidate_id": "stage12-candidate-8f5bd086e5c285e8bb5f",
+      "candidate_id": "stage12-candidate-ecd9693894dcdb53d61d",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-d568a59cb172251b252c",
+      "candidate_id": "stage12-candidate-9b4a4a1154a7a45d6036",
       "classification": "needs_gold_completion"
     },
     {
@@ -329,6 +345,14 @@
     {
       "candidate_id": "stage12-candidate-7418d2ac6aea4e5394bb",
       "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-653d6edd4615a8a90072",
+      "classification": "needs_gold_completion"
+    },
+    {
+      "candidate_id": "stage12-candidate-aab735c403d1aa7cb81d",
+      "classification": "needs_gold_completion"
     }
   ],
   "unmatched_candidate_review_counts": {
@@ -336,11 +360,11 @@
     "duplicate": 0,
     "over_split": 0,
     "unsupported": 0,
-    "needs_gold_completion": 6
+    "needs_gold_completion": 8
   },
   "candidate_coverage": {
     "matched_candidate_count": 17,
-    "extra_candidate_count": 6,
+    "extra_candidate_count": 8,
     "duplicate_candidate_rate": 0.0,
     "over_split_rate": 0.0,
     "spurious_candidate_rate": null
@@ -362,12 +386,12 @@
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "76e46466c39185c46a73c80621453ec4f4e4865eedac43c7f3446b0416819f06",
+    "candidate": "903e0e85e38eab12b3ae9852e7a8efadd0f5b401a2677ec9d92f35441a6637f4",
     "gold": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
     "manifest": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
-    "contract": "2d89a2e3ca349468738137eddbbec24e9b24af71e0f5fbca465d54bc8dd98e84",
+    "contract": "e5ea32d4b5f09edaa620867ddba60a6fcb18abba384d230b9654ffb1bae57923",
     "provider_config": "89dc2d33a13a3d7f203fe84295508c184cd04979367cdb939d2dc766d1ec11b1",
     "prompt": "a5be2a377f4acdacbddc34438c450233728810a7386bcfb2a65cc44fa7d09d99",
     "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",

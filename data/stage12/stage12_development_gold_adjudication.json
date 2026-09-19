@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_development_gold_adjudication",
+  "status": "completed",
+  "formal_release": false,
+  "source": "completed user manual adjudication in current conversation",
+  "holdout_used_for_tuning": false,
+  "blind_read": false,
+  "original_gold_count": 19,
+  "updated_gold_count": 42,
+  "decision_counts": {
+    "unmatched_gold": 2,
+    "needs_gold_completion": 8,
+    "matched_pair_mismatch": 17,
+    "total": 27
+  },
+  "coverage": {
+    "unmatched_gold": "all 2 covered",
+    "needs_gold_completion": "all 8 covered",
+    "matched_pair_mismatch": "all 17 covered"
+  },
+  "gold_update_policy": "Human adjudication updates Gold; no LLM Candidate is promoted automatically. Evidence bindings, review provenance and formal_release=false are retained.",
+  "general_rules_applied": [
+    "independent knowledge value controls statement boundary",
+    "list headings and numbering are excluded from statement_text",
+    "statement_type expresses normative nature, not action verb",
+    "coarse relation vocabulary is used; legacy predicates are adapter-compatible",
+    "condition, temporal/lifecycle applicability, method and requirement content remain distinct",
+    "unknown applicability is not not_applicable",
+    "quantities retain comparator, range and source surface wording",
+    "sequence and causal chains are split without losing shared context",
+    "purpose/rationale is not forced into condition or entity"
+  ],
+  "outputs": {
+    "development_gold": "data/stage11/stage11_statement_development_samples.jsonl",
+    "adjudication_record": "data/stage12/stage12_development_gold_adjudication.json"
+  },
+  "reserve_status": "not_read",
+  "stage13_status": "not_entered"
+}

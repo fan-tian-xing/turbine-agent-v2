@@ -394,7 +394,7 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
         },
         "extraction_profile": "profile_routing_v1",
         "provider_id": provider.provider_id,
-        "prompt_version": "stage12-candidate-prompt-v6",
+        "prompt_version": "stage12-candidate-prompt-v7",
         "provider_metadata": provider.metadata,
         "input_sha256": {path: _sha(ROOT / path) for path in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",

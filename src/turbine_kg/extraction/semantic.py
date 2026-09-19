@@ -150,7 +150,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v6",
+        "version": "stage12-candidate-prompt-v7",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -183,7 +183,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v6",
+        "prompt_version": "stage12-candidate-prompt-v7",
         "response_schema_version": 2,
     }
 
@@ -223,7 +223,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v6",
+            "prompt_version": "stage12-candidate-prompt-v7",
             "response_schema_version": 2,
         }
 
@@ -643,22 +643,12 @@ def _split_clauses(text: str) -> list[str]:
                 pieces.append(value)
     flush()
 
-    # A numeric multi-step procedure is a single engineering unit when the
-    # source has already bound its measurements to the same operation.  This
-    # avoids turning a controlled sequence into unrelated quantity fragments.
     normalized = re.sub(r"\s+", " ", text).strip()
-    if (
-        re.search(QUANTITY_RE, normalized)
-        and any(token in normalized for token in ("然后", "再将", "再"))
-        and any(token in normalized for token in ("抬起", "调节", "调整", "检查"))
-        and not re.search(r"(?:^|\n)\s*[1-9][0-9]*(?:\.[0-9]+){1,3}\s+", text)
-    ):
-        return [normalized]
-
     # In prose procedures, conjunctions can carry the step boundary when the
     # OCR text has no sentence punctuation.  Keep the conjunction with the
-    # following step so each candidate remains independently readable.
-    if not re.search(QUANTITY_RE, normalized) and any(token in normalized for token in ("然后", "再")):
+    # following step so each candidate remains independently readable.  A
+    # quantity is not a reason to merge otherwise independent operations.
+    if any(token in normalized for token in ("然后", "再")):
         steps = re.split(r"(?=(?:然后|再)(?:将|调节|调整|确认|检查|确保|验证))", normalized)
         if len(steps) > 1 and all(len(step.strip()) >= 8 for step in steps):
             return [step.strip() for step in steps]
@@ -719,17 +709,18 @@ def _statement_type(text: str, evidence_role: str | None = None) -> str:
         return "condition"
     if re.match(r"^\s*(?:当|若|如果)", text) and any(token in text for token in ("可能", "造成", "导致")):
         return "fact"
-    if evidence_role == "requirement_source" and "应" in text and not any(token in text for token in ("校核", "核查", "检验", "验收", "验证")):
+    normative = any(token in text for token in ("应", "必须", "不得", "须", "要求"))
+    if evidence_role == "requirement_source" and normative:
         return "requirement"
-    if "确认" in text and any(token in text for token in ("要求", "满足", "正常")):
-        return "verification"
-    if any(token in text for token in ("校核", "核查", "检验", "验收", "验证")):
-        return "verification"
+    if normative and not re.match(r"^\s*(?:当|若|如果)", text):
+        # Checking, confirmation and measurement can be the action inside a
+        # normative requirement; an action verb does not make it verification.
+        return "requirement"
     if any(token in text for token in ("封闭", "止水")) and not any(token in text for token in ("应", "必须", "不得", "须")):
         return "condition"
-    if any(token in text for token in ("首先", "然后", "再", "依次", "步骤", "调节", "调整", "抬起", "清洗")):
+    if any(token in text for token in ("首先", "然后", "再", "依次", "步骤")) and not normative:
         return "procedure"
-    if any(token in text for token in ("应", "必须", "不得", "须", "要求")):
+    if normative:
         return "requirement"
     if any(token in text for token in ("以上", "以下", "至少", "不小于", "不少于", "不低于")):
         return "requirement"
@@ -820,7 +811,7 @@ def _applicability_scope(
     compact = re.sub(r"\s+", "", text)
     # Preserve explicit wording, but do not invent a canonical model/equipment.
     applicability_markers = re.findall(
-        r"(?:冲转前|冲转之前|(?:在|于)[^。；，,]{1,28}(?:前|期间|状态下)|(?:当|若|如果)[^。；，,]{1,36}(?:时|后))",
+        r"(?:冲转前|冲转之前|(?:在|于)[^。；，,]{1,28}(?:前|期间|开始|时)|当[^。；，,]{1,36}时)",
         compact,
     )
     if applicability_markers:
@@ -1476,7 +1467,7 @@ def compare_candidates(
         "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates),
         "unmatched_candidate_review": unmatched_review, "unmatched_candidate_review_counts": review_counts,
         "candidate_coverage": {"matched_candidate_count": len(assigned_candidates), "extra_candidate_count": len(unmatched_candidates), "duplicate_candidate_rate": review_counts["duplicate"] / len(candidates) if candidates else 0.0, "over_split_rate": review_counts["over_split"] / len(candidates) if candidates else 0.0, "spurious_candidate_rate": len(unmatched_candidates) / len(candidates) if gold_exhaustive and candidates else None},
-        "evaluator_adapters": {"applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately", "matching": "maximum-weight matching within shared Evidence components using text, coarse relation, primary entity, condition and quantity", "grounding": "Evidence binding, canonical Evidence semantic support and Gold agreement are reported separately"},
+        "evaluator_adapters": {"applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately", "matching": "maximum-weight one-to-one matching within shared Evidence components; a large candidate covering multiple newly split Gold statements matches at most one and leaves remaining Gold visible as recall/boundary gaps", "grounding": "Evidence binding, canonical Evidence semantic support and Gold agreement are reported separately"},
     }
 
 
@@ -1586,7 +1577,11 @@ def _condition_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any
     expected = gold.get("conditions") or []
     actual = candidate.get("conditions") or []
     if not expected:
-        return all(_overlap(item.get("surface_form", ""), candidate.get("statement_text", "")) >= 0.6 for item in actual)
+        # An empty Gold condition is an explicit semantic decision.  A
+        # grounded phrase is not automatically a condition merely because it
+        # occurs in the statement text; temporal scope, method and requirement
+        # content are evaluated in their own fields.
+        return not actual
     return all(any(_overlap(item.get("surface_form", ""), other.get("surface_form", "")) >= 0.6 for other in actual) for item in expected)
 
 

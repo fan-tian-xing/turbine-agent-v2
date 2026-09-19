@@ -25,11 +25,11 @@
   },
   "architecture": {
     "pipeline": ["Evidence", "extraction_provider", "strict_structured_response", "Candidate Engineering Statement", "deterministic_validation", "Stage 12 Candidate Output"],
-    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. The LLM returns statement text, bounded statement type, coarse relation, source-grounded entity wording with roles, condition wording and applicability wording only. Deterministic code derives quantity, unit, comparison, negation, modality and relation direction from the returned statement text; it supplies fixed protocol constants and candidate entity class. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
+    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. The LLM returns one or more independently retrievable statement texts per Evidence, bounded statement type, coarse relation, source-grounded entity wording with roles, true condition wording and applicability wording only. A statement is split when its proposition independently enters the graph, retrieval and answer support; shared scope, ordering and causal context must remain source-grounded. Deterministic code derives quantity, unit, comparison, negation, modality and relation direction from the returned statement text; it supplies fixed protocol constants and candidate entity class. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
     "production_provider": "external_llm",
     "fixture_policy": "Fixture is test/offline-only and cannot satisfy the formal Stage 12 extraction or quality gate.",
     "relation_vocabulary": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"],
-    "unknown_applicability_policy": "known = exact wording is present in the statement and Evidence; unknown is not not_applicable; absent values are omitted or marked unknown",
+    "unknown_applicability_policy": "known = exact wording is present in the statement and Evidence; temporal/lifecycle/activity scope is distinct from a true antecedent condition; unknown is not not_applicable; absent values are omitted or marked unknown",
   "deterministic_field_derivation": ["quantity", "unit", "comparison", "normative_modality", "negation", "relation_direction", "protocol_constants", "entity_class"],
     "gold_exhaustive": false
   },

@@ -57,7 +57,7 @@
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "1942adeff2b45d69ddc2b3a7a1a84d55db6a5df22f464d186b0eed808916e049"
+      "sha256": "70029f130a577b035f7190d194b966c2cc47558ff62203f480622ce5ad2646f4"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "fa0c3aa40afc547c96fda27a11e22b79eca75029d7b345b12a1288fb5cf02a52"
+      "sha256": "9ce95fc5c2fe4ca0f1a9e40c4829d47e4e722f882c6c5be5d4b48ce7a33a13c0"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",

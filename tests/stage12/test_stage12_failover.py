@@ -14,6 +14,7 @@ from turbine_kg.extraction.semantic import (
     ExternalLLMProvider,
     FailoverExternalLLMProvider,
     FixtureExtractionProvider,
+    provider_from_config,
 )
 from turbine_kg.llm_client import LLMTransportError, OpenAICompatibleChatTransport
 
@@ -197,3 +198,21 @@ def test_backup_cache_provenance_is_accepted_but_not_relabelled():
     assert provider.cache_provider_matches(cached)
     assert cached["provider_metadata"]["config_fingerprint"] == "backup-fp"
     assert cached["provider_metadata"]["provider_alias"] == "backup"
+
+
+def test_provider_wiring_keeps_formal_primary_and_backup_timeouts(monkeypatch):
+    monkeypatch.setenv("LLM_ALLOW_EVIDENCE_SEND", "true")
+    monkeypatch.setenv("LLM_BASE_URL", "https://primary.example/v1")
+    monkeypatch.setenv("LLM_MODEL", "primary-test")
+    monkeypatch.setenv("LLM_API_KEY", "primary-test-secret")
+    monkeypatch.setenv("LLM_TIMEOUT_SECONDS", "180")
+    monkeypatch.setenv("LLM_FALLBACK_BASE_URL", "https://backup.example/v1")
+    monkeypatch.setenv("LLM_FALLBACK_MODEL", "backup-test")
+    monkeypatch.setenv("LLM_FALLBACK_API_KEY", "backup-test-secret")
+    monkeypatch.setenv("LLM_FALLBACK_TIMEOUT_SECONDS", "120")
+
+    provider = provider_from_config()
+
+    assert isinstance(provider, FailoverExternalLLMProvider)
+    assert provider.primary.transport.timeout_seconds == 180
+    assert provider.backup.transport.timeout_seconds == 120

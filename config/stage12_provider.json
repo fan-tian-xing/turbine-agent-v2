@@ -29,7 +29,6 @@
       "timeout_max_attempts": 1,
       "backoff_base_seconds": 1.0,
       "max_backoff_seconds": 20.0,
-      "failover_timeout_seconds": 10,
       "backup": {
         "enabled": true,
         "endpoint_env": "LLM_FALLBACK_BASE_URL",

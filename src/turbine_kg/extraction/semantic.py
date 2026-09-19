@@ -610,12 +610,12 @@ def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvide
         backup_timeout = float(configured_value(backup_cfg.get("timeout_env", "LLM_FALLBACK_TIMEOUT_SECONDS")) or "60")
         backup_available = bool(backup_cfg.get("enabled", True) and backup_endpoint and backup_model and backup_credential)
         if backup_available:
-            # A configured 180-second read timeout remains the ordinary upper
-            # bound, but a failover route gets a shorter availability budget so
-            # a dead endpoint cannot stall the whole batch.
-            failover_timeout = min(timeout, float(provider.get("failover_timeout_seconds", timeout)))
-            primary = build_endpoint("primary", endpoint, model, credential, min(timeout, failover_timeout))
-            backup = build_endpoint("backup", backup_endpoint, backup_model, backup_credential, min(backup_timeout, failover_timeout))
+            # Formal extraction keeps each provider's configured generation
+            # deadline. Fast availability failures are classified by the
+            # transport and fail over immediately; they are not a second,
+            # shorter generation timeout.
+            primary = build_endpoint("primary", endpoint, model, credential, timeout)
+            backup = build_endpoint("backup", backup_endpoint, backup_model, backup_credential, backup_timeout)
             policy_fingerprint = hashlib.sha256(canonical_json(backup_cfg).encode("utf-8")).hexdigest()[:16]
             return FailoverExternalLLMProvider(primary, backup, policy_fingerprint=policy_fingerprint)
         primary = build_endpoint("primary", endpoint, model, credential, timeout)

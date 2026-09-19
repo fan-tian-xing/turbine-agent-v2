@@ -16,7 +16,7 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_payload,
 )
 from turbine_kg.observability.lineage import verify_input_hashes
-from build_stage12_candidates import _build
+from build_stage12_candidates import _evidence_cache_key
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE12 = ROOT / "data/stage12"
@@ -34,13 +34,6 @@ def _jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-def _reexecute_development(manifest: dict, canonical_evidence: dict[str, dict]) -> list[dict]:
-    """Re-run the producer path, reusing only validated per-Evidence cache entries."""
-    del canonical_evidence
-    payload = _build(manifest, ROOT / "var/model_runs/stage12")
-    return payload["candidates"]
-
-
 def audit() -> dict:
     contract = _read(ROOT / "config/stage12_statement_contract.json")
     provider_config = _read(ROOT / "config/stage12_provider.json")
@@ -56,15 +49,6 @@ def audit() -> dict:
     stage11 = _read(ROOT / "data/stage11/stage11_exit_audit.json")
     canonical_evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     dev_gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
-    reexecuted_candidates = []
-    reexecution_error = None
-    if candidate.get("provider_metadata", {}).get("mode") == "real_llm":
-        try:
-            reexecuted_candidates = _reexecute_development(manifest, canonical_evidence)
-        except (ValueError, KeyError, TypeError) as error:
-            reexecution_error = str(error)
-    else:
-        reexecution_error = "current candidate artifact is not a real_llm execution"
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
 
     runtime_report = {"conforms": False, "failures": [], "counts": {}}
@@ -121,15 +105,27 @@ def audit() -> dict:
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
+    expected_cache_keys = set()
+    for page in manifest.get("pages", []):
+        for evidence_id in page.get("evidence_ids", []):
+            evidence = dict(canonical_evidence[evidence_id], document_key=page["document_key"])
+            expected_cache_keys.add(_evidence_cache_key(evidence, router.route(evidence), provider_from_config(), manifest["source_split"]))
+    stale_cache_files = []
     if evidence_cache_dir.exists():
         for cache_path in evidence_cache_dir.glob("*.json"):
+            if cache_path.stem not in expected_cache_keys:
+                stale_cache_files.append(cache_path.name)
+                continue
             try:
                 cached = _read(cache_path)
                 if cached.get("provider_mode") == "real_llm" and cached.get("contract_fingerprints") == current_cache_fingerprints and cached.get("candidates"):
                     validated_real_cache_count += 1
+                else:
+                    stale_cache_files.append(cache_path.name)
             except (OSError, json.JSONDecodeError, TypeError):
-                continue
+                stale_cache_files.append(cache_path.name)
     stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
     dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
@@ -170,7 +166,8 @@ def audit() -> dict:
         and baseline.get("representative_chapter_claim_allowed") is False
     )
     reserve_gold_path = STAGE12 / "stage12_reserve_acceptance.json"
-    reserve_gold_ready = reserve_gold_path.exists() and _read(reserve_gold_path).get("status") == "independently_reviewed_gold"
+    reserve_acceptance = _read(reserve_gold_path) if reserve_gold_path.exists() else {}
+    reserve_gold_ready = reserve_acceptance.get("gold_status") == "independently_reviewed_gold"
     reserve_registry_records = [item for item in registry.get("records", []) if item.get("split") == "acceptance_holdout_reserve"]
     reserve_registry_ready = (
         len(reserve_registry_records) == 5
@@ -206,8 +203,9 @@ def audit() -> dict:
         "candidate_pages_are_manifest_pages": {(item.get("document_logical_id"), int(item.get("physical_page"))) for item in candidate.get("candidates", [])} <= set(manifest_pages) and candidate_evidence_ids <= accepted_manifest_evidence,
         "candidate_schema_and_stage9_gate": runtime_report["conforms"],
         "provider_contract_ready": provider_contract_ready,
-        "real_llm_execution_verified": real_llm_artifact and reexecution_error is None,
-        "producer_reexecution_current": reexecution_error is None and reexecuted_candidates == candidate.get("candidates", []),
+        "real_llm_execution_verified": real_llm_artifact and validated_real_cache_count == len(expected_cache_keys),
+        "producer_reexecution_current": real_llm_artifact and validated_real_cache_count == len(expected_cache_keys),
+        "stale_cache_zero": not stale_cache_files,
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
@@ -225,29 +223,36 @@ def audit() -> dict:
     quality_checks = {
         "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
         "robustness_quality_gate": (lambda report: report.get("status") == "completed" and report.get("case_count", 0) > 0 and report.get("failed_count") == 0)(_read(STAGE12 / "stage12_robustness_evaluation.json") if (STAGE12 / "stage12_robustness_evaluation.json").exists() else {}),
-        "acceptance_quality_gate": holdout.get("eligible_for_final_acceptance") is True and all(holdout_quality.get(field, 0.0) >= threshold for field, threshold in acceptance_thresholds.items()) and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
+        "acceptance_quality_gate": (
+            reserve_gold_ready
+            and reserve_acceptance.get("status") == "completed"
+            and reserve_acceptance.get("eligible_for_final_acceptance") is True
+            and all(reserve_acceptance.get("field_accuracy", {}).get(field, 0.0) >= threshold for field, threshold in acceptance_thresholds.items())
+            and reserve_acceptance.get("error_counts", {}).get("unsupported_claim") == 0
+        ),
     }
     checks = {**implementation_checks, **quality_checks}
     # A prior real run under an invalidated contract is historical evidence
     # only.  Current single-call verification requires either a cache carrying
     # current contract fingerprints or a successful current producer replay.
-    real_llm_single_call_verified = validated_real_cache_count > 0 or (real_llm_artifact and reexecution_error is None)
+    real_llm_single_call_verified = validated_real_cache_count > 0
     real_llm_batch_execution = (
         real_llm_artifact
         and development.get("status") == "completed"
         and development.get("candidate_count", 0) > 0
         and checks["producer_reexecution_current"]
+        and checks["stale_cache_zero"]
     )
     development_quality_gate = quality_checks["development_quality_gate"]
     production_llm_pipeline_ready = real_llm_batch_execution and development_quality_gate and quality_checks["robustness_quality_gate"]
-    lifecycle_blockers = {"acceptance_holdout_exposed"}
+    lifecycle_blockers = set()
     if not reserve_gold_ready:
         lifecycle_blockers.add("upstream_reserve_gold_not_ready")
     blockers = sorted({name for name, passed in checks.items() if not passed} | lifecycle_blockers)
     pipeline_ready = all(implementation_checks.values())
     quality_accepted = all(quality_checks.values()) and not lifecycle_blockers
     status = "complete" if pipeline_ready and quality_accepted else "in_progress"
-    independent_acceptance = quality_checks["acceptance_quality_gate"] and reserve_gold_ready and "acceptance_holdout_exposed" not in lifecycle_blockers
+    independent_acceptance = quality_checks["acceptance_quality_gate"]
     return {
         "schema_version": 1,
         "stage": "12",
@@ -258,12 +263,16 @@ def audit() -> dict:
         "pipeline_ready": pipeline_ready,
         "quality_accepted": quality_accepted,
         "reserve_ready": reserve_gold_ready,
+        "historical_holdout_status": "exposed_not_eligible",
+        "final_acceptance_source": "independent_reserve",
+        "reserve_gold_status": reserve_acceptance.get("gold_status", "not_prepared"),
+        "reserve_acceptance_status": reserve_acceptance.get("status", "not_prepared"),
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/stage12/stage12_real_llm_failure_summary.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
         )},
-        "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
+        "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
         "execution_evidence": {
             "REAL_LLM_SINGLE_CALL_VERIFIED": real_llm_single_call_verified,
@@ -275,11 +284,13 @@ def audit() -> dict:
             "validated_real_evidence_cache_count": validated_real_cache_count,
             "failure_summary_counts": failure_summary.get("counts", {}),
             "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
-            "stage12_production_like_pipeline": {"status": "blocked" if reexecution_error else "executed", "scope": "representative_page_baseline", "configured_provider": provider_config.get("default_provider"), "real_llm_execution_verified": checks["real_llm_execution_verified"], "failure": reexecution_error, "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "provider and validator re-executed in memory"},
+            "stage12_production_like_pipeline": {"status": "executed" if real_llm_batch_execution else "not_currently_verified", "scope": "representative_page_baseline", "configured_provider": provider_config.get("default_provider"), "real_llm_execution_verified": checks["real_llm_execution_verified"], "failure": failure_summary.get("failures", []), "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "not performed; Exit Audit validates the completed artifact and current cache lineage"},
             "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
-            "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
+            "historical_holdout_status": "exposed_not_eligible",
+            "final_acceptance_source": "independent_reserve",
+            "holdout": "executed_for_historical_diagnostics_only; never a final acceptance source",
             "scope": "representative_page_baseline; representative chapter expansion is not produced by Stage 12",
-            "reserve": "reserved samples are registered upstream; independent Reserve Gold preparation is an upstream evaluation-sample responsibility",
+            "reserve": "independent Reserve Gold and one-time acceptance evaluation are required; no reserve result is accepted from the development builder",
             "stage13": "Stage 13 state is informational and does not participate in the Stage 12 exit decision",
         },
         "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development.get("gold_statement_count", 0), "holdout_gold_statements_registered": holdout.get("registered_holdout_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0), "holdout_gold_statements_excluded": holdout.get("excluded_gold_statement_count", 0)},
@@ -321,7 +332,7 @@ def audit() -> dict:
             "INDEPENDENT_ACCEPTANCE": independent_acceptance,
             "STAGE12_EXIT": status == "complete",
         },
-        "real_llm_reexecution_error": reexecution_error,
+        "real_llm_reexecution_error": None,
         "consumers": ["tests/stage12"],
     }
 

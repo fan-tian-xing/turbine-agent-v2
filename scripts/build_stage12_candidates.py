@@ -45,6 +45,7 @@ def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
         "prompt_sha256": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema_sha256": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
         "semantic_source_sha256": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config_sha256": _sha(ROOT / "config/stage12_provider.json"),
     }
     return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
 
@@ -64,6 +65,7 @@ def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict]) ->
             "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
             "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
             "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+            "provider_config": _sha(ROOT / "config/stage12_provider.json"),
         },
         "candidates": candidates,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -92,6 +94,7 @@ def _extract_with_evidence_cache(
                     "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
                     "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
                     "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+                    "provider_config": _sha(ROOT / "config/stage12_provider.json"),
                 }
                 if cached.get("contract_fingerprints") != expected_fingerprints:
                     raise ValueError("Stage 12 cache contract fingerprints are stale")
@@ -136,6 +139,7 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     for key, (evidence, profile) in current.items():
         target = evidence_dir / f"{key}.json"

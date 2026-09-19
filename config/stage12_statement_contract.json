@@ -80,10 +80,13 @@
     "acceptance_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
     "unsupported_claim_count": 0,
     "acceptance_lifecycle": {
-      "current_holdout_status": "historical_exposed",
+      "current_holdout_status": "exposed_not_eligible",
       "current_holdout_eligible_for_final_acceptance": false,
       "reserve_requires_independent_gold": true,
       "reserve_gold_must_not_be_generated_by_development_builder": true,
+      "final_acceptance_source": "independent_reserve",
+      "reserve_acceptance_artifact": "data/stage12/stage12_reserve_acceptance.json",
+      "reserve_acceptance_is_one_time": true,
       "blind_test_status": "unknown_to_stage12"
     }
   },

@@ -8,6 +8,10 @@
   "pipeline_ready": false,
   "quality_accepted": false,
   "reserve_ready": false,
+  "historical_holdout_status": "exposed_not_eligible",
+  "final_acceptance_source": "independent_reserve",
+  "reserve_gold_status": "not_prepared",
+  "reserve_acceptance_status": "not_prepared",
   "formal_release": false,
   "producer": "scripts/audit_stage12_exit.py",
   "inputs": {
@@ -45,7 +49,7 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "2d89a2e3ca349468738137eddbbec24e9b24af71e0f5fbca465d54bc8dd98e84"
+      "sha256": "f5f2558763b7ddc3dee045357b282940a215f36cb264c3bf89e848bccc7261c0"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
@@ -85,7 +89,7 @@
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "3f3aaf09169f0c90adf52ebb9663add3400b4f51afeff3008edbd2f6fd1801d6"
+      "sha256": "85e850f7f448cec3273703a1cb5c607617bca1f6615680b909ac64201271d651"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -105,7 +109,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "19097c44b9ca839b682d10a73aee2d1a6f42dcb4e6f9cdd14a12959e8689cebc"
+      "sha256": "50d99893ab6d521b31c41407fac73cb5b02e6cdfdbc4dcebeed8de034ec2e510"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -117,7 +121,7 @@
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "96911ab1148967352fec9542aadcc15883c9ab653fc6198b6ee7be704df8d02f"
+      "sha256": "8adf9490565f94f8d5e16327747c87d65d9475fec33ce3989ac94657c429c2dc"
     }
   },
   "outputs": {
@@ -125,6 +129,7 @@
     "development_candidates": "data/stage12/stage12_development_candidates.json",
     "development_evaluation": "data/stage12/stage12_development_evaluation.json",
     "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
+    "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json",
     "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json",
     "exit_audit": "data/stage12/stage12_exit_audit.json",
     "runtime_cache": "var/model_runs/stage12"
@@ -145,6 +150,7 @@
     "provider_contract_ready": true,
     "real_llm_execution_verified": false,
     "producer_reexecution_current": false,
+    "stale_cache_zero": true,
     "candidate_input_lineage_current": false,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
@@ -169,7 +175,7 @@
     "DEVELOPMENT_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 1,
+    "validated_real_evidence_cache_count": 2,
     "failure_summary_counts": {
       "transport_failure": 1,
       "schema_failure": 0,
@@ -180,22 +186,35 @@
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "blocked",
+      "status": "not_currently_verified",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
       "real_llm_execution_verified": false,
-      "failure": "external LLM provider failed",
+      "failure": [
+        {
+          "evidence_id": "evidence-cbce7568bef677f62bac",
+          "attempt": 1,
+          "outcome": "failure",
+          "failure_type": "transport_failure",
+          "field": null,
+          "validator_reason": "LLM transport failure: TimeoutError",
+          "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
+          "model_value_or_text": null
+        }
+      ],
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
         "scripts/audit_stage12_exit.py"
       ],
-      "audit_reexecution": "provider and validator re-executed in memory"
+      "audit_reexecution": "not performed; Exit Audit validates the completed artifact and current cache lineage"
     },
     "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
-    "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
+    "historical_holdout_status": "exposed_not_eligible",
+    "final_acceptance_source": "independent_reserve",
+    "holdout": "executed_for_historical_diagnostics_only; never a final acceptance source",
     "scope": "representative_page_baseline; representative chapter expansion is not produced by Stage 12",
-    "reserve": "reserved samples are registered upstream; independent Reserve Gold preparation is an upstream evaluation-sample responsibility",
+    "reserve": "independent Reserve Gold and one-time acceptance evaluation are required; no reserve result is accepted from the development builder",
     "stage13": "Stage 13 state is informational and does not participate in the Stage 12 exit decision"
   },
   "counts": {
@@ -288,7 +307,7 @@
       "statement_boundary": 0.875,
       "statement_type": 0.6458333333333334,
       "entity": 0.7291666666666666,
-      "relation": 0.7083333333333334,
+      "relation": 0.625,
       "quantity": 0.7708333333333334,
       "unit": 0.8333333333333334,
       "comparison": 0.7916666666666666,
@@ -296,7 +315,7 @@
       "condition": 0.8541666666666666,
       "applicability": 0.8958333333333334,
       "applicability_meaning": 0.8958333333333334,
-      "relation_direction": 0.8958333333333334,
+      "relation_direction": 0.875,
       "unsupported_addition": 1.0,
       "evidence_grounding": 1.0
     },
@@ -357,7 +376,6 @@
   "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
   "zero_tolerance_errors": [],
   "blockers": [
-    "acceptance_holdout_exposed",
     "acceptance_quality_gate",
     "candidate_input_lineage_current",
     "development_evaluation_present",
@@ -383,7 +401,7 @@
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false
   },
-  "real_llm_reexecution_error": "external LLM provider failed",
+  "real_llm_reexecution_error": null,
   "consumers": [
     "tests/stage12"
   ]

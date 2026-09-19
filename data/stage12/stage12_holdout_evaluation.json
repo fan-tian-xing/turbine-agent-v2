@@ -3,7 +3,7 @@
   "candidate_count": 46,
   "gold_exhaustive": false,
   "statement_recall": 0.8958333333333334,
-  "statement_semantic_correctness": 0.2708333333333333,
+  "statement_semantic_correctness": 0.22916666666666666,
   "field_totals": {
     "statement_boundary": 48,
     "statement_type": 48,
@@ -24,7 +24,7 @@
     "statement_boundary": 42,
     "statement_type": 31,
     "entity": 35,
-    "relation": 34,
+    "relation": 30,
     "quantity": 37,
     "unit": 40,
     "comparison": 38,
@@ -32,7 +32,7 @@
     "condition": 41,
     "applicability": 43,
     "applicability_meaning": 43,
-    "relation_direction": 43,
+    "relation_direction": 42,
     "unsupported_addition": 48,
     "evidence_grounding": 48
   },
@@ -40,7 +40,7 @@
     "statement_boundary": 0.875,
     "statement_type": 0.6458333333333334,
     "entity": 0.7291666666666666,
-    "relation": 0.7083333333333334,
+    "relation": 0.625,
     "quantity": 0.7708333333333334,
     "unit": 0.8333333333333334,
     "comparison": 0.7916666666666666,
@@ -48,7 +48,7 @@
     "condition": 0.8541666666666666,
     "applicability": 0.8958333333333334,
     "applicability_meaning": 0.8958333333333334,
-    "relation_direction": 0.8958333333333334,
+    "relation_direction": 0.875,
     "unsupported_addition": 1.0,
     "evidence_grounding": 1.0
   },
@@ -56,14 +56,14 @@
     "boundary_error": 6,
     "statement_type_error": 17,
     "entity_error": 13,
-    "relation_error": 14,
+    "relation_error": 18,
     "quantity_error": 11,
     "unit_error": 8,
     "comparison_error": 10,
     "negation_error": 24,
     "condition_loss": 7,
     "applicability_error": 5,
-    "relation_direction_error": 5,
+    "relation_direction_error": 6,
     "unsupported_claim": 0
   },
   "errors": [
@@ -110,6 +110,7 @@
       "statement_id": "stage11-statement-95798801af5dc2c07392-s3",
       "candidate_id": "stage12-candidate-571eef0398217c0eecb4",
       "error_types": [
+        "relation_error",
         "negation_error"
       ]
     },
@@ -126,6 +127,7 @@
       "statement_id": "stage11-statement-984577961d918cdbc6ff-s2",
       "candidate_id": "stage12-candidate-07e7c62caa9758090b43",
       "error_types": [
+        "relation_error",
         "negation_error"
       ]
     },
@@ -288,8 +290,7 @@
       "statement_id": "stage11-statement-63a328bae825a87cbffe-s10",
       "candidate_id": "stage12-candidate-d17f812db2491dded672",
       "error_types": [
-        "statement_type_error",
-        "relation_error"
+        "statement_type_error"
       ]
     },
     {
@@ -360,6 +361,14 @@
       ]
     },
     {
+      "statement_id": "stage11-statement-094cd95f5d1abcdc8b31-s3",
+      "candidate_id": "stage12-candidate-d994d448e2c33763a92e",
+      "error_types": [
+        "relation_error",
+        "relation_direction_error"
+      ]
+    },
+    {
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff",
       "candidate_id": "stage12-candidate-9444fd27080b758d6821",
       "error_types": [
@@ -370,6 +379,7 @@
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s2",
       "candidate_id": "stage12-candidate-28143fa3acacb7737ff2",
       "error_types": [
+        "relation_error",
         "negation_error"
       ]
     },
@@ -391,6 +401,13 @@
       ]
     },
     {
+      "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s4",
+      "candidate_id": "stage12-candidate-1955374b2d1ceabd12a3",
+      "error_types": [
+        "relation_error"
+      ]
+    },
+    {
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s5",
       "candidate_id": "stage12-candidate-25d3a99df7972cce79fb",
       "error_types": [
@@ -398,7 +415,7 @@
       ]
     }
   ],
-  "gold_mismatch_count": 30,
+  "gold_mismatch_count": 32,
   "gold_mismatch_details": [
     {
       "statement_id": "stage11-statement-fe16fd2c0ddf82659111-s2",
@@ -443,6 +460,7 @@
       "statement_id": "stage11-statement-95798801af5dc2c07392-s3",
       "candidate_id": "stage12-candidate-571eef0398217c0eecb4",
       "fields": [
+        "relation",
         "negation"
       ]
     },
@@ -459,6 +477,7 @@
       "statement_id": "stage11-statement-984577961d918cdbc6ff-s2",
       "candidate_id": "stage12-candidate-07e7c62caa9758090b43",
       "fields": [
+        "relation",
         "negation"
       ]
     },
@@ -570,8 +589,7 @@
       "statement_id": "stage11-statement-63a328bae825a87cbffe-s10",
       "candidate_id": "stage12-candidate-d17f812db2491dded672",
       "fields": [
-        "statement_type",
-        "relation"
+        "statement_type"
       ]
     },
     {
@@ -625,6 +643,14 @@
       ]
     },
     {
+      "statement_id": "stage11-statement-094cd95f5d1abcdc8b31-s3",
+      "candidate_id": "stage12-candidate-d994d448e2c33763a92e",
+      "fields": [
+        "relation",
+        "relation_direction"
+      ]
+    },
+    {
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff",
       "candidate_id": "stage12-candidate-9444fd27080b758d6821",
       "fields": [
@@ -635,7 +661,15 @@
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s2",
       "candidate_id": "stage12-candidate-28143fa3acacb7737ff2",
       "fields": [
+        "relation",
         "negation"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s4",
+      "candidate_id": "stage12-candidate-1955374b2d1ceabd12a3",
+      "fields": [
+        "relation"
       ]
     },
     {
@@ -701,7 +735,7 @@
     {
       "statement_id": "stage11-statement-95798801af5dc2c07392-s3",
       "candidate_id": "stage12-candidate-571eef0398217c0eecb4",
-      "score": 1.0
+      "score": 0.85
     },
     {
       "statement_id": "stage11-statement-984577961d918cdbc6ff",
@@ -711,7 +745,7 @@
     {
       "statement_id": "stage11-statement-984577961d918cdbc6ff-s2",
       "candidate_id": "stage12-candidate-07e7c62caa9758090b43",
-      "score": 0.95769231
+      "score": 0.80769231
     },
     {
       "statement_id": "stage11-statement-984577961d918cdbc6ff-s4",
@@ -786,7 +820,7 @@
     {
       "statement_id": "stage11-statement-63a328bae825a87cbffe-s10",
       "candidate_id": "stage12-candidate-d17f812db2491dded672",
-      "score": 0.85
+      "score": 1.0
     },
     {
       "statement_id": "stage11-statement-67ae012526d707f2def1",
@@ -836,7 +870,7 @@
     {
       "statement_id": "stage11-statement-094cd95f5d1abcdc8b31-s3",
       "candidate_id": "stage12-candidate-d994d448e2c33763a92e",
-      "score": 1.0
+      "score": 0.85
     },
     {
       "statement_id": "stage11-statement-094cd95f5d1abcdc8b31-s4",
@@ -861,12 +895,12 @@
     {
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s2",
       "candidate_id": "stage12-candidate-28143fa3acacb7737ff2",
-      "score": 0.96944444
+      "score": 0.81944444
     },
     {
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s4",
       "candidate_id": "stage12-candidate-1955374b2d1ceabd12a3",
-      "score": 0.97380952
+      "score": 0.82380952
     },
     {
       "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s5",
@@ -979,7 +1013,7 @@
   "input_sha256": {
     "registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
-    "contract": "2d89a2e3ca349468738137eddbbec24e9b24af71e0f5fbca465d54bc8dd98e84",
+    "contract": "f5f2558763b7ddc3dee045357b282940a215f36cb264c3bf89e848bccc7261c0",
     "evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
     "gold": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0"
   },

@@ -363,6 +363,70 @@ def test_real_evidence_cache_reuses_only_validated_candidates(tmp_path):
     assert len(calls) == 1
 
 
+def test_real_evidence_cache_accepts_valid_no_statement_empty_result(tmp_path):
+    from scripts.build_stage12_candidates import _extract_with_evidence_cache
+
+    response = {"schema_version": 1, "response_kind": "stage12_candidate_extraction", "status": "no_statement", "candidates": []}
+    calls = []
+
+    def transport(prompt):
+        calls.append(prompt)
+        return json.dumps(response, ensure_ascii=False)
+
+    provider = ExternalLLMProvider(transport=transport, model_config_identifier="test-model", max_attempts=1)
+    first = _extract_with_evidence_cache(_evidence("这是背景说明。"), _external_profile(), provider, "development_regression_golden", tmp_path)
+    second = _extract_with_evidence_cache(
+        _evidence("这是背景说明。"),
+        _external_profile(),
+        ExternalLLMProvider(transport=lambda prompt: (_ for _ in ()).throw(AssertionError("no_statement cache miss")), model_config_identifier="test-model", max_attempts=1),
+        "development_regression_golden",
+        tmp_path,
+    )
+    assert first == second == []
+    assert len(calls) == 1
+    cache = json.loads(next(tmp_path.joinpath("evidence").glob("*.json")).read_text(encoding="utf-8"))
+    assert cache["response_status"] == "no_statement"
+    assert cache["candidates"] == []
+
+
+def test_cache_contract_and_candidate_schema_changes_force_stale_miss(tmp_path):
+    from scripts.build_stage12_candidates import _extract_with_evidence_cache
+
+    response = FixtureExtractionProvider().extract(_evidence(), _external_profile())
+    provider = ExternalLLMProvider(transport=lambda prompt: json.dumps(response, ensure_ascii=False), model_config_identifier="test-model", max_attempts=1)
+    _extract_with_evidence_cache(_evidence(), _external_profile(), provider, "development_regression_golden", tmp_path)
+    cache_path = next(tmp_path.joinpath("evidence").glob("*.json"))
+    cache = json.loads(cache_path.read_text(encoding="utf-8"))
+    cache["contract_fingerprints"]["contract"] = "stale-contract"
+    cache["contract_fingerprints"]["candidate_schema"] = "stale-schema"
+    cache_path.write_text(json.dumps(cache), encoding="utf-8")
+    calls = []
+    refreshed = _extract_with_evidence_cache(
+        _evidence(),
+        _external_profile(),
+        ExternalLLMProvider(transport=lambda prompt: (calls.append(prompt) or json.dumps(response, ensure_ascii=False)), model_config_identifier="test-model", max_attempts=1),
+        "development_regression_golden",
+        tmp_path,
+    )
+    assert refreshed
+    assert len(calls) == 1
+
+
+def test_batch_failure_isolation_continues_after_one_error():
+    from scripts.build_stage12_candidates import run_evidence_batch
+
+    items = [(str(index), {"evidence_id": str(index)}, None) for index in range(1, 6)]
+
+    def extract_one(evidence, profile):
+        if evidence["evidence_id"] == "3":
+            raise TimeoutError("timeout")
+        return [{"candidate_id": evidence["evidence_id"]}]
+
+    candidates, failures = run_evidence_batch(items, extract_one)
+    assert [item["candidate_id"] for item in candidates] == ["1", "2", "4", "5"]
+    assert [item[0] for item in failures] == ["3"]
+
+
 def test_robustness_artifact_is_development_only_and_passes():
     report = _read("data/stage12/stage12_fixture_robustness_evaluation.json")
     assert report["holdout_used_for_tuning"] is False

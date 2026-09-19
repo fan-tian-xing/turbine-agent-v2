@@ -104,6 +104,8 @@ def audit() -> dict:
     current_cache_fingerprints = {
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
         "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
@@ -120,7 +122,14 @@ def audit() -> dict:
                 continue
             try:
                 cached = _read(cache_path)
-                if cached.get("provider_mode") == "real_llm" and cached.get("contract_fingerprints") == current_cache_fingerprints and cached.get("candidates"):
+                cached_candidates = cached.get("candidates")
+                cached_status = cached.get("response_status")
+                cache_has_valid_result = (
+                    isinstance(cached_candidates, list)
+                    and cached_status in {"ok", "no_statement"}
+                    and ((cached_status == "no_statement" and not cached_candidates) or (cached_status == "ok" and cached_candidates))
+                )
+                if cached.get("schema_version") == 2 and cached.get("provider_mode") == "real_llm" and cached.get("contract_fingerprints") == current_cache_fingerprints and cache_has_valid_result:
                     validated_real_cache_count += 1
                 else:
                     stale_cache_files.append(cache_path.name)

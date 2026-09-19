@@ -29,6 +29,14 @@ ROOT = Path(__file__).resolve().parents[1]
 STAGE12 = ROOT / "data/stage12"
 
 
+class IncompleteDevelopmentError(RuntimeError):
+    """Raised after all Evidence was attempted but one or more items failed."""
+
+    def __init__(self, progress: dict[str, Any]):
+        super().__init__("Stage 12 Development batch is incomplete")
+        self.progress = progress
+
+
 def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
     material = {
         "evidence": evidence,
@@ -44,6 +52,8 @@ def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
         "provider_metadata": getattr(provider, "metadata", {}),
         "prompt_sha256": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema_sha256": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "contract_sha256": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "candidate_schema_sha256": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source_sha256": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
         "provider_config_sha256": _sha(ROOT / "config/stage12_provider.json"),
     }
@@ -54,19 +64,22 @@ def _cache_path(evidence: dict, profile, provider, split: str, cache_root: Path)
     return cache_root / "evidence" / f"{_evidence_cache_key(evidence, profile, provider, split)}.json"
 
 
-def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict]) -> None:
+def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict], response_status: str) -> None:
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_text(json.dumps({
-        "schema_version": 1,
+        "schema_version": 2,
         "cache_key": cache_path.stem,
         "provider_id": provider.provider_id,
         "provider_mode": "real_llm",
         "contract_fingerprints": {
             "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
             "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+            "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+            "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
             "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
             "provider_config": _sha(ROOT / "config/stage12_provider.json"),
         },
+        "response_status": response_status,
         "candidates": candidates,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -89,16 +102,25 @@ def _extract_with_evidence_cache(
     if cache_path.exists() and not force:
         try:
             cached = json.loads(cache_path.read_text(encoding="utf-8"))
-            if cached.get("schema_version") == 1 and cached.get("cache_key") == cache_key and cached.get("provider_id") == provider.provider_id:
+            if cached.get("schema_version") == 2 and cached.get("cache_key") == cache_key and cached.get("provider_id") == provider.provider_id:
                 expected_fingerprints = {
                     "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
                     "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+                    "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+                    "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
                     "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
                     "provider_config": _sha(ROOT / "config/stage12_provider.json"),
                 }
                 if cached.get("contract_fingerprints") != expected_fingerprints:
                     raise ValueError("Stage 12 cache contract fingerprints are stale")
-                candidates = cached.get("candidates") or []
+                candidates = cached.get("candidates")
+                response_status = cached.get("response_status")
+                if not isinstance(candidates, list) or response_status not in {"ok", "no_statement"}:
+                    raise ValueError("Stage 12 cache response status or candidates field is invalid")
+                if response_status == "no_statement" and candidates:
+                    raise ValueError("no_statement cache must contain an empty candidates list")
+                if response_status == "ok" and not candidates:
+                    raise ValueError("ok cache must contain at least one candidate")
                 for candidate in candidates:
                     validate_candidate_evidence_binding(candidate, evidence)
                     validate_candidate_against_evidence(candidate, evidence)
@@ -107,7 +129,7 @@ def _extract_with_evidence_cache(
             pass
     extractor = ProviderBackedExtractor(provider, profile=profile, split=split)
     candidates = extractor.extract(evidence, attempt_observer=attempt_observer)
-    _write_evidence_cache(cache_path, provider, candidates)
+    _write_evidence_cache(cache_path, provider, candidates, "no_statement" if not candidates else "ok")
     return candidates
 
 
@@ -138,6 +160,8 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
     expected_fingerprints = {
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
         "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
@@ -147,8 +171,17 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
             continue
         try:
             cached = json.loads(target.read_text(encoding="utf-8"))
-            candidates = cached.get("candidates") or []
-            if cached.get("cache_key") == key and cached.get("provider_id") == provider.provider_id and cached.get("contract_fingerprints") == expected_fingerprints:
+            candidates = cached.get("candidates")
+            response_status = cached.get("response_status")
+            if (
+                cached.get("schema_version") == 2
+                and cached.get("cache_key") == key
+                and cached.get("provider_id") == provider.provider_id
+                and cached.get("contract_fingerprints") == expected_fingerprints
+                and isinstance(candidates, list)
+                and response_status in {"ok", "no_statement"}
+                and ((response_status == "no_statement" and not candidates) or (response_status == "ok" and candidates))
+            ):
                 for candidate in candidates:
                     validate_candidate_evidence_binding(candidate, evidence)
                     validate_candidate_against_evidence(candidate, evidence)
@@ -238,11 +271,70 @@ def _gate(manifest: dict) -> None:
             raise ValueError(f"Stage 12 manifest input hash is stale: {path}")
 
 
+def _current_valid_evidence_ids(manifest: dict, cache_root: Path) -> set[str]:
+    """Return Evidence IDs with a current, schema-valid per-Evidence cache."""
+    evidence_by_id = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
+    router = ProfileRouter()
+    provider = provider_from_config()
+    expected_fingerprints = {
+        "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+        "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
+        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
+    }
+    valid = set()
+    for page in manifest.get("pages", []):
+        for evidence_id in page.get("evidence_ids", []):
+            evidence = dict(evidence_by_id[evidence_id], document_key=page["document_key"])
+            profile = router.route(evidence)
+            key = _evidence_cache_key(evidence, profile, provider, manifest["source_split"])
+            path = cache_root / "evidence" / f"{key}.json"
+            if not path.exists():
+                continue
+            try:
+                cached = json.loads(path.read_text(encoding="utf-8"))
+                candidates = cached.get("candidates")
+                response_status = cached.get("response_status")
+                if (
+                    cached.get("schema_version") == 2
+                    and cached.get("cache_key") == key
+                    and cached.get("provider_id") == provider.provider_id
+                    and cached.get("contract_fingerprints") == expected_fingerprints
+                    and isinstance(candidates, list)
+                    and response_status in {"ok", "no_statement"}
+                    and ((response_status == "no_statement" and not candidates) or (response_status == "ok" and candidates))
+                ):
+                    for candidate in candidates:
+                        validate_candidate_evidence_binding(candidate, evidence)
+                        validate_candidate_against_evidence(candidate, evidence)
+                    valid.add(evidence_id)
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+                continue
+    return valid
+
+
+def run_evidence_batch(items: list[tuple[str, dict, Any]], extract_one) -> tuple[list[dict], list[tuple[str, dict, Exception]]]:
+    """Process every Evidence independently and return successes plus failures."""
+    candidates: list[dict] = []
+    failures: list[tuple[str, dict, Exception]] = []
+    for evidence_id, evidence, profile in items:
+        try:
+            candidates.extend(extract_one(evidence, profile))
+        except Exception as error:  # isolate one Evidence; caller decides batch status
+            failures.append((evidence_id, evidence, error))
+    return candidates, failures
+
+
 def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
     evidence_by_id = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     router = ProfileRouter()
     provider = provider_from_config()
     candidates = []
+    failed_evidence_ids = []
+    attempted_evidence_ids = []
+    work_items = []
     for page in manifest["pages"]:
         for evidence_id in page["evidence_ids"]:
             evidence = dict(evidence_by_id[evidence_id], document_key=page["document_key"])
@@ -251,8 +343,38 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
             profile = router.route(evidence)
             if page.get("extraction_profile_id") != profile.extraction_profile_id or page.get("semantic_role") != profile.semantic_role:
                 raise ValueError(f"manifest Profile route does not match Evidence: {evidence_id}")
-            observer = None if attempt_observer is None else lambda event, item=evidence: attempt_observer(item, event)
-            candidates.extend(_extract_with_evidence_cache(evidence, profile, provider, manifest["source_split"], cache_root, attempt_observer=observer))
+            work_items.append((evidence_id, evidence, profile))
+    def extract_one(evidence, profile):
+        observer = None if attempt_observer is None else lambda event: attempt_observer(evidence, event)
+        return _extract_with_evidence_cache(evidence, profile, provider, manifest["source_split"], cache_root, attempt_observer=observer)
+    extracted_candidates, failures = run_evidence_batch(work_items, extract_one)
+    candidates.extend(extracted_candidates)
+    for evidence_id, evidence, error in failures:
+        failed_evidence_ids.append(evidence_id)
+        attempted_evidence_ids.append(evidence_id)
+        if attempt_observer is not None:
+            attempt_observer(evidence, {
+                "attempt": 1,
+                "outcome": "failure",
+                "failure_type": "semantic_validation_failure" if "semantic" in str(error).lower() else "transport_failure",
+                "field": None,
+                "validator_reason": str(error),
+                "exception_type": type(error).__name__,
+                "message": str(error)[:1600],
+                "model_value_or_text": None,
+            })
+    if failed_evidence_ids:
+        valid_ids = _current_valid_evidence_ids(manifest, cache_root)
+        raise IncompleteDevelopmentError({
+            "total_evidence": sum(len(page.get("evidence_ids", [])) for page in manifest.get("pages", [])),
+            "valid_cached_evidence": len(valid_ids),
+            "attempted_this_run": [],
+            "succeeded_this_run": [],
+            "failed_evidence_ids": sorted(set(failed_evidence_ids)),
+            "remaining_evidence_ids": sorted({evidence_id for page in manifest.get("pages", []) for evidence_id in page.get("evidence_ids", [])} - valid_ids),
+            "batch_complete": False,
+            "current_artifact_status": "current_artifact_not_available",
+        })
     payload = {
         "schema_version": 1,
         "stage": "12",
@@ -298,6 +420,7 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
 
 
 def build(*, force: bool = False) -> tuple[dict, dict]:
+    """Build a complete batch; force rebuilds the batch record, not valid Evidence caches."""
     manifest = json.loads((STAGE12 / "stage12_input_manifest.json").read_text(encoding="utf-8"))
     _gate(manifest)
     contract = load_contract()
@@ -305,7 +428,14 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
     cache_maintenance = prune_stale_evidence_cache(manifest, cache_root)
     events = []
     evidence_ids = [evidence_id for page in manifest.get("pages", []) for evidence_id in page.get("evidence_ids", [])]
-    observer = lambda evidence, event: events.append(decorate_event(evidence, dict(event)))
+    def observer(evidence, event):
+        decorated = decorate_event(evidence, dict(event))
+        if decorated.get("outcome") == "failure":
+            previous = [item for item in events if item.get("evidence_id") == decorated.get("evidence_id") and item.get("outcome") == "failure"]
+            if previous:
+                previous[-1].update({key: decorated[key] for key in ("exception_type", "message") if decorated.get(key) is not None})
+                return
+        events.append(decorated)
     input_refs = tuple(
         {"kind": "file", "path": path, "sha256": _sha(ROOT / path)}
         for path in (
@@ -330,13 +460,35 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
         validate_input=lambda: _gate(manifest),
         validate_output=lambda result: (validate_candidate_payload(result), to_stage9_runtime_payload(result["candidates"])),
         )
+    except IncompleteDevelopmentError as error:
+        valid_ids = _current_valid_evidence_ids(manifest, cache_root)
+        progress = dict(error.progress)
+        progress["valid_cached_evidence"] = len(valid_ids)
+        progress["attempted_this_run"] = sorted({item.get("evidence_id") for item in events})
+        progress["succeeded_this_run"] = sorted({item.get("evidence_id") for item in events if item.get("outcome") == "success"})
+        progress["remaining_evidence_ids"] = sorted(set(evidence_ids) - valid_ids)
+        progress["batch_complete"] = False
+        error.progress = progress
+        write_failure_summary(events, run_kind="development_batch", evidence_ids=evidence_ids, cache_maintenance=cache_maintenance, status="incomplete", progress=progress)
+        raise
     except Exception:
         if events:
             write_failure_summary(events, run_kind="development_batch", evidence_ids=evidence_ids, cache_maintenance=cache_maintenance, status="failed")
         raise
     cache_maintenance["batch_records_deleted"] = prune_stale_batch_records(cache_root, batch.extraction_batch_id)
+    valid_ids = _current_valid_evidence_ids(manifest, cache_root)
+    progress = {
+        "total_evidence": len(evidence_ids),
+        "valid_cached_evidence": len(valid_ids),
+        "attempted_this_run": sorted({item.get("evidence_id") for item in events}),
+        "succeeded_this_run": sorted({item.get("evidence_id") for item in events if item.get("outcome") == "success"}),
+        "failed_evidence_ids": [],
+        "remaining_evidence_ids": sorted(set(evidence_ids) - valid_ids),
+        "batch_complete": len(valid_ids) == len(evidence_ids),
+        "current_artifact_status": "current_artifact_available",
+    }
     if events:
-        write_failure_summary(events, run_kind="development_batch", evidence_ids=evidence_ids, cache_maintenance=cache_maintenance)
+        write_failure_summary(events, run_kind="development_batch", evidence_ids=evidence_ids, cache_maintenance=cache_maintenance, progress=progress)
     STAGE12.mkdir(parents=True, exist_ok=True)
     (STAGE12 / "stage12_development_candidates.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return batch.as_dict(), payload
@@ -363,10 +515,14 @@ def evaluate_development(payload: dict) -> dict:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--force", action="store_true")
+    parser.add_argument("--force", action="store_true", help="Rebuild the batch record while reusing valid per-Evidence caches.")
     parser.add_argument("--evaluate-development", action="store_true")
     args = parser.parse_args()
-    batch, payload = build(force=args.force)
+    try:
+        batch, payload = build(force=args.force)
+    except IncompleteDevelopmentError as error:
+        print(json.dumps({"status": "incomplete", **error.progress}, ensure_ascii=False))
+        raise SystemExit(2)
     result = {"status": "completed", "extraction_batch_id": batch["extraction_batch_id"], "candidate_count": len(payload["candidates"])}
     if args.evaluate_development:
         evaluation = evaluate_development(payload)

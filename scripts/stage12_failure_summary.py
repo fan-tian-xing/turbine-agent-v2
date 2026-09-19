@@ -26,6 +26,8 @@ def decorate_event(evidence: dict[str, Any], event: dict[str, Any]) -> dict[str,
         "failure_type": event.get("failure_type"),
         "field": event.get("field"),
         "validator_reason": _clip(event.get("validator_reason")),
+        "exception_type": event.get("exception_type"),
+        "message": _clip(event.get("message")),
         "evidence_value_or_text": _clip(evidence.get("effective_text") or evidence.get("source_text") or ""),
         "model_value_or_text": event.get("model_value_or_text"),
     }
@@ -39,6 +41,7 @@ def write_failure_summary(
     evidence_ids: list[str],
     cache_maintenance: dict[str, Any] | None = None,
     status: str = "completed",
+    progress: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     events = list(events)
     failures = [event for event in events if event.get("outcome") == "failure"]
@@ -74,6 +77,7 @@ def write_failure_summary(
         "failures": failures,
         "attempts": events,
         "cache_maintenance": cache_maintenance or {},
+        "progress": progress or {},
         "raw_model_response_persisted": False,
         "sensitive_transport_data_persisted": False,
         "producer": "scripts/stage12_failure_summary.py",

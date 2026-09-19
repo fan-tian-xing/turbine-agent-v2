@@ -57,7 +57,7 @@
     "provider_failure_is_distinct_from_validation_failure": true,
     "response_max_attempts": 3,
     "transport_max_attempts": 3,
-    "per_evidence_cache": "var/model_runs/stage12/evidence; stores only fully validated structured candidates keyed by Evidence, profile, provider, prompt, response schema and semantic source fingerprints; raw model responses are never persisted",
+    "per_evidence_cache": "var/model_runs/stage12/evidence; stores only fully validated structured candidates keyed by Evidence, profile, split, provider metadata, provider configuration, statement Contract, candidate schema, prompt, response schema and semantic source fingerprints; raw model responses are never persisted",
     "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints.",
     "no_silent_fixture_fallback": true,
     "stale_cache_pruning": "scripts/build_stage12_candidates.py retains only current Development Evidence cache keys and removes stale or invalid JSON entries; changed Prompt, Schema or semantic source fingerprints require fresh real-provider extraction and are never re-keyed",

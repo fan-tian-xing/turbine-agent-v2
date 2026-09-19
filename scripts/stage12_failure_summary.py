@@ -37,6 +37,7 @@ def decorate_event(evidence: dict[str, Any], event: dict[str, Any]) -> dict[str,
         "fallback_triggered": event.get("fallback_triggered", False),
         "fallback_provider": event.get("fallback_provider"),
         "fallback_result": event.get("fallback_result"),
+        "semantic_attempts": event.get("semantic_attempts"),
         "evidence_value_or_text": _clip(evidence.get("effective_text") or evidence.get("source_text") or ""),
         "model_value_or_text": event.get("model_value_or_text"),
     }

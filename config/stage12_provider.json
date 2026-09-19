@@ -5,7 +5,7 @@
   "status": "active_for_stage12",
   "default_provider": "external_llm",
   "prompt": {
-    "version": "stage12-candidate-prompt-v7",
+    "version": "stage12-candidate-prompt-v8",
     "path": "config/stage12_prompt.txt"
   },
   "providers": {

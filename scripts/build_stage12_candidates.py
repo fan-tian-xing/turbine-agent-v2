@@ -80,6 +80,7 @@ def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict], re
             "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
             "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
             "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+            "provider_config": _sha(ROOT / "config/stage12_provider.json"),
         },
         "response_status": response_status,
         "candidates": candidates,
@@ -111,6 +112,7 @@ def _extract_with_evidence_cache(
                     "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
                     "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
                     "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+                    "provider_config": _sha(ROOT / "config/stage12_provider.json"),
                 }
                 cached_fingerprints = cached.get("contract_fingerprints") or {}
                 if any(cached_fingerprints.get(key) != value for key, value in expected_fingerprints.items()):
@@ -168,6 +170,7 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
         "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     for key, (evidence, profile) in current.items():
         target = evidence_dir / f"{key}.json"
@@ -287,6 +290,7 @@ def _current_valid_evidence_ids(manifest: dict, cache_root: Path) -> set[str]:
         "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
         "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     valid = set()
     for page in manifest.get("pages", []):
@@ -401,7 +405,7 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
         },
         "extraction_profile": "profile_routing_v1",
         "provider_id": provider.provider_id,
-        "prompt_version": "stage12-candidate-prompt-v7",
+        "prompt_version": "stage12-candidate-prompt-v8",
         "provider_metadata": provider.metadata,
         "input_sha256": {path: _sha(ROOT / path) for path in (
             "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",

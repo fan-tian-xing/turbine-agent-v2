@@ -57,11 +57,11 @@
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "70029f130a577b035f7190d194b966c2cc47558ff62203f480622ce5ad2646f4"
+      "sha256": "5dd8799f0e07106f1f71969a393084cca21b3b8b8ecaf7e5fe3b088373dc4e41"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "560b6bdfcb6573966dec45d84c93837fe15e2738ade70af12669c81623724d1f"
+      "sha256": "357b336e1510e67033865166d759752d3cef6131c773e083f066f391760511fb"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "9ce95fc5c2fe4ca0f1a9e40c4829d47e4e722f882c6c5be5d4b48ce7a33a13c0"
+      "sha256": "e00b598a72e2b0a63eab0769ca36bafcdc713da066011f1c586435ea670620fb"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -109,7 +109,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "ed15e91a8801328411975e635eb7c704e6f9ecf6e58d441636dc087123940d36"
+      "sha256": "e2d271c55435f9cea00dac0f8dd16634537a93d470af6bdec05e3b80bfa5f88a"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -169,29 +169,26 @@
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
     "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 0,
+    "validated_real_evidence_cache_count": 1,
     "failure_summary_counts": {
-      "transport_failure": 2,
+      "transport_failure": 0,
       "schema_failure": 0,
       "semantic_validation_failure": 0,
-      "success": 0,
-      "attempts": 2,
+      "success": 1,
+      "attempts": 1,
       "retry_recovered": 0,
-      "fallback_triggered": 2,
+      "fallback_triggered": 0,
       "fallback_success": 0,
       "provider_counts": {
-        "backup": 1,
         "primary": 1
       },
-      "root_cause_counts": {
-        "url_error": 2
-      }
+      "root_cause_counts": {}
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
@@ -199,50 +196,7 @@
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
       "real_llm_execution_verified": false,
-      "failure": [
-        {
-          "evidence_id": "evidence-93fb6fefbfccb828c68c",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.687,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-93fb6fefbfccb828c68c",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.344,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-          "model_value_or_text": null
-        }
-      ],
+      "failure": [],
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -438,7 +392,7 @@
   "production_llm_pipeline_ready": false,
   "real_llm_execution": true,
   "stage12_status_summary": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
     "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,

@@ -12,113 +12,139 @@
     "evidence-93fb6fefbfccb828c68c"
   ],
   "counts": {
-    "transport_failure": 2,
+    "transport_failure": 0,
     "schema_failure": 0,
     "semantic_validation_failure": 0,
-    "success": 0,
-    "attempts": 2,
+    "success": 1,
+    "attempts": 1,
     "retry_recovered": 0,
-    "fallback_triggered": 2,
+    "fallback_triggered": 0,
     "fallback_success": 0,
     "provider_counts": {
-      "backup": 1,
       "primary": 1
     },
-    "root_cause_counts": {
-      "url_error": 2
-    }
+    "root_cause_counts": {}
   },
-  "failures": [
-    {
-      "evidence_id": "evidence-93fb6fefbfccb828c68c",
-      "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
-      "message": null,
-      "provider_alias": "primary",
-      "endpoint_alias": "primary",
-      "root_cause": "url_error",
-      "status_code": null,
-      "elapsed_seconds": 0.687,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_attempted",
-      "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-      "model_value_or_text": null
-    },
-    {
-      "evidence_id": "evidence-93fb6fefbfccb828c68c",
-      "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
-      "message": null,
-      "provider_alias": "backup",
-      "endpoint_alias": "backup",
-      "root_cause": "url_error",
-      "status_code": null,
-      "elapsed_seconds": 0.344,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_failure",
-      "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-      "model_value_or_text": null
-    }
-  ],
+  "failures": [],
   "attempts": [
     {
       "evidence_id": "evidence-93fb6fefbfccb828c68c",
       "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
+      "outcome": "success",
+      "failure_type": null,
       "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
+      "validator_reason": null,
+      "exception_type": null,
       "message": null,
       "provider_alias": "primary",
       "endpoint_alias": "primary",
-      "root_cause": "url_error",
+      "root_cause": null,
       "status_code": null,
-      "elapsed_seconds": 0.687,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_attempted",
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
       "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-      "model_value_or_text": null
-    },
-    {
-      "evidence_id": "evidence-93fb6fefbfccb828c68c",
-      "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
-      "message": null,
-      "provider_alias": "backup",
-      "endpoint_alias": "backup",
-      "root_cause": "url_error",
-      "status_code": null,
-      "elapsed_seconds": 0.344,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_failure",
-      "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-      "model_value_or_text": null
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪下垫片脱开0.2～0.5mm。",
+            "statement_type": "procedure",
+            "predicate": "describes",
+            "subject_entities": [
+              {
+                "surface_form": "高中压外缸前猫爪",
+                "role": "subject"
+              },
+              {
+                "surface_form": "猫爪下垫片",
+                "role": "object"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若需检查"
+              },
+              {
+                "surface_form": "半空缸状态下"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "大修时"
+            }
+          },
+          {
+            "statement_text": "若需检查，可在大修时，在半空缸状态下，再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，清洗干净。",
+            "statement_type": "procedure",
+            "predicate": "describes",
+            "subject_entities": [
+              {
+                "surface_form": "前箱",
+                "role": "subject"
+              },
+              {
+                "surface_form": "滑块",
+                "role": "object"
+              },
+              {
+                "surface_form": "基架上滑块",
+                "role": "object"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若需检查"
+              },
+              {
+                "surface_form": "半空缸状态下"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "大修时"
+            }
+          },
+          {
+            "statement_text": "若需检查，可在大修时，在半空缸状态下，清理好滑块槽后再将滑块复位。",
+            "statement_type": "procedure",
+            "predicate": "describes",
+            "subject_entities": [
+              {
+                "surface_form": "滑块槽",
+                "role": "subject"
+              },
+              {
+                "surface_form": "滑块",
+                "role": "object"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若需检查"
+              },
+              {
+                "surface_form": "半空缸状态下"
+              },
+              {
+                "surface_form": "清理好滑块槽后"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "大修时"
+            }
+          }
+        ]
+      }
     }
   ],
   "cache_maintenance": {
     "current_valid": 0,
-    "stale_deleted": 0
+    "stale_deleted": 1
   },
   "progress": {},
   "raw_model_response_persisted": false,

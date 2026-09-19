@@ -13,7 +13,7 @@
 - `stage12_semantic_coverage_matrix.json` 明确 19 条 Development Gold 的覆盖范围和缺口；Gold 未被声明为 exhaustive。
 - `stage12_robustness_cases.json` 与 `stage12_robustness_evaluation.json` 保存真实 LLM 鲁棒性结果；`stage12_fixture_robustness_evaluation.json` 单独保存 fixture 结果，二者不得混用。
 - `stage12_holdout_evaluation.json` 只能由 `evaluate_stage12_holdout.py` 生成；它读取留出 Evidence/Gold 后只写评测指标，不写回开发候选、Profile、规则或 runtime cache。
-- `stage12_exit_audit.json` 是本阶段退出证据记录；项目当前状态唯一以 `data/project_state.json` 为准。当前 runtime、来源绑定、隔离和 OWL/SHACL 投影检查已通过，但当前 Candidate/Evaluation 仍不是 Prompt v7 下的有效重建结果，真实 LLM 当前受控诊断在 Primary/Backup 两端均为 transport `url_error`，有效真实 cache 为 0；Stage 13 按用户要求保持冻结，不执行、不重放、不修改。
+- `stage12_exit_audit.json` 是本阶段退出证据记录；项目当前状态唯一以 `data/project_state.json` 为准。当前 runtime、来源绑定、隔离和 OWL/SHACL 投影检查已通过，但当前 Candidate/Evaluation 仍不是 Prompt v8 下的有效重建结果，真实 LLM 当前受控诊断已到达 Primary 但响应结构仍未通过严格 Schema，未写入有效真实 cache；Stage 13 按用户要求保持冻结，不执行、不重放、不修改。
 
 当前观测：开发集 Evidence grounding 为 1.0，但关系和适用范围字段仍按冻结阈值单独计量；Holdout 注册 50 条、其中 48 条按冻结的 accepted-Evidence 规则评测，2 条隔离表格行在比较前排除，详细行号、页码和原因以评测产物为准。留出结果历史上已暴露，只能作为不可用于调参的独立验收记录。
 

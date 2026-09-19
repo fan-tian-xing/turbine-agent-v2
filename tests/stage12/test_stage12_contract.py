@@ -278,6 +278,43 @@ def test_external_provider_retries_deterministic_semantic_feedback_without_repai
     assert events[-1]["outcome"] == "success"
 
 
+def test_external_provider_preserves_final_semantic_diagnostics_without_raw_response():
+    valid = FixtureExtractionProvider().extract(_evidence(), _external_profile())
+    invalid = json.loads(json.dumps(valid, ensure_ascii=False))
+    invalid["candidates"][0]["applicability_scope"] = {"status": "known", "applicability_text": "未经证据支持的范围"}
+    raw = json.dumps(invalid, ensure_ascii=False)
+    extractor = ProviderBackedExtractor(
+        ExternalLLMProvider(transport=lambda prompt: raw, model_config_identifier="test-model", max_attempts=2),
+        profile=_external_profile(),
+        split="development_regression_golden",
+    )
+    with pytest.raises(ExtractionProviderError) as raised:
+        extractor.extract(_evidence())
+    details = raised.value.details
+    assert raised.value.failure_type == "semantic_validation_failure"
+    assert len(details["semantic_attempts"]) == 2
+    assert details["semantic_attempts"][0]["field"] == "applicability"
+    assert "raw" not in json.dumps(details, ensure_ascii=False).lower()
+
+
+def test_provider_shape_errors_are_schema_failures_not_semantic_retries():
+    valid = FixtureExtractionProvider().extract(_evidence(), _external_profile())
+    malformed = json.loads(json.dumps(valid, ensure_ascii=False))
+    malformed["candidates"][0]["applicability_scope"] = "大修时"
+    raw = json.dumps(malformed, ensure_ascii=False)
+    events = []
+    extractor = ProviderBackedExtractor(
+        ExternalLLMProvider(transport=lambda prompt: raw, model_config_identifier="test-model", max_attempts=1),
+        profile=_external_profile(),
+        split="development_regression_golden",
+    )
+    with pytest.raises(ExtractionProviderError) as raised:
+        extractor.extract(_evidence(), attempt_observer=events.append)
+    assert raised.value.failure_type == "schema_failure"
+    assert events[0]["failure_type"] == "schema_failure"
+    assert events[0]["field"] == "schema"
+
+
 def test_failure_summary_keeps_retry_failure_and_recovery_without_raw_response(tmp_path, monkeypatch):
     summary_path = tmp_path / "stage12_real_llm_failure_summary.json"
     monkeypatch.setattr(stage12_failure_summary, "SUMMARY_PATH", summary_path)

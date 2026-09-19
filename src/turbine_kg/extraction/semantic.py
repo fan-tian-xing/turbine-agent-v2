@@ -156,7 +156,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v7",
+        "version": "stage12-candidate-prompt-v8",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -189,7 +189,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v7",
+        "prompt_version": "stage12-candidate-prompt-v8",
         "response_schema_version": 2,
     }
 
@@ -238,7 +238,7 @@ class ExternalLLMProvider:
             "generated_by": provider_alias,
             "model": getattr(transport, "model", None),
             "config_fingerprint": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v7",
+            "prompt_version": "stage12-candidate-prompt-v8",
             "response_schema_version": 2,
         }
         self.last_result_metadata = dict(self.metadata)
@@ -249,7 +249,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": self.model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v7",
+            "prompt_version": "stage12-candidate-prompt-v8",
             "response_schema_version": 2,
         }
 
@@ -281,6 +281,7 @@ class ExternalLLMProvider:
             raise ExtractionProviderError("external LLM provider has no configured transport")
         prompt = stage12_prompt(evidence, profile)
         last_schema_error: ExtractionSchemaError | None = None
+        semantic_attempts: list[dict[str, Any]] = []
         for attempt in range(self.max_attempts):
             attempt_number = attempt + 1
             try:
@@ -302,8 +303,26 @@ class ExternalLLMProvider:
                 if response_validator is not None:
                     try:
                         response_validator(response)
+                    except ExtractionSchemaError as error:
+                        self._record("schema_failure")
+                        if attempt_observer is not None:
+                            attempt_observer(self._event({
+                                "attempt": attempt_number,
+                                "outcome": "failure",
+                                "failure_type": "schema_failure",
+                                "field": _diagnostic_failure_field(str(error), schema=True),
+                                "validator_reason": str(error),
+                                "model_value_or_text": _diagnostic_response_snapshot(response),
+                            }))
+                        raise
                     except ValueError as error:
                         self._record("semantic_validation_failure")
+                        semantic_attempts.append({
+                            "attempt": attempt_number,
+                            "field": _diagnostic_failure_field(str(error)),
+                            "validator_reason": str(error),
+                            "model_value_or_text": _diagnostic_response_snapshot(response),
+                        })
                         if attempt_observer is not None:
                             attempt_observer(self._event({
                                 "attempt": attempt_number,
@@ -364,6 +383,7 @@ class ExternalLLMProvider:
                     raise ExtractionProviderError(
                         f"external LLM response failed Stage 12 semantic validation after {self.max_attempts} attempts",
                         failure_type="semantic_validation_failure",
+                        details={"semantic_attempts": semantic_attempts},
                     ) from error
                 prompt = prompt | {
                     "system": prompt["system"]
@@ -399,7 +419,7 @@ class FailoverExternalLLMProvider(ExternalLLMProvider):
             "primary_model": primary.metadata.get("model"),
             "backup_model": backup.metadata.get("model"),
             "failover_policy_fingerprint": policy_fingerprint,
-            "prompt_version": "stage12-candidate-prompt-v7",
+            "prompt_version": "stage12-candidate-prompt-v8",
             "response_schema_version": 2,
             "failover_enabled": True,
         }
@@ -490,6 +510,18 @@ def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
     for item in list(raw.get("candidates") or [])[:3]:
         if not isinstance(item, Mapping):
             continue
+        raw_scope = item.get("applicability_scope")
+        if isinstance(raw_scope, Mapping):
+            scope_snapshot = {
+                key: str(value)[:500]
+                for key, value in dict(raw_scope).items()
+                if key in {"status", "applicability_text"}
+            }
+        else:
+            scope_snapshot = {
+                "raw_type": type(raw_scope).__name__,
+                "raw_value": str(raw_scope)[:500],
+            }
         candidate = {
             "statement_text": str(item.get("statement_text", ""))[:1200],
             "statement_type": item.get("statement_type"),
@@ -504,11 +536,7 @@ def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
                 for condition in list(item.get("conditions") or [])[:10]
                 if isinstance(condition, Mapping)
             ],
-            "applicability_scope": {
-                key: str(value)[:500]
-                for key, value in dict(item.get("applicability_scope") or {}).items()
-                if key in {"status", "applicability_text"}
-            },
+            "applicability_scope": scope_snapshot,
         }
         candidates.append(candidate)
     snapshot["candidates"] = candidates
@@ -1075,8 +1103,12 @@ def _assemble_candidate(
     predicate = str(item["predicate"])
     quantities, value, unit = _quantity_fields(statement_text)
     raw_entities = item.get("subject_entities") or []
+    if not isinstance(raw_entities, list):
+        raise ExtractionSchemaError("candidate subject_entities must be an array")
     subject_entities = []
     for entity in raw_entities:
+        if not isinstance(entity, Mapping):
+            raise ExtractionSchemaError("candidate entity entries must be objects")
         surface_form = str(entity.get("surface_form", "")).strip()
         if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
             raise ValueError("candidate entity is not grounded in statement text")
@@ -1087,13 +1119,20 @@ def _assemble_candidate(
     if not subject_entities or subject_entities[0]["role"] != "subject":
         raise ValueError("candidate must provide a subject entity first")
     raw_conditions = item.get("conditions") or []
+    if not isinstance(raw_conditions, list):
+        raise ExtractionSchemaError("candidate conditions must be an array")
     conditions = []
     for condition in raw_conditions:
+        if not isinstance(condition, Mapping):
+            raise ExtractionSchemaError("candidate condition entries must be objects")
         surface_form = str(condition.get("surface_form", "")).strip()
         if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
             raise ValueError("candidate condition is not grounded in statement text")
         conditions.append({"surface_form": surface_form, "kind": "condition"})
-    raw_scope = dict(item.get("applicability_scope") or {})
+    raw_scope_value = item.get("applicability_scope")
+    if not isinstance(raw_scope_value, Mapping):
+        raise ExtractionSchemaError("candidate applicability_scope must be an object")
+    raw_scope = dict(raw_scope_value)
     scope_status = raw_scope.get("status")
     scope_text = raw_scope.get("applicability_text")
     if scope_status == "known" and not scope_text:

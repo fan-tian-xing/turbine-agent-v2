@@ -23,6 +23,7 @@ from turbine_kg.extraction.semantic import (
 )
 from turbine_kg.llm_client import OpenAICompatibleChatTransport
 from scripts import stage12_failure_summary
+from scripts.audit_stage12_exit import _reserve_acceptance_gate
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -56,6 +57,31 @@ def test_contract_is_candidate_only_and_has_provider_boundary():
     assert contract["architecture"]["relation_vocabulary"] == ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"]
     assert contract["architecture"]["gold_exhaustive"] is False
     assert schema["properties"]["provider_id"]["type"] == "string"
+
+
+def test_exposed_holdout_cannot_satisfy_independent_reserve_acceptance():
+    thresholds = {"statement_boundary": 0.9, "negation": 1.0}
+    exposed_holdout = {
+        "status": "completed",
+        "eligible_for_final_acceptance": False,
+        "field_accuracy": {"statement_boundary": 1.0, "negation": 1.0},
+        "error_counts": {"unsupported_claim": 0},
+    }
+    assert _reserve_acceptance_gate(False, exposed_holdout, thresholds) is False
+    assert _reserve_acceptance_gate(True, exposed_holdout, thresholds) is False
+
+
+def test_independent_reserve_acceptance_uses_only_frozen_reserve_result():
+    thresholds = {"statement_boundary": 0.9, "negation": 1.0}
+    reserve = {
+        "status": "completed",
+        "eligible_for_final_acceptance": True,
+        "field_accuracy": {"statement_boundary": 0.9, "negation": 1.0},
+        "error_counts": {"unsupported_claim": 0},
+    }
+    assert _reserve_acceptance_gate(True, reserve, thresholds) is True
+    reserve["error_counts"]["unsupported_claim"] = 1
+    assert _reserve_acceptance_gate(True, reserve, thresholds) is False
 
 
 def test_provider_response_parser_is_strict_and_does_not_repair_prose():

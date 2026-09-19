@@ -34,6 +34,29 @@ def _jsonl(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def _reserve_acceptance_gate(
+    reserve_gold_ready: bool,
+    reserve_acceptance: dict,
+    acceptance_thresholds: dict[str, float],
+) -> bool:
+    """Evaluate only the independent Reserve result for final acceptance.
+
+    Historical/exposed Holdout observations are intentionally not inputs here;
+    they remain implementation and lineage evidence, but can never promote an
+    exposed result to final acceptance.
+    """
+    return (
+        reserve_gold_ready
+        and reserve_acceptance.get("status") == "completed"
+        and reserve_acceptance.get("eligible_for_final_acceptance") is True
+        and all(
+            reserve_acceptance.get("field_accuracy", {}).get(field, 0.0) >= threshold
+            for field, threshold in acceptance_thresholds.items()
+        )
+        and reserve_acceptance.get("error_counts", {}).get("unsupported_claim") == 0
+    )
+
+
 def audit() -> dict:
     contract = _read(ROOT / "config/stage12_statement_contract.json")
     provider_config = _read(ROOT / "config/stage12_provider.json")
@@ -243,13 +266,7 @@ def audit() -> dict:
     quality_checks = {
         "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
         "robustness_quality_gate": robustness_input_hashes_match and robustness.get("status") == "completed" and robustness.get("case_count", 0) > 0 and robustness.get("failed_count") == 0,
-        "acceptance_quality_gate": (
-            reserve_gold_ready
-            and reserve_acceptance.get("status") == "completed"
-            and reserve_acceptance.get("eligible_for_final_acceptance") is True
-            and all(reserve_acceptance.get("field_accuracy", {}).get(field, 0.0) >= threshold for field, threshold in acceptance_thresholds.items())
-            and reserve_acceptance.get("error_counts", {}).get("unsupported_claim") == 0
-        ),
+        "acceptance_quality_gate": _reserve_acceptance_gate(reserve_gold_ready, reserve_acceptance, acceptance_thresholds),
     }
     checks = {**implementation_checks, **quality_checks}
     # A prior real run under an invalidated contract is historical evidence

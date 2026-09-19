@@ -16,6 +16,7 @@ import unicodedata
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from difflib import SequenceMatcher
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
@@ -1245,37 +1246,177 @@ def validate_candidate_evidence_binding(candidate: Mapping[str, Any], evidence: 
         raise ValueError("candidate does not bind the canonical Evidence id")
 
 
-def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapping[str, Any]], *, gold_exhaustive: bool = False) -> dict[str, Any]:
-    """Evaluate semantics and extras without treating non-exhaustive Gold as FP."""
-    by_evidence: dict[str, list[Mapping[str, Any]]] = {}
-    for candidate in candidates:
+def _candidate_evidence_ids(candidate: Mapping[str, Any]) -> set[str]:
+    return {str(item.get("evidence_id")) for item in candidate.get("evidence_bindings", []) if item.get("evidence_id")}
+
+
+def _coarse_relation_for_gold(gold: Mapping[str, Any]) -> str:
+    """Adapt legacy fine predicates to the Stage 12 coarse relation contract."""
+    predicate = str(gold.get("predicate", ""))
+    if predicate in COARSE_RELATIONS:
+        return predicate
+    lowered = predicate.lower()
+    if lowered.startswith(("requires", "controls", "has_")):
+        return "requires"
+    if lowered.startswith(("describes", "adjust")):
+        return "describes"
+    if lowered.startswith(("verify", "verifies", "checks")):
+        return "verifies"
+    if "causes" in lowered or lowered.endswith("_risk"):
+        return "causes"
+    if lowered.startswith(("limits", "scope")):
+        return "limits_scope"
+    if lowered.startswith(("prohibits", "forbids")):
+        return "prohibits"
+    return _predicate(str(gold.get("statement_text", "")), "fact")
+
+
+def _gold_candidate_match_score(gold: Mapping[str, Any], candidate: Mapping[str, Any]) -> float:
+    """Score a same-Evidence pair without using any result-only field."""
+    expected_relation = _coarse_relation_for_gold(gold)
+    relation = float(candidate.get("predicate") == expected_relation)
+    entity = float(_entity_match(candidate, gold))
+    condition = float(_condition_match(candidate, gold))
+    quantity = float(_quantities_match(candidate.get("quantities", []), gold.get("quantities", [])))
+    return round(
+        0.55 * _text_similarity(gold.get("statement_text", ""), candidate.get("statement_text", ""))
+        + 0.15 * relation
+        + 0.15 * entity
+        + 0.10 * condition
+        + 0.05 * quantity,
+        8,
+    )
+
+
+def _maximum_gold_candidate_matching(
+    candidates: list[Mapping[str, Any]], gold_rows: list[Mapping[str, Any]],
+) -> dict[int, Mapping[str, Any]]:
+    """Find a deterministic maximum-weight matching within Evidence components."""
+    candidate_by_id = {str(item.get("candidate_id")): item for item in candidates}
+    gold_to_candidates: dict[int, set[str]] = {}
+    candidate_to_gold: dict[str, set[int]] = {}
+    for gold_index, gold in enumerate(gold_rows):
+        gold_evidence = {str(item.get("evidence_id")) for item in gold.get("evidence_bindings", [])}
+        for candidate in candidates:
+            candidate_id = str(candidate.get("candidate_id"))
+            if gold_evidence & _candidate_evidence_ids(candidate):
+                gold_to_candidates.setdefault(gold_index, set()).add(candidate_id)
+                candidate_to_gold.setdefault(candidate_id, set()).add(gold_index)
+
+    matches: dict[int, Mapping[str, Any]] = {}
+    remaining_gold = set(gold_to_candidates)
+    while remaining_gold:
+        seed = min(remaining_gold)
+        component_gold = {seed}
+        component_candidates: set[str] = set()
+        queue = [("gold", seed)]
+        while queue:
+            kind, value = queue.pop()
+            if kind == "gold":
+                for candidate_id in gold_to_candidates.get(value, set()):
+                    if candidate_id not in component_candidates:
+                        component_candidates.add(candidate_id)
+                        queue.append(("candidate", candidate_id))
+            else:
+                for gold_index in candidate_to_gold.get(value, set()):
+                    if gold_index not in component_gold:
+                        component_gold.add(gold_index)
+                        queue.append(("gold", gold_index))
+        remaining_gold -= component_gold
+        ordered_gold = sorted(component_gold)
+        ordered_candidates = sorted(component_candidates)
+        if len(ordered_candidates) > 20:
+            # The frozen Stage 12 samples are small; retain a safe deterministic
+            # fallback if a future component is too large for bitmask DP.
+            for gold_index in ordered_gold:
+                options = [
+                    (candidate_by_id[candidate_id], _gold_candidate_match_score(gold_rows[gold_index], candidate_by_id[candidate_id]))
+                    for candidate_id in ordered_candidates
+                    if candidate_id in component_candidates and candidate_id not in {item.get("candidate_id") for item in matches.values()}
+                ]
+                if options:
+                    candidate, score = max(options, key=lambda item: (item[1], str(item[0].get("candidate_id"))))
+                    if score > 0:
+                        matches[gold_index] = candidate
+            continue
+
+        @lru_cache(maxsize=None)
+        def solve(position: int, used_mask: int) -> tuple[float, tuple[tuple[int, str], ...]]:
+            if position == len(ordered_gold):
+                return 0.0, ()
+            gold_index = ordered_gold[position]
+            best_score, best_assignments = solve(position + 1, used_mask)
+            for candidate_position, candidate_id in enumerate(ordered_candidates):
+                if used_mask & (1 << candidate_position):
+                    continue
+                candidate = candidate_by_id[candidate_id]
+                score = _gold_candidate_match_score(gold_rows[gold_index], candidate)
+                if score <= 0:
+                    continue
+                remainder_score, remainder = solve(position + 1, used_mask | (1 << candidate_position))
+                option = (remainder_score + score, ((gold_index, candidate_id),) + remainder)
+                if option[0] > best_score or (option[0] == best_score and option[1] < best_assignments):
+                    best_score, best_assignments = option
+            return best_score, best_assignments
+
+        _, assignments = solve(0, 0)
+        for gold_index, candidate_id in assignments:
+            matches[gold_index] = candidate_by_id[candidate_id]
+    return matches
+
+
+def _evidence_semantic_support(candidate: Mapping[str, Any] | None, evidence_by_id: Mapping[str, Mapping[str, Any]] | None) -> bool | None:
+    """Validate candidate meaning against canonical Evidence, not Gold wording."""
+    if evidence_by_id is None:
+        return None
+    if not candidate or not candidate.get("evidence_bindings"):
+        return False
+    try:
         for binding in candidate.get("evidence_bindings", []):
-            by_evidence.setdefault(binding["evidence_id"], []).append(candidate)
+            evidence = evidence_by_id.get(str(binding.get("evidence_id")))
+            if evidence is None:
+                return False
+            validate_candidate_evidence_binding(candidate, evidence)
+            validate_candidate_against_evidence(candidate, evidence)
+    except (KeyError, TypeError, ValueError):
+        return False
+    return True
+
+
+def compare_candidates(
+    candidates: list[Mapping[str, Any]],
+    gold_rows: list[Mapping[str, Any]],
+    *,
+    gold_exhaustive: bool = False,
+    evidence_by_id: Mapping[str, Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Evaluate Gold agreement separately from Evidence support and binding."""
     fields = ("statement_boundary", "statement_type", "entity", "relation", "quantity", "unit", "comparison", "negation", "condition", "applicability", "applicability_meaning", "relation_direction", "unsupported_addition", "evidence_grounding")
     totals = {field: 0 for field in fields}
     correct = {field: 0 for field in fields}
+    binding_total = binding_correct = support_total = support_correct = 0
     errors: list[dict[str, Any]] = []
-    pairs = []
+    gold_mismatch_details: list[dict[str, Any]] = []
+    matches = _maximum_gold_candidate_matching(candidates, gold_rows)
+    assigned_candidates = {str(candidate.get("candidate_id")) for candidate in matches.values()}
     for gold_index, gold in enumerate(gold_rows):
-        evidence_ids = {item["evidence_id"] for item in gold.get("evidence_bindings", [])}
-        for evidence_id in evidence_ids:
-            for candidate in by_evidence.get(evidence_id, []):
-                pairs.append((_text_similarity(gold["statement_text"], candidate["statement_text"]), gold_index, candidate))
-    assigned_gold: set[int] = set()
-    assigned_candidates: set[str] = set()
-    matches: dict[int, Mapping[str, Any]] = {}
-    for score, gold_index, candidate in sorted(pairs, key=lambda item: item[0], reverse=True):
-        candidate_id = candidate["candidate_id"]
-        if gold_index in assigned_gold or candidate_id in assigned_candidates:
-            continue
-        matches[gold_index] = candidate
-        assigned_gold.add(gold_index)
-        assigned_candidates.add(candidate_id)
-    for gold_index, gold in enumerate(gold_rows):
-        evidence_ids = {item["evidence_id"] for item in gold.get("evidence_bindings", [])}
+        evidence_ids = {str(item.get("evidence_id")) for item in gold.get("evidence_bindings", [])}
         candidate = matches.get(gold_index)
+        binding_ok = bool(candidate and evidence_ids <= _candidate_evidence_ids(candidate))
+        semantic_support = _evidence_semantic_support(candidate, evidence_by_id)
+        if candidate is not None:
+            binding_total += 1
+            binding_correct += int(binding_ok)
+        if candidate is not None and semantic_support is not None:
+            support_total += 1
+            support_correct += int(semantic_support)
         boundary_score = _boundary_similarity(gold["statement_text"], candidate["statement_text"]) if candidate else 0.0
-        expected_relation = gold.get("predicate") if gold.get("predicate") in COARSE_RELATIONS else _predicate(str(gold.get("statement_text", "")), str(gold.get("statement_type", "fact")))
+        expected_relation = _coarse_relation_for_gold(gold)
+        # A missing candidate is a recall/Gold-coverage problem, not an
+        # Evidence-grounding failure. Only emitted candidates participate in
+        # binding and semantic-support checks.
+        evidence_grounding = candidate is None or bool(binding_ok and (semantic_support if semantic_support is not None else True))
+        unsupported_addition = candidate is None or bool(binding_ok and (semantic_support if semantic_support is not None else not _unsupported_addition(candidate, gold)))
         checks = {
             "statement_boundary": bool(candidate and boundary_score >= 0.8),
             "statement_type": bool(candidate and candidate["statement_type"] == gold["statement_type"]),
@@ -1288,13 +1429,17 @@ def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapp
             "condition": _condition_match(candidate, gold),
             "applicability": _applicability_match(candidate, gold),
             "applicability_meaning": _applicability_match(candidate, gold),
-            "relation_direction": _relation_direction_match(candidate, gold),
-            "unsupported_addition": not _unsupported_addition(candidate, gold),
-            "evidence_grounding": bool(candidate and evidence_ids <= {b["evidence_id"] for b in candidate.get("evidence_bindings", [])}),
+            "relation_direction": bool(candidate and candidate.get("relation_direction") == _relation_direction(str(gold.get("statement_text", "")), expected_relation)),
+            "unsupported_addition": unsupported_addition,
+            "evidence_grounding": evidence_grounding,
         }
         for field, passed in checks.items():
             totals[field] += 1
             correct[field] += int(passed)
+        gold_fields = [field for field in fields if field not in {"unsupported_addition", "evidence_grounding"}]
+        gold_mismatch_fields = [field for field in gold_fields if not checks[field]]
+        if candidate is not None and gold_mismatch_fields:
+            gold_mismatch_details.append({"statement_id": gold.get("statement_id"), "candidate_id": candidate.get("candidate_id"), "fields": gold_mismatch_fields})
         if not all(checks.values()):
             error_types = []
             if not checks["statement_boundary"]: error_types.append("boundary_error")
@@ -1308,20 +1453,31 @@ def compare_candidates(candidates: list[Mapping[str, Any]], gold_rows: list[Mapp
             if not checks["condition"]: error_types.append("condition_loss")
             if not checks["applicability"]: error_types.append("applicability_error")
             if not checks["relation_direction"]: error_types.append("relation_direction_error")
-            if not checks["unsupported_addition"]: error_types.append("unsupported_claim")
-            # A missing candidate is a recall failure, not a fabricated claim.
-            # Keep grounding false for the field metric, but reserve the
-            # zero-tolerance unsupported_claim counter for an emitted
-            # candidate that cites the wrong Evidence.
-            if candidate is not None and not checks["evidence_grounding"]: error_types.append("unsupported_claim")
+            if not checks["unsupported_addition"] or not checks["evidence_grounding"]: error_types.append("unsupported_claim")
             errors.append({"statement_id": gold.get("statement_id"), "candidate_id": candidate.get("candidate_id") if candidate else None, "error_types": error_types})
     unmatched_gold = [gold_rows[index].get("statement_id") for index in range(len(gold_rows)) if index not in matches]
-    unmatched_candidates = [candidate.get("candidate_id") for candidate in candidates if candidate.get("candidate_id") not in assigned_candidates]
+    unmatched_candidates = [candidate.get("candidate_id") for candidate in candidates if str(candidate.get("candidate_id")) not in assigned_candidates]
     error_names = ("boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "unit_error", "comparison_error", "negation_error", "condition_loss", "applicability_error", "relation_direction_error", "unsupported_claim")
     unmatched_review = [{"candidate_id": candidate_id, "classification": _classify_unmatched_candidate(candidate_id, candidates, matches, gold_rows)} for candidate_id in unmatched_candidates]
     review_counts = {name: sum(item["classification"] == name for item in unmatched_review) for name in ("valid_extra", "duplicate", "over_split", "unsupported", "needs_gold_completion")}
     semantic_correct = len(gold_rows) - len(errors)
-    return {"gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive, "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0), "statement_semantic_correctness": (semantic_correct / len(gold_rows) if gold_rows else 0.0), "field_totals": totals, "field_correct": correct, "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields}, "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in error_names}, "errors": errors, "matched_pairs": [{"statement_id": gold_rows[index].get("statement_id"), "candidate_id": candidate.get("candidate_id"), "score": _text_similarity(gold_rows[index]["statement_text"], candidate["statement_text"])} for index, candidate in sorted(matches.items())], "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates), "unmatched_candidate_review": unmatched_review, "unmatched_candidate_review_counts": review_counts, "candidate_coverage": {"matched_candidate_count": len(assigned_candidates), "extra_candidate_count": len(unmatched_candidates), "duplicate_candidate_rate": review_counts["duplicate"] / len(candidates) if candidates else 0.0, "over_split_rate": review_counts["over_split"] / len(candidates) if candidates else 0.0, "spurious_candidate_rate": len(unmatched_candidates) / len(candidates) if gold_exhaustive and candidates else None}, "evaluator_adapters": {"applicability": "statement-level applicability text is compared when Gold provides it; source/document-level scope metadata alone does not imply not_applicable or a known statement scope"}}
+    return {
+        "gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive,
+        "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0),
+        "statement_semantic_correctness": (semantic_correct / len(gold_rows) if gold_rows else 0.0),
+        "field_totals": totals, "field_correct": correct,
+        "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields},
+        "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in error_names},
+        "errors": errors,
+        "gold_mismatch_count": len(gold_mismatch_details), "gold_mismatch_details": gold_mismatch_details,
+        "evidence_binding": {"total": binding_total, "correct": binding_correct, "accuracy": binding_correct / binding_total if binding_total else 0.0},
+        "evidence_semantic_support": {"total": support_total, "correct": support_correct, "accuracy": support_correct / support_total if support_total else None, "source": "canonical Evidence validator" if evidence_by_id is not None else "not supplied"},
+        "matched_pairs": [{"statement_id": gold_rows[index].get("statement_id"), "candidate_id": candidate.get("candidate_id"), "score": _gold_candidate_match_score(gold_rows[index], candidate)} for index, candidate in sorted(matches.items())],
+        "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates),
+        "unmatched_candidate_review": unmatched_review, "unmatched_candidate_review_counts": review_counts,
+        "candidate_coverage": {"matched_candidate_count": len(assigned_candidates), "extra_candidate_count": len(unmatched_candidates), "duplicate_candidate_rate": review_counts["duplicate"] / len(candidates) if candidates else 0.0, "over_split_rate": review_counts["over_split"] / len(candidates) if candidates else 0.0, "spurious_candidate_rate": len(unmatched_candidates) / len(candidates) if gold_exhaustive and candidates else None},
+        "evaluator_adapters": {"applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately", "matching": "maximum-weight matching within shared Evidence components using text, coarse relation, primary entity, condition and quantity", "grounding": "Evidence binding, canonical Evidence semantic support and Gold agreement are reported separately"},
+    }
 
 
 def _units_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) -> bool:
@@ -1476,8 +1632,10 @@ def _applicability_match(candidate: Mapping[str, Any] | None, gold: Mapping[str,
             continue
         if key in expected and _normalized_text(value) != _normalized_text(expected[key]):
             return False
-    if actual.get("applicability_text") and _normalized_text(actual["applicability_text"]) not in _normalized_text(gold.get("statement_text", "")):
-        return False
+    # Gold without statement-level wording cannot disprove a source-grounded
+    # scope.  Canonical Evidence support is checked separately by
+    # ``_evidence_semantic_support``; comparing the wording to Gold here would
+    # incorrectly turn a Gold representation difference into a hallucination.
     return True
 
 

@@ -45,7 +45,7 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "acc300e50970a3c1c4a7a648493a6f0545768aeee9c25943a77de444d86754f0"
+      "sha256": "2d89a2e3ca349468738137eddbbec24e9b24af71e0f5fbca465d54bc8dd98e84"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
@@ -65,7 +65,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "85a2b0624ae46c2f4e57fa1b31f63acfef0342dd3a772e992b0e5a65fba1c3b8"
+      "sha256": "b8ea7c20344924bdd5437cd44ec53ffadb40a934d3041697036428be55399196"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -77,15 +77,15 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "d26a83acac710fe14feae616acbb64e5bdaad5c825984ff51c9d3bd369f1ed06"
+      "sha256": "76e46466c39185c46a73c80621453ec4f4e4865eedac43c7f3446b0416819f06"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "e9d104c6cec2a5c59d1f05f2c2a2eb8ba5284640647abc4f39ab69368307511e"
+      "sha256": "1fd45a9eebb8e02a050e83434e82c0df83353b85c6532485ce5ac903202eeba5"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "aae44f39c140de507642ab05733a585abe7305b3243f50e21d884a1c94a9454f"
+      "sha256": "3f3aaf09169f0c90adf52ebb9663add3400b4f51afeff3008edbd2f6fd1801d6"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -105,7 +105,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "08b9e53644fd8d43e4ee322f460a07190a77080f47a8a8df3a4ea6f7ac5c2744"
+      "sha256": "19097c44b9ca839b682d10a73aee2d1a6f42dcb4e6f9cdd14a12959e8689cebc"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -117,7 +117,7 @@
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "75ddf7476f98c33a05ea1dc7c1e9ffa80d55e8ca288d0236b6e4e9ba41c5f9a8"
+      "sha256": "96911ab1148967352fec9542aadcc15883c9ab653fc6198b6ee7be704df8d02f"
     }
   },
   "outputs": {
@@ -135,7 +135,7 @@
     "label_free_development_manifest": true,
     "manifest_input_lineage_current": true,
     "representative_baseline_frozen": true,
-    "representative_chapter_scope_resolved": false,
+    "representative_input_scope_declared": true,
     "five_documents_represented": true,
     "representative_coverage": true,
     "candidate_only_boundary": true,
@@ -143,47 +143,48 @@
     "candidate_pages_are_manifest_pages": true,
     "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": true,
-    "producer_reexecution_current": true,
-    "candidate_input_lineage_current": true,
+    "real_llm_execution_verified": false,
+    "producer_reexecution_current": false,
+    "candidate_input_lineage_current": false,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": true,
+    "development_evaluation_present": false,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
-    "grounding_zero_tolerance": false,
+    "grounding_zero_tolerance": true,
     "no_ontology_or_release_write": true,
     "robustness_evaluation_present": true,
     "real_llm_failure_summary_current": true,
     "semantic_coverage_matrix_present": true,
-    "stage13_frozen_by_user": true,
+    "reserve_registry_ready_for_independent_preparation": true,
     "development_quality_gate": false,
     "robustness_quality_gate": true,
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
     "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": true,
+    "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
+    "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 10,
+    "validated_real_evidence_cache_count": 1,
     "failure_summary_counts": {
-      "transport_failure": 0,
-      "schema_failure": 2,
-      "semantic_validation_failure": 2,
-      "success": 10,
-      "attempts": 14,
-      "retry_recovered": 3
+      "transport_failure": 1,
+      "schema_failure": 0,
+      "semantic_validation_failure": 0,
+      "success": 0,
+      "attempts": 1,
+      "retry_recovered": 0
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "executed",
+      "status": "blocked",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
-      "real_llm_execution_verified": true,
-      "failure": null,
+      "real_llm_execution_verified": false,
+      "failure": "external LLM provider failed",
       "entrypoints": [
         "scripts/build_stage12_candidates.py --force --evaluate-development",
         "scripts/evaluate_stage12_robustness.py",
@@ -192,12 +193,15 @@
       "audit_reexecution": "provider and validator re-executed in memory"
     },
     "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
-    "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible"
+    "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
+    "scope": "representative_page_baseline; representative chapter expansion is not produced by Stage 12",
+    "reserve": "reserved samples are registered upstream; independent Reserve Gold preparation is an upstream evaluation-sample responsibility",
+    "stage13": "Stage 13 state is informational and does not participate in the Stage 12 exit decision"
   },
   "counts": {
     "representative_pages": 8,
     "documents": 5,
-    "candidates": 25,
+    "candidates": 23,
     "development_gold_statements": 19,
     "holdout_gold_statements_registered": 50,
     "holdout_gold_statements_evaluated": 48,
@@ -266,7 +270,7 @@
   "quality_observation": {
     "development_field_accuracy": {
       "statement_boundary": 0.8421052631578947,
-      "statement_type": 0.631578947368421,
+      "statement_type": 0.7368421052631579,
       "entity": 0.8947368421052632,
       "relation": 0.7894736842105263,
       "quantity": 0.8947368421052632,
@@ -274,16 +278,16 @@
       "comparison": 0.8421052631578947,
       "negation": 0.8947368421052632,
       "condition": 0.8947368421052632,
-      "applicability": 0.7894736842105263,
-      "applicability_meaning": 0.7894736842105263,
+      "applicability": 0.8947368421052632,
+      "applicability_meaning": 0.8947368421052632,
       "relation_direction": 0.8421052631578947,
-      "unsupported_addition": 0.5263157894736842,
-      "evidence_grounding": 0.8947368421052632
+      "unsupported_addition": 1.0,
+      "evidence_grounding": 1.0
     },
     "holdout_field_accuracy": {
       "statement_boundary": 0.875,
       "statement_type": 0.6458333333333334,
-      "entity": 0.7083333333333334,
+      "entity": 0.7291666666666666,
       "relation": 0.7083333333333334,
       "quantity": 0.7708333333333334,
       "unit": 0.8333333333333334,
@@ -293,8 +297,8 @@
       "applicability": 0.8958333333333334,
       "applicability_meaning": 0.8958333333333334,
       "relation_direction": 0.8958333333333334,
-      "unsupported_addition": 0.9166666666666666,
-      "evidence_grounding": 0.8958333333333334
+      "unsupported_addition": 1.0,
+      "evidence_grounding": 1.0
     },
     "development_thresholds": {
       "statement_boundary": 0.9,
@@ -320,36 +324,47 @@
     },
     "development_recomputed": {
       "statement_boundary": 0.8421052631578947,
-      "statement_type": 0.631578947368421,
+      "statement_type": 0.7368421052631579,
       "entity": 0.8947368421052632,
-      "relation": 0.7894736842105263,
+      "relation": 0.8421052631578947,
       "quantity": 0.8947368421052632,
       "unit": 0.8947368421052632,
       "comparison": 0.8421052631578947,
       "negation": 0.8947368421052632,
       "condition": 0.8947368421052632,
-      "applicability": 0.7894736842105263,
-      "applicability_meaning": 0.7894736842105263,
+      "applicability": 0.8947368421052632,
+      "applicability_meaning": 0.8947368421052632,
       "relation_direction": 0.8421052631578947,
-      "unsupported_addition": 0.5263157894736842,
-      "evidence_grounding": 0.8947368421052632
+      "unsupported_addition": 1.0,
+      "evidence_grounding": 1.0
     },
+    "evidence_binding": {
+      "total": 17,
+      "correct": 17,
+      "accuracy": 1.0
+    },
+    "evidence_semantic_support": {
+      "total": 17,
+      "correct": 17,
+      "accuracy": 1.0,
+      "source": "canonical Evidence validator"
+    },
+    "gold_mismatch_count": 6,
     "scale_gate": false,
-    "interpretation": "development metrics may guide extractor work; the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"
+    "interpretation": "development metrics may guide extractor work; evidence support is evaluated against canonical Evidence, Gold agreement is reported separately, the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"
   },
   "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
   "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
-  "zero_tolerance_errors": [
-    "development_unsupported_claim",
-    "holdout_unsupported_claim"
-  ],
+  "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_holdout_exposed",
     "acceptance_quality_gate",
+    "candidate_input_lineage_current",
+    "development_evaluation_present",
     "development_quality_gate",
-    "grounding_zero_tolerance",
-    "representative_chapter_scope_resolved",
-    "reserve_independent_gold_not_ready"
+    "producer_reexecution_current",
+    "real_llm_execution_verified",
+    "upstream_reserve_gold_not_ready"
   ],
   "next_stage_allowed": false,
   "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",
@@ -362,12 +377,13 @@
   "real_llm_execution": true,
   "stage12_status_summary": {
     "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": true,
+    "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
+    "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false
   },
-  "real_llm_reexecution_error": null,
+  "real_llm_reexecution_error": "external LLM provider failed",
   "consumers": [
     "tests/stage12"
   ]

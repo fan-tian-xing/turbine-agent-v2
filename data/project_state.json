@@ -103,7 +103,7 @@
     },
     "12": {
       "status": "in_progress",
-    "scope": "llm_candidate_extraction_and_deterministic_validation",
+    "scope": "llm_candidate_extraction_and_deterministic_validation_on_representative_page_baseline",
       "entry_record": "data/stage12/stage12_entry_audit.json",
       "exit_audit": "data/stage12/stage12_exit_audit.json",
       "statement_contract": "config/stage12_statement_contract.json",

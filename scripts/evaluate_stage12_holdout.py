@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data/stage12/stage12_holdout_evaluation.json"
 REGISTRY = ROOT / "data/stage11/evaluation_sample_registry.json"
 ROUTING = ROOT / "config/stage12_profile_routing.json"
-EVALUATOR_VERSION = "stage12-holdout-evaluator-v3"
+EVALUATOR_VERSION = "stage12-holdout-evaluator-v4"
 
 
 def _rows(path: Path) -> list[dict]:
@@ -126,7 +126,7 @@ def evaluate() -> dict:
     }
     validate_candidate_payload(candidate_payload)
     to_stage9_runtime_payload(candidates)
-    report = compare_candidates(candidates, gold)
+    report = compare_candidates(candidates, gold, evidence_by_id=evidence_by_id)
     report.update({
         "schema_version": 1, "stage": "12", "artifact_kind": "stage12_holdout_evaluation", "status": "completed", "formal_release": False,
         "evaluation_entrypoint": "scripts/evaluate_stage12_holdout.py", "evaluator_version": EVALUATOR_VERSION, "frozen_extractor_profile": "profile_routing_v1", "holdout_used_for_tuning": False, "result_written_to_development": False,

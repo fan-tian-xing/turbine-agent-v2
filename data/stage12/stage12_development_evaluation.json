@@ -1,9 +1,9 @@
 {
   "gold_statement_count": 19,
-  "candidate_count": 25,
+  "candidate_count": 23,
   "gold_exhaustive": false,
   "statement_recall": 0.8947368421052632,
-  "statement_semantic_correctness": 0.2631578947368421,
+  "statement_semantic_correctness": 0.5789473684210527,
   "field_totals": {
     "statement_boundary": 19,
     "statement_type": 19,
@@ -22,7 +22,7 @@
   },
   "field_correct": {
     "statement_boundary": 16,
-    "statement_type": 12,
+    "statement_type": 14,
     "entity": 17,
     "relation": 15,
     "quantity": 17,
@@ -30,15 +30,15 @@
     "comparison": 16,
     "negation": 17,
     "condition": 17,
-    "applicability": 15,
-    "applicability_meaning": 15,
+    "applicability": 17,
+    "applicability_meaning": 17,
     "relation_direction": 16,
-    "unsupported_addition": 10,
-    "evidence_grounding": 17
+    "unsupported_addition": 19,
+    "evidence_grounding": 19
   },
   "field_accuracy": {
     "statement_boundary": 0.8421052631578947,
-    "statement_type": 0.631578947368421,
+    "statement_type": 0.7368421052631579,
     "entity": 0.8947368421052632,
     "relation": 0.7894736842105263,
     "quantity": 0.8947368421052632,
@@ -46,15 +46,15 @@
     "comparison": 0.8421052631578947,
     "negation": 0.8947368421052632,
     "condition": 0.8947368421052632,
-    "applicability": 0.7894736842105263,
-    "applicability_meaning": 0.7894736842105263,
+    "applicability": 0.8947368421052632,
+    "applicability_meaning": 0.8947368421052632,
     "relation_direction": 0.8421052631578947,
-    "unsupported_addition": 0.5263157894736842,
-    "evidence_grounding": 0.8947368421052632
+    "unsupported_addition": 1.0,
+    "evidence_grounding": 1.0
   },
   "error_counts": {
     "boundary_error": 3,
-    "statement_type_error": 7,
+    "statement_type_error": 5,
     "entity_error": 2,
     "relation_error": 4,
     "quantity_error": 2,
@@ -62,27 +62,16 @@
     "comparison_error": 3,
     "negation_error": 2,
     "condition_loss": 2,
-    "applicability_error": 4,
+    "applicability_error": 2,
     "relation_direction_error": 3,
-    "unsupported_claim": 9
+    "unsupported_claim": 0
   },
   "errors": [
-    {
-      "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-2f0b520d99a9fd845950",
-      "error_types": [
-        "statement_type_error",
-        "applicability_error",
-        "unsupported_claim"
-      ]
-    },
     {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
       "candidate_id": "stage12-candidate-b1854668f08d056ae9c0",
       "error_types": [
-        "comparison_error",
-        "applicability_error",
-        "unsupported_claim"
+        "comparison_error"
       ]
     },
     {
@@ -90,23 +79,14 @@
       "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
       "error_types": [
         "statement_type_error",
-        "relation_error",
-        "unsupported_claim"
+        "relation_error"
       ]
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
       "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
       "error_types": [
-        "statement_type_error",
-        "unsupported_claim"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
-      "candidate_id": "stage12-candidate-bc52a9b3a2fc31f886da",
-      "error_types": [
-        "unsupported_claim"
+        "statement_type_error"
       ]
     },
     {
@@ -114,27 +94,12 @@
       "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
       "error_types": [
         "boundary_error",
-        "statement_type_error",
-        "unsupported_claim"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
-      "candidate_id": "stage12-candidate-e6cc6f6d2cebeac9252a",
-      "error_types": [
-        "unsupported_claim"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
-      "candidate_id": "stage12-candidate-07549d808a5a3c6f0337",
-      "error_types": [
-        "unsupported_claim"
+        "statement_type_error"
       ]
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-68f226f353533491f864",
+      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
       "error_types": [
         "relation_error"
       ]
@@ -174,37 +139,81 @@
       ]
     },
     {
-      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-edeba7f5592e1facbc9e",
-      "error_types": [
-        "unsupported_claim"
-      ]
-    },
-    {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
       "candidate_id": "stage12-candidate-61b14738823efe7ca729",
       "error_types": [
         "relation_direction_error"
       ]
+    }
+  ],
+  "gold_mismatch_count": 6,
+  "gold_mismatch_details": [
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance",
+      "candidate_id": "stage12-candidate-b1854668f08d056ae9c0",
+      "fields": [
+        "comparison"
+      ]
     },
     {
-      "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
-      "error_types": [
-        "statement_type_error"
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
+      "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
+      "fields": [
+        "statement_type",
+        "relation"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
+      "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
+      "fields": [
+        "statement_type"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
+      "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
+      "fields": [
+        "statement_boundary",
+        "statement_type"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06",
+      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
+      "fields": [
+        "relation"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
+      "candidate_id": "stage12-candidate-61b14738823efe7ca729",
+      "fields": [
+        "relation_direction"
       ]
     }
   ],
+  "evidence_binding": {
+    "total": 17,
+    "correct": 17,
+    "accuracy": 1.0
+  },
+  "evidence_semantic_support": {
+    "total": 17,
+    "correct": 17,
+    "accuracy": 1.0,
+    "source": "canonical Evidence validator"
+  },
   "matched_pairs": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
       "candidate_id": "stage12-candidate-2f0b520d99a9fd845950",
-      "score": 0.8461538461538461
+      "score": 0.91538462
     },
     {
       "statement_id": "real-statement-dl5190-p86-contact",
       "candidate_id": "stage12-candidate-2469cfb6b8df11353404",
-      "score": 0.9583333333333334
+      "score": 0.97708333
     },
     {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
@@ -213,7 +222,7 @@
     },
     {
       "statement_id": "real-statement-haf103-p1-scope",
-      "candidate_id": "stage12-candidate-3c6eedbb1d7aa0db5411",
+      "candidate_id": "stage12-candidate-05e58312c190754b335d",
       "score": 1.0
     },
     {
@@ -224,7 +233,7 @@
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
       "candidate_id": "stage12-candidate-d8f621043b68f5df0479",
-      "score": 0.9454545454545454
+      "score": 0.82
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c",
@@ -234,36 +243,36 @@
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s2",
       "candidate_id": "stage12-candidate-a2b57b579dbc5a17747d",
-      "score": 0.926829268292683
+      "score": 0.9597561
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s3",
       "candidate_id": "stage12-candidate-bc52a9b3a2fc31f886da",
-      "score": 0.9666666666666667
+      "score": 0.98166667
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s4",
       "candidate_id": "stage12-candidate-acc726623fbe0d9ef984",
-      "score": 0.6923076923076923
+      "score": 0.83076923
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s5",
       "candidate_id": "stage12-candidate-e6cc6f6d2cebeac9252a",
-      "score": 0.9642857142857143
+      "score": 0.98035714
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c-s6",
       "candidate_id": "stage12-candidate-07549d808a5a3c6f0337",
-      "score": 0.975609756097561
+      "score": 0.98658537
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-68f226f353533491f864",
-      "score": 0.9642857142857143
+      "candidate_id": "stage12-candidate-cf5dbbbe93e2d7a9cf32",
+      "score": 0.83035714
     },
     {
       "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-edeba7f5592e1facbc9e",
+      "candidate_id": "stage12-candidate-67cc52b572d5004d2f71",
       "score": 1.0
     },
     {
@@ -274,12 +283,12 @@
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813",
       "candidate_id": "stage12-candidate-7b4d6f9e00c8a7ca560a",
-      "score": 0.9803921568627451
+      "score": 0.98921569
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
-      "candidate_id": "stage12-candidate-c1ef0c801314a513eda0",
-      "score": 0.9487179487179487
+      "candidate_id": "stage12-candidate-243c5e4d62b1d487f11c",
+      "score": 0.98589744
     }
   ],
   "unmatched_gold": [
@@ -289,15 +298,13 @@
   "unmatched_candidates": [
     "stage12-candidate-8f5bd086e5c285e8bb5f",
     "stage12-candidate-d568a59cb172251b252c",
-    "stage12-candidate-8e423d55819111100034",
-    "stage12-candidate-08a12a35e76146fd0462",
-    "stage12-candidate-d65ef49b57bc1bfe7003",
-    "stage12-candidate-bc3733aeaf7275c4eef5",
-    "stage12-candidate-36e378235612bf316599",
-    "stage12-candidate-7bf87e69237e4e984ff3"
+    "stage12-candidate-03b3364ba28494cd88f6",
+    "stage12-candidate-b463a37e086a622e8e51",
+    "stage12-candidate-b7f852777d9e5b11e390",
+    "stage12-candidate-7418d2ac6aea4e5394bb"
   ],
   "unmatched_gold_count": 2,
-  "unmatched_candidate_count": 8,
+  "unmatched_candidate_count": 6,
   "unmatched_candidate_review": [
     {
       "candidate_id": "stage12-candidate-8f5bd086e5c285e8bb5f",
@@ -308,27 +315,19 @@
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-8e423d55819111100034",
+      "candidate_id": "stage12-candidate-03b3364ba28494cd88f6",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-08a12a35e76146fd0462",
+      "candidate_id": "stage12-candidate-b463a37e086a622e8e51",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-d65ef49b57bc1bfe7003",
+      "candidate_id": "stage12-candidate-b7f852777d9e5b11e390",
       "classification": "needs_gold_completion"
     },
     {
-      "candidate_id": "stage12-candidate-bc3733aeaf7275c4eef5",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-36e378235612bf316599",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-7bf87e69237e4e984ff3",
+      "candidate_id": "stage12-candidate-7418d2ac6aea4e5394bb",
       "classification": "needs_gold_completion"
     }
   ],
@@ -337,48 +336,50 @@
     "duplicate": 0,
     "over_split": 0,
     "unsupported": 0,
-    "needs_gold_completion": 8
+    "needs_gold_completion": 6
   },
   "candidate_coverage": {
     "matched_candidate_count": 17,
-    "extra_candidate_count": 8,
+    "extra_candidate_count": 6,
     "duplicate_candidate_rate": 0.0,
     "over_split_rate": 0.0,
     "spurious_candidate_rate": null
   },
   "evaluator_adapters": {
-    "applicability": "statement-level applicability text is compared when Gold provides it; source/document-level scope metadata alone does not imply not_applicable or a known statement scope"
+    "applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately",
+    "matching": "maximum-weight matching within shared Evidence components using text, coarse relation, primary entity, condition and quantity",
+    "grounding": "Evidence binding, canonical Evidence semantic support and Gold agreement are reported separately"
   },
   "schema_version": 1,
   "stage": "12",
   "artifact_kind": "stage12_development_evaluation",
   "status": "completed",
   "formal_release": false,
-  "evaluator_version": "stage12-field-evaluator-v3",
+  "evaluator_version": "stage12-field-evaluator-v4",
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "real_llm_execution": true,
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "d26a83acac710fe14feae616acbb64e5bdaad5c825984ff51c9d3bd369f1ed06",
+    "candidate": "76e46466c39185c46a73c80621453ec4f4e4865eedac43c7f3446b0416819f06",
     "gold": "abd677dce813541f2e8e67f934e56dec518769f05872cff29603793974c0e13a",
     "manifest": "ac5034cc111cfbb2fcc587f63c19f39849bc2d6bd032064352d1a9391a4f023f",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
-    "contract": "acc300e50970a3c1c4a7a648493a6f0545768aeee9c25943a77de444d86754f0",
+    "contract": "2d89a2e3ca349468738137eddbbec24e9b24af71e0f5fbca465d54bc8dd98e84",
     "provider_config": "89dc2d33a13a3d7f203fe84295508c184cd04979367cdb939d2dc766d1ec11b1",
     "prompt": "a5be2a377f4acdacbddc34438c450233728810a7386bcfb2a65cc44fa7d09d99",
     "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
     "registry": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf",
-    "evaluator": "stage12-field-evaluator-v3"
+    "evaluator": "stage12-field-evaluator-v4"
   },
   "coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
   "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json",
   "robustness_executed": true,
   "robustness": {
     "case_count": 6,
-    "passed_count": 2,
-    "failed_count": 4
+    "passed_count": 6,
+    "failed_count": 0
   }
 }

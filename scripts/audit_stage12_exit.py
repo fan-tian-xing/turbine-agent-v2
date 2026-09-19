@@ -105,7 +105,7 @@ def audit() -> dict:
     acceptance_thresholds = contract["evaluation"]["acceptance_quality_gate"]
     development_quality = development.get("field_accuracy", {})
     holdout_quality = holdout.get("field_accuracy", {})
-    dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False)
+    dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False, evidence_by_id=canonical_evidence)
     provider_contract_ready = (
         provider_config.get("default_provider") == "external_llm"
         and provider_config.get("providers", {}).get("external_llm", {}).get("enabled") is True
@@ -130,7 +130,7 @@ def audit() -> dict:
                     validated_real_cache_count += 1
             except (OSError, json.JSONDecodeError, TypeError):
                 continue
-    stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "error_counts", "unmatched_gold", "unmatched_candidates"))
+    stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
     dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
         "gold": ROOT / "data/stage11/stage11_statement_development_samples.jsonl",
@@ -164,15 +164,18 @@ def audit() -> dict:
     manifest_input_refs = {key: {"path": path, "sha256": manifest.get("inputs", {}).get(key, "")} for key, path in manifest_paths.items()}
     manifest_lineage_current = not verify_input_hashes(ROOT, manifest_input_refs)
     representative_chapter_resolved = baseline.get("scope_kind") == "representative_chapter" and baseline.get("representative_chapter_claim_allowed") is True and baseline.get("section_identity_status") == "resolved"
+    representative_input_scope_declared = (
+        manifest.get("scope_kind") == baseline.get("scope_kind") == "representative_page_baseline"
+        and manifest.get("representative_chapter_claim_allowed") is False
+        and baseline.get("representative_chapter_claim_allowed") is False
+    )
     reserve_gold_path = STAGE12 / "stage12_reserve_acceptance.json"
     reserve_gold_ready = reserve_gold_path.exists() and _read(reserve_gold_path).get("status") == "independently_reviewed_gold"
-    stage13 = project_state.get("stages", {}).get("13", {})
-    stage13_frozen_by_user = (
-        stage13.get("status") == "blocked"
-        and stage13.get("reason") == "user_requested_stage13_freeze"
-        and stage13.get("verification_mode") == "FROZEN_BY_USER"
-        and stage13.get("not_executed") is True
-        and stage13.get("not_modified") is True
+    reserve_registry_records = [item for item in registry.get("records", []) if item.get("split") == "acceptance_holdout_reserve"]
+    reserve_registry_ready = (
+        len(reserve_registry_records) == 5
+        and all(item.get("frozen") is True and item.get("review_status") == "reserved" for item in reserve_registry_records)
+        and all((item.get("independence") or {}).get("statement") is True for item in reserve_registry_records)
     )
     holdout_exclusions = holdout.get("excluded_gold_statements", [])
     holdout_exclusions_accounted = (
@@ -195,7 +198,7 @@ def audit() -> dict:
         "label_free_development_manifest": manifest.get("label_free_extractor_view") is True and manifest.get("source_split") == "development_regression_golden" and manifest.get("holdout_used_for_tuning") is False and manifest.get("blind_read") is False,
         "manifest_input_lineage_current": manifest_lineage_current,
         "representative_baseline_frozen": baseline.get("status") == "frozen_page_baseline" and baseline.get("scope_kind") == "representative_page_baseline" and baseline.get("representative_chapter_claim_allowed") is False and baseline_identities == manifest_identities and all(set(page.get("evidence_ids", [])) == set(manifest_pages[key].get("evidence_ids", [])) and page.get("section_path") == manifest_pages[key].get("section_path") for key, page in baseline_pages.items()),
-        "representative_chapter_scope_resolved": representative_chapter_resolved,
+        "representative_input_scope_declared": representative_input_scope_declared,
         "five_documents_represented": len({page.get("document_key") for page in manifest.get("pages", [])}) == 5,
         "representative_coverage": {"numeric_unit", "range", "negation", "condition", "multi_object_or_step", "enumeration"} <= coverage,
         "candidate_only_boundary": candidate.get("status") == "candidate_only" and candidate.get("formal_release") is False and "authorized_action" not in forbidden,
@@ -208,8 +211,8 @@ def audit() -> dict:
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
-        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v3" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and stored_eval_matches and dev_input_hashes_match,
-        "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v3" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
+        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v4" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and stored_eval_matches and dev_input_hashes_match,
+        "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v4" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
@@ -217,7 +220,7 @@ def audit() -> dict:
         "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True and _read(STAGE12 / "stage12_robustness_evaluation.json").get("real_llm_execution") is True,
         "real_llm_failure_summary_current": failure_summary.get("artifact_kind") == "stage12_real_llm_failure_summary" and failure_summary.get("source_split") == "development_regression_golden" and failure_summary.get("holdout_used_for_tuning") is False and failure_summary.get("blind_read") is False,
         "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
-        "stage13_frozen_by_user": stage13_frozen_by_user,
+        "reserve_registry_ready_for_independent_preparation": reserve_registry_ready,
     }
     quality_checks = {
         "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
@@ -239,11 +242,12 @@ def audit() -> dict:
     production_llm_pipeline_ready = real_llm_batch_execution and development_quality_gate and quality_checks["robustness_quality_gate"]
     lifecycle_blockers = {"acceptance_holdout_exposed"}
     if not reserve_gold_ready:
-        lifecycle_blockers.add("reserve_independent_gold_not_ready")
+        lifecycle_blockers.add("upstream_reserve_gold_not_ready")
     blockers = sorted({name for name, passed in checks.items() if not passed} | lifecycle_blockers)
     pipeline_ready = all(implementation_checks.values())
     quality_accepted = all(quality_checks.values()) and not lifecycle_blockers
     status = "complete" if pipeline_ready and quality_accepted else "in_progress"
+    independent_acceptance = quality_checks["acceptance_quality_gate"] and reserve_gold_ready and "acceptance_holdout_exposed" not in lifecycle_blockers
     return {
         "schema_version": 1,
         "stage": "12",
@@ -266,6 +270,7 @@ def audit() -> dict:
             "REAL_LLM_BATCH_EXECUTION": real_llm_batch_execution,
             "PRODUCTION_LLM_PIPELINE_READY": production_llm_pipeline_ready,
             "DEVELOPMENT_QUALITY_GATE": development_quality_gate,
+            "INDEPENDENT_ACCEPTANCE": independent_acceptance,
             "STAGE12_EXIT": status == "complete",
             "validated_real_evidence_cache_count": validated_real_cache_count,
             "failure_summary_counts": failure_summary.get("counts", {}),
@@ -273,6 +278,9 @@ def audit() -> dict:
             "stage12_production_like_pipeline": {"status": "blocked" if reexecution_error else "executed", "scope": "representative_page_baseline", "configured_provider": provider_config.get("default_provider"), "real_llm_execution_verified": checks["real_llm_execution_verified"], "failure": reexecution_error, "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "provider and validator re-executed in memory"},
             "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
             "holdout": "executed_for_independent_metrics_only; historical exposure keeps final acceptance ineligible",
+            "scope": "representative_page_baseline; representative chapter expansion is not produced by Stage 12",
+            "reserve": "reserved samples are registered upstream; independent Reserve Gold preparation is an upstream evaluation-sample responsibility",
+            "stage13": "Stage 13 state is informational and does not participate in the Stage 12 exit decision",
         },
         "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development.get("gold_statement_count", 0), "holdout_gold_statements_registered": holdout.get("registered_holdout_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0), "holdout_gold_statements_excluded": holdout.get("excluded_gold_statement_count", 0)},
         "regression_matrix": {
@@ -291,7 +299,7 @@ def audit() -> dict:
             "12": {"verification_mode": "EXECUTED", "scope": "representative_page_baseline only", "evidence": "Stage 12 manifest, candidates, evaluations and exit audit"},
             "13": {"verification_mode": "FROZEN_BY_USER", "not_executed": True, "not_modified": True},
         },
-        "quality_observation": {"development_field_accuracy": development_quality, "holdout_field_accuracy": holdout_quality, "development_thresholds": quality_thresholds, "acceptance_thresholds": acceptance_thresholds, "development_recomputed": dev_recomputed.get("field_accuracy", {}), "scale_gate": quality_checks["development_quality_gate"], "interpretation": "development metrics may guide extractor work; the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"},
+        "quality_observation": {"development_field_accuracy": development_quality, "holdout_field_accuracy": holdout_quality, "development_thresholds": quality_thresholds, "acceptance_thresholds": acceptance_thresholds, "development_recomputed": dev_recomputed.get("field_accuracy", {}), "evidence_binding": dev_recomputed.get("evidence_binding"), "evidence_semantic_support": dev_recomputed.get("evidence_semantic_support"), "gold_mismatch_count": dev_recomputed.get("gold_mismatch_count"), "scale_gate": quality_checks["development_quality_gate"], "interpretation": "development metrics may guide extractor work; evidence support is evaluated against canonical Evidence, Gold agreement is reported separately, the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"},
         "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
         "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
         "zero_tolerance_errors": [name for name, count in {"development_unsupported_claim": development.get("error_counts", {}).get("unsupported_claim", 0), "holdout_unsupported_claim": holdout.get("error_counts", {}).get("unsupported_claim", 0)}.items() if count],
@@ -310,6 +318,7 @@ def audit() -> dict:
             "REAL_LLM_BATCH_EXECUTION": real_llm_batch_execution,
             "PRODUCTION_LLM_PIPELINE_READY": production_llm_pipeline_ready,
             "DEVELOPMENT_QUALITY_GATE": development_quality_gate,
+            "INDEPENDENT_ACCEPTANCE": independent_acceptance,
             "STAGE12_EXIT": status == "complete",
         },
         "real_llm_reexecution_error": reexecution_error,

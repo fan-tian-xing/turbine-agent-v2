@@ -154,6 +154,50 @@ def test_applicability_evaluator_does_not_turn_source_scope_into_not_applicable(
     assert report["field_accuracy"]["applicability_meaning"] == 1.0
 
 
+def test_evaluator_separates_evidence_support_from_gold_representation():
+    evidence = _evidence("若油压低于规定值，应停止调试。")
+    candidate = _candidate(evidence["source_text"])
+    gold = {
+        "statement_id": "s",
+        "statement_text": "应停止调试。",
+        "statement_type": "requirement",
+        "predicate": "requires",
+        "entity_alignment": [{"surface_form": "油压"}],
+        "quantities": [],
+        "negation_scope": [],
+        "conditions": [],
+        "applicability_scope": {},
+        "document_logical_id": evidence["document_logical_id"],
+        "physical_page": evidence["physical_page"],
+        "evidence_bindings": [{"evidence_id": evidence["evidence_id"]}],
+    }
+    report = compare_candidates([candidate], [gold], evidence_by_id={evidence["evidence_id"]: evidence})
+    assert report["evidence_binding"]["accuracy"] == 1.0
+    assert report["evidence_semantic_support"]["accuracy"] == 1.0
+    assert report["error_counts"]["unsupported_claim"] == 0
+    assert report["gold_mismatch_count"] >= 1
+
+
+def test_evaluator_maps_legacy_fine_predicate_to_stage12_coarse_relation():
+    candidate = _candidate()
+    gold = {
+        "statement_id": "s",
+        "statement_text": candidate["statement_text"],
+        "statement_type": "verification",
+        "predicate": "requires_dimension_check",
+        "entity_alignment": [{"surface_form": "真空"}],
+        "quantities": candidate["quantities"],
+        "negation_scope": candidate["negation_scope"],
+        "conditions": [],
+        "applicability_scope": {},
+        "document_logical_id": "fixture-document",
+        "physical_page": 1,
+        "evidence_bindings": [{"evidence_id": "fixture-evidence"}],
+    }
+    report = compare_candidates([candidate], [gold])
+    assert report["field_accuracy"]["relation"] == 1.0
+
+
 def test_profile_router_exposes_source_level_external_permission_without_filename_logic():
     router = ProfileRouter(ROOT / "config/stage12_profile_routing.json")
     route = router.route({"document_logical_id": "doc-af7fa1738c5c89599e41", "revision_id": "rev-c700c57426b967b2d2c9"})

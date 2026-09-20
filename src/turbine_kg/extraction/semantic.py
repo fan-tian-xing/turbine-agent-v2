@@ -64,7 +64,7 @@ COMPARATORS = (
     ("大于", "gt", "lower_bound"), ("超过", "gt", "lower_bound"),
     ("小于", "lt", "upper_bound"),
 )
-NEGATIONS = ("不得", "不应", "不小于", "不大于", "不少于", "不低于", "不超过", "无", "未", "不入")
+NEGATIONS = ("不得", "不应", "不小于", "不大于", "不少于", "不低于", "不超过", "不涉及", "无", "未", "不入")
 CONDITION_RE = re.compile(r"(?:当[^。；，,]{1,32}时|若[^。；，,]{1,32}|如果[^。；，,]{1,32}|在[^。；，,]{1,32}状态下|大修时)")
 ACTION_MARKERS = "应必须需可检查调整确认保证进行达到满足包括采用有"
 NOISE_PREFIXES = ("编制审核", "录入员", "目录", "目次", "题库", "选择题")
@@ -156,7 +156,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v13",
+        "version": "stage12-candidate-prompt-v15",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -189,7 +189,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v13",
+        "prompt_version": "stage12-candidate-prompt-v15",
         "response_schema_version": 2,
     }
 
@@ -238,7 +238,7 @@ class ExternalLLMProvider:
             "generated_by": provider_alias,
             "model": getattr(transport, "model", None),
             "config_fingerprint": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v13",
+            "prompt_version": "stage12-candidate-prompt-v15",
             "response_schema_version": 2,
         }
         self.last_result_metadata = dict(self.metadata)
@@ -249,7 +249,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": self.model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v13",
+            "prompt_version": "stage12-candidate-prompt-v15",
             "response_schema_version": 2,
         }
 
@@ -419,7 +419,7 @@ class FailoverExternalLLMProvider(ExternalLLMProvider):
             "primary_model": primary.metadata.get("model"),
             "backup_model": backup.metadata.get("model"),
             "failover_policy_fingerprint": policy_fingerprint,
-            "prompt_version": "stage12-candidate-prompt-v13",
+            "prompt_version": "stage12-candidate-prompt-v15",
             "response_schema_version": 2,
             "failover_enabled": True,
         }
@@ -1067,7 +1067,10 @@ class HeuristicSemanticExtractor:
         for index, clause in enumerate(_split_clauses(text), start=1):
             statement_type = _statement_type(clause, str(evidence.get("evidence_role") or ""))
             quantities, value, unit = _quantity_fields(clause)
-            conditions = [{"surface_form": item, "kind": "condition"} for item in CONDITION_RE.findall(clause)]
+            predicate = _predicate(clause, statement_type)
+            # A causal antecedent is represented by causes/cause_to_effect;
+            # only an additional gating prerequisite belongs in conditions.
+            conditions = [] if predicate == "causes" else [{"surface_form": item, "kind": "condition"} for item in CONDITION_RE.findall(clause)]
             entities = _entities(clause)
             candidate_basis = {
                 "evidence_id": evidence["evidence_id"], "index": index, "text": clause,
@@ -1078,8 +1081,8 @@ class HeuristicSemanticExtractor:
                 "task": "statement",
                 "statement_text": clause,
                 "statement_type": statement_type,
-                "predicate": _predicate(clause, statement_type),
-                "relation_direction": _relation_direction(clause, _predicate(clause, statement_type)),
+                "predicate": predicate,
+                "relation_direction": _relation_direction(clause, predicate),
                 "subject_entities": entities,
                 "object_value": {"kind": "source_assertion", "value": clause},
                 "value": value,
@@ -1143,6 +1146,8 @@ def _assemble_candidate(
         if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
             raise ValueError("candidate condition is not grounded in statement text")
         conditions.append({"surface_form": surface_form, "kind": "condition"})
+    if predicate == "causes":
+        conditions = []
     raw_scope_value = item.get("applicability_scope")
     if not isinstance(raw_scope_value, Mapping):
         raise ExtractionSchemaError("candidate applicability_scope must be an object")
@@ -1762,10 +1767,12 @@ def _unsupported_addition(candidate: Mapping[str, Any] | None, gold: Mapping[str
 def _classify_unmatched_candidate(candidate_id: str, candidates: list[Mapping[str, Any]], matches: Mapping[int, Mapping[str, Any]], gold_rows: list[Mapping[str, Any]]) -> str:
     candidate = next(item for item in candidates if item.get("candidate_id") == candidate_id)
     matched = list(matches.values())
-    if any(_text_similarity(candidate.get("statement_text"), item.get("statement_text")) >= 0.96 for item in matched):
+    if any(_normalized_text(candidate.get("statement_text")) == _normalized_text(item.get("statement_text")) for item in matched):
         return "duplicate"
     if any(_normalized_text(candidate.get("statement_text")) in _normalized_text(item.get("statement_text")) for item in matched):
         return "over_split"
+    if any(_text_similarity(candidate.get("statement_text"), item.get("statement_text")) >= 0.96 for item in matched):
+        return "duplicate"
     if not candidate.get("evidence_bindings") or not candidate.get("statement_text"):
         return "unsupported"
     return "needs_gold_completion"

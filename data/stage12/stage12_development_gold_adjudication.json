@@ -4,11 +4,11 @@
   "artifact_kind": "stage12_development_gold_adjudication",
   "status": "completed",
   "formal_release": false,
-  "source": "completed user manual adjudication in current conversation",
+  "source": "latest user manual adjudication in current conversation",
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "original_gold_count": 19,
-  "updated_gold_count": 42,
+  "updated_gold_count": 40,
   "decision_counts": {
     "unmatched_gold": 2,
     "needs_gold_completion": 8,
@@ -30,12 +30,38 @@
     "unknown applicability is not not_applicable",
     "quantities retain comparator, range and source surface wording",
     "sequence and causal chains are split without losing shared context",
-    "purpose/rationale is not forced into condition or entity"
+    "purpose/rationale is not forced into condition or entity",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+    "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves"
   ],
   "outputs": {
     "development_gold": "data/stage11/stage11_statement_development_samples.jsonl",
     "adjudication_record": "data/stage12/stage12_development_gold_adjudication.json"
   },
   "reserve_status": "not_read",
-  "stage13_status": "not_entered"
+  "stage13_status": "not_entered",
+  "historical_gold_count_before_boundary_adjudication": 40,
+  "historical_boundary_adjudication": {
+    "status": "retained_for_audit_only",
+    "superseded_statement_ids": [
+      "stage12-gold-delivery-08",
+      "stage12-gold-delivery-09"
+    ],
+    "canonical_statement_id": "stage12-gold-delivery-07",
+    "reason": "Semantically isomorphic parallel items are one canonical Statement with multiple entities; historical split records remain in repository history and are not current Development Gold."
+  }
 }

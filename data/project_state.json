@@ -114,7 +114,7 @@
     "provider_config": "config/stage12_provider.json",
     "production_provider": "external_llm",
     "fixture_policy": "test_and_offline_only",
-    "real_llm_execution": "current_development_batch_incomplete_due_transport_failure; resume_from_validated_evidence_cache",
+      "real_llm_execution": "current_development_batch_attempted_after_prompt_v15_gold_semantic_audit; zero_successes_due_primary_and_backup_url_error; no_current_candidate_or_evaluation_artifact",
       "provider_response_schema": "config/stage12_extraction_response.schema.json",
       "prompt": "config/stage12_prompt.txt",
       "semantic_coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",

@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GOLD_PATH = ROOT / "data/stage11/stage11_statement_development_samples.jsonl"
 AUDIT_PATH = ROOT / "data/stage12/stage12_development_gold_adjudication.json"
+STAGE11_QUEUE_PATH = ROOT / "data/stage11/stage11_adjudication_queue.jsonl"
 
 
 def _entity(surface: str, role: str, entity_class: str = "engineering_object") -> dict:
@@ -91,8 +92,94 @@ def _write_rows(rows: list[dict]) -> None:
     GOLD_PATH.write_text("\n".join(json.dumps(row, ensure_ascii=False, separators=(",", ":")) for row in rows) + "\n", encoding="utf-8")
 
 
+def _apply_current_boundary_adjudication(rows: list[dict]) -> None:
+    """Revise an already materialized current Gold without replaying history."""
+    by_id = {row["statement_id"]: row for row in rows}
+    canonical = copy.deepcopy(by_id["stage12-gold-delivery-07"])
+    canonical["statement_text"] = "厂房内各基础的纵横中心线、标高标识和基础沉降观测点应清晰、齐全。"
+    canonical["entity_alignment"] = [
+        _entity("厂房内各基础的纵横中心线", "subject", "reference_mark"),
+        _entity("厂房内各基础的标高标识", "subject", "reference_mark"),
+        _entity("厂房内各基础的基础沉降观测点", "subject", "measurement_point"),
+    ]
+    canonical["subject_entity_id"] = canonical["entity_alignment"][0]["entity_id"]
+    canonical["object_value"] = {"kind": "source_assertion", "value": canonical["statement_text"]}
+    canonical = _mark(canonical, ["matched-08", "matched-09", "matched-10", "matched-11", "matched-12"], "Latest user manual adjudication: delivery-07/08/09 are semantically isomorphic parallel items and must be one canonical Statement with three entities; delivery-10 remains merged, while delivery-01/02/03/04/05/06/11 remain split because their requirements differ substantively.")
+    vertical = copy.deepcopy(by_id["stage12-gold-seal-vertical-joint-flatness"])
+    vertical["negation_scope"] = [{"surface_form": "无错口", "polarity": "negative", "scope_type": "statement"}]
+    vertical = _mark(vertical, ["needs-gold-05"], "Latest user manual adjudication: negation is grounded in ‘无错口’; the prior ‘不入’ was inherited incorrectly.")
+    axial = copy.deepcopy(by_id["stage12-gold-seal-axial-paint-check"])
+    axial["negation_scope"] = []
+    axial = _mark(axial, ["needs-gold-06"], "Latest user manual adjudication: this statement has no negation; the prior ‘不入’ was inherited incorrectly.")
+    output = []
+    for row in rows:
+        sid = row["statement_id"]
+        if sid in {"stage12-gold-delivery-08", "stage12-gold-delivery-09"}:
+            continue
+        if sid == "stage12-gold-delivery-07":
+            output.append(canonical)
+        elif sid == "stage12-gold-seal-vertical-joint-flatness":
+            output.append(vertical)
+        elif sid == "stage12-gold-seal-axial-paint-check":
+            output.append(axial)
+        else:
+            output.append(row)
+    staged = next(row for row in output if row["statement_id"] == "stage11-statement-5740cf642266fcd6feb4")
+    staged["statement_text"] = staged["statement_text"].replace("监督", "监查")
+    staged["object_value"] = {"kind": "source_assertion", "value": staged["statement_text"]}
+    staged["conditions"] = [{"surface_form": "在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后", "kind": "condition"}]
+    staged["review_reason"] = "Latest user manual adjudication: Evidence wording is ‘监查’; activity-stage applicability remains distinct from the true prerequisite condition."
+    for row in output:
+        if row["statement_id"] == "stage12-gold-oil-cleanliness":
+            row["entity_alignment"] = [_entity("油室", "subject", "equipment_component"), _entity("油孔", "subject", "equipment_component")]
+            row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["review_reason"] = "Latest user manual adjudication: one Statement with two peer engineering entities; negation remains local to the same statement."
+        if row["statement_id"] == "stage11-statement-a9ff60d2526222447813-s5":
+            row["statement_text"] = "真空过低会给汽缸和转子造成较大的热冲击。"
+            row["object_value"] = {"kind": "source_assertion", "value": row["statement_text"]}
+            row["entity_alignment"] = [_entity("真空过低", "subject", "condition_state"), _entity("汽缸", "object", "component"), _entity("转子", "object", "component"), _entity("热冲击", "object", "phenomenon")]
+            row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["conditions"] = []
+            row["review_reason"] = "Latest user manual adjudication: causal subject and peer component entities must be Evidence-grounded; ‘相关过程’ was not present in the Evidence and was removed."
+        if row["statement_id"] in {"stage11-statement-a9ff60d2526222447813-s2", "stage11-statement-a9ff60d2526222447813-s3", "stage11-statement-a9ff60d2526222447813-s4"}:
+            row["conditions"] = []
+        if row["statement_id"] == "stage12-gold-scope-reference-only":
+            row.setdefault("applicability_scope", {})["status"] = "reference_only"
+    _write_rows(output)
+    queue_rows = [json.loads(line) for line in STAGE11_QUEUE_PATH.read_text(encoding="utf-8").splitlines() if line.strip()]
+    for queue_row in queue_rows:
+        sample_rows = sorted((row for row in output if row.get("sample_id") == queue_row.get("sample_id") and row.get("review_status") == "accepted" and row.get("label_status") == "gold"), key=lambda row: row.get("statement_id", ""))
+        if sample_rows and queue_row.get("adjudication_output_sha256"):
+            canonical = json.dumps(sample_rows, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            sample_hash = hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+            queue_row["adjudicated_statement_count"] = len(sample_rows)
+            queue_row["adjudication_output_sha256"] = sample_hash
+            if queue_row.get("split") == "development_regression_golden":
+                queue_row["adjudication_notes"] = "Stage 12 latest user manual adjudication applied; current Gold semantic corrections are reflected, while historical review records remain audit-only."
+    STAGE11_QUEUE_PATH.write_text("".join(json.dumps(row, ensure_ascii=False) + "\n" for row in queue_rows), encoding="utf-8")
+    audit = json.loads(AUDIT_PATH.read_text(encoding="utf-8"))
+    audit["source"] = "latest user manual adjudication in current conversation"
+    audit["updated_gold_count"] = len(output)
+    audit["historical_gold_count_before_boundary_adjudication"] = len(rows)
+    audit["historical_boundary_adjudication"] = {
+        "status": "retained_for_audit_only",
+        "superseded_statement_ids": ["stage12-gold-delivery-08", "stage12-gold-delivery-09"],
+        "canonical_statement_id": "stage12-gold-delivery-07",
+        "reason": "Semantically isomorphic parallel items are one canonical Statement with multiple entities; historical split records remain in repository history and are not current Development Gold.",
+    }
+    audit.setdefault("general_rules_applied", []).extend([
+        "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+        "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
+    ])
+    AUDIT_PATH.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps({"status": "completed", "mode": "current_boundary_revision", "original_gold_count": len(rows), "updated_gold_count": len(output)}, ensure_ascii=False))
+
+
 def main() -> None:
     original = _load_rows()
+    if "stage11-statement-090cfb6b41999cdd681c-s2" not in {row["statement_id"] for row in original}:
+        _apply_current_boundary_adjudication(original)
+        return
     by_id = {row["statement_id"]: row for row in original}
     consumed: set[str] = set()
     rows: list[dict] = []
@@ -139,8 +226,39 @@ def main() -> None:
         rows.append(row)
 
     vertical_base = by_id["real-statement-dl5190-p86-feeler"]
-    rows.append(_set_semantics(vertical_base, statement_id="stage12-gold-seal-vertical-joint-flatness", text="在紧好水平结合面螺栓的情况下，密封瓦座垂直结合面应平整、无错口。", statement_type="requirement", predicate="requires", entities=[("密封瓦座垂直结合面", "subject", "engineering_surface")], conditions=["在紧好水平结合面螺栓的情况下"], item_ids=["needs-gold-05"], reason="Shared requirement over the two vertical surfaces remains one independently retrievable statement; bolt-tightening context is a true condition."))
-    rows.append(_set_semantics(vertical_base, statement_id="stage12-gold-seal-axial-paint-check", text="密封瓦座内轴向两侧面应做涂色检查，接触面应均匀、连续。", statement_type="requirement", predicate="requires", entities=[("密封瓦座内轴向两侧面", "subject", "engineering_surface"), ("接触面", "object", "engineering_surface")], conditions=[], item_ids=["needs-gold-06"], reason="Method and acceptance result remain one complete normative requirement; method is not condition."))
+    vertical = _set_semantics(vertical_base, statement_id="stage12-gold-seal-vertical-joint-flatness", text="在紧好水平结合面螺栓的情况下，密封瓦座垂直结合面应平整、无错口。", statement_type="requirement", predicate="requires", entities=[("密封瓦座垂直结合面", "subject", "engineering_surface")], conditions=["在紧好水平结合面螺栓的情况下"], item_ids=["needs-gold-05"], reason="Latest user manual adjudication: negation is grounded in the source phrase ‘无错口’, while bolt-tightening context remains a true condition.")
+    vertical["negation_scope"] = [{"surface_form": "无错口", "polarity": "negative", "scope_type": "statement"}]
+    rows.append(vertical)
+    axial = _set_semantics(vertical_base, statement_id="stage12-gold-seal-axial-paint-check", text="密封瓦座内轴向两侧面应做涂色检查，接触面应均匀、连续。", statement_type="requirement", predicate="requires", entities=[("密封瓦座内轴向两侧面", "subject", "engineering_surface"), ("接触面", "object", "engineering_surface")], conditions=[], item_ids=["needs-gold-06"], reason="Latest user manual adjudication: this statement has no negation; method and acceptance result remain one complete normative requirement.")
+    axial["negation_scope"] = []
+    rows.append(axial)
+
+    # Correct source wording, local condition scope, causal semantics and
+    # parallel entity representation in the current Gold.
+    staged = next(row for row in output if row["statement_id"] == "stage11-statement-5740cf642266fcd6feb4")
+    staged["statement_text"] = staged["statement_text"].replace("监督", "监查")
+    staged["object_value"] = {"kind": "source_assertion", "value": staged["statement_text"]}
+    staged["conditions"] = [{"surface_form": "在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后", "kind": "condition"}]
+    staged = _mark(staged, ["matched-14"], "Latest user manual adjudication: Evidence wording is ‘监查’; activity-stage applicability remains distinct from the true prerequisite condition.")
+    for row in output:
+        if row["statement_id"] == "stage12-gold-oil-cleanliness":
+            row["entity_alignment"] = [_entity("油室", "subject", "equipment_component"), _entity("油孔", "subject", "equipment_component")]
+            row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["review_reason"] = "Latest user manual adjudication: one Statement with two peer engineering entities; negation remains local to the same statement."
+        if row["statement_id"] == "stage11-statement-a9ff60d2526222447813-s5":
+            row["statement_text"] = "真空过低会给汽缸和转子造成较大的热冲击。"
+            row["object_value"] = {"kind": "source_assertion", "value": row["statement_text"]}
+            row["entity_alignment"] = [_entity("真空过低", "subject", "condition_state"), _entity("汽缸", "object", "component"), _entity("转子", "object", "component"), _entity("热冲击", "object", "phenomenon")]
+            row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["conditions"] = []
+            row["review_reason"] = "Latest user manual adjudication: causal subject and peer component entities must be Evidence-grounded; ‘相关过程’ was not present in the Evidence and was removed."
+        if row["statement_id"] in {"stage11-statement-a9ff60d2526222447813-s2", "stage11-statement-a9ff60d2526222447813-s3", "stage11-statement-a9ff60d2526222447813-s4"}:
+            row["conditions"] = []
+            row["review_reason"] = "Latest user manual adjudication: causal antecedent remains in causes relation and is not duplicated as a condition."
+        if row["statement_id"] == "stage12-gold-scope-reference-only":
+            row.setdefault("applicability_scope", {})["status"] = "reference_only"
+            row["review_reason"] = "Reference-only scope remains limitation/limits_scope; it is not direct applicability."
+    _write_rows(output)
 
     # The user required four independently retrievable procedure statements,
     # retaining shared trigger, operating state and sequence in the text.
@@ -170,6 +288,7 @@ def main() -> None:
     ]:
         consumed.add(old_id)
     base = by_id["stage11-statement-090cfb6b41999cdd681c-s2"]
+    consumed.update({"stage12-gold-delivery-08", "stage12-gold-delivery-09"})
     delivery_specs = [
         ("stage12-gold-delivery-01", "行车轨道应安装完毕。", [("行车轨道", "subject", "facility_component")]),
         ("stage12-gold-delivery-02", "二次灌浆混凝土应达到设计强度并经验收合格。", [("二次灌浆混凝土", "subject", "material")]),
@@ -177,14 +296,12 @@ def main() -> None:
         ("stage12-gold-delivery-04", "模板应已拆除。", [("模板", "subject", "facility_component")]),
         ("stage12-gold-delivery-05", "厂房应封闭。", [("厂房", "subject", "facility")]),
         ("stage12-gold-delivery-06", "屋面应止水。", [("屋面", "subject", "facility_component")]),
-        ("stage12-gold-delivery-07", "厂房内各基础的纵横中心线应清晰、齐全。", [("厂房内各基础的纵横中心线", "subject", "reference_mark")]),
-        ("stage12-gold-delivery-08", "厂房内各基础的标高标识应清晰、齐全。", [("厂房内各基础的标高标识", "subject", "reference_mark")]),
-        ("stage12-gold-delivery-09", "厂房内各基础的基础沉降观测点应清晰、齐全。", [("厂房内各基础的基础沉降观测点", "subject", "measurement_point")]),
+        ("stage12-gold-delivery-07", "厂房内各基础的纵横中心线、标高标识和基础沉降观测点应清晰、齐全。", [("厂房内各基础的纵横中心线", "subject", "reference_mark"), ("厂房内各基础的标高标识", "subject", "reference_mark"), ("厂房内各基础的基础沉降观测点", "subject", "measurement_point")]),
         ("stage12-gold-delivery-10", "各层平台、通道、梯子、栏杆、踢脚板应装设完毕且焊接牢固。", [("各层平台、通道、梯子、栏杆、踢脚板", "subject", "facility_component")]),
         ("stage12-gold-delivery-11", "主机周边孔洞应有可靠的临时盖板或围栏。", [("主机周边孔洞", "subject", "facility_opening"), ("临时盖板或围栏", "object", "safety_feature")]),
     ]
     for statement_id, text, entities in delivery_specs:
-        rows.append(_set_semantics(base, statement_id=statement_id, text=text, statement_type="requirement", predicate="requires", entities=entities, conditions=[], item_ids=["matched-08", "matched-09", "matched-10", "matched-11", "matched-12"], reason="Delivery list item split by independent retrieval and answer value; installation handover remains shared applicability and list heading is excluded."))
+        rows.append(_set_semantics(base, statement_id=statement_id, text=text, statement_type="requirement", predicate="requires", entities=entities, conditions=[], item_ids=["matched-08", "matched-09", "matched-10", "matched-11", "matched-12"], reason="Latest user manual adjudication: merge only semantically isomorphic list items; delivery-07/08/09 share predicate, requirement, condition, method, result, acceptance criterion, causal relation and applicability, so they are one canonical statement with three entities. Other delivery items remain split where substantive content differs."))
 
     # The control-oil sequence is normative in all three independently
     # retrievable steps; old fine-grained predicates are adapted to requires.
@@ -233,7 +350,7 @@ def main() -> None:
     if consumed != set(by_id):
         missing = sorted(set(by_id) - consumed)
         raise RuntimeError(f"unhandled original Gold rows: {missing}")
-    if len(rows) != 42 or len({row["statement_id"] for row in rows}) != len(rows):
+    if len(rows) != 40 or len({row["statement_id"] for row in rows}) != len(rows):
         raise RuntimeError(f"unexpected adjudicated Gold count or duplicate IDs: {len(rows)}")
 
     _write_rows(rows)
@@ -248,6 +365,13 @@ def main() -> None:
         "blind_read": False,
         "original_gold_count": len(original),
         "updated_gold_count": len(rows),
+        "historical_gold_count_before_boundary_adjudication": 42,
+        "historical_boundary_adjudication": {
+            "status": "retained_for_audit_only",
+            "superseded_statement_ids": ["stage12-gold-delivery-08", "stage12-gold-delivery-09"],
+            "canonical_statement_id": "stage12-gold-delivery-07",
+            "reason": "Latest user manual adjudication established one canonical statement for three semantically isomorphic entities; historical split records remain in repository history and are not current Development Gold."
+        },
         "decision_counts": {"unmatched_gold": 2, "needs_gold_completion": 8, "matched_pair_mismatch": 17, "total": 27},
         "coverage": {"unmatched_gold": "all 2 covered", "needs_gold_completion": "all 8 covered", "matched_pair_mismatch": "all 17 covered"},
         "gold_update_policy": "Human adjudication updates Gold; no LLM Candidate is promoted automatically. Evidence bindings, review provenance and formal_release=false are retained.",
@@ -261,6 +385,8 @@ def main() -> None:
             "quantities retain comparator, range and source surface wording",
             "sequence and causal chains are split without losing shared context",
             "purpose/rationale is not forced into condition or entity",
+            "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
+            "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
         ],
         "outputs": {"development_gold": "data/stage11/stage11_statement_development_samples.jsonl", "adjudication_record": "data/stage12/stage12_development_gold_adjudication.json"},
         "reserve_status": "not_read",

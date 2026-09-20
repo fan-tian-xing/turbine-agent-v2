@@ -50,18 +50,22 @@ def test_project_state_references_matching_stage_exit_audits():
         assert entry["status"] == "in_progress"
 
 
-def test_stage12_project_state_is_a_current_snapshot_not_an_execution_log():
+def test_stage12_project_state_keeps_project_status_not_artifact_details():
     state = _read_json("data/project_state.json")
     stage12 = state["stages"]["12"]
 
-    execution = stage12["real_llm_execution"]
-    current = stage12["current_development_observation"]
-    assert execution["current_batch_completed"] is True
-    assert execution["evidence_success"] == current["real_llm_success"]
-    assert execution["evidence_total"] == current["evidence_total"]
-    assert execution["current_valid_cache_count"] == current["real_llm_success"]
-    assert set(stage12["provider_connectivity"]) == {"primary", "backup"}
+    assert stage12["status"] == state["current_stage_status"]
+    assert stage12["development_evaluation"] == "data/stage12/stage12_development_evaluation.json"
+    assert stage12["exit_audit"] == "data/stage12/stage12_exit_audit.json"
+    for detailed_field in (
+        "current_development_observation",
+        "real_llm_execution",
+        "provider_connectivity",
+        "production_provider",
+        "fixture_policy",
+    ):
+        assert detailed_field not in stage12
 
     serialized = json.dumps(stage12, ensure_ascii=False)
-    for historical_marker in ("smoke1", "smoke2", "prompt_v", "minimal_chat_completion"):
+    for historical_marker in ("field_accuracy", "candidate_count", "batch_id", "smoke1", "smoke2", "prompt_v"):
         assert historical_marker not in serialized

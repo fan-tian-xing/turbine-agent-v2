@@ -67,8 +67,8 @@ def audit() -> dict:
     candidate = _read(STAGE12 / "stage12_development_candidates.json")
     development = _read(STAGE12 / "stage12_development_evaluation.json")
     holdout = _read(STAGE12 / "stage12_holdout_evaluation.json")
+    coverage_matrix = _read(STAGE12 / "stage12_semantic_coverage_matrix.json")
     failure_summary = _read(STAGE12 / "stage12_real_llm_failure_summary.json") if (STAGE12 / "stage12_real_llm_failure_summary.json").exists() else {}
-    project_state = _read(ROOT / "data/project_state.json")
     stage11 = _read(ROOT / "data/stage11/stage11_exit_audit.json")
     canonical_evidence = {row["evidence"]["evidence_id"]: row["evidence"] for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")}
     dev_gold = _jsonl(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
@@ -112,7 +112,6 @@ def audit() -> dict:
     quality_thresholds = contract["evaluation"]["development_quality_gate"]
     acceptance_thresholds = contract["evaluation"]["acceptance_quality_gate"]
     development_quality = development.get("field_accuracy", {})
-    holdout_quality = holdout.get("field_accuracy", {})
     dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False, evidence_by_id=canonical_evidence)
     provider_contract_ready = (
         provider_config.get("default_provider") == "external_llm"
@@ -260,7 +259,14 @@ def audit() -> dict:
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
         "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and robustness.get("status") == "completed" and robustness.get("real_llm_execution") is True and robustness_input_hashes_match,
         "real_llm_failure_summary_current": failure_summary.get("artifact_kind") == "stage12_real_llm_failure_summary" and failure_summary.get("source_split") == "development_regression_golden" and failure_summary.get("holdout_used_for_tuning") is False and failure_summary.get("blind_read") is False,
-        "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
+        "semantic_coverage_matrix_current": (
+            coverage_matrix.get("status") == "current"
+            and coverage_matrix.get("producer") == "scripts/build_stage12_semantic_coverage_matrix.py"
+            and coverage_matrix.get("gold_artifact") == "data/stage11/stage11_statement_development_samples.jsonl"
+            and coverage_matrix.get("gold_sha256") == _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
+            and coverage_matrix.get("gold_statement_count") == development_gold_count
+            and coverage_matrix.get("generator_sha256") == _sha(ROOT / "scripts/build_stage12_semantic_coverage_matrix.py")
+        ),
         "reserve_registry_ready_for_independent_preparation": reserve_registry_ready,
     }
     quality_checks = {
@@ -290,6 +296,15 @@ def audit() -> dict:
     quality_accepted = all(quality_checks.values()) and not lifecycle_blockers
     status = "complete" if pipeline_ready and quality_accepted else "in_progress"
     independent_acceptance = quality_checks["acceptance_quality_gate"]
+    gates = {
+        "REAL_LLM_SINGLE_CALL_VERIFIED": real_llm_single_call_verified,
+        "REAL_LLM_BATCH_EXECUTION": real_llm_batch_execution,
+        "PRODUCTION_LLM_PIPELINE_READY": production_llm_pipeline_ready,
+        "DEVELOPMENT_QUALITY_GATE": development_quality_gate,
+        "ROBUSTNESS_QUALITY_GATE": quality_checks["robustness_quality_gate"],
+        "INDEPENDENT_ACCEPTANCE": independent_acceptance,
+        "STAGE12_EXIT": status == "complete",
+    }
     return {
         "schema_version": 1,
         "stage": "12",
@@ -307,47 +322,11 @@ def audit() -> dict:
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/stage12/stage12_real_llm_failure_summary.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "scripts/build_stage12_semantic_coverage_matrix.py", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/stage12/stage12_real_llm_failure_summary.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
         )},
         "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
-        "execution_evidence": {
-            "REAL_LLM_SINGLE_CALL_VERIFIED": real_llm_single_call_verified,
-            "REAL_LLM_BATCH_EXECUTION": real_llm_batch_execution,
-            "PRODUCTION_LLM_PIPELINE_READY": production_llm_pipeline_ready,
-            "DEVELOPMENT_QUALITY_GATE": development_quality_gate,
-            "INDEPENDENT_ACCEPTANCE": independent_acceptance,
-            "STAGE12_EXIT": status == "complete",
-            "validated_real_evidence_cache_count": validated_real_cache_count,
-            "failure_summary_counts": failure_summary.get("counts", {}),
-            "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
-            "stage12_production_like_pipeline": {"status": "executed" if real_llm_batch_execution else "not_currently_verified", "scope": "representative_page_baseline", "configured_provider": provider_config.get("default_provider"), "real_llm_execution_verified": checks["real_llm_execution_verified"], "failure": failure_summary.get("failures", []), "entrypoints": ["scripts/build_stage12_candidates.py --force --evaluate-development", "scripts/evaluate_stage12_robustness.py", "scripts/audit_stage12_exit.py"], "audit_reexecution": "not performed; Exit Audit validates the completed artifact and current cache lineage"},
-            "runtime_semantic_gate": "executed_in_memory_via_to_stage9_runtime_payload",
-            "historical_holdout_status": "exposed_not_eligible",
-            "final_acceptance_source": "independent_reserve",
-            "holdout": "executed_for_historical_diagnostics_only; never a final acceptance source",
-            "scope": "representative_page_baseline; representative chapter expansion is not produced by Stage 12",
-            "reserve": "independent Reserve Gold and one-time acceptance evaluation are required; no reserve result is accepted from the development builder",
-            "stage13": "Stage 13 state is informational and does not participate in the Stage 12 exit decision",
-        },
-        "counts": {"representative_pages": len(manifest.get("pages", [])), "documents": len({page.get("document_key") for page in manifest.get("pages", [])}), "candidates": len(candidate.get("candidates", [])), "development_gold_statements": development_gold_count, "historical_development_gold_statements_in_evaluation": development.get("gold_statement_count", 0), "holdout_gold_statements_registered": holdout.get("registered_holdout_statement_count", 0), "holdout_gold_statements_evaluated": holdout.get("gold_statement_count", 0), "holdout_gold_statements_excluded": holdout.get("excluded_gold_statement_count", 0)},
-        "regression_matrix": {
-            "0": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/project_state.json v2 boundary"},
-            "1": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/project_state.json stage 1 state"},
-            "2": {"verification_mode": "LINEAGE_VERIFIED", "evidence": "data/project_state.json and Stage 2 exit audit"},
-            "3": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage3/real_trial_execution.json"},
-            "4": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage4/stage4_full_parse_audit_2026-09-12.json"},
-            "5": {"verification_mode": "LINEAGE_VERIFIED", "evidence": "data/stage5/stage5_exit_audit_2026-09-12.json; frozen outputs not rerun"},
-            "6": {"verification_mode": "LINEAGE_VERIFIED", "evidence": "data/stage6/stage6_exit_audit.json"},
-            "7": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage7/stage7_exit_audit.json"},
-            "8": {"verification_mode": "STATICALLY_VERIFIED", "evidence": "data/stage8/stage8_exit_audit.json"},
-            "9": {"verification_mode": "EXECUTED", "evidence": "data/stage9/stage9_exit_audit.json and current Stage 9 gate"},
-            "10": {"verification_mode": "EXECUTED", "evidence": "data/stage10/stage10_audit.json runtime consumer"},
-            "11": {"verification_mode": "REPLAY_VERIFIED", "evidence": "data/stage11/stage11_exit_audit.json"},
-            "12": {"verification_mode": "EXECUTED", "scope": "representative_page_baseline only", "evidence": "Stage 12 manifest, candidates, evaluations and exit audit"},
-            "13": {"verification_mode": "FROZEN_BY_USER", "not_executed": True, "not_modified": True},
-        },
-        "quality_observation": {"development_field_accuracy": development_quality, "holdout_field_accuracy": holdout_quality, "development_thresholds": quality_thresholds, "acceptance_thresholds": acceptance_thresholds, "development_recomputed": dev_recomputed.get("field_accuracy", {}), "evidence_binding": dev_recomputed.get("evidence_binding"), "evidence_semantic_support": dev_recomputed.get("evidence_semantic_support"), "gold_mismatch_count": dev_recomputed.get("gold_mismatch_count"), "scale_gate": quality_checks["development_quality_gate"], "interpretation": "development metrics may guide extractor work; evidence support is evaluated against canonical Evidence, Gold agreement is reported separately, the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"},
+        "gates": gates,
         "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
         "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",
         "zero_tolerance_errors": [name for name, count in {"development_unsupported_claim": development.get("error_counts", {}).get("unsupported_claim", 0), "holdout_unsupported_claim": holdout.get("error_counts", {}).get("unsupported_claim", 0)}.items() if count],
@@ -355,21 +334,6 @@ def audit() -> dict:
         "next_stage_allowed": False,
         "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",
         "next_stage_inputs": {},
-        "stage13_formal_entry": "blocked",
-        "stage13_verification_mode": "FROZEN_BY_USER",
-        "provider_contract_ready": checks["provider_contract_ready"],
-        "fixture_pipeline_ready": (STAGE12 / "stage12_fixture_robustness_evaluation.json").exists() and _read(STAGE12 / "stage12_fixture_robustness_evaluation.json").get("execution_kind") == "fixture" and _read(STAGE12 / "stage12_fixture_robustness_evaluation.json").get("failed_count") == 0,
-        "production_llm_pipeline_ready": production_llm_pipeline_ready,
-        "real_llm_execution": development.get("real_llm_execution") is True,
-        "stage12_status_summary": {
-            "REAL_LLM_SINGLE_CALL_VERIFIED": real_llm_single_call_verified,
-            "REAL_LLM_BATCH_EXECUTION": real_llm_batch_execution,
-            "PRODUCTION_LLM_PIPELINE_READY": production_llm_pipeline_ready,
-            "DEVELOPMENT_QUALITY_GATE": development_quality_gate,
-            "INDEPENDENT_ACCEPTANCE": independent_acceptance,
-            "STAGE12_EXIT": status == "complete",
-        },
-        "real_llm_reexecution_error": None,
         "consumers": ["tests/stage12"],
     }
 

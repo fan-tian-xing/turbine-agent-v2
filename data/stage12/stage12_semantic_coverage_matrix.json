@@ -1,27 +1,90 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "stage": "12",
   "artifact_kind": "stage12_semantic_coverage_matrix",
-  "status": "development_audit",
+  "status": "current",
+  "producer": "scripts/build_stage12_semantic_coverage_matrix.py",
+  "generator_version": "stage12-semantic-coverage-v2",
+  "generator_sha256": "e9171e7bb34fcf611bb762bfa3aef5c2ad241d72e1b83c54fdff061b0e865cc9",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
-  "gold_statement_count": 19,
+  "gold_sha256": "9861fc4a5143294ea0057248ec59866b5badfaa25899129d89148f0fd37702e8",
+  "gold_statement_count": 40,
   "gold_exhaustive": false,
   "coverage": {
-    "source_role": {"covered": ["manufacturer_manual", "construction_standard", "commissioning_guideline", "nuclear_safety_regulation", "textbook"], "status": "covered_on_representative_pages"},
-    "modality": {"covered": ["requirement", "procedure", "fact", "verification", "limitation", "condition"], "status": "covered"},
-    "negation": {"covered": true, "note": "single Development negation example; broader negative constructions remain a gap"},
-    "causal_relation": {"covered": true, "status": "one Development example"},
-    "quantity_unit": {"covered": true, "status": "scalar, range and percentage examples"},
-    "comparison_operator": {"covered": ["eq", "gt", "gte", "range", "approximately"], "missing": ["lt", "lte"], "status": "partial"},
-    "condition": {"covered": true, "status": "explicit conditional clauses"},
-    "applicability": {"covered": true, "status": "source-bounded structured scope plus original wording; fine-grained canonical labels remain unresolved"},
-    "multi_entity": {"covered": "partial", "note": "Evidence contains multi-object language; candidate fixture keeps a conservative subject anchor"},
-    "procedure_steps": {"covered": true, "status": "conservative step grouping"},
-    "exception_disposition": {"covered": false, "status": "not represented in current 19 Gold"},
-    "ordinary_prose": {"covered": "partial", "status": "representative pages are requirement-heavy"},
-    "table_source": {"covered": "partial", "status": "Evidence lineage is retained; table-specific semantic coverage is not exhaustive"},
-    "expression_variation": {"covered": true, "status": "separate metamorphic cases"}
+    "documents": {
+      "count": 5,
+      "values": [
+        "D300N",
+        "DL5190.3",
+        "DLT863",
+        "HAF103",
+        "auxiliary_installation_book"
+      ]
+    },
+    "statement_type": {
+      "fact": 4,
+      "limitation": 2,
+      "procedure": 4,
+      "requirement": 30
+    },
+    "predicate": {
+      "causes": 4,
+      "describes": 4,
+      "limits_scope": 2,
+      "requires": 30
+    },
+    "normative_modality": {
+      "descriptive": 5,
+      "must": 1,
+      "shall": 34
+    },
+    "quantity": {
+      "statement_count": 6,
+      "quantity_count": 6,
+      "operator_counts": {
+        "approximately": 1,
+        "eq": 1,
+        "gt": 1,
+        "gte": 1,
+        "range": 2
+      },
+      "unit_counts": {
+        "%": 2,
+        "kPa": 1,
+        "mm": 3
+      }
+    },
+    "negation": {
+      "statement_count": 5
+    },
+    "condition": {
+      "statement_count": 6
+    },
+    "applicability": {
+      "statement_count": 40,
+      "scope_key_counts": {
+        "activity": 16,
+        "applicability_text": 12,
+        "document_key": 23,
+        "equipment": 18,
+        "lifecycle_stage": 39,
+        "model": 4,
+        "physical_page": 23,
+        "status": 1
+      },
+      "status_counts": {
+        "reference_only": 1
+      }
+    },
+    "entity": {
+      "multi_entity_statement_count": 27,
+      "maximum_entities_per_statement": 5
+    }
   },
-  "gaps": ["limited exhaustive coverage", "single-example negation/causality", "lt/lte comparison variants", "exception disposition", "table semantics"],
+  "gaps": [
+    "gold_not_exhaustive",
+    "comparison_operators_lt_lte_not_represented"
+  ],
+  "coverage_claim": "descriptive_development_gold_coverage_only",
   "consumer": "scripts/audit_stage12_exit.py"
 }

@@ -24,7 +24,8 @@ from turbine_kg.extraction.semantic import (
 from turbine_kg.extraction.semantic import _single_evidence_applicability_marker
 from turbine_kg.llm_client import OpenAICompatibleChatTransport
 from scripts import stage12_failure_summary
-from scripts.audit_stage12_exit import _reserve_acceptance_gate
+from scripts.audit_stage12_exit import _reserve_acceptance_gate, audit
+from scripts.build_stage12_semantic_coverage_matrix import build_matrix
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -58,6 +59,45 @@ def test_contract_is_candidate_only_and_has_provider_boundary():
     assert contract["architecture"]["relation_vocabulary"] == ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"]
     assert contract["architecture"]["gold_exhaustive"] is False
     assert schema["properties"]["provider_id"]["type"] == "string"
+
+
+def test_semantic_coverage_matrix_matches_current_gold_and_generator():
+    matrix = _read("data/stage12/stage12_semantic_coverage_matrix.json")
+    gold_rows = [
+        json.loads(line)
+        for line in (ROOT / "data/stage11/stage11_statement_development_samples.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+
+    assert matrix == build_matrix()
+    assert matrix["gold_statement_count"] == len(gold_rows)
+    assert matrix["coverage"]["statement_type"]
+    assert matrix["coverage"]["predicate"]
+    assert matrix["coverage_claim"] == "descriptive_development_gold_coverage_only"
+
+
+def test_exit_audit_keeps_exit_decision_without_copying_detailed_artifacts():
+    report = audit()
+
+    assert report["checks"]["semantic_coverage_matrix_current"] is True
+    assert set(report["gates"]) == {
+        "REAL_LLM_SINGLE_CALL_VERIFIED",
+        "REAL_LLM_BATCH_EXECUTION",
+        "PRODUCTION_LLM_PIPELINE_READY",
+        "DEVELOPMENT_QUALITY_GATE",
+        "ROBUSTNESS_QUALITY_GATE",
+        "INDEPENDENT_ACCEPTANCE",
+        "STAGE12_EXIT",
+    }
+    for duplicated_section in (
+        "counts",
+        "execution_evidence",
+        "quality_observation",
+        "regression_matrix",
+        "stage12_status_summary",
+        "real_llm_reexecution_error",
+    ):
+        assert duplicated_section not in report
 
 
 def test_exposed_holdout_cannot_satisfy_independent_reserve_acceptance():

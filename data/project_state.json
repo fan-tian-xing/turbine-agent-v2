@@ -111,43 +111,7 @@
       "development_candidates": "data/stage12/stage12_development_candidates.json",
       "development_evaluation": "data/stage12/stage12_development_evaluation.json",
       "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
-      "current_development_observation": {
-        "batch_id": "batch-4ece378884044a3ab2dd",
-        "evidence_total": 10,
-        "real_llm_success": 10,
-        "candidate_count": 38,
-        "field_accuracy": {
-          "statement_boundary": 0.9,
-          "statement_type": 0.9,
-          "entity": 0.9,
-          "relation": 0.9,
-          "quantity": 0.9,
-          "unit": 0.9,
-          "comparison": 0.9,
-          "negation": 0.875,
-          "condition": 0.85,
-          "applicability": 0.85,
-          "applicability_meaning": 0.85,
-          "relation_direction": 0.875,
-          "unsupported_addition": 1.0,
-          "evidence_grounding": 1.0
-        },
-        "development_quality_gate": false,
-        "robustness_started": false
-      },
       "provider_config": "config/stage12_provider.json",
-      "production_provider": "external_llm",
-      "fixture_policy": "test_and_offline_only",
-      "real_llm_execution": {
-        "current_batch_completed": true,
-        "evidence_success": 10,
-        "evidence_total": 10,
-        "current_valid_cache_count": 10
-      },
-      "provider_connectivity": {
-        "primary": "available_for_current_development_batch",
-        "backup": "unavailable_for_fallback"
-      },
       "provider_response_schema": "config/stage12_extraction_response.schema.json",
       "prompt": "config/stage12_prompt.txt",
       "semantic_coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",

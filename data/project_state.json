@@ -103,7 +103,7 @@
     },
     "12": {
       "status": "in_progress",
-    "scope": "llm_candidate_extraction_and_deterministic_validation_on_representative_page_baseline",
+      "scope": "llm_candidate_extraction_and_deterministic_validation_on_representative_page_baseline",
       "entry_record": "data/stage12/stage12_entry_audit.json",
       "exit_audit": "data/stage12/stage12_exit_audit.json",
       "statement_contract": "config/stage12_statement_contract.json",
@@ -135,18 +135,26 @@
         "development_quality_gate": false,
         "robustness_started": false
       },
-    "provider_config": "config/stage12_provider.json",
-    "production_provider": "external_llm",
-    "fixture_policy": "test_and_offline_only",
-      "real_llm_execution": "primary_minimal_chat_completion_verified_http_200; backup_minimal_chat_completion_http_403_forbidden; prompt_v17_smoke1_success; prompt_v17_smoke2_success; current_v17_development_batch_batch-4ece378884044a3ab2dd_10_of_10_primary_success; current_v17_candidate_count_38; current_v17_valid_cache_count_ten; development_quality_gate_false; robustness_not_started",
-      "provider_connectivity": "primary_dns_and_chat_completion_ok; backup_dns_ok_but_chat_completion_forbidden; no_proxy_env_detected; backup_not_usable_fallback",
+      "provider_config": "config/stage12_provider.json",
+      "production_provider": "external_llm",
+      "fixture_policy": "test_and_offline_only",
+      "real_llm_execution": {
+        "current_batch_completed": true,
+        "evidence_success": 10,
+        "evidence_total": 10,
+        "current_valid_cache_count": 10
+      },
+      "provider_connectivity": {
+        "primary": "available_for_current_development_batch",
+        "backup": "unavailable_for_fallback"
+      },
       "provider_response_schema": "config/stage12_extraction_response.schema.json",
       "prompt": "config/stage12_prompt.txt",
       "semantic_coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
-    "robustness_cases": "data/stage12/stage12_robustness_cases.json",
-    "robustness_evaluation": "data/stage12/stage12_robustness_evaluation.json",
-    "fixture_robustness_evaluation": "data/stage12/stage12_fixture_robustness_evaluation.json",
-    "external_processing_change_control": "data/change_control/retroactive_change_stage12_external_processing_permission.json",
+      "robustness_cases": "data/stage12/stage12_robustness_cases.json",
+      "robustness_evaluation": "data/stage12/stage12_robustness_evaluation.json",
+      "fixture_robustness_evaluation": "data/stage12/stage12_fixture_robustness_evaluation.json",
+      "external_processing_change_control": "data/change_control/retroactive_change_stage12_external_processing_permission.json",
       "next_stage": 13,
       "next_stage_status": "blocked"
     },

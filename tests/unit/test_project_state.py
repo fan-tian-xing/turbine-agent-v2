@@ -48,3 +48,20 @@ def test_project_state_references_matching_stage_exit_audits():
         entry = _read_json(current_stage["entry_record"])
         assert entry["stage"] == str(state["current_stage"])
         assert entry["status"] == "in_progress"
+
+
+def test_stage12_project_state_is_a_current_snapshot_not_an_execution_log():
+    state = _read_json("data/project_state.json")
+    stage12 = state["stages"]["12"]
+
+    execution = stage12["real_llm_execution"]
+    current = stage12["current_development_observation"]
+    assert execution["current_batch_completed"] is True
+    assert execution["evidence_success"] == current["real_llm_success"]
+    assert execution["evidence_total"] == current["evidence_total"]
+    assert execution["current_valid_cache_count"] == current["real_llm_success"]
+    assert set(stage12["provider_connectivity"]) == {"primary", "backup"}
+
+    serialized = json.dumps(stage12, ensure_ascii=False)
+    for historical_marker in ("smoke1", "smoke2", "prompt_v", "minimal_chat_completion"):
+        assert historical_marker not in serialized

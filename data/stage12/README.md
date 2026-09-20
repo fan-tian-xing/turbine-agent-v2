@@ -13,11 +13,11 @@
 - `stage12_semantic_coverage_matrix.json` 明确 19 条 Development Gold 的覆盖范围和缺口；Gold 未被声明为 exhaustive。
 - `stage12_robustness_cases.json` 与 `stage12_robustness_evaluation.json` 保存真实 LLM 鲁棒性结果；`stage12_fixture_robustness_evaluation.json` 单独保存 fixture 结果，二者不得混用。
 - `stage12_holdout_evaluation.json` 只能由 `evaluate_stage12_holdout.py` 生成；它读取留出 Evidence/Gold 后只写评测指标，不写回开发候选、Profile、规则或 runtime cache。
-- `stage12_exit_audit.json` 是本阶段退出证据记录；项目当前状态唯一以 `data/project_state.json` 为准。当前 runtime、来源绑定、隔离和 OWL/SHACL 投影检查已通过；Prompt v13 用于细化原子边界、条件枚举与段落级适用范围继承，Development Candidate/Evaluation 需在其下重新生成，Stage 13 按用户要求保持冻结，不执行、不重放、不修改。
+- `stage12_exit_audit.json` 是本阶段 canonical live Exit Audit；阶段退出前由审计器覆盖更新，正式退出并冻结后按变更控制处理。项目当前状态唯一以 `data/project_state.json` 为准，本 README 不固化 Prompt 版本、批次编号或动态质量成绩。Stage 13 按用户要求保持冻结，不执行、不重放、不修改。
 
-当前观测：开发集 Evidence grounding 为 1.0，但关系和适用范围字段仍按冻结阈值单独计量；Holdout 注册 50 条、其中 48 条按冻结的 accepted-Evidence 规则评测，2 条隔离表格行在比较前排除，详细行号、页码和原因以评测产物为准。留出结果历史上已暴露，只能作为不可用于调参的独立验收记录。
+历史 Holdout 已暴露，只能作为 observation-only 的受保护审计记录，不得用于调参或替代 Independent Reserve；其样本数、排除项和指标以 canonical Holdout Evaluation 为准。
 
-当前真实 LLM 单条验证尚未取得成功：最近一次受控诊断选择 1 条 Development Evidence，Primary 和 Backup 各尝试 1 次，均在 semantic validation 前返回 transport `url_error`，未写入成功 cache。旧 Candidate、旧 Development Evaluation 和旧批量失败记录不得视为当前有效产物；质量门、真实 robustness 和独立验收仍未全部通过，Exit Audit 的 blocker 才是阶段状态依据。运行方式：
+动态运行结果、当前 lineage、质量门和 blocker 分别读取 `data/project_state.json`、canonical Candidate/Evaluation 和 `stage12_exit_audit.json`；历史过程由 Git 与受保护审计产物追溯，不在 README 中累积。运行方式：
 
 ```powershell
 $projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"

@@ -140,11 +140,31 @@ def _apply_current_boundary_adjudication(rows: list[dict]) -> None:
     staged["object_value"] = {"kind": "source_assertion", "value": staged["statement_text"]}
     staged["conditions"] = [{"surface_form": "在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后", "kind": "condition"}]
     staged["review_reason"] = "Latest user manual adjudication: Evidence wording is ‘监查’; activity-stage applicability remains distinct from the true prerequisite condition."
+    scope = next(row for row in output if row["statement_id"] == "real-statement-haf103-p1-scope")
+    scope["statement_text"] = "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。"
+    scope["object_value"] = {"kind": "source_assertion", "value": scope["statement_text"]}
+    scope["negation_scope"] = [{"surface_form": "不涉及", "polarity": "negative", "scope_type": "statement"}]
+    scope["review_reason"] = "Latest user manual adjudication: the scope limitation preserves the Evidence-grounded exclusion ‘不涉及’; it remains limits_scope semantics and is not direct applicability."
     for row in output:
         if row["statement_id"] == "stage12-gold-oil-cleanliness":
             row["entity_alignment"] = [_entity("油室", "subject", "equipment_component"), _entity("油孔", "subject", "equipment_component")]
             row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["negation_scope"] = [
+                {"surface_form": "无铁屑", "polarity": "negative", "scope_type": "statement"},
+                {"surface_form": "无锈皮等杂物", "polarity": "negative", "scope_type": "statement"},
+            ]
             row["review_reason"] = "Latest user manual adjudication: one Statement with two peer engineering entities; negation remains local to the same statement."
+        if row["statement_id"] == "stage12-gold-gasket-undamaged":
+            row["negation_scope"] = [{"surface_form": "无破损", "polarity": "negative", "scope_type": "statement"}]
+            row["review_reason"] = "Latest user manual adjudication: negation preserves the complete Evidence-grounded phrase ‘无破损’."
+        if row["statement_id"] == "stage12-gold-delivery-03":
+            row["entity_alignment"] = [_entity("主辅设备基础", "subject", "foundation"), _entity("基座混凝土", "subject", "foundation")]
+            row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["review_reason"] = "Latest user manual adjudication: one Statement with two peer engineering entities; the shared strength requirement remains one canonical statement."
+        if row["statement_id"] == "stage12-gold-delivery-10":
+            row["entity_alignment"] = [_entity(surface, "subject", "facility_component") for surface in ("各层平台", "通道", "梯子", "栏杆", "踢脚板")]
+            row["subject_entity_id"] = row["entity_alignment"][0]["entity_id"]
+            row["review_reason"] = "Latest user manual adjudication: one Statement with five peer engineering entities; shared installation and welding requirements remain one canonical statement."
         if row["statement_id"] == "stage11-statement-a9ff60d2526222447813-s5":
             row["statement_text"] = "真空过低会给汽缸和转子造成较大的热冲击。"
             row["object_value"] = {"kind": "source_assertion", "value": row["statement_text"]}
@@ -239,8 +259,13 @@ def main() -> None:
     ]
     for statement_id, text, entities in seal_specs:
         row = _set_semantics(seal_base, statement_id=statement_id, text=text, statement_type="requirement", predicate="requires", entities=entities, conditions=[], item_ids=["needs-gold-01", "needs-gold-02", "needs-gold-03", "needs-gold-04"], reason="Evidence-supported Candidate was adjudicated into the specified independently retrievable requirements; method is retained in text and not misclassified as condition or entity.")
-        if "无" in text:
-            row["negation_scope"] = [{"surface_form": "无", "polarity": "negative", "scope_type": "statement"}]
+        if statement_id == "stage12-gold-oil-cleanliness":
+            row["negation_scope"] = [
+                {"surface_form": "无铁屑", "polarity": "negative", "scope_type": "statement"},
+                {"surface_form": "无锈皮等杂物", "polarity": "negative", "scope_type": "statement"},
+            ]
+        elif statement_id == "stage12-gold-gasket-undamaged":
+            row["negation_scope"] = [{"surface_form": "无破损", "polarity": "negative", "scope_type": "statement"}]
         rows.append(row)
 
     vertical_base = by_id["real-statement-dl5190-p86-feeler"]
@@ -310,12 +335,12 @@ def main() -> None:
     delivery_specs = [
         ("stage12-gold-delivery-01", "行车轨道应安装完毕。", [("行车轨道", "subject", "facility_component")]),
         ("stage12-gold-delivery-02", "二次灌浆混凝土应达到设计强度并经验收合格。", [("二次灌浆混凝土", "subject", "material")]),
-        ("stage12-gold-delivery-03", "主辅设备基础、基座混凝土应达到设计强度的70%以上。", [("主辅设备基础、基座混凝土", "subject", "foundation")]),
+        ("stage12-gold-delivery-03", "主辅设备基础、基座混凝土应达到设计强度的70%以上。", [("主辅设备基础", "subject", "foundation"), ("基座混凝土", "subject", "foundation")]),
         ("stage12-gold-delivery-04", "模板应已拆除。", [("模板", "subject", "facility_component")]),
         ("stage12-gold-delivery-05", "厂房应封闭。", [("厂房", "subject", "facility")]),
         ("stage12-gold-delivery-06", "屋面应止水。", [("屋面", "subject", "facility_component")]),
         ("stage12-gold-delivery-07", "厂房内各基础的纵横中心线、标高标识和基础沉降观测点应清晰、齐全。", [("厂房内各基础的纵横中心线", "subject", "reference_mark"), ("厂房内各基础的标高标识", "subject", "reference_mark"), ("厂房内各基础的基础沉降观测点", "subject", "measurement_point")]),
-        ("stage12-gold-delivery-10", "各层平台、通道、梯子、栏杆、踢脚板应装设完毕且焊接牢固。", [("各层平台、通道、梯子、栏杆、踢脚板", "subject", "facility_component")]),
+        ("stage12-gold-delivery-10", "各层平台、通道、梯子、栏杆、踢脚板应装设完毕且焊接牢固。", [("各层平台", "subject", "facility_component"), ("通道", "subject", "facility_component"), ("梯子", "subject", "facility_component"), ("栏杆", "subject", "facility_component"), ("踢脚板", "subject", "facility_component")]),
         ("stage12-gold-delivery-11", "主机周边孔洞应有可靠的临时盖板或围栏。", [("主机周边孔洞", "subject", "facility_opening"), ("临时盖板或围栏", "object", "safety_feature")]),
     ]
     for statement_id, text, entities in delivery_specs:
@@ -336,7 +361,7 @@ def main() -> None:
     # Staged commissioning: applicability and antecedent condition remain
     # separate; the old fine-grained relation is adapted to requires.
     replace("stage11-statement-5740cf642266fcd6feb4", [{
-        "statement_id": "stage11-statement-5740cf642266fcd6feb4", "text": "当调试活动分阶段实施时，营运单位应当确保在完成对前阶段调试试验结果的评价和监督，并确认调试结果评价满足了全部核安全管理要求之后，才允许进行下一阶段的调试试验工作。", "statement_type": "requirement", "predicate": "requires", "entities": [("营运单位", "subject", "organization"), ("前阶段调试试验结果", "object", "process_result"), ("全部核安全管理要求", "object", "requirement"), ("下一阶段的调试试验工作", "object", "process")], "conditions": ["在完成对前阶段调试试验结果的评价和监督，并确认调试结果评价满足了全部核安全管理要求之后"], "applicability_text": "当调试活动分阶段实施时", "item_ids": ["matched-14"], "reason": "Applicability and true antecedent condition separated; statement remains a normative requirement with coarse requires relation."}],)
+        "statement_id": "stage11-statement-5740cf642266fcd6feb4", "text": "当调试活动分阶段实施时，营运单位应当确保在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后，才允许进行下一阶段的调试试验工作。", "statement_type": "requirement", "predicate": "requires", "entities": [("营运单位", "subject", "organization"), ("前阶段调试试验结果", "object", "process_result"), ("全部核安全管理要求", "object", "requirement"), ("下一阶段的调试试验工作", "object", "process")], "conditions": ["在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后"], "applicability_text": "当调试活动分阶段实施时", "item_ids": ["matched-14"], "reason": "Latest user manual adjudication: Evidence wording is ‘监查’; activity-stage applicability remains distinct from the true prerequisite condition."}],)
 
     # Initial energization recordkeeping is two requirements; the source's
     # purpose/rationale remains in Evidence rather than becoming an entity.
@@ -357,7 +382,7 @@ def main() -> None:
         {"statement_id": "stage11-statement-a9ff60d2526222447813-s2", "text": "若真空过低，转子转动需要较多的新蒸汽。", "statement_type": "fact", "predicate": "causes", "entities": [("真空", "subject", "parameter"), ("转子转动", "object", "process"), ("较多的新蒸汽", "object", "material")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; trigger and causal direction retained."},
         {"statement_id": "stage11-statement-a9ff60d2526222447813-s3", "text": "若真空过低，乏汽突然排至凝汽器，会使凝汽器汽侧压力瞬间升高过多，并可能形成正压。", "statement_type": "fact", "predicate": "causes", "entities": [("乏汽", "subject", "material"), ("凝汽器汽侧压力", "object", "parameter"), ("正压", "object", "state")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; pressure-rise and positive-pressure link retained."},
         {"statement_id": "stage11-statement-a9ff60d2526222447813-s4", "text": "若真空过低，凝汽器汽侧形成正压可能造成排大气安全薄膜损坏。", "statement_type": "fact", "predicate": "causes", "entities": [("凝汽器汽侧正压", "subject", "state"), ("排大气安全薄膜", "object", "safety_feature")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; safety-film consequence retained."},
-        {"statement_id": "stage11-statement-a9ff60d2526222447813-s5", "text": "若真空过低，相关过程还可能给汽缸和转子造成较大的热冲击。", "statement_type": "fact", "predicate": "causes", "entities": [("相关过程", "subject", "process"), ("汽缸和转子", "object", "component"), ("热冲击", "object", "phenomenon")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; thermal-shock consequence retained without adding unsupported mechanism."},
+        {"statement_id": "stage11-statement-a9ff60d2526222447813-s5", "text": "真空过低会给汽缸和转子造成较大的热冲击。", "statement_type": "fact", "predicate": "causes", "entities": [("真空过低", "subject", "condition_state"), ("汽缸", "object", "component"), ("转子", "object", "component"), ("热冲击", "object", "phenomenon")], "conditions": [], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Latest user manual adjudication: causal subject and peer component entities must be Evidence-grounded; unsupported ‘相关过程’ is removed and the cause is represented only by the causes relation."},
     ])
 
     # The scope reference-only statement is an additional human-confirmed Gold

@@ -25,7 +25,7 @@
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "de5331994866ea2b6477d5a10b79af0cf93f6cf7bf06a52c42879b6280740459"
+      "sha256": "7ad8742be13c267164694694b9f6b91d7d0f85eeeac72bfe97f9489326b16594"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
@@ -41,7 +41,7 @@
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "006439d6d290f0186c3163037b98288b076cf250864160488698be98baca8aab"
+      "sha256": "54f4bce1a6d39c82c2bf960a306d648b8a0bb392366cd10c5c1bce0f35a6a45c"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "375df56d0e0906875f7d996078955fe7712195a0fce8b497f5825e6892d27225"
+      "sha256": "a08b04a3046776327377e0e29ddc8b1a19a0af0b957c8d458e887ec6ec6f96b8"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -81,11 +81,11 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "bb92b754c18e93350fcacd7f1c5e44f6f13931565514c41e3243c131992b3a17"
+      "sha256": "bdfb4b60e6f03f0433ae64171566b9940c0ab2e931004366416d424368fea0f3"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "cfc51e72b9c3f7f8aae8a451ecf9651cb0f00d3947c89a84b0077f42418b5564"
+      "sha256": "52919d7b1572cec3afa4540bc4418bb6b2ea5b8c8f87cc130f0532de2afa8e97"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
@@ -109,7 +109,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "5dfc90fc9f364594e3d70c08cd2dd25ed3ef20b84c0a61df3455cf1d4afda096"
+      "sha256": "83ffd9ad7c9be4b67962dc2d880400ffac6c9b2e40b956918bdc5de09a324d36"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -121,7 +121,7 @@
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "537da47d64051dfd9a5a21f93f30e8ab516d309acc9caf7198e6991f58632808"
+      "sha256": "671c5e0a148f7673d71881887d5f306c920bedc7a6cc1737499f965ecb85536c"
     }
   },
   "outputs": {
@@ -146,15 +146,15 @@
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": false,
+    "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": false,
-    "producer_reexecution_current": false,
-    "stale_cache_zero": false,
-    "candidate_input_lineage_current": false,
-    "canonical_evidence_consumed": false,
+    "real_llm_execution_verified": true,
+    "producer_reexecution_current": true,
+    "stale_cache_zero": true,
+    "candidate_input_lineage_current": true,
+    "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": false,
+    "development_evaluation_present": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
@@ -169,36 +169,36 @@
     "acceptance_quality_gate": false
   },
   "execution_evidence": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false,
-    "validated_real_evidence_cache_count": 0,
+    "validated_real_evidence_cache_count": 10,
     "failure_summary_counts": {
       "transport_failure": 0,
-      "schema_failure": 0,
-      "semantic_validation_failure": 3,
-      "success": 9,
+      "schema_failure": 1,
+      "semantic_validation_failure": 1,
+      "success": 10,
       "attempts": 12,
-      "retry_recovered": 1,
+      "retry_recovered": 2,
       "fallback_triggered": 0,
       "fallback_success": 0,
       "provider_counts": {
-        "primary": 11
+        "primary": 12
       },
       "root_cause_counts": {}
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
-      "status": "not_currently_verified",
+      "status": "executed",
       "scope": "representative_page_baseline",
       "configured_provider": "external_llm",
-      "real_llm_execution_verified": false,
+      "real_llm_execution_verified": true,
       "failure": [
         {
-          "evidence_id": "evidence-93fb6fefbfccb828c68c",
+          "evidence_id": "evidence-08795eed23203e43aa25",
           "attempt": 1,
           "outcome": "failure",
           "failure_type": "semantic_validation_failure",
@@ -216,88 +216,69 @@
           "fallback_provider": null,
           "fallback_result": null,
           "semantic_attempts": null,
-          "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
+          "evidence_value_or_text": "3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；  \n4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； \n5 密封瓦座上的丝扣接头应经试装，确认紧固密封。  \n9.7.2 密封瓦检查应符合下列规定： \n1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；  \n2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙\n应符合制造厂技术要求；",
           "model_value_or_text": {
             "status": "ok",
             "candidates": [
               {
-                "statement_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪下垫片脱开0.2～0.5mm。",
-                "statement_type": "procedure",
-                "predicate": "describes",
+                "statement_text": "各垂直结合面应光洁。",
+                "statement_type": "requirement",
+                "predicate": "requires",
                 "subject_entities": [
                   {
-                    "surface_form": "高中压外缸前猫爪",
+                    "surface_form": "各垂直结合面",
                     "role": "subject"
-                  },
-                  {
-                    "surface_form": "猫爪下垫片",
-                    "role": "object"
                   }
                 ],
-                "conditions": [
-                  {
-                    "surface_form": "若需检查"
-                  }
-                ],
+                "conditions": [],
                 "applicability_scope": {
-                  "status": "known",
-                  "applicability_text": "在大修时，在半空缸状态下"
+                  "status": "unknown"
                 }
               },
               {
-                "statement_text": "若需检查，在大修时，在半空缸状态下，再将前箱微微抬起0.1～0.15mm，与滑块脱开。",
-                "statement_type": "procedure",
-                "predicate": "describes",
+                "statement_text": "油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；",
+                "statement_type": "requirement",
+                "predicate": "requires",
                 "subject_entities": [
                   {
-                    "surface_form": "前箱",
+                    "surface_form": "油室",
                     "role": "subject"
                   },
                   {
-                    "surface_form": "滑块",
-                    "role": "object"
-                  }
-                ],
-                "conditions": [
-                  {
-                    "surface_form": "若需检查"
-                  }
-                ],
-                "applicability_scope": {
-                  "status": "known",
-                  "applicability_text": "在大修时，在半空缸状态下"
-                }
-              },
-              {
-                "statement_text": "若需检查，在大修时，在半空缸状态下，抽出基架上滑块，清洗干净。",
-                "statement_type": "procedure",
-                "predicate": "describes",
-                "subject_entities": [
-                  {
-                    "surface_form": "基架上滑块",
+                    "surface_form": "油孔",
                     "role": "subject"
                   }
                 ],
-                "conditions": [
+                "conditions": [],
+                "applicability_scope": {
+                  "status": "unknown"
+                }
+              },
+              {
+                "statement_text": "密封瓦座垫片应无破损，",
+                "statement_type": "requirement",
+                "predicate": "requires",
+                "subject_entities": [
                   {
-                    "surface_form": "若需检查"
+                    "surface_form": "密封瓦座垫片",
+                    "role": "subject"
                   }
                 ],
+                "conditions": [],
                 "applicability_scope": {
-                  "status": "known",
-                  "applicability_text": "在大修时，在半空缸状态下"
+                  "status": "unknown"
                 }
               }
             ]
           }
         },
         {
-          "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+          "evidence_id": "evidence-cd924809c0b4d4b4acc5",
           "attempt": 1,
           "outcome": "failure",
-          "failure_type": "semantic_validation_failure",
-          "field": "statement_boundary",
-          "validator_reason": "candidate dropped condition present in statement text",
+          "failure_type": "schema_failure",
+          "field": "status",
+          "validator_reason": "invalid Stage 12 provider response: 'status' is a required property",
           "exception_type": null,
           "message": null,
           "provider_alias": "primary",
@@ -310,357 +291,72 @@
           "fallback_provider": null,
           "fallback_result": null,
           "semantic_attempts": null,
-          "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+          "evidence_value_or_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
           "model_value_or_text": {
-            "status": "ok",
+            "status": null,
             "candidates": [
               {
-                "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+                "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力",
                 "statement_type": "requirement",
                 "predicate": "requires",
                 "subject_entities": [
                   {
-                    "surface_form": "汽轮机",
+                    "surface_form": "油泵出口溢流阀",
                     "role": "subject"
                   },
                   {
-                    "surface_form": "真空",
+                    "surface_form": "系统压力",
                     "role": "quantity_target"
                   }
                 ],
                 "conditions": [],
                 "applicability_scope": {
                   "status": "known",
-                  "applicability_text": "汽轮机冲转前"
+                  "applicability_text": "控制油压力调整时"
                 }
               },
               {
-                "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
-                "statement_type": "fact",
-                "predicate": "causes",
+                "statement_text": "然后调整出口母管泄压阀，确保系统安全泄压阀正常动作",
+                "statement_type": "requirement",
+                "predicate": "requires",
                 "subject_entities": [
                   {
-                    "surface_form": "真空",
+                    "surface_form": "出口母管泄压阀",
                     "role": "subject"
                   },
                   {
-                    "surface_form": "转子",
-                    "role": "related"
-                  }
-                ],
-                "conditions": [
-                  {
-                    "surface_form": "若真空过低"
-                  }
-                ],
-                "applicability_scope": {
-                  "status": "unknown"
-                }
-              },
-              {
-                "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
-                "statement_type": "fact",
-                "predicate": "causes",
-                "subject_entities": [
-                  {
-                    "surface_form": "真空",
-                    "role": "subject"
-                  },
-                  {
-                    "surface_form": "乏汽",
-                    "role": "related"
-                  },
-                  {
-                    "surface_form": "凝汽器",
+                    "surface_form": "系统安全泄压阀",
                     "role": "object"
+                  }
+                ],
+                "conditions": [],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "控制油压力调整时"
+                }
+              },
+              {
+                "statement_text": "再调节油泵出口溢流阀，确认系统压力满足设计要求",
+                "statement_type": "requirement",
+                "predicate": "requires",
+                "subject_entities": [
+                  {
+                    "surface_form": "油泵出口溢流阀",
+                    "role": "subject"
                   },
                   {
-                    "surface_form": "凝汽器汽侧压力",
-                    "role": "related"
+                    "surface_form": "系统压力",
+                    "role": "quantity_target"
                   }
                 ],
-                "conditions": [
-                  {
-                    "surface_form": "若真空过低"
-                  }
-                ],
+                "conditions": [],
                 "applicability_scope": {
-                  "status": "unknown"
+                  "status": "known",
+                  "applicability_text": "控制油压力调整时"
                 }
               }
             ]
           }
-        },
-        {
-          "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "semantic_validation_failure",
-          "field": null,
-          "validator_reason": "external LLM response failed Stage 12 semantic validation after 3 attempts",
-          "exception_type": "ExtractionProviderError",
-          "message": "external LLM response failed Stage 12 semantic validation after 3 attempts",
-          "provider_alias": null,
-          "endpoint_alias": null,
-          "root_cause": null,
-          "status_code": null,
-          "elapsed_seconds": null,
-          "fallback_eligible": false,
-          "fallback_triggered": false,
-          "fallback_provider": null,
-          "fallback_result": null,
-          "semantic_attempts": [
-            {
-              "attempt": 1,
-              "field": "statement_boundary",
-              "validator_reason": "candidate dropped condition present in statement text",
-              "model_value_or_text": {
-                "status": "ok",
-                "candidates": [
-                  {
-                    "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
-                    "statement_type": "requirement",
-                    "predicate": "requires",
-                    "subject_entities": [
-                      {
-                        "surface_form": "汽轮机",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "真空",
-                        "role": "quantity_target"
-                      }
-                    ],
-                    "conditions": [],
-                    "applicability_scope": {
-                      "status": "known",
-                      "applicability_text": "汽轮机冲转前"
-                    }
-                  },
-                  {
-                    "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
-                    "statement_type": "fact",
-                    "predicate": "causes",
-                    "subject_entities": [
-                      {
-                        "surface_form": "真空",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "转子",
-                        "role": "related"
-                      }
-                    ],
-                    "conditions": [
-                      {
-                        "surface_form": "若真空过低"
-                      }
-                    ],
-                    "applicability_scope": {
-                      "status": "unknown"
-                    }
-                  },
-                  {
-                    "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
-                    "statement_type": "fact",
-                    "predicate": "causes",
-                    "subject_entities": [
-                      {
-                        "surface_form": "真空",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "乏汽",
-                        "role": "related"
-                      },
-                      {
-                        "surface_form": "凝汽器",
-                        "role": "object"
-                      },
-                      {
-                        "surface_form": "凝汽器汽侧压力",
-                        "role": "related"
-                      }
-                    ],
-                    "conditions": [
-                      {
-                        "surface_form": "若真空过低"
-                      }
-                    ],
-                    "applicability_scope": {
-                      "status": "unknown"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "attempt": 2,
-              "field": "statement_boundary",
-              "validator_reason": "candidate dropped condition present in statement text",
-              "model_value_or_text": {
-                "status": "ok",
-                "candidates": [
-                  {
-                    "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
-                    "statement_type": "requirement",
-                    "predicate": "requires",
-                    "subject_entities": [
-                      {
-                        "surface_form": "汽轮机",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "真空",
-                        "role": "quantity_target"
-                      }
-                    ],
-                    "conditions": [],
-                    "applicability_scope": {
-                      "status": "known",
-                      "applicability_text": "汽轮机冲转前"
-                    }
-                  },
-                  {
-                    "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
-                    "statement_type": "fact",
-                    "predicate": "causes",
-                    "subject_entities": [
-                      {
-                        "surface_form": "真空",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "转子",
-                        "role": "related"
-                      },
-                      {
-                        "surface_form": "新蒸汽",
-                        "role": "object"
-                      }
-                    ],
-                    "conditions": [
-                      {
-                        "surface_form": "若真空过低"
-                      }
-                    ],
-                    "applicability_scope": {
-                      "status": "unknown"
-                    }
-                  },
-                  {
-                    "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
-                    "statement_type": "fact",
-                    "predicate": "causes",
-                    "subject_entities": [
-                      {
-                        "surface_form": "乏汽",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "凝汽器",
-                        "role": "object"
-                      },
-                      {
-                        "surface_form": "凝汽器汽侧压力",
-                        "role": "quantity_target"
-                      }
-                    ],
-                    "conditions": [
-                      {
-                        "surface_form": "若真空过低"
-                      }
-                    ],
-                    "applicability_scope": {
-                      "status": "unknown"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "attempt": 3,
-              "field": "statement_boundary",
-              "validator_reason": "candidate dropped condition present in statement text",
-              "model_value_or_text": {
-                "status": "ok",
-                "candidates": [
-                  {
-                    "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
-                    "statement_type": "requirement",
-                    "predicate": "requires",
-                    "subject_entities": [
-                      {
-                        "surface_form": "汽轮机",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "真空",
-                        "role": "quantity_target"
-                      }
-                    ],
-                    "conditions": [],
-                    "applicability_scope": {
-                      "status": "known",
-                      "applicability_text": "汽轮机冲转前"
-                    }
-                  },
-                  {
-                    "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
-                    "statement_type": "fact",
-                    "predicate": "causes",
-                    "subject_entities": [
-                      {
-                        "surface_form": "转子",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "新蒸汽",
-                        "role": "object"
-                      }
-                    ],
-                    "conditions": [
-                      {
-                        "surface_form": "若真空过低"
-                      }
-                    ],
-                    "applicability_scope": {
-                      "status": "unknown"
-                    }
-                  },
-                  {
-                    "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
-                    "statement_type": "fact",
-                    "predicate": "causes",
-                    "subject_entities": [
-                      {
-                        "surface_form": "过多的乏汽",
-                        "role": "subject"
-                      },
-                      {
-                        "surface_form": "凝汽器",
-                        "role": "object"
-                      },
-                      {
-                        "surface_form": "凝汽器汽侧压力",
-                        "role": "quantity_target"
-                      }
-                    ],
-                    "conditions": [
-                      {
-                        "surface_form": "若真空过低"
-                      }
-                    ],
-                    "applicability_scope": {
-                      "status": "unknown"
-                    }
-                  }
-                ]
-              }
-            }
-          ],
-          "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-          "model_value_or_text": null
         }
       ],
       "entrypoints": [
@@ -681,9 +377,9 @@
   "counts": {
     "representative_pages": 8,
     "documents": 5,
-    "candidates": 47,
+    "candidates": 38,
     "development_gold_statements": 40,
-    "historical_development_gold_statements_in_evaluation": 42,
+    "historical_development_gold_statements_in_evaluation": 40,
     "holdout_gold_statements_registered": 50,
     "holdout_gold_statements_evaluated": 48,
     "holdout_gold_statements_excluded": 2
@@ -750,18 +446,18 @@
   },
   "quality_observation": {
     "development_field_accuracy": {
-      "statement_boundary": 0.8333333333333334,
-      "statement_type": 0.9523809523809523,
-      "entity": 0.9047619047619048,
-      "relation": 0.9523809523809523,
-      "quantity": 0.9523809523809523,
-      "unit": 0.9523809523809523,
-      "comparison": 0.9523809523809523,
-      "negation": 0.9047619047619048,
-      "condition": 0.8571428571428571,
-      "applicability": 0.9047619047619048,
-      "applicability_meaning": 0.9047619047619048,
-      "relation_direction": 0.9285714285714286,
+      "statement_boundary": 0.9,
+      "statement_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.9,
+      "quantity": 0.9,
+      "unit": 0.9,
+      "comparison": 0.9,
+      "negation": 0.875,
+      "condition": 0.85,
+      "applicability": 0.85,
+      "applicability_meaning": 0.85,
+      "relation_direction": 0.875,
       "unsupported_addition": 1.0,
       "evidence_grounding": 1.0
     },
@@ -804,33 +500,33 @@
       "evidence_grounding": 1.0
     },
     "development_recomputed": {
-      "statement_boundary": 0.85,
-      "statement_type": 1.0,
-      "entity": 1.0,
-      "relation": 1.0,
-      "quantity": 1.0,
-      "unit": 1.0,
-      "comparison": 1.0,
-      "negation": 0.975,
+      "statement_boundary": 0.9,
+      "statement_type": 0.9,
+      "entity": 0.9,
+      "relation": 0.9,
+      "quantity": 0.9,
+      "unit": 0.9,
+      "comparison": 0.9,
+      "negation": 0.875,
       "condition": 0.85,
-      "applicability": 0.95,
-      "applicability_meaning": 0.95,
-      "relation_direction": 0.975,
+      "applicability": 0.85,
+      "applicability_meaning": 0.85,
+      "relation_direction": 0.875,
       "unsupported_addition": 1.0,
       "evidence_grounding": 1.0
     },
     "evidence_binding": {
-      "total": 40,
-      "correct": 40,
+      "total": 36,
+      "correct": 36,
       "accuracy": 1.0
     },
     "evidence_semantic_support": {
-      "total": 40,
-      "correct": 40,
+      "total": 36,
+      "correct": 36,
       "accuracy": 1.0,
       "source": "canonical Evidence validator"
     },
-    "gold_mismatch_count": 14,
+    "gold_mismatch_count": 6,
     "scale_gate": false,
     "interpretation": "development metrics may guide extractor work; evidence support is evaluated against canonical Evidence, Gold agreement is reported separately, the exposed holdout is historical only, reserve Gold is not generated here, and no candidate is promoted by Stage 12"
   },
@@ -839,16 +535,9 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
-    "candidate_input_lineage_current",
-    "candidate_schema_and_stage9_gate",
-    "canonical_evidence_consumed",
-    "development_evaluation_present",
     "development_quality_gate",
-    "producer_reexecution_current",
-    "real_llm_execution_verified",
     "robustness_evaluation_present",
     "robustness_quality_gate",
-    "stale_cache_zero",
     "upstream_reserve_gold_not_ready"
   ],
   "next_stage_allowed": false,
@@ -861,8 +550,8 @@
   "production_llm_pipeline_ready": false,
   "real_llm_execution": true,
   "stage12_status_summary": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,

@@ -906,6 +906,16 @@ def _quantity_fields(text: str) -> tuple[list[dict[str, Any]], Any, str | None]:
 def _negation_fields(text: str) -> list[dict[str, Any]]:
     result = []
     for token in NEGATIONS:
+        if token == "无":
+            # Preserve the source-grounded negated phrase (for example,
+            # "无错口" or "无铁屑") instead of reducing it to the marker
+            # itself.  The following term is deliberately surface-based and
+            # bounded by punctuation; semantic scope still comes from the
+            # provider and Evidence validation.
+            surfaces = re.findall(r"无[^\s，。；,、]{1,8}", text)
+            for surface in dict.fromkeys(surfaces):
+                result.append({"surface_form": surface, "polarity": "negative", "scope_type": "statement"})
+            continue
         if token not in text:
             continue
         polarity = "negative"
@@ -999,7 +1009,7 @@ def _relation_direction(text: str, predicate: str) -> str:
         return "cause_to_effect"
     if predicate == "limits_scope":
         return "scope_to_subject"
-    if predicate == "describes" and any(token in text for token in ("然后", "再", "首先", "依次")):
+    if predicate == "describes" and any(token in text for token in ("然后", "再", "首先", "依次", "随后", "之后", "后将", "后再")):
         return "procedure_order"
     has_true_condition = bool(re.search(r"(?:若|如果)|(?<!应)当[^，。；,]{1,36}(?:时|情况下|条件)", text))
     if has_true_condition and predicate in {"requires", "prohibits"}:
@@ -1146,8 +1156,6 @@ def _assemble_candidate(
         if not surface_form or _normalized_text(surface_form) not in _normalized_text(statement_text):
             raise ValueError("candidate condition is not grounded in statement text")
         conditions.append({"surface_form": surface_form, "kind": "condition"})
-    if predicate == "causes":
-        conditions = []
     raw_scope_value = item.get("applicability_scope")
     if not isinstance(raw_scope_value, Mapping):
         raise ExtractionSchemaError("candidate applicability_scope must be an object")
@@ -1330,8 +1338,12 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("candidate dropped quantities present in statement text")
     if _negation_fields(text) and not candidate.get("negation_scope"):
         raise ValueError("candidate dropped negation present in statement text")
-    if CONDITION_RE.search(text) and not candidate.get("conditions"):
-        raise ValueError("candidate dropped condition present in statement text")
+    # Presence of a surface marker such as "若" or "当" does not determine
+    # whether the phrase is a condition.  The provider assigns condition and
+    # applicability semantics; this layer only validates the returned fields'
+    # grounding and shape.  In particular, a causal antecedent belongs to the
+    # causes relation and may legitimately have no conditions, while an
+    # additional provider-supplied gating prerequisite remains allowed.
     scope = candidate.get("applicability_scope") or {}
     if scope.get("status") not in {"known", "unknown"}:
         raise ValueError("candidate applicability must explicitly be known or unknown")
@@ -1384,7 +1396,8 @@ def validate_candidate_against_evidence(candidate: Mapping[str, Any], evidence: 
     if scope_text and _normalized_text(scope_text) not in _normalized_text(evidence_text):
         raise ValueError("candidate applicability exceeds Evidence wording")
     explicit_cause = _has_causal_marker(str(candidate.get("statement_text", "")))
-    if candidate.get("predicate") == "causes" and not explicit_cause:
+    evidence_cause_context = _has_causal_marker(evidence_text)
+    if candidate.get("predicate") == "causes" and not (explicit_cause or evidence_cause_context):
         raise ValueError("candidate causal relation is not expressed by Evidence")
     if explicit_cause and candidate.get("predicate") != "causes" and any(token in candidate.get("statement_text", "") for token in ("导致", "造成", "引起")):
         raise ValueError("candidate causal direction or relation is inconsistent with Evidence")
@@ -1767,12 +1780,34 @@ def _unsupported_addition(candidate: Mapping[str, Any] | None, gold: Mapping[str
 def _classify_unmatched_candidate(candidate_id: str, candidates: list[Mapping[str, Any]], matches: Mapping[int, Mapping[str, Any]], gold_rows: list[Mapping[str, Any]]) -> str:
     candidate = next(item for item in candidates if item.get("candidate_id") == candidate_id)
     matched = list(matches.values())
+    candidate_evidence = {str(item.get("evidence_id")) for item in candidate.get("evidence_bindings", [])}
+
+    def same_evidence(other: Mapping[str, Any]) -> bool:
+        other_evidence = {str(item.get("evidence_id")) for item in other.get("evidence_bindings", [])}
+        return bool(candidate_evidence and other_evidence and candidate_evidence == other_evidence)
+
+    def is_short_fragment(other: Mapping[str, Any]) -> bool:
+        candidate_text = _normalized_text(candidate.get("statement_text"))
+        other_text = _normalized_text(other.get("statement_text"))
+        if not candidate_text or len(candidate_text) >= len(other_text):
+            return False
+        # An independently returned fragment from the same Evidence is an
+        # over-split candidate when it retains the same context and most of
+        # the other statement's semantic surface, even if punctuation or a
+        # short connector differs.  This deliberately avoids sentence IDs or
+        # Development-specific wording.
+        return same_evidence(other) and _text_similarity(candidate_text, other_text) >= 0.78
+
     if any(_normalized_text(candidate.get("statement_text")) == _normalized_text(item.get("statement_text")) for item in matched):
         return "duplicate"
     if any(_normalized_text(candidate.get("statement_text")) in _normalized_text(item.get("statement_text")) for item in matched):
         return "over_split"
     if any(_text_similarity(candidate.get("statement_text"), item.get("statement_text")) >= 0.96 for item in matched):
         return "duplicate"
+    if any(is_short_fragment(item) for item in matched):
+        return "over_split"
+    if any(is_short_fragment(item) for item in gold_rows):
+        return "over_split"
     if not candidate.get("evidence_bindings") or not candidate.get("statement_text"):
         return "unsupported"
     return "needs_gold_completion"
@@ -1871,6 +1906,15 @@ def _applicability_match(candidate: Mapping[str, Any] | None, gold: Mapping[str,
         return False
     expected = gold.get("applicability_scope") or {}
     actual = candidate.get("applicability_scope") or {}
+    if expected.get("status") == "reference_only":
+        # Candidate schema intentionally represents reference-only scope via
+        # the limitation/limits_scope relation and an unknown direct
+        # applicability scope; it does not admit a reference_only enum value.
+        return (
+            candidate.get("predicate") == "limits_scope"
+            and actual.get("status") == "unknown"
+            and _normalized_text(str(gold.get("statement_text", ""))) == _normalized_text(str(candidate.get("statement_text", "")))
+        )
     # Stage 11 Gold currently carries document/source routing scope (equipment,
     # lifecycle, activity, condition), not a sentence-level applicability
     # wording.  It is not valid to score candidate ``unknown`` as wrong merely

@@ -205,7 +205,7 @@
   "inputs": {
     "stage9_exit_audit": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483",
     "stage10_audit": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d",
-    "stage11_exit_audit": "de5331994866ea2b6477d5a10b79af0cf93f6cf7bf06a52c42879b6280740459",
+    "stage11_exit_audit": "7ad8742be13c267164694694b9f6b91d7d0f85eeeac72bfe97f9489326b16594",
     "stage6_evidence_bundle": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
     "stage11_evaluation_sample_registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
     "stage12_representative_baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",

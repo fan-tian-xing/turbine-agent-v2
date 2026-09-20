@@ -1,294 +1,224 @@
 {
-  "gold_statement_count": 42,
-  "candidate_count": 47,
+  "gold_statement_count": 40,
+  "candidate_count": 38,
   "gold_exhaustive": false,
-  "statement_recall": 0.9523809523809523,
-  "statement_semantic_correctness": 0.6428571428571429,
+  "statement_recall": 0.9,
+  "statement_semantic_correctness": 0.75,
   "field_totals": {
-    "statement_boundary": 42,
-    "statement_type": 42,
-    "entity": 42,
-    "relation": 42,
-    "quantity": 42,
-    "unit": 42,
-    "comparison": 42,
-    "negation": 42,
-    "condition": 42,
-    "applicability": 42,
-    "applicability_meaning": 42,
-    "relation_direction": 42,
-    "unsupported_addition": 42,
-    "evidence_grounding": 42
-  },
-  "field_correct": {
-    "statement_boundary": 35,
+    "statement_boundary": 40,
     "statement_type": 40,
-    "entity": 38,
+    "entity": 40,
     "relation": 40,
     "quantity": 40,
     "unit": 40,
     "comparison": 40,
-    "negation": 38,
-    "condition": 36,
-    "applicability": 38,
-    "applicability_meaning": 38,
-    "relation_direction": 39,
-    "unsupported_addition": 42,
-    "evidence_grounding": 42
+    "negation": 40,
+    "condition": 40,
+    "applicability": 40,
+    "applicability_meaning": 40,
+    "relation_direction": 40,
+    "unsupported_addition": 40,
+    "evidence_grounding": 40
+  },
+  "field_correct": {
+    "statement_boundary": 36,
+    "statement_type": 36,
+    "entity": 36,
+    "relation": 36,
+    "quantity": 36,
+    "unit": 36,
+    "comparison": 36,
+    "negation": 35,
+    "condition": 34,
+    "applicability": 34,
+    "applicability_meaning": 34,
+    "relation_direction": 35,
+    "unsupported_addition": 40,
+    "evidence_grounding": 40
   },
   "field_accuracy": {
-    "statement_boundary": 0.8333333333333334,
-    "statement_type": 0.9523809523809523,
-    "entity": 0.9047619047619048,
-    "relation": 0.9523809523809523,
-    "quantity": 0.9523809523809523,
-    "unit": 0.9523809523809523,
-    "comparison": 0.9523809523809523,
-    "negation": 0.9047619047619048,
-    "condition": 0.8571428571428571,
-    "applicability": 0.9047619047619048,
-    "applicability_meaning": 0.9047619047619048,
-    "relation_direction": 0.9285714285714286,
+    "statement_boundary": 0.9,
+    "statement_type": 0.9,
+    "entity": 0.9,
+    "relation": 0.9,
+    "quantity": 0.9,
+    "unit": 0.9,
+    "comparison": 0.9,
+    "negation": 0.875,
+    "condition": 0.85,
+    "applicability": 0.85,
+    "applicability_meaning": 0.85,
+    "relation_direction": 0.875,
     "unsupported_addition": 1.0,
     "evidence_grounding": 1.0
   },
   "error_counts": {
-    "boundary_error": 7,
-    "statement_type_error": 2,
+    "boundary_error": 4,
+    "statement_type_error": 4,
     "entity_error": 4,
-    "relation_error": 2,
-    "quantity_error": 2,
-    "unit_error": 2,
-    "comparison_error": 2,
-    "negation_error": 4,
+    "relation_error": 4,
+    "quantity_error": 4,
+    "unit_error": 4,
+    "comparison_error": 4,
+    "negation_error": 5,
     "condition_loss": 6,
-    "applicability_error": 4,
-    "relation_direction_error": 3,
+    "applicability_error": 6,
+    "relation_direction_error": 5,
     "unsupported_claim": 0
   },
   "errors": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-a40c99b1713aece29b3d",
+      "candidate_id": "stage12-candidate-9cfbb07aaa322dec6c1a",
       "error_types": [
         "condition_loss"
       ]
     },
     {
-      "statement_id": "stage12-gold-oil-cleanliness",
-      "candidate_id": "stage12-candidate-f45834531d520b03c0c0",
+      "statement_id": "stage12-gold-seal-axial-paint-check",
+      "candidate_id": "stage12-candidate-b5cb4e0ecb5b32416cee",
       "error_types": [
-        "entity_error"
+        "condition_loss"
       ]
     },
     {
-      "statement_id": "stage12-gold-seal-vertical-joint-flatness",
-      "candidate_id": "stage12-candidate-7f05930876eb1ae4e966",
+      "statement_id": "real-statement-haf103-p1-scope",
+      "candidate_id": "stage12-candidate-dac33640eb60f13af38d",
       "error_types": [
         "negation_error"
       ]
     },
     {
-      "statement_id": "stage12-gold-seal-axial-paint-check",
-      "candidate_id": "stage12-candidate-5e70f958f2b52ae907fa",
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
+      "candidate_id": "stage12-candidate-6354d64e4594ea49999a",
       "error_types": [
-        "boundary_error",
-        "negation_error",
-        "condition_loss"
-      ]
-    },
-    {
-      "statement_id": "real-statement-d300n-p73-lift-clearance-s4",
-      "candidate_id": "stage12-candidate-47622318dacc237bfe48",
-      "error_types": [
-        "relation_direction_error"
-      ]
-    },
-    {
-      "statement_id": "stage12-gold-delivery-08",
-      "candidate_id": null,
-      "error_types": [
-        "boundary_error",
-        "statement_type_error",
-        "entity_error",
-        "relation_error",
-        "quantity_error",
-        "unit_error",
-        "comparison_error",
-        "negation_error",
-        "condition_loss",
-        "applicability_error",
-        "relation_direction_error"
-      ]
-    },
-    {
-      "statement_id": "stage12-gold-delivery-09",
-      "candidate_id": null,
-      "error_types": [
-        "boundary_error",
-        "statement_type_error",
-        "entity_error",
-        "relation_error",
-        "quantity_error",
-        "unit_error",
-        "comparison_error",
-        "negation_error",
-        "condition_loss",
-        "applicability_error",
-        "relation_direction_error"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
-      "candidate_id": "stage12-candidate-76895e163b807c44de08",
-      "error_types": [
-        "boundary_error"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
-      "candidate_id": "stage12-candidate-291c59db38012d0f39ef",
-      "error_types": [
-        "boundary_error"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-5a00cbef8b96974873ed",
-      "error_types": [
-        "condition_loss",
         "applicability_error"
       ]
     },
     {
-      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-411d7f163300667a337b",
+      "statement_id": "stage12-gold-delivery-01",
+      "candidate_id": null,
       "error_types": [
-        "boundary_error"
+        "boundary_error",
+        "statement_type_error",
+        "entity_error",
+        "relation_error",
+        "quantity_error",
+        "unit_error",
+        "comparison_error",
+        "negation_error",
+        "condition_loss",
+        "applicability_error",
+        "relation_direction_error"
       ]
     },
     {
-      "statement_id": "stage11-statement-7121ec273c465f8f2c6f-s2",
-      "candidate_id": "stage12-candidate-34ab85761fa6ecceac4b",
+      "statement_id": "stage12-gold-delivery-04",
+      "candidate_id": null,
       "error_types": [
-        "boundary_error"
+        "boundary_error",
+        "statement_type_error",
+        "entity_error",
+        "relation_error",
+        "quantity_error",
+        "unit_error",
+        "comparison_error",
+        "negation_error",
+        "condition_loss",
+        "applicability_error",
+        "relation_direction_error"
       ]
     },
     {
-      "statement_id": "stage11-statement-a9ff60d2526222447813-s4",
-      "candidate_id": "stage12-candidate-2eedf5d2b7255435f9f1",
+      "statement_id": "stage12-gold-delivery-06",
+      "candidate_id": null,
       "error_types": [
-        "condition_loss"
+        "boundary_error",
+        "statement_type_error",
+        "entity_error",
+        "relation_error",
+        "quantity_error",
+        "unit_error",
+        "comparison_error",
+        "negation_error",
+        "condition_loss",
+        "applicability_error",
+        "relation_direction_error"
       ]
     },
     {
-      "statement_id": "stage11-statement-a9ff60d2526222447813-s5",
-      "candidate_id": "stage12-candidate-6a3242731d7a0d015110",
+      "statement_id": "stage12-gold-delivery-11",
+      "candidate_id": null,
       "error_types": [
-        "entity_error"
+        "boundary_error",
+        "statement_type_error",
+        "entity_error",
+        "relation_error",
+        "quantity_error",
+        "unit_error",
+        "comparison_error",
+        "negation_error",
+        "condition_loss",
+        "applicability_error",
+        "relation_direction_error"
+      ]
+    },
+    {
+      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
+      "candidate_id": "stage12-candidate-2f10d4f23abca82383ae",
+      "error_types": [
+        "relation_direction_error"
       ]
     },
     {
       "statement_id": "stage12-gold-scope-reference-only",
-      "candidate_id": "stage12-candidate-ea9a511f0f7900e5625d",
+      "candidate_id": "stage12-candidate-aab735c403d1aa7cb81d",
       "error_types": [
         "applicability_error"
       ]
     }
   ],
-  "gold_mismatch_count": 13,
+  "gold_mismatch_count": 6,
   "gold_mismatch_details": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-a40c99b1713aece29b3d",
+      "candidate_id": "stage12-candidate-9cfbb07aaa322dec6c1a",
       "fields": [
         "condition"
       ]
     },
     {
-      "statement_id": "stage12-gold-oil-cleanliness",
-      "candidate_id": "stage12-candidate-f45834531d520b03c0c0",
+      "statement_id": "stage12-gold-seal-axial-paint-check",
+      "candidate_id": "stage12-candidate-b5cb4e0ecb5b32416cee",
       "fields": [
-        "entity"
+        "condition"
       ]
     },
     {
-      "statement_id": "stage12-gold-seal-vertical-joint-flatness",
-      "candidate_id": "stage12-candidate-7f05930876eb1ae4e966",
+      "statement_id": "real-statement-haf103-p1-scope",
+      "candidate_id": "stage12-candidate-dac33640eb60f13af38d",
       "fields": [
         "negation"
       ]
     },
     {
-      "statement_id": "stage12-gold-seal-axial-paint-check",
-      "candidate_id": "stage12-candidate-5e70f958f2b52ae907fa",
+      "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
+      "candidate_id": "stage12-candidate-6354d64e4594ea49999a",
       "fields": [
-        "statement_boundary",
-        "negation",
-        "condition"
-      ]
-    },
-    {
-      "statement_id": "real-statement-d300n-p73-lift-clearance-s4",
-      "candidate_id": "stage12-candidate-47622318dacc237bfe48",
-      "fields": [
-        "relation_direction"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
-      "candidate_id": "stage12-candidate-76895e163b807c44de08",
-      "fields": [
-        "statement_boundary"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
-      "candidate_id": "stage12-candidate-291c59db38012d0f39ef",
-      "fields": [
-        "statement_boundary"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-5a00cbef8b96974873ed",
-      "fields": [
-        "condition",
         "applicability",
         "applicability_meaning"
       ]
     },
     {
-      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-411d7f163300667a337b",
+      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
+      "candidate_id": "stage12-candidate-2f10d4f23abca82383ae",
       "fields": [
-        "statement_boundary"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-7121ec273c465f8f2c6f-s2",
-      "candidate_id": "stage12-candidate-34ab85761fa6ecceac4b",
-      "fields": [
-        "statement_boundary"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-a9ff60d2526222447813-s4",
-      "candidate_id": "stage12-candidate-2eedf5d2b7255435f9f1",
-      "fields": [
-        "condition"
-      ]
-    },
-    {
-      "statement_id": "stage11-statement-a9ff60d2526222447813-s5",
-      "candidate_id": "stage12-candidate-6a3242731d7a0d015110",
-      "fields": [
-        "entity"
+        "relation_direction"
       ]
     },
     {
       "statement_id": "stage12-gold-scope-reference-only",
-      "candidate_id": "stage12-candidate-ea9a511f0f7900e5625d",
+      "candidate_id": "stage12-candidate-aab735c403d1aa7cb81d",
       "fields": [
         "applicability",
         "applicability_meaning"
@@ -296,71 +226,71 @@
     }
   ],
   "evidence_binding": {
-    "total": 40,
-    "correct": 40,
+    "total": 36,
+    "correct": 36,
     "accuracy": 1.0
   },
   "evidence_semantic_support": {
-    "total": 40,
-    "correct": 40,
+    "total": 36,
+    "correct": 36,
     "accuracy": 1.0,
     "source": "canonical Evidence validator"
   },
   "matched_pairs": [
     {
       "statement_id": "real-statement-dl5190-p86-feeler",
-      "candidate_id": "stage12-candidate-a40c99b1713aece29b3d",
-      "score": 0.81538462
+      "candidate_id": "stage12-candidate-9cfbb07aaa322dec6c1a",
+      "score": 0.79423077
     },
     {
       "statement_id": "real-statement-dl5190-p86-contact",
-      "candidate_id": "stage12-candidate-fa91767c079d2ec031cf",
-      "score": 0.99225352
-    },
-    {
-      "statement_id": "stage12-gold-seal-vertical",
-      "candidate_id": "stage12-candidate-0cc34e23f9b1ef0d978b",
-      "score": 0.97105263
-    },
-    {
-      "statement_id": "stage12-gold-oil-cleanliness",
-      "candidate_id": "stage12-candidate-f45834531d520b03c0c0",
-      "score": 0.83777778
-    },
-    {
-      "statement_id": "stage12-gold-gasket-undamaged",
-      "candidate_id": "stage12-candidate-29989036f937e5f9be7d",
-      "score": 0.97380952
-    },
-    {
-      "statement_id": "stage12-gold-gasket-dimensions",
-      "candidate_id": "stage12-candidate-67588404cc83f59f3e58",
-      "score": 0.9725
-    },
-    {
-      "statement_id": "stage12-gold-gasket-material",
-      "candidate_id": "stage12-candidate-20004984d6964363bd32",
-      "score": 0.97105263
-    },
-    {
-      "statement_id": "stage12-gold-thread-joint",
-      "candidate_id": "stage12-candidate-b377dee1c9b5a84fb85a",
-      "score": 0.9872093
-    },
-    {
-      "statement_id": "stage12-gold-seal-measurements",
-      "candidate_id": "stage12-candidate-bbf8538d94a564faac7d",
-      "score": 0.98962264
-    },
-    {
-      "statement_id": "stage12-gold-seal-vertical-joint-flatness",
-      "candidate_id": "stage12-candidate-7f05930876eb1ae4e966",
+      "candidate_id": "stage12-candidate-43686a073adabca5032f",
       "score": 1.0
     },
     {
+      "statement_id": "stage12-gold-seal-vertical",
+      "candidate_id": "stage12-candidate-8356267f034993b08769",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage12-gold-oil-cleanliness",
+      "candidate_id": "stage12-candidate-7a55aa644b9a76207b1e",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage12-gold-gasket-undamaged",
+      "candidate_id": "stage12-candidate-7399c6cd671f7ed34f04",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage12-gold-gasket-dimensions",
+      "candidate_id": "stage12-candidate-9f453492f5e297534299",
+      "score": 0.98658537
+    },
+    {
+      "statement_id": "stage12-gold-gasket-material",
+      "candidate_id": "stage12-candidate-858e2fa06fef8a11b81a",
+      "score": 0.98589744
+    },
+    {
+      "statement_id": "stage12-gold-thread-joint",
+      "candidate_id": "stage12-candidate-48a261fa9a9cd137f086",
+      "score": 1.0
+    },
+    {
+      "statement_id": "stage12-gold-seal-measurements",
+      "candidate_id": "stage12-candidate-925abc8cc2a75dddcf00",
+      "score": 0.99485981
+    },
+    {
+      "statement_id": "stage12-gold-seal-vertical-joint-flatness",
+      "candidate_id": "stage12-candidate-05ac5837a27d709488e4",
+      "score": 0.98035714
+    },
+    {
       "statement_id": "stage12-gold-seal-axial-paint-check",
-      "candidate_id": "stage12-candidate-5e70f958f2b52ae907fa",
-      "score": 0.746
+      "candidate_id": "stage12-candidate-b5cb4e0ecb5b32416cee",
+      "score": 0.87962963
     },
     {
       "statement_id": "real-statement-d300n-p73-lift-clearance",
@@ -385,7 +315,7 @@
     {
       "statement_id": "real-statement-haf103-p1-scope",
       "candidate_id": "stage12-candidate-dac33640eb60f13af38d",
-      "score": 0.99320988
+      "score": 0.89725275
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f",
@@ -394,8 +324,8 @@
     },
     {
       "statement_id": "stage11-statement-d2c4678c8e96566b0c8f-s2",
-      "candidate_id": "stage12-candidate-0498b2ee95c2d7cc8db9",
-      "score": 0.96262136
+      "candidate_id": "stage12-candidate-6354d64e4594ea49999a",
+      "score": 0.96944444
     },
     {
       "statement_id": "stage11-statement-090cfb6b41999cdd681c",
@@ -403,79 +333,59 @@
       "score": 1.0
     },
     {
-      "statement_id": "stage12-gold-delivery-01",
-      "candidate_id": "stage12-candidate-e29637cc29400c83c2f7",
-      "score": 0.91315789
-    },
-    {
       "statement_id": "stage12-gold-delivery-02",
-      "candidate_id": "stage12-candidate-267c24944dda9f2e408d",
-      "score": 0.925
+      "candidate_id": "stage12-candidate-536900e72e124c33cf44",
+      "score": 0.975
     },
     {
       "statement_id": "stage12-gold-delivery-03",
-      "candidate_id": "stage12-candidate-94b28451305756500f24",
-      "score": 0.95769231
-    },
-    {
-      "statement_id": "stage12-gold-delivery-04",
-      "candidate_id": "stage12-candidate-bc0b81cc31b10dae0325",
-      "score": 0.87307692
+      "candidate_id": "stage12-candidate-e07d77d0b0d7409a316b",
+      "score": 0.978
     },
     {
       "statement_id": "stage12-gold-delivery-05",
-      "candidate_id": "stage12-candidate-a2ced7ac030c644b4e30",
-      "score": 0.85
-    },
-    {
-      "statement_id": "stage12-gold-delivery-06",
-      "candidate_id": "stage12-candidate-0462082fa4a5b6d4e05c",
-      "score": 0.85
+      "candidate_id": "stage12-candidate-0383dae921a7c70d1acc",
+      "score": 0.92142857
     },
     {
       "statement_id": "stage12-gold-delivery-07",
-      "candidate_id": "stage12-candidate-c999742bd028b0b16387",
-      "score": 0.94210526
+      "candidate_id": "stage12-candidate-18e0378c21a7c33fce9d",
+      "score": 1.0
     },
     {
       "statement_id": "stage12-gold-delivery-10",
-      "candidate_id": "stage12-candidate-87422928fae7574f1fe8",
-      "score": 0.97962963
-    },
-    {
-      "statement_id": "stage12-gold-delivery-11",
-      "candidate_id": "stage12-candidate-4179d00d7b4257f165f5",
-      "score": 0.96944444
+      "candidate_id": "stage12-candidate-8ee5ed9ecbf4020a8df0",
+      "score": 1.0
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06",
-      "candidate_id": "stage12-candidate-c87452b591cb46c886b2",
-      "score": 0.91046512
+      "candidate_id": "stage12-candidate-7c87b937e4e9e24b0b6a",
+      "score": 0.97708333
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
-      "candidate_id": "stage12-candidate-76895e163b807c44de08",
-      "score": 0.84722222
+      "candidate_id": "stage12-candidate-fdbdc0da929ebeaeb510",
+      "score": 0.97884615
     },
     {
       "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
-      "candidate_id": "stage12-candidate-291c59db38012d0f39ef",
-      "score": 0.81666667
+      "candidate_id": "stage12-candidate-13ecb4de7125205df32d",
+      "score": 0.97708333
     },
     {
       "statement_id": "stage11-statement-5740cf642266fcd6feb4",
-      "candidate_id": "stage12-candidate-5a00cbef8b96974873ed",
-      "score": 0.89320988
+      "candidate_id": "stage12-candidate-2f10d4f23abca82383ae",
+      "score": 0.97
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
-      "candidate_id": "stage12-candidate-411d7f163300667a337b",
-      "score": 0.81034483
+      "candidate_id": "stage12-candidate-24637a71832fe86abf19",
+      "score": 1.0
     },
     {
       "statement_id": "stage11-statement-7121ec273c465f8f2c6f-s2",
-      "candidate_id": "stage12-candidate-34ab85761fa6ecceac4b",
-      "score": 0.85857143
+      "candidate_id": "stage12-candidate-e35d7a6825cc44086bab",
+      "score": 1.0
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813",
@@ -489,82 +399,59 @@
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s3",
-      "candidate_id": "stage12-candidate-e7250305c2646649d639",
-      "score": 0.89814815
+      "candidate_id": "stage12-candidate-869e234249d4aa2fad00",
+      "score": 0.91851852
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s4",
-      "candidate_id": "stage12-candidate-2eedf5d2b7255435f9f1",
-      "score": 0.80434783
+      "candidate_id": "stage12-candidate-b5c836052d41b26a75fd",
+      "score": 0.97962963
     },
     {
       "statement_id": "stage11-statement-a9ff60d2526222447813-s5",
-      "candidate_id": "stage12-candidate-6a3242731d7a0d015110",
-      "score": 0.74897959
+      "candidate_id": "stage12-candidate-8b605a3279387b0ed845",
+      "score": 0.9725
     },
     {
       "statement_id": "stage12-gold-scope-reference-only",
-      "candidate_id": "stage12-candidate-ea9a511f0f7900e5625d",
+      "candidate_id": "stage12-candidate-aab735c403d1aa7cb81d",
       "score": 0.98333333
     }
   ],
   "unmatched_gold": [
-    "stage12-gold-delivery-08",
-    "stage12-gold-delivery-09"
+    "stage12-gold-delivery-01",
+    "stage12-gold-delivery-04",
+    "stage12-gold-delivery-06",
+    "stage12-gold-delivery-11"
   ],
   "unmatched_candidates": [
-    "stage12-candidate-baa8769a0744f45e10de",
-    "stage12-candidate-0cd9a4139b6ab974e1bf",
-    "stage12-candidate-6371a3a94311eb7f64f4",
-    "stage12-candidate-4e032de49828e5bea576",
-    "stage12-candidate-7cb345fd5dfd9cbff565",
-    "stage12-candidate-8b2b7967cfa21bee1c13",
-    "stage12-candidate-f0a882da86c4d6c68d16"
+    "stage12-candidate-653d6edd4615a8a90072",
+    "stage12-candidate-e7250305c2646649d639"
   ],
-  "unmatched_gold_count": 2,
-  "unmatched_candidate_count": 7,
+  "unmatched_gold_count": 4,
+  "unmatched_candidate_count": 2,
   "unmatched_candidate_review": [
     {
-      "candidate_id": "stage12-candidate-baa8769a0744f45e10de",
-      "classification": "needs_gold_completion"
+      "candidate_id": "stage12-candidate-653d6edd4615a8a90072",
+      "classification": "over_split"
     },
     {
-      "candidate_id": "stage12-candidate-0cd9a4139b6ab974e1bf",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-6371a3a94311eb7f64f4",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-4e032de49828e5bea576",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-7cb345fd5dfd9cbff565",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-8b2b7967cfa21bee1c13",
-      "classification": "needs_gold_completion"
-    },
-    {
-      "candidate_id": "stage12-candidate-f0a882da86c4d6c68d16",
-      "classification": "needs_gold_completion"
+      "candidate_id": "stage12-candidate-e7250305c2646649d639",
+      "classification": "over_split"
     }
   ],
   "unmatched_candidate_review_counts": {
     "valid_extra": 0,
     "duplicate": 0,
-    "over_split": 0,
+    "over_split": 2,
     "unsupported": 0,
-    "needs_gold_completion": 7
+    "needs_gold_completion": 0
   },
   "candidate_coverage": {
-    "matched_candidate_count": 40,
-    "extra_candidate_count": 7,
+    "matched_candidate_count": 36,
+    "extra_candidate_count": 2,
     "duplicate_candidate_rate": 0.0,
-    "over_split_rate": 0.0,
+    "over_split_rate": 0.05263157894736842,
     "spurious_candidate_rate": null
   },
   "evaluator_adapters": {
@@ -584,24 +471,19 @@
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "bb92b754c18e93350fcacd7f1c5e44f6f13931565514c41e3243c131992b3a17",
-    "gold": "63c752a5dbeb2a5597ab7045e9d97f7f320da91f8996c6eeed8b47c24383cc77",
-    "manifest": "8e091bc4099793a3a7ed60b35dfe2ecb35428a003a8778567ef9cf9fa89d5d05",
+    "candidate": "bdfb4b60e6f03f0433ae64171566b9940c0ab2e931004366416d424368fea0f3",
+    "gold": "9861fc4a5143294ea0057248ec59866b5badfaa25899129d89148f0fd37702e8",
+    "manifest": "54f4bce1a6d39c82c2bf960a306d648b8a0bb392366cd10c5c1bce0f35a6a45c",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
     "contract": "af66cef5e76f5d0ac769cd34da2d2536b73fe5c5ede4ed21e9d61182d9b37c53",
-    "provider_config": "a1e986db54ac95cf14195dd7aecb0963be56ed75bd32f3c6435f92308291af4b",
-    "prompt": "aee3f2efa845b4cdd0bc1154814ac837cae853464dd55d999d5997691e130d41",
+    "provider_config": "a6bb2758d5c089bdfaa92f789100c8370da830696be00708129617524dccdf14",
+    "prompt": "598d9431ceb2cad13a12beb6e6210fb14c56d6d431cbb569947c17ed0b9a0365",
     "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
     "registry": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf",
     "evaluator": "stage12-field-evaluator-v4"
   },
   "coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
   "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json",
-  "robustness_executed": true,
-  "robustness": {
-    "case_count": 6,
-    "passed_count": 0,
-    "failed_count": 6
-  }
+  "robustness_executed": false
 }

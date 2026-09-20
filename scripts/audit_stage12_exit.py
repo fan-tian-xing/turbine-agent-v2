@@ -258,7 +258,7 @@ def audit() -> dict:
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
-        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and development.get("robustness_executed") is True and robustness.get("real_llm_execution") is True and robustness_input_hashes_match,
+        "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and robustness.get("status") == "completed" and robustness.get("real_llm_execution") is True and robustness_input_hashes_match,
         "real_llm_failure_summary_current": failure_summary.get("artifact_kind") == "stage12_real_llm_failure_summary" and failure_summary.get("source_split") == "development_regression_golden" and failure_summary.get("holdout_used_for_tuning") is False and failure_summary.get("blind_read") is False,
         "semantic_coverage_matrix_present": (STAGE12 / "stage12_semantic_coverage_matrix.json").exists(),
         "reserve_registry_ready_for_independent_preparation": reserve_registry_ready,

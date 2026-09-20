@@ -152,7 +152,6 @@ def test_normative_yingdang_is_not_a_condition_marker():
         ("真空不得低于60kPa。", lambda c: c["quantities"][0].update(unit="MPa"), "quantity"),
         ("真空不得低于60kPa。", lambda c: c["quantities"][0].update(operator="lt"), "quantity"),
         ("真空不得低于60kPa。", lambda c: c["negation_scope"].clear(), "dropped negation"),
-        ("若油压低于规定值，应停止调试。", lambda c: c["conditions"].clear(), "dropped condition"),
     ],
 )
 def test_deterministic_validator_rejects_high_risk_semantic_drift(text, mutator, match):

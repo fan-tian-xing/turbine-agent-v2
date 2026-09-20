@@ -3,218 +3,1078 @@
   "stage": "12",
   "artifact_kind": "stage12_real_llm_failure_summary",
   "status": "completed",
-  "run_kind": "controlled_development_diagnostic",
+  "run_kind": "development_batch",
   "source_split": "development_regression_golden",
   "formal_release": false,
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "evidence_ids": [
-    "evidence-aa97a9ec78cf7cc57dc5",
-    "evidence-cbce7568bef677f62bac"
+    "evidence-93fb6fefbfccb828c68c",
+    "evidence-111e9dc5263ec94003bb",
+    "evidence-cbce7568bef677f62bac",
+    "evidence-08795eed23203e43aa25",
+    "evidence-44dd2f79786c9a998c97",
+    "evidence-cd924809c0b4d4b4acc5",
+    "evidence-be6509fd8df673522604",
+    "evidence-bb9c008b78e12b735d94",
+    "evidence-97d1de6c7b49cdea31f8",
+    "evidence-aa97a9ec78cf7cc57dc5"
   ],
   "counts": {
-    "transport_failure": 4,
+    "transport_failure": 0,
     "schema_failure": 0,
-    "semantic_validation_failure": 0,
-    "success": 0,
-    "attempts": 4,
-    "retry_recovered": 0,
-    "fallback_triggered": 4,
+    "semantic_validation_failure": 2,
+    "success": 8,
+    "attempts": 10,
+    "retry_recovered": 2,
+    "fallback_triggered": 0,
     "fallback_success": 0,
     "provider_counts": {
-      "backup": 2,
-      "primary": 2
+      "primary": 10
     },
-    "root_cause_counts": {
-      "url_error": 4
-    }
+    "root_cause_counts": {}
   },
   "failures": [
     {
-      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "evidence_id": "evidence-111e9dc5263ec94003bb",
       "attempt": 1,
       "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
+      "failure_type": "semantic_validation_failure",
+      "field": "entity",
+      "validator_reason": "candidate entity is not grounded in statement text",
+      "exception_type": null,
       "message": null,
       "provider_alias": "primary",
       "endpoint_alias": "primary",
-      "root_cause": "url_error",
+      "root_cause": null,
       "status_code": null,
-      "elapsed_seconds": 11.281,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_attempted",
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
       "semantic_attempts": null,
-      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-      "model_value_or_text": null
+      "evidence_value_or_text": "3.1.1 汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。 \n3.1.2 基础施工期间，安装专业应做下列配合工作： \n1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "汽轮发电机组基础",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "汽轮发电机组基础施工前"
+            }
+          },
+          {
+            "statement_text": "施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "安装专业",
+                "role": "subject"
+              },
+              {
+                "surface_form": "预留孔洞",
+                "role": "object"
+              },
+              {
+                "surface_form": "预埋件",
+                "role": "object"
+              },
+              {
+                "surface_form": "汽轮发电机组基座",
+                "role": "object"
+              },
+              {
+                "surface_form": "主要附属设备基础",
+                "role": "object"
+              },
+              {
+                "surface_form": "地脚螺栓孔",
+                "role": "object"
+              },
+              {
+                "surface_form": "标高、中心线、地脚螺栓孔位置等重要几何尺寸",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "基础施工期间"
+            }
+          }
+        ]
+      }
     },
     {
-      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "evidence_id": "evidence-cd924809c0b4d4b4acc5",
       "attempt": 1,
       "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
-      "message": null,
-      "provider_alias": "backup",
-      "endpoint_alias": "backup",
-      "root_cause": "url_error",
-      "status_code": null,
-      "elapsed_seconds": 0.375,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_failure",
-      "semantic_attempts": null,
-      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-      "model_value_or_text": null
-    },
-    {
-      "evidence_id": "evidence-cbce7568bef677f62bac",
-      "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
+      "failure_type": "semantic_validation_failure",
+      "field": "entity",
+      "validator_reason": "candidate must provide a subject entity first",
+      "exception_type": null,
       "message": null,
       "provider_alias": "primary",
       "endpoint_alias": "primary",
-      "root_cause": "url_error",
+      "root_cause": null,
       "status_code": null,
-      "elapsed_seconds": 0.172,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_attempted",
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
       "semantic_attempts": null,
-      "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
-      "model_value_or_text": null
-    },
-    {
-      "evidence_id": "evidence-cbce7568bef677f62bac",
-      "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
-      "message": null,
-      "provider_alias": "backup",
-      "endpoint_alias": "backup",
-      "root_cause": "url_error",
-      "status_code": null,
-      "elapsed_seconds": 0.14,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_failure",
-      "semantic_attempts": null,
-      "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
-      "model_value_or_text": null
+      "evidence_value_or_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统压力",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          },
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，确保系统安全泄压阀正常动作",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "出口母管泄压阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统安全泄压阀",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          },
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "出口母管泄压阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统安全泄压阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统压力",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          }
+        ]
+      }
     }
   ],
   "attempts": [
     {
-      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "evidence_id": "evidence-93fb6fefbfccb828c68c",
       "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
+      "outcome": "success",
+      "failure_type": null,
       "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
+      "validator_reason": null,
+      "exception_type": null,
       "message": null,
       "provider_alias": "primary",
       "endpoint_alias": "primary",
-      "root_cause": "url_error",
+      "root_cause": null,
       "status_code": null,
-      "elapsed_seconds": 11.281,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_attempted",
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
       "semantic_attempts": null,
-      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-      "model_value_or_text": null
+      "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪下垫片脱开0.2～0.5mm。",
+            "statement_type": "procedure",
+            "predicate": "describes",
+            "subject_entities": [
+              {
+                "surface_form": "高中压外缸前猫爪",
+                "role": "subject"
+              },
+              {
+                "surface_form": "猫爪下垫片",
+                "role": "object"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若需检查"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "大修时，在半空缸状态下"
+            }
+          },
+          {
+            "statement_text": "若需检查，可在大修时，在半空缸状态下，再将前箱微微抬起0.1～0.15mm，与滑块脱开。",
+            "statement_type": "procedure",
+            "predicate": "describes",
+            "subject_entities": [
+              {
+                "surface_form": "前箱",
+                "role": "subject"
+              },
+              {
+                "surface_form": "滑块",
+                "role": "object"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若需检查"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "大修时，在半空缸状态下"
+            }
+          },
+          {
+            "statement_text": "若需检查，可在大修时，在半空缸状态下，抽出基架上滑块，清洗干净。",
+            "statement_type": "procedure",
+            "predicate": "describes",
+            "subject_entities": [
+              {
+                "surface_form": "基架上滑块",
+                "role": "subject"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "若需检查"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "大修时，在半空缸状态下"
+            }
+          }
+        ]
+      }
     },
     {
-      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "evidence_id": "evidence-111e9dc5263ec94003bb",
       "attempt": 1,
       "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
-      "message": null,
-      "provider_alias": "backup",
-      "endpoint_alias": "backup",
-      "root_cause": "url_error",
-      "status_code": null,
-      "elapsed_seconds": 0.375,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_failure",
-      "semantic_attempts": null,
-      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-      "model_value_or_text": null
-    },
-    {
-      "evidence_id": "evidence-cbce7568bef677f62bac",
-      "attempt": 1,
-      "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
+      "failure_type": "semantic_validation_failure",
+      "field": "entity",
+      "validator_reason": "candidate entity is not grounded in statement text",
+      "exception_type": null,
       "message": null,
       "provider_alias": "primary",
       "endpoint_alias": "primary",
-      "root_cause": "url_error",
+      "root_cause": null,
       "status_code": null,
-      "elapsed_seconds": 0.172,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_attempted",
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
       "semantic_attempts": null,
-      "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
-      "model_value_or_text": null
+      "evidence_value_or_text": "3.1.1 汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。 \n3.1.2 基础施工期间，安装专业应做下列配合工作： \n1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "汽轮发电机组基础",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "汽轮发电机组基础施工前"
+            }
+          },
+          {
+            "statement_text": "施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "安装专业",
+                "role": "subject"
+              },
+              {
+                "surface_form": "预留孔洞",
+                "role": "object"
+              },
+              {
+                "surface_form": "预埋件",
+                "role": "object"
+              },
+              {
+                "surface_form": "汽轮发电机组基座",
+                "role": "object"
+              },
+              {
+                "surface_form": "主要附属设备基础",
+                "role": "object"
+              },
+              {
+                "surface_form": "地脚螺栓孔",
+                "role": "object"
+              },
+              {
+                "surface_form": "标高、中心线、地脚螺栓孔位置等重要几何尺寸",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "基础施工期间"
+            }
+          }
+        ]
+      }
     },
     {
-      "evidence_id": "evidence-cbce7568bef677f62bac",
+      "evidence_id": "evidence-111e9dc5263ec94003bb",
+      "attempt": 2,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "3.1.1 汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。 \n3.1.2 基础施工期间，安装专业应做下列配合工作： \n1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "汽轮发电机组基础",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "汽轮发电机组基础施工前"
+            }
+          },
+          {
+            "statement_text": "施工准备时，安装专业应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、地脚螺栓孔位置等重要几何尺寸；",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "安装专业",
+                "role": "subject"
+              },
+              {
+                "surface_form": "预留孔洞",
+                "role": "object"
+              },
+              {
+                "surface_form": "预埋件",
+                "role": "object"
+              },
+              {
+                "surface_form": "汽轮发电机组基座",
+                "role": "object"
+              },
+              {
+                "surface_form": "主要附属设备基础",
+                "role": "object"
+              },
+              {
+                "surface_form": "重要几何尺寸",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "基础施工期间"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-08795eed23203e43aa25",
+      "attempt": 1,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；  \n4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； \n5 密封瓦座上的丝扣接头应经试装，确认紧固密封。  \n9.7.2 密封瓦检查应符合下列规定： \n1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；  \n2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙\n应符合制造厂技术要求；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "各垂直结合面应光洁",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "各垂直结合面",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油室",
+                "role": "subject"
+              },
+              {
+                "surface_form": "油孔",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "密封瓦座垫片应无破损",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "密封瓦座垫片",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-44dd2f79786c9a998c97",
+      "attempt": 1,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的\n垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。密封瓦座内轴\n向两侧面应做涂色检查，接触面应均匀、连续；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的垂直结合面应平整、无错口。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "密封瓦与密封瓦座配合的环形垂直面",
+                "role": "subject"
+              },
+              {
+                "surface_form": "密封瓦座与端盖配合的垂直结合面",
+                "role": "subject"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "在紧好水平结合面螺栓的情况下"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "在紧好水平结合面螺栓的情况下，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "外部接口",
+                "role": "subject"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "在紧好水平结合面螺栓的情况下"
+              }
+            ],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "密封瓦座内轴向两侧面应做涂色检查，接触面应均匀、连续。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "密封瓦座内轴向两侧面",
+                "role": "subject"
+              },
+              {
+                "surface_form": "接触面",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-cd924809c0b4d4b4acc5",
       "attempt": 1,
       "outcome": "failure",
-      "failure_type": "transport_failure",
-      "field": null,
-      "validator_reason": "LLM transport failure: URLError",
-      "exception_type": "LLMTransportError",
+      "failure_type": "semantic_validation_failure",
+      "field": "entity",
+      "validator_reason": "candidate must provide a subject entity first",
+      "exception_type": null,
       "message": null,
-      "provider_alias": "backup",
-      "endpoint_alias": "backup",
-      "root_cause": "url_error",
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
       "status_code": null,
-      "elapsed_seconds": 0.14,
-      "fallback_eligible": true,
-      "fallback_triggered": true,
-      "fallback_provider": "backup",
-      "fallback_result": "backup_failure",
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
       "semantic_attempts": null,
-      "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
-      "model_value_or_text": null
+      "evidence_value_or_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统压力",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          },
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，确保系统安全泄压阀正常动作",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "出口母管泄压阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统安全泄压阀",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          },
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "出口母管泄压阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统安全泄压阀",
+                "role": "object"
+              },
+              {
+                "surface_form": "系统压力",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-cd924809c0b4d4b4acc5",
+      "attempt": 2,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "subject"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          },
+          {
+            "statement_text": "然后调整出口母管泄压阀，确保系统安全泄压阀正常动作",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "出口母管泄压阀",
+                "role": "subject"
+              },
+              {
+                "surface_form": "系统安全泄压阀",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          },
+          {
+            "statement_text": "再调节油泵出口溢流阀，确认系统压力满足设计要求",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "油泵出口溢流阀",
+                "role": "subject"
+              },
+              {
+                "surface_form": "系统压力",
+                "role": "quantity_target"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "控制油压力调整时"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-be6509fd8df673522604",
+      "attempt": 1,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面。",
+            "statement_type": "limitation",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定",
+                "role": "subject"
+              },
+              {
+                "surface_form": "陆上固定式核动力厂",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面"
+            }
+          },
+          {
+            "statement_text": "本规定不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。",
+            "statement_type": "limitation",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "本规定",
+                "role": "subject"
+              },
+              {
+                "surface_form": "不影响核安全的工业安全",
+                "role": "object"
+              },
+              {
+                "surface_form": "由核动力厂运行所引起的非放射性影响",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          },
+          {
+            "statement_text": "其他类型核动力厂可参照本规定执行。",
+            "statement_type": "limitation",
+            "predicate": "limits_scope",
+            "subject_entities": [
+              {
+                "surface_form": "其他类型核动力厂",
+                "role": "subject"
+              },
+              {
+                "surface_form": "本规定",
+                "role": "object"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "unknown"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-bb9c008b78e12b735d94",
+      "attempt": 1,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对\n前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全\n部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "当调试活动分阶段实施时，营运单位应当确保在完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "营运单位",
+                "role": "subject"
+              },
+              {
+                "surface_form": "前阶段调试试验结果",
+                "role": "object"
+              },
+              {
+                "surface_form": "调试结果评价",
+                "role": "object"
+              },
+              {
+                "surface_form": "全部核安全管理要求",
+                "role": "object"
+              },
+              {
+                "surface_form": "下一阶段的调试试验工作",
+                "role": "object"
+              }
+            ],
+            "conditions": [
+              {
+                "surface_form": "完成对前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全部核安全管理要求"
+              }
+            ],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "当调试活动分阶段实施时"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "evidence_id": "evidence-97d1de6c7b49cdea31f8",
+      "attempt": 1,
+      "outcome": "success",
+      "failure_type": null,
+      "field": null,
+      "validator_reason": null,
+      "exception_type": null,
+      "message": null,
+      "provider_alias": "primary",
+      "endpoint_alias": "primary",
+      "root_cause": null,
+      "status_code": null,
+      "elapsed_seconds": null,
+      "fallback_eligible": false,
+      "fallback_triggered": false,
+      "fallback_provider": null,
+      "fallback_result": null,
+      "semantic_attempts": null,
+      "evidence_value_or_text": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应\n当保存运行和维修记录，并收集和保存系统及设备的基准数据，以\n有利于确保核动力厂的安全和后续的安全评价。",
+      "model_value_or_text": {
+        "status": "ok",
+        "candidates": [
+          {
+            "statement_text": "从核动力厂每个系统初始通电和运行开始，营运单位应当保存运行和维修记录，以有利于确保核动力厂的安全和后续的安全评价。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "营运单位",
+                "role": "subject"
+              },
+              {
+                "surface_form": "运行和维修记录",
+                "role": "object"
+              },
+              {
+                "surface_form": "核动力厂",
+                "role": "related"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "从核动力厂每个系统初始通电和运行开始"
+            }
+          },
+          {
+            "statement_text": "从核动力厂每个系统初始通电和运行开始，营运单位应当收集和保存系统及设备的基准数据，以有利于确保核动力厂的安全和后续的安全评价。",
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [
+              {
+                "surface_form": "营运单位",
+                "role": "subject"
+              },
+              {
+                "surface_form": "系统及设备",
+                "role": "object"
+              },
+              {
+                "surface_form": "基准数据",
+                "role": "quantity_target"
+              },
+              {
+                "surface_form": "核动力厂",
+                "role": "related"
+              }
+            ],
+            "conditions": [],
+            "applicability_scope": {
+              "status": "known",
+              "applicability_text": "从核动力厂每个系统初始通电和运行开始"
+            }
+          }
+        ]
+      }
     }
   ],
   "cache_maintenance": {
-    "current_valid": 0,
-    "stale_deleted": 10,
-    "batch_records_deleted": 0
+    "current_valid": 2,
+    "stale_deleted": 0,
+    "batch_records_deleted": 1
   },
-  "progress": {},
+  "progress": {
+    "total_evidence": 10,
+    "valid_cached_evidence": 10,
+    "attempted_this_run": [
+      "evidence-08795eed23203e43aa25",
+      "evidence-111e9dc5263ec94003bb",
+      "evidence-44dd2f79786c9a998c97",
+      "evidence-93fb6fefbfccb828c68c",
+      "evidence-97d1de6c7b49cdea31f8",
+      "evidence-bb9c008b78e12b735d94",
+      "evidence-be6509fd8df673522604",
+      "evidence-cd924809c0b4d4b4acc5"
+    ],
+    "succeeded_this_run": [
+      "evidence-08795eed23203e43aa25",
+      "evidence-111e9dc5263ec94003bb",
+      "evidence-44dd2f79786c9a998c97",
+      "evidence-93fb6fefbfccb828c68c",
+      "evidence-97d1de6c7b49cdea31f8",
+      "evidence-bb9c008b78e12b735d94",
+      "evidence-be6509fd8df673522604",
+      "evidence-cd924809c0b4d4b4acc5"
+    ],
+    "failed_evidence_ids": [],
+    "remaining_evidence_ids": [],
+    "batch_complete": true,
+    "current_artifact_status": "current_artifact_available"
+  },
   "raw_model_response_persisted": false,
   "sensitive_transport_data_persisted": false,
   "producer": "scripts/stage12_failure_summary.py"

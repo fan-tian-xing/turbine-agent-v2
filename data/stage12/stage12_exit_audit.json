@@ -61,7 +61,7 @@
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "e3640bf1b649ce07dbd3d7ab7700a59a6ec7ebc0f91f0a1f77333b75d6f59984"
+      "sha256": "a0630982711e5956fe97661f6adfae6dc6295df58ef4bc45c739f8a294f8143e"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -81,11 +81,11 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "bdfb4b60e6f03f0433ae64171566b9940c0ab2e931004366416d424368fea0f3"
+      "sha256": "a39a03f4359f8a5458f42c52904bf431442686ad507ce579b7cf5f69f58d1322"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "52919d7b1572cec3afa4540bc4418bb6b2ea5b8c8f87cc130f0532de2afa8e97"
+      "sha256": "b8659fff2eb7d4ec7056cba88faaecf5fe451a1b50a697ce68a6eccaf24a3035"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
@@ -113,7 +113,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "91de3bbce735c4c3892533e004afa5c40bd08d8f91e650e7e7bd21af09f18331"
+      "sha256": "444594fbe1875cc7dc85b583a25d151ed1a7fea5c1b1f651ecee628f127c2039"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -150,13 +150,13 @@
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": false,
+    "candidate_schema_and_stage9_gate": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": false,
-    "producer_reexecution_current": false,
+    "real_llm_execution_verified": true,
+    "producer_reexecution_current": true,
     "stale_cache_zero": true,
-    "candidate_input_lineage_current": false,
-    "canonical_evidence_consumed": false,
+    "candidate_input_lineage_current": true,
+    "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
     "development_evaluation_present": false,
     "independent_holdout_evaluation_present": true,
@@ -173,8 +173,8 @@
     "acceptance_quality_gate": false
   },
   "gates": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
-    "REAL_LLM_BATCH_EXECUTION": false,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
+    "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "ROBUSTNESS_QUALITY_GATE": false,
@@ -186,13 +186,8 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
-    "candidate_input_lineage_current",
-    "candidate_schema_and_stage9_gate",
-    "canonical_evidence_consumed",
     "development_evaluation_present",
     "development_quality_gate",
-    "producer_reexecution_current",
-    "real_llm_execution_verified",
     "robustness_evaluation_present",
     "robustness_quality_gate",
     "stage11_internal_lineage_current",

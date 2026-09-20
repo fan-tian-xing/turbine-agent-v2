@@ -18,6 +18,11 @@ AUDIT_PATH = ROOT / "data/stage12/stage12_development_gold_adjudication.json"
 STAGE11_QUEUE_PATH = ROOT / "data/stage11/stage11_adjudication_queue.jsonl"
 
 
+def _dedupe_preserving_order(values: list[str]) -> list[str]:
+    """Return a stable, duplicate-free copy for repeatable audit updates."""
+    return list(dict.fromkeys(values))
+
+
 def _entity(surface: str, role: str, entity_class: str = "engineering_object") -> dict:
     entity_id = "stage12-adjudicated-entity-" + hashlib.sha1(f"{surface}|{role}".encode("utf-8")).hexdigest()[:24]
     return {
@@ -108,9 +113,15 @@ def _apply_current_boundary_adjudication(rows: list[dict]) -> None:
     vertical = copy.deepcopy(by_id["stage12-gold-seal-vertical-joint-flatness"])
     vertical["negation_scope"] = [{"surface_form": "无错口", "polarity": "negative", "scope_type": "statement"}]
     vertical = _mark(vertical, ["needs-gold-05"], "Latest user manual adjudication: negation is grounded in ‘无错口’; the prior ‘不入’ was inherited incorrectly.")
+    vertical["review_basis"] = "stage3_user_confirmation"
+    vertical["reviewer"] = "user_confirmation"
+    vertical["reviewer_type"] = "user_confirmation"
     axial = copy.deepcopy(by_id["stage12-gold-seal-axial-paint-check"])
     axial["negation_scope"] = []
     axial = _mark(axial, ["needs-gold-06"], "Latest user manual adjudication: this statement has no negation; the prior ‘不入’ was inherited incorrectly.")
+    axial["review_basis"] = "stage3_user_confirmation"
+    axial["reviewer"] = "user_confirmation"
+    axial["reviewer_type"] = "user_confirmation"
     output = []
     for row in rows:
         sid = row["statement_id"]
@@ -167,10 +178,17 @@ def _apply_current_boundary_adjudication(rows: list[dict]) -> None:
         "canonical_statement_id": "stage12-gold-delivery-07",
         "reason": "Semantically isomorphic parallel items are one canonical Statement with multiple entities; historical split records remain in repository history and are not current Development Gold.",
     }
-    audit.setdefault("general_rules_applied", []).extend([
+    rules = audit.setdefault("general_rules_applied", [])
+    # Keep the adjudication record stable when this migration is rerun.  The
+    # migration is intentionally repeatable because it may be used to rebuild
+    # current Gold after a lineage change.
+    rules[:] = _dedupe_preserving_order(rules)
+    for rule in (
         "semantically isomorphic parallel items merge into one Statement with multiple entities; substantive differences require separate Statements",
         "surface conjunctions such as list punctuation, 和, 及 and 以及 do not decide boundary by themselves",
-    ])
+    ):
+        if rule not in rules:
+            rules.append(rule)
     AUDIT_PATH.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": "completed", "mode": "current_boundary_revision", "original_gold_count": len(rows), "updated_gold_count": len(output)}, ensure_ascii=False))
 

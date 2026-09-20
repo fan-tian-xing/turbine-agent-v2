@@ -25,7 +25,7 @@
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "c899d570264d1c38124ba0b1b6c32bf750b1951729ae56ee4cfbcaee72d98c4a"
+      "sha256": "de5331994866ea2b6477d5a10b79af0cf93f6cf7bf06a52c42879b6280740459"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
@@ -41,7 +41,7 @@
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "8e091bc4099793a3a7ed60b35dfe2ecb35428a003a8778567ef9cf9fa89d5d05"
+      "sha256": "006439d6d290f0186c3163037b98288b076cf250864160488698be98baca8aab"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
@@ -57,11 +57,11 @@
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "e4c911e8f5ec904e073f60722c3050d02687a1ea1b7edfdf433867bad79c7244"
+      "sha256": "a6bb2758d5c089bdfaa92f789100c8370da830696be00708129617524dccdf14"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "b493df6e3e4229798df970ac66373dc64a9752827c7ae38fdfca2eab2b2f08b1"
+      "sha256": "598d9431ceb2cad13a12beb6e6210fb14c56d6d431cbb569947c17ed0b9a0365"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "04086c082fabc4d3a05cadb188a872c719c2b254e0d600ce364670da2e18fa33"
+      "sha256": "375df56d0e0906875f7d996078955fe7712195a0fce8b497f5825e6892d27225"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -109,7 +109,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "1f511bdb582180740f3144dc5db7016c05c4a8e5f70ef9468370611bc31c82ff"
+      "sha256": "5dfc90fc9f364594e3d70c08cd2dd25ed3ef20b84c0a61df3455cf1d4afda096"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -121,7 +121,7 @@
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "86e6a8385c2811e106235f9b1c9acbf01eb042bee5daabebdc8d9323403ee4fd"
+      "sha256": "537da47d64051dfd9a5a21f93f30e8ab516d309acc9caf7198e6991f58632808"
     }
   },
   "outputs": {
@@ -136,7 +136,7 @@
   },
   "checks": {
     "stage11_exit_gate": true,
-    "stage11_internal_lineage_current": false,
+    "stage11_internal_lineage_current": true,
     "label_free_development_manifest": true,
     "manifest_input_lineage_current": true,
     "representative_baseline_frozen": true,
@@ -146,13 +146,13 @@
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": true,
+    "candidate_schema_and_stage9_gate": false,
     "provider_contract_ready": true,
     "real_llm_execution_verified": false,
     "producer_reexecution_current": false,
-    "stale_cache_zero": true,
+    "stale_cache_zero": false,
     "candidate_input_lineage_current": false,
-    "canonical_evidence_consumed": true,
+    "canonical_evidence_consumed": false,
     "profile_routes_are_unique_and_consumed": true,
     "development_evaluation_present": false,
     "independent_holdout_evaluation_present": true,
@@ -177,21 +177,18 @@
     "STAGE12_EXIT": false,
     "validated_real_evidence_cache_count": 0,
     "failure_summary_counts": {
-      "transport_failure": 20,
+      "transport_failure": 0,
       "schema_failure": 0,
-      "semantic_validation_failure": 0,
-      "success": 0,
-      "attempts": 20,
-      "retry_recovered": 0,
-      "fallback_triggered": 20,
+      "semantic_validation_failure": 3,
+      "success": 9,
+      "attempts": 12,
+      "retry_recovered": 1,
+      "fallback_triggered": 0,
       "fallback_success": 0,
       "provider_counts": {
-        "backup": 10,
-        "primary": 10
+        "primary": 11
       },
-      "root_cause_counts": {
-        "url_error": 20
-      }
+      "root_cause_counts": {}
     },
     "pytest": "Regression tests are a separate verification layer and are not evidence that the production-like extraction pipeline ran.",
     "stage12_production_like_pipeline": {
@@ -204,439 +201,464 @@
           "evidence_id": "evidence-93fb6fefbfccb828c68c",
           "attempt": 1,
           "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
+          "failure_type": "semantic_validation_failure",
+          "field": "entity",
+          "validator_reason": "candidate must provide a subject entity first",
+          "exception_type": null,
           "message": null,
           "provider_alias": "primary",
           "endpoint_alias": "primary",
-          "root_cause": "url_error",
+          "root_cause": null,
           "status_code": null,
-          "elapsed_seconds": 0.516,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
+          "elapsed_seconds": null,
+          "fallback_eligible": false,
+          "fallback_triggered": false,
+          "fallback_provider": null,
+          "fallback_result": null,
           "semantic_attempts": null,
           "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-93fb6fefbfccb828c68c",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.109,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块，\n清洗干净。清理好滑块槽后再将滑块复位。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-111e9dc5263ec94003bb",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.172,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "3.1.1 汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。 \n3.1.2 基础施工期间，安装专业应做下列配合工作： \n1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-111e9dc5263ec94003bb",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.015,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "3.1.1 汽轮发电机组基础施工前，应按DL/T 5434《电力建设工程监理规范》的规定进行图纸会检。 \n3.1.2 基础施工期间，安装专业应做下列配合工作： \n1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-cbce7568bef677f62bac",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.188,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-cbce7568bef677f62bac",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.047,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。 \n3.1.3 交付安装的土建工程应具备下列条件： \n1 行车轨道安装完毕，二次灌浆的混凝土已达到设计强度，并经验收合格； \n2 主辅设备基础、基座混凝土已达到设计强度的70％以上，模板已拆除； \n3 厂房封闭，屋面止水； \n4 厂房内的各基础纵横中心线、标高标识和基础沉降观测点清晰、齐全； \n5 各层平台、通道、梯子、栏杆、踢脚板装设完毕且焊接牢固，主机周边孔洞有可靠的临时盖板或\n围栏；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-08795eed23203e43aa25",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.156,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；  \n4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； \n5 密封瓦座上的丝扣接头应经试装，确认紧固密封。  \n9.7.2 密封瓦检查应符合下列规定： \n1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；  \n2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙\n应符合制造厂技术要求；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-08795eed23203e43aa25",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.047,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；  \n4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； \n5 密封瓦座上的丝扣接头应经试装，确认紧固密封。  \n9.7.2 密封瓦检查应符合下列规定： \n1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；  \n2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙\n应符合制造厂技术要求；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-44dd2f79786c9a998c97",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.187,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的\n垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。密封瓦座内轴\n向两侧面应做涂色检查，接触面应均匀、连续；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-44dd2f79786c9a998c97",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.032,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的\n垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。密封瓦座内轴\n向两侧面应做涂色检查，接触面应均匀、连续；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-cd924809c0b4d4b4acc5",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.187,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-cd924809c0b4d4b4acc5",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.031,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "b）\n控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀，\n确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求；",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-be6509fd8df673522604",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.157,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-be6509fd8df673522604",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.031,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "1.2范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-bb9c008b78e12b735d94",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.172,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对\n前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全\n部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-bb9c008b78e12b735d94",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.031,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "4.2.3当调试活动分阶段实施时，营运单位应当确保在完成对\n前阶段调试试验结果的评价和监查，并确认调试结果评价满足了全\n部核安全管理要求之后，才允许进行下一阶段的调试试验工作。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-97d1de6c7b49cdea31f8",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "primary",
-          "endpoint_alias": "primary",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.188,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应\n当保存运行和维修记录，并收集和保存系统及设备的基准数据，以\n有利于确保核动力厂的安全和后续的安全评价。",
-          "model_value_or_text": null
-        },
-        {
-          "evidence_id": "evidence-97d1de6c7b49cdea31f8",
-          "attempt": 1,
-          "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
-          "status_code": null,
-          "elapsed_seconds": 0.015,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
-          "evidence_value_or_text": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应\n当保存运行和维修记录，并收集和保存系统及设备的基准数据，以\n有利于确保核动力厂的安全和后续的安全评价。",
-          "model_value_or_text": null
+          "model_value_or_text": {
+            "status": "ok",
+            "candidates": [
+              {
+                "statement_text": "若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪下垫片脱开0.2～0.5mm。",
+                "statement_type": "procedure",
+                "predicate": "describes",
+                "subject_entities": [
+                  {
+                    "surface_form": "高中压外缸前猫爪",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "猫爪下垫片",
+                    "role": "object"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若需检查"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "在大修时，在半空缸状态下"
+                }
+              },
+              {
+                "statement_text": "若需检查，在大修时，在半空缸状态下，再将前箱微微抬起0.1～0.15mm，与滑块脱开。",
+                "statement_type": "procedure",
+                "predicate": "describes",
+                "subject_entities": [
+                  {
+                    "surface_form": "前箱",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "滑块",
+                    "role": "object"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若需检查"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "在大修时，在半空缸状态下"
+                }
+              },
+              {
+                "statement_text": "若需检查，在大修时，在半空缸状态下，抽出基架上滑块，清洗干净。",
+                "statement_type": "procedure",
+                "predicate": "describes",
+                "subject_entities": [
+                  {
+                    "surface_form": "基架上滑块",
+                    "role": "subject"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若需检查"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "在大修时，在半空缸状态下"
+                }
+              }
+            ]
+          }
         },
         {
           "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
           "attempt": 1,
           "outcome": "failure",
-          "failure_type": "transport_failure",
-          "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
+          "failure_type": "semantic_validation_failure",
+          "field": "statement_boundary",
+          "validator_reason": "candidate dropped condition present in statement text",
+          "exception_type": null,
           "message": null,
           "provider_alias": "primary",
           "endpoint_alias": "primary",
-          "root_cause": "url_error",
+          "root_cause": null,
           "status_code": null,
-          "elapsed_seconds": 0.156,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_attempted",
+          "elapsed_seconds": null,
+          "fallback_eligible": false,
+          "fallback_triggered": false,
+          "fallback_provider": null,
+          "fallback_result": null,
           "semantic_attempts": null,
           "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-          "model_value_or_text": null
+          "model_value_or_text": {
+            "status": "ok",
+            "candidates": [
+              {
+                "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+                "statement_type": "requirement",
+                "predicate": "requires",
+                "subject_entities": [
+                  {
+                    "surface_form": "汽轮机",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "真空",
+                    "role": "quantity_target"
+                  }
+                ],
+                "conditions": [],
+                "applicability_scope": {
+                  "status": "known",
+                  "applicability_text": "汽轮机冲转前"
+                }
+              },
+              {
+                "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
+                "statement_type": "fact",
+                "predicate": "causes",
+                "subject_entities": [
+                  {
+                    "surface_form": "真空",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "转子",
+                    "role": "related"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若真空过低"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "unknown"
+                }
+              },
+              {
+                "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
+                "statement_type": "fact",
+                "predicate": "causes",
+                "subject_entities": [
+                  {
+                    "surface_form": "真空",
+                    "role": "subject"
+                  },
+                  {
+                    "surface_form": "乏汽",
+                    "role": "related"
+                  },
+                  {
+                    "surface_form": "凝汽器",
+                    "role": "object"
+                  },
+                  {
+                    "surface_form": "凝汽器汽侧压力",
+                    "role": "related"
+                  }
+                ],
+                "conditions": [
+                  {
+                    "surface_form": "若真空过低"
+                  }
+                ],
+                "applicability_scope": {
+                  "status": "unknown"
+                }
+              }
+            ]
+          }
         },
         {
           "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
           "attempt": 1,
           "outcome": "failure",
-          "failure_type": "transport_failure",
+          "failure_type": "semantic_validation_failure",
           "field": null,
-          "validator_reason": "LLM transport failure: URLError",
-          "exception_type": "LLMTransportError",
-          "message": null,
-          "provider_alias": "backup",
-          "endpoint_alias": "backup",
-          "root_cause": "url_error",
+          "validator_reason": "external LLM response failed Stage 12 semantic validation after 3 attempts",
+          "exception_type": "ExtractionProviderError",
+          "message": "external LLM response failed Stage 12 semantic validation after 3 attempts",
+          "provider_alias": null,
+          "endpoint_alias": null,
+          "root_cause": null,
           "status_code": null,
-          "elapsed_seconds": 0.016,
-          "fallback_eligible": true,
-          "fallback_triggered": true,
-          "fallback_provider": "backup",
-          "fallback_result": "backup_failure",
-          "semantic_attempts": null,
+          "elapsed_seconds": null,
+          "fallback_eligible": false,
+          "fallback_triggered": false,
+          "fallback_provider": null,
+          "fallback_result": null,
+          "semantic_attempts": [
+            {
+              "attempt": 1,
+              "field": "statement_boundary",
+              "validator_reason": "candidate dropped condition present in statement text",
+              "model_value_or_text": {
+                "status": "ok",
+                "candidates": [
+                  {
+                    "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+                    "statement_type": "requirement",
+                    "predicate": "requires",
+                    "subject_entities": [
+                      {
+                        "surface_form": "汽轮机",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "真空",
+                        "role": "quantity_target"
+                      }
+                    ],
+                    "conditions": [],
+                    "applicability_scope": {
+                      "status": "known",
+                      "applicability_text": "汽轮机冲转前"
+                    }
+                  },
+                  {
+                    "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
+                    "statement_type": "fact",
+                    "predicate": "causes",
+                    "subject_entities": [
+                      {
+                        "surface_form": "真空",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "转子",
+                        "role": "related"
+                      }
+                    ],
+                    "conditions": [
+                      {
+                        "surface_form": "若真空过低"
+                      }
+                    ],
+                    "applicability_scope": {
+                      "status": "unknown"
+                    }
+                  },
+                  {
+                    "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
+                    "statement_type": "fact",
+                    "predicate": "causes",
+                    "subject_entities": [
+                      {
+                        "surface_form": "真空",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "乏汽",
+                        "role": "related"
+                      },
+                      {
+                        "surface_form": "凝汽器",
+                        "role": "object"
+                      },
+                      {
+                        "surface_form": "凝汽器汽侧压力",
+                        "role": "related"
+                      }
+                    ],
+                    "conditions": [
+                      {
+                        "surface_form": "若真空过低"
+                      }
+                    ],
+                    "applicability_scope": {
+                      "status": "unknown"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "attempt": 2,
+              "field": "statement_boundary",
+              "validator_reason": "candidate dropped condition present in statement text",
+              "model_value_or_text": {
+                "status": "ok",
+                "candidates": [
+                  {
+                    "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+                    "statement_type": "requirement",
+                    "predicate": "requires",
+                    "subject_entities": [
+                      {
+                        "surface_form": "汽轮机",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "真空",
+                        "role": "quantity_target"
+                      }
+                    ],
+                    "conditions": [],
+                    "applicability_scope": {
+                      "status": "known",
+                      "applicability_text": "汽轮机冲转前"
+                    }
+                  },
+                  {
+                    "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
+                    "statement_type": "fact",
+                    "predicate": "causes",
+                    "subject_entities": [
+                      {
+                        "surface_form": "真空",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "转子",
+                        "role": "related"
+                      },
+                      {
+                        "surface_form": "新蒸汽",
+                        "role": "object"
+                      }
+                    ],
+                    "conditions": [
+                      {
+                        "surface_form": "若真空过低"
+                      }
+                    ],
+                    "applicability_scope": {
+                      "status": "unknown"
+                    }
+                  },
+                  {
+                    "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
+                    "statement_type": "fact",
+                    "predicate": "causes",
+                    "subject_entities": [
+                      {
+                        "surface_form": "乏汽",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "凝汽器",
+                        "role": "object"
+                      },
+                      {
+                        "surface_form": "凝汽器汽侧压力",
+                        "role": "quantity_target"
+                      }
+                    ],
+                    "conditions": [
+                      {
+                        "surface_form": "若真空过低"
+                      }
+                    ],
+                    "applicability_scope": {
+                      "status": "unknown"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "attempt": 3,
+              "field": "statement_boundary",
+              "validator_reason": "candidate dropped condition present in statement text",
+              "model_value_or_text": {
+                "status": "ok",
+                "candidates": [
+                  {
+                    "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
+                    "statement_type": "requirement",
+                    "predicate": "requires",
+                    "subject_entities": [
+                      {
+                        "surface_form": "汽轮机",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "真空",
+                        "role": "quantity_target"
+                      }
+                    ],
+                    "conditions": [],
+                    "applicability_scope": {
+                      "status": "known",
+                      "applicability_text": "汽轮机冲转前"
+                    }
+                  },
+                  {
+                    "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
+                    "statement_type": "fact",
+                    "predicate": "causes",
+                    "subject_entities": [
+                      {
+                        "surface_form": "转子",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "新蒸汽",
+                        "role": "object"
+                      }
+                    ],
+                    "conditions": [
+                      {
+                        "surface_form": "若真空过低"
+                      }
+                    ],
+                    "applicability_scope": {
+                      "status": "unknown"
+                    }
+                  },
+                  {
+                    "statement_text": "若真空过低，过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
+                    "statement_type": "fact",
+                    "predicate": "causes",
+                    "subject_entities": [
+                      {
+                        "surface_form": "过多的乏汽",
+                        "role": "subject"
+                      },
+                      {
+                        "surface_form": "凝汽器",
+                        "role": "object"
+                      },
+                      {
+                        "surface_form": "凝汽器汽侧压力",
+                        "role": "quantity_target"
+                      }
+                    ],
+                    "conditions": [
+                      {
+                        "surface_form": "若真空过低"
+                      }
+                    ],
+                    "applicability_scope": {
+                      "status": "unknown"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
           "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
           "model_value_or_text": null
         }
@@ -818,13 +840,15 @@
   "blockers": [
     "acceptance_quality_gate",
     "candidate_input_lineage_current",
+    "candidate_schema_and_stage9_gate",
+    "canonical_evidence_consumed",
     "development_evaluation_present",
     "development_quality_gate",
     "producer_reexecution_current",
     "real_llm_execution_verified",
     "robustness_evaluation_present",
     "robustness_quality_gate",
-    "stage11_internal_lineage_current",
+    "stale_cache_zero",
     "upstream_reserve_gold_not_ready"
   ],
   "next_stage_allowed": false,

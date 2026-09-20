@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+from scripts.apply_stage12_manual_adjudication import _dedupe_preserving_order
 from turbine_kg.extraction.semantic import HeuristicSemanticExtractor, _classify_unmatched_candidate
 
 
@@ -42,6 +43,10 @@ def test_prompt_states_semantic_boundary_regression_examples():
     assert "never decide the boundary by themselves" in prompt
     assert "multiple entities" in prompt
     assert "independently retrievable" in prompt
+    assert "60kPa左右" not in prompt
+    assert "0.2～0.5mm" not in prompt
+    assert "D300-style" not in prompt
+    assert "additional gating prerequisite" in prompt
 
 
 def test_causal_antecedent_is_not_duplicated_as_condition():
@@ -91,3 +96,12 @@ def test_unmatched_substatement_is_classified_as_over_split():
     base = {"candidate_id": "base", "statement_text": "perform inspection and ensure the contact surface is uniform and continuous"}
     extra = {"candidate_id": "extra", "statement_text": "ensure the contact surface is uniform and continuous"}
     assert _classify_unmatched_candidate("extra", [base, extra], {0: base}, []) == "over_split"
+
+
+def test_manual_adjudication_rule_updates_are_idempotent():
+    rules = ["base", "merge rule", "base"]
+    assert _dedupe_preserving_order(_dedupe_preserving_order(rules)) == ["base", "merge rule"]
+
+    artifact = json.loads((ROOT / "data/stage12/stage12_development_gold_adjudication.json").read_text(encoding="utf-8"))
+    applied = artifact["general_rules_applied"]
+    assert len(applied) == len(set(applied))

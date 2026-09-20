@@ -156,7 +156,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v15",
+        "version": "stage12-candidate-prompt-v17",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -189,7 +189,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v15",
+        "prompt_version": "stage12-candidate-prompt-v17",
         "response_schema_version": 2,
     }
 
@@ -238,7 +238,7 @@ class ExternalLLMProvider:
             "generated_by": provider_alias,
             "model": getattr(transport, "model", None),
             "config_fingerprint": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v15",
+            "prompt_version": "stage12-candidate-prompt-v17",
             "response_schema_version": 2,
         }
         self.last_result_metadata = dict(self.metadata)
@@ -249,7 +249,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": self.model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v15",
+            "prompt_version": "stage12-candidate-prompt-v17",
             "response_schema_version": 2,
         }
 
@@ -419,7 +419,7 @@ class FailoverExternalLLMProvider(ExternalLLMProvider):
             "primary_model": primary.metadata.get("model"),
             "backup_model": backup.metadata.get("model"),
             "failover_policy_fingerprint": policy_fingerprint,
-            "prompt_version": "stage12-candidate-prompt-v15",
+            "prompt_version": "stage12-candidate-prompt-v17",
             "response_schema_version": 2,
             "failover_enabled": True,
         }

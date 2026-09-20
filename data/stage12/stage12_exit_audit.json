@@ -57,11 +57,11 @@
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "a6bb2758d5c089bdfaa92f789100c8370da830696be00708129617524dccdf14"
+      "sha256": "45a5253f67ee57b850c6aff58a0531f70e34ce35ab7a8a51c4b7653194c16d93"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "598d9431ceb2cad13a12beb6e6210fb14c56d6d431cbb569947c17ed0b9a0365"
+      "sha256": "e3640bf1b649ce07dbd3d7ab7700a59a6ec7ebc0f91f0a1f77333b75d6f59984"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "a08b04a3046776327377e0e29ddc8b1a19a0af0b957c8d458e887ec6ec6f96b8"
+      "sha256": "ad376e31efe8ec6ff84c391111b79fd3e374a1f4e21323dc92ecba55e204264e"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -93,7 +93,7 @@
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
-      "sha256": "d4286bffc734ebea0b9da026908fde999cfb10a67700d73c24a8fbb6847700d7"
+      "sha256": "1cd84adfafd12b6a1eb9e91d8c0d977ba204f10034134d6c54ce4dbb4ceee759"
     },
     "scripts/build_stage12_semantic_coverage_matrix.py": {
       "path": "scripts/build_stage12_semantic_coverage_matrix.py",
@@ -113,7 +113,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "83ffd9ad7c9be4b67962dc2d880400ffac6c9b2e40b956918bdc5de09a324d36"
+      "sha256": "91de3bbce735c4c3892533e004afa5c40bd08d8f91e650e7e7bd21af09f18331"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -140,7 +140,7 @@
   },
   "checks": {
     "stage11_exit_gate": true,
-    "stage11_internal_lineage_current": true,
+    "stage11_internal_lineage_current": false,
     "label_free_development_manifest": true,
     "manifest_input_lineage_current": true,
     "representative_baseline_frozen": true,
@@ -150,15 +150,15 @@
     "candidate_only_boundary": true,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": true,
+    "candidate_schema_and_stage9_gate": false,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": true,
-    "producer_reexecution_current": true,
+    "real_llm_execution_verified": false,
+    "producer_reexecution_current": false,
     "stale_cache_zero": true,
-    "candidate_input_lineage_current": true,
-    "canonical_evidence_consumed": true,
+    "candidate_input_lineage_current": false,
+    "canonical_evidence_consumed": false,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": true,
+    "development_evaluation_present": false,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
@@ -173,8 +173,8 @@
     "acceptance_quality_gate": false
   },
   "gates": {
-    "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": true,
+    "REAL_LLM_SINGLE_CALL_VERIFIED": false,
+    "REAL_LLM_BATCH_EXECUTION": false,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
     "ROBUSTNESS_QUALITY_GATE": false,
@@ -186,9 +186,16 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
+    "candidate_input_lineage_current",
+    "candidate_schema_and_stage9_gate",
+    "canonical_evidence_consumed",
+    "development_evaluation_present",
     "development_quality_gate",
+    "producer_reexecution_current",
+    "real_llm_execution_verified",
     "robustness_evaluation_present",
     "robustness_quality_gate",
+    "stage11_internal_lineage_current",
     "upstream_reserve_gold_not_ready"
   ],
   "next_stage_allowed": false,

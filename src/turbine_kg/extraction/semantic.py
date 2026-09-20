@@ -156,7 +156,7 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v17",
+        "version": "stage12-candidate-prompt-v18",
         "system": system,
         "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
     }
@@ -189,7 +189,7 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v17",
+        "prompt_version": "stage12-candidate-prompt-v18",
         "response_schema_version": 2,
     }
 
@@ -238,7 +238,7 @@ class ExternalLLMProvider:
             "generated_by": provider_alias,
             "model": getattr(transport, "model", None),
             "config_fingerprint": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v17",
+            "prompt_version": "stage12-candidate-prompt-v18",
             "response_schema_version": 2,
         }
         self.last_result_metadata = dict(self.metadata)
@@ -249,7 +249,7 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": self.model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v17",
+            "prompt_version": "stage12-candidate-prompt-v18",
             "response_schema_version": 2,
         }
 
@@ -419,7 +419,7 @@ class FailoverExternalLLMProvider(ExternalLLMProvider):
             "primary_model": primary.metadata.get("model"),
             "backup_model": backup.metadata.get("model"),
             "failover_policy_fingerprint": policy_fingerprint,
-            "prompt_version": "stage12-candidate-prompt-v17",
+            "prompt_version": "stage12-candidate-prompt-v18",
             "response_schema_version": 2,
             "failover_enabled": True,
         }
@@ -1004,15 +1004,24 @@ def _has_causal_marker(text: str) -> bool:
     return direct_cause or explicit_effect or conditional_effect
 
 
-def _relation_direction(text: str, predicate: str) -> str:
+def _relation_direction(
+    text: str,
+    predicate: str,
+    conditions: Iterable[Mapping[str, Any]] = (),
+) -> str:
+    """Derive direction from the relation and already-structured semantics.
+
+    Conditional surface words are deliberately not re-interpreted here.  The
+    provider/assembler has already decided whether a grounded phrase is a
+    genuine gating condition; direction must use that decision consistently.
+    """
     if predicate == "causes":
         return "cause_to_effect"
     if predicate == "limits_scope":
         return "scope_to_subject"
     if predicate == "describes" and any(token in text for token in ("然后", "再", "首先", "依次", "随后", "之后", "后将", "后再")):
         return "procedure_order"
-    has_true_condition = bool(re.search(r"(?:若|如果)|(?<!应)当[^，。；,]{1,36}(?:时|情况下|条件)", text))
-    if has_true_condition and predicate in {"requires", "prohibits"}:
+    if any(str(item.get("surface_form", "")).strip() for item in conditions) and predicate in {"requires", "prohibits"}:
         return "condition_to_consequence"
     return "subject_to_object"
 
@@ -1045,17 +1054,6 @@ def _applicability_scope(
         scope["applicability_text"] = applicability_markers[0]
         scope["status"] = "known"
     return scope
-
-
-def _single_evidence_applicability_marker(text: str) -> str | None:
-    """Return one unambiguous applicability marker from the whole Evidence."""
-    compact = re.sub(r"\s+", "", text)
-    markers = re.findall(
-        r"(?:冲转前|冲转之前|(?:在|于)[^。；，,]{1,28}(?:前|期间|开始|时)|当[^。；，,]{1,36}时)",
-        compact,
-    )
-    unique = list(dict.fromkeys(markers))
-    return unique[0] if len(unique) == 1 else None
 
 
 class HeuristicSemanticExtractor:
@@ -1092,7 +1090,7 @@ class HeuristicSemanticExtractor:
                 "statement_text": clause,
                 "statement_type": statement_type,
                 "predicate": predicate,
-                "relation_direction": _relation_direction(clause, predicate),
+                "relation_direction": _relation_direction(clause, predicate, conditions),
                 "subject_entities": entities,
                 "object_value": {"kind": "source_assertion", "value": clause},
                 "value": value,
@@ -1162,11 +1160,6 @@ def _assemble_candidate(
     raw_scope = dict(raw_scope_value)
     scope_status = raw_scope.get("status")
     scope_text = raw_scope.get("applicability_text")
-    if scope_status == "unknown" and not scope_text and predicate == "causes":
-        inherited_scope = _single_evidence_applicability_marker(_canonical_evidence_text(evidence))
-        if inherited_scope:
-            scope_status = "known"
-            scope_text = inherited_scope
     if scope_status == "known" and not scope_text:
         raise ValueError("known applicability must preserve exact wording")
     if scope_status == "unknown" and scope_text:
@@ -1192,7 +1185,7 @@ def _assemble_candidate(
         "statement_text": statement_text,
         "statement_type": statement_type,
         "predicate": predicate,
-        "relation_direction": _relation_direction(statement_text, predicate),
+        "relation_direction": _relation_direction(statement_text, predicate, conditions),
         "subject_entities": subject_entities,
         "object_value": {"kind": "source_assertion", "value": statement_text},
         "value": value,
@@ -1318,7 +1311,11 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("candidate statement text and predicate are required")
     if candidate.get("predicate") not in COARSE_RELATIONS:
         raise ValueError("candidate predicate is outside the Stage 12 coarse relation vocabulary")
-    if candidate.get("relation_direction") != _relation_direction(text, str(candidate.get("predicate", ""))):
+    if candidate.get("relation_direction") != _relation_direction(
+        text,
+        str(candidate.get("predicate", "")),
+        candidate.get("conditions") or (),
+    ):
         raise ValueError("candidate relation direction is required")
     if candidate.get("object_value", {}).get("value") != text:
         raise ValueError("candidate object_value must preserve statement_text")
@@ -1693,7 +1690,11 @@ def compare_candidates(
             "condition": _condition_match(candidate, gold),
             "applicability": _applicability_match(candidate, gold),
             "applicability_meaning": _applicability_match(candidate, gold),
-            "relation_direction": bool(candidate and candidate.get("relation_direction") == _relation_direction(str(gold.get("statement_text", "")), expected_relation)),
+            "relation_direction": bool(candidate and candidate.get("relation_direction") == _relation_direction(
+                str(gold.get("statement_text", "")),
+                expected_relation,
+                gold.get("conditions") or (),
+            )),
             "unsupported_addition": unsupported_addition,
             "evidence_grounding": evidence_grounding,
         }
@@ -1761,7 +1762,11 @@ def _comparison_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, An
 def _relation_direction_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) -> bool:
     if candidate is None:
         return False
-    expected = _relation_direction(str(gold.get("statement_text", "")), candidate.get("predicate", "describes"))
+    expected = _relation_direction(
+        str(gold.get("statement_text", "")),
+        candidate.get("predicate", "describes"),
+        gold.get("conditions") or (),
+    )
     return candidate.get("relation_direction") == expected
 
 
@@ -1784,6 +1789,8 @@ def _classify_unmatched_candidate(candidate_id: str, candidates: list[Mapping[st
 
     def same_evidence(other: Mapping[str, Any]) -> bool:
         other_evidence = {str(item.get("evidence_id")) for item in other.get("evidence_bindings", [])}
+        if not candidate_evidence and not other_evidence:
+            return True
         return bool(candidate_evidence and other_evidence and candidate_evidence == other_evidence)
 
     def is_short_fragment(other: Mapping[str, Any]) -> bool:
@@ -1800,12 +1807,20 @@ def _classify_unmatched_candidate(candidate_id: str, candidates: list[Mapping[st
 
     if any(_normalized_text(candidate.get("statement_text")) == _normalized_text(item.get("statement_text")) for item in matched):
         return "duplicate"
-    if any(_normalized_text(candidate.get("statement_text")) in _normalized_text(item.get("statement_text")) for item in matched):
+    if any(
+        same_evidence(item)
+        and _normalized_text(candidate.get("statement_text")) in _normalized_text(item.get("statement_text"))
+        for item in matched
+    ):
         return "over_split"
-    if any(_text_similarity(candidate.get("statement_text"), item.get("statement_text")) >= 0.96 for item in matched):
-        return "duplicate"
     if any(is_short_fragment(item) for item in matched):
         return "over_split"
+    if any(
+        same_evidence(item)
+        and _text_similarity(candidate.get("statement_text"), item.get("statement_text")) >= 0.96
+        for item in matched
+    ):
+        return "duplicate"
     if any(is_short_fragment(item) for item in gold_rows):
         return "over_split"
     if not candidate.get("evidence_bindings") or not candidate.get("statement_text"):
@@ -1856,16 +1871,45 @@ def _entity_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) 
         return False
     expected = gold.get("entity_alignment") or []
     actual = candidate.get("subject_entities") or []
+    used: set[int] = set()
     for item in expected:
         target = str(item.get("surface_form", ""))
-        if any(_overlap(target, entity.get("surface_form", "")) >= 0.6 for entity in actual):
-            return True
+        target_role = str(item.get("role", ""))
+        matched_index = next(
+            (
+                index
+                for index, entity in enumerate(actual)
+                if index not in used
+                and (
+                    not target_role
+                    or not entity.get("role")
+                    or target_role == entity.get("role")
+                    or {target_role, str(entity.get("role"))} <= {"subject", "object", "related"}
+                )
+                and _overlap(target, entity.get("surface_form", "")) >= 0.6
+            ),
+            None,
+        )
+        if matched_index is not None:
+            used.add(matched_index)
+            continue
         # Some frozen development labels expose only a canonical ID. The
         # candidate intentionally returns a grounded alias, not an ID; accept
         # that alias only when it is present in the labeled statement text.
-        if "_" in target and any(_overlap(entity.get("surface_form", ""), gold.get("statement_text", "")) >= 0.6 for entity in actual):
-            return True
-    return False
+        if "_" in target:
+            alias_index = next(
+                (
+                    index for index, entity in enumerate(actual)
+                    if index not in used
+                    and _overlap(entity.get("surface_form", ""), gold.get("statement_text", "")) >= 0.6
+                ),
+                None,
+            )
+            if alias_index is not None:
+                used.add(alias_index)
+                continue
+        return False
+    return True
 
 
 def _condition_match(candidate: Mapping[str, Any] | None, gold: Mapping[str, Any]) -> bool:
@@ -1913,7 +1957,8 @@ def _applicability_match(candidate: Mapping[str, Any] | None, gold: Mapping[str,
         return (
             candidate.get("predicate") == "limits_scope"
             and actual.get("status") == "unknown"
-            and _normalized_text(str(gold.get("statement_text", ""))) == _normalized_text(str(candidate.get("statement_text", "")))
+            and _normalized_text(str(gold.get("statement_text", ""))).rstrip("。；，,、")
+            == _normalized_text(str(candidate.get("statement_text", ""))).rstrip("。；，,、")
         )
     # Stage 11 Gold currently carries document/source routing scope (equipment,
     # lifecycle, activity, condition), not a sentence-level applicability

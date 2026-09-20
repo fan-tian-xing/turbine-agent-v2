@@ -21,7 +21,6 @@ from turbine_kg.extraction.semantic import (
     validate_candidate_against_evidence,
     validate_candidate_payload,
 )
-from turbine_kg.extraction.semantic import _single_evidence_applicability_marker
 from turbine_kg.llm_client import OpenAICompatibleChatTransport
 from scripts import stage12_failure_summary
 from scripts.audit_stage12_exit import _reserve_acceptance_gate, audit
@@ -173,11 +172,6 @@ def test_conditional_causal_wording_is_classified_as_causes(text):
     candidate = HeuristicSemanticExtractor().extract(_evidence(text))[0]
     assert candidate["predicate"] == "causes"
     assert candidate["relation_direction"] == "cause_to_effect"
-
-
-def test_only_one_evidence_scope_marker_is_eligible_for_causal_inheritance():
-    assert _single_evidence_applicability_marker("汽轮机冲转前必须有真空；若真空过低会造成热冲击。") == "冲转前"
-    assert _single_evidence_applicability_marker("基础施工期间，施工准备时应校核尺寸。") is None
 
 
 def test_normative_yingdang_is_not_a_condition_marker():

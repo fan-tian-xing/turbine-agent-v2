@@ -49,5 +49,32 @@
     ],
     "canonical_statement_id": "stage12-gold-delivery-07",
     "reason": "Semantically isomorphic parallel items are one canonical Statement with multiple entities; historical split records remain in repository history and are not current Development Gold."
+  },
+  "latest_user_adjudication": {
+    "source": "latest user manual adjudication in current conversation",
+    "decisions": [
+      {
+        "decision_id": "stage12-user-boundary-haf103-scope-2026-09-20",
+        "status": "confirmed",
+        "statement_ids": [
+          "real-statement-haf103-p1-scope"
+        ],
+        "decision": "Keep the positive scope and the Evidence-grounded exclusion in one canonical Statement."
+      },
+      {
+        "decision_id": "stage12-user-boundary-low-vacuum-chain-2026-09-20",
+        "status": "confirmed",
+        "statement_ids": [
+          "stage11-statement-a9ff60d2526222447813-s3"
+        ],
+        "decision": "Keep exhaust-steam discharge, pressure rise and possible positive pressure in one canonical causal Statement."
+      },
+      {
+        "decision_id": "stage12-user-evaluator-one-to-one-2026-09-20",
+        "status": "confirmed",
+        "statement_ids": [],
+        "decision": "Evaluator matching remains strict one-to-one; merge/split equivalence is not accepted."
+      }
+    ]
   }
 }

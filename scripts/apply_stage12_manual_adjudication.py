@@ -17,10 +17,39 @@ GOLD_PATH = ROOT / "data/stage11/stage11_statement_development_samples.jsonl"
 AUDIT_PATH = ROOT / "data/stage12/stage12_development_gold_adjudication.json"
 STAGE11_QUEUE_PATH = ROOT / "data/stage11/stage11_adjudication_queue.jsonl"
 
+LATEST_USER_ADJUDICATION_DECISIONS = [
+    {
+        "decision_id": "stage12-user-boundary-haf103-scope-2026-09-20",
+        "status": "confirmed",
+        "statement_ids": ["real-statement-haf103-p1-scope"],
+        "decision": "Keep the positive scope and the Evidence-grounded exclusion in one canonical Statement.",
+    },
+    {
+        "decision_id": "stage12-user-boundary-low-vacuum-chain-2026-09-20",
+        "status": "confirmed",
+        "statement_ids": ["stage11-statement-a9ff60d2526222447813-s3"],
+        "decision": "Keep exhaust-steam discharge, pressure rise and possible positive pressure in one canonical causal Statement.",
+    },
+    {
+        "decision_id": "stage12-user-evaluator-one-to-one-2026-09-20",
+        "status": "confirmed",
+        "statement_ids": [],
+        "decision": "Evaluator matching remains strict one-to-one; merge/split equivalence is not accepted.",
+    },
+]
+
 
 def _dedupe_preserving_order(values: list[str]) -> list[str]:
     """Return a stable, duplicate-free copy for repeatable audit updates."""
     return list(dict.fromkeys(values))
+
+
+def _record_latest_user_adjudication(audit: dict) -> None:
+    """Write the latest human decisions to the bounded adjudication record."""
+    audit["latest_user_adjudication"] = {
+        "source": "latest user manual adjudication in current conversation",
+        "decisions": copy.deepcopy(LATEST_USER_ADJUDICATION_DECISIONS),
+    }
 
 
 def _entity(surface: str, role: str, entity_class: str = "engineering_object") -> dict:
@@ -144,7 +173,7 @@ def _apply_current_boundary_adjudication(rows: list[dict]) -> None:
     scope["statement_text"] = "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和由核动力厂运行所引起的非放射性影响。"
     scope["object_value"] = {"kind": "source_assertion", "value": scope["statement_text"]}
     scope["negation_scope"] = [{"surface_form": "不涉及", "polarity": "negative", "scope_type": "statement"}]
-    scope["review_reason"] = "Latest user manual adjudication: the scope limitation preserves the Evidence-grounded exclusion ‘不涉及’; it remains limits_scope semantics and is not direct applicability."
+    scope["review_reason"] = "Latest user manual adjudication: the positive HAF103 scope and the Evidence-grounded exclusion ‘不涉及’ remain one canonical limits_scope Statement; the exclusion is not direct applicability."
     for row in output:
         if row["statement_id"] == "stage12-gold-oil-cleanliness":
             row["entity_alignment"] = [_entity("油室", "subject", "equipment_component"), _entity("油孔", "subject", "equipment_component")]
@@ -209,6 +238,7 @@ def _apply_current_boundary_adjudication(rows: list[dict]) -> None:
     ):
         if rule not in rules:
             rules.append(rule)
+    _record_latest_user_adjudication(audit)
     AUDIT_PATH.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": "completed", "mode": "current_boundary_revision", "original_gold_count": len(rows), "updated_gold_count": len(output)}, ensure_ascii=False))
 
@@ -298,6 +328,8 @@ def main() -> None:
         if row["statement_id"] in {"stage11-statement-a9ff60d2526222447813-s2", "stage11-statement-a9ff60d2526222447813-s3", "stage11-statement-a9ff60d2526222447813-s4"}:
             row["conditions"] = []
             row["review_reason"] = "Latest user manual adjudication: causal antecedent remains in causes relation and is not duplicated as a condition."
+        if row["statement_id"] == "stage11-statement-a9ff60d2526222447813-s3":
+            row["review_reason"] = "Latest user manual adjudication: exhaust-steam discharge, condenser steam-side pressure rise and possible positive pressure remain one canonical causal Statement; strict one-to-one matching applies."
         if row["statement_id"] == "stage12-gold-scope-reference-only":
             row.setdefault("applicability_scope", {})["status"] = "reference_only"
             row["review_reason"] = "Reference-only scope remains limitation/limits_scope; it is not direct applicability."
@@ -312,7 +344,7 @@ def main() -> None:
         {"statement_id": "real-statement-d300n-p73-lift-clearance-s4", "text": "若需检查，在大修时、半空缸状态下，清理滑块槽后将滑块复位。", "statement_type": "procedure", "predicate": "describes", "entities": [("滑块槽", "subject", "component"), ("滑块", "object", "component")], "conditions": ["若需检查", "半空缸状态下"], "item_ids": ["matched-03"], "reason": "Procedure boundary split by independent knowledge value; the final reset step remains linked by the sequence wording."},
     ])
 
-    keep("real-statement-haf103-p1-scope", item_ids=["matched-04"], reason="Scope limitation retained; exclusion/negation semantics remain source-bounded and are not ordinary applicability.")
+    keep("real-statement-haf103-p1-scope", item_ids=["matched-04"], reason="Latest user manual adjudication: the positive HAF103 scope and the Evidence-grounded exclusion ‘不涉及’ remain one canonical limits_scope Statement; the exclusion is not direct applicability.")
 
     # Construction and preconstruction requirements use the current coarse
     # relation.  Temporal wording is applicability, not condition.
@@ -380,7 +412,7 @@ def main() -> None:
     # retaining the trigger condition and cause-to-effect relation.
     replace("stage11-statement-a9ff60d2526222447813-s2", [
         {"statement_id": "stage11-statement-a9ff60d2526222447813-s2", "text": "若真空过低，转子转动需要较多的新蒸汽。", "statement_type": "fact", "predicate": "causes", "entities": [("真空", "subject", "parameter"), ("转子转动", "object", "process"), ("较多的新蒸汽", "object", "material")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; trigger and causal direction retained."},
-        {"statement_id": "stage11-statement-a9ff60d2526222447813-s3", "text": "若真空过低，乏汽突然排至凝汽器，会使凝汽器汽侧压力瞬间升高过多，并可能形成正压。", "statement_type": "fact", "predicate": "causes", "entities": [("乏汽", "subject", "material"), ("凝汽器汽侧压力", "object", "parameter"), ("正压", "object", "state")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; pressure-rise and positive-pressure link retained."},
+        {"statement_id": "stage11-statement-a9ff60d2526222447813-s3", "text": "若真空过低，乏汽突然排至凝汽器，会使凝汽器汽侧压力瞬间升高过多，并可能形成正压。", "statement_type": "fact", "predicate": "causes", "entities": [("乏汽", "subject", "material"), ("凝汽器汽侧压力", "object", "parameter"), ("正压", "object", "state")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Latest user manual adjudication: exhaust-steam discharge, condenser steam-side pressure rise and possible positive pressure remain one canonical causal Statement; strict one-to-one matching applies."},
         {"statement_id": "stage11-statement-a9ff60d2526222447813-s4", "text": "若真空过低，凝汽器汽侧形成正压可能造成排大气安全薄膜损坏。", "statement_type": "fact", "predicate": "causes", "entities": [("凝汽器汽侧正压", "subject", "state"), ("排大气安全薄膜", "object", "safety_feature")], "conditions": ["若真空过低"], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Causal chain split into independently retrievable facts; safety-film consequence retained."},
         {"statement_id": "stage11-statement-a9ff60d2526222447813-s5", "text": "真空过低会给汽缸和转子造成较大的热冲击。", "statement_type": "fact", "predicate": "causes", "entities": [("真空过低", "subject", "condition_state"), ("汽缸", "object", "component"), ("转子", "object", "component"), ("热冲击", "object", "phenomenon")], "conditions": [], "applicability_text": "冲转前", "item_ids": ["matched-17"], "reason": "Latest user manual adjudication: causal subject and peer component entities must be Evidence-grounded; unsupported ‘相关过程’ is removed and the cause is represented only by the causes relation."},
     ])
@@ -435,6 +467,7 @@ def main() -> None:
         "reserve_status": "not_read",
         "stage13_status": "not_entered",
     }
+    _record_latest_user_adjudication(audit)
     AUDIT_PATH.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": "completed", "original_gold_count": len(original), "updated_gold_count": len(rows), "adjudication_items": 27}, ensure_ascii=False))
 

@@ -1,13 +1,18 @@
 import json
 from pathlib import Path
 
-from scripts.apply_stage12_manual_adjudication import _dedupe_preserving_order
+from scripts.apply_stage12_manual_adjudication import (
+    LATEST_USER_ADJUDICATION_DECISIONS,
+    _dedupe_preserving_order,
+    _record_latest_user_adjudication,
+)
 from turbine_kg.extraction.semantic import (
     ExtractionProfile,
     HeuristicSemanticExtractor,
     _assemble_candidate,
     _classify_unmatched_candidate,
     to_stage9_runtime_payload,
+    validate_candidate_against_evidence,
     validate_candidate_semantics,
 )
 
@@ -45,6 +50,7 @@ def test_current_gold_negation_is_source_grounded():
 
 def test_prompt_states_semantic_boundary_regression_examples():
     prompt = PROMPT.read_text(encoding="utf-8")
+    assert prompt.startswith("Stage 12 Candidate Extraction Prompt v18")
     assert "semantically isomorphic" in prompt
     assert "substantive difference" in prompt
     assert "never decide the boundary by themselves" in prompt
@@ -54,6 +60,8 @@ def test_prompt_states_semantic_boundary_regression_examples():
     assert "0.2～0.5mm" not in prompt
     assert "D300-style" not in prompt
     assert "additional gating prerequisite" in prompt
+    assert "never upgrade `unknown` merely because the whole Evidence contains one scope-looking phrase" in prompt
+    assert "Relation direction follows structured semantics" in prompt
 
 
 def test_causal_antecedent_is_not_duplicated_as_condition():
@@ -141,6 +149,25 @@ def test_manual_adjudication_rule_updates_are_idempotent():
     artifact = json.loads((ROOT / "data/stage12/stage12_development_gold_adjudication.json").read_text(encoding="utf-8"))
     applied = artifact["general_rules_applied"]
     assert len(applied) == len(set(applied))
+
+
+def test_latest_user_adjudication_preserves_confirmed_canonical_boundaries():
+    rows = {row["statement_id"]: row for row in _gold_rows()}
+    scope = rows["real-statement-haf103-p1-scope"]
+    causal = rows["stage11-statement-a9ff60d2526222447813-s3"]
+
+    assert "适用于" in scope["statement_text"] and "不涉及" in scope["statement_text"]
+    assert "乏汽突然排至凝汽器" in causal["statement_text"]
+    assert "压力瞬间升高过多" in causal["statement_text"]
+    assert "形成正压" in causal["statement_text"]
+
+    audit = {}
+    _record_latest_user_adjudication(audit)
+    assert audit["latest_user_adjudication"]["decisions"] == LATEST_USER_ADJUDICATION_DECISIONS
+    decisions = {item["decision_id"]: item for item in LATEST_USER_ADJUDICATION_DECISIONS}
+    assert decisions["stage12-user-boundary-haf103-scope-2026-09-20"]["statement_ids"] == ["real-statement-haf103-p1-scope"]
+    assert decisions["stage12-user-boundary-low-vacuum-chain-2026-09-20"]["statement_ids"] == ["stage11-statement-a9ff60d2526222447813-s3"]
+    assert "strict one-to-one" in decisions["stage12-user-evaluator-one-to-one-2026-09-20"]["decision"]
 
 
 def _synthetic_evidence(text):
@@ -277,6 +304,60 @@ def test_activity_scope_and_prerequisite_condition_are_separate_fields():
     )
     assert candidate["applicability_scope"]["applicability_text"] == "当调试分阶段进行时"
     assert [item["surface_form"] for item in candidate["conditions"]] == ["前阶段验收通过"]
+
+
+def test_single_paragraph_scope_phrase_does_not_upgrade_unknown_causal_candidate():
+    evidence = _synthetic_evidence("设备调试期间应记录参数；压力过低会导致泵组停止。")
+    candidate = _assemble_synthetic(
+        {
+            "statement_text": "压力过低会导致泵组停止。",
+            "statement_type": "fact",
+            "predicate": "causes",
+            "subject_entities": [
+                {"surface_form": "压力过低", "role": "subject"},
+                {"surface_form": "泵组", "role": "object"},
+            ],
+            "conditions": [],
+            "applicability_scope": {"status": "unknown"},
+        },
+        evidence,
+    )
+    assert candidate["applicability_scope"]["status"] == "unknown"
+    assert candidate["relation_direction"] == "cause_to_effect"
+
+
+def test_relation_direction_uses_structured_condition_not_introductory_keywords():
+    text = "联锁已就绪是启动泵组的前置条件，操作员必须启动泵组。"
+    candidate = _assemble_synthetic(
+        {
+            "statement_text": text,
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [{"surface_form": "操作员", "role": "subject"}],
+            "conditions": [{"surface_form": "联锁已就绪"}],
+            "applicability_scope": {"status": "unknown"},
+        },
+        _synthetic_evidence(text),
+    )
+    assert candidate["relation_direction"] == "condition_to_consequence"
+    validate_candidate_against_evidence(candidate, _synthetic_evidence(text))
+
+
+def test_condition_like_introductory_word_does_not_set_direction_without_structured_condition():
+    text = "当班操作员应记录运行数据。"
+    candidate = _assemble_synthetic(
+        {
+            "statement_text": text,
+            "statement_type": "requirement",
+            "predicate": "requires",
+            "subject_entities": [{"surface_form": "当班操作员", "role": "subject"}],
+            "conditions": [],
+            "applicability_scope": {"status": "unknown"},
+        },
+        _synthetic_evidence(text),
+    )
+    assert candidate["relation_direction"] == "subject_to_object"
+    validate_candidate_against_evidence(candidate, _synthetic_evidence(text))
 
 
 def test_ordered_procedure_direction_preserves_after_then_sequence():

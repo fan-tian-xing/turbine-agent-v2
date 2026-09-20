@@ -7,7 +7,7 @@
   "generator_version": "stage12-semantic-coverage-v2",
   "generator_sha256": "e9171e7bb34fcf611bb762bfa3aef5c2ad241d72e1b83c54fdff061b0e865cc9",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
-  "gold_sha256": "9861fc4a5143294ea0057248ec59866b5badfaa25899129d89148f0fd37702e8",
+  "gold_sha256": "afbfd629a1bd3cf810bbd811b6804077c3619d1cc988600d7cc25506220ef6f7",
   "gold_statement_count": 40,
   "gold_exhaustive": false,
   "coverage": {

@@ -1155,7 +1155,27 @@
     "evidence_semantic_support_accuracy": 1.0,
     "unsupported_addition_count": 0,
     "unsupported_candidate_count": 0,
-    "critical_error_row_count": 0,
+    "critical_quantity_mismatch_count": 0,
+    "critical_polarity_error_count": 1,
+    "critical_relation_direction_error_count": 0,
+    "critical_omission_count": 2,
+    "critical_error_row_count": 2,
+    "critical_omission_details": [
+      {
+        "statement_id": "stage11-statement-fe16fd2c0ddf82659111-s6",
+        "evidence_id": "stage11-evidence-3812f37a11eb0fed6910",
+        "fields": [
+          "negation"
+        ]
+      },
+      {
+        "statement_id": "stage11-statement-ef0d945f112ec36c98ff-s3",
+        "evidence_id": "stage11-evidence-324e7de3fa52e0d9e60b",
+        "fields": [
+          "statement_omission"
+        ]
+      }
+    ],
     "critical_fields": [
       "quantity",
       "negation",
@@ -1165,7 +1185,7 @@
     ]
   },
   "disagreement_summary": {
-    "model_error_count": 0,
+    "model_error_count": 2,
     "gold_error_count": 0,
     "evaluator_error_count": 0,
     "acceptable_semantic_equivalence_count": 0,
@@ -1238,7 +1258,7 @@
   "input_sha256": {
     "registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
-    "contract": "95d86aa97452786986778c1246670cd40ae5ce067dabe68122535dbaf20c7964",
+    "contract": "16807f7e200ad7696950c3b39ea2c29e23693b5123cbc20ab20edfd9c891207e",
     "evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
     "gold": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0"
   },

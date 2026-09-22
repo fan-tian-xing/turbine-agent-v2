@@ -9,6 +9,7 @@ available only as an explicit fixture for tests and offline pipeline checks.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import os
 import re
@@ -35,6 +36,18 @@ PROFILE_ROUTING_PATH = ROOT / "config/stage12_profile_routing.json"
 PROVIDER_CONFIG_PATH = ROOT / "config/stage12_provider.json"
 PROMPT_PATH = ROOT / "config/stage12_prompt.txt"
 RESPONSE_SCHEMA_PATH = ROOT / "config/stage12_extraction_response.schema.json"
+EXTRACTION_CONTRACT_KEYS = (
+    "input",
+    "architecture",
+    "extraction_order",
+    "profiles",
+    "statement_types",
+    "evidence_support_types",
+    "candidate_status",
+    "required_candidate_fields",
+    "forbidden_outputs",
+    "deterministic_field_derivation",
+)
 COARSE_RELATIONS = frozenset({"requires", "prohibits", "describes", "causes", "verifies", "limits_scope"})
 STATEMENT_TYPES = frozenset({"fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"})
 ENTITY_ROLES = frozenset({"subject", "object", "related", "quantity_target"})
@@ -780,6 +793,29 @@ def _canonical_evidence_text(evidence: Mapping[str, Any]) -> str:
     return str(evidence.get("effective_text") or evidence.get("source_text") or "")
 
 
+def extraction_contract_fingerprint(contract: Mapping[str, Any] | None = None) -> str:
+    """Hash only Contract sections that can change LLM extraction behavior."""
+    if contract is None:
+        contract = json.loads(CONTRACT_PATH.read_text(encoding="utf-8"))
+    material = {key: contract.get(key) for key in EXTRACTION_CONTRACT_KEYS}
+    return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
+
+
+def extraction_source_fingerprint() -> str:
+    """Hash extraction/validation symbols, excluding evaluator-only helpers."""
+    names = (
+        "parse_provider_response", "stage12_prompt", "ProviderBackedExtractor",
+        "HeuristicSemanticExtractor", "_split_clauses", "_quantity_fields",
+        "_negation_fields", "_statement_type", "_modality", "_entities",
+        "_predicate", "_has_causal_marker", "_relation_direction",
+        "_applicability_scope", "_assemble_candidate", "to_stage9_runtime_payload",
+        "validate_candidate_semantics", "validate_candidate_against_evidence",
+        "validate_candidate_evidence_binding",
+    )
+    material = {name: inspect.getsource(globals()[name]) for name in names if name in globals()}
+    return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
+
+
 def _location(evidence: Mapping[str, Any]) -> dict[str, Any]:
     locations = evidence.get("locations") or []
     if locations:
@@ -1411,6 +1447,67 @@ def validate_candidate_against_evidence(candidate: Mapping[str, Any], evidence: 
     }
 
 
+def _critical_evidence_profile(text: str) -> dict[str, Any]:
+    """Identify only principle-level safety semantics in canonical Evidence."""
+    quantities = _quantity_fields(text)[0]
+    negations = _negation_fields(text)
+    numeric_markers = ("不得", "不应", "禁止", "严禁", "必须", "应", "需", "要求", "超过", "低于", "不小于", "不大于", "范围", "限值", "上限", "下限")
+    critical_quantity = bool(quantities) and (
+        any(item.get("operator") in {"gte", "lte", "gt", "lt", "range"} for item in quantities)
+        or any(marker in text for marker in numeric_markers)
+    )
+    critical_negation = bool(negations) or any(marker in text for marker in ("不得", "不应", "禁止", "严禁", "不允许"))
+    critical_causality = _has_causal_marker(text)
+    return {
+        "quantities": quantities,
+        "negations": negations,
+        "critical_quantity": critical_quantity,
+        "critical_negation": critical_negation,
+        "critical_causality": critical_causality,
+    }
+
+
+def _critical_semantic_checks(candidate: Mapping[str, Any] | None, evidence_text: str, reference_text: str | None = None) -> dict[str, bool]:
+    """Compare safety-relevant fields to Evidence, never to Gold wording."""
+    profile = _critical_evidence_profile(evidence_text)
+    if reference_text:
+        reference_normalized = _normalized_text(reference_text)
+        profile["quantities"] = [item for item in profile["quantities"] if _normalized_text(item.get("surface_form")) in reference_normalized]
+        profile["negations"] = [item for item in profile["negations"] if _normalized_text(item.get("surface_form")) in reference_normalized]
+        profile["critical_quantity"] = bool(profile["quantities"])
+        profile["critical_negation"] = bool(profile["negations"])
+        profile["critical_causality"] = profile["critical_causality"] and _has_causal_marker(reference_text)
+    actual_quantities = list((candidate or {}).get("quantities") or [])
+    actual_negations = list((candidate or {}).get("negation_scope") or [])
+    quantity_missing = profile["critical_quantity"] and any(
+        not _quantity_is_supported(expected, actual_quantities) for expected in profile["quantities"]
+    )
+    negation_missing = profile["critical_negation"] and any(
+        not any(
+            _normalized_text(item.get("surface_form")) == _normalized_text(expected.get("surface_form"))
+            and item.get("polarity") == expected.get("polarity")
+            for item in actual_negations
+        )
+        for expected in profile["negations"]
+    )
+    direction_error = profile["critical_causality"] and not (
+        candidate
+        and candidate.get("predicate") == "causes"
+        and candidate.get("relation_direction") == "cause_to_effect"
+    )
+    return {
+        "critical_quantity_mismatch": bool(quantity_missing),
+        "critical_polarity_error": bool(negation_missing),
+        "critical_relation_direction_error": bool(direction_error),
+        "critical_omission": bool(
+            (candidate is None and (profile["critical_quantity"] or profile["critical_negation"] or profile["critical_causality"]))
+            or quantity_missing
+            or negation_missing
+            or direction_error
+        ),
+    }
+
+
 def validate_stage12_runtime_projection(candidates: Iterable[Mapping[str, Any]], payload: Mapping[str, Any]) -> None:
     """Verify that the Stage 9 projection retains every Stage 12 semantic field."""
     nodes = {node["id"]: node for node in payload.get("nodes", [])}
@@ -1737,7 +1834,11 @@ def compare_candidates(
         field: (matched_correct[field] / matched_totals[field] if matched_totals[field] else 0.0)
         for field in matched_fields
     }
-    critical_error_rows = 0
+    critical_error_row_ids: set[str] = set()
+    critical_omission_details: list[dict[str, Any]] = []
+    critical_quantity_mismatch_count = 0
+    critical_polarity_error_count = 0
+    critical_relation_direction_error_count = 0
     unsupported_addition_count = review_counts["unsupported"]
     for gold_index, candidate in matches.items():
         gold = gold_rows[gold_index]
@@ -1746,7 +1847,38 @@ def compare_candidates(
         semantic_support = _evidence_semantic_support(candidate, evidence_by_id)
         evidence_error = not binding_ok or semantic_support is False
         unsupported_addition_count += int(semantic_support is False)
-        critical_error_rows += int(evidence_error)
+        row_id = str(gold.get("statement_id") or gold_index)
+        if evidence_error:
+            critical_error_row_ids.add(row_id)
+        if evidence_by_id is not None:
+            for evidence_id in evidence_ids:
+                evidence = evidence_by_id.get(evidence_id)
+                if evidence is None:
+                    continue
+                critical = _critical_semantic_checks(candidate, _canonical_evidence_text(evidence), str(gold.get("statement_text", "")))
+                critical_quantity_mismatch_count += int(critical["critical_quantity_mismatch"])
+                critical_polarity_error_count += int(critical["critical_polarity_error"])
+                critical_relation_direction_error_count += int(critical["critical_relation_direction_error"])
+                if critical["critical_omission"]:
+                    critical_error_row_ids.add(row_id)
+                    critical_omission_details.append({"statement_id": gold.get("statement_id"), "evidence_id": evidence_id, "fields": [field for field in ("quantity", "negation", "relation_direction") if critical.get({"quantity": "critical_quantity_mismatch", "negation": "critical_polarity_error", "relation_direction": "critical_relation_direction_error"}[field])] or ["statement_omission"]})
+    if evidence_by_id is not None:
+        for gold_index, gold in enumerate(gold_rows):
+            if gold_index in matches:
+                continue
+            statement_id = gold.get("statement_id")
+            for binding in gold.get("evidence_bindings", []):
+                evidence_id = str(binding.get("evidence_id"))
+                evidence = evidence_by_id.get(evidence_id)
+                if evidence is None:
+                    continue
+                critical = _critical_semantic_checks(None, _canonical_evidence_text(evidence), str(gold.get("statement_text", "")))
+                if critical["critical_omission"]:
+                    row_id = str(gold.get("statement_id") or statement_id or gold_index)
+                    critical_error_row_ids.add(row_id)
+                    critical_omission_details.append({"statement_id": gold.get("statement_id"), "evidence_id": evidence_id, "fields": ["statement_omission"]})
+    critical_omission_count = len({(item.get("statement_id"), item.get("evidence_id")) for item in critical_omission_details})
+    critical_error_rows = len(critical_error_row_ids)
     matched_candidate_precision = matched_count / len(candidates) if candidates else 0.0
     disagreement_count = len(gold_mismatch_details)
     return {
@@ -1782,8 +1914,13 @@ def compare_candidates(
             "evidence_semantic_support_accuracy": support_correct / support_total if support_total else None,
             "unsupported_addition_count": unsupported_addition_count,
             "unsupported_candidate_count": review_counts["unsupported"],
+            "critical_quantity_mismatch_count": critical_quantity_mismatch_count,
+            "critical_polarity_error_count": critical_polarity_error_count,
+            "critical_relation_direction_error_count": critical_relation_direction_error_count,
+            "critical_omission_count": critical_omission_count,
             "critical_error_row_count": critical_error_rows,
-            "critical_fields": ["quantity", "negation", "relation_direction", "unsupported_addition", "evidence_grounding"],
+            "critical_omission_details": critical_omission_details,
+            "critical_fields": ["quantity", "negation", "relation_direction", "unsupported_addition", "evidence_grounding", "critical_omission"],
         },
         "disagreement_summary": {
             "model_error_count": critical_error_rows,

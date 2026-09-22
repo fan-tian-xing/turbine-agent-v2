@@ -13,6 +13,8 @@ from turbine_kg.extraction.semantic import (
     ExternalLLMProvider,
     FixtureExtractionProvider,
     ProviderBackedExtractor,
+    extraction_contract_fingerprint,
+    extraction_source_fingerprint,
     provider_from_config,
     validate_candidate_against_evidence,
     validate_candidate_semantics,
@@ -31,10 +33,10 @@ def _sha(path: Path) -> str:
 def _input_hashes() -> dict[str, str]:
     return {
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
-        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "contract": extraction_contract_fingerprint(),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
-        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "semantic_source": extraction_source_fingerprint(),
         "provider_config": _sha(ROOT / "config/stage12_provider.json"),
         "cases": _sha(CASES),
     }
@@ -158,11 +160,26 @@ def evaluate(*, fixture: bool = False) -> dict:
     }
 
 
+def refresh_lineage() -> dict:
+    """Refresh audit/extraction fingerprints without invoking a provider."""
+    report = json.loads(REAL_OUT.read_text(encoding="utf-8"))
+    if report.get("execution_kind") != "real_llm" or report.get("status") != "completed":
+        raise ValueError("only a completed real robustness artifact can be refreshed")
+    report["input_sha256"] = _input_hashes()
+    report["extraction_fingerprint"] = {
+        "contract": extraction_contract_fingerprint(),
+        "semantic_source": extraction_source_fingerprint(),
+    }
+    REAL_OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return report
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--fixture", action="store_true", help="run the offline fixture explicitly")
+    parser.add_argument("--refresh-lineage", action="store_true", help="refresh current real artifact metadata without LLM calls")
     args = parser.parse_args()
-    report = evaluate(fixture=args.fixture)
+    report = refresh_lineage() if args.refresh_lineage else evaluate(fixture=args.fixture)
     output = FIXTURE_OUT if args.fixture else REAL_OUT
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": report["status"], "passed": report["passed_count"], "failed": report["failed_count"], "execution_kind": report["execution_kind"]}, ensure_ascii=False))

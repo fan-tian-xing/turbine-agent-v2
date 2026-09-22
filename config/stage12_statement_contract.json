@@ -71,13 +71,13 @@
     "metric_layers": {
       "statement_level": ["gold_statement_recall", "matched_candidate_precision", "boundary_correctness_matched", "over_split_count", "under_split_or_coverage_gap_count", "unsupported_candidate_count"],
       "matched_field_level": ["statement_type", "entity", "relation", "quantity", "negation", "condition", "applicability", "applicability_meaning", "relation_direction"],
-      "safety": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_error_row_count"],
+      "safety": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_quantity_mismatch_count", "critical_polarity_error_count", "critical_relation_direction_error_count", "critical_omission_count", "critical_error_row_count"],
       "disagreement": ["model_error_count", "gold_error_count", "evaluator_error_count", "acceptable_semantic_equivalence_count", "ambiguous_needs_human_review_count", "boundary_disagreement_count"]
     },
     "legacy_metric_policy": "statement_semantic_correctness is retained as historical exact Gold agreement and must not be interpreted as standalone semantic correctness; unmatched Gold rows are excluded from matched_field_accuracy.",
     "disagreement_policy": "Evaluator reports differences. gold_error, evaluator_error and acceptable_semantic_equivalence require explicit human adjudication and are never inferred solely from Candidate != Gold.",
     "stop_tuning_rule": "A Development mismatch permits Prompt or production semantic changes only when it demonstrates a generalizable language or engineering rule that survives synthetic counterexamples. Evidence-supported, non-critical granularity disagreements enter adjudication and do not trigger sample-specific tuning.",
-    "hard_safety_gate": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_error_row_count"],
+    "hard_safety_gate": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_quantity_mismatch_count", "critical_polarity_error_count", "critical_relation_direction_error_count", "critical_omission_count", "critical_error_row_count"],
     "error_types": ["boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "unit_error", "comparison_error", "negation_error", "condition_loss", "applicability_error", "relation_direction_error", "unsupported_claim", "duplicate_candidate", "over_split", "unmatched_candidate_review"],
     "holdout_entrypoint": "scripts/evaluate_stage12_holdout.py",
     "development_entrypoint": "scripts/build_stage12_candidates.py --evaluate-development",
@@ -87,8 +87,18 @@
     "fixture_robustness_artifact": "data/stage12/stage12_fixture_robustness_evaluation.json",
     "promotion": "No candidate is promoted by evaluation; Stage 13 review and later Release stages own approval.",
     "minimum_observability": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_claim_count": 0, "provider_parse_failures_are_explicit": true, "real_llm_execution_required": true},
-    "development_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
+    "development_quality_gate": {
+      "policy_version": "stage12-development-gate-v2",
+      "hard_safety": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_addition_count": 0, "unsupported_candidate_count": 0, "critical_quantity_mismatch_count": 0, "critical_polarity_error_count": 0, "critical_relation_direction_error_count": 0, "critical_omission_count": 0, "critical_error_row_count": 0},
+      "coverage": {"gold_statement_recall": 0.9, "matched_candidate_precision": 0.9, "boundary_correctness_matched": 0.9, "max_over_split_count": 3, "max_under_split_or_coverage_gap_count": 5},
+      "matched_quality": {"statement_type": 0.95, "relation": 0.95, "quantity": 0.95, "negation": 0.95, "relation_direction": 0.95},
+      "adjudication": {"max_confirmed_model_errors": 0, "pending_ambiguous_review_allowed": true},
+      "soft_observations": ["entity", "condition", "applicability", "applicability_meaning"],
+      "threshold_basis": "Conservative engineering minimums for safety, coverage and critical matched fields; not fitted to the current Development scores. Non-critical granularity fields remain observable and require adjudication rather than automatic failure."
+    },
     "acceptance_quality_gate": {"statement_boundary": 0.9, "statement_type": 0.9, "entity": 0.9, "relation": 0.9, "quantity": 0.9, "negation": 1.0, "condition": 0.9, "applicability": 0.9, "evidence_grounding": 1.0},
+    "pipeline_ready_policy": "PRODUCTION_LLM_PIPELINE_READY reports technical operability only: provider contract, real batch execution, schema/runtime validation, Evidence lineage, current cache and failure isolation. It is independent of Development quality, Robustness quality and Reserve acceptance.",
+    "holdout_final_gate_policy": "The exposed historical Holdout remains an observation and lineage check; it cannot satisfy or fail current final acceptance. Final acceptance uses only an independently prepared Reserve result.",
     "unsupported_claim_count": 0,
     "acceptance_lifecycle": {
       "current_holdout_status": "exposed_not_eligible",

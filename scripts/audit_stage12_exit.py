@@ -5,10 +5,13 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from typing import Any
 
 from turbine_kg.extraction.semantic import (
     ProfileRouter,
     compare_candidates,
+    extraction_contract_fingerprint,
+    extraction_source_fingerprint,
     provider_from_config,
     to_stage9_runtime_payload,
     validate_candidate_against_evidence,
@@ -55,6 +58,35 @@ def _reserve_acceptance_gate(
         )
         and reserve_acceptance.get("error_counts", {}).get("unsupported_claim") == 0
     )
+
+
+def _development_quality_gate(development: dict, policy: dict) -> tuple[bool, dict[str, Any]]:
+    """Apply the Evidence-first v2 gate without using raw Gold exactness."""
+    safety = development.get("safety_metrics", {})
+    coverage = development.get("coverage_metrics", {})
+    matched = development.get("matched_field_accuracy", {})
+    disagreement = development.get("disagreement_summary", {})
+    hard_safety = {
+        name: (safety.get(name, 0.0) >= threshold if isinstance(threshold, float) else safety.get(name, 0) <= threshold)
+        for name, threshold in policy.get("hard_safety", {}).items()
+    }
+    coverage_checks = {
+        "gold_statement_recall": coverage.get("gold_statement_recall", 0.0) >= policy.get("coverage", {}).get("gold_statement_recall", 1.0),
+        "matched_candidate_precision": coverage.get("matched_candidate_precision", 0.0) >= policy.get("coverage", {}).get("matched_candidate_precision", 1.0),
+        "boundary_correctness_matched": coverage.get("boundary_correctness_matched", 0.0) >= policy.get("coverage", {}).get("boundary_correctness_matched", 1.0),
+        "over_split_count": coverage.get("over_split_count", 0) <= policy.get("coverage", {}).get("max_over_split_count", 0),
+        "under_split_or_coverage_gap_count": coverage.get("under_split_or_coverage_gap_count", 0) <= policy.get("coverage", {}).get("max_under_split_or_coverage_gap_count", 0),
+    }
+    matched_checks = {
+        field: matched.get(field, 0.0) >= threshold
+        for field, threshold in policy.get("matched_quality", {}).items()
+    }
+    adjudication_checks = {
+        "confirmed_model_errors": disagreement.get("model_error_count", 0) <= policy.get("adjudication", {}).get("max_confirmed_model_errors", 0),
+        "pending_review_policy_declared": isinstance(policy.get("adjudication", {}).get("pending_ambiguous_review_allowed"), bool),
+    }
+    details = {"hard_safety": hard_safety, "coverage": coverage_checks, "matched_quality": matched_checks, "adjudication": adjudication_checks}
+    return all((*hard_safety.values(), *coverage_checks.values(), *matched_checks.values(), *adjudication_checks.values())), details
 
 
 def audit() -> dict:
@@ -127,9 +159,9 @@ def audit() -> dict:
     current_cache_fingerprints = {
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
-        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "contract": extraction_contract_fingerprint(),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
-        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "semantic_source": extraction_source_fingerprint(),
         "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     expected_cache_keys = set()
@@ -152,7 +184,8 @@ def audit() -> dict:
                     and cached_status in {"ok", "no_statement"}
                     and ((cached_status == "no_statement" and not cached_candidates) or (cached_status == "ok" and cached_candidates))
                 )
-                if cached.get("schema_version") == 2 and cached.get("provider_mode") == "real_llm" and cached.get("contract_fingerprints") == current_cache_fingerprints and cache_has_valid_result:
+                cached_fingerprints = cached.get("contract_fingerprints") or {}
+                if cached.get("schema_version") == 2 and cached.get("provider_mode") == "real_llm" and all(cached_fingerprints.get(key) == value for key, value in current_cache_fingerprints.items()) and cache_has_valid_result:
                     validated_real_cache_count += 1
                 else:
                     stale_cache_files.append(cache_path.name)
@@ -179,15 +212,16 @@ def audit() -> dict:
         "contract": ROOT / "config/stage12_statement_contract.json",
     }.items())
     robustness = _read(STAGE12 / "stage12_robustness_evaluation.json") if (STAGE12 / "stage12_robustness_evaluation.json").exists() else {}
-    robustness_input_hashes_match = all(robustness.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
-        "prompt": ROOT / "config/stage12_prompt.txt",
-        "contract": ROOT / "config/stage12_statement_contract.json",
-        "response_schema": ROOT / "config/stage12_extraction_response.schema.json",
-        "candidate_schema": ROOT / "config/stage12_candidate.schema.json",
-        "semantic_source": ROOT / "src/turbine_kg/extraction/semantic.py",
-        "provider_config": ROOT / "config/stage12_provider.json",
-        "cases": STAGE12 / "stage12_robustness_cases.json",
-    }.items())
+    robustness_hashes = {
+        "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+        "contract": extraction_contract_fingerprint(),
+        "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+        "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
+        "semantic_source": extraction_source_fingerprint(),
+        "provider_config": _sha(ROOT / "config/stage12_provider.json"),
+        "cases": _sha(STAGE12 / "stage12_robustness_cases.json"),
+    }
+    robustness_input_hashes_match = all(robustness.get("input_sha256", {}).get(key) == value for key, value in robustness_hashes.items())
     candidate_input_refs = {key: {"path": key, "sha256": value} for key, value in candidate.get("input_sha256", {}).items() if key != "evaluator"}
     candidate_lineage_current = not verify_input_hashes(ROOT, candidate_input_refs)
     manifest_paths = {
@@ -255,7 +289,8 @@ def audit() -> dict:
         "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v5" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
-        "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,
+        "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0,
+        "historical_holdout_grounding_observed": holdout.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",
         "robustness_evaluation_present": (STAGE12 / "stage12_robustness_evaluation.json").exists() and robustness.get("status") == "completed" and robustness.get("real_llm_execution") is True and robustness_input_hashes_match,
         "real_llm_failure_summary_current": failure_summary.get("artifact_kind") == "stage12_real_llm_failure_summary" and failure_summary.get("source_split") == "development_regression_golden" and failure_summary.get("holdout_used_for_tuning") is False and failure_summary.get("blind_read") is False,
@@ -269,8 +304,9 @@ def audit() -> dict:
         ),
         "reserve_registry_ready_for_independent_preparation": reserve_registry_ready,
     }
+    development_quality_gate, development_gate_details = _development_quality_gate(development, quality_thresholds)
     quality_checks = {
-        "development_quality_gate": all(development_quality.get(field, 0.0) >= threshold for field, threshold in quality_thresholds.items()),
+        "development_quality_gate": development_quality_gate,
         "robustness_quality_gate": robustness_input_hashes_match and robustness.get("status") == "completed" and robustness.get("case_count", 0) > 0 and robustness.get("failed_count") == 0,
         "acceptance_quality_gate": _reserve_acceptance_gate(reserve_gold_ready, reserve_acceptance, acceptance_thresholds),
     }
@@ -287,12 +323,22 @@ def audit() -> dict:
         and checks["stale_cache_zero"]
     )
     development_quality_gate = quality_checks["development_quality_gate"]
-    production_llm_pipeline_ready = real_llm_batch_execution and development_quality_gate and quality_checks["robustness_quality_gate"]
+    production_llm_pipeline_ready = real_llm_batch_execution and provider_contract_ready and checks["candidate_schema_and_stage9_gate"] and checks["canonical_evidence_consumed"]
     lifecycle_blockers = set()
     if not reserve_gold_ready:
         lifecycle_blockers.add("upstream_reserve_gold_not_ready")
     blockers = sorted({name for name, passed in checks.items() if not passed} | lifecycle_blockers)
-    pipeline_ready = all(implementation_checks.values())
+    pipeline_checks = {
+        name: implementation_checks[name]
+        for name in (
+            "provider_contract_ready", "real_llm_execution_verified", "producer_reexecution_current",
+            "stale_cache_zero", "candidate_input_lineage_current", "candidate_schema_and_stage9_gate",
+            "canonical_evidence_consumed", "profile_routes_are_unique_and_consumed",
+            "development_evaluation_present", "holdout_result_not_written_to_development",
+            "real_llm_failure_summary_current", "semantic_coverage_matrix_current",
+        )
+    }
+    pipeline_ready = all(pipeline_checks.values())
     quality_accepted = all(quality_checks.values()) and not lifecycle_blockers
     status = "complete" if pipeline_ready and quality_accepted else "in_progress"
     independent_acceptance = quality_checks["acceptance_quality_gate"]
@@ -326,6 +372,8 @@ def audit() -> dict:
         )},
         "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
+        "development_gate_details": development_gate_details,
+        "pipeline_checks": pipeline_checks,
         "gates": gates,
         "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
         "rollback": "Restore the previous verified Stage 11/Stage 12 artifacts and rerun the same development input manifest; do not tune against holdout results.",

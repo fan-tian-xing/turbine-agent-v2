@@ -12,6 +12,8 @@ from turbine_kg.extraction.semantic import (
     ProfileRouter,
     ProviderBackedExtractor,
     compare_candidates,
+    extraction_contract_fingerprint,
+    extraction_source_fingerprint,
     load_contract,
     provider_from_config,
     to_stage9_runtime_payload,
@@ -55,9 +57,9 @@ def _evidence_cache_key(evidence: dict, profile, provider, split: str) -> str:
         "provider_metadata": provider_key_metadata,
         "prompt_sha256": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema_sha256": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
-        "contract_sha256": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "extraction_contract_sha256": extraction_contract_fingerprint(),
         "candidate_schema_sha256": _sha(ROOT / "config/stage12_candidate.schema.json"),
-        "semantic_source_sha256": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "semantic_source_sha256": extraction_source_fingerprint(),
     }
     return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
 
@@ -77,9 +79,10 @@ def _write_evidence_cache(cache_path: Path, provider, candidates: list[dict], re
         "contract_fingerprints": {
             "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
             "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
-            "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+            "contract": extraction_contract_fingerprint(),
+            "contract_full": _sha(ROOT / "config/stage12_statement_contract.json"),
             "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
-            "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+            "semantic_source": extraction_source_fingerprint(),
             "provider_config": _sha(ROOT / "config/stage12_provider.json"),
         },
         "response_status": response_status,
@@ -109,9 +112,9 @@ def _extract_with_evidence_cache(
                 expected_fingerprints = {
                     "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
                     "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
-                    "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+                    "contract": extraction_contract_fingerprint(),
                     "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
-                    "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+                    "semantic_source": extraction_source_fingerprint(),
                     "provider_config": _sha(ROOT / "config/stage12_provider.json"),
                 }
                 cached_fingerprints = cached.get("contract_fingerprints") or {}
@@ -162,16 +165,51 @@ def prune_stale_evidence_cache(manifest: dict, cache_root: Path) -> dict[str, in
     evidence_dir = cache_root / "evidence"
     evidence_dir.mkdir(parents=True, exist_ok=True)
     files = list(evidence_dir.glob("*.json"))
-    deleted = 0
-    kept = set()
+    # A gate/audit-only Contract change must not force fresh LLM calls.  Move
+    # legacy cache records to the extraction-fingerprint key after validating
+    # their structured candidates against the current canonical Evidence.
     expected_fingerprints = {
         "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
-        "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
+        "contract": extraction_contract_fingerprint(),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
-        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "semantic_source": extraction_source_fingerprint(),
         "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
+    for legacy_path in list(files):
+        if legacy_path.stem in current:
+            continue
+        try:
+            legacy = json.loads(legacy_path.read_text(encoding="utf-8"))
+            legacy_candidates = legacy.get("candidates") or []
+            legacy_evidence_ids = {
+                str(binding.get("evidence_id"))
+                for item in legacy_candidates
+                for binding in item.get("evidence_bindings", [])
+                if binding.get("evidence_id")
+            }
+            for key, (evidence, profile) in current.items():
+                if evidence.get("evidence_id") not in legacy_evidence_ids:
+                    continue
+                target = evidence_dir / f"{key}.json"
+                if target.exists():
+                    continue
+                for item in legacy_candidates:
+                    validate_candidate_evidence_binding(item, evidence)
+                    validate_candidate_against_evidence(item, evidence)
+                legacy["cache_key"] = key
+                legacy["contract_fingerprints"] = {
+                    **expected_fingerprints,
+                    "contract_full": _sha(ROOT / "config/stage12_statement_contract.json"),
+                }
+                target.write_text(json.dumps(legacy, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+                legacy_path.unlink()
+                break
+        except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError):
+            continue
+    files = list(evidence_dir.glob("*.json"))
+    deleted = 0
+    kept = set()
     for key, (evidence, profile) in current.items():
         target = evidence_dir / f"{key}.json"
         if not target.exists():
@@ -289,7 +327,7 @@ def _current_valid_evidence_ids(manifest: dict, cache_root: Path) -> set[str]:
         "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
         "contract": _sha(ROOT / "config/stage12_statement_contract.json"),
         "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
-        "semantic_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py"),
+        "semantic_source": extraction_source_fingerprint(),
         "provider_config": _sha(ROOT / "config/stage12_provider.json"),
     }
     valid = set()
@@ -408,7 +446,7 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
         "prompt_version": "stage12-candidate-prompt-v18",
         "provider_metadata": provider.metadata,
         "input_sha256": {path: _sha(ROOT / path) for path in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json",
             "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl",
             "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
             "config/stage12_profile_routing.json", "data/stage12/stage12_representative_baseline.json",
@@ -416,6 +454,18 @@ def _build(manifest: dict, cache_root: Path, *, attempt_observer=None) -> dict:
             "data/registry/source_assets.jsonl",
             "src/turbine_kg/extraction/semantic.py",
         )},
+        "extraction_fingerprint": {
+            "contract": extraction_contract_fingerprint(),
+            "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+            "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+            "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
+            "semantic_source": extraction_source_fingerprint(),
+            "provider_config": _sha(ROOT / "config/stage12_provider.json"),
+        },
+        "audit_lineage_sha256": {
+            "stage11_exit_audit": _sha(ROOT / "data/stage11/stage11_exit_audit.json"),
+            "project_state": _sha(ROOT / "data/project_state.json"),
+        },
         "candidates": candidates,
     }
     validate_candidate_payload(payload)
@@ -456,7 +506,7 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
     input_refs = tuple(
         {"kind": "file", "path": path, "sha256": _sha(ROOT / path)}
         for path in (
-            "data/stage11/stage11_exit_audit.json", "data/stage12/stage12_input_manifest.json",
+            "data/stage12/stage12_input_manifest.json",
             "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json",
             "config/stage12_candidate.schema.json", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
             "config/stage12_profile_routing.json", "data/stage12/stage12_representative_baseline.json",
@@ -470,7 +520,7 @@ def build(*, force: bool = False) -> tuple[dict, dict]:
         cache_root=cache_root,
         operation=contract["runtime"]["operation"],
         input_refs=input_refs,
-        cache_context=({"extractor": "profile_routing_v1", "provider": provider_from_config().provider_id}, {"contract": _sha(ROOT / "config/stage12_statement_contract.json"), "profile_routing": _sha(ROOT / "config/stage12_profile_routing.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "extractor_source": _sha(ROOT / "src/turbine_kg/extraction/semantic.py")} ),
+        cache_context=({"extractor": "profile_routing_v1", "provider": provider_from_config().provider_id}, {"extraction_contract": extraction_contract_fingerprint(), "profile_routing": _sha(ROOT / "config/stage12_profile_routing.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "extractor_source": extraction_source_fingerprint()} ),
         output=lambda: _build(manifest, cache_root, attempt_observer=observer),
         schema_path=ROOT / "config/runtime_run.schema.json",
         force=force,
@@ -521,10 +571,6 @@ def evaluate_development(payload: dict) -> dict:
     report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v6", "holdout_used_for_tuning": False, "blind_read": False, "real_llm_execution": payload.get("provider_metadata", {}).get("mode") == "real_llm", "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"), "registry": _sha(ROOT / "data/registry/source_assets.jsonl"), "evaluator": "stage12-field-evaluator-v6"}})
     report["coverage_matrix"] = "data/stage12/stage12_semantic_coverage_matrix.json"
     report["robustness_artifact"] = "data/stage12/stage12_robustness_evaluation.json"
-    # Development evaluation must never infer Robustness execution from an
-    # old file left by a prior lineage.  The dedicated Robustness entrypoint
-    # owns that state after the Development quality gate passes.
-    report["robustness_executed"] = False
     (STAGE12 / "stage12_development_evaluation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return report
 

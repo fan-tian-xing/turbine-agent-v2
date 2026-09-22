@@ -3,9 +3,9 @@
   "stage": "12",
   "artifact_kind": "stage12_exit_audit",
   "status": "in_progress",
-  "implementation_status": "in_progress",
+  "implementation_status": "complete",
   "quality_status": "quality_not_accepted",
-  "pipeline_ready": false,
+  "pipeline_ready": true,
   "quality_accepted": false,
   "reserve_ready": false,
   "historical_holdout_status": "exposed_not_eligible",
@@ -25,7 +25,7 @@
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "7ad8742be13c267164694694b9f6b91d7d0f85eeeac72bfe97f9489326b16594"
+      "sha256": "79d2faca40b58a1aad26af23423f584569659b5cc6a305548d85ed311e46bb68"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
@@ -41,7 +41,7 @@
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "54f4bce1a6d39c82c2bf960a306d648b8a0bb392366cd10c5c1bce0f35a6a45c"
+      "sha256": "429d2ad61e214cf5cf3089d710d3370ac2a47577eaeb9c269d539f98cea49ec9"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
@@ -49,11 +49,11 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "95d86aa97452786986778c1246670cd40ae5ce067dabe68122535dbaf20c7964"
+      "sha256": "16807f7e200ad7696950c3b39ea2c29e23693b5123cbc20ab20edfd9c891207e"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "531b31f7386d44ee33c5f3d952986c7825a1273b74e2f6582d618ee661a22c59"
+      "sha256": "925e30d65d5a916ab07a794bb14c84a2c337af00e3a19f0e63747670fec24314"
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "15711248dd555de48e9c37a3fca349f30e5174372245333a4c9ba5b3dd229465"
+      "sha256": "2466bb01215d0abfb84316a3aea6974445637e654af4473cbebc2ebebb2e0b08"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -81,15 +81,15 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "40a2b9f87a5759be287d07c2bffe225bd64d81d9fdbbda005d2a3fe8aa7fe2a4"
+      "sha256": "d0d48bd4d464c1d16f584841c2201fa6541334408e2e93674a2c8f03a99e8780"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "dfd98a88f367eaba0fb836ed489e3a82e433beb70bc17bd45d95ad166117a1df"
+      "sha256": "ed71a4419425324df4a1720092a7b1b08facfdb6fe89255d47a82d19d04e4d5f"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "a8b525149ae438034d41a65321cafd2a70e5ddab86885496b5f7023810009885"
+      "sha256": "97d1d169f013077ad985169f435f7b7e09da1303e9babf53043f76e7b2572c30"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -105,7 +105,7 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "132bec402cf7909958eb3e5053d6a5af79cf4f5dd74f8976da34e518833e66bd"
+      "sha256": "7755ba2dec5d34280ab7a4e98142dc016aae3b7c368f3d9f32cfbc7a1aedce17"
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
@@ -140,7 +140,7 @@
   },
   "checks": {
     "stage11_exit_gate": true,
-    "stage11_internal_lineage_current": false,
+    "stage11_internal_lineage_current": true,
     "label_free_development_manifest": true,
     "manifest_input_lineage_current": true,
     "representative_baseline_frozen": true,
@@ -163,20 +163,66 @@
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": true,
+    "historical_holdout_grounding_observed": true,
     "no_ontology_or_release_write": true,
     "robustness_evaluation_present": true,
     "real_llm_failure_summary_current": true,
     "semantic_coverage_matrix_current": true,
     "reserve_registry_ready_for_independent_preparation": true,
-    "development_quality_gate": false,
+    "development_quality_gate": true,
     "robustness_quality_gate": true,
     "acceptance_quality_gate": false
+  },
+  "development_gate_details": {
+    "hard_safety": {
+      "evidence_binding_accuracy": true,
+      "evidence_semantic_support_accuracy": true,
+      "unsupported_addition_count": true,
+      "unsupported_candidate_count": true,
+      "critical_quantity_mismatch_count": true,
+      "critical_polarity_error_count": true,
+      "critical_relation_direction_error_count": true,
+      "critical_omission_count": true,
+      "critical_error_row_count": true
+    },
+    "coverage": {
+      "gold_statement_recall": true,
+      "matched_candidate_precision": true,
+      "boundary_correctness_matched": true,
+      "over_split_count": true,
+      "under_split_or_coverage_gap_count": true
+    },
+    "matched_quality": {
+      "statement_type": true,
+      "relation": true,
+      "quantity": true,
+      "negation": true,
+      "relation_direction": true
+    },
+    "adjudication": {
+      "confirmed_model_errors": true,
+      "pending_review_policy_declared": true
+    }
+  },
+  "pipeline_checks": {
+    "provider_contract_ready": true,
+    "real_llm_execution_verified": true,
+    "producer_reexecution_current": true,
+    "stale_cache_zero": true,
+    "candidate_input_lineage_current": true,
+    "candidate_schema_and_stage9_gate": true,
+    "canonical_evidence_consumed": true,
+    "profile_routes_are_unique_and_consumed": true,
+    "development_evaluation_present": true,
+    "holdout_result_not_written_to_development": true,
+    "real_llm_failure_summary_current": true,
+    "semantic_coverage_matrix_current": true
   },
   "gates": {
     "REAL_LLM_SINGLE_CALL_VERIFIED": true,
     "REAL_LLM_BATCH_EXECUTION": true,
-    "PRODUCTION_LLM_PIPELINE_READY": false,
-    "DEVELOPMENT_QUALITY_GATE": false,
+    "PRODUCTION_LLM_PIPELINE_READY": true,
+    "DEVELOPMENT_QUALITY_GATE": true,
     "ROBUSTNESS_QUALITY_GATE": true,
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false
@@ -186,8 +232,6 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
-    "development_quality_gate",
-    "stage11_internal_lineage_current",
     "upstream_reserve_gold_not_ready"
   ],
   "next_stage_allowed": false,

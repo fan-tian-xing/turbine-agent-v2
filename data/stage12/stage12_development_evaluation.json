@@ -705,13 +705,19 @@
     "evidence_semantic_support_accuracy": 1.0,
     "unsupported_addition_count": 0,
     "unsupported_candidate_count": 0,
+    "critical_quantity_mismatch_count": 0,
+    "critical_polarity_error_count": 0,
+    "critical_relation_direction_error_count": 0,
+    "critical_omission_count": 0,
     "critical_error_row_count": 0,
+    "critical_omission_details": [],
     "critical_fields": [
       "quantity",
       "negation",
       "relation_direction",
       "unsupported_addition",
-      "evidence_grounding"
+      "evidence_grounding",
+      "critical_omission"
     ]
   },
   "disagreement_summary": {
@@ -742,12 +748,12 @@
   "candidate_artifact": "data/stage12/stage12_development_candidates.json",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
   "input_sha256": {
-    "candidate": "40a2b9f87a5759be287d07c2bffe225bd64d81d9fdbbda005d2a3fe8aa7fe2a4",
+    "candidate": "d0d48bd4d464c1d16f584841c2201fa6541334408e2e93674a2c8f03a99e8780",
     "gold": "afbfd629a1bd3cf810bbd811b6804077c3619d1cc988600d7cc25506220ef6f7",
-    "manifest": "54f4bce1a6d39c82c2bf960a306d648b8a0bb392366cd10c5c1bce0f35a6a45c",
+    "manifest": "429d2ad61e214cf5cf3089d710d3370ac2a47577eaeb9c269d539f98cea49ec9",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
-    "contract": "95d86aa97452786986778c1246670cd40ae5ce067dabe68122535dbaf20c7964",
+    "contract": "16807f7e200ad7696950c3b39ea2c29e23693b5123cbc20ab20edfd9c891207e",
     "provider_config": "45a5253f67ee57b850c6aff58a0531f70e34ce35ab7a8a51c4b7653194c16d93",
     "prompt": "a0630982711e5956fe97661f6adfae6dc6295df58ef4bc45c739f8a294f8143e",
     "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
@@ -755,6 +761,5 @@
     "evaluator": "stage12-field-evaluator-v6"
   },
   "coverage_matrix": "data/stage12/stage12_semantic_coverage_matrix.json",
-  "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json",
-  "robustness_executed": false
+  "robustness_artifact": "data/stage12/stage12_robustness_evaluation.json"
 }

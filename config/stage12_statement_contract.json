@@ -66,7 +66,18 @@
     "diagnostic_entrypoint": "scripts/diagnose_stage12_real_llm.py --limit 2"
   },
   "evaluation": {
+    "evaluator_version": "stage12-field-evaluator-v6",
     "fields": ["statement_semantic_correctness", "statement_boundary", "statement_type", "entity", "quantity", "unit", "comparison", "negation", "condition", "applicability_meaning", "relation", "relation_direction", "unsupported_addition", "evidence_grounding", "candidate_coverage"],
+    "metric_layers": {
+      "statement_level": ["gold_statement_recall", "matched_candidate_precision", "boundary_correctness_matched", "over_split_count", "under_split_or_coverage_gap_count", "unsupported_candidate_count"],
+      "matched_field_level": ["statement_type", "entity", "relation", "quantity", "negation", "condition", "applicability", "applicability_meaning", "relation_direction"],
+      "safety": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_error_row_count"],
+      "disagreement": ["model_error_count", "gold_error_count", "evaluator_error_count", "acceptable_semantic_equivalence_count", "ambiguous_needs_human_review_count", "boundary_disagreement_count"]
+    },
+    "legacy_metric_policy": "statement_semantic_correctness is retained as historical exact Gold agreement and must not be interpreted as standalone semantic correctness; unmatched Gold rows are excluded from matched_field_accuracy.",
+    "disagreement_policy": "Evaluator reports differences. gold_error, evaluator_error and acceptable_semantic_equivalence require explicit human adjudication and are never inferred solely from Candidate != Gold.",
+    "stop_tuning_rule": "A Development mismatch permits Prompt or production semantic changes only when it demonstrates a generalizable language or engineering rule that survives synthetic counterexamples. Evidence-supported, non-critical granularity disagreements enter adjudication and do not trigger sample-specific tuning.",
+    "hard_safety_gate": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_error_row_count"],
     "error_types": ["boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "unit_error", "comparison_error", "negation_error", "condition_loss", "applicability_error", "relation_direction_error", "unsupported_claim", "duplicate_candidate", "over_split", "unmatched_candidate_review"],
     "holdout_entrypoint": "scripts/evaluate_stage12_holdout.py",
     "development_entrypoint": "scripts/build_stage12_candidates.py --evaluate-development",

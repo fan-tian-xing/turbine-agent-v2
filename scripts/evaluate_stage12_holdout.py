@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data/stage12/stage12_holdout_evaluation.json"
 REGISTRY = ROOT / "data/stage11/evaluation_sample_registry.json"
 ROUTING = ROOT / "config/stage12_profile_routing.json"
-EVALUATOR_VERSION = "stage12-holdout-evaluator-v4"
+EVALUATOR_VERSION = "stage12-holdout-evaluator-v5"
 
 
 def _rows(path: Path) -> list[dict]:

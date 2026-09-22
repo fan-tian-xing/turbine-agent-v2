@@ -49,7 +49,7 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "af66cef5e76f5d0ac769cd34da2d2536b73fe5c5ede4ed21e9d61182d9b37c53"
+      "sha256": "95d86aa97452786986778c1246670cd40ae5ce067dabe68122535dbaf20c7964"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "ad376e31efe8ec6ff84c391111b79fd3e374a1f4e21323dc92ecba55e204264e"
+      "sha256": "15711248dd555de48e9c37a3fca349f30e5174372245333a4c9ba5b3dd229465"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -81,15 +81,15 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "a39a03f4359f8a5458f42c52904bf431442686ad507ce579b7cf5f69f58d1322"
+      "sha256": "40a2b9f87a5759be287d07c2bffe225bd64d81d9fdbbda005d2a3fe8aa7fe2a4"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "b8659fff2eb7d4ec7056cba88faaecf5fe451a1b50a697ce68a6eccaf24a3035"
+      "sha256": "dfd98a88f367eaba0fb836ed489e3a82e433beb70bc17bd45d95ad166117a1df"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "5517ba3174ec825da084a9026954c40eaa9436a44083c1447fce23676f07c636"
+      "sha256": "a8b525149ae438034d41a65321cafd2a70e5ddab86885496b5f7023810009885"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -105,7 +105,7 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "00bc385618b3c8fbd20ce182bfa4d9db519ad919a2bfbd1fccd46736cb9202f2"
+      "sha256": "132bec402cf7909958eb3e5053d6a5af79cf4f5dd74f8976da34e518833e66bd"
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
@@ -113,7 +113,7 @@
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "444594fbe1875cc7dc85b583a25d151ed1a7fea5c1b1f651ecee628f127c2039"
+      "sha256": "1ee0c7fdb73e08377f3cad66c1d1db884732e5f59979129487e3c72920b32d7a"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
@@ -158,18 +158,18 @@
     "candidate_input_lineage_current": true,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": false,
+    "development_evaluation_present": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
     "grounding_zero_tolerance": true,
     "no_ontology_or_release_write": true,
-    "robustness_evaluation_present": false,
+    "robustness_evaluation_present": true,
     "real_llm_failure_summary_current": true,
     "semantic_coverage_matrix_current": true,
     "reserve_registry_ready_for_independent_preparation": true,
     "development_quality_gate": false,
-    "robustness_quality_gate": false,
+    "robustness_quality_gate": true,
     "acceptance_quality_gate": false
   },
   "gates": {
@@ -177,7 +177,7 @@
     "REAL_LLM_BATCH_EXECUTION": true,
     "PRODUCTION_LLM_PIPELINE_READY": false,
     "DEVELOPMENT_QUALITY_GATE": false,
-    "ROBUSTNESS_QUALITY_GATE": false,
+    "ROBUSTNESS_QUALITY_GATE": true,
     "INDEPENDENT_ACCEPTANCE": false,
     "STAGE12_EXIT": false
   },
@@ -186,10 +186,7 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
-    "development_evaluation_present",
     "development_quality_gate",
-    "robustness_evaluation_present",
-    "robustness_quality_gate",
     "stage11_internal_lineage_current",
     "upstream_reserve_gold_not_ready"
   ],

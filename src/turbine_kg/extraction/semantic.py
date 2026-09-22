@@ -1655,6 +1655,9 @@ def compare_candidates(
     fields = ("statement_boundary", "statement_type", "entity", "relation", "quantity", "unit", "comparison", "negation", "condition", "applicability", "applicability_meaning", "relation_direction", "unsupported_addition", "evidence_grounding")
     totals = {field: 0 for field in fields}
     correct = {field: 0 for field in fields}
+    matched_fields = tuple(field for field in fields if field not in {"unsupported_addition", "evidence_grounding"})
+    matched_totals = {field: 0 for field in matched_fields}
+    matched_correct = {field: 0 for field in matched_fields}
     binding_total = binding_correct = support_total = support_correct = 0
     errors: list[dict[str, Any]] = []
     gold_mismatch_details: list[dict[str, Any]] = []
@@ -1701,6 +1704,9 @@ def compare_candidates(
         for field, passed in checks.items():
             totals[field] += 1
             correct[field] += int(passed)
+            if candidate is not None and field in matched_totals:
+                matched_totals[field] += 1
+                matched_correct[field] += int(passed)
         gold_fields = [field for field in fields if field not in {"unsupported_addition", "evidence_grounding"}]
         gold_mismatch_fields = [field for field in gold_fields if not checks[field]]
         if candidate is not None and gold_mismatch_fields:
@@ -1726,12 +1732,33 @@ def compare_candidates(
     unmatched_review = [{"candidate_id": candidate_id, "classification": _classify_unmatched_candidate(candidate_id, candidates, matches, gold_rows)} for candidate_id in unmatched_candidates]
     review_counts = {name: sum(item["classification"] == name for item in unmatched_review) for name in ("valid_extra", "duplicate", "over_split", "unsupported", "needs_gold_completion")}
     semantic_correct = len(gold_rows) - len(errors)
+    matched_count = len(matches)
+    matched_field_accuracy = {
+        field: (matched_correct[field] / matched_totals[field] if matched_totals[field] else 0.0)
+        for field in matched_fields
+    }
+    critical_error_rows = 0
+    unsupported_addition_count = review_counts["unsupported"]
+    for gold_index, candidate in matches.items():
+        gold = gold_rows[gold_index]
+        evidence_ids = {str(item.get("evidence_id")) for item in gold.get("evidence_bindings", [])}
+        binding_ok = evidence_ids <= _candidate_evidence_ids(candidate)
+        semantic_support = _evidence_semantic_support(candidate, evidence_by_id)
+        evidence_error = not binding_ok or semantic_support is False
+        unsupported_addition_count += int(semantic_support is False)
+        critical_error_rows += int(evidence_error)
+    matched_candidate_precision = matched_count / len(candidates) if candidates else 0.0
+    disagreement_count = len(gold_mismatch_details)
     return {
         "gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive,
         "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0),
         "statement_semantic_correctness": (semantic_correct / len(gold_rows) if gold_rows else 0.0),
+        "exact_gold_field_agreement": (semantic_correct / len(gold_rows) if gold_rows else 0.0),
         "field_totals": totals, "field_correct": correct,
         "field_accuracy": {field: (correct[field] / totals[field] if totals[field] else 0.0) for field in fields},
+        "matched_field_totals": matched_totals,
+        "matched_field_correct": matched_correct,
+        "matched_field_accuracy": matched_field_accuracy,
         "error_counts": {name: sum(name in error["error_types"] for error in errors) for name in error_names},
         "errors": errors,
         "gold_mismatch_count": len(gold_mismatch_details), "gold_mismatch_details": gold_mismatch_details,
@@ -1741,6 +1768,34 @@ def compare_candidates(
         "unmatched_gold": unmatched_gold, "unmatched_candidates": unmatched_candidates, "unmatched_gold_count": len(unmatched_gold), "unmatched_candidate_count": len(unmatched_candidates),
         "unmatched_candidate_review": unmatched_review, "unmatched_candidate_review_counts": review_counts,
         "candidate_coverage": {"matched_candidate_count": len(assigned_candidates), "extra_candidate_count": len(unmatched_candidates), "duplicate_candidate_rate": review_counts["duplicate"] / len(candidates) if candidates else 0.0, "over_split_rate": review_counts["over_split"] / len(candidates) if candidates else 0.0, "spurious_candidate_rate": len(unmatched_candidates) / len(candidates) if gold_exhaustive and candidates else None},
+        "coverage_metrics": {
+            "gold_statement_recall": (matched_count / len(gold_rows) if gold_rows else 0.0),
+            "matched_candidate_precision": matched_candidate_precision,
+            "candidate_precision": matched_candidate_precision if gold_exhaustive else None,
+            "boundary_correctness_matched": matched_field_accuracy.get("statement_boundary", 0.0),
+            "over_split_count": review_counts["over_split"],
+            "under_split_or_coverage_gap_count": len(unmatched_gold),
+            "unsupported_candidate_count": review_counts["unsupported"],
+        },
+        "safety_metrics": {
+            "evidence_binding_accuracy": binding_correct / binding_total if binding_total else 0.0,
+            "evidence_semantic_support_accuracy": support_correct / support_total if support_total else None,
+            "unsupported_addition_count": unsupported_addition_count,
+            "unsupported_candidate_count": review_counts["unsupported"],
+            "critical_error_row_count": critical_error_rows,
+            "critical_fields": ["quantity", "negation", "relation_direction", "unsupported_addition", "evidence_grounding"],
+        },
+        "disagreement_summary": {
+            "model_error_count": critical_error_rows,
+            "gold_error_count": 0,
+            "evaluator_error_count": 0,
+            "acceptable_semantic_equivalence_count": 0,
+            "ambiguous_needs_human_review_count": disagreement_count,
+            "boundary_disagreement_count": sum(1 for item in gold_mismatch_details if "statement_boundary" in item["fields"]),
+            "matched_field_disagreement_count": disagreement_count,
+            "adjudication_required": disagreement_count > 0,
+            "classification_policy": "Only critical Evidence, quantity, polarity, or relation-direction failures are counted as model_error automatically; Gold/evaluator error and acceptable equivalence require explicit adjudication.",
+        },
         "evaluator_adapters": {"applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately", "matching": "maximum-weight one-to-one matching within shared Evidence components; a large candidate covering multiple newly split Gold statements matches at most one and leaves remaining Gold visible as recall/boundary gaps", "grounding": "Evidence binding, canonical Evidence semantic support and Gold agreement are reported separately"},
     }
 

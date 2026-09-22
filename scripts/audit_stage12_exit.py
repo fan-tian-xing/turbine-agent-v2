@@ -158,7 +158,7 @@ def audit() -> dict:
                     stale_cache_files.append(cache_path.name)
             except (OSError, json.JSONDecodeError, TypeError):
                 stale_cache_files.append(cache_path.name)
-    stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
+    stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "matched_field_totals", "matched_field_correct", "matched_field_accuracy", "coverage_metrics", "safety_metrics", "disagreement_summary", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
     dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
         "gold": ROOT / "data/stage11/stage11_statement_development_samples.jsonl",
@@ -251,8 +251,8 @@ def audit() -> dict:
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
-        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v4" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and development.get("gold_statement_count") == development_gold_count and stored_eval_matches and dev_input_hashes_match,
-        "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v4" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
+        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v6" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and development.get("gold_statement_count") == development_gold_count and stored_eval_matches and dev_input_hashes_match,
+        "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v5" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0 and holdout.get("error_counts", {}).get("unsupported_claim") == 0,

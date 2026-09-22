@@ -49,7 +49,7 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "16807f7e200ad7696950c3b39ea2c29e23693b5123cbc20ab20edfd9c891207e"
+      "sha256": "d1d5c591faf39be69ba0ab120b39da641ee11dc1ae73ed8edb60d5b12390b970"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "2466bb01215d0abfb84316a3aea6974445637e654af4473cbebc2ebebb2e0b08"
+      "sha256": "ec1d1bab2854258441bb3432cd18de74108174672ab2ddb4c475259e3ca21f64"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -85,11 +85,15 @@
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "ed71a4419425324df4a1720092a7b1b08facfdb6fe89255d47a82d19d04e4d5f"
+      "sha256": "3915dfc2109e07119c66c7a2a837058c4038071c4d13acae742c99f57aab3739"
+    },
+    "data/stage12/stage12_development_disagreement_adjudication.json": {
+      "path": "data/stage12/stage12_development_disagreement_adjudication.json",
+      "sha256": "65f8daba591b05f8276478924bbb4b5cbcad2b308effdac80c6e9fdb5e968775"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "97d1d169f013077ad985169f435f7b7e09da1303e9babf53043f76e7b2572c30"
+      "sha256": "f9f526e65729ce1a6f18ee067f70b9889bfe913187500a374b7450effe484c65"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -98,6 +102,10 @@
     "scripts/build_stage12_semantic_coverage_matrix.py": {
       "path": "scripts/build_stage12_semantic_coverage_matrix.py",
       "sha256": "e9171e7bb34fcf611bb762bfa3aef5c2ad241d72e1b83c54fdff061b0e865cc9"
+    },
+    "scripts/build_stage12_development_adjudication.py": {
+      "path": "scripts/build_stage12_development_adjudication.py",
+      "sha256": "d6c2f2b722353e8abcb43df67388078a05228aa30f141d7bb8837e581aa000e5"
     },
     "data/stage12/stage12_robustness_cases.json": {
       "path": "data/stage12/stage12_robustness_cases.json",
@@ -132,6 +140,7 @@
     "input_manifest": "data/stage12/stage12_input_manifest.json",
     "development_candidates": "data/stage12/stage12_development_candidates.json",
     "development_evaluation": "data/stage12/stage12_development_evaluation.json",
+    "development_adjudication": "data/stage12/stage12_development_disagreement_adjudication.json",
     "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
     "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json",
     "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json",
@@ -159,6 +168,7 @@
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
     "development_evaluation_present": true,
+    "development_adjudication_current": true,
     "independent_holdout_evaluation_present": true,
     "holdout_result_not_written_to_development": true,
     "holdout_exclusions_accounted": true,
@@ -186,11 +196,9 @@
       "critical_error_row_count": true
     },
     "coverage": {
-      "gold_statement_recall": true,
+      "adjudicated_information_coverage": true,
       "matched_candidate_precision": true,
-      "boundary_correctness_matched": true,
-      "over_split_count": true,
-      "under_split_or_coverage_gap_count": true
+      "over_split_count": true
     },
     "matched_quality": {
       "statement_type": true,
@@ -200,8 +208,10 @@
       "relation_direction": true
     },
     "adjudication": {
-      "confirmed_model_errors": true,
-      "pending_review_policy_declared": true
+      "confirmed_critical_model_errors": true,
+      "confirmed_noncritical_model_error_rate": true,
+      "pending_review_count": true,
+      "adjudication_records_are_current": true
     }
   },
   "pipeline_checks": {
@@ -214,6 +224,7 @@
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
     "development_evaluation_present": true,
+    "development_adjudication_current": true,
     "holdout_result_not_written_to_development": true,
     "real_llm_failure_summary_current": true,
     "semantic_coverage_matrix_current": true

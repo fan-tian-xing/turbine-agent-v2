@@ -5,6 +5,7 @@
 - `stage12_input_manifest.json` 是无标签开发输入视图，声明代表页、资料范围和语义覆盖标签。抽取器只读取该清单指定的 Stage 6 accepted Evidence，不读取 Stage 11 Gold 字段；当前数量以该 canonical manifest 为准。
 - `stage12_development_candidates.json` 是唯一候选输出，Producer 为 `build_stage12_candidates.py`，消费者为开发评测、Stage 12 审计和后续审核阶段。
 - `stage12_development_evaluation.json` 按边界、类型、实体、关系、量值、否定、条件、适用范围和 Evidence grounding 分字段记录开发结果，并分类错误。
+- `stage12_development_disagreement_adjudication.json` 是当前 Development disagreement 的最小 canonical 裁决记录；它只解释 raw Gold/Candidate 差异，不修改 Gold/Candidate，Evaluator 由此计算 adjudicated information coverage 和已确认错误。
 - `config/stage12_provider.json`、`config/stage12_prompt.txt` 和 `config/stage12_extraction_response.schema.json` 定义 Provider、Prompt 版本和严格 JSON 响应边界；正式主路径为配置的 external LLM，deterministic fixture 只能通过显式 fixture 模式用于测试和离线管线验证。
 - Provider 只接收 statement text、bounded statement type、coarse relation、带角色的 Evidence 原文 entity、condition/applicability wording；数量、单位、比较符、否定、modality 和 relation direction 由确定性代码从 statement text 推导，协议常量和 entity class 由适配器补齐。传输层对 timeout、429、5xx 使用有界指数退避并尊重 `Retry-After`。
 - 完成的真实 Evidence 候选会写入 `var/model_runs/stage12/evidence` 的结构化缓存；缓存键绑定 Evidence、Profile、Provider、Prompt、Schema 和语义源码指纹，缓存命中仍重新执行确定性校验，且不保存 raw model response。

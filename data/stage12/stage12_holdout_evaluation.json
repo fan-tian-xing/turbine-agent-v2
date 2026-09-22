@@ -1181,7 +1181,8 @@
       "negation",
       "relation_direction",
       "unsupported_addition",
-      "evidence_grounding"
+      "evidence_grounding",
+      "critical_omission"
     ]
   },
   "disagreement_summary": {
@@ -1195,6 +1196,9 @@
     "adjudication_required": true,
     "classification_policy": "Only critical Evidence, quantity, polarity, or relation-direction failures are counted as model_error automatically; Gold/evaluator error and acceptable equivalence require explicit adjudication."
   },
+  "adjudicated_disagreement_summary": null,
+  "adjudication_validation": null,
+  "adjudicated_information_coverage": null,
   "evaluator_adapters": {
     "applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately",
     "matching": "maximum-weight one-to-one matching within shared Evidence components; a large candidate covering multiple newly split Gold statements matches at most one and leaves remaining Gold visible as recall/boundary gaps",
@@ -1258,7 +1262,7 @@
   "input_sha256": {
     "registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
-    "contract": "16807f7e200ad7696950c3b39ea2c29e23693b5123cbc20ab20edfd9c891207e",
+    "contract": "d1d5c591faf39be69ba0ab120b39da641ee11dc1ae73ed8edb60d5b12390b970",
     "evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",
     "gold": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0"
   },

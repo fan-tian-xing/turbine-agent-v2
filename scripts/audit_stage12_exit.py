@@ -20,6 +20,7 @@ from turbine_kg.extraction.semantic import (
 )
 from turbine_kg.observability.lineage import verify_input_hashes
 from build_stage12_candidates import _evidence_cache_key
+from build_stage12_development_adjudication import OUTPUT_PATH
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE12 = ROOT / "data/stage12"
@@ -40,7 +41,7 @@ def _jsonl(path: Path) -> list[dict]:
 def _reserve_acceptance_gate(
     reserve_gold_ready: bool,
     reserve_acceptance: dict,
-    acceptance_thresholds: dict[str, float],
+    acceptance_policy: dict[str, Any],
 ) -> bool:
     """Evaluate only the independent Reserve result for final acceptance.
 
@@ -48,15 +49,42 @@ def _reserve_acceptance_gate(
     they remain implementation and lineage evidence, but can never promote an
     exposed result to final acceptance.
     """
-    return (
+    # Keep old unit-test fixtures readable while the live Contract uses the
+    # Evidence-first v2 policy below.
+    if "hard_safety" not in acceptance_policy:
+        return bool(
+            reserve_gold_ready
+            and reserve_acceptance.get("status") == "completed"
+            and reserve_acceptance.get("eligible_for_final_acceptance") is True
+            and all(reserve_acceptance.get("field_accuracy", {}).get(field, 0.0) >= threshold for field, threshold in acceptance_policy.items())
+            and reserve_acceptance.get("error_counts", {}).get("unsupported_claim") == 0
+        )
+    safety = reserve_acceptance.get("safety_metrics", {})
+    hard_safety = {
+        name: (safety.get(name, 0.0) >= threshold if isinstance(threshold, float) else safety.get(name, 0) <= threshold)
+        for name, threshold in acceptance_policy.get("hard_safety", {}).items()
+    }
+    supported = {
+        name: (safety.get(name, 0.0) >= threshold if isinstance(threshold, float) else safety.get(name, 0) <= threshold)
+        for name, threshold in acceptance_policy.get("supported_candidate_quality", {}).items()
+    }
+    coverage = reserve_acceptance.get("adjudicated_information_coverage")
+    coverage_ok = coverage is not None and coverage >= acceptance_policy.get("information_coverage", {}).get("adjudicated_information_coverage", 1.0)
+    disagreement = reserve_acceptance.get("adjudicated_disagreement_summary", {})
+    adjudication = acceptance_policy.get("adjudication", {})
+    disagreement_ok = (
+        disagreement.get("confirmed_critical_model_error_count", 0) <= adjudication.get("max_confirmed_critical_model_errors", 0)
+        and disagreement.get("confirmed_noncritical_model_error_rate", 1.0) <= adjudication.get("max_confirmed_noncritical_model_error_rate", 0.0)
+        and disagreement.get("pending_review_count", 1) <= adjudication.get("max_pending_review_count", 0)
+    )
+    return bool(
         reserve_gold_ready
         and reserve_acceptance.get("status") == "completed"
         and reserve_acceptance.get("eligible_for_final_acceptance") is True
-        and all(
-            reserve_acceptance.get("field_accuracy", {}).get(field, 0.0) >= threshold
-            for field, threshold in acceptance_thresholds.items()
-        )
-        and reserve_acceptance.get("error_counts", {}).get("unsupported_claim") == 0
+        and all(hard_safety.values())
+        and all(supported.values())
+        and coverage_ok
+        and disagreement_ok
     )
 
 
@@ -70,20 +98,23 @@ def _development_quality_gate(development: dict, policy: dict) -> tuple[bool, di
         name: (safety.get(name, 0.0) >= threshold if isinstance(threshold, float) else safety.get(name, 0) <= threshold)
         for name, threshold in policy.get("hard_safety", {}).items()
     }
+    adjudicated_coverage = development.get("adjudicated_information_coverage")
     coverage_checks = {
-        "gold_statement_recall": coverage.get("gold_statement_recall", 0.0) >= policy.get("coverage", {}).get("gold_statement_recall", 1.0),
+        "adjudicated_information_coverage": adjudicated_coverage is not None and adjudicated_coverage >= policy.get("coverage", {}).get("adjudicated_information_coverage", 1.0),
         "matched_candidate_precision": coverage.get("matched_candidate_precision", 0.0) >= policy.get("coverage", {}).get("matched_candidate_precision", 1.0),
-        "boundary_correctness_matched": coverage.get("boundary_correctness_matched", 0.0) >= policy.get("coverage", {}).get("boundary_correctness_matched", 1.0),
         "over_split_count": coverage.get("over_split_count", 0) <= policy.get("coverage", {}).get("max_over_split_count", 0),
-        "under_split_or_coverage_gap_count": coverage.get("under_split_or_coverage_gap_count", 0) <= policy.get("coverage", {}).get("max_under_split_or_coverage_gap_count", 0),
     }
     matched_checks = {
         field: matched.get(field, 0.0) >= threshold
         for field, threshold in policy.get("matched_quality", {}).items()
     }
+    adjudicated = development.get("adjudicated_disagreement_summary") or {}
+    adjudication_policy = policy.get("adjudication", {})
     adjudication_checks = {
-        "confirmed_model_errors": disagreement.get("model_error_count", 0) <= policy.get("adjudication", {}).get("max_confirmed_model_errors", 0),
-        "pending_review_policy_declared": isinstance(policy.get("adjudication", {}).get("pending_ambiguous_review_allowed"), bool),
+        "confirmed_critical_model_errors": adjudicated.get("confirmed_critical_model_error_count", 0) <= adjudication_policy.get("max_confirmed_critical_model_errors", 0),
+        "confirmed_noncritical_model_error_rate": adjudicated.get("confirmed_noncritical_model_error_rate", 1.0) <= adjudication_policy.get("max_confirmed_noncritical_model_error_rate", 0.0),
+        "pending_review_count": adjudicated.get("pending_review_count", 1) <= adjudication_policy.get("max_pending_review_count", 0),
+        "adjudication_records_are_current": (development.get("adjudication_validation") or {}).get("pending_review_count", 1) == 0 and (development.get("adjudication_validation") or {}).get("extra_adjudication_count", 1) == 0,
     }
     details = {"hard_safety": hard_safety, "coverage": coverage_checks, "matched_quality": matched_checks, "adjudication": adjudication_checks}
     return all((*hard_safety.values(), *coverage_checks.values(), *matched_checks.values(), *adjudication_checks.values())), details
@@ -142,9 +173,10 @@ def audit() -> dict:
     coverage = {item for page in manifest.get("pages", []) for item in page.get("coverage", [])}
     forbidden = json.dumps(candidate, ensure_ascii=False).lower()
     quality_thresholds = contract["evaluation"]["development_quality_gate"]
-    acceptance_thresholds = contract["evaluation"]["acceptance_quality_gate"]
+    acceptance_policy = contract["evaluation"]["acceptance_quality_gate"]
     development_quality = development.get("field_accuracy", {})
-    dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False, evidence_by_id=canonical_evidence)
+    adjudication = _read(OUTPUT_PATH)
+    dev_recomputed = compare_candidates(candidate.get("candidates", []), dev_gold, gold_exhaustive=False, evidence_by_id=canonical_evidence, adjudication=adjudication)
     provider_contract_ready = (
         provider_config.get("default_provider") == "external_llm"
         and provider_config.get("providers", {}).get("external_llm", {}).get("enabled") is True
@@ -191,7 +223,7 @@ def audit() -> dict:
                     stale_cache_files.append(cache_path.name)
             except (OSError, json.JSONDecodeError, TypeError):
                 stale_cache_files.append(cache_path.name)
-    stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "matched_field_totals", "matched_field_correct", "matched_field_accuracy", "coverage_metrics", "safety_metrics", "disagreement_summary", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
+    stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "matched_field_totals", "matched_field_correct", "matched_field_accuracy", "coverage_metrics", "safety_metrics", "disagreement_summary", "adjudicated_disagreement_summary", "adjudicated_information_coverage", "adjudication_validation", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
     dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
         "gold": ROOT / "data/stage11/stage11_statement_development_samples.jsonl",
@@ -203,6 +235,7 @@ def audit() -> dict:
         "prompt": ROOT / "config/stage12_prompt.txt",
         "response_schema": ROOT / "config/stage12_extraction_response.schema.json",
         "registry": ROOT / "data/registry/source_assets.jsonl",
+        "adjudication": OUTPUT_PATH,
     }.items())
     holdout_input_hashes_match = all(holdout.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "registry": ROOT / "data/stage11/evaluation_sample_registry.json",
@@ -222,8 +255,23 @@ def audit() -> dict:
         "cases": _sha(STAGE12 / "stage12_robustness_cases.json"),
     }
     robustness_input_hashes_match = all(robustness.get("input_sha256", {}).get(key) == value for key, value in robustness_hashes.items())
-    candidate_input_refs = {key: {"path": key, "sha256": value} for key, value in candidate.get("input_sha256", {}).items() if key != "evaluator"}
-    candidate_lineage_current = not verify_input_hashes(ROOT, candidate_input_refs)
+    candidate_input_refs = {
+        key: {"path": key, "sha256": value}
+        for key, value in candidate.get("input_sha256", {}).items()
+        if key not in {"config/stage12_statement_contract.json", "src/turbine_kg/extraction/semantic.py", "evaluator"}
+    }
+    candidate_extraction_fingerprint = candidate.get("extraction_fingerprint") or {}
+    candidate_lineage_current = (
+        not verify_input_hashes(ROOT, candidate_input_refs)
+        and candidate_extraction_fingerprint == {
+            "contract": extraction_contract_fingerprint(),
+            "prompt": _sha(ROOT / "config/stage12_prompt.txt"),
+            "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"),
+            "candidate_schema": _sha(ROOT / "config/stage12_candidate.schema.json"),
+            "semantic_source": extraction_source_fingerprint(),
+            "provider_config": _sha(ROOT / "config/stage12_provider.json"),
+        }
+    )
     manifest_paths = {
         "stage9_exit_audit": "data/stage9/stage9_exit_audit.json",
         "stage10_audit": "data/stage10/stage10_audit.json",
@@ -285,7 +333,8 @@ def audit() -> dict:
         "candidate_input_lineage_current": candidate_lineage_current,
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
-        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v6" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and development.get("gold_statement_count") == development_gold_count and stored_eval_matches and dev_input_hashes_match,
+        "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v7" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and development.get("gold_statement_count") == development_gold_count and stored_eval_matches and dev_input_hashes_match,
+        "development_adjudication_current": adjudication.get("artifact_kind") == "stage12_development_disagreement_adjudication" and adjudication.get("status") == "completed" and adjudication.get("source_sha256", {}).get("gold") == _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl") and adjudication.get("source_sha256", {}).get("candidate") == _sha(STAGE12 / "stage12_development_candidates.json") and development.get("raw_evaluation_sha256") == adjudication.get("source_sha256", {}).get("evaluation"),
         "independent_holdout_evaluation_present": holdout.get("status") == "completed" and holdout.get("evaluation_entrypoint") == "scripts/evaluate_stage12_holdout.py" and holdout.get("evaluator_version") == "stage12-holdout-evaluator-v5" and holdout.get("frozen_extractor_profile") == "profile_routing_v1" and holdout.get("holdout_used_for_tuning") is False and holdout.get("blind_read") is False and holdout_input_hashes_match,
         "holdout_result_not_written_to_development": holdout.get("result_written_to_development") is False and holdout.get("candidate_artifact_written") is False and holdout.get("runtime_cache_written") is False,
         "holdout_exclusions_accounted": holdout_exclusions_accounted,
@@ -308,7 +357,7 @@ def audit() -> dict:
     quality_checks = {
         "development_quality_gate": development_quality_gate,
         "robustness_quality_gate": robustness_input_hashes_match and robustness.get("status") == "completed" and robustness.get("case_count", 0) > 0 and robustness.get("failed_count") == 0,
-        "acceptance_quality_gate": _reserve_acceptance_gate(reserve_gold_ready, reserve_acceptance, acceptance_thresholds),
+        "acceptance_quality_gate": _reserve_acceptance_gate(reserve_gold_ready, reserve_acceptance, acceptance_policy),
     }
     checks = {**implementation_checks, **quality_checks}
     # A prior real run under an invalidated contract is historical evidence
@@ -334,7 +383,7 @@ def audit() -> dict:
             "provider_contract_ready", "real_llm_execution_verified", "producer_reexecution_current",
             "stale_cache_zero", "candidate_input_lineage_current", "candidate_schema_and_stage9_gate",
             "canonical_evidence_consumed", "profile_routes_are_unique_and_consumed",
-            "development_evaluation_present", "holdout_result_not_written_to_development",
+            "development_evaluation_present", "development_adjudication_current", "holdout_result_not_written_to_development",
             "real_llm_failure_summary_current", "semantic_coverage_matrix_current",
         )
     }
@@ -368,9 +417,9 @@ def audit() -> dict:
         "formal_release": False,
         "producer": "scripts/audit_stage12_exit.py",
         "inputs": {name: {"path": name, "sha256": _sha(ROOT / name)} for name in (
-            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "scripts/build_stage12_semantic_coverage_matrix.py", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/stage12/stage12_real_llm_failure_summary.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
+            "data/stage9/stage9_exit_audit.json", "data/stage10/stage10_audit.json", "data/stage11/stage11_exit_audit.json", "data/stage11/evaluation_sample_registry.json", "data/stage12/stage12_representative_baseline.json", "config/stage12_profile_routing.json", "data/stage12/stage12_input_manifest.json", "data/stage6/stage6_evidence_bundle.jsonl", "config/stage12_statement_contract.json", "config/stage12_candidate.schema.json", "config/stage12_provider.json", "config/stage12_prompt.txt", "config/stage12_extraction_response.schema.json", "src/turbine_kg/extraction/semantic.py", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl", "data/stage12/stage12_development_candidates.json", "data/stage12/stage12_development_evaluation.json", "data/stage12/stage12_development_disagreement_adjudication.json", "data/stage12/stage12_holdout_evaluation.json", "data/stage12/stage12_semantic_coverage_matrix.json", "scripts/build_stage12_semantic_coverage_matrix.py", "scripts/build_stage12_development_adjudication.py", "data/stage12/stage12_robustness_cases.json", "data/stage12/stage12_robustness_evaluation.json", "data/stage12/stage12_fixture_robustness_evaluation.json", "data/stage12/stage12_real_llm_failure_summary.json", "data/registry/source_assets.jsonl", "data/registry/source_manual_findings.jsonl", "data/project_state.json",
         )},
-        "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
+        "outputs": {"input_manifest": "data/stage12/stage12_input_manifest.json", "development_candidates": "data/stage12/stage12_development_candidates.json", "development_evaluation": "data/stage12/stage12_development_evaluation.json", "development_adjudication": "data/stage12/stage12_development_disagreement_adjudication.json", "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json", "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json", "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json", "exit_audit": "data/stage12/stage12_exit_audit.json", "runtime_cache": "var/model_runs/stage12"},
         "checks": checks,
         "development_gate_details": development_gate_details,
         "pipeline_checks": pipeline_checks,

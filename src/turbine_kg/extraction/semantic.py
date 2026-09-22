@@ -1741,12 +1741,123 @@ def _evidence_semantic_support(candidate: Mapping[str, Any] | None, evidence_by_
     return True
 
 
+def _adjudication_key(gold_id: Any, candidate_id: Any) -> tuple[str | None, str | None]:
+    """Normalize the bounded Gold/Candidate reference pair used by adjudication."""
+    return (
+        str(gold_id) if gold_id not in (None, "") else None,
+        str(candidate_id) if candidate_id not in (None, "") else None,
+    )
+
+
+def _adjudicated_metrics(
+    adjudication: Mapping[str, Any],
+    gold_rows: list[Mapping[str, Any]],
+    matches: Mapping[int, Mapping[str, Any]],
+    gold_mismatch_details: list[Mapping[str, Any]],
+    unmatched_gold: list[Any],
+    unmatched_candidates: list[Any],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Apply explicit human-authorized disagreement decisions without changing raw metrics."""
+    records = adjudication.get("decisions") or []
+    by_key = {
+        _adjudication_key(item.get("gold_statement_id"), item.get("candidate_id")): item
+        for item in records
+    }
+    by_gold = {
+        str(item.get("gold_statement_id")): item
+        for item in records
+        if item.get("gold_statement_id") not in (None, "")
+    }
+    raw_keys = {
+        _adjudication_key(item.get("statement_id"), item.get("candidate_id"))
+        for item in gold_mismatch_details
+    }
+    raw_keys.update(_adjudication_key(item, None) for item in unmatched_gold)
+    raw_keys.update(_adjudication_key(None, item) for item in unmatched_candidates)
+    extra_keys = sorted(set(by_key) - raw_keys, key=repr)
+    unmatched_gold_ids = {str(item) for item in unmatched_gold}
+    extra_keys = [key for key in extra_keys if key[0] not in unmatched_gold_ids]
+    pending_keys = sorted(
+        (
+            key for key in raw_keys
+            if key not in by_key and not (key[0] in unmatched_gold_ids and key[0] in by_gold)
+        ),
+        key=repr,
+    )
+    acceptable = confirmed_model = confirmed_critical = confirmed_noncritical = gold_error = evaluator_error = 0
+    invalid_records = []
+    for key, item in by_key.items():
+        decision = item.get("decision")
+        if key not in raw_keys and key[0] not in unmatched_gold_ids:
+            continue
+        if decision == "D":
+            acceptable += 1
+        elif decision == "A":
+            confirmed_model += 1
+            if item.get("critical") is True:
+                confirmed_critical += 1
+            else:
+                confirmed_noncritical += 1
+        elif decision == "G":
+            gold_error += 1
+        elif decision == "E":
+            evaluator_error += 1
+        else:
+            invalid_records.append({"disagreement_id": item.get("disagreement_id"), "decision": decision})
+    covered_gold_ids = set()
+    mismatch_by_key = {
+        _adjudication_key(item.get("statement_id"), item.get("candidate_id"))
+        for item in gold_mismatch_details
+    }
+    for index, gold in enumerate(gold_rows):
+        gold_id = str(gold.get("statement_id"))
+        if index in matches:
+            candidate_id = str(matches[index].get("candidate_id"))
+            key = _adjudication_key(gold_id, candidate_id)
+            record = by_key.get(key)
+            if key not in mismatch_by_key or (record and record.get("information_coverage") is True):
+                covered_gold_ids.add(gold_id)
+        else:
+            record = by_key.get(_adjudication_key(gold_id, None)) or by_gold.get(gold_id)
+            if record and record.get("information_coverage") is True:
+                covered_gold_ids.add(gold_id)
+    summary = {
+        "total_reviewed_count": len(records),
+        "acceptable_semantic_equivalence_count": acceptable,
+        "confirmed_model_error_count": confirmed_model,
+        "confirmed_critical_model_error_count": confirmed_critical,
+        "confirmed_noncritical_model_error_count": confirmed_noncritical,
+        "confirmed_noncritical_model_error_rate": confirmed_noncritical / len(gold_rows) if gold_rows else 0.0,
+        "gold_error_count": gold_error,
+        "evaluator_error_count": evaluator_error,
+        "pending_review_count": len(pending_keys) + len(invalid_records),
+        "extra_adjudication_count": len(extra_keys),
+        "covered_gold_statement_count": len(covered_gold_ids),
+        "gold_statement_count": len(gold_rows),
+    }
+    validation = {
+        "raw_disagreement_count": len(raw_keys),
+        "adjudication_record_count": len(records),
+        "pending_review_count": len(pending_keys) + len(invalid_records),
+        "extra_adjudication_count": len(extra_keys),
+        "pending_disagreement_keys": [list(item) for item in pending_keys],
+        "extra_disagreement_keys": [list(item) for item in extra_keys],
+        "invalid_records": invalid_records,
+        "source_artifact": adjudication.get("artifact_kind"),
+    }
+    summary["adjudicated_information_coverage"] = (
+        len(covered_gold_ids) / len(gold_rows) if gold_rows else 0.0
+    )
+    return summary, validation
+
+
 def compare_candidates(
     candidates: list[Mapping[str, Any]],
     gold_rows: list[Mapping[str, Any]],
     *,
     gold_exhaustive: bool = False,
     evidence_by_id: Mapping[str, Mapping[str, Any]] | None = None,
+    adjudication: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Evaluate Gold agreement separately from Evidence support and binding."""
     fields = ("statement_boundary", "statement_type", "entity", "relation", "quantity", "unit", "comparison", "negation", "condition", "applicability", "applicability_meaning", "relation_direction", "unsupported_addition", "evidence_grounding")
@@ -1881,6 +1992,17 @@ def compare_candidates(
     critical_error_rows = len(critical_error_row_ids)
     matched_candidate_precision = matched_count / len(candidates) if candidates else 0.0
     disagreement_count = len(gold_mismatch_details)
+    adjudicated_summary = None
+    adjudication_validation = None
+    if adjudication is not None:
+        adjudicated_summary, adjudication_validation = _adjudicated_metrics(
+            adjudication,
+            gold_rows,
+            matches,
+            gold_mismatch_details,
+            unmatched_gold,
+            unmatched_candidates,
+        )
     return {
         "gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive,
         "statement_recall": (len(matches) / len(gold_rows) if gold_rows else 0.0),
@@ -1933,6 +2055,12 @@ def compare_candidates(
             "adjudication_required": disagreement_count > 0,
             "classification_policy": "Only critical Evidence, quantity, polarity, or relation-direction failures are counted as model_error automatically; Gold/evaluator error and acceptable equivalence require explicit adjudication.",
         },
+        "adjudicated_disagreement_summary": adjudicated_summary,
+        "adjudication_validation": adjudication_validation,
+        "adjudicated_information_coverage": (
+            adjudicated_summary.get("adjudicated_information_coverage")
+            if adjudicated_summary is not None else None
+        ),
         "evaluator_adapters": {"applicability": "unknown is accepted when Gold has no explicit statement-level wording; known wording is compared only when Gold provides wording, while canonical Evidence support is checked separately", "matching": "maximum-weight one-to-one matching within shared Evidence components; a large candidate covering multiple newly split Gold statements matches at most one and leaves remaining Gold visible as recall/boundary gaps", "grounding": "Evidence binding, canonical Evidence semantic support and Gold agreement are reported separately"},
     }
 

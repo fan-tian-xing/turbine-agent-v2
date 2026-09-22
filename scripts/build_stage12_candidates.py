@@ -24,8 +24,10 @@ from turbine_kg.extraction.semantic import (
 from turbine_kg.observability.runtime import canonical_json, run_with_cache
 try:
     from scripts.stage12_failure_summary import decorate_event, write_failure_summary
+    from scripts.build_stage12_development_adjudication import OUTPUT_PATH
 except ModuleNotFoundError:  # direct execution from the scripts directory
     from stage12_failure_summary import decorate_event, write_failure_summary
+    from build_stage12_development_adjudication import OUTPUT_PATH
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE12 = ROOT / "data/stage12"
@@ -567,8 +569,13 @@ def evaluate_development(payload: dict) -> dict:
         row["evidence"]["evidence_id"]: row["evidence"]
         for row in _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")
     }
-    report = compare_candidates(payload["candidates"], gold, gold_exhaustive=False, evidence_by_id=evidence_by_id)
-    report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v6", "holdout_used_for_tuning": False, "blind_read": False, "real_llm_execution": payload.get("provider_metadata", {}).get("mode") == "real_llm", "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"), "registry": _sha(ROOT / "data/registry/source_assets.jsonl"), "evaluator": "stage12-field-evaluator-v6"}})
+    if not OUTPUT_PATH.exists():
+        raise FileNotFoundError(f"missing canonical Development adjudication: {OUTPUT_PATH}")
+    adjudication = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+    report = compare_candidates(payload["candidates"], gold, gold_exhaustive=False, evidence_by_id=evidence_by_id, adjudication=adjudication)
+    report["adjudication_artifact"] = "data/stage12/stage12_development_disagreement_adjudication.json"
+    report["raw_evaluation_sha256"] = _sha(STAGE12 / "stage12_development_evaluation.json") if (STAGE12 / "stage12_development_evaluation.json").exists() else None
+    report.update({"schema_version": 1, "stage": "12", "artifact_kind": "stage12_development_evaluation", "status": "completed", "formal_release": False, "evaluator_version": "stage12-field-evaluator-v7", "holdout_used_for_tuning": False, "blind_read": False, "real_llm_execution": payload.get("provider_metadata", {}).get("mode") == "real_llm", "candidate_artifact": "data/stage12/stage12_development_candidates.json", "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl", "input_sha256": {"candidate": _sha(STAGE12 / "stage12_development_candidates.json"), "gold": _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl"), "manifest": _sha(STAGE12 / "stage12_input_manifest.json"), "routing": _sha(ROOT / "config/stage12_profile_routing.json"), "baseline": _sha(STAGE12 / "stage12_representative_baseline.json"), "contract": _sha(ROOT / "config/stage12_statement_contract.json"), "provider_config": _sha(ROOT / "config/stage12_provider.json"), "prompt": _sha(ROOT / "config/stage12_prompt.txt"), "response_schema": _sha(ROOT / "config/stage12_extraction_response.schema.json"), "registry": _sha(ROOT / "data/registry/source_assets.jsonl"), "adjudication": _sha(OUTPUT_PATH), "evaluator": "stage12-field-evaluator-v7"}})
     report["coverage_matrix"] = "data/stage12/stage12_semantic_coverage_matrix.json"
     report["robustness_artifact"] = "data/stage12/stage12_robustness_evaluation.json"
     (STAGE12 / "stage12_development_evaluation.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

@@ -1083,9 +1083,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": null,
+      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
       "allowed_consumers": [
-        "stage11_holdout_selector"
+        "stage11_holdout_selector",
+        "stage12_reserve_evidence_builder",
+        "stage12_reserve_gold_annotation"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1201,9 +1203,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": null,
+      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
       "allowed_consumers": [
-        "stage11_holdout_selector"
+        "stage11_holdout_selector",
+        "stage12_reserve_evidence_builder",
+        "stage12_reserve_gold_annotation"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1319,9 +1323,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": null,
+      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
       "allowed_consumers": [
-        "stage11_holdout_selector"
+        "stage11_holdout_selector",
+        "stage12_reserve_evidence_builder",
+        "stage12_reserve_gold_annotation"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1437,9 +1443,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": null,
+      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
       "allowed_consumers": [
-        "stage11_holdout_selector"
+        "stage11_holdout_selector",
+        "stage12_reserve_evidence_builder",
+        "stage12_reserve_gold_annotation"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1555,9 +1563,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": null,
+      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
       "allowed_consumers": [
-        "stage11_holdout_selector"
+        "stage11_holdout_selector",
+        "stage12_reserve_evidence_builder",
+        "stage12_reserve_gold_annotation"
       ],
       "review_status": "reserved",
       "frozen": true

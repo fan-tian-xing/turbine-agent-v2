@@ -25,11 +25,11 @@
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "79d2faca40b58a1aad26af23423f584569659b5cc6a305548d85ed311e46bb68"
+      "sha256": "8ad02076e018a6a0e0823f33ac3455bdf7bbf2fa4d74b4e213a2544dd5ef2c0f"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
-      "sha256": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a"
+      "sha256": "cd19016726e521ad818cffe7c5c1f321b4170494ff547e5b4c54ef4f08d86859"
     },
     "data/stage12/stage12_representative_baseline.json": {
       "path": "data/stage12/stage12_representative_baseline.json",
@@ -41,7 +41,7 @@
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "429d2ad61e214cf5cf3089d710d3370ac2a47577eaeb9c269d539f98cea49ec9"
+      "sha256": "f74fa0b6922fd129ce85b535c5a115173a61b45becbd233ba36a8e45cc63173d"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
@@ -81,19 +81,19 @@
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "d0d48bd4d464c1d16f584841c2201fa6541334408e2e93674a2c8f03a99e8780"
+      "sha256": "aee3eb19ade9fa153f60c93478d6dd6899b6582daf6a9cc5a2e6d0c15def5e71"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "3915dfc2109e07119c66c7a2a837058c4038071c4d13acae742c99f57aab3739"
+      "sha256": "ffa4e2070bfa3b23be5b691107afc6fd338ce0615f8e4652397af0479f8de51d"
     },
     "data/stage12/stage12_development_disagreement_adjudication.json": {
       "path": "data/stage12/stage12_development_disagreement_adjudication.json",
-      "sha256": "65f8daba591b05f8276478924bbb4b5cbcad2b308effdac80c6e9fdb5e968775"
+      "sha256": "5621182f833a8c688f594ea0713fcc1fb4c1c68c181485425bb3a4ab601207ca"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "f9f526e65729ce1a6f18ee067f70b9889bfe913187500a374b7450effe484c65"
+      "sha256": "9eb8431e2ee70934caec91dfa7cf22b258c1db358187f0848b72434016d90bde"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",

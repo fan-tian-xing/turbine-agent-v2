@@ -44,9 +44,9 @@
   "input_sha256": {
     "data/stage9/stage9_exit_audit.json": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483",
     "data/stage10/stage10_audit.json": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d",
-    "data/stage12/stage12_input_manifest.json": "429d2ad61e214cf5cf3089d710d3370ac2a47577eaeb9c269d539f98cea49ec9",
+    "data/stage12/stage12_input_manifest.json": "f74fa0b6922fd129ce85b535c5a115173a61b45becbd233ba36a8e45cc63173d",
     "data/stage6/stage6_evidence_bundle.jsonl": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
-    "config/stage12_statement_contract.json": "16807f7e200ad7696950c3b39ea2c29e23693b5123cbc20ab20edfd9c891207e",
+    "config/stage12_statement_contract.json": "d1d5c591faf39be69ba0ab120b39da641ee11dc1ae73ed8edb60d5b12390b970",
     "config/stage12_candidate.schema.json": "925e30d65d5a916ab07a794bb14c84a2c337af00e3a19f0e63747670fec24314",
     "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
     "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56",
@@ -56,7 +56,7 @@
     "config/stage12_prompt.txt": "a0630982711e5956fe97661f6adfae6dc6295df58ef4bc45c739f8a294f8143e",
     "config/stage12_extraction_response.schema.json": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
     "data/registry/source_assets.jsonl": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf",
-    "src/turbine_kg/extraction/semantic.py": "2466bb01215d0abfb84316a3aea6974445637e654af4473cbebc2ebebb2e0b08"
+    "src/turbine_kg/extraction/semantic.py": "ec1d1bab2854258441bb3432cd18de74108174672ab2ddb4c475259e3ca21f64"
   },
   "extraction_fingerprint": {
     "contract": "4a3d96b1ba2e89d81556fbb996b74446fec8a4e777f445edcbe4ff510e88186e",
@@ -67,7 +67,7 @@
     "provider_config": "45a5253f67ee57b850c6aff58a0531f70e34ce35ab7a8a51c4b7653194c16d93"
   },
   "audit_lineage_sha256": {
-    "stage11_exit_audit": "79d2faca40b58a1aad26af23423f584569659b5cc6a305548d85ed311e46bb68",
+    "stage11_exit_audit": "8ad02076e018a6a0e0823f33ac3455bdf7bbf2fa4d74b4e213a2544dd5ef2c0f",
     "project_state": "ec464bb3d4d22525857a9d277067b92ea4aeb3e677574b42a23bdadfeea1f92e"
   },
   "candidates": [

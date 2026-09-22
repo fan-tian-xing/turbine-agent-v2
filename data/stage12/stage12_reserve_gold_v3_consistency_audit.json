@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_reserve_gold_v3_consistency_audit",
+  "status": "completed_draft_audit",
+  "formal_release": false,
+  "producer": "scripts/build_stage12_reserve_gold_v3_draft.py",
+  "gold_status": "draft_not_frozen",
+  "candidate_seen": false,
+  "reserve_llm_calls": 0,
+  "inputs": {
+    "reserve_evidence": "data/stage12/stage12_reserve_evidence.jsonl",
+    "reserve_evidence_sha256": "2065a21122ac58e13592f143585d50b49e7cb36fe0fb1d46f19615668796612f"
+  },
+  "counts": {
+    "reserve_1_D300N": 14,
+    "reserve_2_DL5190_3": 26,
+    "reserve_3_DLT863": 29,
+    "reserve_4_HAF103": 8,
+    "reserve_5_auxiliary_installation_book": 7,
+    "total": 84
+  },
+  "per_reserve": {
+    "D300N": {
+      "gold_count": 14,
+      "boundary_issues": "PASS",
+      "condition_applicability_issues": "PASS",
+      "predicate_issues": "PASS",
+      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+      "quantity_issues": "PASS",
+      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+      "grounding_issues": "PASS",
+      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+    },
+    "DL5190.3": {
+      "gold_count": 26,
+      "boundary_issues": "PASS",
+      "condition_applicability_issues": "PASS",
+      "predicate_issues": "PASS",
+      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+      "quantity_issues": "PASS",
+      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+      "grounding_issues": "PASS",
+      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+    },
+    "DLT863": {
+      "gold_count": 29,
+      "boundary_issues": "PASS",
+      "condition_applicability_issues": "PASS",
+      "predicate_issues": "PASS",
+      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+      "quantity_issues": "PASS",
+      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+      "grounding_issues": "PASS",
+      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+    },
+    "HAF103": {
+      "gold_count": 8,
+      "boundary_issues": "PASS",
+      "condition_applicability_issues": "PASS",
+      "predicate_issues": "PASS",
+      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+      "quantity_issues": "PASS",
+      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+      "grounding_issues": "PASS",
+      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+    },
+    "auxiliary_installation_book": {
+      "gold_count": 7,
+      "boundary_issues": "PASS",
+      "condition_applicability_issues": "PASS",
+      "predicate_issues": "PASS",
+      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+      "quantity_issues": "PASS",
+      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+      "grounding_issues": "PASS",
+      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+    }
+  },
+  "schema_checks": {
+    "missing_required_fields": [],
+    "duplicate_statement_ids": [],
+    "candidate_like_fields": [],
+    "all_rows_pending_manual_review": true,
+    "all_rows_formal_release_false": true
+  },
+  "checks": {
+    "boundary": "PASS",
+    "condition_vs_applicability": "PASS",
+    "predicate": "PASS",
+    "statement_type": "PASS",
+    "normative_modality": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+    "quantity": "PASS",
+    "negation": "PASS",
+    "entity": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+    "evidence_grounding": "PASS",
+    "ocr_incomplete_spans": "PASS_WITH_EXCLUDED_INCOMPLETE_FRAGMENT",
+    "candidate_contamination": "PASS"
+  },
+  "detailed_checks": {
+    "independent_requirement_boundary": "PASS",
+    "mixed_modality": "PASS",
+    "source_locator_not_in_applicability": "PASS",
+    "temporal_scope_not_condition": "PASS",
+    "genuine_prerequisite_not_applicability": "PASS",
+    "limits_scope_not_abused": "PASS",
+    "statement_type_matches_normative_nature": "PASS",
+    "no_unsupported_normative_strength": "PASS_WITH_SCHEMA_MAPPING_NOTE",
+    "quantity_grounding": "PASS",
+    "negation_explicit": "PASS",
+    "causal_direction": "PASS",
+    "entity_completeness": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
+    "numeric_values_not_entities": "PASS",
+    "incomplete_cross_page_spans_excluded": "PASS_WITH_EXCLUDED_INCOMPLETE_FRAGMENT",
+    "ambiguous_ocr_items_excluded": "PASS_WITH_EXCLUDED_AMBIGUOUS_INTRO_ROW",
+    "source_span_recall": "PASS",
+    "duplicate_statement_check": "PASS",
+    "clause_numbers_not_semantic_fields": "PASS",
+    "independent_retrievability": "PASS",
+    "no_unnecessary_over_split": "PASS"
+  },
+  "modality_mapping_note": "The current deterministic contract permits only shall/must/descriptive. Source wording '宜' is preserved verbatim in statement_text and follows the repository's existing deterministic mapping to shall; no recommended enum was introduced.",
+  "excluded_items": [
+    {
+      "document_key": "HAF103",
+      "reason": "2.2.2 fragment ends at '防止造-' and is incomplete across the page boundary."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "reason": "The mixed OCR introductory option row is not answer-resolvable from this Evidence and is excluded."
+    }
+  ],
+  "remaining_human_questions": [
+    "Confirm stable ontology/entity IDs and whether the seven auxiliary-book answer assertions are acceptable as a distinct textbook-quiz source class.",
+    "Confirm the exact answer marking for the auxiliary-book items from the original page visual; no answer is inferred from general knowledge."
+  ],
+  "consumers": [
+    "user_confirmation",
+    "future_stage12_reserve_gold_freezer"
+  ]
+}

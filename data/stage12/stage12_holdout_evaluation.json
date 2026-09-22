@@ -1260,7 +1260,7 @@
   "gold_artifact": "data/stage11/stage11_statement_holdout.jsonl",
   "evidence_artifact": "data/stage11/stage11_holdout_evidence.jsonl",
   "input_sha256": {
-    "registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
+    "registry": "cd19016726e521ad818cffe7c5c1f321b4170494ff547e5b4c54ef4f08d86859",
     "routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff",
     "contract": "d1d5c591faf39be69ba0ab120b39da641ee11dc1ae73ed8edb60d5b12390b970",
     "evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",

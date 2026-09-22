@@ -44,7 +44,7 @@
     },
     "evaluation_sample_registry": {
       "path": "data/stage11/evaluation_sample_registry.json",
-      "sha256": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a"
+      "sha256": "cd19016726e521ad818cffe7c5c1f321b4170494ff547e5b4c54ef4f08d86859"
     },
     "review_round_a": {
       "path": "data/stage11/review_round_a.jsonl",
@@ -61,7 +61,7 @@
   },
   "input_sha256": {
     "statement_contract": "d30424f390e8c40f47b2e219a1befe00d02337bbe8a9dedbbb926252fedbb42a",
-    "evaluation_sample_registry": "b6f111405dc4e9b71420b9561a5261f78881011ac05d0448bcaa5cb967b8c90a",
+    "evaluation_sample_registry": "cd19016726e521ad818cffe7c5c1f321b4170494ff547e5b4c54ef4f08d86859",
     "development_statement_samples": "afbfd629a1bd3cf810bbd811b6804077c3619d1cc988600d7cc25506220ef6f7",
     "holdout_statement_samples": "31c313f5be43e202d26e1b4f845e19099219e5d0dfddeed2d5d009476ffeaac0",
     "holdout_evidence": "00134d71dc14a13035064a72598d2342655484e8f6974ff12d44432e8da215e7",

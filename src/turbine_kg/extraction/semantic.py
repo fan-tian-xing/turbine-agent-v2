@@ -60,14 +60,18 @@ STAGE9_TYPE = {
     "verification": "inspection_requirement",
     "limitation": "scope_definition",
 }
-UNITS = r"mm|m|μm|MW|MPa|kPa|Pa|%|％|s|Hz|r/min|℃|°C|dB|t/h"
+UNITS = r"r/min|MPa|kPa|MW|mm|μm|Pa|Ω|Ω|m|%|％|s|Hz|℃|°C|dB|t/h"
 NUMBER = r"[+-]?(?:\d+(?:\.\d+)?|\.\d+)"
 QUANTITY_RE = re.compile(
-    rf"(?P<left>{NUMBER})\s*(?:～|~|至|到|-|—)\s*(?P<right>{NUMBER})\s*(?P<unit>{UNITS})"
+    rf"(?P<left>{NUMBER})\s*(?P<left_unit>{UNITS})?\s*(?:～|~|至|到|-|—)\s*(?P<right>{NUMBER})\s*(?P<unit>{UNITS})"
     rf"|(?P<single>{NUMBER})\s*(?P<single_unit>{UNITS})",
     re.IGNORECASE,
 )
 COMPARATORS = (
+    ("不得大于", "lte", "upper_bound"), ("不得超过", "lte", "upper_bound"),
+    ("不应大于", "lte", "upper_bound"), ("不应超过", "lte", "upper_bound"),
+    ("不得低于", "gte", "lower_bound"), ("不得小于", "gte", "lower_bound"),
+    ("不应低于", "gte", "lower_bound"), ("不应小于", "gte", "lower_bound"),
     ("不小于", "gte", "lower_bound"), ("不少于", "gte", "lower_bound"),
     ("不低于", "gte", "lower_bound"), ("至少", "gte", "lower_bound"),
     ("以上", "gte", "lower_bound"),
@@ -75,9 +79,10 @@ COMPARATORS = (
     ("不高于", "lte", "upper_bound"), ("至多", "lte", "upper_bound"),
     ("以下", "lte", "upper_bound"),
     ("大于", "gt", "lower_bound"), ("超过", "gt", "lower_bound"),
-    ("小于", "lt", "upper_bound"),
+    ("高于", "gt", "lower_bound"), ("小于", "lt", "upper_bound"),
+    ("低于", "lt", "upper_bound"),
 )
-NEGATIONS = ("不得", "不应", "不小于", "不大于", "不少于", "不低于", "不超过", "不涉及", "无", "未", "不入")
+NEGATIONS = ("不得", "不应", "不小于", "不大于", "不少于", "不低于", "不超过", "不涉及", "没有", "无", "未", "不入", "不卡")
 CONDITION_RE = re.compile(r"(?:当[^。；，,]{1,32}时|若[^。；，,]{1,32}|如果[^。；，,]{1,32}|在[^。；，,]{1,32}状态下|大修时)")
 ACTION_MARKERS = "应必须需可检查调整确认保证进行达到满足包括采用有"
 NOISE_PREFIXES = ("编制审核", "录入员", "目录", "目次", "题库", "选择题")
@@ -736,7 +741,7 @@ class ProviderBackedExtractor:
     def __init__(self, provider: ExtractionProvider, *, profile: ExtractionProfile, split: str):
         self.provider = provider
         self.profile = profile
-        self.split = split
+        self.split = _candidate_schema_split(split)
         self.profile_id = profile.extraction_profile_id
 
     def extract(
@@ -918,8 +923,11 @@ def _quantity_fields(text: str) -> tuple[list[dict[str, Any]], Any, str | None]:
     scalar_unit = None
     for match in QUANTITY_RE.finditer(text):
         unit = match.group("unit") or match.group("single_unit")
-        unit = "%" if unit == "％" else unit
+        unit = _canonical_quantity_unit(unit)
         if match.group("left") is not None:
+            left_unit = _canonical_quantity_unit(match.group("left_unit"))
+            if left_unit is not None and left_unit != unit:
+                continue
             minimum, maximum = float(match.group("left")), float(match.group("right"))
             quantities.append({"surface_form": match.group(0), "min": minimum, "max": maximum, "unit": unit, "operator": "range"})
         else:
@@ -928,7 +936,7 @@ def _quantity_fields(text: str) -> tuple[list[dict[str, Any]], Any, str | None]:
                 value = int(value)
             operator = "eq"
             context = text[max(0, match.start() - 12): min(len(text), match.end() + 12)]
-            bound = next((item for item in COMPARATORS if item[0] in context), None)
+            bound = next((item for item in sorted(COMPARATORS, key=lambda entry: len(entry[0]), reverse=True) if item[0] in context), None)
             if bound:
                 operator = bound[1]
             elif re.search(r"(?:约为|大约|左右|约)\s*$", context) or re.search(r"(?:约为|大约|左右|约)", context):
@@ -939,16 +947,27 @@ def _quantity_fields(text: str) -> tuple[list[dict[str, Any]], Any, str | None]:
     return quantities, scalar_value, scalar_unit
 
 
+def _canonical_quantity_unit(unit: str | None) -> str | None:
+    if unit is None:
+        return None
+    normalized = unicodedata.normalize("NFKC", unit)
+    if normalized == "％":
+        return "%"
+    if normalized == "Ω":
+        return "Ω"
+    return normalized
+
+
 def _negation_fields(text: str) -> list[dict[str, Any]]:
     result = []
     for token in NEGATIONS:
-        if token == "无":
+        if token in {"无", "没有", "不卡"}:
             # Preserve the source-grounded negated phrase (for example,
             # "无错口" or "无铁屑") instead of reducing it to the marker
             # itself.  The following term is deliberately surface-based and
             # bounded by punctuation; semantic scope still comes from the
             # provider and Evidence validation.
-            surfaces = re.findall(r"无[^\s，。；,、]{1,8}", text)
+            surfaces = re.findall(r"(?:没有|无|不卡)[^\s，。；,、]{1,8}", text)
             for surface in dict.fromkeys(surfaces):
                 result.append({"surface_form": surface, "polarity": "negative", "scope_type": "statement"})
             continue
@@ -998,9 +1017,20 @@ def _statement_type(text: str, evidence_role: str | None = None) -> str:
 def _modality(text: str) -> str:
     if "必须" in text or "须" in text:
         return "must"
+    if "宜" in text:
+        return "recommended"
     if any(token in text for token in ("应", "不得", "不应")):
         return "shall"
     return "descriptive"
+
+
+def _candidate_schema_split(source_split: str) -> str:
+    """Map registry Reserve isolation to the candidate schema's holdout class."""
+    if source_split == "acceptance_holdout_reserve":
+        return "acceptance_holdout"
+    if source_split in {"development_regression_golden", "acceptance_holdout", "synthetic"}:
+        return source_split
+    raise ValueError(f"unsupported Stage 12 source split: {source_split}")
 
 
 def _entities(text: str) -> list[dict[str, str]]:
@@ -1100,7 +1130,7 @@ class HeuristicSemanticExtractor:
     def __init__(self, *, profile_id: str | None = None, semantic_role: str | None = None, split: str = "development_regression_golden", source_applicability_scope: Mapping[str, Any] | None = None):
         self.profile_id = profile_id or type(self).profile_id
         self.semantic_role = semantic_role
-        self.split = split
+        self.split = _candidate_schema_split(split)
         self.source_applicability_scope = dict(source_applicability_scope or {})
 
     def extract(self, evidence: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -1216,7 +1246,7 @@ def _assemble_candidate(
     basis = {"evidence_id": evidence["evidence_id"], "index": index, "text": statement_text, "provider": profile.extraction_profile_id}
     candidate = {
         "candidate_id": "stage12-candidate-" + hashlib.sha1(_sha(basis).encode()).hexdigest()[:20],
-        "split": split,
+        "split": _candidate_schema_split(split),
         "task": "statement",
         "statement_text": statement_text,
         "statement_type": statement_type,
@@ -1359,7 +1389,7 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("candidate must retain at least one subject entity")
     if any(_normalized_text(entity.get("surface_form")) not in _normalized_text(text) for entity in candidate.get("subject_entities", [])):
         raise ValueError("candidate entity is not grounded in statement text")
-    if candidate.get("normative_modality") not in {"shall", "must", "descriptive"}:
+    if candidate.get("normative_modality") not in {"shall", "must", "recommended", "descriptive"}:
         raise ValueError("unsupported normative modality")
     for item in [*candidate.get("conditions", []), *candidate.get("negation_scope", [])]:
         if item.get("surface_form") and item["surface_form"] not in text:
@@ -1395,7 +1425,7 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
 def _quantity_key(quantity: Mapping[str, Any]) -> tuple[Any, ...]:
     return (
         quantity.get("value"), quantity.get("min"), quantity.get("max"),
-        "%" if quantity.get("unit") == "％" else quantity.get("unit"), quantity.get("operator"),
+        _canonical_quantity_unit(quantity.get("unit")), quantity.get("operator"),
     )
 
 

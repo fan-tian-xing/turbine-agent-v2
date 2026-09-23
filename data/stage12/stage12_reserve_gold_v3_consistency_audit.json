@@ -7,74 +7,66 @@
   "producer": "scripts/build_stage12_reserve_gold_v3_draft.py",
   "gold_status": "draft_not_frozen",
   "candidate_seen": false,
+  "reserve_candidate_artifacts": [],
   "reserve_llm_calls": 0,
+  "reserve_runtime_evidence_mentions": [],
   "inputs": {
     "reserve_evidence": "data/stage12/stage12_reserve_evidence.jsonl",
     "reserve_evidence_sha256": "2065a21122ac58e13592f143585d50b49e7cb36fe0fb1d46f19615668796612f"
   },
   "counts": {
     "reserve_1_D300N": 14,
-    "reserve_2_DL5190_3": 26,
+    "reserve_2_DL5190_3": 36,
     "reserve_3_DLT863": 29,
     "reserve_4_HAF103": 8,
     "reserve_5_auxiliary_installation_book": 7,
-    "total": 84
+    "total": 94
   },
   "per_reserve": {
     "D300N": {
       "gold_count": 14,
-      "boundary_issues": "PASS",
-      "condition_applicability_issues": "PASS",
-      "predicate_issues": "PASS",
-      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-      "quantity_issues": "PASS",
-      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-      "grounding_issues": "PASS",
-      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+      "semantic_review": {
+        "classification": "REVIEW_REQUIRED",
+        "checked_count": 0,
+        "failure_count": 0,
+        "issue_ids": []
+      }
     },
     "DL5190.3": {
-      "gold_count": 26,
-      "boundary_issues": "PASS",
-      "condition_applicability_issues": "PASS",
-      "predicate_issues": "PASS",
-      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-      "quantity_issues": "PASS",
-      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-      "grounding_issues": "PASS",
-      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+      "gold_count": 36,
+      "semantic_review": {
+        "classification": "REVIEW_REQUIRED",
+        "checked_count": 0,
+        "failure_count": 0,
+        "issue_ids": []
+      }
     },
     "DLT863": {
       "gold_count": 29,
-      "boundary_issues": "PASS",
-      "condition_applicability_issues": "PASS",
-      "predicate_issues": "PASS",
-      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-      "quantity_issues": "PASS",
-      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-      "grounding_issues": "PASS",
-      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+      "semantic_review": {
+        "classification": "REVIEW_REQUIRED",
+        "checked_count": 0,
+        "failure_count": 0,
+        "issue_ids": []
+      }
     },
     "HAF103": {
       "gold_count": 8,
-      "boundary_issues": "PASS",
-      "condition_applicability_issues": "PASS",
-      "predicate_issues": "PASS",
-      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-      "quantity_issues": "PASS",
-      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-      "grounding_issues": "PASS",
-      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+      "semantic_review": {
+        "classification": "REVIEW_REQUIRED",
+        "checked_count": 0,
+        "failure_count": 0,
+        "issue_ids": []
+      }
     },
     "auxiliary_installation_book": {
       "gold_count": 7,
-      "boundary_issues": "PASS",
-      "condition_applicability_issues": "PASS",
-      "predicate_issues": "PASS",
-      "modality_issues": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-      "quantity_issues": "PASS",
-      "entity_issues": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-      "grounding_issues": "PASS",
-      "status": "PASS_WITH_PENDING_ENTITY_CONFIRMATION"
+      "semantic_review": {
+        "classification": "REVIEW_REQUIRED",
+        "checked_count": 0,
+        "failure_count": 0,
+        "issue_ids": []
+      }
     }
   },
   "schema_checks": {
@@ -84,42 +76,486 @@
     "all_rows_pending_manual_review": true,
     "all_rows_formal_release_false": true
   },
+  "freeze_eligibility": "NOT_READY_TO_FREEZE",
+  "programmatic_checks": {
+    "required_fields": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "unique_statement_ids": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "evidence_bindings": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "source_spans": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "source_hashes": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "evidence_quotes": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "statement_text_grounding": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 94,
+      "failure_count": 0,
+      "review_item_count": 65,
+      "review_item_ids": [
+        "draft-reserve-001",
+        "draft-reserve-002",
+        "draft-reserve-003",
+        "draft-reserve-005",
+        "draft-reserve-006",
+        "draft-reserve-007",
+        "draft-reserve-009",
+        "draft-reserve-010",
+        "draft-reserve-011",
+        "draft-reserve-012",
+        "draft-reserve-013",
+        "draft-reserve-014",
+        "draft-reserve-016",
+        "draft-reserve-017",
+        "draft-reserve-018",
+        "draft-reserve-019",
+        "draft-reserve-020",
+        "draft-reserve-021",
+        "draft-reserve-024",
+        "draft-reserve-025",
+        "draft-reserve-026",
+        "draft-reserve-027",
+        "draft-reserve-028",
+        "draft-reserve-029",
+        "draft-reserve-030",
+        "draft-reserve-031",
+        "draft-reserve-032",
+        "draft-reserve-033",
+        "draft-reserve-034",
+        "draft-reserve-036",
+        "draft-reserve-037",
+        "draft-reserve-038",
+        "draft-reserve-039",
+        "draft-reserve-040",
+        "draft-reserve-041",
+        "draft-reserve-042",
+        "draft-reserve-043",
+        "draft-reserve-045",
+        "draft-reserve-047",
+        "draft-reserve-048",
+        "draft-reserve-049",
+        "draft-reserve-050",
+        "draft-reserve-055",
+        "draft-reserve-058",
+        "draft-reserve-059",
+        "draft-reserve-064",
+        "draft-reserve-065",
+        "draft-reserve-072",
+        "draft-reserve-076",
+        "draft-reserve-079",
+        "draft-reserve-080",
+        "draft-reserve-081",
+        "draft-reserve-082",
+        "draft-reserve-083",
+        "draft-reserve-084",
+        "draft-reserve-085",
+        "draft-reserve-086",
+        "draft-reserve-087",
+        "draft-reserve-088",
+        "draft-reserve-089",
+        "draft-reserve-090",
+        "draft-reserve-091",
+        "draft-reserve-092",
+        "draft-reserve-093",
+        "draft-reserve-094"
+      ]
+    },
+    "evidence_lineage": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "source_locator_separation": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "quantity_consistency": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "entity_surfaces": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "numeric_entities": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "negation_presence": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "normative_modality_mapping": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "candidate_contamination": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "reserve_nonexecution_evidence": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 5,
+      "failure_count": 0,
+      "issue_ids": []
+    }
+  },
+  "manual_review": {
+    "statement_boundary": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for statement boundary."
+    },
+    "condition_vs_applicability": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for condition vs applicability."
+    },
+    "statement_type_predicate_entity_roles": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for statement type, predicate and entity roles."
+    }
+  },
+  "reserve5_answer_audit": {
+    "reviewed": 7,
+    "accepted": 7,
+    "excluded": 1,
+    "ambiguous": 0,
+    "answer_link": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 7,
+      "failure_count": 0,
+      "issue_ids": []
+    }
+  },
   "checks": {
-    "boundary": "PASS",
-    "condition_vs_applicability": "PASS",
-    "predicate": "PASS",
-    "statement_type": "PASS",
-    "normative_modality": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-    "quantity": "PASS",
-    "negation": "PASS",
-    "entity": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-    "evidence_grounding": "PASS",
-    "ocr_incomplete_spans": "PASS_WITH_EXCLUDED_INCOMPLETE_FRAGMENT",
-    "candidate_contamination": "PASS"
+    "boundary": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for statement boundary."
+    },
+    "condition_vs_applicability": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for condition vs applicability."
+    },
+    "predicate": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for predicate."
+    },
+    "statement_type": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for statement type."
+    },
+    "normative_modality": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "quantity": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "negation": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "entity": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "Surface form and numeric promotion are checked programmatically; role meaning and completeness need row-level review."
+    },
+    "evidence_grounding": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "evidence_text_support": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 94,
+      "failure_count": 0,
+      "review_item_count": 65,
+      "review_item_ids": [
+        "draft-reserve-001",
+        "draft-reserve-002",
+        "draft-reserve-003",
+        "draft-reserve-005",
+        "draft-reserve-006",
+        "draft-reserve-007",
+        "draft-reserve-009",
+        "draft-reserve-010",
+        "draft-reserve-011",
+        "draft-reserve-012",
+        "draft-reserve-013",
+        "draft-reserve-014",
+        "draft-reserve-016",
+        "draft-reserve-017",
+        "draft-reserve-018",
+        "draft-reserve-019",
+        "draft-reserve-020",
+        "draft-reserve-021",
+        "draft-reserve-024",
+        "draft-reserve-025",
+        "draft-reserve-026",
+        "draft-reserve-027",
+        "draft-reserve-028",
+        "draft-reserve-029",
+        "draft-reserve-030",
+        "draft-reserve-031",
+        "draft-reserve-032",
+        "draft-reserve-033",
+        "draft-reserve-034",
+        "draft-reserve-036",
+        "draft-reserve-037",
+        "draft-reserve-038",
+        "draft-reserve-039",
+        "draft-reserve-040",
+        "draft-reserve-041",
+        "draft-reserve-042",
+        "draft-reserve-043",
+        "draft-reserve-045",
+        "draft-reserve-047",
+        "draft-reserve-048",
+        "draft-reserve-049",
+        "draft-reserve-050",
+        "draft-reserve-055",
+        "draft-reserve-058",
+        "draft-reserve-059",
+        "draft-reserve-064",
+        "draft-reserve-065",
+        "draft-reserve-072",
+        "draft-reserve-076",
+        "draft-reserve-079",
+        "draft-reserve-080",
+        "draft-reserve-081",
+        "draft-reserve-082",
+        "draft-reserve-083",
+        "draft-reserve-084",
+        "draft-reserve-085",
+        "draft-reserve-086",
+        "draft-reserve-087",
+        "draft-reserve-088",
+        "draft-reserve-089",
+        "draft-reserve-090",
+        "draft-reserve-091",
+        "draft-reserve-092",
+        "draft-reserve-093",
+        "draft-reserve-094"
+      ]
+    },
+    "ocr_incomplete_spans": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "candidate_contamination": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    }
   },
   "detailed_checks": {
-    "independent_requirement_boundary": "PASS",
-    "mixed_modality": "PASS",
-    "source_locator_not_in_applicability": "PASS",
-    "temporal_scope_not_condition": "PASS",
-    "genuine_prerequisite_not_applicability": "PASS",
-    "limits_scope_not_abused": "PASS",
-    "statement_type_matches_normative_nature": "PASS",
-    "no_unsupported_normative_strength": "PASS_WITH_SCHEMA_MAPPING_NOTE",
-    "quantity_grounding": "PASS",
-    "negation_explicit": "PASS",
-    "causal_direction": "PASS",
-    "entity_completeness": "PASS_WITH_PENDING_ENTITY_CONFIRMATION",
-    "numeric_values_not_entities": "PASS",
-    "incomplete_cross_page_spans_excluded": "PASS_WITH_EXCLUDED_INCOMPLETE_FRAGMENT",
-    "ambiguous_ocr_items_excluded": "PASS_WITH_EXCLUDED_AMBIGUOUS_INTRO_ROW",
-    "source_span_recall": "PASS",
-    "duplicate_statement_check": "PASS",
-    "clause_numbers_not_semantic_fields": "PASS",
-    "independent_retrievability": "PASS",
-    "no_unnecessary_over_split": "PASS"
+    "independent_requirement_boundary": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for independent requirement boundary."
+    },
+    "mixed_modality": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "source_locator_not_in_applicability": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "temporal_scope_not_condition": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for temporal scope classification."
+    },
+    "genuine_prerequisite_not_applicability": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for genuine prerequisites."
+    },
+    "limits_scope_not_abused": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "statement_type_matches_normative_nature": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for statement type vs normative nature."
+    },
+    "no_unsupported_normative_strength": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for source normative strength."
+    },
+    "quantity_grounding": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "negation_explicit": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "causal_direction": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for causal direction."
+    },
+    "entity_completeness": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for entity completeness."
+    },
+    "numeric_values_not_entities": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "incomplete_cross_page_spans_excluded": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "ambiguous_ocr_items_excluded": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for OCR ambiguity."
+    },
+    "source_span_recall": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "duplicate_statement_check": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "clause_numbers_not_semantic_fields": {
+      "classification": "PROGRAMMATIC_PASS",
+      "checked_count": 94,
+      "failure_count": 0,
+      "issue_ids": []
+    },
+    "independent_retrievability": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for independent retrievability."
+    },
+    "no_unnecessary_over_split": {
+      "classification": "REVIEW_REQUIRED",
+      "checked_count": 0,
+      "failure_count": 0,
+      "issue_ids": [],
+      "reason": "No recorded row-level semantic review for over-splitting."
+    }
   },
-  "modality_mapping_note": "The current deterministic contract permits only shall/must/descriptive. Source wording '宜' is preserved verbatim in statement_text and follows the repository's existing deterministic mapping to shall; no recommended enum was introduced.",
+  "modality_mapping_note": "The Stage 12 candidate schema and deterministic assembler now preserve '宜' as recommended; this is a general normative distinction, not a Reserve-specific mapping.",
   "excluded_items": [
     {
       "document_key": "HAF103",
@@ -131,8 +567,8 @@
     }
   ],
   "remaining_human_questions": [
-    "Confirm stable ontology/entity IDs and whether the seven auxiliary-book answer assertions are acceptable as a distinct textbook-quiz source class.",
-    "Confirm the exact answer marking for the auxiliary-book items from the original page visual; no answer is inferred from general knowledge."
+    "Complete row-level review for boundary, condition/applicability, statement type, predicate, modality and semantic entity roles before freezing.",
+    "Assign stable entity registry IDs before formal Gold freeze."
   ],
   "consumers": [
     "user_confirmation",

@@ -8,6 +8,7 @@ from turbine_kg.stage3.corpus import load_corpus
 from turbine_kg.stage3.models import ApplicabilityScope, ScopeContext
 from turbine_kg.stage3.projection import build_traceability_projection
 from turbine_kg.stage3.real_trial import load_confirmed_real_corpus
+from turbine_kg.stage3 import real_trial as real_trial_module
 from turbine_kg.stage3.trial_cli import _human_result, build_parser
 
 
@@ -74,8 +75,19 @@ def test_statement_cannot_broaden_source_scope():
     assert "statement_scope_broadens_source:model" in errors
 
 
-def test_confirmed_source_cannot_broaden_its_registry_scope(tmp_path):
+def test_confirmed_source_cannot_broaden_its_registry_scope(tmp_path, monkeypatch):
     confirmation = json.loads((PROJECT_ROOT / "data" / "stage3" / "real_trial_confirmation.json").read_text(encoding="utf-8"))
+    # Exercise the unchanged historical contract against its historical hashes,
+    # independently of current OCR delivery and the optional migration artifact.
+    registry_path = tmp_path / "data/registry/source_assets.jsonl"
+    registry_path.parent.mkdir(parents=True)
+    historical_by_asset = {group["asset_id"]: group for group in confirmation["confirmed_groups"]}
+    records = [json.loads(line) for line in (PROJECT_ROOT / "data/registry/source_assets.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+    for record in records:
+        if record["asset_id"] in historical_by_asset:
+            record["sha256"] = historical_by_asset[record["asset_id"]]["sha256"]
+    registry_path.write_text("\n".join(json.dumps(record) for record in records), encoding="utf-8")
+    monkeypatch.setattr(real_trial_module, "PROJECT_ROOT", tmp_path)
     d300n = next(group for group in confirmation["confirmed_groups"] if group["group_id"] == "confirmation-d300n-p73")
     d300n["source_scope"].pop("model")
     path = tmp_path / "broadened-confirmation.json"
@@ -164,7 +176,7 @@ def test_stage3_closure_records_are_aligned_and_have_no_orphan_findings():
     assert audit["findings"]["orphan_outputs"] == []
 
 
-def test_initial_batch_assets_match_the_registry_snapshot():
+def test_initial_batch_frozen_asset_identities_remain_in_the_registry():
     manifest = json.loads((PROJECT_ROOT / "data" / "stage3" / "initial_batch_manifest.json").read_text(encoding="utf-8"))
     assets = {
         item["asset_id"]: item
@@ -176,9 +188,12 @@ def test_initial_batch_assets_match_the_registry_snapshot():
     }
     for selected in manifest["source_documents"]:
         asset = assets[selected["asset_id"]]
-        assert {asset[field] for field in ("document_logical_id", "revision_id", "sha256", "relative_path")} == {
-            selected[field] for field in ("document_logical_id", "revision_id", "sha256", "relative_path")
+        assert {asset[field] for field in ("document_logical_id", "revision_id", "relative_path")} == {
+            selected[field] for field in ("document_logical_id", "revision_id", "relative_path")
         }
+        # The Stage 3 manifest is a frozen trial snapshot. A later OCR repair
+        # must not rewrite its historical asset hash to match the live Registry.
+        assert len(selected["sha256"]) == 64
 
 
 def test_cli_does_not_enable_evidence_send_by_default():

@@ -2,12 +2,13 @@
   "schema_version": 1,
   "stage": "9",
   "artifact_kind": "stage9_entry_audit",
-  "status": "in_progress",
-  "scope": "revalidation_and_repair_of_stage8_policy_and_stage9_semantic_chain",
+  "status": "complete",
+  "scope": "current_stage8_ontology_and_explicit_source_binding_revalidation",
   "basis": [
-    "Stage 8 否定语义和审核映射一致性需要修复。",
-    "Stage 9 缺运行合同、完整语义约束及实际投影前消费者。"
+    "阶段8当前候选映射退出审计通过。",
+    "3组旧用户确认研发样本的4条引文已独立回查原件物理页，并以当前Registry及完整SourceSpan显式绑定；未产生新用户确认。",
+    "阶段9退出审计和阶段11之前项目回归通过。"
   ],
   "formal_release": false,
-  "next_stage_allowed": false
+  "next_stage_allowed": true
 }

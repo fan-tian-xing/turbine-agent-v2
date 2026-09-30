@@ -357,6 +357,33 @@ def test_stage7_cached_result_cannot_bypass_current_admission(tmp_path, monkeypa
     assert calls == ["build"]
 
 
+def test_stage7_user_accepted_ocr_requires_current_pdf_hash_and_page_range(tmp_path, monkeypatch):
+    monkeypatch.setattr(stage7, "ROOT", tmp_path)
+    path = tmp_path / "data/stage5/stage5_exit_audit.json"
+    path.parent.mkdir(parents=True)
+    audit = {
+        "status": "complete", "next_stage_allowed": True,
+        "documents": [{
+            "document_key": "auxiliary_installation_book",
+            "review_basis": "explicit_current_pdf_user_acceptance",
+            "original_sha256": "a" * 64,
+            "processing_sha256": "b" * 64,
+            "user_acceptance": {
+                "confirmation_text": "current PDF accepted",
+                "processing_sha256": "b" * 64,
+                "accepted_page_ranges": [[1, 480]],
+            },
+        }],
+    }
+    path.write_text(json.dumps(audit), encoding="utf-8")
+    page = {"document_key": "auxiliary_installation_book", "physical_page": 480}
+    original = {"sha256": "a" * 64}
+    processing = {"asset_kind": "derived_ocr", "sha256": "b" * 64}
+    assert stage7._current_stage5_user_acceptance(page, original, processing)
+    assert not stage7._current_stage5_user_acceptance({**page, "physical_page": 481}, original, processing)
+    assert not stage7._current_stage5_user_acceptance(page, original, {**processing, "sha256": "c" * 64})
+
+
 @pytest.mark.parametrize("field,value", [
     ("inputs", {}), ("contract_sha256", "b" * 64), ("status", "complete"),
     ("formal_release", True),

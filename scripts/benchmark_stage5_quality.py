@@ -13,15 +13,23 @@ import difflib
 import json
 from pathlib import Path
 import re
+import time
 
 import fitz
 
-from stage5_fingerprint import OCR_DPI, find_matching_artifact, load_assets, ocr_fingerprint, resolve_asset
+from stage5_fingerprint import load_assets, ocr_fingerprint, resolve_asset, sha256_file
+from audit_stage5_exit import _current_user_acceptance
 from turbine_kg.settings import PROJECT_ROOT, Settings
 
 
 STAGE5_ROOT = PROJECT_ROOT / "data" / "stage5"
 MANIFEST = STAGE5_ROOT / "stage5_sample_manifest.json"
+BASELINE = STAGE5_ROOT / "stage5_baseline_benchmark.json"
+TRUTH = STAGE5_ROOT / "stage5_truth_annotations_2026-09-28.json"
+TABLE_TRUTH = STAGE5_ROOT / "stage5_table_truth_review.json"
+FULL_REVIEW = PROJECT_ROOT / "data/registry/ocr_validation_report.json"
+REGISTRY = PROJECT_ROOT / "data/registry/source_assets.jsonl"
+EXIT_AUDIT = STAGE5_ROOT / "stage5_exit_audit.json"
 NUMBER_PATTERN = re.compile(r"(?<![A-Za-z])[-+]?\d+(?:[,.]\d+)?(?:\s*[-~至]\s*\d+(?:[,.]\d+)?)?")
 UNIT_PATTERN = re.compile(
     r"(?:mm|cm|m|MPa|kPa|Pa|℃|°C|V|kV|A|Hz|MW|kW|rpm|%|毫米|厘米|米|兆帕|千帕)",
@@ -30,11 +38,78 @@ UNIT_PATTERN = re.compile(
 NEGATION_TERMS = ("不得", "不应", "禁止", "严禁", "不准", "无须", "除非", "未")
 
 
-def _latest(pattern: str) -> Path:
-    candidates = sorted(STAGE5_ROOT.glob(pattern))
-    if not candidates:
-        raise FileNotFoundError(f"no Stage 5 artifact matches {pattern}")
-    return candidates[-1]
+def _current_inputs(settings: Settings) -> tuple[dict, dict, dict, dict, str, dict]:
+    # Keep Stage 5 quality validation independent of the paused Stage 6 builder.
+    from build_stage5_truth_annotations import _table_truth
+    from stage7_baseline import validate_current_baseline
+
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    assets = load_assets()
+    fingerprint, components = ocr_fingerprint()
+    baseline = json.loads(BASELINE.read_text(encoding="utf-8"))
+    validate_current_baseline(baseline, manifest, assets, fingerprint, components)
+    truth = json.loads(TRUTH.read_text(encoding="utf-8"))
+    hashes = {"stage5_sample_manifest_sha256": sha256_file(MANIFEST),
+              "source_assets_sha256": sha256_file(REGISTRY),
+              "full_corpus_reviews_sha256": sha256_file(FULL_REVIEW)}
+    if (truth.get("status") != "complete" or truth.get("errors") != []
+            or truth.get("source_input_fingerprint") != fingerprint
+            or truth.get("source_fingerprint_components") != components
+            or truth.get("inputs", {}).get("stage5_table_truth_review_sha256") != sha256_file(TABLE_TRUTH)
+            or any(truth.get("inputs", {}).get(field) != digest for field, digest in hashes.items())):
+        raise ValueError("quality input truth is not bound to the current PDF and table truth inputs")
+    reviews = json.loads(FULL_REVIEW.read_text(encoding="utf-8"))["full_corpus_reviews"]
+    gate = json.loads(EXIT_AUDIT.read_text(encoding="utf-8"))
+    if (gate.get("status") != "complete" or gate.get("next_stage_allowed") is not True
+            or gate.get("blocking_items")):
+        raise ValueError("current Stage 5 exit gate must pass before quality scoring")
+    review_by_key = {row["document_key"]: row for row in reviews}
+    gate_by_key = {row["document_key"]: row for row in gate["documents"]}
+    documents = {row["document_key"]: row for row in manifest["documents"]}
+    if (len(review_by_key) != len(reviews) or len(gate_by_key) != len(gate["documents"])
+            or len(documents) != len(manifest["documents"])
+            or set(review_by_key) != set(gate_by_key) or set(gate_by_key) != set(documents)):
+        raise ValueError("Stage 5 review/exit document coverage differs")
+    expected_pages = {(key, int(page["physical_page"])) for key, doc in documents.items()
+                      for page in doc["sample_pages"]}
+    actual_pages = [(row["document_key"], int(row["physical_page"])) for row in truth["records"]]
+    if len(actual_pages) != len(set(actual_pages)) or set(actual_pages) != expected_pages:
+        raise ValueError("Stage 5 truth sample-page coverage differs from current manifest")
+    for key, doc in documents.items():
+        review = review_by_key[key]
+        checked = gate_by_key[key]
+        original_sha = assets[doc["original_asset_id"]]["sha256"]
+        processing_sha = assets[doc["processing_asset_id"]]["sha256"]
+        if (review.get("original_sha256") != original_sha
+                or review.get("processing_sha256") != processing_sha
+                or checked.get("original_sha256") != original_sha
+                or checked.get("processing_sha256") != processing_sha
+                or checked.get("issues") or checked.get("pixel_mismatch_pages")
+                or checked.get("unsearchable_pages")):
+            raise ValueError(f"Stage 5 current PDF review/exit binding differs: {key}")
+        agent_reviewed = all(review.get(flag) is True for flag in (
+            "line_by_line_reviewed", "table_cells_reviewed", "reading_order_reviewed"
+        )) and all(review.get(field) == 0 for field in (
+            "unresolved_text_count", "unresolved_table_cell_count", "unresolved_page_mapping_count"
+        ))
+        user_accepted = (
+            checked.get("review_basis") == "explicit_current_pdf_user_acceptance"
+            and _current_user_acceptance(
+                review.get("user_acceptance"), original_sha, processing_sha,
+                doc["page_count"]
+            )
+        )
+        if not (agent_reviewed or user_accepted):
+            raise ValueError(f"Stage 5 current full review or exact PDF user acceptance missing: {key}")
+        for row in (row for row in truth["records"] if row["document_key"] == key):
+            if (row.get("original_asset_id") != doc["original_asset_id"]
+                    or row.get("processing_asset_id") != doc["processing_asset_id"]
+                    or row.get("original_sha256") != original_sha
+                    or row.get("processing_sha256") != processing_sha):
+                raise ValueError(f"Stage 5 truth sample PDF identity differs: {key}")
+    _table_truth(TABLE_TRUTH, manifest=manifest, assets=assets, fingerprint=fingerprint,
+                 components=components, input_hashes=hashes)
+    return manifest, assets, baseline, truth, fingerprint, components
 
 
 def _normalize(text: str) -> str:
@@ -107,21 +182,7 @@ def _iou(left: dict, right: dict) -> float:
 
 
 def _native_layout_score(page, boxes: list[dict], candidate_lines: list[str], reference_lines: list[str]) -> dict:
-    words = page.get_text("words")
-    grouped: dict[tuple[int, int], list[tuple[float, float, float, float]]] = {}
-    for row in words:
-        grouped.setdefault((int(row[5]), int(row[6])), []).append(
-            (float(row[0]), float(row[1]), float(row[2]), float(row[3]))
-        )
-    truth = [
-        {
-            "x0": min(item[0] for item in values) * 170 / 72,
-            "y0": min(item[1] for item in values) * 170 / 72,
-            "x1": max(item[2] for item in values) * 170 / 72,
-            "y1": max(item[3] for item in values) * 170 / 72,
-        }
-        for _, values in sorted(grouped.items(), key=lambda item: (min(row[1] for row in item[1]), min(row[0] for row in item[1])))
-    ]
+    truth = _pdf_line_boxes(page)
     if not truth or not boxes:
         return {"status": "not_scored_no_boxes", "bbox_iou_mean": None, "reading_order_similarity": None}
     count = min(len(truth), len(boxes))
@@ -135,6 +196,17 @@ def _native_layout_score(page, boxes: list[dict], candidate_lines: list[str], re
         "bbox_iou_mean": round(sum(ious) / len(ious), 6),
         "reading_order_similarity": round(order_similarity, 6),
     }
+
+
+def _pdf_line_boxes(page) -> list[dict]:
+    """Extract display PDF-point boxes from the current PDF, rotating only once."""
+    boxes = []
+    for block in page.get_text("dict")["blocks"]:
+        for line in block.get("lines", []):
+            box = (fitz.Rect(line["bbox"]) * page.rotation_matrix) & page.rect
+            if not box.is_empty:
+                boxes.append({"x0": box.x0, "y0": box.y0, "x1": box.x1, "y1": box.y1})
+    return boxes
 
 
 def _summary(records: list[dict], engine_key: str) -> dict:
@@ -169,49 +241,45 @@ def _summary(records: list[dict], engine_key: str) -> dict:
 
 def benchmark() -> dict:
     settings = Settings.from_environment()
-    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    truth = json.loads(_latest("stage5_truth_annotations_*.json").read_text(encoding="utf-8"))
+    manifest, assets, baseline, truth, ocr_input_fingerprint, components = _current_inputs(settings)
     truth_by_page = {(row["document_key"], int(row["physical_page"])): row for row in truth["records"]}
-    assets = load_assets()
-    ocr_input_fingerprint, _ = ocr_fingerprint()
-    if truth.get("source_input_fingerprint") != ocr_input_fingerprint:
-        raise ValueError(
-            "truth annotations do not match the current source/input fingerprint; "
-            "run scripts/build_stage5_truth_annotations.py first"
-        )
-    rapid_path = find_matching_artifact("stage5_rapidocr_sample_benchmark_*.json", ocr_input_fingerprint)
-    if rapid_path is None:
-        raise FileNotFoundError(
-            "no reusable RapidOCR sample artifact matches the current input fingerprint; "
-            "run scripts/benchmark_stage5_rapidocr_sample.py first"
-        )
-    rapid_report = json.loads(rapid_path.read_text(encoding="utf-8"))
-    rapid_by_page = {(row["document_key"], int(row["physical_page"])): row for row in rapid_report["records"]}
     records: list[dict] = []
     errors: list[dict] = []
 
     for document in manifest["documents"]:
         original = assets[document["original_asset_id"]]
+        processing = assets[document["processing_asset_id"]]
         original_doc = fitz.open(resolve_asset(original, settings))
+        processing_doc = fitz.open(resolve_asset(processing, settings))
         try:
             for sample_page in document["sample_pages"]:
                 page_number = int(sample_page["physical_page"])
                 key = (document["document_key"], page_number)
                 truth_row = truth_by_page[key]
-                rapid_row = rapid_by_page[key]
                 original_page = original_doc[page_number - 1]
-                cached = rapid_row["fresh_rapidocr"]
+                processing_page = processing_doc[page_number - 1]
+                if (original_page.mediabox != processing_page.mediabox
+                        or original_page.cropbox != processing_page.cropbox
+                        or original_page.rotation != processing_page.rotation):
+                    raise ValueError("quality processing PDF geometry differs from its original")
+                started = time.perf_counter()
+                current_text = processing_page.get_text("text")
+                current_boxes = _pdf_line_boxes(processing_page)
                 engine_outputs = {
-                    "rapidocr": {
-                        "text": _normalize(cached.get("text", "")),
-                        "lines": _lines(cached.get("text", "")),
-                        "boxes": cached.get("boxes", []),
-                        "elapsed_seconds": float(cached.get("elapsed_seconds", 0)),
+                    "reviewed_pdf": {
+                        "text": _normalize(current_text),
+                        "lines": _lines(current_text),
+                        "boxes": current_boxes,
+                        "elapsed_seconds": time.perf_counter() - started,
                     }
                 }
 
                 row = {
                     "document_key": document["document_key"],
+                    "original_asset_id": original["asset_id"],
+                    "processing_asset_id": processing["asset_id"],
+                    "original_sha256": original["sha256"],
+                    "processing_sha256": processing["sha256"],
                     "physical_page": page_number,
                     "categories": sample_page["categories"],
                     "truth_reference_kind": truth_row["reference_kind"],
@@ -225,7 +293,9 @@ def benchmark() -> dict:
                 }
                 reference = truth_row["reference_text"]
                 for name, output in engine_outputs.items():
-                    row["runtime"][name] = {"elapsed_seconds": output["elapsed_seconds"], "render_dpi": OCR_DPI}
+                    row["runtime"][name] = {"elapsed_seconds": output["elapsed_seconds"],
+                                             "operation": "current_pdf_text_and_geometry_extraction",
+                                             "coordinate_units": "display_pdf_points"}
                     row["layout_metrics"][name] = (
                         _native_layout_score(
                             original_page,
@@ -260,6 +330,7 @@ def benchmark() -> dict:
                 records.append(row)
         finally:
             original_doc.close()
+            processing_doc.close()
 
     table_rows = [row for row in records if row["table_metrics"] is not None]
     quarantined_tables = [row for row in table_rows if row["table_metrics"]["cell_text_accuracy_status"] == "quarantined_not_scored"]
@@ -270,11 +341,14 @@ def benchmark() -> dict:
         "audited_at": date.today().isoformat(),
         "authority": "Original materials original PDF; scanned-page text is scored only against independent manual transcription",
         "ocr_input_fingerprint": ocr_input_fingerprint,
-        "ocr_artifact": str(rapid_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
-        "truth_annotations": str(_latest("stage5_truth_annotations_*.json").relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "fingerprint_components": components,
+        "baseline": str(BASELINE.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "truth_annotations": str(TRUTH.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "inputs": {"baseline_sha256": sha256_file(BASELINE), "truth_annotations_sha256": sha256_file(TRUTH),
+                   "stage5_table_truth_review_sha256": sha256_file(TABLE_TRUTH)},
         "sample_page_count": len(records),
         "engines": {
-            "rapidocr": _summary(records, "rapidocr"),
+            "reviewed_pdf": _summary(records, "reviewed_pdf"),
         },
         "table_quality": {
             "table_page_count": len(table_rows),
@@ -289,7 +363,7 @@ def benchmark() -> dict:
             "Character and critical-token metrics are scored only where native PDF text or independent manual transcription is available and the Golden Sample disposition permits it.",
             "Native-text pages additionally score geometry and reading-order similarity against original PDF word boxes.",
             "Scanned-page text without independent transcription, scanned-page bbox truth and unresolved table cell text remain visual/region-level work; all such pages stay unscored or quarantined.",
-            "Runtime is measured locally and is not a cost estimate for external services.",
+            "Runtime measures current PDF extraction, not the earlier OCR generation or external service cost.",
         ],
     }
 

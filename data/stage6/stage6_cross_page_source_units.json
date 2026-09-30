@@ -1,0 +1,1139 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_cross_page_source_units",
+  "scope": "reviewed adjacent original PDF pages; each unit is projected to one accepted canonical Evidence with both-page locations",
+  "inputs": {
+    "ocr_dpi": 170,
+    "original_pdfs": {
+      "HAF103": {
+        "sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf"
+      },
+      "D300N": {
+        "sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+        "relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf"
+      }
+    }
+  },
+  "source_units": [
+    {
+      "source_unit_id": "HAF103-2.1.2-p1-p2",
+      "document_key": "HAF103",
+      "kind": "clause",
+      "physical_pages": [
+        1,
+        2
+      ],
+      "source_review_status": "original_pdf_visually_confirmed",
+      "canonical_projection_status": "accepted",
+      "fragments": [
+        {
+          "physical_page": 1,
+          "page_visual_sha256_170dpi": "928ead098612b6f652f4007ba51be266da50b6673ef6a9185cbc31535973e92b",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "2.1.2 控股核动力厂的企业集团应当按照相关规定的要求，在",
+              "bbox_pdf_pt": [
+                106.56,
+                693.6,
+                518.64,
+                708.6
+              ],
+              "source_text_sha256": "10d3cbdc1a51dd51c9080e00a76da815f58cc09a61cdd035d55306c7df4d13fa"
+            },
+            {
+              "text": "核动力厂营运单位人员配置、核安全管理和财务保障等方面，建立",
+              "bbox_pdf_pt": [
+                76.56,
+                723.12,
+                518.75,
+                738.12
+              ],
+              "source_text_sha256": "fb8e1060dcc7f6ba218dc1cf7962dfabd59369c1d5910cb0fb8f1f327a6cb92a"
+            }
+          ],
+          "source_text": "2.1.2 控股核动力厂的企业集团应当按照相关规定的要求，在核动力厂营运单位人员配置、核安全管理和财务保障等方面，建立",
+          "logical_page": "3",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        },
+        {
+          "physical_page": 2,
+          "page_visual_sha256_170dpi": "a2a051832460cb59d8380da8e6d408e0aae8ba7fabedf5b420a331357055a53f",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "和实施有效的监督和考核制度，确保营运单位能够履行核安全的全",
+              "bbox_pdf_pt": [
+                76.56,
+                95.76,
+                518.75,
+                110.76
+              ],
+              "source_text_sha256": "3cf1a8b37054a7f2a779144ec2677a5a43e831b3bcd940724cc6b37aece3ce37"
+            },
+            {
+              "text": "面责任。",
+              "bbox_pdf_pt": [
+                76.56,
+                125.4,
+                136.56,
+                140.4
+              ],
+              "source_text_sha256": "925cf7df6d193b7ccaa5dee74f7f5edc69433234fe92156225d034440a355ad1"
+            }
+          ],
+          "source_text": "和实施有效的监督和考核制度，确保营运单位能够履行核安全的全面责任。",
+          "logical_page": "4",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        }
+      ],
+      "complete_source_text": "2.1.2 控股核动力厂的企业集团应当按照相关规定的要求，在核动力厂营运单位人员配置、核安全管理和财务保障等方面，建立和实施有效的监督和考核制度，确保营运单位能够履行核安全的全面责任。",
+      "complete_source_text_sha256": "a769913d48f7f05d1032364c1c6d8da3f8f3a1c9e9bbcc490bdc4605d3281a28",
+      "canonical_evidence_id": "evidence-0c7430615255b732de41",
+      "canonical_evidence_text_sha256": "8dfb79d8b152b9942e859ee80c10825df82f89660d3374ff31e77008172e80d5"
+    },
+    {
+      "source_unit_id": "HAF103-4.1.3-p10-p11",
+      "document_key": "HAF103",
+      "kind": "clause",
+      "physical_pages": [
+        10,
+        11
+      ],
+      "source_review_status": "original_pdf_visually_confirmed",
+      "canonical_projection_status": "accepted",
+      "fragments": [
+        {
+          "physical_page": 10,
+          "page_visual_sha256_170dpi": "1cc9d4ee729253fd35849ba4c38829239a36e6fca60a7c7eb01d71f316895fed",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "4.1.3 调试大纲应当规定调试组织机构及其在调试过程中的职",
+              "bbox_pdf_pt": [
+                106.56,
+                717.0,
+                518.63,
+                732.0
+              ],
+              "source_text_sha256": "38ac4adfbbbe79cb38fe203d7fc2c8e85f4eb7e3876696d4aeada1ffe189749a"
+            }
+          ],
+          "source_text": "4.1.3 调试大纲应当规定调试组织机构及其在调试过程中的职",
+          "logical_page": "12",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        },
+        {
+          "physical_page": 11,
+          "page_visual_sha256_170dpi": "d9acfef885f1b0013d252a054dc07e98c3d592324210b314d4051be9dc1e4a7b",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "责，应当规定在调试中涉及的各组织之间的接口关系，应当规定构",
+              "bbox_pdf_pt": [
+                76.56,
+                95.76,
+                518.75,
+                110.76
+              ],
+              "source_text_sha256": "365eba98d1034b1c4e407a8b51abbf01f0311fa73ad2232ad65fab866322a357"
+            },
+            {
+              "text": "筑物、系统、设备从建造单位向调试部门的调试移交和从调试部门",
+              "bbox_pdf_pt": [
+                76.56,
+                125.4,
+                518.75,
+                140.4
+              ],
+              "source_text_sha256": "1f900b86c972ff2ea37b27736e6103ed59e77ec3e31df31fdee343da51565fca"
+            },
+            {
+              "text": "向生产部门的生产移交的管理制度。",
+              "bbox_pdf_pt": [
+                76.56,
+                154.92,
+                316.56,
+                169.92
+              ],
+              "source_text_sha256": "acaf08d5de51d0883725a448ba73e404de899fe66f06197f2fb3039f0ed8ccc7"
+            }
+          ],
+          "source_text": "责，应当规定在调试中涉及的各组织之间的接口关系，应当规定构筑物、系统、设备从建造单位向调试部门的调试移交和从调试部门向生产部门的生产移交的管理制度。",
+          "logical_page": "13",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        }
+      ],
+      "complete_source_text": "4.1.3 调试大纲应当规定调试组织机构及其在调试过程中的职责，应当规定在调试中涉及的各组织之间的接口关系，应当规定构筑物、系统、设备从建造单位向调试部门的调试移交和从调试部门向生产部门的生产移交的管理制度。",
+      "complete_source_text_sha256": "054f956ddd5cf3ec8a402b109ae7a5f314735c1717fcfe7b3bdb34cf0873cd1c",
+      "canonical_evidence_id": "evidence-d55f2e446c3f49296354",
+      "canonical_evidence_text_sha256": "fa9d7418fa45ac9ed14dafffd7aabcf56e83bec2d9c4cf495a9d92aa7d39c1a1"
+    },
+    {
+      "source_unit_id": "HAF103-5.5.2-p15-p16",
+      "document_key": "HAF103",
+      "kind": "clause",
+      "physical_pages": [
+        15,
+        16
+      ],
+      "source_review_status": "original_pdf_visually_confirmed",
+      "canonical_projection_status": "accepted",
+      "fragments": [
+        {
+          "physical_page": 15,
+          "page_visual_sha256_170dpi": "97e35591b06a3eaed0e1558d24df7923b0dab2001ba983547b6b0b572eb3026e",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "5.5.2 营运单位应当制定燃料及堆芯部件的采购、装载、使用、",
+              "bbox_pdf_pt": [
+                106.56,
+                598.68,
+                526.2,
+                613.68
+              ],
+              "source_text_sha256": "147cd67bb8a0804af402796ab899ff9db58eee974930aabe1abda3fd2336152d"
+            },
+            {
+              "text": "卸料和试验的技术条件和程序，应当根据设计要求制定装换料大纲。",
+              "bbox_pdf_pt": [
+                76.56,
+                628.32,
+                526.2,
+                643.32
+              ],
+              "source_text_sha256": "351af2ee68bdd656e60c5201fa325c17825b3b0074c6d0fdee3d64663cb894b0"
+            },
+            {
+              "text": "在装换料后，反应堆启动前和启动时都应当进行试验以确认堆芯性",
+              "bbox_pdf_pt": [
+                76.56,
+                657.96,
+                518.75,
+                672.96
+              ],
+              "source_text_sha256": "1c9949d407a54f3023b3417a2b6bf7da299faf736349974ec5cec09b2b7b74e0"
+            },
+            {
+              "text": "能满足设计要求。营运单位应当监测堆芯状况，及时复查和修订装",
+              "bbox_pdf_pt": [
+                76.56,
+                687.48,
+                518.75,
+                702.48
+              ],
+              "source_text_sha256": "9ab09963a56f337e6418273c99a1d74b8b7209a0d1eab532876a06e268bc5043"
+            },
+            {
+              "text": "换料大纲。应当制定确定冷却剂比活度异常变化的适当分析方法，",
+              "bbox_pdf_pt": [
+                76.56,
+                717.0,
+                518.75,
+                732.0
+              ],
+              "source_text_sha256": "e7a8954c522fae9b0ce56470ebff60f5d78ba618219c1cd0d6fec00c004c213c"
+            }
+          ],
+          "source_text": "5.5.2 营运单位应当制定燃料及堆芯部件的采购、装载、使用、卸料和试验的技术条件和程序，应当根据设计要求制定装换料大纲。在装换料后，反应堆启动前和启动时都应当进行试验以确认堆芯性能满足设计要求。营运单位应当监测堆芯状况，及时复查和修订装换料大纲。应当制定确定冷却剂比活度异常变化的适当分析方法，",
+          "logical_page": "17",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        },
+        {
+          "physical_page": 16,
+          "page_visual_sha256_170dpi": "9a52b89e86126a8f3b511a86975b5d745ac2ba5b52507c053355f7773991fe14",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "以便开展燃料缺陷分析，确定这种缺陷的性质和严重程度、位置、",
+              "bbox_pdf_pt": [
+                76.56,
+                95.76,
+                518.75,
+                110.76
+              ],
+              "source_text_sha256": "fdf74334ff67e2af49e6ffb45c4562a3ae22347b6bf892bbdd8c5d7fc48538d1"
+            },
+            {
+              "text": "原因和纠正行动。",
+              "bbox_pdf_pt": [
+                76.56,
+                125.4,
+                196.56,
+                140.4
+              ],
+              "source_text_sha256": "f88db2a3525cd299ce7215c76f0cee8188f648066ae18d48dd26c1901ef8eb18"
+            }
+          ],
+          "source_text": "以便开展燃料缺陷分析，确定这种缺陷的性质和严重程度、位置、原因和纠正行动。",
+          "logical_page": "18",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        }
+      ],
+      "complete_source_text": "5.5.2 营运单位应当制定燃料及堆芯部件的采购、装载、使用、卸料和试验的技术条件和程序，应当根据设计要求制定装换料大纲。在装换料后，反应堆启动前和启动时都应当进行试验以确认堆芯性能满足设计要求。营运单位应当监测堆芯状况，及时复查和修订装换料大纲。应当制定确定冷却剂比活度异常变化的适当分析方法，以便开展燃料缺陷分析，确定这种缺陷的性质和严重程度、位置、原因和纠正行动。",
+      "complete_source_text_sha256": "ea4ebe8607d8fff713930836a81245b72febf402909087fdacd066abcf97d8aa",
+      "cross_page_tail_requirement": "应当制定确定冷却剂比活度异常变化的适当分析方法，以便开展燃料缺陷分析，确定这种缺陷的性质和严重程度、位置、原因和纠正行动。",
+      "canonical_evidence_id": "evidence-c66886e5d1c21578acd8",
+      "canonical_evidence_text_sha256": "cc9775c25a9dbcd2892966ee21225285455a9c25f1f69712b860b556eccfb5f4"
+    },
+    {
+      "source_unit_id": "HAF103-anticipated-operational-occurrence-p29-p30",
+      "document_key": "HAF103",
+      "kind": "definition",
+      "physical_pages": [
+        29,
+        30
+      ],
+      "source_review_status": "original_pdf_visually_confirmed",
+      "canonical_projection_status": "accepted",
+      "fragments": [
+        {
+          "physical_page": 29,
+          "page_visual_sha256_170dpi": "0aed0e2af4decbd4be7105a139a243763453f00b20e5353ed8c063f520703ac0",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "预计运行事件",
+              "bbox_pdf_pt": [
+                106.56,
+                662.76,
+                196.8,
+                677.76
+              ],
+              "source_text_sha256": "0c0637c0cb1ff9e9ac127a1790dc3fc1f6203cbd2889ea0b33dbce5da6fafe66"
+            },
+            {
+              "text": "在核动力厂运行寿期内预计至少发生一次的偏离正常运行的各",
+              "bbox_pdf_pt": [
+                106.56,
+                692.28,
+                518.75,
+                707.28
+              ],
+              "source_text_sha256": "b2f5e87073ede1da0702adfc48ba5d20d88fbb321e9596675cc68a7e5da0269a"
+            },
+            {
+              "text": "种运行过程；由于设计中已采取相应措施，这类事件不至于引起安",
+              "bbox_pdf_pt": [
+                76.56,
+                721.8,
+                518.75,
+                736.8
+              ],
+              "source_text_sha256": "abc819b40ae2d243c7f2d9e6c37a9297be4871325c242b568a437de117a76767"
+            }
+          ],
+          "source_text": "预计运行事件在核动力厂运行寿期内预计至少发生一次的偏离正常运行的各种运行过程；由于设计中已采取相应措施，这类事件不至于引起安",
+          "logical_page": "31",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        },
+        {
+          "physical_page": 30,
+          "page_visual_sha256_170dpi": "8b5b1493ef649ba3123ce5ce2ef8c7a367184ab1e10b41f9b909a35aeae1704d",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "全重要物项的严重损坏，也不至于导致事故工况。",
+              "bbox_pdf_pt": [
+                76.56,
+                95.76,
+                406.56,
+                110.76
+              ],
+              "source_text_sha256": "56ca8ab0f5d57ace89ea57a6cfc73f77d192ea2e5ba884f9649cbe77ee772545"
+            }
+          ],
+          "source_text": "全重要物项的严重损坏，也不至于导致事故工况。",
+          "logical_page": "32",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        }
+      ],
+      "complete_source_text": "预计运行事件在核动力厂运行寿期内预计至少发生一次的偏离正常运行的各种运行过程；由于设计中已采取相应措施，这类事件不至于引起安全重要物项的严重损坏，也不至于导致事故工况。",
+      "complete_source_text_sha256": "6ed9ab41422365ee568630f69d96a00cca7a93d83691744b124506c08e41dd7e",
+      "canonical_evidence_id": "evidence-e491c577a6ebc2661218",
+      "canonical_evidence_text_sha256": "85c775f788a4da4439c8dfa746de498b98841642a85740ee540207e9694972d9"
+    },
+    {
+      "source_unit_id": "HAF103-maintenance-effectiveness-p31-p32",
+      "document_key": "HAF103",
+      "kind": "definition",
+      "physical_pages": [
+        31,
+        32
+      ],
+      "source_review_status": "original_pdf_visually_confirmed",
+      "canonical_projection_status": "accepted",
+      "fragments": [
+        {
+          "physical_page": 31,
+          "page_visual_sha256_170dpi": "36dd7e5da0c4273dd11964ab38ceeec02d65f592fbce3ec939dc3a9e76a79ff1",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "维修有效性",
+              "bbox_pdf_pt": [
+                106.56,
+                687.48,
+                181.8,
+                702.48
+              ],
+              "source_text_sha256": "ec94d05f65b0be92150e0f34e9a59f37bf0626f1f16e0bcc33343b3fe3791dd7"
+            },
+            {
+              "text": "对特定的构筑物、系统和设备，按照其设计基准、运行经验设",
+              "bbox_pdf_pt": [
+                106.56,
+                717.0,
+                518.75,
+                732.0
+              ],
+              "source_text_sha256": "0194145ec2e04c5ea30d520b604ce74bc0c2b0d27ccbdf6eba720eba5bba76d4"
+            }
+          ],
+          "source_text": "维修有效性对特定的构筑物、系统和设备，按照其设计基准、运行经验设",
+          "logical_page": "33",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        },
+        {
+          "physical_page": 32,
+          "page_visual_sha256_170dpi": "3af6ddccfe5fa4a517b5c25ab161e8886585bd48f6a75758600938c89c4bf163",
+          "extraction": "original_pdf_native_text",
+          "source_boxes": [
+            {
+              "text": "定能反映维修有效性的指标。通过比较上述指标与该构筑物、系统",
+              "bbox_pdf_pt": [
+                76.56,
+                95.76,
+                518.75,
+                110.76
+              ],
+              "source_text_sha256": "2dab7e1c0970e2e074f81eef4efd59c714155ea2dbedfff5fbe73cfbe1dd76e2"
+            },
+            {
+              "text": "和设备在运行、维修、试验中所表现的实际性能，来判断维修是否",
+              "bbox_pdf_pt": [
+                76.56,
+                125.4,
+                518.75,
+                140.4
+              ],
+              "source_text_sha256": "b4a2b40933572b8d73ee075cb28142015d0e88537c2d65444ad3e8b23b48d63e"
+            },
+            {
+              "text": "有效。",
+              "bbox_pdf_pt": [
+                76.56,
+                154.92,
+                121.56,
+                169.92
+              ],
+              "source_text_sha256": "79d9c5290b9fbd89c93a7517b74c6c7d12431c592941e7f87f515869c0a00b80"
+            }
+          ],
+          "source_text": "定能反映维修有效性的指标。通过比较上述指标与该构筑物、系统和设备在运行、维修、试验中所表现的实际性能，来判断维修是否有效。",
+          "logical_page": "34",
+          "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+        }
+      ],
+      "complete_source_text": "维修有效性对特定的构筑物、系统和设备，按照其设计基准、运行经验设定能反映维修有效性的指标。通过比较上述指标与该构筑物、系统和设备在运行、维修、试验中所表现的实际性能，来判断维修是否有效。",
+      "complete_source_text_sha256": "6f14c9269bca11ffb95819a25e3dfec81194e856685d62a56a6dd970e467fda6",
+      "canonical_evidence_id": "evidence-9f42c50b7e2f53da3d41",
+      "canonical_evidence_text_sha256": "ee22443ab289b32046bd7db9b8c957908b7e9584e2190ae9713a6c4b70b3bf36"
+    },
+    {
+      "source_unit_id": "D300N-table-2-14-1-row-6-p49-p50",
+      "document_key": "D300N",
+      "kind": "ordered_table_procedure",
+      "physical_pages": [
+        49,
+        50
+      ],
+      "source_review_status": "original_pdf_visually_confirmed",
+      "canonical_projection_status": "accepted",
+      "source_title": "转子装配：",
+      "row_number": "6",
+      "title_source_box_ids": [
+        "p49-ocr-024",
+        "p49-ocr-023"
+      ],
+      "fragments": [
+        {
+          "physical_page": 49,
+          "page_visual_sha256_170dpi": "14426b069b2a33edb6ffc02081218a7a7735b8ec63d613cb344736c6a640e11c",
+          "extraction": "reviewed_rapidocr_170dpi",
+          "selected_boxes_sha256": "c751912febfbedf07098996c9ea4e23a6b8ad529bd950ae6902e172d811b45cd",
+          "source_boxes": [
+            {
+              "box_id": "p49-ocr-024",
+              "text": "6",
+              "bbox_ocr_px": [
+                171.0,
+                915.0,
+                183.0,
+                930.0
+              ],
+              "bbox_pdf_pt": [
+                72.42,
+                387.53,
+                77.51,
+                393.88
+              ],
+              "source_text_sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683"
+            },
+            {
+              "box_id": "p49-ocr-023",
+              "text": "转子装配：",
+              "bbox_ocr_px": [
+                212.0,
+                905.0,
+                335.0,
+                936.0
+              ],
+              "bbox_pdf_pt": [
+                89.79,
+                383.29,
+                141.88,
+                396.42
+              ],
+              "source_text_sha256": "b6fb6beb7330738663ef30cbdc23351338b49cb0ca7a13798b1ada40c553d7cb"
+            },
+            {
+              "box_id": "p49-ocr-025",
+              "text": "a)清洗，检查动叶。",
+              "bbox_ocr_px": [
+                209.0,
+                939.0,
+                440.0,
+                975.0
+              ],
+              "bbox_pdf_pt": [
+                88.52,
+                397.69,
+                196.0,
+                412.94
+              ],
+              "source_text_sha256": "829ec437e83b74e155b3d07d89d77631cf460c156363a694bbe0f3447c615806"
+            },
+            {
+              "box_id": "p49-ocr-026",
+              "text": "b)检查围带。",
+              "bbox_ocr_px": [
+                210.0,
+                976.0,
+                362.0,
+                1009.0
+              ],
+              "bbox_pdf_pt": [
+                88.94,
+                413.36,
+                164.0,
+                427.34
+              ],
+              "source_text_sha256": "92cda8478b2702a21dbe03df0eff43db97375b9eab851bdb5fc933c2e7bcf5c0"
+            },
+            {
+              "box_id": "p49-ocr-027",
+              "text": "c)清洗、检查联轴器表面和轴颈表面。",
+              "bbox_ocr_px": [
+                211.0,
+                1014.0,
+                653.0,
+                1045.0
+              ],
+              "bbox_pdf_pt": [
+                89.36,
+                429.46,
+                287.0,
+                442.59
+              ],
+              "source_text_sha256": "1c7a716e6218ad54d25e34725dfb4f88ac3d0bb16b49b1983ec28e7e4a438d2a"
+            },
+            {
+              "box_id": "p49-ocr-028",
+              "text": "d)利用汽缸移动工具将高中压外缸向机头侧移动15mm,",
+              "bbox_ocr_px": [
+                212.0,
+                1050.0,
+                861.0,
+                1081.0
+              ],
+              "bbox_pdf_pt": [
+                89.79,
+                444.71,
+                405.0,
+                457.84
+              ],
+              "source_text_sha256": "410310e2809e6e408ba365b93ca4a77602f3e2d8c4c9195428a3605cb0b1ea3e"
+            },
+            {
+              "box_id": "p49-ocr-029",
+              "text": "此时，高中压外缸与中低压轴承箱的距离为S2+15mm。",
+              "bbox_ocr_px": [
+                214.0,
+                1085.0,
+                848.0,
+                1116.0
+              ],
+              "bbox_pdf_pt": [
+                90.64,
+                459.53,
+                382.0,
+                472.66
+              ],
+              "source_text_sha256": "5ad2eef4522e605556e9e6c9f5ab45f832db725c4627681bdcccc71edb6a5c8c"
+            },
+            {
+              "box_id": "p49-ocr-030",
+              "text": "e)高中压转子、低压转子复装就位，按照转子的静挠",
+              "bbox_ocr_px": [
+                212.0,
+                1121.0,
+                831.0,
+                1153.0
+              ],
+              "bbox_pdf_pt": [
+                89.79,
+                474.78,
+                351.95,
+                488.33
+              ],
+              "source_text_sha256": "5f26a673db36a7a167866e1660a73cecac8e3513384720027eb56b17c71452bc"
+            },
+            {
+              "box_id": "p49-ocr-031",
+              "text": "度曲线检查转子的标高和挠度，复查联轴器、止口中心",
+              "bbox_ocr_px": [
+                215.0,
+                1159.0,
+                856.0,
+                1185.0
+              ],
+              "bbox_pdf_pt": [
+                91.06,
+                490.87,
+                362.54,
+                501.88
+              ],
+              "source_text_sha256": "057cc1b23fdc8b5c7e806855232e3b65389c19b3d6aa431e89f069e70a7b85e4"
+            },
+            {
+              "box_id": "p49-ocr-032",
+              "text": "和端面平行度,然后用随机提供的高-低间联轴器用临时",
+              "bbox_ocr_px": [
+                212.0,
+                1193.0,
+                848.0,
+                1223.0
+              ],
+              "bbox_pdf_pt": [
+                89.79,
+                505.27,
+                359.15,
+                517.98
+              ],
+              "source_text_sha256": "71544e41a8b41c3f8a56bc8f7c86b1921d80155064947f6fec0cd5afcc3af065"
+            },
+            {
+              "box_id": "p49-ocr-033",
+              "text": "螺栓和中心销进行转子靠背轮的对接,此时利用汽缸移",
+              "bbox_ocr_px": [
+                215.0,
+                1230.0,
+                844.0,
+                1256.0
+              ],
+              "bbox_pdf_pt": [
+                91.06,
+                520.94,
+                357.46,
+                531.95
+              ],
+              "source_text_sha256": "7aade58cadc39547762bcf76f72777ac2dde8f9f3ebee3dab4153c1df6bf2410"
+            },
+            {
+              "box_id": "p49-ocr-034",
+              "text": "动工具将高中压缸向电机侧拉回。靠背轮的对接应和汽",
+              "bbox_ocr_px": [
+                215.0,
+                1267.0,
+                858.0,
+                1293.0
+              ],
+              "bbox_pdf_pt": [
+                91.06,
+                536.61,
+                363.39,
+                547.62
+              ],
+              "source_text_sha256": "57ba1bcd73e7ee53c8067d55bd37e90c1089e1f66d4e32b64b7576892cb9fd25"
+            },
+            {
+              "box_id": "p49-ocr-035",
+              "text": "缸的移动同步协调进行。当靠背轮对接好后取出临时螺",
+              "bbox_ocr_px": [
+                214.0,
+                1303.0,
+                857.0,
+                1329.0
+              ],
+              "bbox_pdf_pt": [
+                90.64,
+                551.86,
+                362.96,
+                562.87
+              ],
+              "source_text_sha256": "e86b68bf0e6ce9123438b541de347ad5be9b182108316f375c397b66c6abb1c7"
+            },
+            {
+              "box_id": "p49-ocr-036",
+              "text": "栓和中心销，对在制造厂已铰孔的靠背轮，可直接进行",
+              "bbox_ocr_px": [
+                213.0,
+                1336.0,
+                857.0,
+                1366.0
+              ],
+              "bbox_pdf_pt": [
+                90.21,
+                565.84,
+                362.96,
+                578.54
+              ],
+              "source_text_sha256": "15ffe0ca08784ca7b1c9fe98d8e9b1339ac5ea2bd538207a558380c911129465"
+            },
+            {
+              "box_id": "p49-ocr-037",
+              "text": "联轴器螺栓的连接紧固。对未铰孔的靠背轮，先进行铰",
+              "bbox_ocr_px": [
+                213.0,
+                1372.0,
+                858.0,
+                1402.0
+              ],
+              "bbox_pdf_pt": [
+                90.21,
+                581.08,
+                363.39,
+                593.79
+              ],
+              "source_text_sha256": "502d3529f355879f91d634cd86c68406637672b6cc500b1c4d8659ba83951d0f"
+            },
+            {
+              "box_id": "p49-ocr-038",
+              "text": "孔，再紧固螺栓。祥见2-16节。",
+              "bbox_ocr_px": [
+                214.0,
+                1410.0,
+                581.0,
+                1439.0
+              ],
+              "bbox_pdf_pt": [
+                90.64,
+                597.18,
+                246.07,
+                609.46
+              ],
+              "source_text_sha256": "a47d31aa125e61000ff50718e270fe9a279cd780ed5f91e7a67bc0e95f91878c"
+            },
+            {
+              "box_id": "p49-ocr-039",
+              "text": "f)联轴器连接紧固好后，高中压缸移动到位，保证高中",
+              "bbox_ocr_px": [
+                213.0,
+                1445.0,
+                847.0,
+                1475.0
+              ],
+              "bbox_pdf_pt": [
+                90.21,
+                612.0,
+                358.73,
+                624.71
+              ],
+              "source_text_sha256": "fad116f17c07ec3829ab80d023bfae52f3393b8277fd9c40bf222334075b7168"
+            },
+            {
+              "box_id": "p49-ocr-040",
+              "text": "压通流基准和低压通流基准不变，此时配准高压外缸后",
+              "bbox_ocr_px": [
+                216.0,
+                1483.0,
+                856.0,
+                1509.0
+              ],
+              "bbox_pdf_pt": [
+                91.48,
+                628.09,
+                362.54,
+                639.11
+              ],
+              "source_text_sha256": "ed771ebf1dddd9b4a6d69ca19141c3b7a060fe4d989169f4690ad11cd94c22bd"
+            },
+            {
+              "box_id": "p49-ocr-042",
+              "text": "猫爪与中箱横键间的垫片。",
+              "bbox_ocr_px": [
+                214.0,
+                1518.0,
+                518.0,
+                1545.0
+              ],
+              "bbox_pdf_pt": [
+                90.64,
+                642.92,
+                219.39,
+                654.35
+              ],
+              "source_text_sha256": "b386af13318e73d144c96d6bde6e93edffa2be492966375cbd52d28477b7bba4"
+            }
+          ],
+          "logical_page": "2-14-2",
+          "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9"
+        },
+        {
+          "physical_page": 50,
+          "page_visual_sha256_170dpi": "2420e30b7345da068edbc55a02b867100cdea70064be740d9b8bd851c9a5c18f",
+          "extraction": "reviewed_rapidocr_170dpi",
+          "selected_boxes_sha256": "b37425aa8fb20823d79141321fcb0089bd58f10eb7dda2c4ef72c11e0749c188",
+          "source_boxes": [
+            {
+              "box_id": "p50-ocr-008",
+              "text": "g)推力轴承安装调整:",
+              "bbox_ocr_px": [
+                224.0,
+                439.0,
+                475.0,
+                471.0
+              ],
+              "bbox_pdf_pt": [
+                94.87,
+                185.93,
+                220.0,
+                199.48
+              ],
+              "source_text_sha256": "5813a50f3a4f8d2a7f75ab0d844c63b83a985ee200c677c9c829d562e3efa222"
+            },
+            {
+              "box_id": "p50-ocr-009",
+              "text": "检查正、反向推力瓦厚度并记录。",
+              "bbox_ocr_px": [
+                225.0,
+                476.0,
+                612.0,
+                505.0
+              ],
+              "bbox_pdf_pt": [
+                95.29,
+                201.6,
+                259.2,
+                213.88
+              ],
+              "source_text_sha256": "650d052ca3f522ff6386b324bc7b646d01dfa5efdbb9a8d4a24e5f789e5f6556"
+            },
+            {
+              "box_id": "p50-ocr-010",
+              "text": "安装正向推力瓦和正向垫环，将转子向电机侧推，使",
+              "bbox_ocr_px": [
+                226.0,
+                513.0,
+                842.0,
+                539.0
+              ],
+              "bbox_pdf_pt": [
+                95.72,
+                217.27,
+                356.61,
+                228.28
+              ],
+              "source_text_sha256": "4f53cf2595bc6029376ebc36c9d60ab94bed757694787eac8cbed0854590e344"
+            },
+            {
+              "box_id": "p50-ocr-011",
+              "text": "推力盘与正向推力瓦靠紧。安装反向推力瓦和反向垫",
+              "bbox_ocr_px": [
+                226.0,
+                549.0,
+                842.0,
+                575.0
+              ],
+              "bbox_pdf_pt": [
+                95.72,
+                232.52,
+                356.61,
+                243.53
+              ],
+              "source_text_sha256": "73c29d8c5f348c5a4a6e9b66827358014294b39fe36f9c96ef8e6ce7ca3721ec"
+            },
+            {
+              "box_id": "p50-ocr-012",
+              "text": "环，测量推力瓦与推力盘的总间隙值。",
+              "bbox_ocr_px": [
+                225.0,
+                585.0,
+                665.0,
+                612.0
+              ],
+              "bbox_pdf_pt": [
+                95.29,
+                247.76,
+                281.65,
+                259.2
+              ],
+              "source_text_sha256": "60b65a7513a257080bfa5c882a1cafd25f8c5728cf673e09b0d0903f26cff8cd"
+            },
+            {
+              "box_id": "p50-ocr-013",
+              "text": "h)对所有轴承提供润滑油，盘动转子，复查所有通流",
+              "bbox_ocr_px": [
+                224.0,
+                620.0,
+                839.0,
+                650.0
+              ],
+              "bbox_pdf_pt": [
+                94.87,
+                262.59,
+                355.34,
+                275.29
+              ],
+              "source_text_sha256": "09993f203100a794e592327cc39672b6bc35d8c761af5be447a88347fc2ecf38"
+            },
+            {
+              "box_id": "p50-ocr-014",
+              "text": "间隙，复查支持轴承和推力轴承与转子配合间隙。",
+              "bbox_ocr_px": [
+                225.0,
+                656.0,
+                799.0,
+                685.0
+              ],
+              "bbox_pdf_pt": [
+                95.29,
+                277.84,
+                338.4,
+                290.12
+              ],
+              "source_text_sha256": "3db4ecac6ea286cee6e3df3538465b612f813af7ffa071bc5947734a773dd17a"
+            },
+            {
+              "box_id": "p50-ocr-015",
+              "text": "i)通流间隙最终记录。",
+              "bbox_ocr_px": [
+                226.0,
+                692.0,
+                468.0,
+                719.0
+              ],
+              "bbox_pdf_pt": [
+                95.72,
+                293.08,
+                205.0,
+                304.52
+              ],
+              "source_text_sha256": "dca584c449a2ff77b45a8d52b00fe4ef85f15ea56351073679d15d797ea7bd3d"
+            },
+            {
+              "box_id": "p50-ocr-016",
+              "text": "在每个轴瓦上分别装桥规，测量桥规与轴颈顶部间隙。",
+              "bbox_ocr_px": [
+                225.0,
+                726.0,
+                837.0,
+                757.0
+              ],
+              "bbox_pdf_pt": [
+                95.29,
+                307.48,
+                354.49,
+                320.61
+              ],
+              "source_text_sha256": "02987687bc89cab5b3bb24fc23d8cbb7a19f719b9249296c468a83ed28792fff"
+            },
+            {
+              "box_id": "p50-ocr-017",
+              "text": "并将此值打在相应桥规上面，作为今后轴瓦磨损比较",
+              "bbox_ocr_px": [
+                226.0,
+                763.0,
+                842.0,
+                791.0
+              ],
+              "bbox_pdf_pt": [
+                95.72,
+                323.15,
+                356.61,
+                335.01
+              ],
+              "source_text_sha256": "122a95e6b5c98bb9c410739d92a8f7942c719220a7c28ca7870a2a55e685152e"
+            },
+            {
+              "box_id": "p50-ocr-018",
+              "text": "的判据。",
+              "bbox_ocr_px": [
+                222.0,
+                796.0,
+                318.0,
+                830.0
+              ],
+              "bbox_pdf_pt": [
+                94.02,
+                337.13,
+                134.68,
+                351.53
+              ],
+              "source_text_sha256": "4a0e0778885ac62556371c2180dfb25b623874d67cba93e1ce72d66663028e20"
+            }
+          ],
+          "logical_page": "2-14-3",
+          "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9"
+        }
+      ],
+      "steps": [
+        {
+          "source_order": 1,
+          "source_label": "a)",
+          "physical_page": 49,
+          "source_box_ids": [
+            "p49-ocr-025"
+          ],
+          "source_text": "a)清洗，检查动叶。",
+          "source_text_sha256": "829ec437e83b74e155b3d07d89d77631cf460c156363a694bbe0f3447c615806"
+        },
+        {
+          "source_order": 2,
+          "source_label": "b)",
+          "physical_page": 49,
+          "source_box_ids": [
+            "p49-ocr-026"
+          ],
+          "source_text": "b)检查围带。",
+          "source_text_sha256": "92cda8478b2702a21dbe03df0eff43db97375b9eab851bdb5fc933c2e7bcf5c0"
+        },
+        {
+          "source_order": 3,
+          "source_label": "c)",
+          "physical_page": 49,
+          "source_box_ids": [
+            "p49-ocr-027"
+          ],
+          "source_text": "c)清洗、检查联轴器表面和轴颈表面。",
+          "source_text_sha256": "1c7a716e6218ad54d25e34725dfb4f88ac3d0bb16b49b1983ec28e7e4a438d2a"
+        },
+        {
+          "source_order": 4,
+          "source_label": "d)",
+          "physical_page": 49,
+          "source_box_ids": [
+            "p49-ocr-028",
+            "p49-ocr-029"
+          ],
+          "source_text": "d)利用汽缸移动工具将高中压外缸向机头侧移动15mm,此时，高中压外缸与中低压轴承箱的距离为S2+15mm。",
+          "source_text_sha256": "afd29c311b7d23a1f21e2b717016d21482d80b30d46a7c578bf55adc87e5ed60"
+        },
+        {
+          "source_order": 5,
+          "source_label": "e)",
+          "physical_page": 49,
+          "source_box_ids": [
+            "p49-ocr-030",
+            "p49-ocr-031",
+            "p49-ocr-032",
+            "p49-ocr-033",
+            "p49-ocr-034",
+            "p49-ocr-035",
+            "p49-ocr-036",
+            "p49-ocr-037",
+            "p49-ocr-038"
+          ],
+          "source_text": "e)高中压转子、低压转子复装就位，按照转子的静挠度曲线检查转子的标高和挠度，复查联轴器、止口中心和端面平行度,然后用随机提供的高-低间联轴器用临时螺栓和中心销进行转子靠背轮的对接,此时利用汽缸移动工具将高中压缸向电机侧拉回。靠背轮的对接应和汽缸的移动同步协调进行。当靠背轮对接好后取出临时螺栓和中心销，对在制造厂已铰孔的靠背轮，可直接进行联轴器螺栓的连接紧固。对未铰孔的靠背轮，先进行铰孔，再紧固螺栓。祥见2-16节。",
+          "source_text_sha256": "60e8a4bcee2c6aaa368451f61d528489fffa9f538272157204e5754b5a9221d8"
+        },
+        {
+          "source_order": 6,
+          "source_label": "f)",
+          "physical_page": 49,
+          "source_box_ids": [
+            "p49-ocr-039",
+            "p49-ocr-040",
+            "p49-ocr-042"
+          ],
+          "source_text": "f)联轴器连接紧固好后，高中压缸移动到位，保证高中压通流基准和低压通流基准不变，此时配准高压外缸后猫爪与中箱横键间的垫片。",
+          "source_text_sha256": "6b64efb6d615e294e3616419b8b853b32abdbfa6a551689a031feb2cc3dac305"
+        },
+        {
+          "source_order": 7,
+          "source_label": "g)",
+          "physical_page": 50,
+          "source_box_ids": [
+            "p50-ocr-008",
+            "p50-ocr-009",
+            "p50-ocr-010",
+            "p50-ocr-011",
+            "p50-ocr-012"
+          ],
+          "source_text": "g)推力轴承安装调整:检查正、反向推力瓦厚度并记录。安装正向推力瓦和正向垫环，将转子向电机侧推，使推力盘与正向推力瓦靠紧。安装反向推力瓦和反向垫环，测量推力瓦与推力盘的总间隙值。",
+          "source_text_sha256": "b6f5de75bbf8a41942dc81da2ab57341128f15051cc4bb83b2db12fcc230bce7"
+        },
+        {
+          "source_order": 8,
+          "source_label": "h)",
+          "physical_page": 50,
+          "source_box_ids": [
+            "p50-ocr-013",
+            "p50-ocr-014"
+          ],
+          "source_text": "h)对所有轴承提供润滑油，盘动转子，复查所有通流间隙，复查支持轴承和推力轴承与转子配合间隙。",
+          "source_text_sha256": "1d2b23138512d4fdc06d714d0bc2e2c018ba309968996c234d684e977c3fbb4a"
+        },
+        {
+          "source_order": 9,
+          "source_label": "i)",
+          "physical_page": 50,
+          "source_box_ids": [
+            "p50-ocr-015",
+            "p50-ocr-016",
+            "p50-ocr-017",
+            "p50-ocr-018"
+          ],
+          "source_text": "i)通流间隙最终记录。在每个轴瓦上分别装桥规，测量桥规与轴颈顶部间隙。并将此值打在相应桥规上面，作为今后轴瓦磨损比较的判据。",
+          "source_text_sha256": "4b1518da4065fde836d801dddd13298c5976268613f8bc842c013afbb5d02daf"
+        }
+      ],
+      "right_column_note": {
+        "physical_page": 49,
+        "source_box": {
+          "box_id": "p49-ocr-041",
+          "text": "推力轴承记录",
+          "bbox_ocr_px": [
+            1009.0,
+            1481.0,
+            1170.0,
+            1511.0
+          ],
+          "bbox_pdf_pt": [
+            427.34,
+            627.25,
+            495.53,
+            639.95
+          ],
+          "source_text_sha256": "287e6fdcf52df42e1a8a9f491d027e04389bbd61b338f649c4aac6a8256f5df3"
+        },
+        "meaning": "证明书目录：推力轴承记录；not part of a–i procedure text"
+      },
+      "next_row_boundary": {
+        "physical_page": 50,
+        "bbox_pdf_pt": [
+          96.14,
+          354.07,
+          179.58,
+          365.51
+        ],
+        "text": "轴承上半的装配："
+      },
+      "canonical_evidence_id": "evidence-135e7de5767264fb4302",
+      "canonical_evidence_text_sha256": "05657704a56640b7979fb34ea297e8f081587ca8d71afedcf2a485875db140c0"
+    }
+  ]
+}

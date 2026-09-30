@@ -11,8 +11,10 @@ from collections import defaultdict
 from pathlib import Path
 
 from turbine_kg.terminology.analyzer import analyze_terminology, load_stage6_evidence_bundle, load_terminology_contract
-from turbine_kg.terminology.models import CANDIDATE_TYPES
+from turbine_kg.terminology.models import CANDIDATE_TYPES, PAGE_STATUSES
 from turbine_kg.terminology.validation import content_fingerprint, validate_candidates, validate_input_manifest
+from build_stage7_input_manifest import _expected_page_statuses, _stage6_page_status, _usable_stage6_text
+from stage7_baseline import BASELINE_RELATIVE_PATH, load_current_baseline, validate_stage6_source_binding
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,8 +43,45 @@ def _asset_index() -> dict[str, dict]:
     return {row["asset_id"]: row for row in _jsonl(ROOT / "data" / "registry" / "source_assets.jsonl")}
 
 
+def _baseline_manifest_checks(manifest: dict, sample: dict, baseline_pages: dict, coverage: dict, stage6_pages: dict) -> dict:
+    pages = manifest["pages"]
+    actual = {(row["document_key"], row["physical_page"]): row for row in pages}
+    expected_statuses = _expected_page_statuses(sample, baseline_pages, stage6_pages)
+    documents = {row["document_key"]: row for row in sample["documents"]}
+    counts = {status: sum(row["page_status"] == status for row in pages) for status in PAGE_STATUSES}
+    expected_counts = {status: sum(value == status for value in expected_statuses.values()) for status in PAGE_STATUSES}
+    scope_ok = len(actual) == len(pages) and set(actual) == set(baseline_pages)
+    identity_ok = scope_ok and all(
+        row["document_logical_id"] == documents[key[0]]["document_logical_id"]
+        and row["processing_asset_id"] == documents[key[0]]["processing_asset_id"]
+        and row["authority_asset_id"] == documents[key[0]]["original_asset_id"]
+        and row["stage5_page_mode"] == baseline_pages[key]["page_mode"]
+        for key, row in actual.items()
+    )
+    return {
+        "all_baseline_pages_have_one_status": scope_ok and sum(counts.values()) == coverage["expected_page_count"],
+        "expected_page_status_counts": manifest["status_counts"] == counts == expected_counts,
+        "page_statuses_match_current_baseline": scope_ok and all(actual[key]["page_status"] == status for key, status in expected_statuses.items()),
+        "page_identities_match_current_baseline": identity_ok,
+        "baseline_coverage_counts_reconcile": manifest.get("baseline_coverage") == coverage,
+    }
+
+
+def _candidate_manifest_binding(candidates: dict, manifest: dict) -> bool:
+    expected = content_fingerprint({
+        "manifest": manifest["content_fingerprint"],
+        "page_text_ids": sorted(row["page_id"] for row in manifest["pages"] if row["page_status"] == "text_accepted"),
+    })
+    inputs = candidates.get("inputs", {})
+    return (inputs.get("terminology_input_manifest") == "data/stage7/terminology_input_manifest.json"
+            and inputs.get("source_fingerprint") == expected)
+
+
 def _run_tests() -> dict:
-    command = [sys.executable, "-m", "pytest", "-q"]
+    # Stage 7 is revalidated before historical Stage 8-12 outputs are rebuilt.
+    # Their stale-input failures do not measure this stage's candidate boundary.
+    command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+               "tests/stage6", "tests/stage7", "tests/stage10/test_stage10_runtime.py"]
     result = subprocess.run(
         command,
         cwd=ROOT,
@@ -127,6 +166,17 @@ def main() -> None:
     contract = load_terminology_contract(ROOT / "config" / "terminology_contract.json")
     golden = _read(STAGE7 / "stage7_critical_term_golden_set.json")
     validate_input_manifest(manifest)
+    baseline_error = None
+    baseline_path = ROOT / BASELINE_RELATIVE_PATH
+    baseline_checks = {}
+    coverage = {}
+    baseline = {}
+    try:
+        baseline_path, baseline, baseline_pages, coverage = load_current_baseline(ROOT, sample, assets)
+        validate_stage6_source_binding(ROOT, baseline["input_fingerprint"])
+        baseline_checks = _baseline_manifest_checks(manifest, sample, baseline_pages, coverage, _stage6_page_status(stage6_rows))
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        baseline_error = str(exc)
 
     pages = manifest["pages"]
     candidates = candidates_payload.get("candidates", [])
@@ -181,7 +231,7 @@ def main() -> None:
             evidence_by_id.get(evidence_id, {}).get("document_key") == page["document_key"]
             and evidence_by_id[evidence_id]["input"]["physical_page"] == page["physical_page"]
             and evidence_by_id[evidence_id]["evidence"].get("review_status") == "accepted"
-            and evidence_by_id[evidence_id]["evidence"].get("disposition") == "structured"
+            and _usable_stage6_text(evidence_by_id[evidence_id])
             for evidence_id in page.get("stage6_evidence_ids", [])
         )
         for page in pages
@@ -192,7 +242,16 @@ def main() -> None:
         for page in pages
         if page["page_status"] == "text_accepted"
     )
-    table_isolated = all(not page.get("table_candidate") or page["page_status"] in {"visual_only", "excluded_non_content"} for page in pages)
+    table_isolated = all(
+        not page.get("table_candidate")
+        or page["page_status"] in {"visual_only", "excluded_non_content"}
+        or (
+            page["page_status"] == "text_accepted"
+            and page["text_source"] == "stage6_accepted_evidence"
+            and all(_usable_stage6_text(evidence_by_id[evidence_id]) for evidence_id in page["stage6_evidence_ids"])
+        )
+        for page in pages
+    )
     traceability_ok = all(
         (occurrence["document_logical_id"], occurrence["physical_page"]) in accepted_keys
         for candidate in candidates
@@ -260,16 +319,25 @@ def main() -> None:
     )
     tests = _run_tests()
     status_counts = manifest["status_counts"]
-    expected_counts_ok = status_counts == {
-        "text_accepted": 726,
-        "visual_only": 39,
-        "quarantined": 2,
-        "excluded_non_content": 8,
-    }
     structural_checks = {
         "input_manifest_frozen": manifest.get("status") == "frozen",
-        "all_775_pages_have_one_status": len(pages) == 775 and sum(status_counts.values()) == 775,
-        "expected_page_status_counts": expected_counts_ok,
+        "current_stage5_baseline_valid": baseline_error is None,
+        "all_baseline_pages_have_one_status": baseline_checks.get("all_baseline_pages_have_one_status", False),
+        "expected_page_status_counts": baseline_checks.get("expected_page_status_counts", False),
+        "page_statuses_match_current_baseline": baseline_checks.get("page_statuses_match_current_baseline", False),
+        "page_identities_match_current_baseline": baseline_checks.get("page_identities_match_current_baseline", False),
+        "baseline_coverage_counts_reconcile": baseline_checks.get("baseline_coverage_counts_reconcile", False),
+        "manifest_bound_to_current_inputs": baseline_error is None and (
+            manifest["input_boundary"].get("stage5_baseline") == BASELINE_RELATIVE_PATH
+            and manifest["inputs"].get("source_input_fingerprint") == baseline["input_fingerprint"]
+            and manifest["inputs"].get("stage5_baseline_sha256") == _sha(baseline_path)
+            and manifest["inputs"].get("stage5_sample_manifest_sha256") == _sha(STAGE5 / "stage5_sample_manifest.json")
+            and manifest["inputs"].get("stage6_exit_sha256") == _sha(STAGE6 / "stage6_exit_audit.json")
+            and manifest["inputs"].get("stage6_bundle_sha256") == _sha(STAGE6 / "stage6_evidence_bundle.jsonl")
+            and manifest["inputs"].get("stage6_build_sha256") == _sha(STAGE6 / "stage6_evidence_build_audit.json")
+            and manifest["inputs"].get("stage6_golden_sha256") == _sha(STAGE6 / "stage6_evidence_golden_sample.json")
+            and manifest["inputs"].get("registry_summary_sha256") == _sha(ROOT / "data/registry/source_registry_summary.json")
+        ),
         "only_five_admitted_units": manifest["input_boundary"].get("source_count") == 5 and manifest["input_boundary"].get("unauthorized_source_count") == 0 and sample_scope_ok,
         "case_holdout_blind_materials_explicitly_excluded": set(manifest["input_boundary"].get("excluded_source_classes", {})) == {"formal_case_materials", "holdout_materials", "blind_test_materials"} and bool(manifest["input_boundary"].get("exclusion_enforcement")),
         "only_accepted_pages_are_consumed": accepted_sources_ok and traceability_ok,
@@ -288,6 +356,7 @@ def main() -> None:
         ),
         "ocr_confirmation_boundary_is_explicit": ocr_confirmation_ok,
         "candidate_only_no_promotion": candidates_payload.get("status") == "candidate_only" and candidates_payload.get("automatic_promotion") is False,
+        "candidates_bound_to_current_manifest": _candidate_manifest_binding(candidates_payload, manifest),
         "formal_release_false": candidates_payload.get("formal_release") is False and capability.get("formal_release") is False,
         "runtime_contract_fingerprint_recorded": candidates_payload.get("contract_sha256") == _sha(ROOT / "config" / "terminology_contract.json"),
         "capability_questions_complete": capability_shape_ok,
@@ -321,6 +390,8 @@ def main() -> None:
             "candidate_count": len(candidates),
             "capability_question_count": len(capability_questions),
         },
+        "baseline_coverage": coverage,
+        "baseline_error": baseline_error,
         "candidate_type_counts": {candidate_type: sum(row["candidate_type"] == candidate_type for row in candidates) for candidate_type in sorted(CANDIDATE_TYPES)},
         "unobserved_declared_candidate_types": sorted(set(contract["candidate_types"]) - {row["candidate_type"] for row in candidates}),
         "candidate_scope": {

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_original_page_ocr_review",
+  "coordinate_system": "original_pdf_display_points",
+  "pages": [
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 1, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "verified", "nontext_status": "none",
+      "issues": [],
+      "coverage_note": "Cover only: 11-072, book title, edition, publisher and attribution. Metadata-only exclusion is legitimate; no engineering claim or Evidence is expected."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 12, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "confirmed_ocr_correction", "bbox": [64, 440, 343, 453], "source_key": "2.3.1", "ocr_text": "本职业（工种）.基础知识", "reviewed_text": "本职业（工种）基础知识", "action": "Use reviewed text; current Evidence already removes the inserted period."},
+        {"kind": "same_page_binding_pending", "bbox": [63, 279, 347, 309], "source_key": "2.1.5", "ocr_text": "2.1.5高级技师：在取得技师职业资格的基础上累积不少于 / 350标准学时。", "reviewed_text": "2.1.5 高级技师：在取得技师职业资格的基础上累积不少于350标准学时。", "action": "Bind the two existing Evidence fragments before making the 350-hour statement."},
+        {"kind": "cross_page_pending", "bbox": [64, 520, 349, 533], "source_key": "2.4.1", "ocr_text": "培训目的：通过培训达到《职业技能鉴定规范》对本职", "continuation_text": "Physical page 13 continues: 业的知识和技能要求。", "action": "Cite pages 12–13 together; page 12 alone does not complete the clause."}
+      ],
+      "coverage_note": "Printed page 3. Training hours, teacher qualifications and training facilities are present in 17 Evidence fragments; the 2.1.5 and 2.4.1 boundaries remain unresolved."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 31, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "verified", "nontext_status": "none",
+      "issues": [],
+      "coverage_note": "Blank separator page. Boundary-only exclusion is legitimate; zero OCR text and zero Evidence are expected."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 32, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "confirmed_ocr_correction", "bbox": [82, 405, 345, 419], "source_key": "La5A1004-option-D", "ocr_text": "(D)t=273.15xT", "reviewed_text": "(D)t=273.15×T", "action": "Retain multiplication sign in source review; marked answer remains B, T=t+273.15."},
+        {"kind": "question_group_pending", "bbox": [45, 209, 354, 542], "source_key": "La5A1001–La5A1006", "ocr_text": "Six stems and option sets are separate OCR/Evidence fragments.", "confirmed_pair_summary": "A mm; A 矢量; B 平行力; B T=t+273.15; C 左旋和右旋; C 760 mmHg.", "action": "Use bounded question IDs to pair each stem with only its own options; do not promote alternatives as answers."}
+      ],
+      "coverage_note": "Printed page 23. All six marked questions are visible and text-bearing; current Evidence is region-scoped. La5A1006 begins 一个, already corrected in Evidence."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 64, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "legitimate_exclusion", "bbox": [364, 58, 387, 111], "ocr_text": "鉴选定择题题库", "exclude_reason": "Vertical 鉴定试题库/选择题 navigation lettering, not part of any question.", "action": "Keep excluded from question Evidence; current bundle has removed seven sidebar spans."},
+        {"kind": "cross_page_pending", "bbox": [40, 56, 353, 101], "source_key": "Lb4A3231", "ocr_text": "转速、叶轮尺寸的增大而（C）。（A）降低；（B）不变；（C）增高；（D）不定。", "review_note": "Only the tail of the question begun on physical page 63.", "action": "Do not pair or state as a complete question until page 63 is bound."},
+        {"kind": "question_group_pending", "bbox": [40, 105, 354, 501], "source_key": "Lb4A3232–Lb4A4237", "ocr_text": "Six marked question/option sets; Lb4A3233 option D crosses a line and Lb4A4236 options share an Evidence fragment with the next stem.", "confirmed_pair_summary": "B 后弯; A 5%～10%; C 出口、入口; C 机械密封; C 25%; B 5%.", "action": "Split shared Evidence at question codes; bind each option set only to its own stem."},
+        {"kind": "cross_page_pending", "bbox": [75, 504, 351, 543], "source_key": "Lb4A4238", "ocr_text": "除氧器布置在高于给水泵入口14m（A）标高。", "continuation_text": "Physical page 65: （A）以上；（B）以下；（C）位置；（D）附近。", "action": "Keep outside the six complete page-64 pairs until pages 64–65 are bound."}
+      ],
+      "coverage_note": "Printed page 55. Current 15 Evidence contain the six complete pairs plus two incomplete boundary fragments; original-page answer markers alone do not resolve cross-page questions."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 120, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "confirmed_ocr_correction", "bbox": [66, 424, 348, 453], "source_key": "Jf4A1630", "ocr_text": "于斤顶", "reviewed_text": "千斤顶", "action": "Current Evidence already uses the reviewed character."},
+        {"kind": "legitimate_exclusion", "bbox": [362, 53, 390, 112], "ocr_text": "鉴选定摔题题库", "exclude_reason": "Vertical decorative question-bank label, not stem or option text.", "action": "Keep separate from the eight question groups."},
+        {"kind": "question_group_pending", "bbox": [42, 55, 355, 536], "source_key": "J5A2624–Jf4A2631", "ocr_text": "Eight marked questions; Jf5A4627 option D wraps to 1.10 on another Evidence line.", "confirmed_pair_summary": "D 60°; C 3/4; B W、H; B 0.05～0.20 mm; A 设置拖拉绳; C 6; A 坚韧的木板; C 不足.", "action": "Pair by question code and include the wrapped option lines without borrowing from adjacent questions."}
+      ],
+      "coverage_note": "Printed page 111. Eight complete marked pairs are visible and present in 16 Evidence fragments; grouping remains the semantic coverage gap."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 180, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "legitimate_exclusion", "bbox": [365, 50, 390, 115], "ocr_text": "鉴简定试答题题库", "exclude_reason": "Right-margin question-bank lettering, not answer text.", "action": "Keep omitted from the four Q/A groups."},
+        {"kind": "question_group_pending", "bbox": [42, 52, 355, 541], "source_key": "La5C3011–La5C4014", "ocr_text": "Four answer sections are split across 16 Evidence fragments.", "reviewed_text": "La5C3012 lists four condenser tasks; La5C4014 lists three bearing axial-fixing categories.", "action": "Build four bounded Q/A groups; keep the four tasks and three categories in their respective answers."}
+      ],
+      "coverage_note": "Printed page 171. No confirmed missing answer text after sidebar removal; attribution and list grouping remain pending."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 244, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "legitimate_exclusion", "bbox": [365, 52, 390, 111], "ocr_text": "鉴简定答题题库", "exclude_reason": "Vertical question-bank label, not the adjacent repair answer.", "action": "Keep omitted from content Evidence."},
+        {"kind": "cross_page_pending", "bbox": [40, 54, 355, 150], "source_key": "previous_question_answer", "ocr_text": "在有裂纹处用砂轮磨削……进行补焊处理。若是阀体焊补中出现拉裂现象……", "reviewed_text": "Answer continues from physical page 243; its question stem is absent from page 244.", "action": "Bind to page 243 before extracting a complete repair instruction."},
+        {"kind": "question_group_pending", "bbox": [40, 150, 355, 470], "source_key": "Je4C3267–Je4C3269", "ocr_text": "Three separate answer units: oil-line acid washing, centrifugal-pump clearances, pump-shaft tolerances.", "source_fragments": ["10%盐酸加入0.2%的缓蚀剂", "浸泡时间一般在4h以上", "2%的亚硝酸钠溶液（pH值为9.5～10)", "钝化时间一般在3h以上"], "action": "Preserve three ordered acid-wash steps and bind each answer to its own question."},
+        {"kind": "cross_page_pending", "bbox": [75, 472, 352, 542], "source_key": "Je4C3270", "ocr_text": "另一个原因是大法兰刚性不够而变", "continuation_text": "Physical page 245: 形，可加焊筋板增加刚性，焊后用车床精加工密封面。", "action": "Require page 245 before a complete leakage-repair answer is released."}
+      ],
+      "coverage_note": "Printed page 235. Existing 12 Evidence capture visible text; page-edge answers and three internal Q/A groups are not yet bound."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 300, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "region_recorded",
+      "issues": [
+        {"kind": "confirmed_ocr_correction", "bbox": [139, 135, 350, 323], "source_key": "Jd1D2098", "ocr_text": "Derived OCR flattens stacked fractions; current selected Evidence also has P_P2 / TT, 760--100 and a displaced 710.", "reviewed_formula_linearized": ["p₁/T₁=p₂/T₂", "T₂=p₂T₁/p₁", "p₁=pₐₘᵦ−H₁=760−50=710（mmHg）", "p₂=pₐₘᵦ−H₂=760−100=660（mmHg）", "T₂=p₂T₁/p₁=660×(70+273.15)/710=318.98（K）", "t₂=318.98−273.15=45.8（℃）"], "layout_note": "Slash linearizes an original stacked fraction; parentheses only delimit the printed numerator. Adjacent p₂T₁ has no printed multiplication sign. All displayed numbers and signs were checked on the original page.", "action": "Use this verified sidecar transcription to repair OCR/source alignment; bind correctly located math SourceSpans before making formula Evidence. Preserve printed 318.98 K and 45.8 °C."},
+        {"kind": "diagram_region_recorded", "bbox": [128, 335, 275, 526], "source_key": "Jd1D2099/图D-12", "ocr_text": "9 / F2 / 90 / 图D-12 / C面积为F部分的重心位置……", "reviewed_visible_labels": ["90 at bottom horizontal dimension", "90 at right vertical dimension", "10 at top horizontal dimension", "10 at lower-right vertical dimension", "F₁", "F₂", "C₁", "C₂", "C", "图D-12"], "action": "Retain the original figure region and label positions; do not infer centroid geometry or dimensions from the displaced OCR."},
+        {"kind": "legitimate_exclusion", "bbox": [365, 52, 391, 115], "ocr_text": "鉴定试题库 / 计算题", "exclude_reason": "Right-margin vertical question-bank navigation, separate from Jd1D2098 and Jd1D2099.", "action": "Exclude from both question texts."}
+      ],
+      "coverage_note": "Printed page 291. The upper calculation Jd1D2098 is legible and its formulas are corrected above; the lower Jd1D2099 is a separate T-section diagram question. The figure region and labels are recorded, while geometric interpretation remains outside OCR review."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 360, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "confirmed_ocr_correction", "bbox": [66, 233, 349, 261], "source_key": "La1F2009-efficiency", "ocr_text": "效率……用字母n表示", "reviewed_text": "效率……用字母η表示", "action": "Current Evidence uses Greek η; retain n only for rotational speed."},
+        {"kind": "legitimate_exclusion", "bbox": [364, 54, 390, 111], "ocr_text": "鉴定试题库", "exclude_reason": "Vertical decorative label, not part of either question.", "action": "Keep omitted from answer text."},
+        {"kind": "classification_group_pending", "bbox": [40, 54, 354, 359], "source_key": "La1F2009", "ocr_text": "Six numbered pump parameters are spread across separate Evidence fragments.", "reviewed_text": "流量、扬程、转速、轴功率、效率、比转速", "action": "Group as six parallel parameter classes, not an ordered procedure."},
+        {"kind": "question_group_pending", "bbox": [42, 361, 353, 540], "source_key": "La1F2010", "ocr_text": "冲转真空问答分成 stem and two answer paragraphs.", "review_note": "Printed answer says 一般为60kPa左右 and discusses both too-low and too-high vacuum.", "action": "Bind both answer paragraphs to La1F2010 without merging them into the pump-parameter list."}
+      ],
+      "coverage_note": "Printed page 351. Two complete Q/A units appear in 11 Evidence fragments; classification and answer boundaries remain pending."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 468, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "none",
+      "issues": [
+        {"kind": "confirmed_ocr_correction", "bbox": [40, 248, 352, 280], "source_key": "sample_question_2", "ocr_text": "工作压力的 / ）倍", "reviewed_text": "工作压力的（  ）倍", "action": "Restore only the empty answer bracket in source review; do not select an option."},
+        {"kind": "confirmed_ocr_correction", "bbox": [40, 295, 352, 329], "source_key": "sample_question_3", "ocr_text": "不少于 / ）min", "reviewed_text": "不少于（  ）min", "action": "Restore only the empty answer bracket in source review."},
+        {"kind": "confirmed_ocr_correction", "bbox": [40, 343, 352, 377], "source_key": "sample_question_4", "ocr_text": "不得超过 / )", "reviewed_text": "不得超过（  ）", "action": "Restore only the empty answer bracket in source review."},
+        {"kind": "confirmed_ocr_correction", "bbox": [86, 393, 311, 406], "source_key": "sample_question_5", "ocr_text": "）适用于小型设备的吊装或短距离牵引。5.（", "reviewed_text": "5.（  ）适用于小型设备的吊装或短距离牵引。", "action": "Restore printed reading order and the empty answer bracket; do not select an option."},
+        {"kind": "confirmed_ocr_correction", "bbox": [40, 439, 352, 473], "source_key": "sample_question_6", "ocr_text": "称为 / )", "reviewed_text": "称为（  ）", "action": "Restore only the empty answer bracket in source review."},
+        {"kind": "cross_page_pending", "bbox": [40, 487, 354, 543], "source_key": "sample_question_7", "ocr_text": "Derived OCR reorders the blank bracket; options A–C appear on this page and the rest continue on physical page 469.", "reviewed_bracket": "（  ）", "action": "Preserve all seven questions as context only; do not invent any marked answer or engineering fact."}
+      ],
+      "coverage_note": "Printed page 459. Seven sample questions have no marked answer; current 15 accepted Evidence contain question/option text but no answer authority. Correct brackets in this sidecar only."
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 480, "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d", "ocr_text_status": "corrected", "nontext_status": "region_recorded",
+      "issues": [
+        {"kind": "table_layout_corrected_in_sidecar", "bbox": [61, 222, 344, 362], "source_key": "6.1-table", "ocr_text": "Derived OCR interleaves 20题, 20～40, 25, 30, 15 and 10 across columns; current Evidence contains only the caption and headers.", "reviewed_text_ref": "stage6_auxiliary_source_supplements.json#/table_cells", "action": "Use the 25 individually reviewed cell transcriptions and five row groups; preserve the printed two-tier header and do not treat 选择 as a header row. Header cells lack independent SourceSpans, so no TableContext is asserted."},
+        {"kind": "prose_corrected_in_sidecar", "bbox": [60, 164, 350, 548], "source_key": "6.1/6.2", "ocr_text": "Prose survives in derived OCR but is absent from the current canonical Evidence bundle.", "reviewed_text_ref": "stage6_auxiliary_source_supplements.json#/supplemental_prose", "action": "Use the six verified prose transcriptions for later source alignment."},
+        {"kind": "printed_inconsistency", "bbox": [180, 320, 344, 345], "source_key": "绘图/论述", "ocr_text": "1题（5分/题）；2题（10分/题）；配分15", "review_note": "Original table prints these values exactly despite their arithmetic mismatch.", "action": "Preserve the printed values without silently harmonizing totals."}
+      ],
+      "coverage_note": "Printed page 471. Original confirms the 6.1 five-type/45～60-question rule, every cell of the 5×5 composition table, the advanced-technician note, and both 6.2 practical-exam rules. Six prose spans and 25 cell transcriptions are recorded in the referenced auxiliary source supplement; the OCR table reading order remains invalid."
+    }
+  ]
+}

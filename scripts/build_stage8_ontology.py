@@ -105,7 +105,7 @@ def main() -> None:
         "review_boundary": (
             "Stage 8 mapping review is complete; no formal vocabulary or Release is produced."
             if not queue
-            else "Stage 8 stops here until a human reviews the independent mapping overlay; no formal vocabulary or Release is produced."
+            else "Stage 8 stops here until the independent mapping overlay is reviewed; no formal vocabulary or Release is produced."
         ),
         "next_stage_allowed": not queue,
         "next_stage": "Stage 9 OWL/SHACL semantic authority package" if not queue else "Stage 8 manual ontology mapping review",

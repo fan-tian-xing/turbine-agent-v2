@@ -7,7 +7,9 @@ import json
 from pathlib import Path
 
 from turbine_kg.settings import PROJECT_ROOT
-from stage5_fingerprint import find_matching_artifact, ocr_fingerprint
+from benchmark_stage5_quality import BASELINE, TRUTH, _current_inputs
+from stage5_fingerprint import sha256_file
+from turbine_kg.settings import Settings
 
 
 STAGE5_ROOT = PROJECT_ROOT / "data" / "stage5"
@@ -29,30 +31,33 @@ def _summary(report: dict, similarity_key: str) -> dict:
 
 
 def decide() -> dict:
-    input_fingerprint, _ = ocr_fingerprint()
-    rapid_path = find_matching_artifact("stage5_rapidocr_sample_benchmark_*.json", input_fingerprint)
-    if rapid_path is None:
-        raise FileNotFoundError("no RapidOCR sample artifact matches the current input fingerprint")
-    rapid = json.loads(rapid_path.read_text(encoding="utf-8"))
-    rapid_summary = _summary(rapid, "fresh_vs_registered_similarity")
+    manifest, _, baseline, truth, input_fingerprint, components = _current_inputs(Settings.from_environment())
     return {
         "schema_version": 1,
         "stage": "5",
         "artifact_kind": "stage5_engine_decision",
         "decided_at": TODAY,
         "ocr_input_fingerprint": input_fingerprint,
-        "ocr_artifact": str(rapid_path.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "fingerprint_components": components,
+        "baseline": str(BASELINE.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "truth_annotations": str(TRUTH.relative_to(PROJECT_ROOT)).replace("\\", "/"),
+        "inputs": {"baseline_sha256": sha256_file(BASELINE), "truth_annotations_sha256": sha256_file(TRUTH)},
         "selection": {
             "primary_engine": "rapidocr_onnxruntime",
-            "primary_use": "扫描件首轮 OCR 与页面基线生成",
-            "fallback_policy": "低置信度或关键页只回到 Original materials 原始页人工复核，不切换 OCR 引擎",
+            "primary_use": "扫描页首轮候选识别；后续处理读取已对原件逐页纠正的当前正式PDF",
+            "current_processing_source": "current_registered_reviewed_pdf",
+            "fallback_policy": "复核疑点时可用第二识别器辅助，最终文字仍由原件逐页复核确认",
         },
         "comparison": {
-            "rapidocr": rapid_summary,
+            "current_baseline": {"document_count": len(manifest["documents"]),
+                                 "page_count": baseline["actual"]["page_count"],
+                                 "failed_page_count": baseline["actual"]["failed_page_count"],
+                                 "truth_sample_page_count": len(truth["records"]),
+                                 "comparison_status": "current_pdf_identity_and_coverage_checked"},
         },
         "decision_basis": [
-            "RapidOCR 在项目专用运行环境完成冻结 Golden Sample 的 36 页复跑，0 失败。",
-            "以后所有 OCR 结果只使用 RapidOCR；低置信度和关键页回到 Original materials 原始页复核，不用复核结果覆盖原件。",
+            "当前基线和独立原页转录绑定当前正式PDF、Registry和全文复核记录；旧RapidOCR样本输出不再作为正式输入。",
+            "首轮候选可使用RapidOCR、版面和表格模型，复核疑点时可用第二识别器；最终校正在派生PDF文字层中保留，原件只读。",
             "相似度只用于发现疑点，不是 OCR 字符、数字、单位、否定词或表格准确率证明。",
         ],
         "quality_boundary": {

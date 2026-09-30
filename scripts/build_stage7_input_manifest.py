@@ -14,6 +14,7 @@ except ImportError:  # pragma: no cover
 from turbine_kg.documents.ids import stable_id
 from turbine_kg.settings import Settings
 from turbine_kg.terminology.validation import content_fingerprint, validate_input_manifest
+from stage7_baseline import BASELINE_RELATIVE_PATH, load_current_baseline, validate_stage6_source_binding
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -73,21 +74,34 @@ def _sample_categories(sample: dict) -> dict[tuple[str, int], list[str]]:
     return result
 
 
-def _stage6_page_status() -> dict[tuple[str, int], dict]:
+def _stage6_page_status(rows: list[dict] | None = None) -> dict[tuple[str, int], dict]:
     result: dict[tuple[str, int], dict] = {}
-    for row in _jsonl(STAGE6 / "stage6_evidence_bundle.jsonl"):
+    for row in rows if rows is not None else _jsonl(STAGE6 / "stage6_evidence_bundle.jsonl"):
         evidence = row["evidence"]
         key = (row["document_key"], int(row["input"]["physical_page"]))
         current = result.setdefault(key, {"status": None, "rows": []})
         current["rows"].append(row)
-        if evidence["disposition"] == "region_scoped":
-            current["status"] = "accepted_region_evidence"
-        elif evidence["disposition"] == "structured" and current["status"] != "accepted_region_evidence":
+        if _usable_stage6_text(row):
             current["status"] = "accepted_text_evidence"
+        elif evidence["disposition"] == "region_scoped" and current["status"] != "accepted_text_evidence":
+            current["status"] = "accepted_region_evidence"
     return result
 
 
-def _status(categories: list[str], page_mode: str, metrics: dict, stage6_status: str | None, *, original_processing: bool, table_candidate: bool) -> tuple[str, str]:
+def _usable_stage6_text(row: dict) -> bool:
+    evidence = row["evidence"]
+    return (
+        evidence.get("disposition") in {"structured", "region_scoped"}
+        and evidence.get("content_kind") in {"paragraph", "heading"}
+        and row.get("stage12_extractability") != "context_only"
+    )
+
+
+def _status(categories: list[str], page_mode: str, metrics: dict, stage6_status: str | None, *, original_processing: bool, table_candidate: bool, reviewed_blank: bool = False) -> tuple[str, str]:
+    if reviewed_blank:
+        return "excluded_non_content", "Current full-page review confirmed this physical page is blank."
+    if stage6_status == "accepted_text_evidence":
+        return "text_accepted", "Use only reviewed Stage 6 prose from this sample page; table and figure regions remain excluded."
     if stage6_status == "accepted_region_evidence":
         return "visual_only", "Stage 6 accepted this sample only as region-scoped Evidence."
     if any(value in categories for value in ("cover", "contents", "blank_or_low_text", "document_identity")) and stage6_status != "accepted_text_evidence":
@@ -101,6 +115,23 @@ def _status(categories: list[str], page_mode: str, metrics: dict, stage6_status:
     if original_processing:
         return "text_accepted", "Native text is available for candidate discovery."
     return "text_accepted", "OCR processing text is admitted for candidate discovery only; Original materials remain authoritative."
+
+
+def _expected_page_statuses(sample: dict, baseline_pages: dict, stage6_pages: dict) -> dict:
+    categories = _sample_categories(sample)
+    documents = {row["document_key"]: row for row in sample["documents"]}
+    result = {}
+    for key, row in baseline_pages.items():
+        document = documents[key[0]]
+        metrics = row["processing_metrics"]
+        table = bool(metrics.get("table_count_detected", 0) or (metrics.get("visual_table_metrics") or {}).get("ruled_table_candidate", False))
+        result[key] = _status(
+            categories.get(key, []), row["page_mode"], metrics,
+            stage6_pages.get(key, {}).get("status"),
+            original_processing=document["processing_asset_id"] == document["original_asset_id"],
+            table_candidate=table, reviewed_blank=row["reviewed_blank"],
+        )[0]
+    return result
 
 
 def _processing_path(settings: Settings, relative_path: str) -> Path:
@@ -138,12 +169,12 @@ def _round_one_metadata(sample: dict, assets: dict[str, dict]) -> list[dict]:
 def main() -> None:
     settings = Settings.from_environment()
     sample = _read(STAGE5 / "stage5_sample_manifest.json")
-    baseline = _read(STAGE5 / "stage5_baseline_benchmark_2026-09-10.json")
     assets = _asset_index()
     admitted_originals = _validate_admitted_scope(sample, assets)
+    baseline_path, baseline, baseline_pages, coverage = load_current_baseline(ROOT, sample, assets)
+    validate_stage6_source_binding(ROOT, baseline["input_fingerprint"])
     categories = _sample_categories(sample)
     stage6_pages = _stage6_page_status()
-    baseline_pages = {(row["document_key"], int(row["physical_page"])): row for row in baseline["page_records"]}
     pages: list[dict] = []
     for document in sample["documents"]:
         processing = assets[document["processing_asset_id"]]
@@ -169,13 +200,14 @@ def main() -> None:
                     stage6_status,
                     original_processing=processing["asset_id"] == authority["asset_id"],
                     table_candidate=table_candidate,
+                    reviewed_blank=baseline_row["reviewed_blank"],
                 )
                 text = pdf[physical_page - 1].get_text("text").strip()
-                evidence_ids = sorted({row["evidence"]["evidence_id"] for row in stage6_detail.get("rows", [])})
+                evidence_ids = sorted({row["evidence"]["evidence_id"] for row in stage6_detail.get("rows", []) if _usable_stage6_text(row)})
                 evidence_text = "\n".join(
                     row["evidence"].get("effective_text") or row["evidence"].get("source_text") or ""
                     for row in stage6_detail.get("rows", [])
-                    if row["evidence"].get("disposition") == "structured"
+                    if _usable_stage6_text(row)
                 ).strip()
                 is_stage6_text = page_status == "text_accepted" and stage6_status == "accepted_text_evidence" and bool(evidence_text)
                 analysis_text = evidence_text if is_stage6_text else text
@@ -213,13 +245,13 @@ def main() -> None:
         "stage": "7",
         "artifact_kind": "terminology_input_manifest",
         "status": "frozen",
-        "scope": "the five admitted Stage 3 research-trial processing units; 775 physical PDF pages",
+        "scope": f"the five admitted Stage 3 research-trial processing units; {coverage['expected_page_count']} physical PDF pages",
         "formal_release": False,
         "producer": "scripts/build_stage7_input_manifest.py",
         "consumer": ["turbine_kg.terminology.analyzer", "scripts/audit_stage7_exit.py", "Stage 8 ontology capability mapping"],
         "input_boundary": {
             "source_registry": "data/registry/source_registry_summary.json",
-            "stage5_baseline": "data/stage5/stage5_baseline_benchmark_2026-09-10.json",
+            "stage5_baseline": BASELINE_RELATIVE_PATH,
             "stage6_canonical_sample": "data/stage6/stage6_evidence_bundle.jsonl",
             "source_root": "SOURCE_ROOT",
             "source_count": len(sample["documents"]),
@@ -237,18 +269,22 @@ def main() -> None:
         },
         "inputs": {
             "stage5_sample_manifest_sha256": _sha(STAGE5 / "stage5_sample_manifest.json"),
-            "stage5_baseline_sha256": _sha(STAGE5 / "stage5_baseline_benchmark_2026-09-10.json"),
+            "stage5_baseline_sha256": _sha(baseline_path),
+            "source_input_fingerprint": baseline["input_fingerprint"],
             "stage6_exit_sha256": _sha(STAGE6 / "stage6_exit_audit.json"),
             "stage6_bundle_sha256": _sha(STAGE6 / "stage6_evidence_bundle.jsonl"),
+            "stage6_build_sha256": _sha(STAGE6 / "stage6_evidence_build_audit.json"),
+            "stage6_golden_sha256": _sha(STAGE6 / "stage6_evidence_golden_sample.json"),
             "registry_summary_sha256": _sha(ROOT / "data" / "registry" / "source_registry_summary.json"),
             "terminology_contract_sha256": _sha(ROOT / "config" / "terminology_contract.json"),
         },
         "rounds": {
             "round_1": "Registry-backed registered-name, identifier, native-text and directory discovery; candidate-only; no unverified scan TOC consumption",
-            "round_2": "accepted processing text from the frozen 775-page manifest",
+            "round_2": f"accepted processing text from the frozen {coverage['expected_page_count']}-page manifest",
         },
         "round_1_metadata_discovery": _round_one_metadata(sample, assets),
         "status_counts": status_counts,
+        "baseline_coverage": coverage,
         "pages": pages,
     }
     validate_input_manifest(payload)

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage12_reserve_source_regions",
+  "status": "reviewed_pre_execution",
+  "coverage_scope": "selected_regions_only",
+  "excluded_prior_reserve_pages": [
+    {
+      "document_key": "D300N",
+      "physical_page": 8
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 26
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 8
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 4
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 80
+    }
+  ],
+  "regions": [
+    {
+      "document_key": "D300N",
+      "physical_page": 10,
+      "bbox": [
+        60,
+        153,
+        470,
+        265
+      ],
+      "source_locator": "2-3 基架就位正文",
+      "source_text": "汽轮发电机的基础混凝土层固化及检查合格后，基架和地脚螺栓的就位工作就可准备进\n行，同时确认汽轮发电机中心线和冷凝器的纵、横向中心线的位置处于正确位置。\n基架应支承于水泥垫块上，此时应注意基架与混凝土之间应紧密接触，并保持水泥垫块\n有足够的强度。然后，先将低压缸基架就位，逐步向电机侧和前轴承箱侧进行基架安装就\n位，再安装汽轮发电机组的地脚螺栓，并预紧。按表 2-3-1 顺序进行工作。",
+      "review_status": "original_visual_reviewed",
+      "review_basis": "original PDF page image compared with the current OCR text layer; selected region only"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 29,
+      "bbox": [
+        50,
+        159,
+        545,
+        301
+      ],
+      "source_locator": "4.8.1 喷嘴检查与安装",
+      "source_text": "4.8.1 喷嘴的检查与安装应符合下列规定： \n1 外观检查应无裂纹、无铸砂、无焊瘤、无油污； \n2 喷嘴组与喷嘴槽或蒸汽室的结合面检查应符合下列规定： \n1） 应用涂色法检查，接触面积应大于75％； \n2） 密封面无贯通缺陷； \n3）散装喷嘴间的结合面、喷嘴组两端面定位键与定位销的间隙应不大于0.04mm； \n4）组装好的喷嘴或喷嘴组应无松动，喷嘴组出汽侧端面应平齐； \n3 紧固喷嘴使用的单头螺栓紧固后，螺栓丝杆端部应与栽丝孔底部留有不小于1.00mm 的间隙，螺栓紧\n固力矩与伸长量应符合制造厂技术要求，并作记录，螺栓与销钉应在扣大盖前点焊或铆固；",
+      "review_status": "original_visual_reviewed",
+      "review_basis": "original PDF page image compared with the current OCR text layer; selected region only"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 9,
+      "bbox": [
+        55,
+        140,
+        490,
+        275
+      ],
+      "source_locator": "5.2.4.1 闭式冷却水系统主要调试项目",
+      "source_text": "5.2.4.1主要调试项目内容\n闭式冷却水系统调试项目和内容如下：\na）\n稳压水箱排放冲洗至水质清澈、无杂物。\nb）闭式冷却水泵试运，并进行系统母管和用户支管循环冲洗，循环冲洗2h后，停泵放水，清洗\n滤网。重复循环冲洗至水质清澈、无杂物。\nc)\n系统投运调整（压力、温度、水位调整及自动控制）。\nd)\n闭式冷却水泵联锁保护动态校验。\ne）停机（应急）冷却水泵试转及调整。",
+      "review_status": "original_visual_reviewed",
+      "review_basis": "original PDF page image compared with the current OCR text layer; selected region only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 5,
+      "bbox": [
+        70,
+        235,
+        525,
+        297
+      ],
+      "source_locator": "2.3.1 经验反馈",
+      "source_text": "2.3.1 营运单位应当建立经验反馈体系，定期或不定期地通过\n自我评估或同行评估等方式对经验反馈体系的有效性进行评价。",
+      "review_status": "original_visual_reviewed",
+      "review_basis": "original PDF page image compared with the current OCR text layer; selected region only"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 81,
+      "bbox": [
+        48,
+        266,
+        352,
+        320
+      ],
+      "source_locator": "Lc4A3351 卷扬机选择题",
+      "source_text": "Lc4A3351\n卷扬机工作时，其卷筒上余留钢丝绳圈数应不\n少于（A）圈。\n(A) 3; (B) 5; (C) 6; (D) 8。",
+      "review_status": "original_visual_reviewed",
+      "review_basis": "original PDF page image compared with the current OCR text layer; selected region only",
+      "question_review": {
+        "status": "confirmed_original_page",
+        "question_id": "Lc4A3351",
+        "marked_option": "A",
+        "answer_text": "3",
+        "answer_source_quote": "(A) 3",
+        "review_basis": "原始页图像确认题干标记（A）与同题选项 (A) 3 配对；其他选项为干扰项。"
+      }
+    }
+  ]
+}

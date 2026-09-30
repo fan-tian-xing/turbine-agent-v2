@@ -39,7 +39,7 @@ def _sha(path: Path) -> str:
 
 
 def _run_tests() -> dict:
-    command = [sys.executable, "-m", "pytest", "-q", "tests/stage8", "tests/unit/test_project_state.py"]
+    command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "tests/stage8", "tests/unit/test_project_state.py"]
     result = subprocess.run(
         command,
         cwd=ROOT,
@@ -67,11 +67,69 @@ def _phenomenon_record_matches_policy(contract: dict, row: dict) -> bool:
     )
 
 
+def _rebinding_review_current(review: dict, overlay: list[dict], mapped: dict[str, dict]) -> bool:
+    records = review.get("records", [])
+    reviewers = review.get("reviewers", [])
+    by_id = {row.get("candidate_id"): row for row in records}
+    overlay_by_id = {row.get("candidate_id"): row for row in overlay}
+    if not (
+        review.get("artifact_kind") == "stage8_mapping_rebinding_review"
+        and review.get("status") == "review_complete"
+        and review.get("formal_release") is False
+        and isinstance(reviewers, list) and len(reviewers) >= 3
+        and len(set(reviewers)) == len(reviewers)
+        and len(records) == review.get("reviewed_candidate_count")
+        and len(by_id) == len(records)
+        and set(by_id) == set(overlay_by_id) == set(mapped)
+        and review.get("changed_fingerprint_count") == sum(
+            row.get("historical_candidate_content_fingerprint") != row.get("current_candidate_content_fingerprint")
+            for row in records
+        )
+        and review.get("added_selected_source_count") == sum(bool(row.get("added_source_occurrences")) for row in records)
+    ):
+        return False
+    for candidate_id, record in by_id.items():
+        decision = overlay_by_id[candidate_id]
+        current = mapped[candidate_id]
+        previous = (
+            decision.get("prior_review_record", {})
+            if record.get("historical_candidate_content_fingerprint") != record.get("current_candidate_content_fingerprint")
+            else decision
+        )
+        old_sources = record.get("old_selected_source_occurrences", [])
+        new_sources = record.get("new_selected_source_occurrences", [])
+        added = record.get("added_source_occurrences", [])
+        checks = record.get("current_original_page_checks", [])
+        if not (
+            record.get("normalized_form") == current.get("normalized_form")
+            and record.get("candidate_type") == current.get("candidate_type")
+            and record.get("mapped_class") == current.get("mapped_class")
+            and record.get("mapping_kind") == current.get("mapping_kind")
+            and record.get("decision") == decision.get("decision")
+            and record.get("decision_preserved") is True
+            and record.get("historical_candidate_content_fingerprint") == previous.get("candidate_content_fingerprint")
+            and record.get("current_candidate_content_fingerprint") == current.get("candidate_content_fingerprint") == decision.get("candidate_content_fingerprint")
+            and new_sources == current.get("source_occurrences")
+            and all(source in new_sources for source in old_sources)
+            and added == [source for source in new_sources if source not in old_sources]
+            and checks == decision.get("original_page_checks", [])
+            and all(
+                (source.get("document_key"), source.get("physical_page"))
+                in {(check.get("document_key"), check.get("physical_page")) for check in checks}
+                for source in added
+            )
+        ):
+            return False
+    return True
+
+
 def _audit() -> dict:
     contract = _read(ROOT / "config" / "ontology_contract.json")
     candidates_payload = _read(STAGE7 / "terminology_candidates.json")
     mapping = _read(STAGE8 / "ontology_mapping_shortlist.json")
     overlay = _jsonl(STAGE8 / "ontology_mapping_review_overlay.jsonl")
+    rebinding_path = STAGE8 / "stage8_mapping_rebinding_review.json"
+    rebinding_review = _read(rebinding_path)
     queue = _jsonl(STAGE8 / "ontology_mapping_review_queue.jsonl")
     ttl = (ROOT / "ontology" / "minimal_turbine.ttl").read_text(encoding="utf-8")
 
@@ -228,6 +286,7 @@ def _audit() -> dict:
         "shortlist_content_quality_gate": content_clean_ok,
         "phenomenon_mapping_policy_enforced": phenomenon_semantics_ok,
         "review_records_match_policy_and_overlay": review_records_consistent,
+        "mapping_rebinding_review_current": _rebinding_review_current(rebinding_review, overlay, mapped_by_id),
         "mapping_matches_current_input_rebuild": mapping_rebuild_ok,
         "review_queue_matches_current_input_rebuild": queue_rebuild_ok,
         "owl_matches_current_contract_rebuild": ttl_rebuild_ok,
@@ -254,6 +313,7 @@ def _audit() -> dict:
             "terminology_candidates": {"path": "data/stage7/terminology_candidates.json", "sha256": _sha(STAGE7 / "terminology_candidates.json")},
             "mapping_shortlist": {"path": "data/stage8/ontology_mapping_shortlist.json", "sha256": _sha(STAGE8 / "ontology_mapping_shortlist.json")},
             "review_overlay": {"path": "data/stage8/ontology_mapping_review_overlay.jsonl", "sha256": _sha(STAGE8 / "ontology_mapping_review_overlay.jsonl")},
+            "mapping_rebinding_review": {"path": "data/stage8/stage8_mapping_rebinding_review.json", "sha256": _sha(rebinding_path)},
             "review_queue": {"path": "data/stage8/ontology_mapping_review_queue.jsonl", "sha256": _sha(STAGE8 / "ontology_mapping_review_queue.jsonl")},
             "ontology": {"path": "ontology/minimal_turbine.ttl", "sha256": _sha(ROOT / "ontology" / "minimal_turbine.ttl")},
         },

@@ -1,0 +1,1884 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_source_structure_index",
+  "inputs": {
+    "evidence_bundle": {
+      "path": "data/stage6/stage6_evidence_bundle.jsonl",
+      "sha256": "9b80080997cadf653d87289bcf61d279c6b3878efff4cff10771fc26f2ba5453"
+    },
+    "golden_sample": {
+      "path": "data/stage6/stage6_evidence_golden_sample.json",
+      "sha256": "0f83cf513773a4d494d040beef7ac6b87646b31c7da6c1189335a259d82e7b29"
+    }
+  },
+  "context_groups": [
+    {
+      "group_id": "haf103-p12-5.1.3-limit-condition-classes",
+      "group_kind": "classification_list",
+      "document_key": "HAF103",
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "physical_pages": [
+        12
+      ],
+      "source_title": "5.1.3 运行限值和条件可以分为以下五类",
+      "title_evidence_id": "evidence-f9f292fb448b8432c016",
+      "member_evidence_ids": [
+        "evidence-26023feee77f5460315c",
+        "evidence-ecc226f8cf8925dbd339",
+        "evidence-73225cf647deab065f7c",
+        "evidence-37c6b51e62360d44e42f",
+        "evidence-c293415d58aa4e95c807"
+      ],
+      "source_review_status": "confirmed",
+      "source_total_items": 5,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "（1）",
+          "source_quote": "安全限值",
+          "source_quotes": {
+            "evidence-26023feee77f5460315c": "（1）安全限值；"
+          },
+          "evidence_ids": [
+            "evidence-26023feee77f5460315c"
+          ],
+          "source_span_ids": [
+            "span-4b115d5eb740e1895730"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "（2）",
+          "source_quote": "安全系统整定值",
+          "source_quotes": {
+            "evidence-ecc226f8cf8925dbd339": "（2）安全系统整定值；"
+          },
+          "evidence_ids": [
+            "evidence-ecc226f8cf8925dbd339"
+          ],
+          "source_span_ids": [
+            "span-e0de548370278ab94620"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_label": "（3）",
+          "source_quote": "正常运行的限值和条件",
+          "source_quotes": {
+            "evidence-73225cf647deab065f7c": "（3）正常运行的限值和条件；"
+          },
+          "evidence_ids": [
+            "evidence-73225cf647deab065f7c"
+          ],
+          "source_span_ids": [
+            "span-774986c484c92f713303"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_label": "（4）",
+          "source_quote": "监督要求",
+          "source_quotes": {
+            "evidence-37c6b51e62360d44e42f": "（4）监督要求；"
+          },
+          "evidence_ids": [
+            "evidence-37c6b51e62360d44e42f"
+          ],
+          "source_span_ids": [
+            "span-1845d0fbfa801ba99294"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 5,
+          "source_label": "（5）",
+          "source_quote": "偏离上述运行限值和条件时的行动",
+          "source_quotes": {
+            "evidence-c293415d58aa4e95c807": "（5）偏离上述运行限值和条件时的行动。"
+          },
+          "evidence_ids": [
+            "evidence-c293415d58aa4e95c807"
+          ],
+          "source_span_ids": [
+            "span-439c22852c1aaa034a1b"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "aux-p32-La5A1001",
+      "group_kind": "question_options",
+      "question_id": "La5A1001",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        32
+      ],
+      "source_title": "La5A1001",
+      "title_evidence_id": "evidence-d749b8e54218171f5a68",
+      "stem_evidence_id": "evidence-d749b8e54218171f5a68",
+      "options_evidence_id": "evidence-12d4e102ab3adc5165d0",
+      "member_evidence_ids": [
+        "evidence-d749b8e54218171f5a68",
+        "evidence-12d4e102ab3adc5165d0"
+      ],
+      "answer_marked": true,
+      "answer_option": "A",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "La5A1001机械制图中长度尺寸未标识时单位是（A）。",
+          "source_quotes": {
+            "evidence-d749b8e54218171f5a68": "La5A1001机械制图中长度尺寸未标识时单位是（A）。"
+          },
+          "evidence_ids": [
+            "evidence-d749b8e54218171f5a68"
+          ],
+          "source_span_ids": [
+            "span-b893f9eb30c728ed3367"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) mm; (B) cm; (C) m; (D) km。",
+          "source_quotes": {
+            "evidence-12d4e102ab3adc5165d0": "(A) mm; (B) cm; (C) m; (D) km。"
+          },
+          "evidence_ids": [
+            "evidence-12d4e102ab3adc5165d0"
+          ],
+          "source_span_ids": [
+            "span-3724f133b97a503e4c17"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "mm",
+      "answer_source_quote": "(A) mm",
+      "answer_evidence_id": "evidence-12d4e102ab3adc5165d0"
+    },
+    {
+      "group_id": "aux-p32-La5A1002",
+      "group_kind": "question_options",
+      "question_id": "La5A1002",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        32
+      ],
+      "source_title": "La5A1002",
+      "title_evidence_id": "evidence-4d589402a74c8f1e3b35",
+      "stem_evidence_id": "evidence-4d589402a74c8f1e3b35",
+      "options_evidence_id": "evidence-f28f39bb8d70fa1ab7bd",
+      "member_evidence_ids": [
+        "evidence-4d589402a74c8f1e3b35",
+        "evidence-f28f39bb8d70fa1ab7bd"
+      ],
+      "answer_marked": true,
+      "answer_option": "A",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "La5A1002力是具有大小和方向的量，所以是（A）。",
+          "source_quotes": {
+            "evidence-4d589402a74c8f1e3b35": "La5A1002力是具有大小和方向的量，所以是（A）。"
+          },
+          "evidence_ids": [
+            "evidence-4d589402a74c8f1e3b35"
+          ],
+          "source_span_ids": [
+            "span-b5ae1cceba0b6c060f67"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "（A）矢量；（B）向量；（C）标量；（D）代数量。",
+          "source_quotes": {
+            "evidence-f28f39bb8d70fa1ab7bd": "（A）矢量；（B）向量；（C）标量；（D）代数量。"
+          },
+          "evidence_ids": [
+            "evidence-f28f39bb8d70fa1ab7bd"
+          ],
+          "source_span_ids": [
+            "span-c68ad5cf27c244752f57"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "矢量",
+      "answer_source_quote": "（A）矢量",
+      "answer_evidence_id": "evidence-f28f39bb8d70fa1ab7bd"
+    },
+    {
+      "group_id": "aux-p32-La5A1003",
+      "group_kind": "question_options",
+      "question_id": "La5A1003",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        32
+      ],
+      "source_title": "La5A1003",
+      "title_evidence_id": "evidence-2f6a8107d3434caba6db",
+      "stem_evidence_id": "evidence-2f6a8107d3434caba6db",
+      "options_evidence_id": "evidence-59eb8e82d639490caf83",
+      "member_evidence_ids": [
+        "evidence-2f6a8107d3434caba6db",
+        "evidence-59eb8e82d639490caf83"
+      ],
+      "answer_marked": true,
+      "answer_option": "B",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "La5A1003\n两个大小相等、方向相反不在一条直线上的\n（B）组成的力系，称为力偶。",
+          "source_quotes": {
+            "evidence-2f6a8107d3434caba6db": "La5A1003\n两个大小相等、方向相反不在一条直线上的\n（B）组成的力系，称为力偶。"
+          },
+          "evidence_ids": [
+            "evidence-2f6a8107d3434caba6db"
+          ],
+          "source_span_ids": [
+            "span-7a1f142981b2ac01c7ff",
+            "span-c8ecc28113f71f05ccc8"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "（A）力；（B）平行力；（C）力矩；（D）作用力。",
+          "source_quotes": {
+            "evidence-59eb8e82d639490caf83": "（A）力；（B）平行力；（C）力矩；（D）作用力。"
+          },
+          "evidence_ids": [
+            "evidence-59eb8e82d639490caf83"
+          ],
+          "source_span_ids": [
+            "span-c61049e6c8e4fd81b3ed"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "平行力",
+      "answer_source_quote": "（B）平行力",
+      "answer_evidence_id": "evidence-59eb8e82d639490caf83"
+    },
+    {
+      "group_id": "aux-p32-La5A1004",
+      "group_kind": "question_options",
+      "question_id": "La5A1004",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        32
+      ],
+      "source_title": "La5A1004",
+      "title_evidence_id": "evidence-47475cb23b8d2f694fba",
+      "stem_evidence_id": "evidence-47475cb23b8d2f694fba",
+      "options_evidence_id": "evidence-b00db804ccba860e0607",
+      "member_evidence_ids": [
+        "evidence-47475cb23b8d2f694fba",
+        "evidence-b00db804ccba860e0607"
+      ],
+      "answer_marked": true,
+      "answer_option": "B",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "La5A1004摄氏温标与绝对温标的关系为（B）。",
+          "source_quotes": {
+            "evidence-47475cb23b8d2f694fba": "La5A1004摄氏温标与绝对温标的关系为（B）。"
+          },
+          "evidence_ids": [
+            "evidence-47475cb23b8d2f694fba"
+          ],
+          "source_span_ids": [
+            "span-5fdff465efc5dc624921"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A)T=t-273.15; (B)T=t+273.15; (C)T=t; (D)t=273.15×T。",
+          "source_quotes": {
+            "evidence-b00db804ccba860e0607": "(A)T=t-273.15; (B)T=t+273.15; (C)T=t; (D)t=273.15×T。"
+          },
+          "evidence_ids": [
+            "evidence-b00db804ccba860e0607"
+          ],
+          "source_span_ids": [
+            "span-1459436fcced50cfbb8f"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "T=t+273.15",
+      "answer_source_quote": "(B)T=t+273.15",
+      "answer_evidence_id": "evidence-b00db804ccba860e0607"
+    },
+    {
+      "group_id": "aux-p32-La5A1005",
+      "group_kind": "question_options",
+      "question_id": "La5A1005",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        32
+      ],
+      "source_title": "La5A1005",
+      "title_evidence_id": "evidence-95f9356d1d3df788d1d6",
+      "stem_evidence_id": "evidence-95f9356d1d3df788d1d6",
+      "options_evidence_id": "evidence-dd9697c2530cde3cb685",
+      "member_evidence_ids": [
+        "evidence-95f9356d1d3df788d1d6",
+        "evidence-dd9697c2530cde3cb685"
+      ],
+      "answer_marked": true,
+      "answer_option": "C",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "La5A1005\n螺纹旋向有（C）。",
+          "source_quotes": {
+            "evidence-95f9356d1d3df788d1d6": "La5A1005\n螺纹旋向有（C）。"
+          },
+          "evidence_ids": [
+            "evidence-95f9356d1d3df788d1d6"
+          ],
+          "source_span_ids": [
+            "span-a9ddcdef5f91037c41e9",
+            "span-6580ded6edc9bb5062fa"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "（A）左旋；（B）右旋；（C）左旋和右旋；（D）无左右\n之分。",
+          "source_quotes": {
+            "evidence-dd9697c2530cde3cb685": "（A）左旋；（B）右旋；（C）左旋和右旋；（D）无左右\n之分。"
+          },
+          "evidence_ids": [
+            "evidence-dd9697c2530cde3cb685"
+          ],
+          "source_span_ids": [
+            "span-508ff1452621289493f5",
+            "span-c33bd7c598bad7c37173"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "左旋和右旋",
+      "answer_source_quote": "（C）左旋和右旋",
+      "answer_evidence_id": "evidence-dd9697c2530cde3cb685"
+    },
+    {
+      "group_id": "aux-p32-La5A1006",
+      "group_kind": "question_options",
+      "question_id": "La5A1006",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        32
+      ],
+      "source_title": "La5A1006",
+      "title_evidence_id": "evidence-25d618e9bba03e909427",
+      "stem_evidence_id": "evidence-25d618e9bba03e909427",
+      "options_evidence_id": "evidence-b917c85cef08ce5277ed",
+      "member_evidence_ids": [
+        "evidence-25d618e9bba03e909427",
+        "evidence-b917c85cef08ce5277ed"
+      ],
+      "answer_marked": true,
+      "answer_option": "C",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "La5A1006一个标准大气压相当于（C）mmHg。",
+          "source_quotes": {
+            "evidence-25d618e9bba03e909427": "La5A1006一个标准大气压相当于（C）mmHg。"
+          },
+          "evidence_ids": [
+            "evidence-25d618e9bba03e909427"
+          ],
+          "source_span_ids": [
+            "span-ff7ce5ff2d180dd4bad3"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) 1000; (B) 13.6; (C) 760; (D) 1。",
+          "source_quotes": {
+            "evidence-b917c85cef08ce5277ed": "(A) 1000; (B) 13.6; (C) 760; (D) 1。"
+          },
+          "evidence_ids": [
+            "evidence-b917c85cef08ce5277ed"
+          ],
+          "source_span_ids": [
+            "span-c640f4134b472e0578ae"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "760",
+      "answer_source_quote": "(C) 760",
+      "answer_evidence_id": "evidence-b917c85cef08ce5277ed"
+    },
+    {
+      "group_id": "aux-p120-Jf5A2624",
+      "group_kind": "question_options",
+      "question_id": "Jf5A2624",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf5A2624",
+      "title_evidence_id": "evidence-0e1751f4582aaffc6720",
+      "stem_evidence_id": "evidence-0e1751f4582aaffc6720",
+      "options_evidence_id": "evidence-0015cb3659bb264f91ec",
+      "member_evidence_ids": [
+        "evidence-0e1751f4582aaffc6720",
+        "evidence-0015cb3659bb264f91ec"
+      ],
+      "answer_marked": true,
+      "answer_option": "D",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf5A2624 三脚架在使用时，备板的支点与地面夹角应不\n小于 (D)。",
+          "source_quotes": {
+            "evidence-0e1751f4582aaffc6720": "Jf5A2624 三脚架在使用时，备板的支点与地面夹角应不\n小于 (D)。"
+          },
+          "evidence_ids": [
+            "evidence-0e1751f4582aaffc6720"
+          ],
+          "source_span_ids": [
+            "span-9bc3048d39ac78a7ae6e",
+            "span-f0ddd32c39bda3b483d8"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) 45°; (B) 30°; (C) 50°;(D) 60°。",
+          "source_quotes": {
+            "evidence-0015cb3659bb264f91ec": "(A) 45°; (B) 30°; (C) 50°;(D) 60°。"
+          },
+          "evidence_ids": [
+            "evidence-0015cb3659bb264f91ec"
+          ],
+          "source_span_ids": [
+            "span-6f98953c6d3f59ab79d2"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "60°",
+      "answer_source_quote": "(D) 60°",
+      "answer_evidence_id": "evidence-0015cb3659bb264f91ec"
+    },
+    {
+      "group_id": "aux-p120-Jf5A2625",
+      "group_kind": "question_options",
+      "question_id": "Jf5A2625",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf5A2625",
+      "title_evidence_id": "evidence-821be9b4a535262a8121",
+      "stem_evidence_id": "evidence-821be9b4a535262a8121",
+      "options_evidence_id": "evidence-26a3c83c48d2168160f7",
+      "member_evidence_ids": [
+        "evidence-821be9b4a535262a8121",
+        "evidence-26a3c83c48d2168160f7"
+      ],
+      "answer_marked": true,
+      "answer_option": "C",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf5A2625螺旋千斤顶在使用时，每次顶升量不得超过螺\n杆牙距的（C）。",
+          "source_quotes": {
+            "evidence-821be9b4a535262a8121": "Jf5A2625螺旋千斤顶在使用时，每次顶升量不得超过螺\n杆牙距的（C）。"
+          },
+          "evidence_ids": [
+            "evidence-821be9b4a535262a8121"
+          ],
+          "source_span_ids": [
+            "span-2b0023413e2293725ff0",
+            "span-b012f59bb1a054ed07ab"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) 1/2; (B) 1/3; (C) 3/4; (D) 2/3。",
+          "source_quotes": {
+            "evidence-26a3c83c48d2168160f7": "(A) 1/2; (B) 1/3; (C) 3/4; (D) 2/3。"
+          },
+          "evidence_ids": [
+            "evidence-26a3c83c48d2168160f7"
+          ],
+          "source_span_ids": [
+            "span-b33668c5968e9d6704f0"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "3/4",
+      "answer_source_quote": "(C) 3/4",
+      "answer_evidence_id": "evidence-26a3c83c48d2168160f7"
+    },
+    {
+      "group_id": "aux-p120-Jf5A3626",
+      "group_kind": "question_options",
+      "question_id": "Jf5A3626",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf5A3626",
+      "title_evidence_id": "evidence-5217641d2edf3f96524b",
+      "stem_evidence_id": "evidence-5217641d2edf3f96524b",
+      "options_evidence_id": "evidence-3168be1bb8946dd28674",
+      "member_evidence_ids": [
+        "evidence-5217641d2edf3f96524b",
+        "evidence-3168be1bb8946dd28674"
+      ],
+      "answer_marked": true,
+      "answer_option": "B",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf5A3626在检修施工过程中，按照质量保证体系的不同\n要求而确定的质量控制点分为（）点和（）点两类。（B）",
+          "source_quotes": {
+            "evidence-5217641d2edf3f96524b": "Jf5A3626在检修施工过程中，按照质量保证体系的不同\n要求而确定的质量控制点分为（）点和（）点两类。（B）"
+          },
+          "evidence_ids": [
+            "evidence-5217641d2edf3f96524b"
+          ],
+          "source_span_ids": [
+            "span-fea286bc1eb1d208bb86",
+            "span-963847edf148a38921a9"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) M、H; (B) W、H; (C) V、H; (D) K、H。",
+          "source_quotes": {
+            "evidence-3168be1bb8946dd28674": "(A) M、H; (B) W、H; (C) V、H; (D) K、H。"
+          },
+          "evidence_ids": [
+            "evidence-3168be1bb8946dd28674"
+          ],
+          "source_span_ids": [
+            "span-3627ec7ef6b149f9d0bc"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "W、H",
+      "answer_source_quote": "(B) W、H",
+      "answer_evidence_id": "evidence-3168be1bb8946dd28674"
+    },
+    {
+      "group_id": "aux-p120-Jf5A4627",
+      "group_kind": "question_options",
+      "question_id": "Jf5A4627",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf5A4627",
+      "title_evidence_id": "evidence-ced84c4f4d4e8467d883",
+      "stem_evidence_id": "evidence-ced84c4f4d4e8467d883",
+      "options_evidence_id": "evidence-6362258130d58c635507",
+      "member_evidence_ids": [
+        "evidence-ced84c4f4d4e8467d883",
+        "evidence-6362258130d58c635507"
+      ],
+      "answer_marked": true,
+      "answer_option": "B",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf5A4627通常，钎焊时的焊缝应选择为（B）mm。",
+          "source_quotes": {
+            "evidence-ced84c4f4d4e8467d883": "Jf5A4627通常，钎焊时的焊缝应选择为（B）mm。"
+          },
+          "evidence_ids": [
+            "evidence-ced84c4f4d4e8467d883"
+          ],
+          "source_span_ids": [
+            "span-551cff5b746991cdf09c"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) 0~0.05; (B) 0.05~0.20; (C) 0.50~0.80; (D) 0.80~\n1.10。",
+          "source_quotes": {
+            "evidence-6362258130d58c635507": "(A) 0~0.05; (B) 0.05~0.20; (C) 0.50~0.80; (D) 0.80~\n1.10。"
+          },
+          "evidence_ids": [
+            "evidence-6362258130d58c635507"
+          ],
+          "source_span_ids": [
+            "span-367f30ab37976d5e852a",
+            "span-1f5026f7461095d5fd27"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "0.05~0.20",
+      "answer_source_quote": "(B) 0.05~0.20",
+      "answer_evidence_id": "evidence-6362258130d58c635507"
+    },
+    {
+      "group_id": "aux-p120-Jf4A1628",
+      "group_kind": "question_options",
+      "question_id": "Jf4A1628",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf4A1628",
+      "title_evidence_id": "evidence-f7927e2c8335e2cd3f2d",
+      "stem_evidence_id": "evidence-f7927e2c8335e2cd3f2d",
+      "options_evidence_id": "evidence-e0ac7d4954312406e1d7",
+      "member_evidence_ids": [
+        "evidence-f7927e2c8335e2cd3f2d",
+        "evidence-e0ac7d4954312406e1d7"
+      ],
+      "answer_marked": true,
+      "answer_option": "A",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf4A1628滚运设备在下坡时，应（A）防止滑坡。",
+          "source_quotes": {
+            "evidence-f7927e2c8335e2cd3f2d": "Jf4A1628滚运设备在下坡时，应（A）防止滑坡。"
+          },
+          "evidence_ids": [
+            "evidence-f7927e2c8335e2cd3f2d"
+          ],
+          "source_span_ids": [
+            "span-2a38aaa0944ac0c3c8d0"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "（A）设置拖拉绳；（B）用撬杠撬；（C）用人力顶；（D）以上\n均可以。",
+          "source_quotes": {
+            "evidence-e0ac7d4954312406e1d7": "（A）设置拖拉绳；（B）用撬杠撬；（C）用人力顶；（D）以上\n均可以。"
+          },
+          "evidence_ids": [
+            "evidence-e0ac7d4954312406e1d7"
+          ],
+          "source_span_ids": [
+            "span-48cfd073000101c92779",
+            "span-891882312f0d53b5f5d4"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "设置拖拉绳",
+      "answer_source_quote": "（A）设置拖拉绳",
+      "answer_evidence_id": "evidence-e0ac7d4954312406e1d7"
+    },
+    {
+      "group_id": "aux-p120-Jf4A1629",
+      "group_kind": "question_options",
+      "question_id": "Jf4A1629",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf4A1629",
+      "title_evidence_id": "evidence-aa24c43c50fbfce64966",
+      "stem_evidence_id": "evidence-aa24c43c50fbfce64966",
+      "options_evidence_id": "evidence-35134a110e15fcdf3f01",
+      "member_evidence_ids": [
+        "evidence-aa24c43c50fbfce64966",
+        "evidence-35134a110e15fcdf3f01"
+      ],
+      "answer_marked": true,
+      "answer_option": "C",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf4A1629\n钢丝绳作吊挂和捆绑用安全系数应不小于（C）。",
+          "source_quotes": {
+            "evidence-aa24c43c50fbfce64966": "Jf4A1629\n钢丝绳作吊挂和捆绑用安全系数应不小于（C）。"
+          },
+          "evidence_ids": [
+            "evidence-aa24c43c50fbfce64966"
+          ],
+          "source_span_ids": [
+            "span-23a405e0ead78a22614c"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "(A) 4; (B) 5; (C) 6; (D) 7。",
+          "source_quotes": {
+            "evidence-35134a110e15fcdf3f01": "(A) 4; (B) 5; (C) 6; (D) 7。"
+          },
+          "evidence_ids": [
+            "evidence-35134a110e15fcdf3f01"
+          ],
+          "source_span_ids": [
+            "span-f971a655625906eea1c8"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "6",
+      "answer_source_quote": "(C) 6",
+      "answer_evidence_id": "evidence-35134a110e15fcdf3f01"
+    },
+    {
+      "group_id": "aux-p120-Jf4A1630",
+      "group_kind": "question_options",
+      "question_id": "Jf4A1630",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf4A1630",
+      "title_evidence_id": "evidence-5771271a40b3a89488e1",
+      "stem_evidence_id": "evidence-5771271a40b3a89488e1",
+      "options_evidence_id": "evidence-79e0160c620ea2538a07",
+      "member_evidence_ids": [
+        "evidence-5771271a40b3a89488e1",
+        "evidence-79e0160c620ea2538a07"
+      ],
+      "answer_marked": true,
+      "answer_option": "A",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf4A1630千斤顶在使用时应放平整，并在上下端垫以\n（A）以防止千斤顶在受力时打滑。",
+          "source_quotes": {
+            "evidence-5771271a40b3a89488e1": "Jf4A1630千斤顶在使用时应放平整，并在上下端垫以\n（A）以防止千斤顶在受力时打滑。"
+          },
+          "evidence_ids": [
+            "evidence-5771271a40b3a89488e1"
+          ],
+          "source_span_ids": [
+            "span-06b7b06579a9478220bd",
+            "span-21fba4860c940695eb4a"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "（A）坚韧的木板；（B）铁板；（C）涂油的铁板；（D）纸板。",
+          "source_quotes": {
+            "evidence-79e0160c620ea2538a07": "（A）坚韧的木板；（B）铁板；（C）涂油的铁板；（D）纸板。"
+          },
+          "evidence_ids": [
+            "evidence-79e0160c620ea2538a07"
+          ],
+          "source_span_ids": [
+            "span-54783ad99160c0a3386b"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "坚韧的木板",
+      "answer_source_quote": "（A）坚韧的木板",
+      "answer_evidence_id": "evidence-79e0160c620ea2538a07"
+    },
+    {
+      "group_id": "aux-p120-Jf4A2631",
+      "group_kind": "question_options",
+      "question_id": "Jf4A2631",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        120
+      ],
+      "source_title": "Jf4A2631",
+      "title_evidence_id": "evidence-403c539626e97ce4c9cf",
+      "stem_evidence_id": "evidence-403c539626e97ce4c9cf",
+      "options_evidence_id": "evidence-1c9d1857e1c624a4f333",
+      "member_evidence_ids": [
+        "evidence-403c539626e97ce4c9cf",
+        "evidence-1c9d1857e1c624a4f333"
+      ],
+      "answer_marked": true,
+      "answer_option": "C",
+      "source_review_status": "confirmed",
+      "source_total_items": 2,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem",
+          "source_quote": "Jf4A2631汽缸法兰螺栓的预紧力（C），这也是形成高、\n中压外缸法兰结合漏汽的主要原因之一。",
+          "source_quotes": {
+            "evidence-403c539626e97ce4c9cf": "Jf4A2631汽缸法兰螺栓的预紧力（C），这也是形成高、\n中压外缸法兰结合漏汽的主要原因之一。"
+          },
+          "evidence_ids": [
+            "evidence-403c539626e97ce4c9cf"
+          ],
+          "source_span_ids": [
+            "span-b14b760c8818c2e789d5",
+            "span-13f0c6f68bdd4440dbea"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "options",
+          "source_quote": "（A）充足；（B）过盈；（C）不足；（D）增加。",
+          "source_quotes": {
+            "evidence-1c9d1857e1c624a4f333": "（A）充足；（B）过盈；（C）不足；（D）增加。"
+          },
+          "evidence_ids": [
+            "evidence-1c9d1857e1c624a4f333"
+          ],
+          "source_span_ids": [
+            "span-06a9e5ea7e37134d166f"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "不足",
+      "answer_source_quote": "（C）不足",
+      "answer_evidence_id": "evidence-1c9d1857e1c624a4f333"
+    },
+    {
+      "group_id": "aux-p360-La1F2010",
+      "group_kind": "question_answer",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        360
+      ],
+      "original_boundary_pages_checked": [
+        360,
+        361
+      ],
+      "next_source_boundary": "La1F3011",
+      "authority_kind": "textbook_explanation",
+      "question_id": "La1F2010",
+      "source_title": "La1F2010",
+      "title_evidence_id": "evidence-0a65ebec99c5a89fbc30",
+      "question_evidence_id": "evidence-0a65ebec99c5a89fbc30",
+      "answer_evidence_ids": [
+        "evidence-b2344c8b4d0ea55cd50d",
+        "evidence-d7667da7416611074df7"
+      ],
+      "member_evidence_ids": [
+        "evidence-0a65ebec99c5a89fbc30",
+        "evidence-b2344c8b4d0ea55cd50d",
+        "evidence-d7667da7416611074df7"
+      ],
+      "source_total_items": 3,
+      "source_review_status": "confirmed",
+      "reviewers": [
+        "qa_source_review",
+        "qa_statement_review",
+        "qa_contract_review"
+      ],
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "question",
+          "source_quote": "La1F2010汽轮机冲转条件中，为什么规定要有一定数值\n的真空？",
+          "source_quotes": {
+            "evidence-0a65ebec99c5a89fbc30": "La1F2010汽轮机冲转条件中，为什么规定要有一定数值\n的真空？"
+          },
+          "evidence_ids": [
+            "evidence-0a65ebec99c5a89fbc30"
+          ],
+          "source_span_ids": [
+            "span-88eedc46258436b2daf5"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "answer_low_vacuum",
+          "source_quote": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+          "source_quotes": {
+            "evidence-b2344c8b4d0ea55cd50d": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。"
+          },
+          "evidence_ids": [
+            "evidence-b2344c8b4d0ea55cd50d"
+          ],
+          "source_span_ids": [
+            "span-c77905630710d4f724a0"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_label": "answer_high_vacuum",
+          "source_quote": "冲动转子时，真空也不能太高，真空过高不仅要延长建立\n真空的时间，也因为通过汽轮机的蒸汽量较少，放热系数小，\n使得汽轮机加热缓慢，转速也不稳定，从而延长启动时间。",
+          "source_quotes": {
+            "evidence-d7667da7416611074df7": "冲动转子时，真空也不能太高，真空过高不仅要延长建立\n真空的时间，也因为通过汽轮机的蒸汽量较少，放热系数小，\n使得汽轮机加热缓慢，转速也不稳定，从而延长启动时间。"
+          },
+          "evidence_ids": [
+            "evidence-d7667da7416611074df7"
+          ],
+          "source_span_ids": [
+            "span-814f2607a51385e0494e"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "aux-p64-Lb4A4236",
+      "group_kind": "question_options",
+      "question_id": "Lb4A4236",
+      "document_key": "auxiliary_installation_book",
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "physical_pages": [
+        64
+      ],
+      "source_title": "Lb4A4236",
+      "title_evidence_id": "evidence-37175e52c4ebeda9b966",
+      "stem_evidence_id": "evidence-37175e52c4ebeda9b966",
+      "options_evidence_id": "evidence-37175e52c4ebeda9b966",
+      "member_evidence_ids": [
+        "evidence-37175e52c4ebeda9b966"
+      ],
+      "answer_marked": true,
+      "answer_option": "C",
+      "source_review_status": "confirmed",
+      "source_total_items": 1,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "stem_and_options",
+          "source_quote": "Lb4A4236两块斜垫铁错开的面积，不应超过该垫铁面积\n的(C)。\n(A) 20%; (B) 15%; (C) 25%; (D) 30%。",
+          "source_quotes": {
+            "evidence-37175e52c4ebeda9b966": "Lb4A4236两块斜垫铁错开的面积，不应超过该垫铁面积\n的(C)。\n(A) 20%; (B) 15%; (C) 25%; (D) 30%。"
+          },
+          "evidence_ids": [
+            "evidence-37175e52c4ebeda9b966"
+          ],
+          "source_span_ids": [
+            "span-7cd808fdb59cdf138524",
+            "span-2fc9879974310fc7b3a2",
+            "span-1b037e88d388a6eddf38"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "answer_text": "25%",
+      "answer_source_quote": "(C) 25%",
+      "answer_evidence_id": "evidence-37175e52c4ebeda9b966"
+    },
+    {
+      "group_id": "dl5190-p14-3.1.2-installation-coordination",
+      "group_kind": "requirement_list",
+      "document_key": "DL5190.3",
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "physical_pages": [
+        14
+      ],
+      "source_title": "3.1.2 基础施工期间，安装专业应做下列配合工作：",
+      "title_evidence_id": "evidence-111e9dc5263ec94003bb",
+      "member_evidence_ids": [
+        "evidence-111e9dc5263ec94003bb",
+        "evidence-291b8c352838ac7ecc80",
+        "evidence-cbce7568bef677f62bac"
+      ],
+      "source_review_status": "confirmed",
+      "source_total_items": 4,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "1",
+          "source_quote": "1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；",
+          "source_quotes": {
+            "evidence-111e9dc5263ec94003bb": "1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；"
+          },
+          "evidence_ids": [
+            "evidence-111e9dc5263ec94003bb"
+          ],
+          "source_span_ids": [
+            "span-25ca81001d8eb2d1313a"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "2",
+          "source_quote": "2 参加基座浇灌前的中间核查；",
+          "source_quotes": {
+            "evidence-291b8c352838ac7ecc80": "2 参加基座浇灌前的中间核查；"
+          },
+          "evidence_ids": [
+            "evidence-291b8c352838ac7ecc80"
+          ],
+          "source_span_ids": [
+            "span-ab5823a4c545c7d3a40b"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_label": "3",
+          "source_quote": "3 起吊设施基础、锚固点及为起吊设备对建筑结构进行的加固方案，土建施工前应由建设、监理、\n设计和土建施工等单位共同确定；",
+          "source_quotes": {
+            "evidence-291b8c352838ac7ecc80": "3 起吊设施基础、锚固点及为起吊设备对建筑结构进行的加固方案，土建施工前应由建设、监理、\n设计和土建施工等单位共同确定；"
+          },
+          "evidence_ids": [
+            "evidence-291b8c352838ac7ecc80"
+          ],
+          "source_span_ids": [
+            "span-ab5823a4c545c7d3a40b"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_label": "4",
+          "source_quote": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。",
+          "source_quotes": {
+            "evidence-cbce7568bef677f62bac": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。"
+          },
+          "evidence_ids": [
+            "evidence-cbce7568bef677f62bac"
+          ],
+          "source_span_ids": [
+            "span-e354939a1516f638e543"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "review_basis": "Original PDF physical page 14 visually checked against current reviewed Evidence on 2026-09-29; list items are non-sequential source positions."
+    },
+    {
+      "group_id": "dlt863-p14-5.2.13.1-cooling-commissioning-items",
+      "group_kind": "activity_list",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "physical_pages": [
+        14
+      ],
+      "source_title": "发电机内冷水系统调试项目和内容如下：",
+      "title_evidence_id": "evidence-829375cd80df8834b573",
+      "member_evidence_ids": [
+        "evidence-02fecb5773dde6cd01e4",
+        "evidence-21c96b71e0daa868dabd",
+        "evidence-f6624d44d000470f19a7",
+        "evidence-4637bf41419eac752546",
+        "evidence-b490108e4fa09c6a08ef",
+        "evidence-c50ac8705f328705c073"
+      ],
+      "source_review_status": "confirmed",
+      "source_total_items": 7,
+      "items": [
+        {
+          "source_order": 1,
+          "source_label": "a)",
+          "source_quote": "a）\n确认发电机内冷水系统管道水冲洗合格；",
+          "source_quotes": {
+            "evidence-02fecb5773dde6cd01e4": "a）\n确认发电机内冷水系统管道水冲洗合格；"
+          },
+          "evidence_ids": [
+            "evidence-02fecb5773dde6cd01e4"
+          ],
+          "source_span_ids": [
+            "span-4fcc9a722f2abd7f3392"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_label": "b)",
+          "source_quote": "b）\n发电机内冷水系统冷却水泵试运；",
+          "source_quotes": {
+            "evidence-21c96b71e0daa868dabd": "b）\n发电机内冷水系统冷却水泵试运；"
+          },
+          "evidence_ids": [
+            "evidence-21c96b71e0daa868dabd"
+          ],
+          "source_span_ids": [
+            "span-be1a81da866e108809b7"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_label": "c)",
+          "source_quote": "c)\n发电机内冷水系统热交换器投运；",
+          "source_quotes": {
+            "evidence-f6624d44d000470f19a7": "c)\n发电机内冷水系统热交换器投运；"
+          },
+          "evidence_ids": [
+            "evidence-f6624d44d000470f19a7"
+          ],
+          "source_span_ids": [
+            "span-6b8b88e8b2b1b90add57"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_label": "d)",
+          "source_quote": "d)\n配合进行离子交换器投运；",
+          "source_quotes": {
+            "evidence-4637bf41419eac752546": "d)\n配合进行离子交换器投运；"
+          },
+          "evidence_ids": [
+            "evidence-4637bf41419eac752546"
+          ],
+          "source_span_ids": [
+            "span-3af0dbc131650cdee593"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 5,
+          "source_label": "e)",
+          "source_quote": "e）\n内冷水系统流量、压力调整；",
+          "source_quotes": {
+            "evidence-b490108e4fa09c6a08ef": "e）\n内冷水系统流量、压力调整；"
+          },
+          "evidence_ids": [
+            "evidence-b490108e4fa09c6a08ef"
+          ],
+          "source_span_ids": [
+            "span-16c7fbd0bb898fd8e936"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 6,
+          "source_label": "f)",
+          "source_quote": "f）\n内冷水流量与发电机进出水压差测试，确定断水保护定值；",
+          "source_quotes": {
+            "evidence-c50ac8705f328705c073": "f）\n内冷水流量与发电机进出水压差测试，确定断水保护定值；"
+          },
+          "evidence_ids": [
+            "evidence-c50ac8705f328705c073"
+          ],
+          "source_span_ids": [
+            "span-e6986005a2c2f100d314"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 7,
+          "source_label": "g)",
+          "source_quote": "g)内冷水泵联锁保护实校，记录内冷水泵联锁启动时间与最低流量。",
+          "source_quotes": {
+            "evidence-c50ac8705f328705c073": "g)内冷水泵联锁保护实校，记录内冷水泵联锁启动时间与最低流量。"
+          },
+          "evidence_ids": [
+            "evidence-c50ac8705f328705c073"
+          ],
+          "source_span_ids": [
+            "span-e6986005a2c2f100d314"
+          ],
+          "status": "confirmed"
+        }
+      ],
+      "review_basis": "Original PDF physical page 14 visually checked against current reviewed Evidence on 2026-09-29; list items are non-sequential source positions."
+    }
+  ],
+  "operation_groups": [
+    {
+      "group_id": "d300n-p73-front-slider-inspection",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_pages": [
+        73
+      ],
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "source_title": "前箱滑动面的润滑和清洗",
+      "title_evidence_id": "evidence-707b018f73814962a790",
+      "source_review_status": "confirmed",
+      "source_total_steps": 6,
+      "steps": [
+        {
+          "source_order": 1,
+          "source_step_label": null,
+          "source_quote": "向上微微抬起高中压外缸前猫爪",
+          "source_quotes": {
+            "evidence-27b7e83ed259cd9d9813": "向上微微抬起高中压外缸前猫爪"
+          },
+          "evidence_id": "evidence-27b7e83ed259cd9d9813",
+          "evidence_ids": [
+            "evidence-27b7e83ed259cd9d9813"
+          ],
+          "source_span_ids": [
+            "span-e7575a9f03802f333f0f",
+            "span-8e1426f9df1be61d8a44"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_step_label": null,
+          "source_quote": "再将前箱微微抬起0.1～0.15mm",
+          "source_quotes": {
+            "evidence-27b7e83ed259cd9d9813": "再将前箱微微抬起0.1～0.15mm"
+          },
+          "evidence_id": "evidence-27b7e83ed259cd9d9813",
+          "evidence_ids": [
+            "evidence-27b7e83ed259cd9d9813"
+          ],
+          "source_span_ids": [
+            "span-8e1426f9df1be61d8a44"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_step_label": null,
+          "source_quote": "抽出基架上滑块",
+          "source_quotes": {
+            "evidence-27b7e83ed259cd9d9813": "抽出基架上滑块"
+          },
+          "evidence_id": "evidence-27b7e83ed259cd9d9813",
+          "evidence_ids": [
+            "evidence-27b7e83ed259cd9d9813"
+          ],
+          "source_span_ids": [
+            "span-8e1426f9df1be61d8a44"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_step_label": null,
+          "source_quote": "清洗干净",
+          "source_quotes": {
+            "evidence-27b7e83ed259cd9d9813": "清洗干净"
+          },
+          "evidence_id": "evidence-27b7e83ed259cd9d9813",
+          "evidence_ids": [
+            "evidence-27b7e83ed259cd9d9813"
+          ],
+          "source_span_ids": [
+            "span-03281d479beac6a9d4ad"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 5,
+          "source_step_label": null,
+          "source_quote": "清理好滑块槽",
+          "source_quotes": {
+            "evidence-27b7e83ed259cd9d9813": "清理好滑块槽"
+          },
+          "evidence_id": "evidence-27b7e83ed259cd9d9813",
+          "evidence_ids": [
+            "evidence-27b7e83ed259cd9d9813"
+          ],
+          "source_span_ids": [
+            "span-03281d479beac6a9d4ad"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 6,
+          "source_step_label": null,
+          "source_quote": "将滑块复位",
+          "source_quotes": {
+            "evidence-27b7e83ed259cd9d9813": "将滑块复位"
+          },
+          "evidence_id": "evidence-27b7e83ed259cd9d9813",
+          "evidence_ids": [
+            "evidence-27b7e83ed259cd9d9813"
+          ],
+          "source_span_ids": [
+            "span-03281d479beac6a9d4ad"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "d300n-p50-table-2-14-1-continuation",
+      "document_key": "D300N",
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "physical_pages": [
+        49,
+        50
+      ],
+      "continuation_from_physical_page": 49,
+      "continuation_to_physical_page": 51,
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "source_title": "续表2-14-1",
+      "title_evidence_id": "evidence-68ae729dc1237ea64a43",
+      "source_review_status": "confirmed",
+      "source_total_steps": 4,
+      "reason": "原件第49页项目6延续到第50页g–i，第50页续表依次列出项目7、8、9。各工作内容按原页文字绑定；项目8右侧证明书目录另有独立Evidence，未将其臆配到具体工作行或单元格。",
+      "steps": [
+        {
+          "source_order": 1,
+          "source_step_label": "6.g-i",
+          "source_quote": "g)推力轴承安装调整:\n检查正、反向推力瓦厚度并记录。\n安装正向推力瓦和正向垫环，将转子向电机侧推，使\n推力盘与正向推力瓦靠紧。安装反向推力瓦和反向垫\n环，测量推力瓦与推力盘的总间隙值。\nh)对所有轴承提供润滑油，盘动转子，复查所有通流\n间隙，复查支持轴承和推力轴承与转子配合间隙。\ni)通流间隙最终记录。\n在每个轴瓦上分别装桥规，测量桥规与轴颈顶部间隙。\n并将此值打在相应桥规上面，作为今后轴瓦磨损比较\n的判据。",
+          "source_quotes": {
+            "evidence-135e7de5767264fb4302": "g)推力轴承安装调整:\n检查正、反向推力瓦厚度并记录。\n安装正向推力瓦和正向垫环，将转子向电机侧推，使\n推力盘与正向推力瓦靠紧。安装反向推力瓦和反向垫\n环，测量推力瓦与推力盘的总间隙值。\nh)对所有轴承提供润滑油，盘动转子，复查所有通流\n间隙，复查支持轴承和推力轴承与转子配合间隙。\ni)通流间隙最终记录。\n在每个轴瓦上分别装桥规，测量桥规与轴颈顶部间隙。\n并将此值打在相应桥规上面，作为今后轴瓦磨损比较\n的判据。"
+          },
+          "evidence_id": "evidence-135e7de5767264fb4302",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302"
+          ],
+          "source_span_ids": [
+            "span-d0ac57ab15ee926263f1",
+            "span-228e3d1c5eff5a0c6bb5",
+            "span-e75c3323c933f32ba8ef",
+            "span-c6db6b240214306e7e9c",
+            "span-f40847931aedac619f75",
+            "span-97c15fe5f7fdaabe72ab",
+            "span-bc280c8f975333836168",
+            "span-48c71d3f612e867af908",
+            "span-042996aafefc496e934e",
+            "span-3c1b0777701bc9026a41",
+            "span-a9245c60727d8bb73b27",
+            "span-46970b403b62005e670c",
+            "span-8724c71248ba56de9ffb",
+            "span-5c363a3edcf88fe6673f",
+            "span-0bfe99ab4fcdc10b5500",
+            "span-efe7ded3b28df67d897a",
+            "span-00511409555df43af793",
+            "span-d33fbdca17fa13ada426",
+            "span-7553e27a358c315075e2",
+            "span-20039179c0cdf180ab9e",
+            "span-97cf420350860a8d84f6",
+            "span-a5c59061e2501a04d25a",
+            "span-1fb0595fa464dbd54534",
+            "span-ace0aa685e508d97aaf7",
+            "span-e64b0f0e2bd8e246ddb3",
+            "span-f402e4e9b66601a21d29",
+            "span-e4bb5a52da6dac1920f2",
+            "span-0b497de0c9d7ea6a252c",
+            "span-1a8c51b29bce3b81d678",
+            "span-66fe3d29c1208ce6e5b0"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_step_label": "7",
+          "source_quote": "轴承上半的装配：\n装配支持轴承和推力轴承上半，复查支持轴承顶隙。",
+          "source_quotes": {
+            "evidence-7765942414f315376d8b": "轴承上半的装配：\n装配支持轴承和推力轴承上半，复查支持轴承顶隙。"
+          },
+          "evidence_id": "evidence-7765942414f315376d8b",
+          "evidence_ids": [
+            "evidence-7765942414f315376d8b"
+          ],
+          "source_span_ids": [
+            "span-638479e19e3477a73a37",
+            "span-dad6760b3cab626662d8"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_step_label": "8",
+          "source_quote": "轴承箱上半装配：\na)检查挡油环齿是否倒伏。\nb)认真清洗轴承箱下半和上半内表面。\nc)测量并调整挡油环与转子上、下和左、右的间隙，\n特别是底部间隙必须认真测量。\nd) 检查并测量低压轴承箱中转子联轴器罩与转子间\n轴向、径向间隙并记录。\ne)配准1#、2#轴承压盖与轴承垫块过盈量，按说明\n书要求的冷紧力矩值拧紧3#、4#轴承压盖螺栓。\nf)临时装配轴承箱盖，检查中分面间隙。",
+          "source_quotes": {
+            "evidence-7e7f97e4e92e98f29616": "轴承箱上半装配：\na)检查挡油环齿是否倒伏。\nb)认真清洗轴承箱下半和上半内表面。\nc)测量并调整挡油环与转子上、下和左、右的间隙，\n特别是底部间隙必须认真测量。\nd) 检查并测量低压轴承箱中转子联轴器罩与转子间\n轴向、径向间隙并记录。\ne)配准1#、2#轴承压盖与轴承垫块过盈量，按说明\n书要求的冷紧力矩值拧紧3#、4#轴承压盖螺栓。\nf)临时装配轴承箱盖，检查中分面间隙。"
+          },
+          "evidence_id": "evidence-7e7f97e4e92e98f29616",
+          "evidence_ids": [
+            "evidence-7e7f97e4e92e98f29616"
+          ],
+          "source_span_ids": [
+            "span-753f0041f22ce402b2dd"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_step_label": "9",
+          "source_quote": "隔板上半安装：\na)清洗每级隔板。\nb)检查汽封齿是否倒伏。\n装配隔板上半中分面定位销，隔板上半安装时应对螺\n纹部位提供润滑剂，把紧中分面螺栓。",
+          "source_quotes": {
+            "evidence-420b708af268c44addd0": "隔板上半安装：\na)清洗每级隔板。\nb)检查汽封齿是否倒伏。\n装配隔板上半中分面定位销，隔板上半安装时应对螺\n纹部位提供润滑剂，把紧中分面螺栓。"
+          },
+          "evidence_id": "evidence-420b708af268c44addd0",
+          "evidence_ids": [
+            "evidence-420b708af268c44addd0"
+          ],
+          "source_span_ids": [
+            "span-b47838ce853ae64d9819",
+            "span-a5fba7c924e8b5092c98",
+            "span-5aa626c38028257c4889",
+            "span-a40ec4dbb414277f293c",
+            "span-3350ecf88ca17da9834f"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "dlt863-p14-5.2.14.1-double-circuit",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_pages": [
+        14
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_title": "密封油系统调整（双流环）",
+      "title_evidence_id": "evidence-cd2a00746a928ad8fdf8",
+      "source_review_status": "confirmed",
+      "source_total_steps": 7,
+      "review_basis": "Original PDF physical pages 14–15 visually checked against current OCR-local Evidence and printed nested numbering on 2026-09-29.",
+      "steps": [
+        {
+          "source_order": 1,
+          "source_step_label": "1)",
+          "source_quote": "1）\n调整空侧密封油泵出口压力和密封油差压调节阀至设计值；",
+          "source_quotes": {
+            "evidence-650975a896876ca7c13f": "1）\n调整空侧密封油泵出口压力和密封油差压调节阀至设计值；"
+          },
+          "evidence_id": "evidence-650975a896876ca7c13f",
+          "evidence_ids": [
+            "evidence-650975a896876ca7c13f"
+          ],
+          "source_span_ids": [
+            "span-dee89fa3ad853b030eee"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_step_label": "2)",
+          "source_quote": "2)\n调整氢侧密封油泵出口压力和平衡阀至设计值，使氢侧与空侧密封油压差符合要求；",
+          "source_quotes": {
+            "evidence-ce0c6fca6810fa2b60b7": "2)\n调整氢侧密封油泵出口压力和平衡阀至设计值，使氢侧与空侧密封油压差符合要求；"
+          },
+          "evidence_id": "evidence-ce0c6fca6810fa2b60b7",
+          "evidence_ids": [
+            "evidence-ce0c6fca6810fa2b60b7"
+          ],
+          "source_span_ids": [
+            "span-fe6302cee36b1c0f4808"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_step_label": "3)",
+          "source_quote": "3)\n高压备用油路调整；",
+          "source_quotes": {
+            "evidence-f4c6cdcf23ebf8865c1a": "3)\n高压备用油路调整；"
+          },
+          "evidence_id": "evidence-f4c6cdcf23ebf8865c1a",
+          "evidence_ids": [
+            "evidence-f4c6cdcf23ebf8865c1a"
+          ],
+          "source_span_ids": [
+            "span-432a5d8dfd8793d332df"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_step_label": "4)",
+          "source_quote": "4）\n氢侧油箱油位调整；",
+          "source_quotes": {
+            "evidence-7df2aae933c522d24b63": "4）\n氢侧油箱油位调整；"
+          },
+          "evidence_id": "evidence-7df2aae933c522d24b63",
+          "evidence_ids": [
+            "evidence-7df2aae933c522d24b63"
+          ],
+          "source_span_ids": [
+            "span-0b6a44501a227635f76c"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 5,
+          "source_step_label": "5)",
+          "source_quote": "5)\n浮动油量调整；",
+          "source_quotes": {
+            "evidence-257184909857bc95884c": "5)\n浮动油量调整；"
+          },
+          "evidence_id": "evidence-257184909857bc95884c",
+          "evidence_ids": [
+            "evidence-257184909857bc95884c"
+          ],
+          "source_span_ids": [
+            "span-793ce7b3988398d28dc4"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 6,
+          "source_step_label": "6)",
+          "source_quote": "6）\n空侧、氢侧冷油器投运；",
+          "source_quotes": {
+            "evidence-9cb932403ffa1be5eeb5": "6）\n空侧、氢侧冷油器投运；"
+          },
+          "evidence_id": "evidence-9cb932403ffa1be5eeb5",
+          "evidence_ids": [
+            "evidence-9cb932403ffa1be5eeb5"
+          ],
+          "source_span_ids": [
+            "span-e409ffbd0bf5661c6c4d"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 7,
+          "source_step_label": "7)",
+          "source_quote": "7）消泡箱液位及发电机漏液开关实校。",
+          "source_quotes": {
+            "evidence-fa46378641d9939dee2f": "7）消泡箱液位及发电机漏液开关实校。"
+          },
+          "evidence_id": "evidence-fa46378641d9939dee2f",
+          "evidence_ids": [
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "source_span_ids": [
+            "span-7b43705f7ddad22fbf8c"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "dlt863-p14-p15-5.2.14.1-single-circuit",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_pages": [
+        14,
+        15
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_title": "密封油系统调整（单流环）",
+      "title_evidence_id": "evidence-2e6ceb3a4df913d5bb1a",
+      "source_review_status": "confirmed",
+      "source_total_steps": 6,
+      "review_basis": "Original PDF physical pages 14–15 visually checked against current OCR-local Evidence and printed nested numbering on 2026-09-29.",
+      "steps": [
+        {
+          "source_order": 1,
+          "source_step_label": "1)",
+          "source_quote": "1）油泵出口压力调整；",
+          "source_quotes": {
+            "evidence-51e3bcecc735117e1fd4": "1）油泵出口压力调整；"
+          },
+          "evidence_id": "evidence-51e3bcecc735117e1fd4",
+          "evidence_ids": [
+            "evidence-51e3bcecc735117e1fd4"
+          ],
+          "source_span_ids": [
+            "span-97dd648ecaebfefb6860"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_step_label": "2)",
+          "source_quote": "2）\n油氢压差、浮动油流量调整，数值应满足设备供货商要求；",
+          "source_quotes": {
+            "evidence-9621e1540ab96385c2c1": "2）\n油氢压差、浮动油流量调整，数值应满足设备供货商要求；"
+          },
+          "evidence_id": "evidence-9621e1540ab96385c2c1",
+          "evidence_ids": [
+            "evidence-9621e1540ab96385c2c1"
+          ],
+          "source_span_ids": [
+            "span-c303b36b03b1f7709231"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_step_label": "3)",
+          "source_quote": "3）\n冷油器投运；",
+          "source_quotes": {
+            "evidence-98c9dd569ee66f0de55f": "3）\n冷油器投运；"
+          },
+          "evidence_id": "evidence-98c9dd569ee66f0de55f",
+          "evidence_ids": [
+            "evidence-98c9dd569ee66f0de55f"
+          ],
+          "source_span_ids": [
+            "span-b3a0e4e5bf52f4920a08"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 4,
+          "source_step_label": "4)",
+          "source_quote": "4）\n真空油箱真空泵试转；",
+          "source_quotes": {
+            "evidence-51a3af3750db9355ea4e": "4）\n真空油箱真空泵试转；"
+          },
+          "evidence_id": "evidence-51a3af3750db9355ea4e",
+          "evidence_ids": [
+            "evidence-51a3af3750db9355ea4e"
+          ],
+          "source_span_ids": [
+            "span-d28eae8f2eff506ed6ba"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 5,
+          "source_step_label": "5)",
+          "source_quote": "5）\n真空油箱油位、真空调整；",
+          "source_quotes": {
+            "evidence-4f79a7760a62a42b87a4": "5）\n真空油箱油位、真空调整；"
+          },
+          "evidence_id": "evidence-4f79a7760a62a42b87a4",
+          "evidence_ids": [
+            "evidence-4f79a7760a62a42b87a4"
+          ],
+          "source_span_ids": [
+            "span-c65e6c80d089e90f15d5"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 6,
+          "source_step_label": "6)",
+          "source_quote": "6）消泡箱液位及发电机漏液开关实校。",
+          "source_quotes": {
+            "evidence-4931f3d3bc2090ffb4e2": "6）消泡箱液位及发电机漏液开关实校。"
+          },
+          "evidence_id": "evidence-4931f3d3bc2090ffb4e2",
+          "evidence_ids": [
+            "evidence-4931f3d3bc2090ffb4e2"
+          ],
+          "source_span_ids": [
+            "span-1c5350be537cf49ebcca"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "dlt863-p15-5.2.15.1-hydrogen-fill",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_pages": [
+        15
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_title": "发电机充氢置换",
+      "title_evidence_id": "evidence-52d40466085559dda91c",
+      "source_review_status": "confirmed",
+      "source_total_steps": 3,
+      "review_basis": "Original PDF physical pages 14–15 visually checked against current OCR-local Evidence and printed nested numbering on 2026-09-29.",
+      "steps": [
+        {
+          "source_order": 1,
+          "source_step_label": "1)",
+          "source_quote": "1）二氧化碳置换空气，二氧化碳浓度应达到95%以上；",
+          "source_quotes": {
+            "evidence-1b57903c1f463f08b7a6": "1）二氧化碳置换空气，二氧化碳浓度应达到95%以上；"
+          },
+          "evidence_id": "evidence-1b57903c1f463f08b7a6",
+          "evidence_ids": [
+            "evidence-1b57903c1f463f08b7a6"
+          ],
+          "source_span_ids": [
+            "span-78c41df512192ef038f6"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_step_label": "2)",
+          "source_quote": "2）氢气置换二氧化碳，氢气浓度达到96%以上；",
+          "source_quotes": {
+            "evidence-9506072e7ddcf593b0b2": "2）氢气置换二氧化碳，氢气浓度达到96%以上；"
+          },
+          "evidence_id": "evidence-9506072e7ddcf593b0b2",
+          "evidence_ids": [
+            "evidence-9506072e7ddcf593b0b2"
+          ],
+          "source_span_ids": [
+            "span-42d85a2cb53de91fc634"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 3,
+          "source_step_label": "3)",
+          "source_quote": "3）发电机氢气压力调整。",
+          "source_quotes": {
+            "evidence-5eaa1072bd44a58bb50c": "3）发电机氢气压力调整。"
+          },
+          "evidence_id": "evidence-5eaa1072bd44a58bb50c",
+          "evidence_ids": [
+            "evidence-5eaa1072bd44a58bb50c"
+          ],
+          "source_span_ids": [
+            "span-43d3b71b156d81c07113"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "group_id": "dlt863-p15-5.2.15.1-hydrogen-vent",
+      "document_key": "DLT863",
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "physical_pages": [
+        15
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_title": "发电机排氢置换",
+      "title_evidence_id": "evidence-fb504c1ff8aca79680ca",
+      "source_review_status": "confirmed",
+      "source_total_steps": 2,
+      "review_basis": "Original PDF physical pages 14–15 visually checked against current OCR-local Evidence and printed nested numbering on 2026-09-29.",
+      "steps": [
+        {
+          "source_order": 1,
+          "source_step_label": "1)",
+          "source_quote": "1）二氧化碳置换氢气，二氧化碳浓度达到96%以上；",
+          "source_quotes": {
+            "evidence-c61e5ba3a5464dd6d668": "1）二氧化碳置换氢气，二氧化碳浓度达到96%以上；"
+          },
+          "evidence_id": "evidence-c61e5ba3a5464dd6d668",
+          "evidence_ids": [
+            "evidence-c61e5ba3a5464dd6d668"
+          ],
+          "source_span_ids": [
+            "span-71a1b5ed6abf2dcb83d7"
+          ],
+          "status": "confirmed"
+        },
+        {
+          "source_order": 2,
+          "source_step_label": "2)",
+          "source_quote": "2）空气置换二氧化碳。",
+          "source_quotes": {
+            "evidence-cc36c8d0adb6bd5d0bc9": "2）空气置换二氧化碳。"
+          },
+          "evidence_id": "evidence-cc36c8d0adb6bd5d0bc9",
+          "evidence_ids": [
+            "evidence-cc36c8d0adb6bd5d0bc9"
+          ],
+          "source_span_ids": [
+            "span-0b6b4ad21257345c341f"
+          ],
+          "status": "confirmed"
+        }
+      ]
+    }
+  ]
+}

@@ -53,7 +53,12 @@ def test_ocr_font_path_is_explicitly_configured(monkeypatch, tmp_path: Path):
     from scripts.generate_ocr_pdf import default_font_file
 
     monkeypatch.delenv("OCR_FONT_FILE", raising=False)
-    assert default_font_file() is None
+    system_fonts = (
+        Path(r"C:\Windows\Fonts\simhei.ttf"),
+        Path(r"C:\Windows\Fonts\msyh.ttc"),
+        Path(r"C:\Windows\Fonts\simsun.ttc"),
+    )
+    assert default_font_file() == next((path for path in system_fonts if path.is_file()), None)
 
     font = tmp_path / "font.ttf"
     font.write_bytes(b"font")

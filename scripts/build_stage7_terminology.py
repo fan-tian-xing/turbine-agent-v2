@@ -18,6 +18,7 @@ from turbine_kg.terminology.models import CANDIDATE_TYPES
 from turbine_kg.terminology.validation import content_fingerprint, validate_candidates, validate_input_manifest
 from turbine_kg.observability.runtime import run_with_cache, sha256_value
 from turbine_kg.registry.source_inputs import load_allowlist, resolve_allowlisted_path, sha256_file
+from build_stage7_input_manifest import _usable_stage6_text
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +63,34 @@ def _stage7_registry_ref(manifest: dict) -> dict:
     }
 
 
+def _current_stage5_user_acceptance(page: dict, original: dict, processing: dict) -> bool:
+    """Admit the explicitly accepted OCR bytes without claiming agent OCR review."""
+    if processing.get("asset_kind") != "derived_ocr":
+        return False
+    path = ROOT / "data/stage5/stage5_exit_audit.json"
+    if not path.exists():
+        return False
+    audit = _read(path)
+    if audit.get("status") != "complete" or audit.get("next_stage_allowed") is not True:
+        return False
+    document = next((row for row in audit.get("documents", []) if row.get("document_key") == page["document_key"]), None)
+    if not document or document.get("review_basis") != "explicit_current_pdf_user_acceptance":
+        return False
+    acceptance = document.get("user_acceptance") or {}
+    number = page["physical_page"]
+    return (
+        document.get("original_sha256") == original.get("sha256")
+        and document.get("processing_sha256") == processing.get("sha256")
+        and acceptance.get("processing_sha256") == processing.get("sha256")
+        and bool(acceptance.get("confirmation_text"))
+        and any(
+            isinstance(interval, list) and len(interval) == 2
+            and interval[0] <= number <= interval[1]
+            for interval in acceptance.get("accepted_page_ranges", [])
+        )
+    )
+
+
 def _runtime_input_gate(manifest: dict, settings: Settings, registry_ref: dict | None = None) -> None:
     """Recheck consumed assets, current admission and manifest path bindings."""
     assets = {row["asset_id"]: row for row in _registry_scope(manifest)}
@@ -76,7 +105,7 @@ def _runtime_input_gate(manifest: dict, settings: Settings, registry_ref: dict |
         if original.get("asset_kind") != "original" or original.get("admission_status") != "admitted":
             raise ValueError(f"runtime manifest original is not currently admitted: {page['page_id']}")
         processing = assets[page["processing_asset_id"]]
-        if processing.get("text_adapter_status") not in {"native_text_available", "ocr_validated"}:
+        if processing.get("text_adapter_status") not in {"native_text_available", "ocr_validated"} and not _current_stage5_user_acceptance(page, original, processing):
             raise ValueError(f"runtime manifest processing text is not currently ready: {page['page_id']}")
         for asset, path_field in ((processing, "processing_relative_path"), (original, "authority_relative_path")):
             if asset["relative_path"] != page[path_field]:
@@ -186,7 +215,7 @@ def _accepted_page_texts(manifest: dict, settings: Settings, stage6_rows: list[d
                     evidence_text = "\n".join(
                         row["evidence"].get("effective_text") or row["evidence"].get("source_text") or ""
                         for row in rows
-                        if row["evidence"].get("disposition") == "structured"
+                        if _usable_stage6_text(row)
                     ).strip()
                     if not evidence_text:
                         raise ValueError(f"accepted OCR page has no structured Stage 6 text: {page['page_id']}")

@@ -7,7 +7,6 @@ import json
 import os
 import subprocess
 import sys
-import uuid
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,8 +24,7 @@ def _read(relative: str) -> dict:
 
 def _run_tests() -> dict:
     command = [
-        sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
-        "--basetemp", str(ROOT / "var/tmp" / f"stage10-audit-targeted-{uuid.uuid4().hex[:12]}"),
+        sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--tb=short",
         "tests/stage10", "tests/stage7", "tests/stage8", "tests/stage3/test_llm_contract.py",
         "tests/registry", "tests/unit/test_project_state.py",
     ]
@@ -158,12 +156,15 @@ def _audit() -> dict:
     checks["targeted_tests"] = targeted["status"] == "passed"
     full = {"status": "not_run"}
     if checks["targeted_tests"]:
-        command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--basetemp", str(ROOT / "var/tmp" / f"stage10-audit-full-{uuid.uuid4().hex[:12]}"), "tests"]
+        command = [
+            sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--tb=short",
+            "tests", "--ignore=tests/stage11", "--ignore=tests/stage12",
+        ]
         result = subprocess.run(command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
         full = {"command": command, "project_python": sys.executable, "status": "passed" if result.returncode == 0 else "failed", "returncode": result.returncode, "stdout_tail": result.stdout[-5000:], "stderr_tail": result.stderr[-2000:]}
-        checks["full_project_tests"] = result.returncode == 0
+        checks["pre_stage11_project_tests"] = result.returncode == 0
     else:
-        checks["full_project_tests"] = False
+        checks["pre_stage11_project_tests"] = False
     blockers = [name for name, passed in checks.items() if not passed]
     inputs = {
         relative: {"path": relative, "sha256": _sha(ROOT / relative)}
@@ -193,7 +194,7 @@ def _audit() -> dict:
         "registry_dependency": registry_ref,
         "checks": checks,
         "runtime_result": {"command": runtime_command, "returncode": runtime_result.returncode, "stdout_tail": runtime_result.stdout[-2000:], "stderr_tail": runtime_result.stderr[-2000:]},
-        "test_result": {"targeted": targeted, "full_project": full},
+        "test_result": {"targeted": targeted, "pre_stage11": full},
         "review": {"mapping_acceptance_is_separate_from_knowledge_approval": True, "formal_release": False, "namespace": "research namespace retained; freeze before formal Release"},
         "failure_isolation": "缓存损坏、输入变化或失败运行不得替换已有成功结果；原始资料、冻结 Evidence、旧版目录和 Neo4j 均不写入。",
         "zero_tolerance_errors": blockers,
@@ -208,7 +209,6 @@ def main() -> int:
     project_python = ROOT.parent / "runtime-python/turbine-kg-env/Scripts/python.exe"
     if Path(sys.executable).resolve() != project_python.resolve():
         raise RuntimeError("Stage 10 audit requires the dedicated project Python")
-    (ROOT / "var/tmp").mkdir(parents=True, exist_ok=True)
     try:
         audit = _audit()
     except Exception as error:

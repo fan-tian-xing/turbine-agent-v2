@@ -159,7 +159,9 @@ class OpenAICompatibleChatTransport:
         last_error: Exception | None = None
         started = time.monotonic()
         attempt_limit = self.max_attempts
+        self.last_request_attempts = 0
         for attempt in range(self.max_attempts):
+            self.last_request_attempts = attempt + 1
             request = Request(
                 self.endpoint,
                 data=body,

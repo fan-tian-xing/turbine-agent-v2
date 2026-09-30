@@ -3,16 +3,17 @@
   "artifact_kind": "stage9_semantic_review",
   "status": "passed",
   "scope": "code_contract_runtime_chain",
-  "reviewer": "independent_agent_recheck9",
   "knowledge_approval": false,
   "reviewed_inputs": {
     "ontology/minimal_turbine.ttl": "c513ddbc2c5c167f3ec7d6af1b2d13349a432a318e00c014d06fb96724a25d34",
-    "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
-    "ontology/stage9_shapes.ttl": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56",
+    "ontology/stage9_core.ttl": "8ecc1eb849310c0ba85bb54b02577ca05007e9a6f91b64e9a0ace6a063f78b63",
+    "ontology/stage9_shapes.ttl": "f1420a6c15cf1884fa6ce1edb41e195e3472844280e7b4bfb77820a2a97d3bdf",
     "src/turbine_kg/ontology/semantic.py": "90f6620373c8cd7cc2818e25fce631c2b15369af3dcaad0c6127e9667164d5de",
     "src/turbine_kg/ontology/research_adapter.py": "feb977eec2a913ffcf3474bff5bfa4de8f66342bf3cc6eae9896c329749330a6",
     "src/turbine_kg/stage3/projection.py": "12f604808acb763721a24d90c437490842b84c1fe749ac146d32076e6d0c8005",
-    "config/semantic_runtime.schema.json": "1cf14ceff2941c3900ae2d2344852ed035a49d91e9433c1e66bff5cc1bfa724a"
+    "config/semantic_runtime.schema.json": "1cf14ceff2941c3900ae2d2344852ed035a49d91e9433c1e66bff5cc1bfa724a",
+    "src/turbine_kg/stage3/real_trial.py": "0c0d16e14c12e7782f7337cfda634b0f9a7dd6920bee1d3fbcd6d83537b55187",
+    "data/stage9/stage9_current_source_bindings.json": "a71d1a3754d3c81df6b7acde5d96bc4731595a56ab5a175b849669f1defb7cc4"
   },
   "checks": {
     "schema_transport_checked": true,
@@ -21,6 +22,7 @@
     "owl_catalog_consumed": true,
     "owl_domain_range_shapes_consumed": true,
     "statement_controlled_values_and_cardinality": true,
+    "controlled_modality_accepts_permission_and_rejects_unknown": true,
     "evidence_locator_and_object_binding": true,
     "source_quote_and_revision_reference_checks": true,
     "optional_context_and_quantity_kind_preserved": true,
@@ -28,17 +30,22 @@
     "research_projection_consumer_gate": true,
     "nonconforming_batch_preserved_before_projection": true,
     "existing_ids_and_synthetic_contract_preserved": true,
-    "no_formal_release_or_stage12_expansion": true
+    "research_projection_boundary_preserved": true,
+    "explicit_current_source_binding_preserves_historical_statements": true
   },
   "evidence": {
     "review_scope": "代码、合同和研发运行消费者交叉复核，不是业务知识批准。",
     "independent_negative_probes": [
       "span_not_in_page",
       "wrong_revision_document",
-      "real_quote_not_in_span"
+      "real_quote_not_in_span",
+      "unknown_normative_modality"
     ],
-    "negative_probe_result": "全部生成失败报告并在投影前阻断。",
-    "synthetic_evidence_boundary": "沿用既有公开合成 Fixture 的描述性 Evidence，不重写或晋级为正式原文。"
+    "negative_probe_result": "未知 normative modality 与既有不合规样例均生成失败报告；recommended、shall、must、permitted、descriptive 在运行时 SHACL 验证通过。阶段12通用派生测试同时确认明确行动许可为 permitted，而可能性、因果和结果表述保持 descriptive。",
+    "synthetic_evidence_boundary": "沿用既有公开合成 Fixture 的描述性 Evidence，不重写或晋级为正式原文。",
+    "current_source_review": "原件 DL5190.3 物理第86页、D300N 物理第73页、HAF103 物理第1页逐页视觉核对；现行 Registry 哈希、全文 SourceSpan 与旧用户确认的4条引文逐项核对。当前来源绑定保留旧 statement、数值、否定、方向和条件，不产生新的用户确认。阶段3与阶段9针对性测试通过。",
+    "stage12_unit_extension_review": "复核 Stage 9 的 unitSymbol 受控枚举只扩充通用量纲单位及无量纲 1；未改变类、属性、基数或原有单位。阶段9及阶段12针对性测试验证新单位可通过、banana 非法单位仍拒绝。",
+    "stage12_permission_extension_review": "三份相互独立的代码、提示词和结果复核确认 permitted 只增加受控值与说明，不改变类、属性、基数或投影结构。复核指出的可导致、可引起、可减少、可提高误判已通过通用语义边界与反例测试修正；不含资料、页码或 Evidence ID 分支。"
   },
   "blockers": []
 }

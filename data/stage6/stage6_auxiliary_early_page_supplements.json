@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_auxiliary_early_page_original_review",
+  "document_key": "auxiliary_installation_book",
+  "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+  "current_ocr_pdf_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+  "physical_pages": [12, 32, 64, 120, 180],
+  "source_structure_ref": "data/stage6/stage6_auxiliary_source_structure.json",
+  "source_review_ref": "data/stage6/stage6_auxiliary_source_supplements.json",
+  "question_code_replacements": {
+    "J5A2624": "Jf5A2624",
+    "J5A2625": "Jf5A2625",
+    "J5A3626": "Jf5A3626",
+    "J4A1629": "Jf4A1629"
+  },
+  "required_current_ocr_fragments": [
+    {"physical_page": 12, "text": "2.1.5高级技师：在取得技师职业资格的基础上累积不少于", "reason": "The 350-hour completion is a separate same-page SourceSpan."},
+    {"physical_page": 32, "text": "(D)t=273.15×T", "reason": "The original prints a multiplication sign, and the current OCR PDF has it."},
+    {"physical_page": 32, "text": "(A) 1000; (B) 13.6; (C) 760; (D) 1", "reason": "All four options and their printed separators belong to La5A1006."},
+    {"physical_page": 64, "text": "Lb4A4238", "reason": "The final stem continues to page 65 and must stay pending."},
+    {"physical_page": 120, "text": "Jf5A2624", "reason": "The first printed question code includes f."},
+    {"physical_page": 120, "text": "Jf5A2625", "reason": "The second printed question code includes f."},
+    {"physical_page": 120, "text": "Jf5A3626", "reason": "The third printed question code includes f."},
+    {"physical_page": 120, "text": "Jf4A1629", "reason": "The sixth printed question code includes f."},
+    {"physical_page": 180, "text": "Q-η", "reason": "The original and current OCR PDF use Greek eta for pump efficiency."}
+  ],
+  "expected_local_question_codes": {
+    "32": ["La5A1001", "La5A1002", "La5A1003", "La5A1004", "La5A1005", "La5A1006"],
+    "64": ["Lb4A3232", "Lb4A3233", "Lb4A3234", "Lb4A3235", "Lb4A4236", "Lb4A4237"],
+    "120": ["Jf5A2624", "Jf5A2625", "Jf5A3626", "Jf5A4627", "Jf4A1628", "Jf4A1629", "Jf4A1630", "Jf4A2631"],
+    "180": ["La5C3011", "La5C3012", "La5C3013", "La5C4014"]
+  },
+  "p32_question_stem_span_counts": {
+    "La5A1001": 1,
+    "La5A1002": 1,
+    "La5A1003": 2,
+    "La5A1004": 1,
+    "La5A1005": 2,
+    "La5A1006": 1
+  },
+  "p120_question_stem_span_counts": {
+    "Jf5A2624": 2,
+    "Jf5A2625": 2,
+    "Jf5A3626": 2,
+    "Jf5A4627": 1,
+    "Jf4A1628": 1,
+    "Jf4A1629": 1,
+    "Jf4A1630": 2,
+    "Jf4A2631": 2
+  },
+  "pending_cross_page_group_ids": ["aux-p12-2.4.1", "aux-p64-Lb4A3231", "aux-p64-Lb4A4238"],
+  "replacement_source_boxes": [
+    {"box_id": "aux-p12-2.1.1", "physical_page": 12, "bbox_pdf_pt": [62, 168, 347, 182], "text": "2.1.1初级工：累积不少于500标准学时。"},
+    {"box_id": "aux-p12-2.1.2", "physical_page": 12, "bbox_pdf_pt": [62, 183, 347, 212], "text": "2.1.2中级工：在取得初级职业资格的基础上累积不少于400\n标准学时。"},
+    {"box_id": "aux-p64-prior-options", "physical_page": 64, "bbox_pdf_pt": [84, 70, 355, 85], "text": "（A）降低；（B）不变；（C）增高；（D）不定。"},
+    {"box_id": "aux-p64-Lb4A3232-stem", "physical_page": 64, "bbox_pdf_pt": [83, 99, 355, 117], "text": "Lb4A3232通常，离心式水泵大多选用的是（B）式叶片。"}
+  ],
+  "replaced_existing_spans": [
+    {"physical_page": 12, "bbox_pdf_pt": [63.1, 168.7, 345.7, 195.1], "text_starts": "2.1.1初级工：", "reason": "one old SourceSpan joins two distinct rules"},
+    {"physical_page": 12, "bbox_pdf_pt": [64.3, 201.7, 112.3, 211.3], "text_starts": "标准学时。", "reason": "continuation belongs to the replacement 2.1.2 rule"},
+    {"physical_page": 64, "bbox_pdf_pt": [85.2, 61.1, 373.9, 83.4], "text_starts": "（A）降低；", "reason": "first prior-question option line also contains sidebar navigation"},
+    {"physical_page": 64, "bbox_pdf_pt": [84.4, 100.3, 385.9, 116.4], "text_starts": "库\nLb4A3232", "reason": "sidebar navigation and next question stem share one old SourceSpan"}
+  ],
+  "group_windows_pdf_pt": {
+    "12": [
+      ["aux-p12-chapter-2", 50, 90, "2\n职业技能培训"],
+      ["aux-p12-2.1-heading", 140, 165, "2.1培训期限"],
+      ["aux-p12-2.1.1", 165, 183, "2.1.1"],
+      ["aux-p12-2.1.2", 183, 214, "2.1.2"],
+      ["aux-p12-2.1.3", 214, 246, "2.1.3"],
+      ["aux-p12-2.1.4", 246, 278, "2.1.4"],
+      ["aux-p12-2.1.5", 278, 312, "2.1.5"],
+      ["aux-p12-2.2-heading", 316, 337, "2.2培训教师资格"],
+      ["aux-p12-2.2.1", 340, 374, "2.2.1"],
+      ["aux-p12-2.2.2", 374, 407, "2.2.2"],
+      ["aux-p12-2.3-heading", 413, 432, "2.3培训场地设备"],
+      ["aux-p12-2.3.1", 435, 454, "2.3.1"],
+      ["aux-p12-2.3.2", 454, 470, "2.3.2"],
+      ["aux-p12-2.3.3", 470, 487, "2.3.3"],
+      ["aux-p12-2.4-heading", 494, 513, "2.4培训项目"],
+      ["aux-p12-2.4.1", 516, 534, "2.4.1"]
+    ],
+    "32": [
+      ["aux-p32-chapter-4.1", 52, 125, "4.1"],
+      ["aux-p32-4.1.1-heading", 187, 212, "4.1.1"],
+      ["aux-p32-La5A1001", 222, 259, "La5A1001"],
+      ["aux-p32-La5A1002", 271, 307, "La5A1002"],
+      ["aux-p32-La5A1003", 320, 373, "La5A1003"],
+      ["aux-p32-La5A1004", 384, 421, "La5A1004"],
+      ["aux-p32-La5A1005", 434, 485, "La5A1005"],
+      ["aux-p32-La5A1006", 498, 533, "La5A1006"]
+    ],
+    "64": [
+      ["aux-p64-Lb4A3231", 54, 95, "转速、叶轮尺寸"],
+      ["aux-p64-Lb4A3232", 97, 138, "Lb4A3232"],
+      ["aux-p64-Lb4A3233", 148, 216, "Lb4A3233"],
+      ["aux-p64-Lb4A3234", 228, 299, "Lb4A3234"],
+      ["aux-p64-Lb4A3235", 309, 363, "Lb4A3235"],
+      ["aux-p64-Lb4A4236", 373, 427, "Lb4A4236"],
+      ["aux-p64-Lb4A4237", 437, 490, "Lb4A4237"],
+      ["aux-p64-Lb4A4238", 501, 537, "Lb4A4238"]
+    ],
+    "120": [
+      ["aux-p120-Jf5A2624", 53, 106, "Jf5A2624"],
+      ["aux-p120-Jf5A2625", 116, 170, "Jf5A2625"],
+      ["aux-p120-Jf5A3626", 180, 235, "Jf5A3626"],
+      ["aux-p120-Jf5A4627", 244, 299, "Jf5A4627"],
+      ["aux-p120-Jf4A1628", 307, 362, "Jf4A1628"],
+      ["aux-p120-Jf4A1629", 372, 411, "Jf4A1629"],
+      ["aux-p120-Jf4A1630", 419, 474, "Jf4A1630"],
+      ["aux-p120-Jf4A2631", 483, 535, "Jf4A2631"]
+    ],
+    "180": [
+      ["aux-p180-La5C3011", 50, 166, "La5C3011"],
+      ["aux-p180-La5C3012", 177, 343, "La5C3012"],
+      ["aux-p180-La5C3013", 353, 422, "La5C3013"],
+      ["aux-p180-La5C4014", 433, 535, "La5C4014"]
+    ]
+  },
+  "review_notes": {
+    "12": "2.1.5 has a two-line, same-page condition and quantity; 2.4.1 continues on page 13.",
+    "32": "Six marked questions each require a distinct stem and four options. The vertical question-bank label is navigation.",
+    "64": "The opening stem comes from page 63 and the final stem's options are on page 65. Lb4A4236 and Lb4A4237 share one old Evidence span and require an exact split.",
+    "120": "Eight distinct marked questions; option D of Jf5A4627 continues onto another line on the same page.",
+    "180": "Four independent question-answer groups; La5C3012 has four numbered condenser tasks and La5C4014 has three parallel bearing-fixation categories."
+  }
+}

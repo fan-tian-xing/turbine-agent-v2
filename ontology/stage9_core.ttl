@@ -20,7 +20,7 @@ tv2:statementType a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement 
 tv2:statementText a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "断言文本"@zh-CN ; rdfs:comment "中等粒度完整工程断言的文本。"@zh-CN .
 tv2:predicateLabel a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "关系标签"@zh-CN ; rdfs:comment "Stage 12 候选关系的文本化语义标签。"@zh-CN .
 tv2:objectAssertion a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "客体断言"@zh-CN ; rdfs:comment "候选客体的来源断言文本，不是执行授权。"@zh-CN .
-tv2:normativeModality a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "规范模态"@zh-CN ; rdfs:comment "候选断言的描述、应当或必须模态。"@zh-CN .
+tv2:normativeModality a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "规范模态"@zh-CN ; rdfs:comment "候选断言的描述、许可、建议、应当或必须模态。"@zh-CN .
 tv2:subjectEntityLabels a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "主体对象集合"@zh-CN ; rdfs:comment "所有文本锚定主体对象的稳定序列化。"@zh-CN .
 tv2:negationScope a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "否定范围"@zh-CN ; rdfs:comment "候选否定标记及其范围的稳定序列化。"@zh-CN .
 tv2:conditionText a owl:DatatypeProperty ; rdfs:domain tv2:EngineeringStatement ; rdfs:range xsd:string ; rdfs:label "条件文本"@zh-CN ; rdfs:comment "候选条件的稳定序列化。"@zh-CN .

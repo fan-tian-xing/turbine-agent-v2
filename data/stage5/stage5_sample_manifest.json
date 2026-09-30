@@ -2,13 +2,16 @@
   "schema_version": 1,
   "stage": "5",
   "artifact_kind": "stage5_sample_manifest",
-  "status": "frozen_for_initial_review",
+  "status": "complete",
   "created_at": "2026-09-09",
-  "scope": "the five Stage 3 research-trial processing units only",
+  "scope": "all five first-batch documents; 775 existing physical pages; 36 Golden Sample pages are QA subset only",
   "formal_release": false,
   "source_registry_snapshot": {
     "path": "data/registry/source_registry_summary.json",
-    "sha256": "140fb6412a1a639fdae30ffde9e49475f1b0210ec1e58b7d7696ceaaf525d925"
+    "sha256": "b27eb9667f106079024c0678343acbd76ec03788d6fef6d96bdcc688dd17b195",
+    "refresh_status": "rebuilt_registry_identity_verified",
+    "source_assets_sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897",
+    "source_documents_sha256": "c33b0b8742ed92dacb0184e623ee54f0a4db0f97defe14631f6eccefd01e4b21"
   },
   "stage3_manifest": "data/stage3/initial_batch_manifest.json",
   "sample_page_count": 36,
@@ -39,19 +42,72 @@
     {
       "document_key": "DL5190.3",
       "document_logical_id": "doc-24b25833ab82e212d1fb",
-      "processing_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
       "original_asset_id": "asset-29ca16b111846e39aabf",
-      "processing_relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "processing_relative_path": "OCR/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组(OCR).pdf",
       "page_count": 141,
       "sample_pages": [
-        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity"]},
-        {"pdf_page": 14, "physical_page": 14, "logical_page_label": "3", "categories": ["ordinary_text", "numeric_and_unit"]},
-        {"pdf_page": 25, "physical_page": 25, "logical_page_label": "14", "categories": ["figure", "caption", "bbox"]},
-        {"pdf_page": 42, "physical_page": 42, "logical_page_label": "31", "categories": ["dense_clause_text", "numeric_and_unit"]},
-        {"pdf_page": 86, "physical_page": 86, "logical_page_label": "75", "categories": ["dense_clause_text", "complex_layout"]},
-        {"pdf_page": 113, "physical_page": 113, "logical_page_label": "102", "categories": ["figure", "caption", "table", "numeric_and_unit"]}
+        {
+          "pdf_page": 1,
+          "physical_page": 1,
+          "categories": [
+            "cover",
+            "document_identity"
+          ]
+        },
+        {
+          "pdf_page": 14,
+          "physical_page": 14,
+          "logical_page_label": "3",
+          "categories": [
+            "ordinary_text",
+            "numeric_and_unit"
+          ]
+        },
+        {
+          "pdf_page": 25,
+          "physical_page": 25,
+          "logical_page_label": "14",
+          "categories": [
+            "figure",
+            "caption",
+            "bbox"
+          ]
+        },
+        {
+          "pdf_page": 42,
+          "physical_page": 42,
+          "logical_page_label": "31",
+          "categories": [
+            "dense_clause_text",
+            "numeric_and_unit"
+          ]
+        },
+        {
+          "pdf_page": 86,
+          "physical_page": 86,
+          "logical_page_label": "75",
+          "categories": [
+            "dense_clause_text",
+            "complex_layout"
+          ]
+        },
+        {
+          "pdf_page": 113,
+          "physical_page": 113,
+          "logical_page_label": "102",
+          "categories": [
+            "figure",
+            "caption",
+            "table",
+            "numeric_and_unit"
+          ]
+        }
       ],
-      "visual_review_status": "reviewed_by_codex_against_original_pages"
+      "visual_review_status": "all_supplied_pages_reviewed",
+      "processing_mode": "native_text_review_and_figure_annotation_supplement",
+      "full_page_count": 141,
+      "original_relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf"
     },
     {
       "document_key": "D300N",
@@ -62,14 +118,68 @@
       "original_relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
       "page_count": 94,
       "sample_pages": [
-        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
-        {"pdf_page": 2, "physical_page": 2, "categories": ["document_identity", "scan_page"]},
-        {"pdf_page": 38, "physical_page": 38, "logical_page_label": "2-10-4", "categories": ["figure", "caption", "scan_page"]},
-        {"pdf_page": 50, "physical_page": 50, "logical_page_label": "2-14-3", "categories": ["table", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 73, "physical_page": 73, "logical_page_label": "3-5-1", "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 94, "physical_page": 94, "physical_pdf_page": 94, "logical_page_label": "3-3-4", "categories": ["boundary_page", "blank_or_low_text", "scan_page"]}
+        {
+          "pdf_page": 1,
+          "physical_page": 1,
+          "categories": [
+            "cover",
+            "document_identity",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 2,
+          "physical_page": 2,
+          "categories": [
+            "document_identity",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 38,
+          "physical_page": 38,
+          "logical_page_label": "2-10-4",
+          "categories": [
+            "figure",
+            "caption",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 50,
+          "physical_page": 50,
+          "logical_page_label": "2-14-3",
+          "categories": [
+            "table",
+            "scan_page",
+            "numeric_and_unit"
+          ]
+        },
+        {
+          "pdf_page": 73,
+          "physical_page": 73,
+          "logical_page_label": "3-5-1",
+          "categories": [
+            "ordinary_text",
+            "scan_page",
+            "numeric_and_unit"
+          ]
+        },
+        {
+          "pdf_page": 94,
+          "physical_page": 94,
+          "physical_pdf_page": 94,
+          "logical_page_label": "3-3-4",
+          "categories": [
+            "boundary_page",
+            "blank_or_low_text",
+            "scan_page"
+          ]
+        }
       ],
-      "visual_review_status": "reviewed_by_codex_against_original_pages"
+      "visual_review_status": "all_supplied_pages_reviewed",
+      "processing_mode": "candidate_then_original_page_text_layer_correction",
+      "full_page_count": 94
     },
     {
       "document_key": "DLT863",
@@ -80,14 +190,68 @@
       "original_relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
       "page_count": 28,
       "sample_pages": [
-        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
-        {"pdf_page": 2, "physical_page": 2, "logical_page_label": "I", "categories": ["contents", "scan_page"]},
-        {"pdf_page": 14, "physical_page": 14, "logical_page_label": "10", "categories": ["ordinary_text", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 15, "physical_page": 15, "logical_page_label": "11", "categories": ["dense_clause_text", "negative_word_candidate", "scan_page"]},
-        {"pdf_page": 27, "physical_page": 27, "logical_page_label": "38", "categories": ["table", "scan_page", "numeric_and_unit"]},
-        {"pdf_page": 28, "physical_page": 28, "logical_page_label": "39", "categories": ["continuation_table", "boundary_page", "scan_page"]}
+        {
+          "pdf_page": 1,
+          "physical_page": 1,
+          "categories": [
+            "cover",
+            "document_identity",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 2,
+          "physical_page": 2,
+          "logical_page_label": "I",
+          "categories": [
+            "contents",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 14,
+          "physical_page": 14,
+          "logical_page_label": "10",
+          "categories": [
+            "ordinary_text",
+            "scan_page",
+            "numeric_and_unit"
+          ]
+        },
+        {
+          "pdf_page": 15,
+          "physical_page": 15,
+          "logical_page_label": "11",
+          "categories": [
+            "dense_clause_text",
+            "negative_word_candidate",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 27,
+          "physical_page": 27,
+          "logical_page_label": "38",
+          "categories": [
+            "table",
+            "scan_page",
+            "numeric_and_unit"
+          ]
+        },
+        {
+          "pdf_page": 28,
+          "physical_page": 28,
+          "logical_page_label": "39",
+          "categories": [
+            "continuation_table",
+            "boundary_page",
+            "scan_page"
+          ]
+        }
       ],
-      "visual_review_status": "reviewed_by_codex_against_original_pages"
+      "visual_review_status": "all_supplied_pages_reviewed",
+      "processing_mode": "candidate_then_original_page_text_layer_correction",
+      "full_page_count": 28
     },
     {
       "document_key": "HAF103",
@@ -98,14 +262,69 @@
       "original_relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
       "page_count": 32,
       "sample_pages": [
-        {"pdf_page": 1, "physical_page": 1, "logical_page_label": "3", "categories": ["scope", "document_identity", "scan_page"]},
-        {"pdf_page": 11, "physical_page": 11, "logical_page_label": "13", "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
-        {"pdf_page": 12, "physical_page": 12, "logical_page_label": "14", "categories": ["ordinary_text", "negative_word_candidate", "scan_page"]},
-        {"pdf_page": 16, "physical_page": 16, "logical_page_label": "18", "categories": ["dense_clause_text", "scan_page"]},
-        {"pdf_page": 29, "physical_page": 29, "logical_page_label": "31", "categories": ["table", "numeric_and_unit", "scan_page"]},
-        {"pdf_page": 32, "physical_page": 32, "logical_page_label": "34", "categories": ["boundary_page", "ordinary_text", "scan_page"]}
+        {
+          "pdf_page": 1,
+          "physical_page": 1,
+          "logical_page_label": "3",
+          "categories": [
+            "scope",
+            "document_identity",
+            "native_text_page"
+          ]
+        },
+        {
+          "pdf_page": 11,
+          "physical_page": 11,
+          "logical_page_label": "13",
+          "categories": [
+            "ordinary_text",
+            "negative_word_candidate",
+            "native_text_page"
+          ]
+        },
+        {
+          "pdf_page": 12,
+          "physical_page": 12,
+          "logical_page_label": "14",
+          "categories": [
+            "ordinary_text",
+            "negative_word_candidate",
+            "native_text_page"
+          ]
+        },
+        {
+          "pdf_page": 16,
+          "physical_page": 16,
+          "logical_page_label": "18",
+          "categories": [
+            "dense_clause_text",
+            "native_text_page"
+          ]
+        },
+        {
+          "pdf_page": 29,
+          "physical_page": 29,
+          "logical_page_label": "31",
+          "categories": [
+            "table",
+            "numeric_and_unit",
+            "native_text_page"
+          ]
+        },
+        {
+          "pdf_page": 32,
+          "physical_page": 32,
+          "logical_page_label": "34",
+          "categories": [
+            "boundary_page",
+            "ordinary_text",
+            "native_text_page"
+          ]
+        }
       ],
-      "visual_review_status": "reviewed_by_codex_against_original_pages"
+      "visual_review_status": "all_supplied_pages_reviewed",
+      "processing_mode": "native_text_layer_review_and_derived_copy",
+      "full_page_count": 32
     },
     {
       "document_key": "auxiliary_installation_book",
@@ -116,20 +335,131 @@
       "original_relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
       "page_count": 480,
       "sample_pages": [
-        {"pdf_page": 1, "physical_page": 1, "categories": ["cover", "document_identity", "scan_page"]},
-        {"pdf_page": 12, "physical_page": 12, "logical_page_label": "3", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 31, "physical_page": 31, "categories": ["blank_or_low_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 32, "physical_page": 32, "logical_page_label": "23", "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 64, "physical_page": 64, "logical_page_label": "55", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 120, "physical_page": 120, "logical_page_label": "111", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 180, "physical_page": 180, "logical_page_label": "171", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 244, "physical_page": 244, "logical_page_label": "235", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 300, "physical_page": 300, "physical_pdf_page": 300, "logical_page_label": "291", "categories": ["figure", "caption", "rotated_page", "scan_page"]},
-        {"pdf_page": 360, "physical_page": 360, "logical_page_label": "351", "categories": ["dense_clause_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 468, "physical_page": 468, "logical_page_label": "459", "categories": ["ordinary_text", "rotated_page", "scan_page"]},
-        {"pdf_page": 480, "physical_page": 480, "logical_page_label": "471", "categories": ["table", "boundary_page", "rotated_page", "scan_page"]}
+        {
+          "pdf_page": 1,
+          "physical_page": 1,
+          "categories": [
+            "cover",
+            "document_identity",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 12,
+          "physical_page": 12,
+          "logical_page_label": "3",
+          "categories": [
+            "ordinary_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 31,
+          "physical_page": 31,
+          "categories": [
+            "blank_or_low_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 32,
+          "physical_page": 32,
+          "logical_page_label": "23",
+          "categories": [
+            "dense_clause_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 64,
+          "physical_page": 64,
+          "logical_page_label": "55",
+          "categories": [
+            "ordinary_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 120,
+          "physical_page": 120,
+          "logical_page_label": "111",
+          "categories": [
+            "ordinary_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 180,
+          "physical_page": 180,
+          "logical_page_label": "171",
+          "categories": [
+            "ordinary_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 244,
+          "physical_page": 244,
+          "logical_page_label": "235",
+          "categories": [
+            "ordinary_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 300,
+          "physical_page": 300,
+          "physical_pdf_page": 300,
+          "logical_page_label": "291",
+          "categories": [
+            "figure",
+            "caption",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 360,
+          "physical_page": 360,
+          "logical_page_label": "351",
+          "categories": [
+            "dense_clause_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 468,
+          "physical_page": 468,
+          "logical_page_label": "459",
+          "categories": [
+            "ordinary_text",
+            "rotated_page",
+            "scan_page"
+          ]
+        },
+        {
+          "pdf_page": 480,
+          "physical_page": 480,
+          "logical_page_label": "471",
+          "categories": [
+            "table",
+            "boundary_page",
+            "rotated_page",
+            "scan_page"
+          ]
+        }
       ],
-      "visual_review_status": "reviewed_by_codex_against_original_pages"
+      "visual_review_status": "all_supplied_pages_reviewed",
+      "processing_mode": "candidate_then_original_page_text_layer_correction",
+      "full_page_count": 480
     }
   ],
   "user_review_boundary": {
@@ -137,5 +467,65 @@
     "uncertain_pages": "codex_first_pass; ask_user_only_for_unresolved_high_risk_pages",
     "engine_and_final_threshold_decision": "codex_decide_from_benchmark_and_record_boundary; ask_user_only_if_unresolved_high_risk"
   },
-  "next_step": "stage5_exit_complete; preserve quarantined layout regions and begin Stage 6 Evidence Golden Sample work"
+  "next_step": "revalidate_stage5_after_auxiliary_ocr_repair; keep_stage6_paused",
+  "full_page_processing": {
+    "sample_page_count": 36,
+    "native_text_page_count": 173,
+    "scanned_documents": [
+      "D300N",
+      "DLT863",
+      "auxiliary_installation_book"
+    ],
+    "scanned_page_count": 602,
+    "native_text_documents": [
+      "DL5190.3",
+      "HAF103"
+    ],
+    "dlt863_missing_printed_pages": [
+      12,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      25,
+      27,
+      28,
+      29
+    ],
+    "sample_role": "quality_sample_only_not_full_coverage",
+    "total_existing_physical_pages": 775
+  },
+  "processing_revalidation": {
+    "status": "required",
+    "document_key": "auxiliary_installation_book",
+    "prior_processing_sha256": "836a526c9caa2b87cd227348d8a0f53b2b3b79c0e3e46815d00a825390e8c8af",
+    "current_processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+    "reason": "Current auxiliary text-layer repair includes 27 verified text corrections and 16 targeted layout pages. Full OCR accuracy and Stage 5 exit require revalidation.",
+    "confirmed_text_difference_count": 27,
+    "false_positive_prior_changes_reverted": 2,
+    "layout_repaired_pages": [
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      124,
+      371,
+      427,
+      430
+    ]
+  }
 }

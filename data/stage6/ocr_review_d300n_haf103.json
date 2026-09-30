@@ -1,0 +1,289 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_ocr_review_d300n_haf103",
+  "scope": "Original PDF visual/text OCR review for 12 selected physical pages; no Evidence generation or completeness claim for unselected pages",
+  "pages": [
+    {
+      "document_key": "D300N",
+      "physical_page": 1,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "original_page_visual_sha256_170dpi": "25c9e433156b910a356100acf9309e6f79dce6e7038c0d48907989614937efe1",
+      "ocr_source": "RapidOCR_170dpi",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "cross_page_source_unit_ids": [],
+      "coverage_note": "封面仅有版本、机型、编号与日期；无工程正文。原件印作“第全册”，不按常识补字。"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 2,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "original_page_visual_sha256_170dpi": "ebe88f81359d0c1d1a14e78ec8819d16276ab9cba91f80e7c31663b8eace6a69",
+      "ocr_source": "RapidOCR_170dpi",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "cross_page_source_unit_ids": [],
+      "coverage_note": "签批页仅有编制、校对、审核、会签、审定、批准空栏；无工程正文。"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "original_page_visual_sha256_170dpi": "56d3c7b27ee4214311eda77618c04dca4db32bcad7f84f5f7e8a8a637b35042d",
+      "ocr_source": "RapidOCR_170dpi",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "figure_region",
+          "note": "两幅独立图 2-10-1、2-10-2；保留整图及红色 1、2、H、a、b 等图示标记。",
+          "bbox_pdf_pt_approx": [
+            130,
+            175,
+            470,
+            700
+          ]
+        },
+        {
+          "kind": "source_unreadable",
+          "bbox_pdf_pt": [
+            236.75,
+            293.51,
+            267.25,
+            304.09
+          ],
+          "ocr_text": "对接间厚",
+          "action": "4x 原页仍不可辨；不猜原文，隔离该 OCR 框并保留图像区域。"
+        },
+        {
+          "kind": "ocr_artifact",
+          "bbox_pdf_pt": [
+            324.42,
+            424.8,
+            343.91,
+            540.85
+          ],
+          "ocr_text": "Te99999999R",
+          "action": "图线误识别；隔离该 OCR 框。"
+        }
+      ],
+      "cross_page_source_unit_ids": [],
+      "coverage_note": "原页 4x 核对两图；可辨标注“支撑条”“间隙测点”“管道”“阀门或管道”及图号已保留。压线小字原件自身不可辨，标 source_unreadable；错误 OCR 框已隔离，图形关系须从图像区域读取。"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "original_page_visual_sha256_170dpi": "2420e30b7345da068edbc55a02b867100cdea70064be740d9b8bd851c9a5c18f",
+      "ocr_source": "RapidOCR_170dpi",
+      "ocr_text_status": "verified",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "cross_page_source_unit",
+          "source_unit_id": "D300N-table-2-14-1-row-6-p49-p50",
+          "bbox_pdf_pt": [
+            94,
+            185,
+            358,
+            352
+          ],
+          "note": "行6 g)–i) 接原件 p49 a)–f)，须以跨页来源单元使用。"
+        },
+        {
+          "kind": "table_geometry",
+          "bbox_pdf_pt": [
+            63,
+            145,
+            542,
+            643
+          ],
+          "note": "续表 2-14-1：工作内容、附图号、证明书目录分别占列；行7–9与右侧记录目录分开。"
+        }
+      ],
+      "cross_page_source_unit_ids": [
+        "D300N-table-2-14-1-row-6-p49-p50"
+      ],
+      "coverage_note": "按原页核对 g)–i)、行7–9和右栏可辨文字；表格各行/列边界须保留，不能按 OCR 阅读顺序混接。"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 73,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "original_page_visual_sha256_170dpi": "5f16bd4b7b633ae2b16a4aaf15dd2544e01509132cce04312705f40341a5ca57",
+      "ocr_source": "RapidOCR_170dpi",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [
+        {
+          "kind": "numeric_text_checked",
+          "source_text": "下垫片脱开 0.2～0.5 mm；前箱抬起 0.1～0.15 mm",
+          "note": "两组范围在原页清楚，与现有 OCR 数值一致。"
+        }
+      ],
+      "cross_page_source_unit_ids": [],
+      "coverage_note": "正文是前箱滑动面清洗及盘车装置润滑；标题原件印作“35”，不擅自规范化为“3.5”。"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 94,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "original_page_visual_sha256_170dpi": "4452bdf10f93d3aef9e96fe6c885dbabc45e66d1913a32099b669197924a9198",
+      "ocr_source": "RapidOCR_170dpi",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [
+        {
+          "kind": "source_crop",
+          "note": "页眉左侧在原件自身被截，OCR 仅保留可见残余页眉；页身无工程内容。"
+        }
+      ],
+      "cross_page_source_unit_ids": [],
+      "coverage_note": "除页眉、页码 3-3-4 外为空白边界页。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "original_page_visual_sha256_170dpi": "928ead098612b6f652f4007ba51be266da50b6673ef6a9185cbc31535973e92b",
+      "ocr_source": "original_pdf_native_text",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "cross_page_source_unit_ids": [
+        "HAF103-2.1.2-p1-p2"
+      ],
+      "coverage_note": "1.1、1.2、2.1.1 为完整正文；2.1.2 在本页末尾续至原件 p2，必须跨页引用。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "original_page_visual_sha256_170dpi": "d9acfef885f1b0013d252a054dc07e98c3d592324210b314d4051be9dc1e4a7b",
+      "ocr_source": "original_pdf_native_text",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "cross_page_source_unit_ids": [
+        "HAF103-4.1.3-p10-p11"
+      ],
+      "coverage_note": "页首 4.1.3 接原件 p10；后续 4.2.1–4.2.7 是完整独立条款。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "original_page_visual_sha256_170dpi": "dd4184060fdf98dd4f4c0a85ae87fa54b2edf63f4e4ae8a5259d94596784f2a0",
+      "ocr_source": "original_pdf_native_text",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [
+        {
+          "kind": "classification_list",
+          "source_text": "5.1.3 运行限值和条件可以分为以下五类",
+          "note": "原页确有五类，需按类别保留，不视为五个操作步骤。"
+        }
+      ],
+      "cross_page_source_unit_ids": [],
+      "coverage_note": "4.2.8、5.1.1–5.1.4 文字及 5.1.3 五类别逐项与原页对齐。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 16,
+      "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "original_page_visual_sha256_170dpi": "9a52b89e86126a8f3b511a86975b5d745ac2ba5b52507c053355f7773991fe14",
+      "ocr_source": "original_pdf_native_text",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "cross_page_source_unit_ids": [
+        "HAF103-5.5.2-p15-p16"
+      ],
+      "coverage_note": "页首是 5.5.2 末句，须接原件 p15；5.5.3–5.5.8 与 5.6.1 为完整正文。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "original_page_visual_sha256_170dpi": "0aed0e2af4decbd4be7105a139a243763453f00b20e5353ed8c063f520703ac0",
+      "ocr_source": "original_pdf_native_text",
+      "ocr_text_status": "verified",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "reviewed_table_hierarchy",
+          "bbox_pdf_pt": [
+            76,
+            345.5,
+            519,
+            440.5
+          ],
+          "note": "原 PDF 4x 核对合并单元格层级；仅为 OCR 来源结构，不生成表格 Evidence。",
+          "top_level": [
+            {
+              "text": "运行状态",
+              "children": [
+                "正常运行",
+                "预计运行事件"
+              ]
+            },
+            {
+              "text": "事故工况",
+              "children": [
+                "设计基准事故",
+                "设计扩展工况"
+              ]
+            }
+          ],
+          "nested_children": {
+            "设计扩展工况": [
+              "没有造成堆芯明显损伤",
+              "堆芯熔化（严重事故）"
+            ]
+          },
+          "cell_boundaries_pdf_pt_approx": {
+            "x": [
+              76,
+              146.25,
+              236.75,
+              323.5,
+              416.75,
+              519
+            ],
+            "y": [
+              345.5,
+              371.25,
+              397.25,
+              440.5
+            ]
+          }
+        },
+        {
+          "kind": "cross_page_source_unit",
+          "source_unit_id": "HAF103-anticipated-operational-occurrence-p29-p30",
+          "note": "页尾“预计运行事件”定义续至原件 p30。"
+        }
+      ],
+      "cross_page_source_unit_ids": [
+        "HAF103-anticipated-operational-occurrence-p29-p30"
+      ],
+      "coverage_note": "表格上下术语正文原生文本清楚；合并单元格层级已据原页复核，页尾“预计运行事件”定义须接 p30。"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 32,
+      "original_pdf_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "original_page_visual_sha256_170dpi": "3af6ddccfe5fa4a517b5c25ab161e8886585bd48f6a75758600938c89c4bf163",
+      "ocr_source": "original_pdf_native_text",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "cross_page_source_unit_ids": [
+        "HAF103-maintenance-effectiveness-p31-p32"
+      ],
+      "coverage_note": "页首“维修有效性”定义接原件 p31；本页“运行限值和条件”定义自足。"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_auxiliary_source_structure_proposal",
+  "document_key": "auxiliary_installation_book",
+  "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+  "coordinate_system": "original_pdf_display_points",
+  "status": "source_reviewed_pending_canonical_binding",
+  "source_reviews": ["data/stage6/ocr_review_auxiliary.json", "data/stage6/stage6_auxiliary_source_supplements.json"],
+  "binding_rule": "Match physical page, bounded source quote, original-PDF bbox and current SourceSpan lineage after the canonical Stage 6 rebuild. No Evidence is created or approved by this proposal.",
+  "groups": [
+    {"group_id": "aux-p12-2.1.5", "kind": "same_page_rule", "physical_pages": [12], "bbox": [63, 279, 347, 309], "start_at": "2.1.5高级技师", "end_before": "2.2培训教师资格", "required_quote": "累积不少于350标准学时", "source_review_status": "confirmed_original_page", "binding_status": "pending_two_span_binding"},
+    {"group_id": "aux-p12-2.4.1", "kind": "cross_page_rule", "physical_pages": [12, 13], "bbox": [64, 520, 349, 533], "start_at": "2.4.1 培训目的", "page_12_tail": "对本职", "page_13_head": "业的知识和技能要求。", "source_review_status": "confirmed_original_pages", "binding_status": "pending_page_13_source_span"},
+
+    {"group_id": "aux-p32-La5A1001", "kind": "marked_question_options", "physical_pages": [32], "bbox": [62, 220, 354, 257], "start_at": "La5A1001", "end_before": "La5A1002", "answer_option": "A", "answer_text": "mm"},
+    {"group_id": "aux-p32-La5A1002", "kind": "marked_question_options", "physical_pages": [32], "bbox": [62, 273, 354, 306], "start_at": "La5A1002", "end_before": "La5A1003", "answer_option": "A", "answer_text": "矢量"},
+    {"group_id": "aux-p32-La5A1003", "kind": "marked_question_options", "physical_pages": [32], "bbox": [62, 322, 354, 371], "start_at": "La5A1003", "end_before": "La5A1004", "answer_option": "B", "answer_text": "平行力"},
+    {"group_id": "aux-p32-La5A1004", "kind": "marked_question_options", "physical_pages": [32], "bbox": [62, 387, 354, 419], "start_at": "La5A1004", "end_before": "La5A1005", "answer_option": "B", "answer_text": "T=t+273.15", "source_correction_ref": "ocr_review_auxiliary.json#p32/La5A1004-option-D"},
+    {"group_id": "aux-p32-La5A1005", "kind": "marked_question_options", "physical_pages": [32], "bbox": [62, 437, 354, 484], "start_at": "La5A1005", "end_before": "La5A1006", "answer_option": "C", "answer_text": "左旋和右旋"},
+    {"group_id": "aux-p32-La5A1006", "kind": "marked_question_options", "physical_pages": [32], "bbox": [62, 502, 354, 532], "start_at": "La5A1006", "end_before": "page_end", "answer_option": "C", "answer_text": "760"},
+
+    {"group_id": "aux-p64-Lb4A3231", "kind": "cross_page_question", "physical_pages": [63, 64], "bbox": [40, 56, 354, 101], "start_at": "physical_page_63", "page_64_head": "转速、叶轮尺寸的增大而（C）。", "end_before": "Lb4A3232", "binding_status": "pending_page_63_stem"},
+    {"group_id": "aux-p64-Lb4A3232", "kind": "marked_question_options", "physical_pages": [64], "bbox": [40, 105, 354, 136], "start_at": "Lb4A3232", "end_before": "Lb4A3233", "answer_option": "B", "answer_text": "后弯"},
+    {"group_id": "aux-p64-Lb4A3233", "kind": "marked_question_options", "physical_pages": [64], "bbox": [40, 152, 354, 216], "start_at": "Lb4A3233", "end_before": "Lb4A3234", "answer_option": "A", "answer_text": "5%～10%", "boundary_note": "Option D ends on the following line at 80%."},
+    {"group_id": "aux-p64-Lb4A3234", "kind": "marked_question_options", "physical_pages": [64], "bbox": [40, 231, 354, 296], "start_at": "Lb4A3234", "end_before": "Lb4A3235", "answer_option": "C", "answer_text": "出口、入口"},
+    {"group_id": "aux-p64-Lb4A3235", "kind": "marked_question_options", "physical_pages": [64], "bbox": [40, 311, 354, 360], "start_at": "Lb4A3235", "end_before": "Lb4A4236", "answer_option": "C", "answer_text": "机械密封"},
+    {"group_id": "aux-p64-Lb4A4236", "kind": "marked_question_options", "physical_pages": [64], "bbox": [40, 376, 354, 424], "start_at": "Lb4A4236", "end_before": "Lb4A4237", "answer_option": "C", "answer_text": "25%", "boundary_note": "Its options and the next stem share one current Evidence; split at Lb4A4237."},
+    {"group_id": "aux-p64-Lb4A4237", "kind": "marked_question_options", "physical_pages": [64], "bbox": [40, 425, 354, 488], "start_at": "Lb4A4237", "end_before": "Lb4A4238", "answer_option": "B", "answer_text": "5%", "boundary_note": "Do not include the following cross-page stem in the last complete group."},
+    {"group_id": "aux-p64-Lb4A4238", "kind": "cross_page_question", "physical_pages": [64, 65], "bbox": [75, 504, 354, 536], "start_at": "Lb4A4238", "page_64_tail": "高于给水泵入口14m（A）标高。", "page_65_head": "（A）以上；（B）以下；（C）位置；（D）附近。", "binding_status": "pending_page_65_options"},
+
+    {"group_id": "aux-p120-J5A2624", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 55, 355, 103], "start_at": "J5A2624", "end_before": "J5A2625", "answer_option": "D", "answer_text": "60°"},
+    {"group_id": "aux-p120-J5A2625", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 119, 355, 167], "start_at": "J5A2625", "end_before": "J5A3626", "answer_option": "C", "answer_text": "3/4"},
+    {"group_id": "aux-p120-J5A3626", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 183, 355, 232], "start_at": "J5A3626", "end_before": "Jf5A4627", "answer_option": "B", "answer_text": "W、H"},
+    {"group_id": "aux-p120-Jf5A4627", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 247, 355, 295], "start_at": "Jf5A4627", "end_before": "Jf4A1628", "answer_option": "B", "answer_text": "0.05～0.20", "boundary_note": "Option D continues with 1.10 in a separate OCR/Evidence fragment."},
+    {"group_id": "aux-p120-Jf4A1628", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 311, 355, 359], "start_at": "Jf4A1628", "end_before": "J4A1629", "answer_option": "A", "answer_text": "设置拖拉绳"},
+    {"group_id": "aux-p120-J4A1629", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 375, 355, 406], "start_at": "J4A1629", "end_before": "Jf4A1630", "answer_option": "C", "answer_text": "6"},
+    {"group_id": "aux-p120-Jf4A1630", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 423,355, 469], "start_at": "Jf4A1630", "end_before": "Jf4A2631", "answer_option": "A", "answer_text": "坚韧的木板", "source_correction_ref": "ocr_review_auxiliary.json#p120/Jf4A1630"},
+    {"group_id": "aux-p120-Jf4A2631", "kind": "marked_question_options", "physical_pages": [120], "bbox": [40, 486, 355, 534], "start_at": "Jf4A2631", "end_before": "page_end", "answer_option": "C", "answer_text": "不足"},
+
+    {"group_id": "aux-p180-La5C3011", "kind": "question_answer", "physical_pages": [180], "bbox": [40, 52, 355, 164], "start_at": "La5C3011", "answer_starts": "答：火力发电厂的生产过程", "end_before": "La5C3012"},
+    {"group_id": "aux-p180-La5C3012", "kind": "question_answer", "physical_pages": [180], "bbox": [40, 181, 355, 340], "start_at": "La5C3012", "answer_starts": "答：凝汽器的工作任务为", "numbered_item_count": 4, "end_before": "La5C3013"},
+    {"group_id": "aux-p180-La5C3013", "kind": "question_answer", "physical_pages": [180], "bbox": [40, 358, 355, 420], "start_at": "La5C3013", "answer_starts": "答：在转速为某一定值的情况下", "end_before": "La5C4014"},
+    {"group_id": "aux-p180-La5C4014", "kind": "question_answer", "physical_pages": [180], "bbox": [40, 438, 355, 532], "start_at": "La5C4014", "answer_starts": "答：根据滚动轴承固定时外圈的受力情况", "numbered_item_count": 3, "end_before": "page_end", "item_semantics": "parallel fixation categories"},
+
+    {"group_id": "aux-p244-prior-answer", "kind": "cross_page_answer_tail", "physical_pages": [243, 244], "bbox": [40, 54, 355, 133], "start_at": "physical_page_243", "page_244_head": "在有裂纹处用砂轮磨削或铲去损伤部位的金属层", "end_before": "Je4C3267", "binding_status": "pending_page_243_question"},
+    {"group_id": "aux-p244-Je4C3267", "kind": "question_answer", "physical_pages": [244], "bbox": [40, 149, 355, 272], "start_at": "Je4C3267", "answer_starts": "答：（1）静泡的酸液配比", "numbered_item_count": 3, "end_before": "Je4C3268", "item_semantics": "ordered acid-wash steps"},
+    {"group_id": "aux-p244-Je4C3268", "kind": "question_answer", "physical_pages": [244], "bbox": [40, 287, 355, 395], "start_at": "Je4C3268", "answer_starts": "答：调整密封环径向间隙的方法", "end_before": "Je4C3269"},
+    {"group_id": "aux-p244-Je4C3269", "kind": "question_answer", "physical_pages": [244], "bbox": [40, 409, 355, 457], "start_at": "Je4C3269", "answer_starts": "答：给水泵在检修时", "end_before": "Je4C3270"},
+    {"group_id": "aux-p244-Je4C3270", "kind": "cross_page_question_answer", "physical_pages": [244, 245], "bbox": [40, 472, 355, 534], "start_at": "Je4C3270", "answer_starts": "答：低压加热器大法兰密封面泄漏", "page_244_tail": "大法兰刚性不够而变", "page_245_head": "形，可加焊筋板增加刚性，焊后用车床精加工密封面。", "binding_status": "pending_page_245_answer"},
+
+    {"group_id": "aux-p300-Jd1D2098", "kind": "calculation_question_answer", "physical_pages": [300], "bbox": [40, 52, 355, 311], "start_at": "Jd1D2098", "end_before": "Jd1D2099", "formula_review_ref": "ocr_review_auxiliary.json#p300/Jd1D2098", "binding_status": "pending_formula_source_span_alignment", "separate_from": "Jd1D2099"},
+    {"group_id": "aux-p300-Jd1D2099", "kind": "figure_question_without_answer_on_page", "physical_pages": [300], "bbox": [40, 324, 355, 548], "start_at": "Jd1D2099", "figure_label": "图D-12", "figure_review_ref": "ocr_review_auxiliary.json#p300/Jd1D2099/图D-12", "binding_status": "pending_figure_label_span_alignment", "separate_from": "Jd1D2098"},
+
+    {"group_id": "aux-p360-La1F2009", "kind": "question_answer_classification", "physical_pages": [360], "bbox": [40, 57, 355, 341], "start_at": "La1F2009", "answer_starts": "答：不论什么水泵", "end_before": "La1F2010", "class_labels": ["流量", "扬程", "转速", "轴功率", "效率", "比转速"], "item_semantics": "six parallel pump-performance parameter classes, not a procedure", "source_correction_ref": "ocr_review_auxiliary.json#p360/La1F2009-efficiency"},
+    {"group_id": "aux-p360-La1F2010", "kind": "question_answer", "physical_pages": [360], "bbox": [40, 360, 355, 516], "start_at": "La1F2010", "answer_starts": "答：汽轮机冲转前必须有一定的真空", "end_before": "page_end", "boundary_note": "Both too-low and too-high vacuum paragraphs belong to this answer."},
+
+    {"group_id": "aux-p468-q1", "kind": "unmarked_sample_question", "physical_pages": [468], "bbox": [40, 214, 354, 246], "start_at": "1．无热位移的管道", "end_before": "2.管道进行水压试验", "answer_option": null, "semantic_use": "question_context_only"},
+    {"group_id": "aux-p468-q2", "kind": "unmarked_sample_question", "physical_pages": [468], "bbox": [40, 248, 354, 295], "start_at": "2.管道进行水压试验", "end_before": "3.打水压检查阀门", "answer_option": null, "semantic_use": "question_context_only"},
+    {"group_id": "aux-p468-q3", "kind": "unmarked_sample_question", "physical_pages": [468], "bbox": [40, 295, 354, 342], "start_at": "3.打水压检查阀门", "end_before": "4.氧气管道严密性试验", "answer_option": null, "semantic_use": "question_context_only"},
+    {"group_id": "aux-p468-q4", "kind": "unmarked_sample_question", "physical_pages": [468], "bbox": [40, 343, 354, 391], "start_at": "4.氧气管道严密性试验", "end_before": "5.（  ）适用于小型设备", "answer_option": null, "semantic_use": "question_context_only"},
+    {"group_id": "aux-p468-q5", "kind": "unmarked_sample_question", "physical_pages": [468], "bbox": [40, 392, 354, 439], "start_at": "5.（  ）适用于小型设备", "end_before": "6.钢材在各种介质", "answer_option": null, "semantic_use": "question_context_only"},
+    {"group_id": "aux-p468-q6", "kind": "unmarked_sample_question", "physical_pages": [468], "bbox": [40, 439, 354, 487], "start_at": "6.钢材在各种介质", "end_before": "7.在水处理除盐系统", "answer_option": null, "semantic_use": "question_context_only"},
+    {"group_id": "aux-p468-q7", "kind": "cross_page_unmarked_sample_question", "physical_pages": [468, 469], "bbox": [40, 487, 354, 535], "start_at": "7.在水处理除盐系统", "page_468_options": "A–C", "page_469_options": "remaining option text", "answer_option": null, "semantic_use": "question_context_only", "binding_status": "pending_page_469_options"},
+
+    {"group_id": "aux-p480-exam-row-0", "kind": "printed_table_data_row", "physical_pages": [480], "bbox": [61, 255, 344, 280], "row_index": 0, "row_label": "选择", "source_group_ref": "stage6_auxiliary_source_supplements.json#/evidence_groups/0", "table_context_status": "header_source_spans_unavailable"},
+    {"group_id": "aux-p480-exam-row-1", "kind": "printed_table_data_row", "physical_pages": [480], "bbox": [61, 280, 344, 305], "row_index": 1, "row_label": "判断", "source_group_ref": "stage6_auxiliary_source_supplements.json#/evidence_groups/1", "table_context_status": "header_source_spans_unavailable"},
+    {"group_id": "aux-p480-exam-row-2", "kind": "printed_table_data_row", "physical_pages": [480], "bbox": [61, 305, 344, 320], "row_index": 2, "row_label": "简答/计算", "source_group_ref": "stage6_auxiliary_source_supplements.json#/evidence_groups/2", "table_context_status": "header_source_spans_unavailable"},
+    {"group_id": "aux-p480-exam-row-3", "kind": "printed_table_data_row", "physical_pages": [480], "bbox": [61, 320, 344, 345], "row_index": 3, "row_label": "绘图/论述", "source_group_ref": "stage6_auxiliary_source_supplements.json#/evidence_groups/3", "table_context_status": "header_source_spans_unavailable", "printed_inconsistency": "高级栏1题×5分/题、2题×10分/题，与配分15并列印刷；保留原值"},
+    {"group_id": "aux-p480-exam-row-4", "kind": "printed_table_data_row", "physical_pages": [480], "bbox": [61, 345, 344, 362], "row_index": 4, "row_label": "总计", "source_group_ref": "stage6_auxiliary_source_supplements.json#/evidence_groups/4", "table_context_status": "header_source_spans_unavailable"}
+  ],
+  "non_group_source_regions": [
+    {"physical_page": 1, "kind": "metadata_only_cover"},
+    {"physical_page": 31, "kind": "blank_separator"},
+    {"physical_page": 480, "kind": "printed_table_header", "bbox": [61, 222, 344, 255], "printed_caption": "试卷的题型与题量分配（组卷方案）表", "header_ref": "stage6_auxiliary_source_supplements.json#/table_cells/printed_header", "warning": "Do not interpret first data row 选择 as a header."},
+    {"physical_page": 480, "kind": "prose", "source_ref": "stage6_auxiliary_source_supplements.json#/supplemental_prose", "source_unit_count": 6}
+  ],
+  "remaining_risks": [
+    "All groups await exact SourceSpan/Evidence binding after the canonical Stage 6 rebuild; broad current Evidence IDs may overlap neighboring questions.",
+    "Physical pages 13, 63, 65, 243, 245 and 469 are outside the 12-page auxiliary sample and are needed for five boundary groups.",
+    "Jd1D2098 formula transcription is confirmed on the original page, but reviewed math SourceSpans and equation layout lineage are not yet present; Jd1D2099 figure labels require separate region binding.",
+    "Page 468 has no marked answers. Its choices are question context and must not become selected engineering facts.",
+    "Page 480 has two-tier printed headers but no independent header SourceSpans; row-level sources cannot claim a validated TableContext."
+  ]
+}

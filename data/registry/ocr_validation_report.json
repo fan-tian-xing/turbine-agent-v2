@@ -1,163 +1,1837 @@
 {
-  "schema_version": 1,
-  "review_method": "Primary visual review plus three independent subagent cross-checks against the original page images",
-  "formal_release_policy": "OCR adapter may be promoted after page-by-page original comparison and independent subagent spot-check pass; this does not itself create a Release. Formal extraction must retain original page coordinates for tables, formulas and diagrams.",
-  "reviews": [
+  "schema_version": 2,
+  "stage": "5",
+  "full_corpus_reviews": [
     {
-      "source": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
-      "ocr": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
-      "comparison_status": "passed",
-      "current_text_adapter_status": "ocr_validated",
-      "correction_status": "text_layer_corrections_applied",
-      "applied_correction_pages": [
-        "10-11",
-        "13",
-        "18",
-        "21-23",
-        "28",
-        "30-31",
-        "34",
-        "36-37",
-        "40-41",
-        "43-48",
-        "51",
-        "54-55",
-        "57-59",
-        "61",
-        "63",
-        "65-74",
-        "76",
-        "79",
-        "84-94"
+      "document_key": "D300N",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "reviewed_page_ranges": [
+        [
+          1,
+          94
+        ]
       ],
-      "page_mapping": "94 source pages to 94 OCR pages",
-      "confirmed": [
-        "cover model, identifier, version and 2001-05 date",
-        "page order and page images",
-        "all 94 rendered pages match the original; key diagram labels and figure numbers were corrected"
+      "review_method": "agent_visual_page_line_and_table_cell_review_then_direct_pdf_text_layer_correction",
+      "line_by_line_reviewed": true,
+      "table_cells_reviewed": true,
+      "reading_order_reviewed": true,
+      "blank_pages": [],
+      "source_unreadable_pages": [],
+      "unresolved_text_count": 0,
+      "unresolved_table_cell_count": 0,
+      "unresolved_page_mapping_count": 0,
+      "source_limits": [
+        {
+          "physical_pages": [
+            86
+          ],
+          "region": "two small Chinese drawing callouts",
+          "limitation": "Original characters remain indistinguishable at enlarged inspection; readable digits 1 and 2 retained, no Chinese text guessed."
+        },
+        {
+          "physical_pages": [
+            87
+          ],
+          "region": "right drawing explanations",
+          "limitation": "Source image crops the right-hand text; readable prefixes retained, missing endings not reconstructed."
+        },
+        {
+          "physical_pages": [
+            92
+          ],
+          "region": "upper-left angular ticks and right bolt drawing dimensions",
+          "limitation": "Leading digits or dimension fragments are cropped in the original; only visible suffixes and legible fragments retained."
+        },
+        {
+          "physical_pages": [
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94
+          ],
+          "region": "upper-left running headers",
+          "limitation": "Source crops the left edge; only visible characters retained, no missing header text invented."
+        },
+        {
+          "physical_pages": [
+            34,
+            41,
+            44,
+            46,
+            48,
+            55,
+            57,
+            59
+          ],
+          "region": "chapter heading digits",
+          "limitation": "Only legible digits transcribed where original separators overlap or cannot be distinguished."
+        }
       ],
-      "manual_review_pages": [
-        "1",
-        "3-4",
-        "6-17",
-        "20-21",
-        "25",
-        "37",
-        "44",
-        "51",
-        "55",
-        "61",
-        "65",
-        "68",
-        "70-71",
-        "80",
-        "87-89",
-        "92"
+      "preserved_source_anomalies": [
+        {
+          "physical_pages": [
+            88
+          ],
+          "kind": "original_figure_numbering",
+          "details": "122 numeric labels; 113 absent; 43, 44 and 117 each appear twice. Original numbering retained."
+        },
+        {
+          "physical_pages": [
+            53
+          ],
+          "kind": "original_character",
+          "details": "The source reads 吵粒; it is not normalized to 砂粒."
+        }
       ],
-      "blocking_findings": [],
-      "subagent_spot_check": "passed",
-      "extraction_notes": [
-        "For tables, formulas, diagrams, multi-column or rotated pages, formal Evidence must retain original page coordinates and the original page image."
-      ]
+      "extraction_boundary": "Use positioned Unicode and original page geometry; table cells, formula parts and drawing labels require geometric reconstruction in Stage 6.",
+      "reviewer_kind": "codex_root_and_authorized_subagents",
+      "mechanical_validation": {
+        "document_key": "D300N",
+        "page_count": 94,
+        "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+        "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+        "passed": true,
+        "page_geometry_preserved": true,
+        "original_pixels_preserved": true,
+        "extractable_unicode_passed": true,
+        "character_bounds_passed": true,
+        "checked_at": "2026-09-28",
+        "pixel_render_scale": 2,
+        "basis": "Completed actual source/PDF validation; original and processing hashes still match the current Registry during consolidation."
+      }
     },
     {
-      "source": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
-      "ocr": "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf",
-      "comparison_status": "passed",
-      "current_text_adapter_status": "ocr_validated",
-      "correction_status": "text_layer_corrections_applied",
-      "applied_correction_pages": [
-        "6",
-        "7",
-        "9-11",
-        "14",
-        "17-20",
-        "22",
-        "24-28"
+      "document_key": "DLT863",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "reviewed_page_ranges": [
+        [
+          1,
+          28
+        ]
       ],
-      "page_mapping": "28 source pages to 28 OCR pages",
-      "confirmed": [
-        "standard identity and dates on page 1",
-        "scope and 300MW wording on page 5",
-        "page images and order",
-        "all 28 rendered pages match the original; directory markers, chemical subscripts and vibration units were checked"
+      "line_by_line_reviewed": true,
+      "table_cells_reviewed": true,
+      "reading_order_reviewed": true,
+      "blank_pages": [],
+      "source_unreadable_pages": [],
+      "unresolved_text_count": 0,
+      "unresolved_table_cell_count": 0,
+      "unresolved_page_mapping_count": 0,
+      "review_method": "agent_visual_page_line_and_table_cell_review_then_direct_pdf_text_layer_correction",
+      "reviewer_kind": "codex_root_and_authorized_subagents",
+      "extraction_boundary": "Use positioned Unicode and original page geometry; table cells, formula parts and drawing labels require geometric reconstruction in Stage 6.",
+      "missing_printed_pages": [
+        12,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        25,
+        27,
+        28,
+        29
       ],
-      "manual_review_pages": [
-        "18-19",
-        "24-28"
-      ],
-      "blocking_findings": [],
-      "subagent_spot_check": "passed",
-      "extraction_notes": [
-        "For tables, formulas, diagrams, multi-column or rotated pages, formal Evidence must retain original page coordinates and the original page image."
-      ]
+      "source_gap_boundary": "Only supplied 28 physical pages; absent printed pages are not reconstructed.",
+      "mechanical_validation": {
+        "document_key": "DLT863",
+        "page_count": 28,
+        "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+        "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+        "passed": true,
+        "page_geometry_preserved": true,
+        "original_pixels_preserved": true,
+        "extractable_unicode_passed": true,
+        "character_bounds_passed": true,
+        "checked_at": "2026-09-28",
+        "pixel_render_scale": 2,
+        "basis": "Completed actual source/PDF validation; original and processing hashes still match the current Registry during consolidation."
+      }
     },
     {
-      "source": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
-      "ocr": "OCR/汽轮机辅机安装（第二版）(OCR).pdf",
-      "comparison_status": "passed",
-      "current_text_adapter_status": "ocr_validated",
-      "correction_status": "all_registered_auxiliary_corrections_reapplied_and_rechecked",
-      "applied_correction_pages": [
-        "2",
-        "3-6",
-        "9",
-        "11",
-        "13-17",
-        "19-20",
-        "22",
-        "32",
-        "34",
-        "75",
-        "300",
-        "456-457",
-        "468",
-        "478-479"
+      "document_key": "HAF103",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "reviewed_page_ranges": [
+        [
+          1,
+          32
+        ]
       ],
-      "page_mapping": "480 source pages to 480 OCR pages",
-      "confirmed": [
-        "full book boundary retained",
-        "all 480 rendered pages match the original page images",
-        "low-text pages 30, 31, 353 and 355 inspected",
-        "rotated pages and representative tables inspected",
-        "registered auxiliary-book correction rules reapplied",
-        "new definite text-layer errors found by independent spot checks corrected",
-        "listed old OCR error strings absent from the current OCR text layer",
-        "formula, table and diagram Evidence remains tied to the original page image"
-      ],
-      "manual_review_pages": [
-        "1-480"
-      ],
-      "blocking_findings": [],
-      "subagent_spot_check": "passed_after_post_correction_audit_by_two_independent_agents",
-      "extraction_notes": [
-        "For tables, formulas, diagrams, multi-column or rotated pages, formal Evidence must retain original page coordinates and the original page image."
-      ],
-      "page_review_coverage": "all 480 pages",
-      "rotation_handling": "OCR derivative normalizes 479 source pages with rotation=90 to rotation=0; original page coordinates and original page images remain authoritative for Evidence."
+      "review_method": "agent_visual_review_of_all_32_native_unicode_pages_and_table_then_byte_identical_derived_copy",
+      "reviewer_kind": "codex_root_and_authorized_subagents",
+      "line_by_line_reviewed": true,
+      "table_cells_reviewed": true,
+      "reading_order_reviewed": true,
+      "blank_pages": [],
+      "source_unreadable_pages": [],
+      "unresolved_text_count": 0,
+      "unresolved_table_cell_count": 0,
+      "unresolved_page_mapping_count": 0,
+      "extraction_boundary": "Use positioned Unicode and original page geometry; table cells, formula parts and drawing labels require geometric reconstruction in Stage 6.",
+      "review_evidence": "All 32 physical source pages were visually compared; page 29 table and page continuations reviewed. No regenerated OCR was needed.",
+      "processing_boundary": "Native searchable Unicode source; formal derived copy is byte-identical.",
+      "mechanical_validation": {
+        "document_key": "HAF103",
+        "page_count": 32,
+        "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "passed": true,
+        "page_geometry_preserved": true,
+        "original_pixels_preserved": true,
+        "extractable_unicode_passed": true,
+        "character_bounds_passed": true,
+        "checked_at": "2026-09-28",
+        "pixel_render_scale": 2,
+        "basis": "Completed actual source/PDF validation; original and processing hashes still match the current Registry during consolidation."
+      }
     },
     {
-      "source": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
-      "ocr": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
-      "comparison_status": "passed",
-      "current_text_adapter_status": "ocr_validated",
-      "page_mapping": "32 source pages to 32 OCR pages, printed pages 3-34",
-      "confirmed": [
-        "title and scope clause",
-        "negative/exclusion wording and other-type reference wording",
-        "checked clauses 4.2.1-4.2.8 and selected later pages",
-        "all 32 rendered pages match the supplied source unit; checked gas, work-plan and completion-drawing terms"
+      "document_key": "DL5190.3",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "reviewed_page_ranges": [
+        [
+          1,
+          141
+        ]
       ],
-      "manual_review_pages": [
-        "OCR 1",
-        "OCR 11-12",
-        "OCR 29",
-        "OCR 32"
+      "review_method": "agent_visual_page_line_and_table_cell_review_then_direct_pdf_text_layer_correction",
+      "reviewer_kind": "codex_root_and_authorized_subagents",
+      "line_by_line_reviewed": true,
+      "table_cells_reviewed": true,
+      "reading_order_reviewed": true,
+      "blank_pages": [
+        11
       ],
-      "blocking_findings": [],
-      "subagent_spot_check": "passed",
-      "extraction_notes": [
-        "For tables, formulas, diagrams, multi-column or rotated pages, formal Evidence must retain original page coordinates and the original page image."
+      "source_unreadable_pages": [],
+      "unresolved_text_count": 0,
+      "unresolved_table_cell_count": 0,
+      "unresolved_page_mapping_count": 0,
+      "extraction_boundary": "Use positioned Unicode and original page geometry; table cells, formula parts and drawing labels require geometric reconstruction in Stage 6.",
+      "review_evidence": "Root visually reviewed pages 1–117; authorized subagent reviewed 118–141; root cross-checked page 122 figure. Native body retained and readable drawing annotations corrected directly in hidden Unicode layer.",
+      "preserved_source_anomalies": [
+        {
+          "kind": "original_typography_and_numbering",
+          "details": "Original repeated clause numbers, XXXX placeholders, old contents references and formula fragments preserved; invisible white cover filing-number residue excluded from searchable text."
+        },
+        {
+          "physical_pages": [
+            122
+          ],
+          "kind": "original_drawing_and_body_variable_difference",
+          "details": "Drawing label m_w1 and adjacent body notation differ in the source; not normalized to each other."
+        }
+      ],
+      "processing_boundary": "Original native PDF remains unchanged; derived PDF adds reviewed figure annotations.",
+      "mechanical_validation": {
+        "document_key": "DL5190.3",
+        "page_count": 141,
+        "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+        "passed": true,
+        "page_geometry_preserved": true,
+        "original_pixels_preserved": true,
+        "extractable_unicode_passed": true,
+        "character_bounds_passed": true,
+        "checked_at": "2026-09-28",
+        "pixel_render_scale": 2,
+        "basis": "Completed actual source/PDF validation; original and processing hashes still match the current Registry during consolidation."
+      }
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "reviewed_page_ranges": [
+        [
+          1,
+          480
+        ]
+      ],
+      "review_method": "targeted_agent_visual_review_and_direct_pdf_correction_plus_explicit_user_acceptance_of_current_delivery",
+      "reviewer_kind": "codex_targeted_review_plus_user_acceptance",
+      "line_by_line_reviewed": false,
+      "table_cells_reviewed": false,
+      "reading_order_reviewed": false,
+      "user_acceptance": {
+        "accepted": true,
+        "acceptance_kind": "user_confirmation_of_current_ocr_delivery",
+        "confirmation_text": "辅机我确认过了，没问题，可以通过",
+        "accepted_at": "2026-09-28",
+        "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+        "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+        "accepted_page_ranges": [[1, 480]],
+        "does_not_assert_agent_line_by_line_or_cell_review": true,
+        "known_extraction_limits_acknowledged": "第124页下标在MuPDF提取后需局部空白归一化；第427页1～2k/g沿原书换行；表格和图示仍需按原页几何解释。"
+      },
+      "blank_pages": [
+        31
+      ],
+      "source_unreadable_pages": [],
+      "unresolved_text_count": null,
+      "unresolved_table_cell_count": null,
+      "unresolved_page_mapping_count": null,
+      "extraction_boundary": "Use current PDF positioned Unicode. Training table pages 14–25 now read by cell; other tables/drawings retain geometric structure. Page124 ActualText subscript groups need local whitespace normalization in MuPDF; pypdf currently ignores these tags.",
+      "review_evidence": {
+        "root": [
+          [
+            121,
+            210
+          ],
+          [
+            315,
+            330
+          ],
+          [
+            455,
+            458
+          ]
+        ],
+        "auxiliary_review": [
+          [
+            1,
+            120
+          ],
+          [
+            211,
+            240
+          ],
+          [
+            331,
+            346
+          ],
+          [
+            459,
+            464
+          ]
+        ],
+        "dl_remaining_review": [
+          [
+            241,
+            314
+          ],
+          [
+            347,
+            360
+          ]
+        ],
+        "downstream_dependency_audit": [
+          [
+            361,
+            454
+          ],
+          [
+            465,
+            480
+          ]
+        ],
+        "cross_review": "315–330 independently checked and drawing positions corrected; page 26 rotated table labels and page 44 gutter bounds corrected before final merge.",
+        "merge_check": "Only reviewed physical page ranges assembled; final 480-page validation confirms original visible pixels, geometry, Unicode extraction, unchanged per-part text and character bounds."
+      },
+      "preserved_source_anomalies": [
+        {
+          "physical_pages": [
+            79,
+            87,
+            103,
+            104
+          ],
+          "kind": "printed_text",
+          "details": "Repeated C120, 圆主齿轮 and HB40~HB40, 波浪选择 and −0.10 are source readings, not OCR errors."
+        },
+        {
+          "physical_pages": [
+            125,
+            133,
+            135,
+            136,
+            137,
+            161,
+            169,
+            173,
+            176
+          ],
+          "kind": "printed_text_and_formula",
+          "details": "Source 侧头、不柱度、花兰、螺栓槽、给水泵于锅炉、丁氢橡胶垫、螺检 and original formula retained. Page176 describes five items but prints four rows; missing content not supplied."
+        },
+        {
+          "physical_pages": [
+            199,
+            201,
+            206,
+            208,
+            235
+          ],
+          "kind": "printed_text",
+          "details": "Source 酥松、漏斗有算子、不柱度、焙掉、凝结器 and 15℃ retained after enlarged visual checks."
+        },
+        {
+          "physical_pages": [
+            267,
+            269,
+            272,
+            273,
+            287,
+            288
+          ],
+          "kind": "printed_formula",
+          "details": "Source answer1289.4/formula1295.34, 9604, 10194at, 7×10⁻⁴ and N=η₂QH/1000η₁ retained. Page288 missing exponents are not invented; other legible powers are transcribed."
+        },
+        {
+          "physical_pages": [
+            324,
+            344,
+            455,
+            456,
+            457,
+            462,
+            463,
+            464
+          ],
+          "kind": "printed_text_and_drawing",
+          "details": "Page324 drawing omits label4 and repeats6; source 凝汽机、取出口轮键、DL/T S210.3—2009、清理打麻、移去主轴泵、各轴承轴承温度、调出电动机 retained."
+        }
+      ],
+      "source_printed_anomalies_from_reviewed_fragment": [
+        {
+          "physical_page": 429,
+          "text": "薄面均匀",
+          "note": "正文与质量要求均按原扫描印刷字面保留。"
+        },
+        {
+          "physical_page": 450,
+          "text": "承银色；薄面均匀",
+          "note": "原印刷字面。"
+        },
+        {
+          "physical_page": 451,
+          "text": "应承银白色",
+          "note": "原印刷字面。"
+        },
+        {
+          "physical_page": 452,
+          "text": "修挂；顶部检修；应坚持；是否整劲",
+          "note": "原印刷字面，未按技术常识改写。"
+        },
+        {
+          "physical_page": 472,
+          "text": "水面计；白元石",
+          "note": "原印刷字面。"
+        },
+        {
+          "physical_page": 474,
+          "text": "21（A）；沿箱；轴瓦内颈",
+          "note": "原印刷字面；未修订试卷答案本身。"
+        }
+      ],
+      "rotation_preservation": "Source rotation, MediaBox and CropBox retained; no rotation normalization.",
+      "mechanical_validation": {
+        "document_key": "auxiliary_installation_book",
+        "page_count": 480,
+        "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+        "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+        "passed": true,
+        "page_geometry_preserved": true,
+        "original_pixels_preserved": true,
+        "extractable_unicode_passed": true,
+        "character_bounds_passed": true,
+        "checked_at": "2026-09-28",
+        "pixel_render_scale": 1,
+        "basis": "All 480 pages match the prior source-identical scan pixels at native scale; affected pages also match at double scale. Reviewed run changes, table ordering, glyph inventory, Unicode and displayed character bounds passed. This is not exhaustive text accuracy verification.",
+        "merge_text_preserved": true,
+        "characters": 266824,
+        "blank_pages": [
+          31
+        ],
+        "targeted_pixel_render_scale": 2,
+        "glyph_inventory_preserved": true
+      },
+      "fragment_review_transcriptions": {
+        "physical_page_ranges": [
+          [
+            361,
+            452
+          ],
+          [
+            465,
+            480
+          ]
+        ],
+        "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+        "processing_sha256": "6d55efe7f4c987594fbfce06ce1709204f2b35cbdd383b2a20d6e8b9e0d9b49d",
+        "reviewed_pages": 108,
+        "checks": {
+          "current_pdf_page_text_fingerprints_recomputed": true,
+          "source_scan_pixels_identical": true,
+          "page_geometry_identical": true,
+          "Unicode_NUL_or_replacement_characters": 0,
+          "non_whitespace_character_bbox_outside_page_over_0_01pt": 0,
+          "text_run_order_verified": true
+        },
+        "pages": [
+          {
+            "physical_page": 361,
+            "text_sha256": "da855400689acdbfa865423c9a6f743df755b82a2e52dd7b4deb76ec5a59dbde",
+            "text_length": 679,
+            "non_whitespace_characters": 648
+          },
+          {
+            "physical_page": 362,
+            "text_sha256": "03f84c91725f32142dff7416e1c36e021b6d4c332c285c4a3bcc232a56c8e9ee",
+            "text_length": 699,
+            "non_whitespace_characters": 666
+          },
+          {
+            "physical_page": 363,
+            "text_sha256": "03072c7267c08e0d5e4171afe033b8b4d775398541795ae0950236585747db29",
+            "text_length": 753,
+            "non_whitespace_characters": 718
+          },
+          {
+            "physical_page": 364,
+            "text_sha256": "360324b056691dc78b1cb022403f56263fcd20741b3caafec7c4686ffc93a5a2",
+            "text_length": 696,
+            "non_whitespace_characters": 666
+          },
+          {
+            "physical_page": 365,
+            "text_sha256": "5d3b11d41fe1a12200de4761065ec1962b75305c9a88267e341a9d25850bc10d",
+            "text_length": 660,
+            "non_whitespace_characters": 629
+          },
+          {
+            "physical_page": 366,
+            "text_sha256": "82c8c858f8103743dc96289e51e851890cdd93a0dff686c43abd7fbdfad004ba",
+            "text_length": 640,
+            "non_whitespace_characters": 609
+          },
+          {
+            "physical_page": 367,
+            "text_sha256": "5eef28aa59f3be6cdfc1137b77fa204b63b460233946d6ff04f4aa25c23aedcf",
+            "text_length": 551,
+            "non_whitespace_characters": 521
+          },
+          {
+            "physical_page": 368,
+            "text_sha256": "91d2d0080a58aee3050cc2b1d1b8499d97faf77ff2b6b9da9c7f0570d7f838c5",
+            "text_length": 597,
+            "non_whitespace_characters": 565
+          },
+          {
+            "physical_page": 369,
+            "text_sha256": "302e707481ba8b6904fee7d94cf523d51b6f4fa31a851c40d978f40b3524d8b2",
+            "text_length": 616,
+            "non_whitespace_characters": 585
+          },
+          {
+            "physical_page": 370,
+            "text_sha256": "b8daf2b245b6408e6eab53f65648a32f1900db77694f7fa0dc10ae74e72ae89e",
+            "text_length": 659,
+            "non_whitespace_characters": 626
+          },
+          {
+            "physical_page": 371,
+            "text_sha256": "a9ea250ed0623f42237b43ed97d23a4fe63e006fd4a3cdd4b621974ab734535b",
+            "text_length": 747,
+            "non_whitespace_characters": 716
+          },
+          {
+            "physical_page": 372,
+            "text_sha256": "d1d11b8735390ac356988ada187260ec726eed94b39ce3826320b6da4dd28468",
+            "text_length": 694,
+            "non_whitespace_characters": 663
+          },
+          {
+            "physical_page": 373,
+            "text_sha256": "e62dc7d185581aac7385e55ef9717d0e224c68b51da2874c7682b6a64af18d4a",
+            "text_length": 641,
+            "non_whitespace_characters": 608
+          },
+          {
+            "physical_page": 374,
+            "text_sha256": "d32a29dfb659814aa0c07ed0cd2a4917da9f414a5ef8ca7a5f20431899567f6b",
+            "text_length": 627,
+            "non_whitespace_characters": 596
+          },
+          {
+            "physical_page": 375,
+            "text_sha256": "9af5845d770c52495e24a90a3c28c78f3114292f33c0340dd4fb28a2894a07ab",
+            "text_length": 646,
+            "non_whitespace_characters": 615
+          },
+          {
+            "physical_page": 376,
+            "text_sha256": "89dd08fa6cbc18d6bcbe03d16cfa9786180a641a1c4fac315e90652d9f4ce22b",
+            "text_length": 544,
+            "non_whitespace_characters": 513
+          },
+          {
+            "physical_page": 377,
+            "text_sha256": "fcf816160a51b91d92ab472fdfcf8b7ae55df9cf85ee18b6fee6e2f31d6735c3",
+            "text_length": 659,
+            "non_whitespace_characters": 627
+          },
+          {
+            "physical_page": 378,
+            "text_sha256": "9c01dd3da1e3e07d24546dded2627e02ffcddb4f2aaa3fadc37d4dde0c896d8c",
+            "text_length": 523,
+            "non_whitespace_characters": 493
+          },
+          {
+            "physical_page": 379,
+            "text_sha256": "16ab7c10ccd1a91fb8f55f674934073c6c708dc096c2f9260abb2d6a9ad7a2b1",
+            "text_length": 625,
+            "non_whitespace_characters": 594
+          },
+          {
+            "physical_page": 380,
+            "text_sha256": "dbfaa1446f5f8afdf8fd993bbe9a4496a4e5fa87ed672baef91ce595bc6beee3",
+            "text_length": 705,
+            "non_whitespace_characters": 673
+          },
+          {
+            "physical_page": 381,
+            "text_sha256": "15a01e8d1e507bedfee62d3cc8b69db26e3a2c36bbec892edea26a18092a8584",
+            "text_length": 628,
+            "non_whitespace_characters": 596
+          },
+          {
+            "physical_page": 382,
+            "text_sha256": "99747ac456410f5f7b207d91a21437d48496ac5827a9f5f9b1b6d76ad8d700fe",
+            "text_length": 666,
+            "non_whitespace_characters": 634
+          },
+          {
+            "physical_page": 383,
+            "text_sha256": "fda3e2c0bd17641e9b222cedfdce7b06c18ac0fffdc9281549e7b4ce05272d06",
+            "text_length": 695,
+            "non_whitespace_characters": 664
+          },
+          {
+            "physical_page": 384,
+            "text_sha256": "a4f91c227f8b9fd80ee9ae1fc0b1183e58eaf9f8a2e628b518d146ffec223919",
+            "text_length": 634,
+            "non_whitespace_characters": 601
+          },
+          {
+            "physical_page": 385,
+            "text_sha256": "e4532a45bf026e1c3a5c89865d0a62bfd7012a00b646a1ba4701157990c91f68",
+            "text_length": 640,
+            "non_whitespace_characters": 609
+          },
+          {
+            "physical_page": 386,
+            "text_sha256": "bb46d80f5cf505853ffd27241724e8078eeb7f6371040a2bef1dba077e802899",
+            "text_length": 632,
+            "non_whitespace_characters": 600
+          },
+          {
+            "physical_page": 387,
+            "text_sha256": "1a6820327b3deffe2b8ec917d94d7a0ee0b9ae0988e2a5b525d5a3c90aeb4d1c",
+            "text_length": 627,
+            "non_whitespace_characters": 597
+          },
+          {
+            "physical_page": 388,
+            "text_sha256": "43c32c7d083f803513526c0165577a9248fe010be21ec198f1b4f93a453824e3",
+            "text_length": 580,
+            "non_whitespace_characters": 550
+          },
+          {
+            "physical_page": 389,
+            "text_sha256": "17d2183519e3256bb6227502247c44140c77f4e8ede152e641c9dfa749b5d893",
+            "text_length": 684,
+            "non_whitespace_characters": 652
+          },
+          {
+            "physical_page": 390,
+            "text_sha256": "09375f96798c052fba7d144613b4bf54965f8f03af103e6a138ab34f2c5f6c6d",
+            "text_length": 663,
+            "non_whitespace_characters": 632
+          },
+          {
+            "physical_page": 391,
+            "text_sha256": "fdb0b55db744acbb52963ec857ce9b24ee50c9cd5ce005f7d0ff1bb59534a48f",
+            "text_length": 627,
+            "non_whitespace_characters": 595
+          },
+          {
+            "physical_page": 392,
+            "text_sha256": "4fa36f2f7d37286cd17faa30b0efe77e4f25105203b1f81504edb84e79cc2a4c",
+            "text_length": 605,
+            "non_whitespace_characters": 573
+          },
+          {
+            "physical_page": 393,
+            "text_sha256": "8a3766df43529d684cc9fa185655e2771d7e373a3cd3b1299dcd52a2f83edc6c",
+            "text_length": 615,
+            "non_whitespace_characters": 577
+          },
+          {
+            "physical_page": 394,
+            "text_sha256": "834a6d3b731f3d8a9b31a91e844365f48232b360ce7fa9541acf883ed685cb36",
+            "text_length": 752,
+            "non_whitespace_characters": 717
+          },
+          {
+            "physical_page": 395,
+            "text_sha256": "99dbebb8775df6cee2be997938fb978efcb38056e068d6f8a48ec51487d615d9",
+            "text_length": 705,
+            "non_whitespace_characters": 674
+          },
+          {
+            "physical_page": 396,
+            "text_sha256": "329bc7cc4b33ae82cc972bcc65c48f4523c25a94232dc2903062518349fdf2f0",
+            "text_length": 736,
+            "non_whitespace_characters": 704
+          },
+          {
+            "physical_page": 397,
+            "text_sha256": "d66235d4b16b30fb780506b39a27896626a0b501c8168e7791f9169bbae8d2b6",
+            "text_length": 732,
+            "non_whitespace_characters": 701
+          },
+          {
+            "physical_page": 398,
+            "text_sha256": "23bb313e2284ff22e0ac9f93400908b8b6729b632276d23473e7dea3038ed2c8",
+            "text_length": 662,
+            "non_whitespace_characters": 632
+          },
+          {
+            "physical_page": 399,
+            "text_sha256": "a663536cb3274fa3a6f8eb6c616402308ba876355b54886b0e5783c189b43b80",
+            "text_length": 669,
+            "non_whitespace_characters": 639
+          },
+          {
+            "physical_page": 400,
+            "text_sha256": "b3146e8e15fed834c29287e573517b05469114d2177f0e7a46bcf752ad768527",
+            "text_length": 686,
+            "non_whitespace_characters": 654
+          },
+          {
+            "physical_page": 401,
+            "text_sha256": "46fb44b9b297e503e440bc7587d97ccb61e490d92c8dceee288d00511fd3918e",
+            "text_length": 709,
+            "non_whitespace_characters": 678
+          },
+          {
+            "physical_page": 402,
+            "text_sha256": "68bc0dc3995c3617b019a8f729edb8d2ae98ad156d36f27e95f34e5e19d2c6cf",
+            "text_length": 690,
+            "non_whitespace_characters": 657
+          },
+          {
+            "physical_page": 403,
+            "text_sha256": "851fa070273e23f067c3900618966971f6b3905a16d221204819c738789a7ebf",
+            "text_length": 607,
+            "non_whitespace_characters": 572
+          },
+          {
+            "physical_page": 404,
+            "text_sha256": "06fde832adfd30946e12a1d86ca4775f48f162f5ff69fe7c6d84ecd3890677a8",
+            "text_length": 591,
+            "non_whitespace_characters": 559
+          },
+          {
+            "physical_page": 405,
+            "text_sha256": "492f8d446d2543e99138820c9e677408db849fa8b336d0a62a957e27b341757d",
+            "text_length": 589,
+            "non_whitespace_characters": 558
+          },
+          {
+            "physical_page": 406,
+            "text_sha256": "6aab5e5be4f552f6f1cf0cdd7485bf74996130124253b552c2d727b1d53322da",
+            "text_length": 708,
+            "non_whitespace_characters": 677
+          },
+          {
+            "physical_page": 407,
+            "text_sha256": "888e3adfdb19eb6e64d4940c0a78241b91ae0eea5b25dccfc414f07f14d679b5",
+            "text_length": 544,
+            "non_whitespace_characters": 516
+          },
+          {
+            "physical_page": 408,
+            "text_sha256": "cb946627f89d4d8d3dc5912d2f45c050b5af8bb067214a287b5bcb8f49a52b3f",
+            "text_length": 364,
+            "non_whitespace_characters": 298
+          },
+          {
+            "physical_page": 409,
+            "text_sha256": "36cbf9903c2ecb57b8defd6a283d383db84264301cc7341b20f66be8c028582a",
+            "text_length": 463,
+            "non_whitespace_characters": 382
+          },
+          {
+            "physical_page": 410,
+            "text_sha256": "45f65639ae946b8fc141e11376ffbc94873e303b4a5a7da8ac12237e28869a6f",
+            "text_length": 454,
+            "non_whitespace_characters": 378
+          },
+          {
+            "physical_page": 411,
+            "text_sha256": "c1e4fbf3b99a318d80969893c487f7fab1ea425b2c175311c712fbd392017e9c",
+            "text_length": 541,
+            "non_whitespace_characters": 450
+          },
+          {
+            "physical_page": 412,
+            "text_sha256": "a2f264a90c318effcc672cfc68fc55ac99d2d357fb13dece35d05ef8d1b88896",
+            "text_length": 497,
+            "non_whitespace_characters": 419
+          },
+          {
+            "physical_page": 413,
+            "text_sha256": "2f8371cff83c162d321741f99107fea410024b64959c418eac64e8400e11020b",
+            "text_length": 384,
+            "non_whitespace_characters": 313
+          },
+          {
+            "physical_page": 414,
+            "text_sha256": "43ec0934936b7fa9e5792b56b71dd200928dea39bdf3bbaebb7566e9e3392d44",
+            "text_length": 468,
+            "non_whitespace_characters": 391
+          },
+          {
+            "physical_page": 415,
+            "text_sha256": "20f9c43d438c577070b786b93ae58aca5b345f6e3e3b3fd880f01490da66cd26",
+            "text_length": 601,
+            "non_whitespace_characters": 505
+          },
+          {
+            "physical_page": 416,
+            "text_sha256": "e09f5211168b003d6af3ed476e8be85d56b6e2763025da7efa16d40ff1ccbed1",
+            "text_length": 513,
+            "non_whitespace_characters": 429
+          },
+          {
+            "physical_page": 417,
+            "text_sha256": "cd41bd16ec0c16625bd9426e784989197b72ffe07787e267e1f062f7f044df6d",
+            "text_length": 499,
+            "non_whitespace_characters": 417
+          },
+          {
+            "physical_page": 418,
+            "text_sha256": "161e0127659619c46c88dfbf165d5053c5927bc1109c189258869f00796f9fa6",
+            "text_length": 341,
+            "non_whitespace_characters": 278
+          },
+          {
+            "physical_page": 419,
+            "text_sha256": "446bb0b3aa53fc51a36c891100cd006148b02e97b96bf3d9afe77d10380a9f23",
+            "text_length": 664,
+            "non_whitespace_characters": 568
+          },
+          {
+            "physical_page": 420,
+            "text_sha256": "83451bd45c6f2576abacfbeedb2ddb65e0c46259833a11624ecba209637f3779",
+            "text_length": 407,
+            "non_whitespace_characters": 334
+          },
+          {
+            "physical_page": 421,
+            "text_sha256": "32b78c6cc88cc76c9cc0f36153a2ded23e75a78256612b450d043ca61f721697",
+            "text_length": 388,
+            "non_whitespace_characters": 316
+          },
+          {
+            "physical_page": 422,
+            "text_sha256": "9f9b40a3ccefe843f4a8f1784993ea7bfdb1d56ee89e06bd9e6421a57cdb0450",
+            "text_length": 343,
+            "non_whitespace_characters": 280
+          },
+          {
+            "physical_page": 423,
+            "text_sha256": "e8016374d5d8149c3e37ddf3415ae5ab90d825a897c67a4dbe00a4a3bf3e4be4",
+            "text_length": 380,
+            "non_whitespace_characters": 312
+          },
+          {
+            "physical_page": 424,
+            "text_sha256": "c2e6671bba073f0a8700f8db34dc2203f6294ad9c1826f8ea12b450222f5f7db",
+            "text_length": 501,
+            "non_whitespace_characters": 411
+          },
+          {
+            "physical_page": 425,
+            "text_sha256": "c8cc7102fe1446504bd6640cd3221299af3ae0edd261b0dbce4117a148f08dbd",
+            "text_length": 442,
+            "non_whitespace_characters": 371
+          },
+          {
+            "physical_page": 426,
+            "text_sha256": "cd0dcd3c63d8c7d344156c900e464134925fb6fe1d61314679feab54b0d286e8",
+            "text_length": 537,
+            "non_whitespace_characters": 456
+          },
+          {
+            "physical_page": 427,
+            "text_sha256": "7688e0cab9ef736d06c5e13a7fd013b5eb92d94060d5478600a87fb8b199e66e",
+            "text_length": 606,
+            "non_whitespace_characters": 519
+          },
+          {
+            "physical_page": 428,
+            "text_sha256": "0c2ec8ef34707398dbbd1d5f7e8c39302d9f307bfd766313237adfe90693ba59",
+            "text_length": 478,
+            "non_whitespace_characters": 406
+          },
+          {
+            "physical_page": 429,
+            "text_sha256": "329a83e0c696f72fb64ce78aaef09051367d781f689a0fd3a6f4d90603948ff8",
+            "text_length": 572,
+            "non_whitespace_characters": 496
+          },
+          {
+            "physical_page": 430,
+            "text_sha256": "6a1ea140d9a02af2df04baef8c94433bb5841027b06a2bc08a915f5bd3afe9b9",
+            "text_length": 539,
+            "non_whitespace_characters": 448
+          },
+          {
+            "physical_page": 431,
+            "text_sha256": "d5b149362801c76e1e953aaa75f5c7ba636d7eaacbe10eb052aa837cb47b6b32",
+            "text_length": 349,
+            "non_whitespace_characters": 288
+          },
+          {
+            "physical_page": 432,
+            "text_sha256": "f9139165e113f9d6805fc3c1f32773f1377760b567f1a4bf4e716b12791531ac",
+            "text_length": 476,
+            "non_whitespace_characters": 398
+          },
+          {
+            "physical_page": 433,
+            "text_sha256": "82f1ed404efda93b3ff59eb413a8cb9a22c6af70eeb2831e3073b443f78fc7fe",
+            "text_length": 364,
+            "non_whitespace_characters": 302
+          },
+          {
+            "physical_page": 434,
+            "text_sha256": "5b1441fe6c082ed50222b00163659e8f9b149ed05990dc07b01f2cf7695fc9d7",
+            "text_length": 397,
+            "non_whitespace_characters": 332
+          },
+          {
+            "physical_page": 435,
+            "text_sha256": "6279b0c97e34ec222e5c4355bd0c6621dc8572bc9c3abbc28b1973f84c5118d5",
+            "text_length": 467,
+            "non_whitespace_characters": 396
+          },
+          {
+            "physical_page": 436,
+            "text_sha256": "8278abfe8ab4be9c8fbcad50815669afa2fdd24c11e26c60e067fcfac0448ff4",
+            "text_length": 539,
+            "non_whitespace_characters": 452
+          },
+          {
+            "physical_page": 437,
+            "text_sha256": "c51bf98beb2f7148a2da3bb4b3f04540a73c7046be220fd54022081c4f996e25",
+            "text_length": 478,
+            "non_whitespace_characters": 396
+          },
+          {
+            "physical_page": 438,
+            "text_sha256": "a1e5c8958642c70fabb71d5b1a6ae0c1c903a2a276c854be5d7baeca9d8a0c63",
+            "text_length": 534,
+            "non_whitespace_characters": 442
+          },
+          {
+            "physical_page": 439,
+            "text_sha256": "81a6e4e5da11af0a752009a2d8f8c8fc6e4a79d801f11504ee17b7e216594808",
+            "text_length": 445,
+            "non_whitespace_characters": 370
+          },
+          {
+            "physical_page": 440,
+            "text_sha256": "2363947a255ac5d1c73c4a1e5ce256981bee94d8709f120e3d6888800d58c145",
+            "text_length": 464,
+            "non_whitespace_characters": 383
+          },
+          {
+            "physical_page": 441,
+            "text_sha256": "2b7b1b5b349af8b764507642b26c25f75a476412b0525f10588737bf4a33f96e",
+            "text_length": 440,
+            "non_whitespace_characters": 367
+          },
+          {
+            "physical_page": 442,
+            "text_sha256": "1b94758a7bea0df4e26df8f3546d4bc810b847c1d683c7384b8a00e97047fbda",
+            "text_length": 400,
+            "non_whitespace_characters": 327
+          },
+          {
+            "physical_page": 443,
+            "text_sha256": "75c21c6ab5b5cecd195743e8e6831f6ddfbe3fd4b38f5ecd4bfcbb09ca631470",
+            "text_length": 634,
+            "non_whitespace_characters": 525
+          },
+          {
+            "physical_page": 444,
+            "text_sha256": "3c96b6b41fba60fac6743fe84c319d13adf0d1b3970f1268706ec1990de6ea85",
+            "text_length": 466,
+            "non_whitespace_characters": 386
+          },
+          {
+            "physical_page": 445,
+            "text_sha256": "2fe94b369b02f2def19ed1cc24b6931b29aa63a866b28ed46562b2115364c075",
+            "text_length": 464,
+            "non_whitespace_characters": 393
+          },
+          {
+            "physical_page": 446,
+            "text_sha256": "28dabf684edd03a604366664346b1d71d8f90adb0fd5a9c7f0b841accae63f20",
+            "text_length": 536,
+            "non_whitespace_characters": 446
+          },
+          {
+            "physical_page": 447,
+            "text_sha256": "7ebcb5d7395a2ac5b8e49f923154ccd6f4c4eb23b42f56e0b0d190f37bb11214",
+            "text_length": 509,
+            "non_whitespace_characters": 427
+          },
+          {
+            "physical_page": 448,
+            "text_sha256": "4b6c68e82864f94d44cb4b807e1a5a2648043fd853a98e0a26c160f7389e9545",
+            "text_length": 513,
+            "non_whitespace_characters": 434
+          },
+          {
+            "physical_page": 449,
+            "text_sha256": "7fd550e83d7f96c3e8830b57c5ed674af660a682ff9230e50004366d51505c0e",
+            "text_length": 418,
+            "non_whitespace_characters": 345
+          },
+          {
+            "physical_page": 450,
+            "text_sha256": "0fe3d4362f76ffd0db192751ec8d497e97cd762f8b426f6716f58fe6fa2545f7",
+            "text_length": 612,
+            "non_whitespace_characters": 532
+          },
+          {
+            "physical_page": 451,
+            "text_sha256": "d7618e9abb92727b503c1f7d6f875368724262d57af681813eb84aa6551d6c10",
+            "text_length": 426,
+            "non_whitespace_characters": 363
+          },
+          {
+            "physical_page": 452,
+            "text_sha256": "3a35fde1a23255c8df3505acf353a627391b231b55d12bb06611ef9ff457de0f",
+            "text_length": 757,
+            "non_whitespace_characters": 648
+          },
+          {
+            "physical_page": 465,
+            "text_sha256": "2595ddff224441198ca9181687ced743612ed7cd9c39c6f344c12698b26253ce",
+            "text_length": 544,
+            "non_whitespace_characters": 467
+          },
+          {
+            "physical_page": 466,
+            "text_sha256": "17284e16e59e665df1c5b4813e65b002ce6dd9696453b59f26aac9bfc0a597d2",
+            "text_length": 654,
+            "non_whitespace_characters": 549
+          },
+          {
+            "physical_page": 467,
+            "text_sha256": "8bf502ae5104f610cb617f98c3a44ba126bd86a0abdcb62d8abc0e009cfac991",
+            "text_length": 510,
+            "non_whitespace_characters": 426
+          },
+          {
+            "physical_page": 468,
+            "text_sha256": "1acbfcaad80c4a1f967817ec2d4a949863527e1e1ea23a8914590249b5496cdd",
+            "text_length": 517,
+            "non_whitespace_characters": 467
+          },
+          {
+            "physical_page": 469,
+            "text_sha256": "2a397cf3ca0345461880a6ab652843f4ad8b9772effbf96ccf98b2fe6386d8c0",
+            "text_length": 682,
+            "non_whitespace_characters": 623
+          },
+          {
+            "physical_page": 470,
+            "text_sha256": "553da191bbe2150ae460a10718dd065fa2caf6bb669e116c7910d5f9f7055900",
+            "text_length": 712,
+            "non_whitespace_characters": 660
+          },
+          {
+            "physical_page": 471,
+            "text_sha256": "82309b9efcbcc757d3a98a95ca0454f946e1f082387dc16a4caeb24a8d4aefce",
+            "text_length": 660,
+            "non_whitespace_characters": 616
+          },
+          {
+            "physical_page": 472,
+            "text_sha256": "07636ec1d398d67b6a9779e125af7352af7ec90ddc433b783998cc8099e857e7",
+            "text_length": 643,
+            "non_whitespace_characters": 588
+          },
+          {
+            "physical_page": 473,
+            "text_sha256": "2af8b8cb161080ca51d037d305c764d72830d831bf2ed331200f8728820f4942",
+            "text_length": 692,
+            "non_whitespace_characters": 565
+          },
+          {
+            "physical_page": 474,
+            "text_sha256": "721e4db0782de95653ce5619337f8a9a17f099145bbb082e3963fa2a29ba1cdd",
+            "text_length": 742,
+            "non_whitespace_characters": 688
+          },
+          {
+            "physical_page": 475,
+            "text_sha256": "bf4e1064d09f72770d762e1330922260fe6f5ef1538197c7075a669995385c0f",
+            "text_length": 459,
+            "non_whitespace_characters": 427
+          },
+          {
+            "physical_page": 476,
+            "text_sha256": "29cee11c7008ede2bff777259d8ddb2ba62c7d74ba3298ef855d2135ab32baa1",
+            "text_length": 150,
+            "non_whitespace_characters": 142
+          },
+          {
+            "physical_page": 477,
+            "text_sha256": "eb593452ea971f4147019e525256ba56b692fb7f4247740e3a152c0ff786bdce",
+            "text_length": 374,
+            "non_whitespace_characters": 310
+          },
+          {
+            "physical_page": 478,
+            "text_sha256": "5613ef9bacbdfa07c63ceec4d7618346072069e24c5aa2fc74d89de76b67895b",
+            "text_length": 644,
+            "non_whitespace_characters": 540
+          },
+          {
+            "physical_page": 479,
+            "text_sha256": "db079f0a34f781349e1fbaa29f0287dc90c0fbc18e617d0a654462aff01aa076",
+            "text_length": 504,
+            "non_whitespace_characters": 413
+          },
+          {
+            "physical_page": 480,
+            "text_sha256": "d50164b41c90b452b8f0b54717ac6d84304b2da23a80b3e8160814322abace8a",
+            "text_length": 530,
+            "non_whitespace_characters": 477
+          }
+        ],
+        "prior_processing_sha256": "26976bbc64575e10212d67b059e01a39e449872a65dc21efa97523441d7a3e11",
+        "binding_status": "historical_before_current_layout_repair",
+        "current_processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+        "requires_current_extract_revalidation": true
+      },
+      "prior_processing_sha256": "26976bbc64575e10212d67b059e01a39e449872a65dc21efa97523441d7a3e11",
+      "review_revalidation_status": "user_accepted_current_pdf_with_agent_full_review_flags_unasserted",
+      "current_targeted_repair": {
+        "reviewed_pages": [
+          15,
+          77,
+          102,
+          110,
+          152,
+          168,
+          176,
+          211,
+          213,
+          232,
+          249,
+          257,
+          259,
+          303,
+          333,
+          347,
+          365,
+          371,
+          414,
+          417,
+          429,
+          443,
+          446,
+          448
+        ],
+        "confirmed_text_difference_count": 27,
+        "confirmed_difference_count_is_exhaustive": false,
+        "correction_rules": [
+          {
+            "page": 15,
+            "old": "学习目",
+            "new": "学习目标",
+            "reason": "OCR omitted 标 from the table heading."
+          },
+          {
+            "page": 15,
+            "old": "1．钳识",
+            "new": "1．钳工基本知识",
+            "reason": "OCR omitted 工基本知 from the table cell."
+          },
+          {
+            "page": 77,
+            "old": "端面飘偏",
+            "new": "端面瓢偏",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 102,
+            "old": "端面飘偏",
+            "new": "端面瓢偏",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 110,
+            "old": "飘偏、径向晃度",
+            "new": "瓢偏、径向晃度",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 110,
+            "old": "端面的飘偏度",
+            "new": "端面的瓢偏度",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 152,
+            "old": "起重机的额定起重量",
+            "new": "起重机械的额定起重量",
+            "reason": "OCR omitted 械."
+          },
+          {
+            "page": 168,
+            "old": "氢气检漏法",
+            "new": "氨气检漏法",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 176,
+            "old": "很小，测量前不要用",
+            "new": "很小，再测量前不要用",
+            "reason": "OCR omitted 再."
+          },
+          {
+            "page": 211,
+            "old": "设置前置诱导轮",
+            "new": "设前置诱导轮",
+            "reason": "OCR added 置."
+          },
+          {
+            "page": 213,
+            "old": "同时给水旁路自动打开",
+            "new": "同时给水经旁路自动打开",
+            "reason": "OCR omitted 经."
+          },
+          {
+            "page": 232,
+            "old": "存在着出",
+            "new": "存在着由",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 249,
+            "old": "并均匀为上",
+            "new": "并均匀为止",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 257,
+            "old": "安全门或动作记录",
+            "new": "安全门或动作实验记录",
+            "reason": "OCR omitted 实验."
+          },
+          {
+            "page": 303,
+            "old": "某黄铜管长9.5m",
+            "new": "某黄钢管长9.5m",
+            "reason": "Preserve the probable source typo as printed."
+          },
+          {
+            "page": 333,
+            "old": "画出全部视图",
+            "new": "画出全剖视图",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 414,
+            "old": "导珣器",
+            "new": "导铜器",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 417,
+            "old": "飘偏度",
+            "new": "瓢偏度",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 429,
+            "old": "薄面均匀的锡层",
+            "new": "薄而均匀的锡层",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 429,
+            "old": "2.所挂锡层应薄面",
+            "new": "2.所挂锡层应薄而",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 443,
+            "old": "至满足要求",
+            "new": "直至满足要求",
+            "reason": "OCR omitted 直."
+          },
+          {
+            "page": 446,
+            "old": "飘偏不大于0.02mm",
+            "new": "瓢偏不大于0.02mm",
+            "reason": "Faithful transcription of the scanned wording."
+          },
+          {
+            "page": 259,
+            "old": "将轴由最低位置抬至最高位置",
+            "new": "将轴由最低位置拾至最高位置",
+            "reason": "原页题名为抬轴试验，但答案明确印作拾至最高位置，忠实转录原字。"
+          },
+          {
+            "page": 347,
+            "old": "φ800",
+            "new": "φ900",
+            "reason": "图E-87平面图直径标注原页为φ900；题干另印φ=800，保留原件内部差异。"
+          },
+          {
+            "page": 365,
+            "old": "壳体焊接变",
+            "new": "壳体接变",
+            "reason": "删除OCR按语义多出的焊字；当前文字段在变/形处原有断行，后段原样保留。"
+          },
+          {
+            "page": 448,
+            "old": "芯接触面上，进行试门，",
+            "new": "芯接处面上，进行试门，",
+            "reason": "按原页字面接处面忠实转录。"
+          },
+          {
+            "page": 371,
+            "old": "Lb3F1032简论述题除氧器的工作原理。",
+            "new": "Lb3F1032简述除氧器的工作原理。",
+            "reason": "Correct OCR text after the left sidebar was merged into the heading."
+          }
+        ],
+        "geometry_runs_widened": 5488,
+        "geometry_rows_unique_matched": 6571,
+        "geometry_rows_unmatched_or_unmapped": 152,
+        "geometry_pages_preserved_or_unmappable": [
+          16,
+          17,
+          18,
+          19,
+          21,
+          23,
+          24,
+          31,
+          369,
+          393,
+          409,
+          413,
+          415,
+          419,
+          420,
+          439
+        ],
+        "visible_page_pixels_identical": true,
+        "all_text_runs_and_order_verified": true,
+        "unicode_nul_and_replacement_checks_passed": true,
+        "character_bounds_check_passed": true,
+        "text_extraction_layout_changes_on_unmodified_pages": [],
+        "prior_false_positive_corrections_reverted": [
+          {
+            "page": 259,
+            "incorrect_prior_change": "拾轴试验",
+            "restored_source_text": "抬轴试验"
+          },
+          {
+            "page": 359,
+            "incorrect_prior_change": "一起拾高",
+            "restored_source_text": "一起抬高"
+          }
+        ],
+        "source_printed_anomaly_retained": [
+          {
+            "page": 303,
+            "text": "黄钢管",
+            "note": "原件印刷为黄钢管，题目后文黄铜管不一致；按原页保留。"
+          }
+        ],
+        "incremental_layout_patches": [
+          {
+            "page": 371,
+            "from": "述",
+            "to": "论述题",
+            "reason": "Restore vertical sidebar text as an independent selectable run."
+          }
+        ],
+        "known_unresolved_extraction_layout_pages": [],
+        "layout_repaired_pages": [
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          124,
+          371,
+          427,
+          430
+        ],
+        "layout_repair_validation": {
+          "candidate_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+          "processing_sha256_before": "9d230f7af93e47e194ab55623dc8a2eba26d43512f7d2a304100462244a1eca4",
+          "pages": 480,
+          "layout_patches": [
+            {
+              "page": 371,
+              "before_text": "鉴定试题库",
+              "text": "鉴定试题库",
+              "character_boxes": [
+                [
+                  12.0,
+                  55.8499755859375,
+                  20.5,
+                  64.3499755859375
+                ],
+                [
+                  12.0,
+                  66.3499755859375,
+                  20.5,
+                  74.8499755859375
+                ],
+                [
+                  12.0,
+                  76.7249755859375,
+                  20.5,
+                  85.2249755859375
+                ],
+                [
+                  12.0,
+                  86.8499755859375,
+                  20.5,
+                  95.3499755859375
+                ],
+                [
+                  12.0,
+                  97.2249755859375,
+                  20.5,
+                  105.7249755859375
+                ]
+              ]
+            },
+            {
+              "page": 371,
+              "before_text": "论述题",
+              "text": "论述题",
+              "character_boxes": [
+                [
+                  23.50897216796875,
+                  58.669677734375,
+                  32.14495849609375,
+                  67.30567932128906
+                ],
+                [
+                  23.50897216796875,
+                  76.169677734375,
+                  32.14495849609375,
+                  84.80567932128906
+                ],
+                [
+                  23.50897216796875,
+                  93.669677734375,
+                  32.14495849609375,
+                  102.30567932128906
+                ]
+              ]
+            },
+            {
+              "page": 427,
+              "before_text": "一般应向原来弯",
+              "text": "一般应向原来弯",
+              "character_boxes": [
+                [
+                  188.0,
+                  494.5159912109375,
+                  195.42855834960938,
+                  501.9445495605469
+                ],
+                [
+                  195.4285888671875,
+                  494.5159912109375,
+                  202.85714721679688,
+                  501.944580078125
+                ],
+                [
+                  202.85711669921875,
+                  494.5159912109375,
+                  210.28567504882812,
+                  501.9445495605469
+                ],
+                [
+                  210.28570556640625,
+                  494.5159606933594,
+                  217.71426391601562,
+                  501.94451904296875
+                ],
+                [
+                  217.71429443359375,
+                  494.5159912109375,
+                  225.14285278320312,
+                  501.9445495605469
+                ],
+                [
+                  225.14288330078125,
+                  494.5159912109375,
+                  232.57144165039062,
+                  501.944580078125
+                ],
+                [
+                  232.57147216796875,
+                  494.5159912109375,
+                  240.00003051757812,
+                  501.9445495605469
+                ]
+              ]
+            },
+            {
+              "page": 427,
+              "before_text": "曲的原方向弯曲0",
+              "text": "曲的原方向弯曲",
+              "character_boxes": [
+                [
+                  181.0,
+                  503.36163330078125,
+                  189.4285888671875,
+                  511.7901916503906
+                ],
+                [
+                  189.4285888671875,
+                  503.36163330078125,
+                  197.857177734375,
+                  511.79022216796875
+                ],
+                [
+                  197.857177734375,
+                  503.36163330078125,
+                  206.2857666015625,
+                  511.7901916503906
+                ],
+                [
+                  206.28570556640625,
+                  503.3616027832031,
+                  214.71429443359375,
+                  511.7901611328125
+                ],
+                [
+                  214.71429443359375,
+                  503.36163330078125,
+                  223.14288330078125,
+                  511.7901916503906
+                ],
+                [
+                  223.14288330078125,
+                  503.36163330078125,
+                  231.57147216796875,
+                  511.79022216796875
+                ],
+                [
+                  231.5714111328125,
+                  503.36163330078125,
+                  240.0,
+                  511.7901916503906
+                ]
+              ]
+            },
+            {
+              "page": 427,
+              "before_text": ".01～0.02mm",
+              "text": "0.01～0.02mm",
+              "character_boxes": [
+                [
+                  180.375,
+                  515.0,
+                  183.76251220703125,
+                  521.7750244140625
+                ],
+                [
+                  183.76251220703125,
+                  515.0,
+                  187.1500244140625,
+                  521.7750244140625
+                ],
+                [
+                  187.1500244140625,
+                  515.0,
+                  190.53753662109375,
+                  521.7750244140625
+                ],
+                [
+                  190.5374755859375,
+                  515.0,
+                  193.92498779296875,
+                  521.7750244140625
+                ],
+                [
+                  193.92498779296875,
+                  515.0,
+                  200.70001220703125,
+                  521.7750244140625
+                ],
+                [
+                  200.699951171875,
+                  515.0,
+                  204.08746337890625,
+                  521.7750244140625
+                ],
+                [
+                  204.08746337890625,
+                  515.0,
+                  207.4749755859375,
+                  521.7750244140625
+                ],
+                [
+                  207.4749755859375,
+                  515.0,
+                  210.86248779296875,
+                  521.7750244140625
+                ],
+                [
+                  210.86248779296875,
+                  515.0,
+                  214.25,
+                  521.7750244140625
+                ],
+                [
+                  214.25,
+                  515.0,
+                  217.63751220703125,
+                  521.7750244140625
+                ],
+                [
+                  220.001953125,
+                  515.0,
+                  223.38946533203125,
+                  521.7750244140625
+                ]
+              ]
+            },
+            {
+              "page": 430,
+              "before_text": "球面接触面积达6",
+              "text": "球面接触面积达",
+              "character_boxes": [
+                [
+                  207.0,
+                  478.2745666503906,
+                  213.83999633789062,
+                  485.11456298828125
+                ],
+                [
+                  213.8399658203125,
+                  478.2745666503906,
+                  220.67996215820312,
+                  485.11456298828125
+                ],
+                [
+                  220.67999267578125,
+                  478.2745666503906,
+                  227.51998901367188,
+                  485.11456298828125
+                ],
+                [
+                  227.52001953125,
+                  478.2745666503906,
+                  234.36001586914062,
+                  485.11456298828125
+                ],
+                [
+                  234.3599853515625,
+                  478.2745666503906,
+                  241.19998168945312,
+                  485.11456298828125
+                ],
+                [
+                  241.199951171875,
+                  478.2745666503906,
+                  248.03994750976562,
+                  485.11456298828125
+                ],
+                [
+                  248.03997802734375,
+                  478.2745666503906,
+                  254.87997436523438,
+                  485.11456298828125
+                ]
+              ]
+            },
+            {
+              "page": 430,
+              "before_text": "0%以上，并均匀",
+              "text": "60%以上，并均匀",
+              "character_boxes": [
+                [
+                  203.58001708984375,
+                  486.48260498046875,
+                  207.00003051757812,
+                  493.32257080078125
+                ],
+                [
+                  207.0,
+                  486.4825744628906,
+                  210.42001342773438,
+                  493.32257080078125
+                ],
+                [
+                  210.41998291015625,
+                  486.4825439453125,
+                  213.83999633789062,
+                  493.32257080078125
+                ],
+                [
+                  213.8399658203125,
+                  486.4825744628906,
+                  220.67996215820312,
+                  493.32257080078125
+                ],
+                [
+                  220.67999267578125,
+                  486.4825744628906,
+                  227.51998901367188,
+                  493.32257080078125
+                ],
+                [
+                  227.52001953125,
+                  486.4825744628906,
+                  234.36001586914062,
+                  493.32257080078125
+                ],
+                [
+                  234.3599853515625,
+                  486.4825744628906,
+                  241.19998168945312,
+                  493.32257080078125
+                ],
+                [
+                  241.199951171875,
+                  486.4825744628906,
+                  248.03994750976562,
+                  493.32257080078125
+                ],
+                [
+                  248.03997802734375,
+                  486.4825744628906,
+                  254.87997436523438,
+                  493.32257080078125
+                ]
+              ]
+            }
+          ],
+          "table_order_pages": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25
+          ],
+          "semantic_tag_pages": [
+            124
+          ],
+          "subscripts_recoverable_from_text_and_blocks": true,
+          "table_glyph_positions_preserved": true,
+          "extraction_layout_changed_pages": [
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            124,
+            427,
+            430
+          ],
+          "visible_page_pixels_identical": true,
+          "page_geometry_identical": true,
+          "glyph_inventory_preserved": true,
+          "text_run_changes_match_reviewed_patches": true,
+          "unaffected_text_traces_preserved": true,
+          "character_bounds_within_page": true,
+          "rendered_pixel_digest": "1d52b2b8c19adf1a98cc0e8530554c66b916fd8e8130c5892fa30dc93dd00faa",
+          "formal_pdf_replaced": true,
+          "current_processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+          "inspection": {
+            "size_bytes": 27392189,
+            "total_text_characters": 266824,
+            "visual_content_fingerprint": "2ba73b5c62f7853e631718b64b1a60e892aca03baa0eec32cc4cf7ddaa9522c8",
+            "text_content_fingerprint": "579f99e76b52c9e4d8111006e4cd20a5f8d80af44821853de04d75d67a711556"
+          },
+          "unicode_nul_and_replacement_checks_passed": true,
+          "previous_27_corrections_preserved": true
+        },
+        "subscript_extraction_limits": [
+          {
+            "page": 124,
+            "issue": "ActualText supplies A_ccm/A_r3/A_c3/A_rcm semantics to MuPDF text/blocks, but layout whitespace remains. Normalize only the A_ subscript group; current pypdf ignores ActualText.",
+            "normalization_pattern": "\\bA\\s*_\\s*(ccm|r\\s*3|c\\s*3|rcm)\\b"
+          },
+          {
+            "page": 427,
+            "issue": "Source itself wraps 1～2k then g on separate lines; source layout is retained and can be joined within the same table cell."
+          }
+        ]
+      },
+      "targeted_reading_order_review_pages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
       ]
     }
   ]

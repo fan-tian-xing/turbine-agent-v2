@@ -9,17 +9,17 @@ available only as an explicit fixture for tests and offline pipeline checks.
 from __future__ import annotations
 
 import hashlib
-import inspect
 import json
 import os
 import re
+import time
 import unicodedata
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from difflib import SequenceMatcher
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Callable, Protocol
+from typing import Any, Callable, Protocol, Sequence
 
 from jsonschema import Draft202012Validator
 
@@ -51,6 +51,7 @@ EXTRACTION_CONTRACT_KEYS = (
 COARSE_RELATIONS = frozenset({"requires", "prohibits", "describes", "causes", "verifies", "limits_scope"})
 STATEMENT_TYPES = frozenset({"fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"})
 ENTITY_ROLES = frozenset({"subject", "object", "related", "quantity_target"})
+SOURCE_LIST_KINDS = frozenset({"classification_list", "requirement_list", "activity_list"})
 STAGE9_TYPE = {
     "fact": "fact",
     "requirement": "acceptance_requirement",
@@ -60,18 +61,24 @@ STAGE9_TYPE = {
     "verification": "inspection_requirement",
     "limitation": "scope_definition",
 }
-UNITS = r"r/min|MPa|kPa|MW|mm|μm|Pa|Ω|Ω|m|%|％|s|Hz|℃|°C|dB|t/h"
+UNITS = r"标准学时|学时|r/min|MPa|kPa|千帕|kV|MW|mmHg|mm|μm|Pa|Ω|Ω|t/h|°C|℃|dB|小时|分钟|min|bar|kg|Hz|圈|次|个|台|根|件|条|项|组|°|m|%|％|s|h"
 NUMBER = r"[+-]?(?:\d+(?:\.\d+)?|\.\d+)"
 QUANTITY_RE = re.compile(
     rf"(?P<left>{NUMBER})\s*(?P<left_unit>{UNITS})?\s*(?:～|~|至|到|-|—)\s*(?P<right>{NUMBER})\s*(?P<unit>{UNITS})"
     rf"|(?P<single>{NUMBER})\s*(?P<single_unit>{UNITS})",
     re.IGNORECASE,
 )
+UNITLESS_COMPARISON_RE = re.compile(rf"(?P<number>{NUMBER}(?:\s*/\s*{NUMBER})?)")
 COMPARATORS = (
+    ("≤", "lte", "upper_bound"), ("≦", "lte", "upper_bound"),
+    ("≥", "gte", "lower_bound"), ("≧", "gte", "lower_bound"),
+    ("<", "lt", "upper_bound"), (">", "gt", "lower_bound"),
     ("不得大于", "lte", "upper_bound"), ("不得超过", "lte", "upper_bound"),
     ("不应大于", "lte", "upper_bound"), ("不应超过", "lte", "upper_bound"),
     ("不得低于", "gte", "lower_bound"), ("不得小于", "gte", "lower_bound"),
     ("不应低于", "gte", "lower_bound"), ("不应小于", "gte", "lower_bound"),
+    ("不得少于", "gte", "lower_bound"), ("不应少于", "gte", "lower_bound"),
+    ("不得高于", "lte", "upper_bound"), ("不应高于", "lte", "upper_bound"),
     ("不小于", "gte", "lower_bound"), ("不少于", "gte", "lower_bound"),
     ("不低于", "gte", "lower_bound"), ("至少", "gte", "lower_bound"),
     ("以上", "gte", "lower_bound"),
@@ -82,7 +89,7 @@ COMPARATORS = (
     ("高于", "gt", "lower_bound"), ("小于", "lt", "upper_bound"),
     ("低于", "lt", "upper_bound"),
 )
-NEGATIONS = ("不得", "不应", "不小于", "不大于", "不少于", "不低于", "不超过", "不涉及", "没有", "无", "未", "不入", "不卡")
+NEGATIONS = ("不得", "不应", "不允许", "不能", "禁止", "严禁", "不小于", "不大于", "不少于", "不低于", "不超过", "不涉及", "没有", "无", "未", "不入", "不卡")
 CONDITION_RE = re.compile(r"(?:当[^。；，,]{1,32}时|若[^。；，,]{1,32}|如果[^。；，,]{1,32}|在[^。；，,]{1,32}状态下|大修时)")
 ACTION_MARKERS = "应必须需可检查调整确认保证进行达到满足包括采用有"
 NOISE_PREFIXES = ("编制审核", "录入员", "目录", "目次", "题库", "选择题")
@@ -146,12 +153,184 @@ def parse_provider_response(raw: str | Mapping[str, Any], schema_path: Path = RE
         key=lambda error: list(error.path),
     )
     if errors:
-        raise ExtractionSchemaError("invalid Stage 12 provider response: " + "; ".join(error.message for error in errors))
+        def describe(error: Any) -> str:
+            path = "$" + "".join(f"[{part}]" if isinstance(part, int) else f".{part}" for part in error.absolute_path)
+            return f"{path}: {error.message}"
+        raise ExtractionSchemaError("invalid Stage 12 provider response: " + "; ".join(describe(error) for error in errors))
     if parsed["status"] == "no_statement" and parsed["candidates"]:
         raise ExtractionSchemaError("no_statement response must not contain candidates")
     if parsed["status"] == "ok" and not parsed["candidates"]:
         raise ExtractionSchemaError("ok response must contain at least one candidate")
+    if parsed["status"] == "no_statement" and not str(parsed.get("no_statement_reason", "")).strip():
+        raise ExtractionSchemaError("no_statement response requires a brief reason")
     return parsed
+
+
+def source_units_for_evidence(evidence: Mapping[str, Any]) -> list[dict[str, str]]:
+    """Give the model stable, provisional source units without inventing clauses.
+
+    Confirmed source steps/items are preferable to punctuation splitting, since
+    a short numbered activity may be complete without a full stop.  Remaining
+    text is split only at strong sentence boundaries; an open tail is kept as
+    a fragment so its omission is explicit in the response ledger.
+    """
+    source = _canonical_evidence_text(evidence)
+    evidence_id = str(evidence.get("evidence_id") or "")
+    positioned_units: list[tuple[int, dict[str, str]]] = []
+    consumed: list[tuple[int, int]] = []
+
+    def add(text: str, kind: str, position: int) -> None:
+        if not text.strip():
+            return
+        unit_id = "source-unit-" + _sha({"evidence_id": evidence_id, "position": position, "text": text})[:20]
+        positioned_units.append((position, {"source_unit_id": unit_id, "source_text": text.strip(), "unit_kind": kind}))
+
+    for group in [*evidence.get("operation_group_context", []), *evidence.get("related_source_context", [])]:
+        if group.get("source_review_status") != "confirmed":
+            continue
+        for member in [*group.get("steps", []), *group.get("items", [])]:
+            member_ids = member.get("evidence_ids") or ([member["evidence_id"]] if member.get("evidence_id") else [])
+            if evidence_id not in member_ids:
+                continue
+            local_quote = str((member.get("source_quotes") or {}).get(evidence_id) or member.get("source_quote") or "")
+            full_quote = str(member.get("source_quote") or local_quote)
+            if not local_quote:
+                continue
+            start = source.find(local_quote)
+            if start < 0:
+                # OCR whitespace can differ from a reviewed quote.  Preserve
+                # the source text, and leave the unmatched raw text visible.
+                add(full_quote if evidence_id == member_ids[0] else local_quote,
+                    "complete" if evidence_id == member_ids[0] else "fragment", len(source) + len(positioned_units))
+                continue
+            end = start + len(local_quote)
+            if any(start < right and end > left for left, right in consumed):
+                continue
+            consumed.append((start, end))
+            add(full_quote if evidence_id == member_ids[0] else local_quote,
+                "complete" if evidence_id == member_ids[0] else "fragment", start)
+
+    occupied = [False] * len(source)
+    for start, end in consumed:
+        occupied[start:end] = [True] * (end - start)
+    cursor = 0
+    while cursor < len(source):
+        if occupied[cursor]:
+            cursor += 1
+            continue
+        start = cursor
+        while cursor < len(source) and not occupied[cursor]:
+            cursor += 1
+        remainder = source[start:cursor]
+        offset = 0
+        for match in re.finditer(r"[^。；;！？!?]+[。；;！？!?]", remainder):
+            if match.start() > offset:
+                add(remainder[offset:match.start()], "fragment", start + offset)
+            add(match.group(0), "complete", start + match.start())
+            offset = match.end()
+        if offset < len(remainder):
+            add(remainder[offset:], "fragment", start + offset)
+    return [unit for _, unit in sorted(positioned_units, key=lambda item: item[0])]
+
+
+def validate_source_unit_coverage(
+    evidence: Mapping[str, Any], response: Mapping[str, Any],
+) -> dict[str, list[str]]:
+    """Validate the temporary, bidirectional source-unit ledger."""
+    units = source_units_for_evidence(evidence)
+    expected = {unit["source_unit_id"] for unit in units}
+    coverage = response.get("source_unit_coverage")
+    if not isinstance(coverage, list):
+        raise ExtractionSchemaError("source_unit_coverage must be an array")
+    candidates = response.get("candidates") or []
+    seen: set[str] = set()
+    by_index: dict[int, set[str]] = {index: set() for index in range(1, len(candidates) + 1)}
+    for entry in coverage:
+        if not isinstance(entry, Mapping):
+            raise ExtractionSchemaError("source_unit_coverage entry must be an object")
+        unit_id = entry.get("source_unit_id")
+        if unit_id not in expected or unit_id in seen:
+            raise ExtractionSchemaError(f"unknown or duplicate source_unit_id: {unit_id}")
+        seen.add(unit_id)
+        indexes = entry.get("candidate_indexes")
+        if not isinstance(indexes, list) or any(type(index) is not int or index not in by_index for index in indexes) or len(indexes) != len(set(indexes)):
+            raise ExtractionSchemaError(f"invalid candidate_indexes for {unit_id}")
+        if entry.get("status") == "covered":
+            if not indexes or entry.get("reason") is not None:
+                raise ExtractionSchemaError(f"covered source unit needs indexes and no reason: {unit_id}")
+            for index in indexes:
+                by_index[index].add(unit_id)
+        elif entry.get("status") == "excluded":
+            if indexes or not str(entry.get("reason") or "").strip():
+                raise ExtractionSchemaError(f"excluded source unit needs a reason and no indexes: {unit_id}")
+        else:
+            raise ExtractionSchemaError(f"invalid source unit status: {unit_id}")
+    if seen != expected:
+        raise ExtractionSchemaError(f"source_unit_coverage missing input units: {sorted(expected - seen)}")
+    assignments: dict[str, list[str]] = {}
+    for index, candidate in enumerate(candidates, start=1):
+        unit_ids = candidate.get("source_unit_ids")
+        if not isinstance(unit_ids, list) or not unit_ids or len(unit_ids) != len(set(unit_ids)) or set(unit_ids) != by_index[index]:
+            raise ExtractionSchemaError(f"candidate {index} source_unit_ids disagrees with source_unit_coverage")
+        assignments[str(index)] = list(unit_ids)
+    if response.get("status") == "no_statement" and any(entry.get("status") != "excluded" for entry in coverage):
+        raise ExtractionSchemaError("no_statement must exclude every source unit")
+    return assignments
+
+
+def _model_evidence_view(evidence: Mapping[str, Any]) -> dict[str, Any]:
+    """Send only source wording and reviewed context needed for extraction."""
+    view: dict[str, Any] = {
+        "evidence_id": evidence.get("evidence_id"),
+        "effective_text": _canonical_evidence_text(evidence),
+    }
+    for key in ("document_key", "document_logical_id", "revision_id"):
+        if evidence.get(key) is not None:
+            view[key] = evidence[key]
+    locations = evidence.get("locations") or []
+    if locations:
+        view["physical_page"] = locations[0].get("physical_page")
+        view["logical_page"] = locations[0].get("logical_page")
+    for context_key, member_key in (("operation_group_context", "steps"), ("related_source_context", "items")):
+        compact_groups = []
+        for group in evidence.get(context_key, []):
+            compact: dict[str, Any] = {
+                key: group[key] for key in (
+                    "group_id", "group_kind", "source_title", "title_evidence_id",
+                    "source_review_status", "source_total_steps", "source_total_items",
+                    "stem_evidence_id", "answer_marked", "answer_option",
+                    "answer_text", "answer_evidence_id", "answer_source_quote",
+                ) if key in group
+            }
+            compact[member_key] = [{key: member[key] for key in (
+                "source_order", "source_step_label", "source_quote", "evidence_id",
+                "evidence_ids", "status",
+            ) if key in member} for member in group.get(member_key, [])]
+            compact["member_evidence"] = [{key: member[key] for key in ("evidence_id", "text") if key in member}
+                                           for member in group.get("member_evidence", [])]
+            compact_groups.append(compact)
+        if compact_groups:
+            view[context_key] = compact_groups
+    question_guidance = []
+    for group in evidence.get("related_source_context", []):
+        if group.get("group_kind") != "question_options" or group.get("source_review_status") != "confirmed" or group.get("answer_marked") is not True:
+            continue
+        if evidence.get("evidence_id") == group.get("stem_evidence_id"):
+            question_guidance.append({
+                "group_id": group.get("group_id"),
+                "role": "stem",
+                "instruction": "只从已核题干生成肯定陈述，并按空缺顺序代入印刷答案。",
+                "resolved_statement_support": _resolved_question_group_text(group),
+            })
+        else:
+            question_guidance.append({
+                "group_id": group.get("group_id"),
+                "role": "support_only",
+                "instruction": "本题组的答案或选项文字只作题干支持，不重复生成题组陈述；仍须检查本 Evidence 的其他来源单元，独立命题照常提取。",
+            })
+    if question_guidance:
+        view["question_extraction_guidance"] = question_guidance
+    return view
 
 
 def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") -> dict[str, str]:
@@ -164,19 +343,26 @@ def stage12_prompt(evidence: Mapping[str, Any], profile: "ExtractionProfile") ->
         "candidate_predicate_enum": candidate_schema["properties"]["predicate"]["enum"],
         "candidate_statement_type_enum": candidate_schema["properties"]["statement_type"]["enum"],
         "entity_role_enum": response_schema["$defs"]["entity"]["properties"]["role"]["enum"],
+        "entity_item_shape": {"required": ["surface_form", "role"], "allowed_fields": ["surface_form", "role"]},
+        "condition_item_shape": {"required": ["surface_form"], "allowed_fields": ["surface_form"]},
+        "applicability_scope_shapes": [
+            {"status": "unknown"},
+            {"status": "known", "applicability_text": "必须同时逐字出现在 statement_text 和来源支持中"},
+        ],
+        "procedure_group_status_enum": candidate_schema["properties"]["procedure_group"]["properties"]["status"]["enum"],
+        "source_list_item_status_enum": candidate_schema["properties"]["source_list_item"]["properties"]["status"]["enum"],
     }
     system = PROMPT_PATH.read_text(encoding="utf-8")
     system += (
-        "\n\nThe following required-field summary is authoritative. Return an object "
-        "that validates against the local machine-readable JSON Schema exactly; "
-        "do not use legacy fields such as relation, statement, applicability, "
-        "or evidence_ids:\n"
+        "\n\n以下必填字段摘要具有约束力。返回结果必须严格通过本地 JSON 结构规范校验；"
+        "不要使用 relation、statement、applicability、evidence_ids 等旧字段：\n"
         + json.dumps(schema_summary, ensure_ascii=False, sort_keys=True)
     )
     return {
-        "version": "stage12-candidate-prompt-v18",
+        "version": "stage12-candidate-prompt-v30",
         "system": system,
-        "user": json.dumps({"profile": profile.semantic_role, "evidence": dict(evidence)}, ensure_ascii=False, sort_keys=True),
+        "user": json.dumps({"profile": profile.semantic_role, "evidence": _model_evidence_view(evidence),
+                            "source_units": source_units_for_evidence(evidence)}, ensure_ascii=False, sort_keys=True),
     }
 
 
@@ -207,8 +393,8 @@ class FixtureExtractionProvider:
         "provider_id": provider_id,
         "mode": "fixture",
         "model_config_identifier": "deterministic-fixture-v1",
-        "prompt_version": "stage12-candidate-prompt-v18",
-        "response_schema_version": 2,
+        "prompt_version": "stage12-candidate-prompt-v30",
+        "response_schema_version": 3,
     }
 
     def extract(self, evidence: Mapping[str, Any], profile: ExtractionProfile) -> Mapping[str, Any]:
@@ -219,8 +405,10 @@ class FixtureExtractionProvider:
             source_applicability_scope=dict(profile.source_applicability_scope),
         )
         rows = fixture.extract(evidence)
+        unit_ids = [unit["source_unit_id"] for unit in source_units_for_evidence(evidence)]
         return parse_provider_response({
             "status": "ok" if rows else "no_statement",
+            **({"no_statement_reason": "No independently retrievable engineering proposition."} if not rows else {}),
             "candidates": [{
                 "statement_text": row["statement_text"],
                 "statement_type": row["statement_type"],
@@ -228,7 +416,13 @@ class FixtureExtractionProvider:
                 "subject_entities": [{"surface_form": entity["surface_form"], "role": entity["role"]} for entity in row["subject_entities"]],
                 "conditions": [{"surface_form": condition["surface_form"]} for condition in row["conditions"]],
                 "applicability_scope": {key: value for key, value in row["applicability_scope"].items() if key in {"status", "applicability_text"}},
+                "source_unit_ids": unit_ids,
             } for row in rows],
+            "source_unit_coverage": [
+                {"source_unit_id": unit_id, "status": "covered", "candidate_indexes": list(range(1, len(rows) + 1))}
+                if rows else {"source_unit_id": unit_id, "status": "excluded", "candidate_indexes": [], "reason": "No independently retrievable engineering proposition."}
+                for unit_id in unit_ids
+            ],
             "provider_metadata": self.metadata,
         })
 
@@ -241,7 +435,7 @@ class ExternalLLMProvider:
     def __init__(self, transport: Any = None, *, model_config_identifier: str = "", max_attempts: int = 2, provider_alias: str = "primary", endpoint_alias: str = "primary"):
         self.transport = transport
         self.model_config_identifier = model_config_identifier
-        self.max_attempts = max_attempts
+        self.max_attempts = min(max_attempts, 2)
         self.provider_alias = provider_alias
         self.endpoint_alias = endpoint_alias
         self.stats = {"success": 0, "transport_failure": 0, "schema_failure": 0, "semantic_validation_failure": 0}
@@ -256,8 +450,8 @@ class ExternalLLMProvider:
             "generated_by": provider_alias,
             "model": getattr(transport, "model", None),
             "config_fingerprint": model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v18",
-            "response_schema_version": 2,
+            "prompt_version": "stage12-candidate-prompt-v30",
+            "response_schema_version": 3,
         }
         self.last_result_metadata = dict(self.metadata)
 
@@ -267,8 +461,8 @@ class ExternalLLMProvider:
             "mode": "real_llm",
             "transport": "openai_compatible_chat_completions",
             "model_config_identifier": self.model_config_identifier,
-            "prompt_version": "stage12-candidate-prompt-v18",
-            "response_schema_version": 2,
+            "prompt_version": "stage12-candidate-prompt-v30",
+            "response_schema_version": 3,
         }
 
     def cache_provider_matches(self, cached: Mapping[str, Any]) -> bool:
@@ -303,7 +497,10 @@ class ExternalLLMProvider:
         for attempt in range(self.max_attempts):
             attempt_number = attempt + 1
             try:
+                request_started = time.monotonic()
                 raw = self.transport(prompt)
+                request_elapsed = round(time.monotonic() - request_started, 3)
+                request_attempts = getattr(self.transport, "last_request_attempts", 1)
                 try:
                     response = parse_provider_response(raw)
                 except ExtractionSchemaError as error:
@@ -316,6 +513,8 @@ class ExternalLLMProvider:
                             "field": _diagnostic_failure_field(str(error), schema=True),
                             "validator_reason": str(error),
                             "model_value_or_text": _diagnostic_response_snapshot(raw),
+                            "elapsed_seconds": request_elapsed,
+                            "transport_attempts": request_attempts,
                         }))
                     raise
                 if response_validator is not None:
@@ -331,6 +530,8 @@ class ExternalLLMProvider:
                                 "field": _diagnostic_failure_field(str(error), schema=True),
                                 "validator_reason": str(error),
                                 "model_value_or_text": _diagnostic_response_snapshot(response),
+                                "elapsed_seconds": request_elapsed,
+                                "transport_attempts": request_attempts,
                             }))
                         raise
                     except ValueError as error:
@@ -349,6 +550,8 @@ class ExternalLLMProvider:
                                 "field": _diagnostic_failure_field(str(error)),
                                 "validator_reason": str(error),
                                 "model_value_or_text": _diagnostic_response_snapshot(response),
+                                "elapsed_seconds": request_elapsed,
+                                "transport_attempts": request_attempts,
                             }))
                         raise
                 self._record("success")
@@ -358,6 +561,8 @@ class ExternalLLMProvider:
                         "attempt": attempt_number,
                         "outcome": "success",
                         "model_value_or_text": _diagnostic_response_snapshot(response),
+                        "elapsed_seconds": request_elapsed,
+                        "transport_attempts": request_attempts,
                     }))
                 return response | {"provider_metadata": self.metadata}
             except ExtractionSchemaError as error:
@@ -367,10 +572,14 @@ class ExternalLLMProvider:
                         f"external LLM response failed Stage 12 schema after {self.max_attempts} attempts",
                         failure_type="schema_failure",
                     ) from error
+                previous_response = raw if isinstance(raw, str) else json.dumps(raw, ensure_ascii=False, default=str)
                 prompt = prompt | {
-                    "system": prompt["system"]
-                    + "\n\nYour previous response failed strict validation. Correct these validation errors and return only corrected JSON:\n"
-                    + str(error)
+                    "user": json.dumps({
+                        "original_request": json.loads(stage12_prompt(evidence, profile)["user"]),
+                        "previous_response": previous_response,
+                        "validator_reason": str(error),
+                        "revision_instruction": "仅修复上述校验错误，返回完整修订后的 JSON。",
+                    }, ensure_ascii=False, sort_keys=True)
                 }
             except ExtractionProviderError:
                 raise
@@ -383,6 +592,7 @@ class ExternalLLMProvider:
                     "elapsed_seconds": error.elapsed_seconds,
                     "fallback_eligible": error.fallback_eligible,
                     "attempts": error.attempts,
+                    "transport_attempts": error.attempts,
                 }
                 if attempt_observer is not None:
                     attempt_observer(self._event({
@@ -403,10 +613,14 @@ class ExternalLLMProvider:
                         failure_type="semantic_validation_failure",
                         details={"semantic_attempts": semantic_attempts},
                     ) from error
+                previous_response = raw if isinstance(raw, str) else json.dumps(raw, ensure_ascii=False, default=str)
                 prompt = prompt | {
-                    "system": prompt["system"]
-                    + "\n\nYour previous response failed deterministic Evidence validation. Correct the semantic fields and return only corrected JSON:\n"
-                    + str(error)
+                    "user": json.dumps({
+                        "original_request": json.loads(stage12_prompt(evidence, profile)["user"]),
+                        "previous_response": previous_response,
+                        "validator_reason": str(error),
+                        "revision_instruction": "仅修复上述校验错误，返回完整修订后的 JSON。",
+                    }, ensure_ascii=False, sort_keys=True)
                 }
             except Exception as error:  # provider failures must not look like validation failures
                 raise ExtractionProviderError("external LLM provider failed") from error
@@ -437,8 +651,8 @@ class FailoverExternalLLMProvider(ExternalLLMProvider):
             "primary_model": primary.metadata.get("model"),
             "backup_model": backup.metadata.get("model"),
             "failover_policy_fingerprint": policy_fingerprint,
-            "prompt_version": "stage12-candidate-prompt-v18",
-            "response_schema_version": 2,
+            "prompt_version": "stage12-candidate-prompt-v30",
+            "response_schema_version": 3,
             "failover_enabled": True,
         }
         self._refresh_metadata()
@@ -562,6 +776,8 @@ def _diagnostic_response_snapshot(raw: Any) -> dict[str, Any] | None:
 
 
 def _diagnostic_failure_field(reason: str, *, schema: bool = False) -> str:
+    if schema:
+        return "schema"
     text = reason.lower()
     if "entity" in text:
         return "entity"
@@ -581,9 +797,7 @@ def _diagnostic_failure_field(reason: str, *, schema: bool = False) -> str:
         return "condition"
     if "unsupported" in text:
         return "unsupported_addition"
-    if schema and "status" in text:
-        return "status"
-    return "schema" if schema else "semantic"
+    return "semantic"
 
 
 def provider_from_config(path: Path = PROVIDER_CONFIG_PATH) -> ExtractionProvider:
@@ -679,8 +893,8 @@ class ProfileRouter:
         if not entries:
             raise ProfileRoutingError("Stage 12 profile routing manifest is empty")
         self._entries: dict[tuple[str, str], ExtractionProfile] = {}
-        source_scopes: dict[str, dict[str, Any]] = {}
-        source_permissions: dict[str, bool] = {}
+        source_scopes: dict[tuple[str, str], dict[str, Any]] = {}
+        source_permissions: dict[tuple[str, str], bool] = {}
         source_registry = path.parents[1] / "data/registry/source_assets.jsonl"
         if source_registry.exists():
             for line in source_registry.read_text(encoding="utf-8").splitlines():
@@ -688,23 +902,27 @@ class ProfileRouter:
                     continue
                 source = json.loads(line)
                 document_id = str(source.get("document_logical_id", ""))
+                revision_id = str(source.get("revision_id", ""))
+                source_key = (document_id, revision_id)
                 structured = source.get("applicability_scope_structured") or {}
-                if document_id and structured:
-                    existing = source_scopes.setdefault(document_id, {})
+                if document_id and revision_id and structured:
+                    existing = source_scopes.setdefault(source_key, {})
                     for key, value in structured.items():
                         if key in existing and existing[key] != value:
-                            raise ProfileRoutingError(f"conflicting source applicability scope: {document_id}/{key}")
+                            raise ProfileRoutingError(f"conflicting source applicability scope: {source_key}/{key}")
                         existing[key] = value
-                explicit = source.get("external_llm_allowed")
-                source_permissions[document_id] = bool(explicit) if isinstance(explicit, bool) else source.get("external_processing_status") == "allowed"
+                if document_id and revision_id:
+                    explicit = source.get("external_llm_allowed")
+                    allowed = bool(explicit) if isinstance(explicit, bool) else source.get("external_processing_status") == "allowed"
+                    source_permissions[source_key] = source_permissions.get(source_key, True) and allowed
         for entry in entries:
             key = (str(entry.get("document_logical_id", "")), str(entry.get("revision_id", "")))
             profile = ExtractionProfile(
                 semantic_role=str(entry.get("semantic_role", "")),
                 extraction_profile_id=str(entry.get("extraction_profile_id", "")),
                 source_profile_id=str(entry.get("source_profile_id", "")),
-                source_applicability_scope=tuple(sorted(source_scopes.get(key[0], {}).items())),
-                external_llm_allowed=source_permissions.get(key[0], False),
+                source_applicability_scope=tuple(sorted(source_scopes.get(key, {}).items())),
+                external_llm_allowed=source_permissions.get(key, False),
             )
             if not all((key[0], key[1], profile.semantic_role, profile.extraction_profile_id, profile.source_profile_id)):
                 raise ProfileRoutingError("profile routing entry is incomplete")
@@ -743,6 +961,11 @@ class ProviderBackedExtractor:
         self.profile = profile
         self.split = _candidate_schema_split(split)
         self.profile_id = profile.extraction_profile_id
+        self.last_response_status: str | None = None
+        self.last_no_statement_reason: str | None = None
+        self.last_source_unit_coverage: list[dict[str, Any]] = []
+        self.last_candidate_source_unit_ids: dict[str, list[str]] = {}
+        self.last_review_diagnostics: list[dict[str, str]] = []
 
     def extract(
         self,
@@ -754,9 +977,14 @@ class ProviderBackedExtractor:
             raise ExtractionProviderError("source-level permission denies sending Evidence to an external LLM")
         if isinstance(self.provider, ExternalLLMProvider):
             def response_validator(response: Mapping[str, Any]) -> None:
+                validate_source_unit_coverage(evidence, response)
+                assembled = []
                 for index, item in enumerate(response["candidates"], start=1):
                     candidate = _assemble_candidate(item, evidence, self.profile, self.split, index, response.get("provider_metadata"))
                     validate_candidate_against_evidence(candidate, evidence)
+                    assembled.append(candidate)
+                # Semantic heuristics are review signals, not reasons to spend
+                # another model attempt on a structurally valid response.
 
             raw_response = self.provider.extract(
                 evidence,
@@ -767,9 +995,14 @@ class ProviderBackedExtractor:
         else:
             raw_response = self.provider.extract(evidence, self.profile)
         response = parse_provider_response(raw_response)
+        self.last_candidate_source_unit_ids = validate_source_unit_coverage(evidence, response)
+        self.last_source_unit_coverage = list(response["source_unit_coverage"])
+        self.last_response_status = response["status"]
+        self.last_no_statement_reason = response.get("no_statement_reason")
         rows = []
         for index, item in enumerate(response["candidates"], start=1):
             rows.append(_assemble_candidate(item, evidence, self.profile, self.split, index, response.get("provider_metadata")))
+        self.last_review_diagnostics = candidate_review_diagnostics(evidence, rows, self.last_source_unit_coverage)
         return rows
 
 
@@ -807,18 +1040,8 @@ def extraction_contract_fingerprint(contract: Mapping[str, Any] | None = None) -
 
 
 def extraction_source_fingerprint() -> str:
-    """Hash extraction/validation symbols, excluding evaluator-only helpers."""
-    names = (
-        "parse_provider_response", "stage12_prompt", "ProviderBackedExtractor",
-        "HeuristicSemanticExtractor", "_split_clauses", "_quantity_fields",
-        "_negation_fields", "_statement_type", "_modality", "_entities",
-        "_predicate", "_has_causal_marker", "_relation_direction",
-        "_applicability_scope", "_assemble_candidate", "to_stage9_runtime_payload",
-        "validate_candidate_semantics", "validate_candidate_against_evidence",
-        "validate_candidate_evidence_binding",
-    )
-    material = {name: inspect.getsource(globals()[name]) for name in names if name in globals()}
-    return hashlib.sha256(canonical_json(material).encode("utf-8")).hexdigest()
+    """Invalidate caches when any extraction helper, constant, or validator changes."""
+    return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 def _location(evidence: Mapping[str, Any]) -> dict[str, Any]:
@@ -829,12 +1052,36 @@ def _location(evidence: Mapping[str, Any]) -> dict[str, Any]:
             "physical_page": int(location["physical_page"]),
             "logical_page": location.get("logical_page"),
             "source_span_ids": list(evidence.get("source_span_ids") or [location.get("source_span_id")]),
+            "source_span_locations": _span_locations(locations),
         }
     return {
         "physical_page": int(evidence["physical_page"]),
         "logical_page": evidence.get("logical_page"),
         "source_span_ids": [evidence.get("source_span_id")],
+        "source_span_locations": _span_locations([evidence]),
     }
+
+
+def _span_locations(locations: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    identities = dict.fromkeys(
+        (str(location["source_span_id"]), int(location["physical_page"]), location.get("logical_page"))
+        for location in locations if location.get("source_span_id")
+    )
+    return [
+        {"source_span_id": span_id, "physical_page": page, "logical_page": logical_page}
+        for span_id, page, logical_page in identities
+    ]
+
+
+def _binding_span_locations(binding: Mapping[str, Any], candidate: Mapping[str, Any]) -> list[dict[str, Any]]:
+    spans = list(binding.get("source_span_ids", candidate["source_span_ids"]))
+    mapped = binding.get("source_span_locations", candidate.get("source_span_locations") if binding is candidate["evidence_bindings"][0] else None)
+    if mapped is None:
+        mapped = [{"source_span_id": span_id, "physical_page": binding.get("physical_page", candidate["physical_page"]),
+                   "logical_page": binding.get("logical_page", candidate.get("logical_page"))} for span_id in spans]
+    if len(mapped) != len(spans) or {item.get("source_span_id") for item in mapped} != set(spans):
+        raise ValueError("source span page map does not match the Evidence binding")
+    return mapped
 
 
 def _evidence_version_id(evidence: Mapping[str, Any]) -> str:
@@ -918,10 +1165,13 @@ def _split_clauses(text: str) -> list[str]:
 
 
 def _quantity_fields(text: str) -> tuple[list[dict[str, Any]], Any, str | None]:
+    text = re.sub(r"\s+", " ", text)
     quantities: list[dict[str, Any]] = []
     scalar_value = None
     scalar_unit = None
+    unit_spans = []
     for match in QUANTITY_RE.finditer(text):
+        unit_spans.append(match.span())
         unit = match.group("unit") or match.group("single_unit")
         unit = _canonical_quantity_unit(unit)
         if match.group("left") is not None:
@@ -935,15 +1185,50 @@ def _quantity_fields(text: str) -> tuple[list[dict[str, Any]], Any, str | None]:
             if value.is_integer():
                 value = int(value)
             operator = "eq"
-            context = text[max(0, match.start() - 12): min(len(text), match.end() + 12)]
-            bound = next((item for item in sorted(COMPARATORS, key=lambda entry: len(entry[0]), reverse=True) if item[0] in context), None)
+            clause_start = max((text.rfind(punctuation, 0, match.start()) for punctuation in "，,。；;！？!?"), default=-1) + 1
+            following_boundaries = [text.find(punctuation, match.end()) for punctuation in "，,。；;！？!?"]
+            clause_end = min((position for position in following_boundaries if position >= 0), default=len(text))
+            before = text[max(clause_start, match.start() - 12):match.start()]
+            after = text[match.end():min(clause_end, match.end() + 5)]
+            before_matches = [(found.end(), len(token), operator) for token, operator, _ in COMPARATORS for found in re.finditer(re.escape(token), before)]
+            after_matches = [(found.start(), len(token), operator) for token, operator, _ in COMPARATORS for found in re.finditer(re.escape(token), after)]
+            nearest = max(before_matches, default=None) if before_matches else min(after_matches, default=None, key=lambda item: (item[0], -item[1]))
+            bound = nearest[2] if nearest else None
             if bound:
-                operator = bound[1]
-            elif re.search(r"(?:约为|大约|左右|约)\s*$", context) or re.search(r"(?:约为|大约|左右|约)", context):
+                operator = bound
+            elif re.search(r"(?:约为|大约|约)\s*$", before) or re.search(r"^\s*(?:左右)", after):
                 operator = "approximately"
             quantities.append({"surface_form": match.group(0), "value": value, "unit": unit, "operator": operator})
             if scalar_value is None:
                 scalar_value, scalar_unit = value, unit
+    # A comparator makes an otherwise unitless ratio or factor meaningful.
+    # Bare numbers can be list positions, dates or identifiers, so exclude them.
+    for match in UNITLESS_COMPARISON_RE.finditer(text):
+        if any(start < match.end() and match.start() < end for start, end in unit_spans):
+            continue
+        if match.end() < len(text) and re.match(r"[A-Za-zΩΩμ℃°%％]", text[match.end()]):
+            continue
+        clause_start = max((text.rfind(mark, 0, match.start()) for mark in "，,。；;！？!?"), default=-1) + 1
+        before = text[max(clause_start, match.start() - 16):match.start()]
+        comparisons = [(found.end(), len(token), operator) for token, operator, _ in COMPARATORS for found in re.finditer(re.escape(token), before)]
+        if not comparisons:
+            continue
+        nearest = max(comparisons, key=lambda item: (item[0], item[1]))
+        if re.search(r"\d", before[nearest[0]:]):
+            continue
+        raw = match.group("number").replace(" ", "")
+        if "/" in raw:
+            numerator, denominator = (float(part) for part in raw.split("/"))
+            if denominator == 0:
+                continue
+            value = numerator / denominator
+        else:
+            value = float(raw)
+        if value.is_integer():
+            value = int(value)
+        quantities.append({"surface_form": match.group(0), "value": value, "unit": "1", "operator": nearest[2]})
+        if scalar_value is None:
+            scalar_value, scalar_unit = value, "1"
     return quantities, scalar_value, scalar_unit
 
 
@@ -960,16 +1245,10 @@ def _canonical_quantity_unit(unit: str | None) -> str | None:
 
 def _negation_fields(text: str) -> list[dict[str, Any]]:
     result = []
+    for surface in dict.fromkeys(re.sub(r"\s+", "", item) for item in re.findall(r"(?:没有|无|不卡)\s*[^\s，。；,、]{1,8}", text)):
+        result.append({"surface_form": surface, "polarity": "negative", "scope_type": "statement"})
     for token in NEGATIONS:
         if token in {"无", "没有", "不卡"}:
-            # Preserve the source-grounded negated phrase (for example,
-            # "无错口" or "无铁屑") instead of reducing it to the marker
-            # itself.  The following term is deliberately surface-based and
-            # bounded by punctuation; semantic scope still comes from the
-            # provider and Evidence validation.
-            surfaces = re.findall(r"(?:没有|无|不卡)[^\s，。；,、]{1,8}", text)
-            for surface in dict.fromkeys(surfaces):
-                result.append({"surface_form": surface, "polarity": "negative", "scope_type": "statement"})
             continue
         if token not in text:
             continue
@@ -1014,12 +1293,20 @@ def _statement_type(text: str, evidence_role: str | None = None) -> str:
     return "fact"
 
 
+_PERMISSION_CUE_RE = re.compile(
+    r"可以(?!导致|引起|造成|使|提高|降低|减少|增加|改善|影响|发生|出现|成为|达到)"
+    r"|可(?!能|靠|见|视|用|达|供|燃|控|读|导致|引起|造成|使|提高|降低|减少|增加|改善|影响|发生|出现|成为|达到)"
+)
+
+
 def _modality(text: str) -> str:
-    if "必须" in text or "须" in text:
+    if any(token in text for token in ("必须", "须", "需要", "需")):
         return "must"
+    if _PERMISSION_CUE_RE.search(text) and not any(token in text for token in ("不可以", "不可")):
+        return "permitted"
     if "宜" in text:
         return "recommended"
-    if any(token in text for token in ("应", "不得", "不应")):
+    if any(token in text for token in ("应当", "应", "不得", "不应", "不允许", "不能", "禁止", "严禁", "不可以", "不可")):
         return "shall"
     return "descriptive"
 
@@ -1168,6 +1455,7 @@ class HeuristicSemanticExtractor:
                 "applicability_scope": _applicability_scope(clause, evidence, location, self.source_applicability_scope),
                 "evidence_bindings": [{"evidence_id": evidence["evidence_id"], "support_type": evidence.get("support_type", "direct")}],
                 "source_span_ids": [item for item in location["source_span_ids"] if item],
+                "source_span_locations": location["source_span_locations"],
                 "evidence_version_id": _evidence_version_id(evidence),
                 "document_logical_id": evidence["document_logical_id"],
                 "revision_id": evidence["revision_id"],
@@ -1182,6 +1470,95 @@ class HeuristicSemanticExtractor:
         return rows
 
 
+def _question_answer_parts(answer_text: Any) -> list[str]:
+    """Split a printed multi-blank answer without splitting numeric ranges."""
+    text = str(answer_text or "").strip()
+    parts = [part.strip() for part in re.split(r"[、，,；;]", text) if part.strip()]
+    return parts or ([text] if text else [])
+
+
+def _resolved_question_group_text(source_group: Mapping[str, Any]) -> str | None:
+    """Resolve a confirmed question stem with its reviewed printed answer."""
+    stem_member = next((
+        item for item in source_group.get("member_evidence", [])
+        if item.get("evidence_id") == source_group.get("stem_evidence_id")
+    ), None)
+    if stem_member is None:
+        return None
+    stem = str(stem_member.get("text") or "")
+    option = re.escape(str(source_group.get("answer_option") or ""))
+    if not option:
+        return None
+    marker = r"(?:[（(]\s*" + option + r"\s*[）)]|(?:正确答案|答案)\s*[:：]?\s*" + option + r"(?![A-Za-z0-9]))"
+    marker_match = re.search(marker, stem)
+    if marker_match is not None:
+        first_option = re.search(r"(?<![A-Za-z0-9])A\s*(?:[）).．、])", stem[marker_match.end():], re.IGNORECASE)
+        if first_option is not None:
+            stem = stem[:marker_match.end() + first_option.start()]
+            marker_match = re.search(marker, stem)
+            if marker_match is None:
+                return None
+    answer_text = str(source_group.get("answer_text") or "").strip()
+    without_marker = stem if marker_match is None else stem[:marker_match.start()] + stem[marker_match.end():]
+    blank_re = re.compile(r"[（(]\s*[）)]|_{2,}|＿{2,}")
+    blanks = list(blank_re.finditer(without_marker))
+    parts = _question_answer_parts(answer_text)
+    if len(blanks) == 1:
+        blank = blanks[0]
+        return (without_marker[:blank.start()] + answer_text + without_marker[blank.end():]).strip()
+    if len(blanks) > 1 and len(parts) == len(blanks):
+        output = []
+        cursor = 0
+        for blank, replacement in zip(blanks, parts):
+            output.extend((without_marker[cursor:blank.start()], replacement))
+            cursor = blank.end()
+        output.append(without_marker[cursor:])
+        return "".join(output).strip()
+    if len(blanks) > 1:
+        return None
+    if marker_match is None:
+        return None
+    if re.search(r"(?:正确答案|答案)", marker_match.group(0)):
+        return (without_marker.strip() + " " + answer_text).strip()
+    return (stem[:marker_match.start()] + answer_text + stem[marker_match.end():]).strip()
+
+
+def _statement_asserts_question_answer(statement_text: Any, answer_text: Any) -> bool:
+    """Accept exact answers and ordered multi-blank substitutions."""
+    statement = _normalized_text(statement_text)
+    expected = _normalized_text(answer_text)
+    if expected and expected in statement:
+        return True
+    parts = [_normalized_text(part) for part in _question_answer_parts(answer_text)]
+    if len(parts) < 2:
+        return False
+    cursor = 0
+    for part in parts:
+        position = statement.find(part, cursor)
+        if position < 0:
+            return False
+        cursor = position + len(part)
+    return True
+
+
+def _validate_question_answer(source_question: Mapping[str, Any], source_group: Mapping[str, Any], statement_text: str) -> None:
+    """Tie a question fact to the printed answer, not merely to its options row."""
+    expected_option = str(source_group.get("answer_option") or "").strip().upper()
+    expected_text = _normalized_text(source_group.get("answer_text"))
+    option_id = source_group.get("answer_evidence_id")
+    option_member = next((member for member in source_group.get("member_evidence", []) if member.get("evidence_id") == option_id), None)
+    answer_quote = _normalized_text(source_group.get("answer_source_quote"))
+    if not expected_option or not expected_text or not option_member or not answer_quote:
+        raise ValueError("question group lacks a verified printed answer")
+    if _normalized_text(source_question.get("answer_option")).upper() != expected_option or _normalized_text(source_question.get("answer_text")) != expected_text:
+        raise ValueError("candidate answer differs from the printed marked option")
+    if not _statement_asserts_question_answer(statement_text, source_group.get("answer_text")):
+        raise ValueError("question statement does not assert the printed answer")
+    option_text = _normalized_text(option_member.get("text"))
+    if answer_quote not in option_text or expected_text not in answer_quote:
+        raise ValueError("printed answer quote is not grounded in its option Evidence")
+
+
 def _assemble_candidate(
     item: Mapping[str, Any], evidence: Mapping[str, Any], profile: ExtractionProfile, split: str, index: int, provider_metadata: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -1192,6 +1569,96 @@ def _assemble_candidate(
     if statement_type not in STATEMENT_TYPES:
         raise ValueError("candidate statement_type is not in the Stage 12 vocabulary")
     predicate = str(item["predicate"])
+    procedure_group = item.get("procedure_group")
+    source_list_item = item.get("source_list_item")
+    source_question = item.get("source_question")
+    if sum(value is not None for value in (procedure_group, source_list_item, source_question)) > 1:
+        raise ValueError("a candidate cannot belong to multiple source group kinds")
+    if source_question is not None:
+        if not isinstance(source_question, Mapping) or not str(source_question.get("group_id", "")).strip():
+            raise ValueError("source question requires a source group ID")
+        if source_question.get("status") == "linked":
+            if source_question.get("uncertainty_reason"):
+                raise ValueError("linked source question cannot also claim uncertainty")
+            if not str(source_question.get("answer_option") or "").strip() or not str(source_question.get("answer_text") or "").strip():
+                raise ValueError("linked source question requires the marked option and answer text")
+        elif source_question.get("status") == "uncertain":
+            if not str(source_question.get("uncertainty_reason", "")).strip():
+                raise ValueError("uncertain source question requires a reason")
+        else:
+            raise ValueError("unsupported source question status")
+    if source_list_item is not None:
+        if not isinstance(source_list_item, Mapping) or not str(source_list_item.get("group_id", "")).strip():
+            raise ValueError("source list item requires a source group ID")
+        if source_list_item.get("status") == "indexed":
+            item_index, item_total = source_list_item.get("item_index"), source_list_item.get("item_total")
+            if not isinstance(item_index, int) or not isinstance(item_total, int) or not 1 <= item_index <= item_total or source_list_item.get("uncertainty_reason"):
+                raise ValueError("indexed source list item requires valid index and total")
+        elif source_list_item.get("status") == "uncertain":
+            if source_list_item.get("item_index") or source_list_item.get("item_total") or not str(source_list_item.get("uncertainty_reason", "")).strip():
+                raise ValueError("uncertain source list item requires a reason and no asserted index")
+        else:
+            raise ValueError("unsupported source list item status")
+    raw_supporting_ids = item.get("supporting_evidence_ids") or []
+    if not isinstance(raw_supporting_ids, list) or len(raw_supporting_ids) != len(set(raw_supporting_ids)):
+        raise ValueError("supporting Evidence IDs must be a unique array")
+    supporting_members = []
+    context_members = []
+    if raw_supporting_ids or (source_question and source_question.get("status") == "linked"):
+        if procedure_group and procedure_group.get("status") == "indexed":
+            source_group = next((group for group in evidence.get("operation_group_context", []) if group.get("group_id") == procedure_group.get("group_id")), None)
+            source_step = next((step for step in (source_group or {}).get("steps", []) if step.get("source_order") == procedure_group.get("step_index")), None)
+            allowed_order = list(source_step.get("evidence_ids") or ([source_step["evidence_id"]] if source_step and source_step.get("evidence_id") else [])) if source_step else []
+        elif source_list_item and source_list_item.get("status") == "indexed":
+            source_group = next((group for group in evidence.get("related_source_context", []) if group.get("group_id") == source_list_item.get("group_id") and group.get("group_kind") in SOURCE_LIST_KINDS), None)
+            source_item = next((part for part in (source_group or {}).get("items", []) if part.get("source_order") == source_list_item.get("item_index")), None)
+            allowed_order = list(source_item.get("evidence_ids") or []) if source_item else []
+        elif source_question and source_question.get("status") == "linked":
+            source_group = next((group for group in evidence.get("related_source_context", []) if group.get("group_id") == source_question.get("group_id") and group.get("group_kind") == "question_options"), None)
+            if source_group is None or source_group.get("source_review_status") != "confirmed" or source_group.get("answer_marked") is not True:
+                raise ValueError("question source is not confirmed with a marked answer")
+            _validate_question_answer(source_question, source_group, statement_text)
+            allowed_order = list(dict.fromkeys([source_group.get("stem_evidence_id"), source_group.get("answer_evidence_id")]))
+            if None in allowed_order or any(member_id not in {member["evidence_id"] for member in source_group.get("member_evidence", [])} for member_id in allowed_order):
+                raise ValueError("question stem or marked answer Evidence is missing")
+        else:
+            raise ValueError("multi-Evidence support requires a confirmed source item or marked question")
+        if not allowed_order or evidence["evidence_id"] != allowed_order[0]:
+            raise ValueError("multi-Evidence claim must be emitted from its first source member")
+        if set(allowed_order) != {evidence["evidence_id"], *raw_supporting_ids}:
+            raise ValueError("supporting Evidence IDs differ from the confirmed source group")
+        member_by_id = {member["evidence_id"]: member for member in source_group.get("member_evidence", [])}
+        for evidence_id in raw_supporting_ids:
+            member = member_by_id.get(evidence_id)
+            if member is None or member.get("document_logical_id") != evidence.get("document_logical_id") or member.get("revision_id") != evidence.get("revision_id") or not member.get("locations"):
+                raise ValueError("supporting Evidence lineage is unavailable or has another Revision")
+            supporting_members.append(member)
+    if (procedure_group and procedure_group.get("status") == "indexed") or (source_list_item and source_list_item.get("status") == "indexed"):
+        source_group = next((group for group in evidence.get("operation_group_context", []) if group.get("group_id") == procedure_group.get("group_id") and group.get("source_review_status") == "confirmed"), None) if procedure_group and procedure_group.get("status") == "indexed" else next((group for group in evidence.get("related_source_context", []) if group.get("group_id") == source_list_item.get("group_id") and group.get("group_kind") in SOURCE_LIST_KINDS), None)
+        title_id = (source_group or {}).get("title_evidence_id")
+        title_member = next((member for member in (source_group or {}).get("member_evidence", []) if member.get("evidence_id") == title_id), None)
+        if source_list_item and (title_member is None or title_member.get("document_logical_id") != evidence.get("document_logical_id") or title_member.get("revision_id") != evidence.get("revision_id") or not title_member.get("locations")):
+            raise ValueError("source list title Evidence lineage is unavailable")
+        if title_member and (title_member.get("document_logical_id") != evidence.get("document_logical_id") or title_member.get("revision_id") != evidence.get("revision_id") or not title_member.get("locations")):
+            raise ValueError("operation title Evidence lineage is unavailable")
+        if title_member and title_id != evidence.get("evidence_id"):
+            context_members.append(title_member)
+    support_parts = [_canonical_evidence_text(evidence), *(str(member["text"]) for member in supporting_members)]
+    support_text = " ".join([*(str(member["text"]) for member in context_members), *support_parts])
+    if procedure_group is not None:
+        if not isinstance(procedure_group, Mapping) or not str(procedure_group.get("group_id", "")).strip():
+            raise ValueError("candidate procedure group requires a source group ID")
+        if procedure_group.get("status") == "indexed":
+            step_index, step_total = procedure_group.get("step_index"), procedure_group.get("step_total")
+            if not isinstance(step_index, int) or not isinstance(step_total, int) or not 1 <= step_index <= step_total:
+                raise ValueError("indexed procedure step requires valid index and total")
+            if procedure_group.get("uncertainty_reason"):
+                raise ValueError("indexed procedure step cannot also claim uncertainty")
+        elif procedure_group.get("status") == "uncertain":
+            if procedure_group.get("step_index") or procedure_group.get("step_total") or not str(procedure_group.get("uncertainty_reason", "")).strip():
+                raise ValueError("uncertain procedure step requires a reason and no asserted index")
+        else:
+            raise ValueError("unsupported procedure group status")
     quantities, value, unit = _quantity_fields(statement_text)
     raw_entities = item.get("subject_entities") or []
     if not isinstance(raw_entities, list):
@@ -1207,8 +1674,17 @@ def _assemble_candidate(
         if role not in ENTITY_ROLES:
             raise ValueError("candidate entity role is not in the Stage 12 vocabulary")
         subject_entities.append({"surface_form": surface_form, "role": role, "entity_class": "candidate"})
-    if not subject_entities or subject_entities[0]["role"] != "subject":
-        raise ValueError("candidate must provide a subject entity first")
+    if not subject_entities:
+        raise ValueError("candidate must provide at least one grounded entity")
+    # Stage 9 uses the first grounded entity as the primary aboutEntity. A
+    # grammatical subject is preferred when the provider identified one, but
+    # source-grounded statements may omit an explicit actor and legitimately
+    # expose only an object, parameter or related entity. Preserve those
+    # roles instead of inventing a subject; only stabilize the primary anchor
+    # when an explicit subject is present.
+    subject_index = next((index for index, entity in enumerate(subject_entities) if entity["role"] == "subject"), None)
+    if subject_index not in (None, 0):
+        subject_entities = [subject_entities[subject_index], *subject_entities[:subject_index], *subject_entities[subject_index + 1:]]
     raw_conditions = item.get("conditions") or []
     if not isinstance(raw_conditions, list):
         raise ExtractionSchemaError("candidate conditions must be an array")
@@ -1231,8 +1707,10 @@ def _assemble_candidate(
     if scope_status == "unknown" and scope_text:
         raise ValueError("unknown applicability must omit applicability_text")
     if scope_text:
-        evidence_text = _canonical_evidence_text(evidence)
-        if _normalized_text(str(scope_text)) not in _normalized_text(statement_text) and _normalized_text(str(scope_text)) not in _normalized_text(evidence_text):
+        evidence_text = support_text + " " + _confirmed_operation_title(evidence, procedure_group)
+        if _normalized_text(str(scope_text)) not in _normalized_text(statement_text):
+            raise ValueError("candidate applicability wording must appear in statement text")
+        if _normalized_text(str(scope_text)) not in _normalized_text(evidence_text):
             raise ValueError("candidate applicability wording is not grounded in Evidence")
     applicability = {"status": scope_status}
     if scope_text:
@@ -1243,7 +1721,22 @@ def _assemble_candidate(
     applicability.update({"document_key": evidence.get("document_key") or evidence.get("document_logical_id"), "physical_page": location["physical_page"]})
     if location.get("logical_page") is not None:
         applicability["logical_page"] = location["logical_page"]
-    basis = {"evidence_id": evidence["evidence_id"], "index": index, "text": statement_text, "provider": profile.extraction_profile_id}
+    basis = {"evidence_id": evidence["evidence_id"], "supporting_evidence_ids": raw_supporting_ids, "procedure_group": procedure_group, "source_list_item": source_list_item, "source_question": source_question, "index": index, "text": statement_text, "provider": profile.extraction_profile_id}
+    support_bindings = []
+    for member in [*supporting_members, *context_members]:
+        locations = member["locations"]
+        support_bindings.append({
+            "evidence_id": member["evidence_id"], "support_type": "context" if member in context_members else "direct",
+            "source_span_ids": list(dict.fromkeys(location["source_span_id"] for location in locations if location.get("source_span_id"))),
+            "source_span_locations": _span_locations(locations),
+            "evidence_version_id": member["evidence_version_id"],
+            "source_text_sha256": member["source_text_sha256"],
+            "evidence_quote": member["text"],
+            "physical_page": int(locations[0]["physical_page"]),
+            "logical_page": locations[0].get("logical_page"),
+            "document_logical_id": member["document_logical_id"],
+            "revision_id": member["revision_id"],
+        })
     candidate = {
         "candidate_id": "stage12-candidate-" + hashlib.sha1(_sha(basis).encode()).hexdigest()[:20],
         "split": _candidate_schema_split(split),
@@ -1251,6 +1744,9 @@ def _assemble_candidate(
         "statement_text": statement_text,
         "statement_type": statement_type,
         "predicate": predicate,
+        **({"procedure_group": dict(procedure_group)} if procedure_group is not None else {}),
+        **({"source_list_item": dict(source_list_item)} if source_list_item is not None else {}),
+        **({"source_question": dict(source_question)} if source_question is not None else {}),
         "relation_direction": _relation_direction(statement_text, predicate, conditions),
         "subject_entities": subject_entities,
         "object_value": {"kind": "source_assertion", "value": statement_text},
@@ -1261,8 +1757,9 @@ def _assemble_candidate(
         "negation_scope": _negation_fields(statement_text),
         "conditions": conditions,
         "applicability_scope": applicability,
-        "evidence_bindings": [{"evidence_id": evidence["evidence_id"], "support_type": evidence.get("support_type", "direct")}],
+        "evidence_bindings": [{"evidence_id": evidence["evidence_id"], "support_type": "direct"}, *support_bindings],
         "source_span_ids": [item for item in location["source_span_ids"] if item],
+        "source_span_locations": location["source_span_locations"],
         "evidence_version_id": _evidence_version_id(evidence),
         "document_logical_id": evidence["document_logical_id"],
         "revision_id": evidence["revision_id"],
@@ -1340,13 +1837,21 @@ def to_stage9_runtime_payload(candidates: Iterable[Mapping[str, Any]]) -> dict[s
         relations.update((sid, "relatedEntity", item) for item in entities[1:])
         for binding in bindings:
             eid = iri("evidence", f"{binding['evidence_id']}:{cid}")
-            add(eid, "Evidence", {"evidenceText": candidate["evidence_quote"], "evidenceId": binding["evidence_id"], "evidenceVersionId": candidate["evidence_version_id"], "supportType": binding["support_type"]})
+            binding_quote = binding.get("evidence_quote", candidate["evidence_quote"])
+            binding_version = binding.get("evidence_version_id", candidate["evidence_version_id"])
+            binding_locations = _binding_span_locations(binding, candidate)
+            binding_revision = binding.get("revision_id", candidate["revision_id"])
+            binding_document = binding.get("document_logical_id", candidate["document_logical_id"])
+            add(eid, "Evidence", {"evidenceText": binding_quote, "evidenceId": binding["evidence_id"], "evidenceVersionId": binding_version, "supportType": binding["support_type"]})
             relations.update({(sid, "supportedBy", eid), (eid, "evidenceAboutEntity", entity)})
-            for span_id in span_ids:
+            for span_location in binding_locations:
+                span_id = span_location["source_span_id"]
+                binding_page = span_location["physical_page"]
+                binding_logical_page = span_location.get("logical_page")
                 span = iri("span", span_id)
-                span_properties = {"spanId": span_id, "spanText": candidate["evidence_quote"], "physicalPage": candidate["physical_page"], "pageId": f"page-{candidate['physical_page']}", "revisionId": candidate["revision_id"], "documentId": candidate["document_logical_id"]}
-                if candidate.get("logical_page") is not None:
-                    span_properties["logicalPage"] = candidate["logical_page"]
+                span_properties = {"spanId": span_id, "spanText": binding_quote, "physicalPage": binding_page, "pageId": f"page-{binding_page}", "revisionId": binding_revision, "documentId": binding_document}
+                if binding_logical_page is not None:
+                    span_properties["logicalPage"] = binding_logical_page
                 add(span, "SourceSpan", span_properties)
                 relations.add((eid, "sourceSpan", span))
         for index, quantity in enumerate(candidate["quantities"]):
@@ -1377,6 +1882,40 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("candidate statement text and predicate are required")
     if candidate.get("predicate") not in COARSE_RELATIONS:
         raise ValueError("candidate predicate is outside the Stage 12 coarse relation vocabulary")
+    group = candidate.get("procedure_group")
+    list_item = candidate.get("source_list_item")
+    source_question = candidate.get("source_question")
+    if sum(bool(value) for value in (group, list_item, source_question)) > 1:
+        raise ValueError("candidate cannot belong to multiple source group kinds")
+    if source_question:
+        if source_question.get("status") == "linked":
+            if source_question.get("uncertainty_reason"):
+                raise ValueError("linked question cannot also claim uncertainty")
+            if not str(source_question.get("answer_option") or "").strip() or not str(source_question.get("answer_text") or "").strip():
+                raise ValueError("linked question lacks the marked answer")
+        elif source_question.get("status") == "uncertain":
+            if not str(source_question.get("uncertainty_reason", "")).strip():
+                raise ValueError("uncertain question requires a reason")
+        else:
+            raise ValueError("candidate source question status is inconsistent")
+    if list_item is not None:
+        if list_item.get("status") == "indexed":
+            if not isinstance(list_item.get("item_index"), int) or not isinstance(list_item.get("item_total"), int) or not 1 <= list_item["item_index"] <= list_item["item_total"]:
+                raise ValueError("candidate source list item index is inconsistent")
+        elif list_item.get("status") == "uncertain":
+            if list_item.get("item_index") or list_item.get("item_total") or not str(list_item.get("uncertainty_reason", "")).strip():
+                raise ValueError("candidate source list item uncertainty is inconsistent")
+        else:
+            raise ValueError("candidate source list item status is inconsistent")
+    if group is not None:
+        if group.get("status") == "indexed":
+            if not isinstance(group.get("step_index"), int) or not isinstance(group.get("step_total"), int) or not 1 <= group["step_index"] <= group["step_total"]:
+                raise ValueError("candidate procedure step index is inconsistent")
+        elif group.get("status") == "uncertain":
+            if group.get("step_index") or group.get("step_total") or not str(group.get("uncertainty_reason", "")).strip():
+                raise ValueError("candidate procedure step uncertainty is inconsistent")
+        else:
+            raise ValueError("candidate procedure group status is inconsistent")
     if candidate.get("relation_direction") != _relation_direction(
         text,
         str(candidate.get("predicate", "")),
@@ -1389,7 +1928,7 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
         raise ValueError("candidate must retain at least one subject entity")
     if any(_normalized_text(entity.get("surface_form")) not in _normalized_text(text) for entity in candidate.get("subject_entities", [])):
         raise ValueError("candidate entity is not grounded in statement text")
-    if candidate.get("normative_modality") not in {"shall", "must", "recommended", "descriptive"}:
+    if candidate.get("normative_modality") not in {"shall", "must", "permitted", "recommended", "descriptive"}:
         raise ValueError("unsupported normative modality")
     for item in [*candidate.get("conditions", []), *candidate.get("negation_scope", [])]:
         if item.get("surface_form") and item["surface_form"] not in text:
@@ -1415,8 +1954,10 @@ def validate_candidate_semantics(candidate: Mapping[str, Any]) -> None:
     if scope.get("status") == "unknown" and scope.get("applicability_text"):
         raise ValueError("unknown applicability must omit wording")
     if scope.get("applicability_text"):
-        evidence_quote = str(candidate.get("evidence_quote", ""))
-        if _normalized_text(scope["applicability_text"]) not in _normalized_text(text) and _normalized_text(scope["applicability_text"]) not in _normalized_text(evidence_quote):
+        evidence_quote = " ".join(str(binding.get("evidence_quote", candidate.get("evidence_quote", ""))) for binding in candidate.get("evidence_bindings", []))
+        if _normalized_text(scope["applicability_text"]) not in _normalized_text(text):
+            raise ValueError("candidate applicability wording must appear in statement text")
+        if _normalized_text(scope["applicability_text"]) not in _normalized_text(evidence_quote) and not (candidate.get("procedure_group") or {}).get("status") == "indexed":
             raise ValueError("candidate applicability wording is not grounded in Evidence")
     if candidate.get("predicate") == "causes" and candidate.get("relation_direction") != "cause_to_effect":
         raise ValueError("causal relation direction is inconsistent")
@@ -1433,45 +1974,434 @@ def _quantity_is_supported(candidate_quantity: Mapping[str, Any], evidence_quant
     return any(_quantity_key(candidate_quantity) == _quantity_key(item) for item in evidence_quantities)
 
 
+def _source_bigrams(value: Any) -> set[str]:
+    normalized = re.sub(r"[^\w\u4e00-\u9fff]", "", _normalized_text(value))
+    return {normalized[index:index + 2] for index in range(len(normalized) - 1)}
+
+
+def source_step_local_match(statement_text: str, source_quote: str, context_title: str = "") -> bool:
+    """Keep a candidate within its reviewed source step, including long rows."""
+    local_text = statement_text.replace(context_title, "") if context_title else statement_text
+    candidate_pairs = _source_bigrams(local_text)
+    source_pairs = _source_bigrams(source_quote)
+    return bool(candidate_pairs and source_pairs and len(candidate_pairs & source_pairs) / len(candidate_pairs) >= 0.45)
+
+
+def source_step_clause_coverage(source_quote: str, statement_texts: Iterable[str]) -> bool:
+    """Require each substantive source clause to survive across atomic candidates."""
+    candidate_pairs = _source_bigrams(" ".join(statement_texts))
+    clauses = [part for part in re.split(r"[。；;]", source_quote) if len(_source_bigrams(part)) >= 2]
+    if not clauses:
+        return False
+    clause_pairs = [_source_bigrams(part) for part in clauses]
+    for index, pairs in enumerate(clause_pairs):
+        if len(pairs & candidate_pairs) / len(pairs) < 0.65:
+            return False
+        distinctive = pairs - set().union(*(other for other_index, other in enumerate(clause_pairs) if other_index != index))
+        if distinctive and not distinctive & candidate_pairs:
+            return False
+    return True
+
+
+def _resolved_marked_answer_text(candidate: Mapping[str, Any], evidence: Mapping[str, Any]) -> str | None:
+    """Construct semantic support from a reviewed stem and its marked answer only."""
+    source_question = candidate.get("source_question") or {}
+    group = next((item for item in evidence.get("related_source_context", []) if item.get("group_kind") == "question_options" and item.get("group_id") == source_question.get("group_id") and item.get("source_review_status") == "confirmed" and item.get("answer_marked") is True), None)
+    if group is None or source_question.get("status") != "linked":
+        return None
+    return _resolved_question_group_text(group)
+
+
+def _confirmed_operation_title(evidence: Mapping[str, Any], procedure_group: Mapping[str, Any] | None) -> str:
+    if not procedure_group or procedure_group.get("status") != "indexed":
+        return ""
+    group = next((item for item in evidence.get("operation_group_context", []) if item.get("group_id") == procedure_group.get("group_id") and item.get("source_review_status") == "confirmed"), None)
+    if not group:
+        return ""
+    title_id = group.get("title_evidence_id")
+    title = next((item for item in group.get("member_evidence", []) if item.get("evidence_id") == title_id and item.get("document_logical_id") == evidence.get("document_logical_id") and item.get("revision_id") == evidence.get("revision_id")), None)
+    if not title or not title.get("locations"):
+        return ""
+    title_text = str(title.get("text") or "")
+    return title_text if _normalized_text(group.get("source_title")) in _normalized_text(title_text) else ""
+
+
+_NORMATIVE_CUE_RE = re.compile(
+    r"不得|不应|不允许|不能|严禁|禁止|必须|应当|应|须|宜|" + _PERMISSION_CUE_RE.pattern
+)
+
+
+def _local_normative_cue(text: str) -> str | None:
+    match = _NORMATIVE_CUE_RE.search(text)
+    if not match:
+        return None
+    cue = match.group(0)
+    if cue == "不应" and re.match(r"少于|低于|小于|大于|高于|超过", text[match.end():]):
+        return "应"
+    return cue
+
+
+def _normative_cue_equivalent(left: str | None, right: str | None) -> bool:
+    if left == right:
+        return True
+    return {left, right} in (
+        {"应", "应当"}, {"可", "可以"}, {"不得", "不能"}, {"不得", "不允许"}, {"不能", "不允许"},
+    )
+
+
+def _normative_content(text: str) -> str:
+    value = _NORMATIVE_CUE_RE.sub("", _normalized_text(text))
+    value = re.sub(r"在[^，,。；]{1,24}(?:阶段|期间|状态下)", "", value)
+    value = re.sub(r"没有|不卡|无|未|有", "", value)
+    return re.sub(r"[^\w\u4e00-\u9fff]", "", value)
+
+
+def _governing_normative_cue(support_text: str, source_clause: str) -> str | None:
+    """Find a source cue that explicitly governs a following list or clause."""
+    position = support_text.find(source_clause)
+    if position < 0:
+        return None
+    prefix = support_text[:position]
+    sentence_prefix = re.split(r"[。；;！？!?]", prefix)[-1]
+    local = list(_NORMATIVE_CUE_RE.finditer(sentence_prefix))
+    if local:
+        return local[-1].group(0)
+    headings = list(re.finditer(r"(?P<cue>不得|不应|必须|应当|应|须|宜|可以|可).{0,24}(?:下列|以下|如下).{0,12}(?:规定|要求|条件|项目|内容|工作)", prefix[-400:]))
+    return headings[-1].group("cue") if headings else None
+
+
+def _source_proposition_clauses(text: str) -> list[str]:
+    """Split comma-linked clauses only when both sides assert obligations."""
+    result = []
+    for sentence in re.split(r"[。；;！？!?]", text):
+        parts = re.split(r"[，,]", sentence)
+        current = ""
+        for part in parts:
+            if not part.strip():
+                continue
+            if current and _local_normative_cue(current) and _local_normative_cue(part):
+                result.append(current)
+                current = part
+            else:
+                current = f"{current}，{part}" if current else part
+        if current:
+            result.append(current)
+    return result
+
+
+def _validate_local_normative_meaning(statement_text: str, support_text: str) -> None:
+    """Reject changed obligation or polarity for an aligned source clause.
+
+    A whole Evidence can contain several independent propositions.  Compare
+    only the source clause that shares the candidate's substantive wording;
+    absence of a reliable local match remains for semantic review.
+    """
+    candidate_clauses = [part for part in re.split(r"[。；;！？!?，,]", statement_text) if _normative_content(part)]
+    source_clauses = [part for part in re.split(r"[。；;！？!?，,]", support_text) if _normative_content(part)]
+    for candidate_clause in candidate_clauses:
+        candidate_content = _normative_content(candidate_clause)
+        if len(candidate_content) < 5:
+            continue
+        scored = []
+        for source_clause in source_clauses:
+            source_content = _normative_content(source_clause)
+            if not source_content:
+                continue
+            matcher = SequenceMatcher(None, candidate_content, source_content, autojunk=False)
+            common = matcher.find_longest_match(0, len(candidate_content), 0, len(source_content)).size
+            score = common / min(len(candidate_content), len(source_content))
+            scored.append((score, source_clause))
+        if not scored:
+            continue
+        score = max(item[0] for item in scored)
+        if score < 0.7:
+            continue
+        candidate_cue = _local_normative_cue(candidate_clause)
+        def semantic_statement_negations(clause: str, cue: str | None) -> set[str]:
+            result = set()
+            for item in _negation_fields(clause):
+                surface = _normalized_text(item["surface_form"])
+                if item.get("scope_type") == "quantity" or surface == _normalized_text(cue):
+                    continue
+                if surface in {"不得", "不应"} and re.search(re.escape(surface) + r"(?:少于|低于|小于|大于|高于|超过)", clause):
+                    continue
+                result.add(surface)
+            return result
+
+        candidate_negations = semantic_statement_negations(candidate_clause, candidate_cue)
+        aligned = [source_clause for source_score, source_clause in scored if source_score >= score - 0.02]
+        def effective_source_cue(source_clause: str) -> str | None:
+            return _local_normative_cue(source_clause) or _governing_normative_cue(support_text, source_clause)
+        if any(
+            _normative_cue_equivalent(effective_source_cue(source_clause), candidate_cue)
+            and semantic_statement_negations(source_clause, effective_source_cue(source_clause)) == candidate_negations
+            for source_clause in aligned
+        ):
+            continue
+        if not any(_normative_cue_equivalent(effective_source_cue(source_clause), candidate_cue) for source_clause in aligned):
+            prohibition_cues = {"不得", "不应", "不允许", "不能", "禁止", "严禁"}
+            if any(effective_source_cue(source_clause) in prohibition_cues for source_clause in aligned) != (candidate_cue in prohibition_cues):
+                raise ValueError("candidate changed an explicit source prohibition")
+            raise ValueError("candidate changed the source clause's normative modality or prohibition")
+        raise ValueError("candidate changed the source clause's negation")
+
+
+def _validate_explicit_polarity(statement_text: str, support_text: str) -> None:
+    """Keep an aligned, explicit prohibition/negation reversal as a hard error."""
+    try:
+        _validate_local_normative_meaning(statement_text, support_text)
+    except ValueError as error:
+        message = str(error)
+        if "negation" in message or "explicit source prohibition" in message:
+            raise
+
+
+def _validate_local_content_support(statement_text: str, support_text: str, predicate: str) -> None:
+    """Reject substantive candidate clauses and causal effects absent from source."""
+    support_pairs = _source_bigrams(support_text)
+    # Low character overlap is not proof of unsupported meaning. Exact actions
+    # borrowed from a different explicit subject are checked separately by
+    # _validate_entity_action_binding; an omitted subject may legitimately
+    # carry forward to the next clause.
+    if predicate == "causes":
+        for match in re.finditer(r"导致|造成|引起|会使|可能使|使", statement_text):
+            effect = re.split(r"[。；;，,！？!?]", statement_text[match.end():], maxsplit=1)[0]
+            pairs = _source_bigrams(effect)
+            if len(pairs) >= 2 and len(pairs & support_pairs) / len(pairs) < 0.2:
+                raise ValueError("candidate causal effect is not grounded in Evidence")
+        candidate_pairs = _causal_pairs(statement_text)
+        source_pairs = _causal_pairs(support_text)
+        if not candidate_pairs or not source_pairs or any(
+            not any(_local_phrase_match(cause, source_cause) and _local_phrase_match(effect, source_effect)
+                    and not _opposing_direction(effect, source_effect)
+                    for source_cause, source_effect in source_pairs)
+            for cause, effect in candidate_pairs
+        ):
+            raise ValueError("candidate causal direction or causal effect is not supported by a source clause")
+
+
+def _validate_entity_action_binding(candidate: Mapping[str, Any], support_text: str) -> None:
+    """Reject an exact action borrowed from a different source proposition."""
+    source_clauses = [_normalized_text(item) for item in _source_proposition_clauses(support_text)]
+    whole_source = _normalized_text(support_text)
+    for candidate_clause in re.split(r"[。；;！？!?，,]", str(candidate.get("statement_text") or "")):
+        normalized_clause = _normalized_text(candidate_clause)
+        for entity in candidate.get("subject_entities", []):
+            if entity.get("role") != "subject":
+                continue
+            subject = _normalized_text(entity.get("surface_form"))
+            if len(subject) < 2 or subject not in normalized_clause:
+                continue
+            action = normalized_clause.split(subject, 1)[1]
+            action = _NORMATIVE_CUE_RE.sub("", action, count=1)
+            if len(action) < 2 or subject not in whole_source or action not in whole_source:
+                continue
+            if not any(subject in clause and action in clause and clause.index(subject) < clause.rindex(action) for clause in source_clauses):
+                action_clauses = [clause for clause in source_clauses if action in clause]
+                def explicit_other_subject(clause: str) -> bool:
+                    prefix = clause[:clause.index(action)]
+                    prefix = _NORMATIVE_CUE_RE.sub("", prefix)
+                    prefix = re.sub(r"^(?:随后|然后|接着|再|并且|并|同时|且|将|对|把|其|该|此)+", "", prefix)
+                    return len(prefix) >= 2 and subject not in prefix
+                if action_clauses and all(explicit_other_subject(clause) for clause in action_clauses):
+                    raise ValueError("candidate combines subject and action from different source clauses")
+
+
+def _local_phrase_match(candidate: str, source: str) -> bool:
+    candidate_text = _normalized_text(candidate)
+    source_text = _normalized_text(source)
+    if not candidate_text or not source_text:
+        return False
+    if candidate_text in source_text or source_text in candidate_text:
+        return True
+    candidate_pairs, source_pairs = _source_bigrams(candidate_text), _source_bigrams(source_text)
+    return bool(candidate_pairs and source_pairs and len(candidate_pairs & source_pairs) / len(candidate_pairs) >= 0.2)
+
+
+def _opposing_direction(candidate: str, source: str) -> bool:
+    opposites = (("增大", "减小"), ("增加", "减少"), ("升高", "降低"), ("上升", "下降"), ("开启", "关闭"), ("打开", "关闭"), ("接通", "断开"))
+    return any((left in candidate and right in source) or (right in candidate and left in source) for left, right in opposites)
+
+
+def _causal_pairs(text: str) -> list[tuple[str, str]]:
+    result = []
+    for clause in re.split(r"[。；;，,！？!?]", text):
+        match = re.search(r"导致|造成|引起|致使|使得|会使|可能使|会影响|可能影响|影响|使", clause)
+        if match:
+            cause, effect = clause[:match.start()].strip(), clause[match.end():].strip()
+            if cause and effect:
+                result.append((cause, effect))
+    return result
+
+
+def _quantity_context_pairs(text: str) -> list[tuple[str, dict[str, Any]]]:
+    """Bind each parsed value to an explicit nearby measurement target."""
+    result = []
+    for clause in re.split(r"[。；;！？!?]", text):
+        cursor = 0
+        for quantity in _quantity_fields(clause)[0]:
+            surface = str(quantity["surface_form"])
+            position = clause.find(surface, cursor)
+            if position < 0:
+                continue
+            cursor = position + len(surface)
+            prefix = re.split(r"且|并且|同时|以及|而|，|,", clause[:position])[-1]
+            for comparator, _, _ in COMPARATORS:
+                prefix = prefix.replace(comparator, "")
+            prefix = _NORMATIVE_CUE_RE.sub("", prefix)
+            anchor = _normalized_text(prefix).strip("的 ")
+            result.append((anchor, quantity))
+    return result
+
+
+def _validate_local_quantity_meaning(statement_text: str, support_text: str) -> None:
+    candidate_pairs = _quantity_context_pairs(statement_text)
+    source_pairs = _quantity_context_pairs(support_text)
+    if not candidate_pairs or len(source_pairs) < 2:
+        return
+    for anchor, quantity in candidate_pairs:
+        if len(anchor) < 2:
+            continue
+        matching = [source_quantity for source_anchor, source_quantity in source_pairs if source_anchor == anchor]
+        if matching and not _quantity_is_supported(quantity, matching):
+            raise ValueError("candidate quantity is assigned to the wrong source clause or target")
+
+
 def validate_candidate_against_evidence(candidate: Mapping[str, Any], evidence: Mapping[str, Any]) -> dict[str, Any]:
     """Deterministically reject semantic drift while avoiding re-extraction."""
     validate_candidate_semantics(candidate)
+    binding = next((item for item in candidate.get("evidence_bindings", []) if item.get("evidence_id") == evidence.get("evidence_id")), None)
+    if binding is None:
+        raise ValueError("candidate does not bind the supplied Evidence")
     evidence_text = _canonical_evidence_text(evidence)
-    if candidate.get("evidence_quote") != evidence_text:
+    binding_quote = binding.get("evidence_quote", candidate.get("evidence_quote"))
+    if binding_quote != evidence_text:
         raise ValueError("candidate Evidence quote is not canonical")
-    if _text_similarity(candidate.get("statement_text"), evidence_text) < 0.45:
-        raise ValueError("candidate statement is not grounded in Evidence context")
+    evidence_bindings = list(candidate.get("evidence_bindings", []))
+    if candidate.get("source_list_item"):
+        evidence_bindings.sort(key=lambda item: item.get("support_type") != "context")
+    support_text = " ".join(str(item.get("evidence_quote", candidate.get("evidence_quote", ""))) for item in evidence_bindings)
+    question_support = _resolved_marked_answer_text(candidate, evidence)
+    if (candidate.get("source_question") or {}).get("status") == "linked" and question_support is None:
+        raise ValueError("confirmed question stem and marked answer cannot be resolved")
+    semantic_support = question_support if question_support is not None else support_text
+    _validate_explicit_polarity(str(candidate.get("statement_text") or ""), semantic_support)
+    _validate_local_quantity_meaning(str(candidate.get("statement_text") or ""), semantic_support)
+    _validate_entity_action_binding(candidate, semantic_support)
     for entity in candidate.get("subject_entities", []):
-        if _normalized_text(entity.get("surface_form")) not in _normalized_text(evidence_text):
+        if _normalized_text(entity.get("surface_form")) not in _normalized_text(semantic_support):
             raise ValueError("candidate entity is not grounded in Evidence")
-    expected_quantities = _quantity_fields(evidence_text)[0]
+    expected_quantities = _quantity_fields(semantic_support)[0]
     actual_quantities = candidate.get("quantities", [])
     if any(not _quantity_is_supported(item, expected_quantities) for item in actual_quantities):
         raise ValueError("candidate contains an unsupported quantity, unit, or comparison operator")
-    expected_negations = _negation_fields(evidence_text)
+    expected_negations = _negation_fields(semantic_support)
     for item in candidate.get("negation_scope", []):
-        if not any(_normalized_text(item.get("surface_form")) == _normalized_text(other.get("surface_form")) and item.get("polarity") == other.get("polarity") for other in expected_negations):
+        if item.get("scope_type") == "quantity" and all(_quantity_is_supported(quantity, expected_quantities) for quantity in actual_quantities):
+            continue
+        item_cue = _local_normative_cue(str(item.get("surface_form") or ""))
+        if item_cue and any(
+            _normative_cue_equivalent(item_cue, _local_normative_cue(str(other.get("surface_form") or "")))
+            for other in expected_negations
+        ):
+            continue
+        if not any(_normalized_text(item.get("surface_form")) in _normalized_text(other.get("surface_form")) and item.get("polarity") == other.get("polarity") for other in expected_negations):
             raise ValueError("candidate contains an unsupported negation")
     for item in candidate.get("conditions", []):
-        if _normalized_text(item.get("surface_form")) not in _normalized_text(evidence_text):
+        if _normalized_text(item.get("surface_form")) not in _normalized_text(semantic_support):
             raise ValueError("candidate contains an unsupported condition")
     scope_text = (candidate.get("applicability_scope") or {}).get("applicability_text")
-    if scope_text and _normalized_text(scope_text) not in _normalized_text(evidence_text):
+    scope_support = semantic_support + " " + _confirmed_operation_title(evidence, candidate.get("procedure_group"))
+    if scope_text and _normalized_text(scope_text) not in _normalized_text(scope_support):
         raise ValueError("candidate applicability exceeds Evidence wording")
-    explicit_cause = _has_causal_marker(str(candidate.get("statement_text", "")))
-    evidence_cause_context = _has_causal_marker(evidence_text)
-    if candidate.get("predicate") == "causes" and not (explicit_cause or evidence_cause_context):
-        raise ValueError("candidate causal relation is not expressed by Evidence")
-    if explicit_cause and candidate.get("predicate") != "causes" and any(token in candidate.get("statement_text", "") for token in ("导致", "造成", "引起")):
-        raise ValueError("candidate causal direction or relation is inconsistent with Evidence")
+    if scope_text and _normalized_text(scope_text) in _normalized_text(semantic_support):
+        subject = next((str(item.get("surface_form") or "") for item in candidate.get("subject_entities", []) if item.get("role") == "subject" and len(str(item.get("surface_form") or "")) >= 2), "")
+        if subject:
+            sentences = [_normalized_text(part) for part in re.split(r"[。；;！？!?]", semantic_support) if part.strip()]
+            selected_scope = _normalized_text(scope_text)
+            selected_subject = _normalized_text(subject)
+            subject_sentences = [part for part in sentences if selected_subject in part]
+            if subject_sentences and not any(selected_scope in part for part in subject_sentences):
+                # A different explicit local scope on the subject's own
+                # proposition disproves cross-sentence scope borrowing.
+                local_scope = re.compile(r"(?:在[^，,]{1,24}(?:期间|阶段|状态下)|[^，,。；]{1,12}(?:之前|之后|以前|以后|前|后|时))")
+                if all(local_scope.search(part) for part in subject_sentences):
+                    raise ValueError("candidate applicability is bound to a different source proposition")
+                scope_sentences = [part for part in sentences if selected_scope in part]
+                if any(
+                    re.search(r"[^，,]{2,}(?:应当|应|必须|须|不得|不应|可)", part.split(selected_scope, 1)[1].strip("，,"))
+                    for part in scope_sentences
+                ):
+                    raise ValueError("candidate applicability is bound to a different source proposition")
+    procedure_group = candidate.get("procedure_group")
+    if procedure_group and "operation_group_context" in evidence:
+        source_group = next((item for item in evidence["operation_group_context"] if item.get("group_id") == procedure_group.get("group_id")), None)
+        if source_group is None:
+            raise ValueError("candidate procedure group is not anchored to this Evidence")
+        if procedure_group.get("status") == "indexed":
+            title_id = source_group.get("title_evidence_id")
+            context_bindings = [item for item in candidate.get("evidence_bindings", []) if item.get("support_type") == "context"]
+            expected_title = [] if title_id == evidence.get("evidence_id") or not title_id else [title_id]
+            if [item.get("evidence_id") for item in context_bindings] != expected_title:
+                raise ValueError("candidate procedure title context binding differs from confirmed source")
+            source_step = next((item for item in source_group.get("steps", []) if item.get("source_order") == procedure_group.get("step_index") and evidence.get("evidence_id") in (item.get("evidence_ids") or ([item["evidence_id"]] if item.get("evidence_id") else []))), None)
+            if source_step is None or source_step.get("status") != "confirmed":
+                raise ValueError("candidate procedure step index is not anchored to this Evidence")
+            source_quote = str(source_step.get("source_quote") or "")
+            local_quote = (source_step.get("source_quotes") or {}).get(evidence.get("evidence_id"), source_quote)
+            if not local_quote or _normalized_text(local_quote) not in _normalized_text(evidence_text):
+                raise ValueError("source procedure quote is not grounded in canonical Evidence")
+            binding_spans = binding.get("source_span_ids", candidate.get("source_span_ids") or ())
+            if not set(source_step.get("source_span_ids") or ()) & set(binding_spans):
+                raise ValueError("candidate procedure step has no matching source span")
+    source_list_item = candidate.get("source_list_item")
+    if source_list_item and "related_source_context" in evidence:
+        source_group = next((item for item in evidence["related_source_context"] if item.get("group_id") == source_list_item.get("group_id") and item.get("group_kind") in SOURCE_LIST_KINDS), None)
+        if source_group is None:
+            raise ValueError("candidate source list item is not anchored to this Evidence")
+        title_id = source_group.get("title_evidence_id")
+        title_bindings = [item for item in candidate.get("evidence_bindings", []) if item.get("support_type") == "context"]
+        expected_title_bindings = [] if title_id == evidence.get("evidence_id") else [title_id]
+        if [item.get("evidence_id") for item in title_bindings] != expected_title_bindings:
+            raise ValueError("source list candidate must bind its confirmed title Evidence as context")
+        if source_group.get("group_kind") == "classification_list" and candidate.get("statement_type") == "procedure":
+            raise ValueError("classification list item cannot be promoted to procedure")
+        if source_list_item.get("status") == "indexed":
+            source_item = next((item for item in source_group.get("items", []) if item.get("source_order") == source_list_item.get("item_index") and evidence.get("evidence_id") in (item.get("evidence_ids") or [])), None)
+            if source_item is None or source_item.get("status") != "confirmed":
+                raise ValueError("candidate source list index is not anchored to this Evidence")
+            source_quote = str(source_item.get("source_quote") or "")
+            local_quote = (source_item.get("source_quotes") or {}).get(evidence.get("evidence_id"), source_quote)
+            if not local_quote or _normalized_text(local_quote) not in _normalized_text(evidence_text):
+                raise ValueError("source list quote is not grounded in canonical Evidence")
+            binding_spans = binding.get("source_span_ids", candidate.get("source_span_ids") or ())
+            if not set(source_item.get("source_span_ids") or ()) & set(binding_spans):
+                raise ValueError("candidate source list item has no matching source span")
+    question_groups = [item for item in evidence.get("related_source_context", []) if item.get("group_kind") == "question_options"]
+    source_question = candidate.get("source_question")
+    if question_groups and source_question:
+        source_group = next((group for group in question_groups if (source_question or {}).get("group_id") == group.get("group_id")), None)
+        if source_group is None or source_group.get("answer_marked") is not True or source_group.get("source_review_status") != "confirmed" or candidate.get("statement_type") == "procedure":
+            raise ValueError("question candidate is not linked to its confirmed source group")
+        _validate_question_answer(source_question, source_group, candidate.get("statement_text", ""))
+        member_ids = {source_group.get("stem_evidence_id"), source_group.get("answer_evidence_id")}
+        if {item.get("evidence_id") for item in candidate.get("evidence_bindings", [])} != member_ids:
+            raise ValueError("question candidate must bind exactly its confirmed stem and marked-answer Evidence")
+    elif question_groups and _normalized_text(candidate.get("statement_text")) not in _normalized_text(evidence_text):
+        raise ValueError("unlinked question candidate is not an independent verbatim source statement")
+    # A causal relation is a semantic decision made from the supplied Evidence.
+    # Surface words such as “影响” or “导致” may occur in a causal claim, a
+    # quoted title, or a non-causal requirement. They are not a reliable
+    # deterministic classifier in either direction. Grounding and the
+    # structured cause_to_effect direction remain checked above.
     return {
         "evidence_grounding": True,
         "quantity": all(_quantity_is_supported(item, expected_quantities) for item in actual_quantities),
         "unit": all(_quantity_is_supported(item, expected_quantities) for item in actual_quantities),
         "comparison": all(_quantity_is_supported(item, expected_quantities) for item in actual_quantities),
-        "negation": all(any(_normalized_text(item.get("surface_form")) == _normalized_text(other.get("surface_form")) and item.get("polarity") == other.get("polarity") for other in expected_negations) for item in candidate.get("negation_scope", [])),
-        "condition": all(_normalized_text(item.get("surface_form")) in _normalized_text(evidence_text) for item in candidate.get("conditions", [])),
-        "applicability": not scope_text or _normalized_text(scope_text) in _normalized_text(evidence_text),
+        "negation": all((item.get("scope_type") == "quantity" and all(_quantity_is_supported(quantity, expected_quantities) for quantity in actual_quantities)) or any(_normalized_text(item.get("surface_form")) == _normalized_text(other.get("surface_form")) and item.get("polarity") == other.get("polarity") for other in expected_negations) for item in candidate.get("negation_scope", [])),
+        "condition": all(_normalized_text(item.get("surface_form")) in _normalized_text(support_text) for item in candidate.get("conditions", [])),
+        "applicability": not scope_text or _normalized_text(scope_text) in _normalized_text(scope_support),
         "relation_direction": True,
         "unsupported_addition": False,
     }
@@ -1538,6 +2468,21 @@ def _critical_semantic_checks(candidate: Mapping[str, Any] | None, evidence_text
     }
 
 
+def _critical_source_text(evidence: Mapping[str, Any], gold: Mapping[str, Any]) -> str:
+    """Use only a source-confirmed marked answer for question safety checks."""
+    groups = [item for item in evidence.get("related_source_context", []) if item.get("group_kind") == "question_options"]
+    if not groups:
+        return _canonical_evidence_text(evidence)
+    group_id = (gold.get("source_question") or {}).get("group_id")
+    for group in groups:
+        if group_id and group.get("group_id") != group_id:
+            continue
+        resolved = _resolved_marked_answer_text({"source_question": {"group_id": group.get("group_id"), "status": "linked"}}, evidence)
+        if resolved:
+            return resolved
+    return _canonical_evidence_text(evidence)
+
+
 def validate_stage12_runtime_projection(candidates: Iterable[Mapping[str, Any]], payload: Mapping[str, Any]) -> None:
     """Verify that the Stage 9 projection retains every Stage 12 semantic field."""
     nodes = {node["id"]: node for node in payload.get("nodes", [])}
@@ -1586,17 +2531,26 @@ def validate_stage12_runtime_projection(candidates: Iterable[Mapping[str, Any]],
         for binding in candidate["evidence_bindings"]:
             evidence_id = f"urn:turbine-v2:stage12:evidence:{binding['evidence_id']}:{candidate['candidate_id']}"
             evidence = nodes.get(evidence_id)
-            if not evidence or evidence["properties"] != {"evidenceText": candidate["evidence_quote"], "evidenceId": binding["evidence_id"], "evidenceVersionId": candidate["evidence_version_id"], "supportType": binding["support_type"]}:
+            binding_quote = binding.get("evidence_quote", candidate["evidence_quote"])
+            binding_version = binding.get("evidence_version_id", candidate["evidence_version_id"])
+            binding_spans = binding.get("source_span_ids", candidate["source_span_ids"])
+            binding_locations = _binding_span_locations(binding, candidate)
+            binding_revision = binding.get("revision_id", candidate["revision_id"])
+            binding_document = binding.get("document_logical_id", candidate["document_logical_id"])
+            if not evidence or evidence["properties"] != {"evidenceText": binding_quote, "evidenceId": binding["evidence_id"], "evidenceVersionId": binding_version, "supportType": binding["support_type"]}:
                 raise ValueError(f"Stage 12 Evidence lineage was lost in runtime projection: {candidate['candidate_id']}")
             span_targets = {link["target"] for link in links if link["source"] == evidence_id and link["predicate"] == "sourceSpan"}
-            expected_spans = set(candidate["source_span_ids"])
+            expected_spans = set(binding_spans)
             if span_targets != {f"urn:turbine-v2:stage12:span:{span_id}" for span_id in expected_spans}:
                 raise ValueError(f"Stage 12 source spans were lost in runtime projection: {candidate['candidate_id']}")
-            for span_id in expected_spans:
+            for span_location in binding_locations:
+                span_id = span_location["source_span_id"]
+                binding_page = span_location["physical_page"]
+                binding_logical_page = span_location.get("logical_page")
                 span = nodes[f"urn:turbine-v2:stage12:span:{span_id}"]
-                expected_span = {"spanId": span_id, "spanText": candidate["evidence_quote"], "physicalPage": candidate["physical_page"], "pageId": f"page-{candidate['physical_page']}", "revisionId": candidate["revision_id"], "documentId": candidate["document_logical_id"]}
-                if candidate.get("logical_page") is not None:
-                    expected_span["logicalPage"] = candidate["logical_page"]
+                expected_span = {"spanId": span_id, "spanText": binding_quote, "physicalPage": binding_page, "pageId": f"page-{binding_page}", "revisionId": binding_revision, "documentId": binding_document}
+                if binding_logical_page is not None:
+                    expected_span["logicalPage"] = binding_logical_page
                 if span.get("properties") != expected_span:
                     raise ValueError(f"Stage 12 source span lineage changed in runtime projection: {candidate['candidate_id']}")
         quantity_links = [link["target"] for link in links if link["source"] == sid and link["predicate"] == "hasQuantityValue"]
@@ -1614,24 +2568,36 @@ def validate_stage12_runtime_projection(candidates: Iterable[Mapping[str, Any]],
 
 def validate_candidate_evidence_binding(candidate: Mapping[str, Any], evidence: Mapping[str, Any]) -> None:
     """Validate candidate lineage against the canonical Stage 6 Evidence row."""
-    if candidate.get("document_logical_id") != evidence.get("document_logical_id") or candidate.get("revision_id") != evidence.get("revision_id"):
+    bindings = candidate.get("evidence_bindings", [])
+    binding = next((item for item in bindings if item.get("evidence_id") == evidence.get("evidence_id")), None)
+    if binding is None:
+        raise ValueError("candidate does not bind the canonical Evidence id")
+    if binding is not bindings[0] and not all(key in binding for key in ("document_logical_id", "revision_id", "physical_page", "evidence_version_id", "source_text_sha256", "source_span_ids", "evidence_quote")):
+        raise ValueError("additional Evidence binding lacks independent lineage")
+    lineage = {key: binding.get(key, candidate.get(key)) for key in ("document_logical_id", "revision_id", "physical_page", "logical_page", "evidence_version_id", "source_text_sha256", "source_span_ids", "source_span_locations", "evidence_quote")}
+    if lineage["document_logical_id"] != evidence.get("document_logical_id") or lineage["revision_id"] != evidence.get("revision_id"):
         raise ValueError("candidate Document/Revision identity does not match canonical Evidence")
     location = _location(evidence)
-    if candidate.get("physical_page") != location["physical_page"] or candidate.get("logical_page") != location.get("logical_page"):
+    if lineage["physical_page"] != location["physical_page"] or lineage["logical_page"] != location.get("logical_page"):
         raise ValueError("candidate page identity does not match canonical Evidence")
-    if candidate.get("evidence_version_id") != _evidence_version_id(evidence):
+    if lineage["evidence_version_id"] != _evidence_version_id(evidence):
         raise ValueError("candidate Evidence version does not match canonical Evidence")
-    if candidate.get("source_text_sha256") != evidence.get("source_text_sha256"):
+    if lineage["source_text_sha256"] != evidence.get("source_text_sha256"):
         raise ValueError("candidate source hash does not match canonical Evidence")
     expected_spans = set(location.get("source_span_ids") or [])
-    actual_spans = set(candidate.get("source_span_ids") or [])
-    if not expected_spans <= actual_spans:
-        raise ValueError("candidate source spans do not cover canonical Evidence")
-    if candidate.get("evidence_quote") != _canonical_evidence_text(evidence):
+    actual_spans = set(lineage["source_span_ids"] or [])
+    if expected_spans != actual_spans:
+        raise ValueError("candidate source spans do not match canonical Evidence")
+    expected_locations = location["source_span_locations"]
+    actual_locations = lineage["source_span_locations"]
+    if actual_locations is None and len({item["physical_page"] for item in expected_locations}) > 1:
+        raise ValueError("cross-page Evidence requires per-span page lineage")
+    if actual_locations is not None and (len(actual_locations) != len(expected_locations) or {
+        (item.get("source_span_id"), item.get("physical_page"), item.get("logical_page")) for item in actual_locations
+    } != {(item["source_span_id"], item["physical_page"], item.get("logical_page")) for item in expected_locations}):
+        raise ValueError("candidate source span page lineage differs from canonical Evidence")
+    if lineage["evidence_quote"] != _canonical_evidence_text(evidence):
         raise ValueError("candidate Evidence quote is not the canonical Evidence text")
-    bindings = {binding.get("evidence_id") for binding in candidate.get("evidence_bindings", [])}
-    if evidence.get("evidence_id") not in bindings:
-        raise ValueError("candidate does not bind the canonical Evidence id")
 
 
 def _candidate_evidence_ids(candidate: Mapping[str, Any]) -> set[str]:
@@ -1786,6 +2752,7 @@ def _adjudicated_metrics(
     gold_mismatch_details: list[Mapping[str, Any]],
     unmatched_gold: list[Any],
     unmatched_candidates: list[Any],
+    candidates: list[Mapping[str, Any]],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Apply explicit human-authorized disagreement decisions without changing raw metrics."""
     records = adjudication.get("decisions") or []
@@ -1806,6 +2773,7 @@ def _adjudicated_metrics(
     raw_keys.update(_adjudication_key(None, item) for item in unmatched_candidates)
     extra_keys = sorted(set(by_key) - raw_keys, key=repr)
     unmatched_gold_ids = {str(item) for item in unmatched_gold}
+    candidates_by_id = {str(item.get("candidate_id")): item for item in candidates}
     extra_keys = [key for key in extra_keys if key[0] not in unmatched_gold_ids]
     pending_keys = sorted(
         (
@@ -1848,9 +2816,16 @@ def _adjudicated_metrics(
             if key not in mismatch_by_key or (record and record.get("information_coverage") is True):
                 covered_gold_ids.add(gold_id)
         else:
+            # A many-to-one match can be explicitly reviewed, but a missing
+            # Candidate cannot be counted as information coverage.
             record = by_key.get(_adjudication_key(gold_id, None)) or by_gold.get(gold_id)
-            if record and record.get("information_coverage") is True:
-                covered_gold_ids.add(gold_id)
+            if record and record.get("information_coverage") is True and record.get("decision") == "D":
+                candidate = candidates_by_id.get(str(record.get("candidate_id")))
+                if candidate is not None:
+                    gold_evidence = {str(binding.get("evidence_id")) for binding in gold.get("evidence_bindings", [])}
+                    candidate_evidence = _candidate_evidence_ids(candidate)
+                    if gold_evidence & candidate_evidence:
+                        covered_gold_ids.add(gold_id)
     summary = {
         "total_reviewed_count": len(records),
         "acceptable_semantic_equivalence_count": acceptable,
@@ -1996,7 +2971,7 @@ def compare_candidates(
                 evidence = evidence_by_id.get(evidence_id)
                 if evidence is None:
                     continue
-                critical = _critical_semantic_checks(candidate, _canonical_evidence_text(evidence), str(gold.get("statement_text", "")))
+                critical = _critical_semantic_checks(candidate, _critical_source_text(evidence, gold), str(gold.get("statement_text", "")))
                 critical_quantity_mismatch_count += int(critical["critical_quantity_mismatch"])
                 critical_polarity_error_count += int(critical["critical_polarity_error"])
                 critical_relation_direction_error_count += int(critical["critical_relation_direction_error"])
@@ -2013,7 +2988,7 @@ def compare_candidates(
                 evidence = evidence_by_id.get(evidence_id)
                 if evidence is None:
                     continue
-                critical = _critical_semantic_checks(None, _canonical_evidence_text(evidence), str(gold.get("statement_text", "")))
+                critical = _critical_semantic_checks(None, _critical_source_text(evidence, gold), str(gold.get("statement_text", "")))
                 if critical["critical_omission"]:
                     row_id = str(gold.get("statement_id") or statement_id or gold_index)
                     critical_error_row_ids.add(row_id)
@@ -2032,6 +3007,7 @@ def compare_candidates(
             gold_mismatch_details,
             unmatched_gold,
             unmatched_candidates,
+            candidates,
         )
     return {
         "gold_statement_count": len(gold_rows), "candidate_count": len(candidates), "gold_exhaustive": gold_exhaustive,
@@ -2364,3 +3340,120 @@ def _quantities_match(candidate: list[Mapping[str, Any]], gold: list[Mapping[str
             return False
         remaining.pop(match_index)
     return not remaining
+
+
+def validate_evidence_candidate_coverage(
+    evidence: Mapping[str, Any], candidates: Sequence[Mapping[str, Any]],
+) -> None:
+    """Legacy coverage heuristic; callers should record errors as review diagnostics.
+
+    This deliberately checks proposition *kinds*, not wording similarity.  A
+    complete normative sentence cannot be covered by a definition alone, and
+    a complete definition cannot vanish behind an unrelated requirement.
+    Ambiguous clause boundaries and semantic paraphrases remain for review.
+    """
+    evidence_id = evidence.get("evidence_id")
+    for group in [*evidence.get("operation_group_context", []), *evidence.get("related_source_context", [])]:
+        if group.get("source_review_status") != "confirmed":
+            continue
+        for member in [*group.get("steps", []), *group.get("items", [])]:
+            member_ids = member.get("evidence_ids") or ([member["evidence_id"]] if member.get("evidence_id") else [])
+            if evidence_id in member_ids[1:]:
+                return  # The first member emits the statement for a continued source item.
+        if group.get("group_kind") == "question_options":
+            return  # A marked answer can reside in a different Evidence.
+
+    source = _canonical_evidence_text(evidence)
+    complete_clauses = [match.group(0).strip() for match in re.finditer(r"[^。；;！？!?]+[。；;！？!?]", source)]
+    if not complete_clauses:
+        return
+    candidate_texts = [_normalized_text(item.get("statement_text")) for item in candidates]
+    has_normative_candidate = any(_modality(item.get("statement_text", "")) != "descriptive" for item in candidates)
+    for clause in complete_clauses:
+        body = re.sub(r"^\s*(?:\d+(?:\.\d+)*[.．、）)]|[A-Za-z][)）])\s*", "", clause).strip(" \n\t。；;！？!?")
+        if not body or body.endswith(("：", ":")):
+            continue
+        # A punctuation-delimited modality is a high-confidence obligation.
+        # Requiring a normative candidate, rather than near-verbatim wording,
+        # lets legitimate paraphrases through while catching definition-only
+        # responses to a mixed Evidence.
+        normative = re.search(r"(?:^|[，,：:])\s*(?:应当|应(?!力|变|急|用)|必须|不得|不应|须|宜|可以)", body)
+        if normative and not has_normative_candidate:
+            raise ValueError("complete normative source clause has no normative candidate")
+
+        if normative:
+            continue
+        definition = re.fullmatch(r"(?P<term>[^，,：:。；;]{1,18}?)\s*(?:为|是|指|表示)\s*(?P<meaning>[^，,：:。；;]{2,})", body)
+        if not definition:
+            continue
+        term = _normalized_text(definition.group("term"))
+        meaning = _normalized_text(definition.group("meaning"))
+        if len(term) == 1 and not re.fullmatch(r"[A-Za-zα-ωΑ-Ω]", term):
+            continue  # “这是背景说明”等普通说明不是符号定义。
+        if len(meaning) >= 2 and not any(term in text and meaning in text for text in candidate_texts):
+            raise ValueError("complete definition source clause has no candidate")
+
+
+def candidate_review_diagnostics(
+    evidence: Mapping[str, Any], candidates: Sequence[Mapping[str, Any]],
+    coverage: Sequence[Mapping[str, Any]],
+) -> list[dict[str, str]]:
+    """Report uncertain semantic signals without rejecting valid model output."""
+    evidence_id = str(evidence.get("evidence_id") or "")
+    diagnostics: list[dict[str, str]] = []
+
+    def note(code: str, message: str, candidate_id: str | None = None) -> None:
+        item = {"evidence_id": evidence_id, "code": code, "severity": "needs_review", "message": message}
+        if candidate_id:
+            item["candidate_id"] = candidate_id
+        diagnostics.append(item)
+
+    by_id = {unit["source_unit_id"]: unit for unit in source_units_for_evidence(evidence)}
+    for entry in coverage:
+        unit = by_id.get(entry.get("source_unit_id"))
+        if unit and unit["unit_kind"] == "complete" and entry.get("status") == "excluded":
+            note("excluded_complete_source_unit", f"Complete source unit excluded: {unit['source_unit_id']}; {entry.get('reason', '')}")
+    for candidate in candidates:
+        candidate_id = str(candidate.get("candidate_id") or "")
+        binding_text = " ".join(str(item.get("evidence_quote") or candidate.get("evidence_quote") or "") for item in candidate.get("evidence_bindings", []))
+        statement = str(candidate.get("statement_text") or "")
+        if _text_similarity(statement, binding_text) < 0.45:
+            note("low_text_similarity", "Candidate wording has low similarity to its Evidence context", candidate_id)
+        for entity in candidate.get("subject_entities", []):
+            if entity.get("role") != "subject":
+                continue
+            subject = str(entity.get("surface_form") or "").strip()
+            if len(subject) < 2:
+                continue
+            candidate_clause = next((part for part in re.split(r"[。；;！？!?，,]", statement) if subject in part), "")
+            source_clauses = [part for part in re.split(r"[。；;！？!?，,]", binding_text) if subject in part]
+            if not candidate_clause or not source_clauses:
+                continue
+            candidate_action = _NORMATIVE_CUE_RE.sub("", candidate_clause.split(subject, 1)[1], count=1).strip()
+            source_actions = [
+                _NORMATIVE_CUE_RE.sub("", part.split(subject, 1)[1], count=1).strip()
+                for part in source_clauses
+            ]
+            if len(candidate_action) < 2 or any(
+                candidate_action in source_action or source_action in candidate_action
+                for source_action in source_actions if source_action
+            ):
+                continue
+            best = max((_text_similarity(candidate_action, source_action) for source_action in source_actions if source_action), default=1.0)
+            if best < 0.72:
+                note(
+                    "action_wording_uncertain",
+                    f"Candidate action for subject '{subject}' is not directly aligned with a source-clause action",
+                    candidate_id,
+                )
+        for code, validator in (("modality_uncertain", _validate_local_normative_meaning),
+                                ("causality_uncertain", lambda a, b: _validate_local_content_support(a, b, str(candidate.get("predicate") or "")))):
+            try:
+                validator(statement, binding_text)
+            except ValueError as error:
+                note(code, str(error), candidate_id)
+    try:
+        validate_evidence_candidate_coverage(evidence, candidates)
+    except ValueError as error:
+        note("possible_definition_or_requirement_omission", str(error))
+    return diagnostics

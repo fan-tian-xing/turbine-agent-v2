@@ -8,9 +8,9 @@
   "decision_basis": "user acceptance policy delegated review: completeness + Evidence support + no fabrication",
   "independent_reviewer_ab_claimed": false,
   "source_sha256": {
-    "evaluation": "509f8bf6d7c38435b303dff22dcb0162e2ad7f977d1cadcc70bb473db68cddc1",
+    "evaluation": "d7ae49d00fa39233b19cb68e9261b397a7ed0ac11a91fc6113edc127829adb6d",
     "gold": "afbfd629a1bd3cf810bbd811b6804077c3619d1cc988600d7cc25506220ef6f7",
-    "candidate": "aee3eb19ade9fa153f60c93478d6dd6899b6582daf6a9cc5a2e6d0c15def5e71"
+    "candidate": "f9259302315bc4eaea46cc4c8cbe586f22c39ad186d601fae701642bd7352dce"
   },
   "decisions": [
     {

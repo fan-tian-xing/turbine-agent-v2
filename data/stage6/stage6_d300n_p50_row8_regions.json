@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_d300n_p50_row8_regions",
+  "document_key": "D300N",
+  "original_pdf_relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+  "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+  "ocr_pdf_filename": "汽轮机本体安装及维护说明书(OCR).pdf",
+  "ocr_pdf_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+  "coordinate_system": "original_pdf_display_points",
+  "reviewed_at": "2026-09-29",
+  "regions": [
+    {
+      "unit_id": "d300n-p50-caption",
+      "physical_page": 50,
+      "bbox": [
+        235,
+        130,
+        375,
+        151
+      ],
+      "source_text": "续表2-14-1",
+      "ocr_reference_text": "续表2-14-1",
+      "table_column": "表题",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    },
+    {
+      "unit_id": "d300n-p50-column-number",
+      "physical_page": 50,
+      "bbox": [
+        62,
+        150,
+        95,
+        186
+      ],
+      "source_text": "项\n号",
+      "ocr_reference_text": "项\n号",
+      "table_column": "项号",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    },
+    {
+      "unit_id": "d300n-p50-column-work",
+      "physical_page": 50,
+      "bbox": [
+        95,
+        150,
+        372,
+        186
+      ],
+      "source_text": "工作内容",
+      "ocr_reference_text": "工作内容",
+      "table_column": "工作内容",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    },
+    {
+      "unit_id": "d300n-p50-column-figure",
+      "physical_page": 50,
+      "bbox": [
+        372,
+        150,
+        421,
+        186
+      ],
+      "source_text": "附图号",
+      "ocr_reference_text": "附图号",
+      "table_column": "附图号",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    },
+    {
+      "unit_id": "d300n-p50-column-records",
+      "physical_page": 50,
+      "bbox": [
+        420,
+        150,
+        540,
+        186
+      ],
+      "source_text": "证明书目录",
+      "ocr_reference_text": "证明书目录",
+      "table_column": "证明书目录",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    },
+    {
+      "unit_id": "d300n-p50-row8-work",
+      "physical_page": 50,
+      "bbox": [
+        65,
+        381,
+        370,
+        564
+      ],
+      "source_text": "8\n轴承箱上半装配：\na)检查挡油环齿是否倒伏。\nb)认真清洗轴承箱下半和上半内表面。\nc)测量并调整挡油环与转子上、下和左、右的间隙，\n特别是底部间隙必须认真测量。\nd) 检查并测量低压轴承箱中转子联轴器罩与转子间\n轴向、径向间隙并记录。\ne)配准1#、2#轴承压盖与轴承垫块过盈量，按说明\n书要求的冷紧力矩值拧紧3#、4#轴承压盖螺栓。\nf)临时装配轴承箱盖，检查中分面间隙。",
+      "ocr_reference_text": "8\n轴承箱上半装配：\na)检查挡油环齿是否倒伏。\nb)认真清洗轴承箱下半和上半内表面。\nc)测量并调整挡油环与转子上、下和左、右的间隙，\n特别是底部间隙必须认真测量。\nd) 检查并测量低压轴承箱中转子联轴器罩与转子间\n轴向、径向间隙并记录。\ne)配准1#、2#轴承压盖与轴承垫块过盈量，按说明\n书要求的冷紧力矩值拧紧3#、4#轴承压盖螺栓。\nf)临时装配轴承箱盖，检查中分面间隙。",
+      "table_column": "工作内容",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    },
+    {
+      "unit_id": "d300n-p50-row8-record-directory",
+      "physical_page": 50,
+      "bbox": [
+        419,
+        422,
+        537,
+        553
+      ],
+      "source_text": "前轴承箱和中低压轴\n承箱挡油环间隙记录\n低压后轴承箱挡油环\n间隙记录\n联轴器与联轴器罩壳\n间隙记录\n1#、2#支持轴承记录\n3#、4#支持轴承记录",
+      "ocr_reference_text": "前轴承箱和中低压轴\n承箱挡油环间隙记录\n低压后轴承箱挡油环\n间隙记录\n联轴器与联轴器罩壳\n间隙记录\n1#、2#支持轴承记录\n3#、4#支持轴承记录",
+      "table_column": "证明书目录",
+      "status": "confirmed_original_page_region",
+      "stage12_extractability": "context_only"
+    }
+  ],
+  "boundary_note": "Caption and four printed column headers have independent local source regions; row 8 work and record-directory columns remain separate and no unprinted cell relation is inferred."
+}

@@ -12,6 +12,9 @@ from build_stage12_candidates import (
     _extract_with_evidence_cache,
     _jsonl,
     _gate,
+    _page_evidence,
+    _source_groups,
+    _context_groups,
     prune_stale_evidence_cache,
 )
 from stage12_failure_summary import decorate_event, write_failure_summary
@@ -56,9 +59,11 @@ def diagnose(*, evidence_ids: list[str] | None = None, limit: int = 2) -> dict:
         for page in manifest.get("pages", [])
         for evidence_id in page.get("evidence_ids", [])
     }
+    groups = _source_groups()
+    context_groups = _context_groups()
     for evidence_id in selected:
         page = page_by_evidence[evidence_id]
-        evidence = dict(evidence_by_id[evidence_id], document_key=page["document_key"])
+        evidence = _page_evidence(page, evidence_by_id, groups, context_groups)[evidence_id]
         profile = router.route(evidence)
         observer = lambda event, item=evidence: events.append(decorate_event(item, dict(event)))
         try:

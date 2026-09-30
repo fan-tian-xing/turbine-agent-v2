@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "retroactive_change_control",
+  "change_id": "retroactive-change-stage9-permission-modality-20260929",
+  "status": "implemented_pending_downstream_rebuild",
+  "discovered_in_stage": 12,
+  "affected_stages": [9, 10, 11, 12],
+  "problem": "Stage 12 derives normative_modality deterministically, but the Stage 9 controlled vocabulary had no value for explicit permission. Source wording using 可 or 可以 was therefore projected as descriptive even when the Statement text preserved the permission.",
+  "evidence": [
+    "ontology/stage9_shapes.ttl previously allowed only shall, must, recommended and descriptive",
+    "src/turbine_kg/extraction/semantic.py derives normative_modality from Statement text",
+    "tests/stage12/test_stage12_reserve_prefreeze.py covers generic permission, obligation, prohibition and non-normative possibility wording"
+  ],
+  "decision": "Add the backward-compatible permitted controlled value and derive it only from explicit permission wording. Keep prohibitions in the existing shall modality and the prohibits predicate; keep ambiguous possibility wording descriptive.",
+  "rejected_alternatives": [
+    "Map permission to recommended, which changes permission into advice",
+    "Map permission to descriptive, which drops explicit normative meaning"
+  ],
+  "files_changed": [
+    "ontology/stage9_core.ttl",
+    "ontology/stage9_shapes.ttl",
+    "config/stage12_candidate.schema.json",
+    "src/turbine_kg/extraction/semantic.py"
+  ],
+  "validation_files": [
+    "tests/stage9/test_stage9_semantic.py",
+    "tests/stage12/test_stage12_reserve_prefreeze.py"
+  ],
+  "old_sha256": {
+    "ontology/stage9_core.ttl": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249",
+    "ontology/stage9_shapes.ttl": "95d18e3aaf4b62b60c8a0541e74193150516cff977f20174b57bd76f1c4b9969",
+    "config/stage12_candidate.schema.json": "be0da2069cfae2ad01aa64a114534dad41d502a611f234703e6dc98906890163",
+    "src/turbine_kg/extraction/semantic.py": "c52e4ce4afbac6bde478ca73de306a422e54d03851e455aa5c39437e95f960a6"
+  },
+  "new_sha256": {
+    "ontology/stage9_core.ttl": "8ecc1eb849310c0ba85bb54b02577ca05007e9a6f91b64e9a0ace6a063f78b63",
+    "ontology/stage9_shapes.ttl": "f1420a6c15cf1884fa6ce1edb41e195e3472844280e7b4bfb77820a2a97d3bdf",
+    "config/stage12_candidate.schema.json": "843a6e4fd8827d26eeec36865f6152d6920cdfa7ba21f58448a36da8e6841d7d",
+    "src/turbine_kg/extraction/semantic.py": "50bf5bb8300d1e211f3e49415217a17d8091e9b2add3a41a49471fa872aa1a0e"
+  },
+  "downstream_dependents": [
+    "data/stage9/stage9_exit_audit.json",
+    "data/stage10/stage10_audit.json",
+    "data/stage11/stage11_exit_audit.json",
+    "data/stage12/stage12_input_manifest.json",
+    "data/stage12/stage12_development_candidates.json",
+    "data/stage12/stage12_development_evaluation.json",
+    "data/stage12/stage12_reserve_freeze_manifest.json",
+    "data/stage12/stage12_exit_audit.json"
+  ],
+  "invalidated_artifacts": [
+    "data/stage9/stage9_exit_audit.json",
+    "data/stage9/stage9_semantic_review.json",
+    "data/stage10/stage10_audit.json",
+    "data/stage11/stage11_entry_audit.json",
+    "data/stage11/stage11_exit_audit.json",
+    "data/stage12/stage12_input_manifest.json",
+    "data/stage12/stage12_development_candidates.json",
+    "data/stage12/stage12_development_raw_evaluation.json",
+    "data/stage12/stage12_development_disagreement_review.json",
+    "data/stage12/stage12_development_disagreement_adjudication.json",
+    "data/stage12/stage12_development_evaluation.json",
+    "data/stage12/stage12_real_llm_failure_summary.json",
+    "data/stage12/stage12_robustness_evaluation.json",
+    "data/stage12/stage12_reserve_freeze_manifest.json",
+    "data/stage12/stage12_exit_audit.json",
+    "data/project_state.json",
+    "var/model_runs/stage12/evidence"
+  ],
+  "rebuild_order": [9, 10, 11, "12_input_manifest", "12_development", "12_evaluation", "12_robustness", "12_reserve_freeze", "12_exit_audit"],
+  "validation": {
+    "stage9_to_stage12_related_tests": "passed with project runtime on 2026-09-30",
+    "permission_boundary": "explicit action permission is permitted; causal, result and possibility wording remains descriptive",
+    "independent_review": "three independent code, prompt and result reviews completed; reported generic boundary issues were corrected before rebuild",
+    "downstream_rebuild": "pending"
+  }
+}

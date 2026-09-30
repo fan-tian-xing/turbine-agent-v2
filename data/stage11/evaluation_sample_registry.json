@@ -10,16 +10,6 @@
     "stage11_semantic_review",
     "scripts/evaluate_stage12_holdout.py"
   ],
-  "consumer_permissions": {
-    "stage12_holdout_evaluator": {
-      "entrypoint": "scripts/evaluate_stage12_holdout.py",
-      "allowed_splits": ["acceptance_holdout"],
-      "forbidden_splits": ["development_regression_golden", "acceptance_holdout_reserve", "blind_test"],
-      "allowed_tasks": ["statement"],
-      "writes": ["data/stage12/stage12_holdout_evaluation.json"],
-      "must_not_write": ["data/stage12/stage12_development_candidates.json", "var/model_runs/stage12"]
-    }
-  },
   "development": {
     "source": "data/stage6/stage6_evidence_golden_sample.json",
     "page_count": 36,
@@ -44,7 +34,7 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 1,
-      "source_text_sha256": "10f5d5bafea9ff881e12aa70377e92eba9d1b9fd3db0a52b552b07d6e5926b98",
+      "source_text_sha256": "bb4666dfab7d3f513c32359819aa1249a2fc188a6d337116e9ae3e63ff4cff59",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -70,7 +60,7 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 2,
-      "source_text_sha256": "d65ee9d2cac3ac555be9fda5adb5067cd7424b28034076890b84018d0817b820",
+      "source_text_sha256": "4bc19cce7be4ce8c73a1418d477ea2ae5d90b2e3b6018671fb506dab21a495b2",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -96,7 +86,7 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 38,
-      "source_text_sha256": "0a833f3a23d11dfedfc246d7a94eef1ac85e49a44be4f021e2087a447afe0449",
+      "source_text_sha256": "3b0ed28d4c55b9980158b40068b4c87c4f993ce771b2287cea9cb77223e3ec20",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -122,7 +112,7 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 50,
-      "source_text_sha256": "10be17b68657148f9bb34bdd7aafa8a74d1f1d3229eadd735297c063af689e28",
+      "source_text_sha256": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -148,7 +138,7 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 73,
-      "source_text_sha256": "249481e4cbc243d5e01bdbcca2174fed0f301317e6ce6110dbd2878ca10b11be",
+      "source_text_sha256": "ec87fde1512b05acac1916cc1547f6b170911bf289f3a0dc657c102b4665e3ec",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -174,7 +164,7 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 94,
-      "source_text_sha256": "f52b541d042d5640462f10f331975fcf2d5cccc0e6d81789a708baf3c842f461",
+      "source_text_sha256": "847155efd0cacc50982b0d2f26d1a327ce3372fa0e97009063c8b7afb415ba09",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -200,7 +190,7 @@
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 1,
-      "source_text_sha256": "f9e84fbd63869d12cf194657f067e62d9966877ac2e0af4c158226f507dedb3e",
+      "source_text_sha256": "7175dcd72860c085fa19960d8f913bf05fdccda21f31ab3bdaeb39909e21baa8",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -226,7 +216,7 @@
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 14,
-      "source_text_sha256": "61fa8e6e9a5ed66a626eee5c6b465c0525f3ad6ddde16e1bf5fc5c5777daff0b",
+      "source_text_sha256": "73f047fec2f6cecc69e278a5b63f554e1dccf365cee281c3564bf84c5a7b3b3c",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -252,7 +242,7 @@
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 25,
-      "source_text_sha256": "edce4023236fc6fc5c2104a68321d89fcdb4d7036c3050d02a898aabd8beb09a",
+      "source_text_sha256": "8f966c1a9dd801c037ed2ac09a60daaec427fb111be70739fd67193d006ad1e4",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -278,7 +268,7 @@
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 42,
-      "source_text_sha256": "d577a8e88bf92adc4758276e80233e06d50274d1269d4bad1585f9c68f242c75",
+      "source_text_sha256": "4d87787eb07b00c18d1e253725a530bdad502885fd1a45ba2b40b75be862af2a",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -304,7 +294,7 @@
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 86,
-      "source_text_sha256": "7da7ca0a928703bdff251b9d527670e4ef885cea923843ce12171086a31a2a6c",
+      "source_text_sha256": "40315f0dd925cd2ffadd267ad480070248d158dc4e8e6014cc70a50eaac6ab0e",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -330,7 +320,7 @@
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 113,
-      "source_text_sha256": "a98b27d8f401ab09872ce1e114b9ab931911fd7ed27c72d250269ca8922b3aae",
+      "source_text_sha256": "4ca6b4614be2ce23c4a3d966810940595ee3701410e630d0e3e0dac6deca1173",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -356,7 +346,7 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 1,
-      "source_text_sha256": "f734b31e1e4d79990d5ba69e6d86f78518edd811006559c39a1b91e93562dc87",
+      "source_text_sha256": "2149e6cf93db9ec5c58a9693ec8ab7744c9159bf3b948d5336ed8180b9ca5097",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -382,7 +372,7 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 2,
-      "source_text_sha256": "497163780f364fe92cd740c355d1badde1dd562baad92ba35b64457d0b512785",
+      "source_text_sha256": "b3872f664a0a5fe0ddda8e20d2bea80dcc45eb465d2c66c20e2735f5bb4f0906",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -408,7 +398,7 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 14,
-      "source_text_sha256": "a7075b2baf8b9446d582c07fab2f2175dfdb5275edbf17470df5733bd0d299f0",
+      "source_text_sha256": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -434,7 +424,7 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 15,
-      "source_text_sha256": "bf7010586cf2f3ec44a41fd51cf66d15f03fdd0108bd7e7c97b2eeeca721a596",
+      "source_text_sha256": "a7074f50e7190421c89975f58a440e20f6f122ecfde8fc1ead1e9312e9c18843",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -460,7 +450,7 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 27,
-      "source_text_sha256": "6198003e4662c7000aea5097382365faade74ebadeeb92e035f8ebd7b28eb4b9",
+      "source_text_sha256": "92c84d6bd2d3d06069f8ead7d3347388c1754e9c1aa26331d658fb7892f1ecee",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -486,7 +476,7 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 28,
-      "source_text_sha256": "2aa205cfd2d6da34b9d6587b2fcff9343404d49e365d9077c4798497a1b721fb",
+      "source_text_sha256": "de81f97ccdc55ab4066baa04370cd7b8103f4ac4ac69be17698a38775098b2b0",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -512,7 +502,7 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 1,
-      "source_text_sha256": "b540a72394fa32f5ece7c4fd7f8ba008d5817b182c0b944f2d8fafb531f4f004",
+      "source_text_sha256": "f5bc6237d3a7a04a08ee382a5caee1d478a774a50e8c90d3e56cfc26b7705ae0",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -538,7 +528,7 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 11,
-      "source_text_sha256": "ea43f91710e7073c804cfaa2524597a7b885c444d8725c0346267360d6958a2f",
+      "source_text_sha256": "3299f203db6f1b422de55b48da503946e87fad620791d9c9c88cd27f00a368bc",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -564,7 +554,7 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 12,
-      "source_text_sha256": "cefc4e6a639843d96face0367c07ecc1480a772ddb08ba97efc062461cad7515",
+      "source_text_sha256": "44d16f8f7120a2a49f0027e7447a203f7e5d6c18d9ece24657a4a1a2a462ea9b",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -590,7 +580,7 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 16,
-      "source_text_sha256": "0e76749b6ee8b4907d39c3e187f75b0d4b67175baf10703002b48d2522ff9d48",
+      "source_text_sha256": "a6c08cf47b4ed97c039a5696f62ecf73a61b7bdd211ebc27558cb61dbcbce80e",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -616,7 +606,7 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 29,
-      "source_text_sha256": "bea595bcd831c5c1a9503be9905c6a2630358912bb5348eb51cc83564efe021b",
+      "source_text_sha256": "1058450f83db0ee8614db854008924f548f94bf75487320d0e03ef62011e6dab",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -642,7 +632,7 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 32,
-      "source_text_sha256": "c572b1e739d9d5c24f68a69da4e26c876f216b4d048297b6f4925462ef029b61",
+      "source_text_sha256": "fc2eac25a8ab3842f8de7fbc8c1c2d4aeab90d3ea9ed2aa6d86b1415c1ad5cc3",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -668,7 +658,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 1,
-      "source_text_sha256": "0871655d762372f2106e9c9b5ff7f11f535e4dc2883c5b70655db301d65290c4",
+      "source_text_sha256": "ec47891987eb7964fd2680b68fca5da36622789d81e2aaf092b50b0685085ca6",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -694,7 +684,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 12,
-      "source_text_sha256": "47685c684763398654ab43b8d315d1151c97159ca6fe9096c02f6cccf4ce91ce",
+      "source_text_sha256": "8957e0177f0b44e371621e47dca700ca850edddaf4593fe977e356d132b3f5a9",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -746,7 +736,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 32,
-      "source_text_sha256": "39c9d13e5a28f10faa919b597756f7052daa01fda916a239ac547ae9b3e014a0",
+      "source_text_sha256": "dd1b37d62f133ac8113f9ad418d14c887f4989f2735571d980b1fc7d6dcadc65",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -772,7 +762,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 64,
-      "source_text_sha256": "ff86009dba1f87fded5c1ac1a395be96ffe5888d93128b4d7adc954676b7574c",
+      "source_text_sha256": "846b33a605e976ea6627273ccf5833d46678e2c3f6f908287eb4a0cc07d49969",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -798,7 +788,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 120,
-      "source_text_sha256": "b904bebd5128971dc725b98e0ae92159fd6814eaa10739dafda945aa106bd4dd",
+      "source_text_sha256": "ef9c5f3aa63e6215d32200230959ba21d635f895086482751123f7085e4872f3",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -824,7 +814,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 180,
-      "source_text_sha256": "a7eab3e11a8570d0bad4eb816831b016413a9ef43c9f8fe6039c833fd9f817d5",
+      "source_text_sha256": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -850,7 +840,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 244,
-      "source_text_sha256": "0bf8319e094c30d0e72209105167a44e6b5d2cbb8fdfb78d7d8d35e53334c6fb",
+      "source_text_sha256": "df44a562fd5c026c4271a4275ca79170d57ab80cbd79ca4f31b50f5e3d312d9c",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -876,7 +866,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 300,
-      "source_text_sha256": "2470c0686e35d32eb22d937bc45e58bd22afaa8ea3d4c7067fe4609f86e42175",
+      "source_text_sha256": "b93817bd8d87f46b3f4bdbad7e79f9b98bd3df6bd2637296cd183c054dfb2f4d",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -902,7 +892,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 360,
-      "source_text_sha256": "cf03327477909a27b96f3b24b6a2595e5bef3d00a6a7eeaf4e3f74e80fe2a886",
+      "source_text_sha256": "02a444ea11f1d8ee761412be4818c530f74883635206039e6fa283455e7c452d",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -928,7 +918,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 468,
-      "source_text_sha256": "c76eece9de5507f3f52cbd5ca63efd40caab8bb2208e714ee6b65a8f327699bb",
+      "source_text_sha256": "832ab689a986a798e6176dd8e22fc25db53e7dcb6110ccdc02a8a2472b404e74",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -954,7 +944,7 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 480,
-      "source_text_sha256": "222571332c6476d6b1f4812fc972309ef3a5fb33ce44b5623a9beaeb454ded2b",
+      "source_text_sha256": "d58490f473084a9e35a8937b5677d9c80957cdc2b58ca8585e102dbdb3c7180d",
       "prior_exposure": [
         "stage5_ocr_layout_selection",
         "stage6_evidence_contract_and_quality"
@@ -981,7 +971,7 @@
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 24,
       "source_text_sha256": "040111fe129a7beb27ae6f0dcf6a7b907aa43eb4a40c18d7db9541ae27aaaf11",
-      "page_analysis_text_sha256": "6b93aaf2d5aaa6f037efd1699291c1669d7b980b2b73c6bb9023576d0a1b1229",
+      "page_analysis_text_sha256": "cc47ab5e838a30601f79358865e05cf4583e68c1edea9ad5aab0bcc839c9a10b",
       "evidence_text_sha256": "040111fe129a7beb27ae6f0dcf6a7b907aa43eb4a40c18d7db9541ae27aaaf11",
       "prior_exposure": [
         "stage7_terminology_discovery",
@@ -1012,7 +1002,7 @@
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "physical_page": 50,
       "source_text_sha256": "08f9452eae89503db9c4db3bc9ad9ed6969688386dc254ed3b70e77c2c8b1003",
-      "page_analysis_text_sha256": "bb6047c4133530a05a485729519ae720f85f76e01e51b6842ab84785d62dc795",
+      "page_analysis_text_sha256": "603e882681994c7951701d798a144d3189b28b049af3cfb670918fe7d089b354",
       "evidence_text_sha256": "08f9452eae89503db9c4db3bc9ad9ed6969688386dc254ed3b70e77c2c8b1003",
       "prior_exposure": [
         "stage7_terminology_discovery",
@@ -1066,14 +1056,14 @@
       "frozen": true
     },
     {
-      "sample_id": "stage11-reserve-0c1fe9669eac8bf0102d",
+      "sample_id": "stage11-reserve-40558ca7d2b1b6ee1d9c",
       "split": "acceptance_holdout_reserve",
       "task": "statement",
       "document_key": "DL5190.3",
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
-      "physical_page": 26,
-      "source_text_sha256": "9ed8338f2821c6ea1f9141f1a806834ee92df5fde45a82daf32ca1085b4e7af0",
+      "physical_page": 29,
+      "source_text_sha256": "3413f060922cd248569845b985523a2cf07f543ed9780edd489c105c1b98abce",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1083,11 +1073,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
+      "evidence_artifact": null,
       "allowed_consumers": [
         "stage11_holdout_selector",
         "stage12_reserve_evidence_builder",
-        "stage12_reserve_gold_annotation"
+        "stage12_reserve_freeze_manifest"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1101,7 +1091,7 @@
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 6,
       "source_text_sha256": "77894335bcc4152199b3fa22c4c07d7f1254d06fd266a9e31fd5aa85593fa3f7",
-      "page_analysis_text_sha256": "0d0351b59efb36ee0dadf537c0d8d7530003560d90868bc4e7ec15ade8122d31",
+      "page_analysis_text_sha256": "f15409df694e0d755f7be05514d7ee01dd3baea6519f7de95ff8ba2ecc39dfd7",
       "evidence_text_sha256": "77894335bcc4152199b3fa22c4c07d7f1254d06fd266a9e31fd5aa85593fa3f7",
       "prior_exposure": [
         "stage7_terminology_discovery",
@@ -1131,9 +1121,9 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 32,
-      "source_text_sha256": "274e641f05b5a61413da3bf51e2a05e194d5586a372b7ae42e9ae7955ef409dd",
-      "page_analysis_text_sha256": "5448d9bf6643cb8378b1a9bd5fe796318a3dd5f64f64612f12583210098111b1",
-      "evidence_text_sha256": "274e641f05b5a61413da3bf51e2a05e194d5586a372b7ae42e9ae7955ef409dd",
+      "source_text_sha256": "273f29a0273bdd9d2a7e358ba6bce04393e90f55783efdc7e475c5ec445d2116",
+      "page_analysis_text_sha256": "0d21455e00f6fc7d46c093331849c5fdebe6dea73a5869c6b8ab6ecadde93480",
+      "evidence_text_sha256": "273f29a0273bdd9d2a7e358ba6bce04393e90f55783efdc7e475c5ec445d2116",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1162,9 +1152,9 @@
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
       "physical_page": 61,
-      "source_text_sha256": "8e1fed902891870e79ae2de8980ad169546443b0c72ff8e7cb3620bdef9cc8d9",
-      "page_analysis_text_sha256": "184f957539097c08b6a945abec867e4409f660dca374a70354dab7bf1bec0c32",
-      "evidence_text_sha256": "8e1fed902891870e79ae2de8980ad169546443b0c72ff8e7cb3620bdef9cc8d9",
+      "source_text_sha256": "b2a252f1193ebbf39dc6ccef9e50ca8fc088a07ab328a0fa48f10297ab9eba40",
+      "page_analysis_text_sha256": "67e7abb47ae3d4994a8b018dcd061eb7614f8efc563c0217a15858e72f2afc15",
+      "evidence_text_sha256": "b2a252f1193ebbf39dc6ccef9e50ca8fc088a07ab328a0fa48f10297ab9eba40",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1186,14 +1176,14 @@
       "frozen": true
     },
     {
-      "sample_id": "stage11-reserve-f807c1f708b2a49d909d",
+      "sample_id": "stage11-reserve-e046315639915d40bba2",
       "split": "acceptance_holdout_reserve",
       "task": "statement",
       "document_key": "D300N",
       "document_logical_id": "doc-af7fa1738c5c89599e41",
       "revision_id": "rev-c700c57426b967b2d2c9",
-      "physical_page": 8,
-      "source_text_sha256": "598752c93962bdefa024c775e8513405cc8d866413a2dd0a1f55af92e6fe3bc1",
+      "physical_page": 10,
+      "source_text_sha256": "8b2ffaadf5719160a924de1bf4eeabb589b266ee25088a6da1783032e2c3d920",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1203,11 +1193,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
+      "evidence_artifact": null,
       "allowed_consumers": [
         "stage11_holdout_selector",
         "stage12_reserve_evidence_builder",
-        "stage12_reserve_gold_annotation"
+        "stage12_reserve_freeze_manifest"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1221,7 +1211,7 @@
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 7,
       "source_text_sha256": "099aea5c1f4a4bdbb8976099e4ce57f10281a786b827d381638b09d19f151b7e",
-      "page_analysis_text_sha256": "89facef1383812d870f636f9e191abefd7f092db943392c0a371f75aa2440c8b",
+      "page_analysis_text_sha256": "6ef686b52d66b44386c4f40f7db790ccd7f95285c48e1744e3a61c99a076c9a2",
       "evidence_text_sha256": "099aea5c1f4a4bdbb8976099e4ce57f10281a786b827d381638b09d19f151b7e",
       "prior_exposure": [
         "stage7_terminology_discovery",
@@ -1251,9 +1241,9 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 13,
-      "source_text_sha256": "1489b3406e4cbb622e5cc9c3fb8958969046d9e1fe27e29e30e6431d2af2851b",
-      "page_analysis_text_sha256": "02761815d0f55412b2f36d6f078bd6bb7869ae5d43f54bf37d9e8e6c720dcbff",
-      "evidence_text_sha256": "1489b3406e4cbb622e5cc9c3fb8958969046d9e1fe27e29e30e6431d2af2851b",
+      "source_text_sha256": "7c5def89d34dd3316e9d791b42c423d9cdbe8cd15b64492fb8e632c545b08d84",
+      "page_analysis_text_sha256": "920317a24910586f891aa2c744a671420859114cf387d4d56c19cef4cafd355f",
+      "evidence_text_sha256": "7c5def89d34dd3316e9d791b42c423d9cdbe8cd15b64492fb8e632c545b08d84",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1283,7 +1273,7 @@
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "physical_page": 19,
       "source_text_sha256": "a2db4c0f7377c8e3db5ec5242b5736a84eb569fca3e6405105759881ef38608d",
-      "page_analysis_text_sha256": "53b3ae4468d9ddcc8cde175865c39ad5ee191c2af9a6ef482157a891426da3f2",
+      "page_analysis_text_sha256": "b1a23b77290fb413fb66403576dad6dc06491b5d882fcb48b129b7071f7677b7",
       "evidence_text_sha256": "a2db4c0f7377c8e3db5ec5242b5736a84eb569fca3e6405105759881ef38608d",
       "prior_exposure": [
         "stage7_terminology_discovery",
@@ -1306,14 +1296,14 @@
       "frozen": true
     },
     {
-      "sample_id": "stage11-reserve-3b37991bd99cb566bafc",
+      "sample_id": "stage11-reserve-19c647e5da14515fbdbd",
       "split": "acceptance_holdout_reserve",
       "task": "statement",
       "document_key": "DLT863",
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
-      "physical_page": 8,
-      "source_text_sha256": "3998b1dd9ea94bfa16854da6ca2e94996a8f5e7f8dced3603467c50a18205997",
+      "physical_page": 9,
+      "source_text_sha256": "d9430dd1daeaccdd48e63615c7e14a758f00395895d4d6e1a89e4f2ce0743aa0",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1323,11 +1313,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
+      "evidence_artifact": null,
       "allowed_consumers": [
         "stage11_holdout_selector",
         "stage12_reserve_evidence_builder",
-        "stage12_reserve_gold_annotation"
+        "stage12_reserve_freeze_manifest"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1341,7 +1331,7 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 2,
       "source_text_sha256": "ac0b8e8800ff69e535e4a679d29f5fdfd6da6e2a19207af4c1ba9e884099fc47",
-      "page_analysis_text_sha256": "d2ff839a3a0fb6c420b91cad33f0b070e69f1ccbf7108b8e2af8a7a0033fef02",
+      "page_analysis_text_sha256": "4f097519d9c9dd0bd310f6ef5d6ac7c26d05743352eed35f72928fdb033acb07",
       "evidence_text_sha256": "ac0b8e8800ff69e535e4a679d29f5fdfd6da6e2a19207af4c1ba9e884099fc47",
       "prior_exposure": [
         "stage7_terminology_discovery",
@@ -1371,9 +1361,9 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 14,
-      "source_text_sha256": "8ac4b1937816e381813a58db617c007392758ca75c1028e0d36364e0ba691577",
-      "page_analysis_text_sha256": "e87e80377a6dee48eb738983a40d69df65e1c6b03e381e9368437188f25977f5",
-      "evidence_text_sha256": "8ac4b1937816e381813a58db617c007392758ca75c1028e0d36364e0ba691577",
+      "source_text_sha256": "713824fd0f4c184a26a2a3f927f891cb5f85f623a365f2e555b41906fa7f28dd",
+      "page_analysis_text_sha256": "478a0b534d6854e4f2bcfef5c8faa8fc4ad68d85299bb79bb0da6c90396b5640",
+      "evidence_text_sha256": "713824fd0f4c184a26a2a3f927f891cb5f85f623a365f2e555b41906fa7f28dd",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1402,9 +1392,9 @@
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
       "physical_page": 21,
-      "source_text_sha256": "e1bcdc6fd6c3b1fc8d695db9fead30b8b037ed365dce995d5b9da5ce0cffd6f0",
-      "page_analysis_text_sha256": "8e9114152a5b7a844ab15f77373e840fc50e143800242372ddc978190f280812",
-      "evidence_text_sha256": "e1bcdc6fd6c3b1fc8d695db9fead30b8b037ed365dce995d5b9da5ce0cffd6f0",
+      "source_text_sha256": "f5fa25e961f17be492a1b185510323a8d80b37b6dbf5e8da780f1b73ff665291",
+      "page_analysis_text_sha256": "c75f837e79457d35e2e9ded2d05a8cd13c3d10d038f1f2adfb4e00fef7989bcd",
+      "evidence_text_sha256": "f5fa25e961f17be492a1b185510323a8d80b37b6dbf5e8da780f1b73ff665291",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1426,14 +1416,14 @@
       "frozen": true
     },
     {
-      "sample_id": "stage11-reserve-e31d2bb0fea947a7fdcd",
+      "sample_id": "stage11-reserve-6721d37f7a28a198db88",
       "split": "acceptance_holdout_reserve",
       "task": "statement",
       "document_key": "HAF103",
       "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
       "revision_id": "rev-be31e11d289998c918fa",
-      "physical_page": 4,
-      "source_text_sha256": "ddcf828d6ab1dc92cf254ce99084a11d4c4ea656d826422c2bb5e8e84c4c95ee",
+      "physical_page": 5,
+      "source_text_sha256": "b59cb5ae030654b3031e137caaa3c6c27eebb41829235896c38a87846d8a2e79",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1443,11 +1433,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
+      "evidence_artifact": null,
       "allowed_consumers": [
         "stage11_holdout_selector",
         "stage12_reserve_evidence_builder",
-        "stage12_reserve_gold_annotation"
+        "stage12_reserve_freeze_manifest"
       ],
       "review_status": "reserved",
       "frozen": true
@@ -1460,9 +1450,9 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 78,
-      "source_text_sha256": "64d5596f75fea35772f8ff7f56531d002c5095f6dadd6829897df5826612bf59",
-      "page_analysis_text_sha256": "de2fbd87ae8281c7941310f8dc12be0101970ec2d6b8892b118d6498113e9733",
-      "evidence_text_sha256": "64d5596f75fea35772f8ff7f56531d002c5095f6dadd6829897df5826612bf59",
+      "source_text_sha256": "3cfb2b68710044a114e25cdc7a3d3cbce7f60e990496f6b7c1907db4300b40bd",
+      "page_analysis_text_sha256": "5c7987ffc7683eff9024c506d4a0c5ec3e24de6f47ea059c6f3c375f60bc6b5d",
+      "evidence_text_sha256": "3cfb2b68710044a114e25cdc7a3d3cbce7f60e990496f6b7c1907db4300b40bd",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1491,9 +1481,9 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 229,
-      "source_text_sha256": "abb780617a2e476861f024b092d3e58bb724cc27a75edd11c30857d99e11bdee",
-      "page_analysis_text_sha256": "acac14c483c734172c06a394153b0917672eb2becec38d0e33a7f5997e1d7dd3",
-      "evidence_text_sha256": "abb780617a2e476861f024b092d3e58bb724cc27a75edd11c30857d99e11bdee",
+      "source_text_sha256": "9225bc91d5b94372286480b5bd4cfee4834cad39b817ebb8a7ef427ab7ebdaaa",
+      "page_analysis_text_sha256": "ed81e935aa265230905279fe12eadeab9034344d0353ccb2070e065505fd5b27",
+      "evidence_text_sha256": "9225bc91d5b94372286480b5bd4cfee4834cad39b817ebb8a7ef427ab7ebdaaa",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1522,9 +1512,9 @@
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "physical_page": 429,
-      "source_text_sha256": "6d01cf9f4546606ec73fa33d880f96c0772df5003cae04c8522e7357c989da5e",
-      "page_analysis_text_sha256": "0f3089a885bdc7e4dcc7ec35d47ab7c6115d1246ce60775c7f547aecccc08e76",
-      "evidence_text_sha256": "6d01cf9f4546606ec73fa33d880f96c0772df5003cae04c8522e7357c989da5e",
+      "source_text_sha256": "4e336b8dad4532eb341b436015c56e43fe1df71facc655e0bde5622e3f3e2188",
+      "page_analysis_text_sha256": "f9c8b57f09af8d595256d3b155e23f1ed7acc5926dcd864abeea7fe3e56adf95",
+      "evidence_text_sha256": "4e336b8dad4532eb341b436015c56e43fe1df71facc655e0bde5622e3f3e2188",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1546,14 +1536,14 @@
       "frozen": true
     },
     {
-      "sample_id": "stage11-reserve-834760feafba5fbc58bd",
+      "sample_id": "stage11-reserve-5163ffbc83c4c0e667b0",
       "split": "acceptance_holdout_reserve",
       "task": "statement",
       "document_key": "auxiliary_installation_book",
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
-      "physical_page": 80,
-      "source_text_sha256": "35150a6af794323f4e3ce7257cec4a9799a2c5aae7ffc76d688f2b70c52b505c",
+      "physical_page": 81,
+      "source_text_sha256": "11e33d1a795acd71ca545b65b17606591425c2fa2b784fbc5bfaabadd8bf2390",
       "prior_exposure": [
         "stage7_terminology_discovery",
         "stage8_candidate_ontology_review"
@@ -1563,11 +1553,11 @@
         "entity_alignment_algorithm": true
       },
       "label_artifact": null,
-      "evidence_artifact": "data/stage12/stage12_reserve_evidence.jsonl",
+      "evidence_artifact": null,
       "allowed_consumers": [
         "stage11_holdout_selector",
         "stage12_reserve_evidence_builder",
-        "stage12_reserve_gold_annotation"
+        "stage12_reserve_freeze_manifest"
       ],
       "review_status": "reserved",
       "frozen": true

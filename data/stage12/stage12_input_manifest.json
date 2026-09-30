@@ -3,13 +3,14 @@
   "stage": "12",
   "artifact_kind": "stage12_development_input_manifest",
   "status": "frozen",
+  "upstream_blockers": [],
   "formal_release": false,
   "producer": "scripts/build_stage12_input_manifest.py",
   "source_split": "development_regression_golden",
   "label_free_extractor_view": true,
   "holdout_used_for_tuning": false,
   "blind_read": false,
-  "scope_kind": "representative_page_baseline",
+  "scope_kind": "development_page_registry",
   "representative_chapter_claim_allowed": false,
   "representative_criteria": [
     "condition",
@@ -19,7 +20,123 @@
     "numeric_unit",
     "range"
   ],
+  "coverage_summary": {
+    "registered_pages": 36,
+    "extractable_evidence": 223,
+    "excluded_evidence": 95,
+    "context_only_evidence": 75,
+    "pages_without_canonical_evidence": 8,
+    "pages_without_extractable_evidence": 12
+  },
   "pages": [
+    {
+      "document_key": "D300N",
+      "physical_page": 1,
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "bb4666dfab7d3f513c32359819aa1249a2fc188a6d337116e9ae3e63ff4cff59"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 2,
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "4bc19cce7be4ce8c73a1418d477ea2ae5d90b2e3b6018671fb506dab21a495b2"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-722d4e503b19582bfc7a",
+        "evidence-9ae8e99b36c9596eb0f3"
+      ],
+      "context_only_reasons": {
+        "evidence-722d4e503b19582bfc7a": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified.",
+        "evidence-9ae8e99b36c9596eb0f3": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified."
+      },
+      "coverage_status": "context_only",
+      "source_text_sha256": [
+        "3b0ed28d4c55b9980158b40068b4c87c4f993ce771b2287cea9cb77223e3ec20"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "logical_page": "2-14-3",
+      "evidence_ids": [
+        "evidence-7765942414f315376d8b",
+        "evidence-420b708af268c44addd0"
+      ],
+      "excluded_evidence_ids": [
+        "evidence-4d69da0c7a7ac2c12ad3"
+      ],
+      "context_only_evidence_ids": [
+        "evidence-68ae729dc1237ea64a43",
+        "evidence-12cfc3a7ec7a95987ecb",
+        "evidence-c799e86444e822599ec7",
+        "evidence-1e7dd9d9b53be5d8ee32",
+        "evidence-8770c39a1fd5376908a4",
+        "evidence-7e7f97e4e92e98f29616",
+        "evidence-d5045d56e0e3845672f6"
+      ],
+      "context_only_reasons": {
+        "evidence-68ae729dc1237ea64a43": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed.",
+        "evidence-12cfc3a7ec7a95987ecb": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed.",
+        "evidence-c799e86444e822599ec7": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed.",
+        "evidence-1e7dd9d9b53be5d8ee32": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed.",
+        "evidence-8770c39a1fd5376908a4": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed.",
+        "evidence-7e7f97e4e92e98f29616": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed.",
+        "evidence-d5045d56e0e3845672f6": "Original table row 8 has separate work and record-directory columns; no cell-level TableContext is yet claimed."
+      },
+      "coverage_status": "pending_region_review",
+      "source_text_sha256": [
+        "1596315b86bb0888490bd573c55779a9a0e0e2846a594f5fa5bc7fc1ce0e3a18",
+        "2c3ad6b27786f4e0ea7cf9e9f4161f7b08b87cebc3e1b5849c55a8ae454d599a"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "manufacturer_manual_v1",
+      "semantic_role": "manufacturer_manual"
+    },
     {
       "document_key": "D300N",
       "physical_page": 73,
@@ -27,10 +144,22 @@
       "revision_id": "rev-c700c57426b967b2d2c9",
       "logical_page": "3-5-1",
       "evidence_ids": [
-        "evidence-93fb6fefbfccb828c68c"
+        "evidence-707b018f73814962a790",
+        "evidence-27b7e83ed259cd9d9813",
+        "evidence-0ca5335ba51f60a440b7"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-193716d1e8bef6a1d71c"
+      ],
+      "context_only_reasons": {
+        "evidence-193716d1e8bef6a1d71c": "Section heading supplies context but is not an independent installation requirement."
+      },
+      "coverage_status": "extractable",
       "source_text_sha256": [
-        "88df64fd7623fea1c342af33478a79beea3a72a1e094b19e1106d9b79caf6895"
+        "11fbe6ce6e459a4006e31c4db2caba4b5e36da5be2c0c60e134d38edfd11bcca",
+        "757428ff5fe68ca8d73f1f48134b2226faf803398f642f643df96ea20911d9f3",
+        "9f676a26434b34b59eed8fc20ffdf8b1b4ffc27c5c484164ded51976bdc4bec0"
       ],
       "coverage": [
         "numeric_unit",
@@ -44,18 +173,82 @@
       "semantic_role": "manufacturer_manual"
     },
     {
+      "document_key": "D300N",
+      "physical_page": 94,
+      "document_logical_id": "doc-af7fa1738c5c89599e41",
+      "revision_id": "rev-c700c57426b967b2d2c9",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "847155efd0cacc50982b0d2f26d1a327ce3372fa0e97009063c8b7afb415ba09"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 1,
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "7175dcd72860c085fa19960d8f913bf05fdccda21f31ab3bdaeb39909e21baa8"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
       "document_key": "DL5190.3",
       "physical_page": 14,
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "logical_page": "3",
       "evidence_ids": [
+        "evidence-93817b2f4dd1e670ad57",
+        "evidence-5e43b0eec278db704a21",
         "evidence-111e9dc5263ec94003bb",
-        "evidence-cbce7568bef677f62bac"
+        "evidence-291b8c352838ac7ecc80",
+        "evidence-cbce7568bef677f62bac",
+        "evidence-0be2ce5c91d61eba812d",
+        "evidence-dcf187ed12ba60c79047",
+        "evidence-1e86e29287bd6425e7b3",
+        "evidence-f706744108453c894d4c",
+        "evidence-d1d85bdc4f5607d42b43"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-872dc337b81ddd07289e"
+      ],
+      "context_only_reasons": {
+        "evidence-872dc337b81ddd07289e": "Reviewed source fragment lacks its adjacent-page context or belongs to a diagram."
+      },
+      "coverage_status": "extractable",
       "source_text_sha256": [
+        "0341ce5c19578d05467b3ef513064a8ebc77f30c61eee8bb0c0b9f870bc459d8",
         "26a8828b97439bd08b057d1e5a508824daa9d361ec3846f2649164e6f0d0fe45",
-        "3e741023f67915c00a30cd6fe79956f4da35884708cf1361d1a3a52da7e1b040"
+        "340dec26ce79a70f5ee476811219862e1ee9c4911e31fc33a642d301b6f9c748",
+        "3e741023f67915c00a30cd6fe79956f4da35884708cf1361d1a3a52da7e1b040",
+        "4dc213877f9afda22307a6a42a5286cb459273cb7c758e3606cf22e9b0e07550",
+        "4dfcf4555ef9917b0c8e424fe21f995de1fc25a1d8fb09e79bee161c3b155aa1",
+        "4f39b45b2560d86c9c79d685240f7a1f0d869a125f47980f40719766427a4ca5",
+        "7b45b5f6fb065f9bac2b0c261b44d18bbf55893ba68e9b7ae5e9e860959ea555",
+        "8bdfeeec5047b81f0202a7a1af9109774dc8a7b593e0c4c5244962ed50c8af3d",
+        "a79da05ad7c203f33e9ff43526c332fb50f558fbe2cb99158916cdc058c10c4f"
       ],
       "coverage": [
         "condition",
@@ -69,16 +262,100 @@
     },
     {
       "document_key": "DL5190.3",
+      "physical_page": 25,
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "logical_page": "14",
+      "evidence_ids": [
+        "evidence-20c6634ca8f8c0b8255a",
+        "evidence-47c0c1c5c2cc5862af5c"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-d543c4ad7d9863a21e98",
+        "evidence-d8e7d2cda2400cf2e33c"
+      ],
+      "context_only_reasons": {
+        "evidence-d543c4ad7d9863a21e98": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified.",
+        "evidence-d8e7d2cda2400cf2e33c": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified."
+      },
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "51d358433a8ae566776a895a4c3ab871e57ba1132ea66fefab7576d9eeb30474",
+        "6f0c001589cceb379d5876d228f61a7391c1b4db6d981372f45a72cfad199877"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "construction_standard_v1",
+      "semantic_role": "construction_standard"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 42,
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "logical_page": "31",
+      "evidence_ids": [
+        "evidence-1c9fddbea2b4314811fd",
+        "evidence-dbde98bb246113f0c7d9"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-361fecb27df8eccf9aba"
+      ],
+      "context_only_reasons": {
+        "evidence-361fecb27df8eccf9aba": "Reviewed source fragment lacks its adjacent-page context or belongs to a diagram."
+      },
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "f14000bd0d7bf112804f59f2b19fd048db6735594fb455f43fa292539be60024",
+        "ff99e23c26e1e79c4ca37d07b493993838c73b385795538866b4fc182fe3c9f1"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "construction_standard_v1",
+      "semantic_role": "construction_standard"
+    },
+    {
+      "document_key": "DL5190.3",
       "physical_page": 86,
       "document_logical_id": "doc-24b25833ab82e212d1fb",
       "revision_id": "rev-4c1c24a74e4b364652e3",
       "logical_page": "75",
       "evidence_ids": [
+        "evidence-44dd2f79786c9a998c97",
         "evidence-08795eed23203e43aa25",
-        "evidence-44dd2f79786c9a998c97"
+        "evidence-8705d6a085ca6938d91c",
+        "evidence-2e31b1dc2edc735b0ba1",
+        "evidence-1398e3de0cb467cd78de",
+        "evidence-dbc588031d0de048376e",
+        "evidence-df4b3bf1070b1fd1417a",
+        "evidence-89b55d3f54808b4c991b",
+        "evidence-13bcaa9188c6bc037f89",
+        "evidence-5e29689f3d56101093c3",
+        "evidence-2c4d7edc853057b71287"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-22d7e13755b1bc852793"
+      ],
+      "context_only_reasons": {
+        "evidence-22d7e13755b1bc852793": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified."
+      },
+      "coverage_status": "extractable",
       "source_text_sha256": [
+        "0300ab3c422daa7aa93dbbde89dbac42f3ec98ddd1fd433572eb44d408a31359",
+        "102258fe5c4e20384c1a20fc72c02fc1b1a1bffc5abe29f4c41748a8cec67ead",
+        "418eaa1425150eb2be72fb60e033f3a41af80f45c83ca4c3e1d2baf30f7e8e87",
+        "62269f9802e80de14bdf170ad6d224f3aa1cff1ce7962da93e4b3d32466d08fc",
         "7d4f89ef26c3c24b13ef50be70d2a923e3d0b3a231ea2b321db78bd525de6cb7",
+        "8e9771556612a39da92f2eec44fcf4a76fe112bdfcfdb30b3c781193abb41ed3",
+        "97b8e8254d0f5546e19617c631afdc5ca9724d1b42f9b603959626a0e7290e67",
+        "a790201deb15cb9e82a85a7d8723fe7c8b98a734b89cf7f37d50334ec4954e63",
+        "c1110ad7ed7c78ae9b76a45a930dfc4781cd4373763aed389d2b292a9a3a7391",
+        "eeb8075ca4d7a048d1d8f36b95f48019478910db2e547965ebcf31480492cfda",
         "f4150c619198ccea8324ccbca86f4f93920ca686b8ac2271a794d18185474fe0"
       ],
       "coverage": [
@@ -93,21 +370,411 @@
       "semantic_role": "construction_standard"
     },
     {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "document_logical_id": "doc-24b25833ab82e212d1fb",
+      "revision_id": "rev-4c1c24a74e4b364652e3",
+      "logical_page": "102",
+      "evidence_ids": [
+        "evidence-322492d1f752594b3c30",
+        "evidence-3afd349ec25b2c196c39",
+        "evidence-b8f2e82a2002d672e821",
+        "evidence-51b9ee54e4b128a87dac",
+        "evidence-5ad2635166a959fdf71c",
+        "evidence-1a8bffdfb5f9b0ebd2e3",
+        "evidence-bcde87a89c9a202c297f",
+        "evidence-4550b0028e202aa432ec",
+        "evidence-bb6358aad7860008a619"
+      ],
+      "excluded_evidence_ids": [
+        "evidence-cc8aa098e94e5be62c1b",
+        "evidence-f10b3e21a70c7f7d82ca",
+        "evidence-93ec0de46c9fe0c4fc6b",
+        "evidence-cff8ad283a1695cc46cb",
+        "evidence-2c4960803624df9b4f6b"
+      ],
+      "context_only_evidence_ids": [
+        "evidence-4e633c1f016fe391e405",
+        "evidence-7d895237bc8e82c049f2",
+        "evidence-382cf6e4dc3a94c81116",
+        "evidence-ba974f2d232eb14d4f18"
+      ],
+      "context_only_reasons": {
+        "evidence-4e633c1f016fe391e405": "Continuation of the preceding page's clause; its opening condition is absent from this page.",
+        "evidence-7d895237bc8e82c049f2": "Printed figure caption is visual context and is separately bound to the figure rectangle.",
+        "evidence-382cf6e4dc3a94c81116": "Reviewed source fragment lacks its adjacent-page context or belongs to a diagram.",
+        "evidence-ba974f2d232eb14d4f18": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified."
+      },
+      "coverage_status": "pending_region_review",
+      "source_text_sha256": [
+        "29c764e90d018d2ee6b387addc252a9b2703fb123e2f75abcbecc07419f86548",
+        "57586d83413d41413d9eed67fd760085dc7ccde6da2ad0586d6b8ecf4487986f",
+        "5bb8420a2f47301d23243c693fa67a2780763d48e8034895bf2c26a20e1abbc5",
+        "66c189e1014eda6149249034f5279a3f9cf16ccb4ecd3bc83e1daad70155d1f9",
+        "746f2645069d2ed45a0ad75df1c0f527c74dad2e1ed69879f76064f33ed9225f",
+        "81f4533cb7ff67a7b79c635ccc6b9222ebf95ebf8a320ddcfd7146b235ac518b",
+        "866d122205bdbf458badfeedfa994dd14080ef570e45beecafe19211aed91156",
+        "9359e5543b7fd4f65489ec7c9f14fd5b4f058c6424649627e8a3a6b50ef2ac72",
+        "aefd228d400528ea5b97fb5e7df28f56dc917d10964049f7dade03b2efe06b83"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "construction_standard_v1",
+      "semantic_role": "construction_standard"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 1,
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "2149e6cf93db9ec5c58a9693ec8ab7744c9159bf3b948d5336ed8180b9ca5097"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 2,
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "b3872f664a0a5fe0ddda8e20d2bea80dcc45eb465d2c66c20e2735f5bb4f0906"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
       "document_key": "DLT863",
       "physical_page": 14,
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "revision_id": "rev-a6ea5862f790a65e1dbf",
       "logical_page": "10",
       "evidence_ids": [
-        "evidence-cd924809c0b4d4b4acc5"
+        "evidence-6b9b30a51d949aec8140",
+        "evidence-02b8e76eb765a7cd6db9",
+        "evidence-7ef848a90097c69cfd16",
+        "evidence-1bfcc9ab9e3c1f2c5eb9",
+        "evidence-7850d683fff9325daaf0",
+        "evidence-829375cd80df8834b573",
+        "evidence-02fecb5773dde6cd01e4",
+        "evidence-21c96b71e0daa868dabd",
+        "evidence-f6624d44d000470f19a7",
+        "evidence-4637bf41419eac752546",
+        "evidence-b490108e4fa09c6a08ef",
+        "evidence-c50ac8705f328705c073",
+        "evidence-8921b80e9e5cedb20485",
+        "evidence-8ea08aa663f548894f05",
+        "evidence-88aa5b0dfe0527e37668",
+        "evidence-52a60eede93bd92c2766",
+        "evidence-56738c679ea4849cee87",
+        "evidence-378b18aaebd0628243c8",
+        "evidence-202210743447409c3fab",
+        "evidence-ef399d007ee48326e817",
+        "evidence-af9973f894c2326502fd",
+        "evidence-cd2a00746a928ad8fdf8",
+        "evidence-650975a896876ca7c13f",
+        "evidence-ce0c6fca6810fa2b60b7",
+        "evidence-f4c6cdcf23ebf8865c1a",
+        "evidence-7df2aae933c522d24b63",
+        "evidence-257184909857bc95884c",
+        "evidence-9cb932403ffa1be5eeb5",
+        "evidence-fa46378641d9939dee2f",
+        "evidence-2e6ceb3a4df913d5bb1a",
+        "evidence-51e3bcecc735117e1fd4"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
       "source_text_sha256": [
-        "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c"
+        "14d877d50de9638957cc600e8aaea3478157104ab7ecf363fd654d4dff4d238f",
+        "17aeb75e70b7883533df6b31152b9053c1d46c0f3008e330a854e7d256b108c5",
+        "28239fe866653cb360e74ba744dad704337c8a65f251fd6112ba97aaf2352546",
+        "28a7cc58493ddc8cc1483804698dd1a2d01226061d39d33c73d2bbb3cbf1400a",
+        "2dd42a2e59a98c143dc3ade76d0a56e43c962cd2a3b6c10706d18e9a821152b8",
+        "31e6aab6d7f80cc033e03a8ed4c8aae21da5713660057523cf791fc9822b0749",
+        "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+        "3dc69744bc5abfb0ae3d8bc7f7aa257ea74c1b9fe79304a87b093c029f521ae0",
+        "4e7d951e39cedc42d4d44df1cdc7d966059ce00af0b1fc393aaeb968dfb6529e",
+        "4f82e41bb4b2804ca3ed7bff73f52444dfbcc09edcfdb19ac715ff57563d9309",
+        "4fe5ffc14dc4573d11cd186b0bc87ff3afeb291f1e14da244f5f67633eb3fde8",
+        "5bf538d8d3329655cb767026ed60f8d67b53bc493777b7cea64ad6b99e2c1354",
+        "6b092c5b8e2dcd01bafb353291f7210726d6a113ff01f3ba010eec50d12daf2a",
+        "6dc857231d8560097d3b24dac08af851798e29f3e1028e475f28250771536421",
+        "6fcdb90ccd6d6c36e7c383d2fc93fa50b8c5ebda6cc07aa2e8f28768f9770ec3",
+        "77e8f43684eb8289a8df10784cf5342ac898925201d96ce5473aee4525ccb962",
+        "793463e176dc274dfde175fa92c091d0db9b79aec9517dc5c8912e17a3468e7d",
+        "7bb5e379a918f695c4d4dab4e7cd9f7db818cb8219fbec79d2bf5adf49ae3b98",
+        "808bd35e14ac43fe968d2bbcd82decafe23f724eefc4c360d805a3cbed2969f2",
+        "b49f4dad0d01535a3a0bf00a3ab2f09838f4c5a6d60ffc005ba4c090f30b6edd",
+        "b61875d0c83666dcc4dd1dc25580a0db4189315bddad74992cfbeb911b029213",
+        "bfdfe31b8be2678482a23453e47f7284d2cfe2b68f2deec0600db9956f3c2eca",
+        "c122907c3dd41e2a68ce0252445bc52fbd5662d93356225c622c103946a3e849",
+        "c6e47419d835bf193fbfdf0238b29803afe4ff7d71438fa3412effc38282ae36",
+        "d32eb690864a24037a85149d9c755f7bc013fe5a6232c5c34d1b52a3dc6d3644",
+        "da27ce156e3e037639b53663487bd255c4623b27a9b420bdb59b50bd5c4d2969",
+        "db1c7f7c2da37ea8b9531ccd73b296db8aaf19650bf24d441b6cad8850cbc43f",
+        "db674a75e3a44a37d9a0b602a62265d21f25bc021dfd082dade2364f91f6d7e2",
+        "dbfbb22c1efd7207dc38bfeaeceae4c026b51b03789282e2363b0a76b9c7e861",
+        "dc6bd4774439cf392ffcd3fa1bc743d21f64b673fd7571f531e726dd098aa59a",
+        "ea6302964791222a4610b1c745971261b5e16bdbec995868962552f5cdcb8a48"
       ],
       "coverage": [
         "condition",
         "multi_object_or_step"
       ],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "commissioning_guideline_v1",
+      "semantic_role": "commissioning_guideline"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "logical_page": "11",
+      "evidence_ids": [
+        "evidence-9621e1540ab96385c2c1",
+        "evidence-98c9dd569ee66f0de55f",
+        "evidence-51a3af3750db9355ea4e",
+        "evidence-4f79a7760a62a42b87a4",
+        "evidence-4931f3d3bc2090ffb4e2",
+        "evidence-5c964a2aec7393ddd482",
+        "evidence-1d14a9fc412be6ff2aa6",
+        "evidence-f08c8719095e081e2692",
+        "evidence-99f58cb919b12046ed2c",
+        "evidence-f1025cd6a275b6b47374",
+        "evidence-41770a7092ba421ef446",
+        "evidence-55a189d274af8d0538e7",
+        "evidence-5a5e1543b0682eff0e57",
+        "evidence-f2bdf5aa7d1c8c43611c",
+        "evidence-4a4591a4fdb26e1acbe7",
+        "evidence-85a1a9ef8cd5d05f4582",
+        "evidence-f4b7118a4a82582a673b",
+        "evidence-d8e4ed72d830fff0a13e",
+        "evidence-1db05e0af4db4b01f5cf",
+        "evidence-6a106e960ea6e37a4bce",
+        "evidence-2fb8632e741d57bbd935",
+        "evidence-52d40466085559dda91c",
+        "evidence-1b57903c1f463f08b7a6",
+        "evidence-9506072e7ddcf593b0b2",
+        "evidence-5eaa1072bd44a58bb50c",
+        "evidence-c666b1d75a6b5848f748",
+        "evidence-fb504c1ff8aca79680ca",
+        "evidence-c61e5ba3a5464dd6d668",
+        "evidence-cc36c8d0adb6bd5d0bc9",
+        "evidence-404b6f10d05f944ac3ff",
+        "evidence-c1e7b707ec66dc30081f",
+        "evidence-730d85e280a4e926afaa",
+        "evidence-30833eb2f3915b8ebf28",
+        "evidence-cc64a6dc901e388c8f5b"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "0a4e89567e271662c067fa84a9128e96835afdcaa5c2777da0a3b2f73538d626",
+        "156e4fad7650ff1196284a665405c5ab3ed8a6488f9fc3dbebc0f8f8cb8e8637",
+        "1c2443c3ac992a5ffadcc3d29eefd378da4187e0341bc71b576f4bfedc822e86",
+        "261b74719669045c18bc93f0222c31ea2cd17a9da9c7ef5de562dce6a130faa5",
+        "3292a3a8f03affbe9758f1dd1d467915cbb4e3d6c749a331efe336d5529e2ca6",
+        "3561fe6134df0ac2945af9681ebcd4fa995cca2db04879eaf25d52a96b9404f3",
+        "35e5ea0fe2b552d6eed96b6738a66abe444b300996658a85d30a0451549e385c",
+        "406b49c07a4aeeced9b6d3fc662ead1ea338e05437e2bbbda2e1d472c207d9e1",
+        "465f818af0a402970d84671f966ccc47c0b7e2210d1a5b8b73b6ab0c0844e813",
+        "4cee06d93279aae940b5a4769947d97249e287824de71768a5cd2d8093aee998",
+        "4f76cc8159850c737b6b2a4868a83221180b2513783f13328871377b665f8dd1",
+        "57c6dc97da0589e17281ecfa39875350d96630e8ec0c320a4154df4f3815fd17",
+        "5e3bce5a2ae08247c28f6d0bf3be77a21e9333aeaaa8e0e90dedb09caca38fde",
+        "5e47b473a6b31322e2c62152e1aea31dda2ebec0cdd48d70635344e998ea20fa",
+        "5e934717c4a36c2e945c8b83b8324611e72788daef50bbc22674cb82beb427f5",
+        "657f47ad4ac3244451b3d5c802add6726459843575b89d12115c2e9b9676f8b8",
+        "65ccebadf51b76468435e7ee62dd16066e1d12cc5d2568b807ad0065b354ca41",
+        "693dd7025a9e1ee2a8fa91747d670533cb246d51444eedee34b7bb2476ea059d",
+        "74a00f581cde23072b2fcf2bdb671e770665b0631b4573a9443ce92cc4068be0",
+        "7678ae26b8c15dffee8f8a813fa30b3644ce42e92a9e5da833c490739d80cdd4",
+        "7f967e794fd3fa8a13fb906b82722129f43c048c0c3893c0b966351f1b4ef4d9",
+        "82e2930d16a129cee0611addc37779d617de19d15bd0271845c37a3c2df04812",
+        "8632c7dd369b0f68246b099c348f2ba5043776a8dde125b6d50687d1570a3897",
+        "89b1c1e56da717d2f4ecd99f058972d22442dba208f27914399ccf54537e12a2",
+        "8a2e7b637e207619d0053e7a6fe3ad20676ba24cfb79f9780a9df9d9fabb71e8",
+        "a3ae1d11f1ba9941902b09c3109dd29a1c0837c7b70f051e417fdf5229133eb8",
+        "a544aa6cb298c25df31d3d52329fd6afb7437abe471e828cc6e09f3ba9bc1744",
+        "b7d3647fc7d1022e14e9bbbce993a6a8a76d83178acbc85c1c5c5ddef84b1a8e",
+        "b8fcebc619cf3242d468b096812f139685e4583026304e900cf71eb02225ce92",
+        "c250a22202eba33411ef29a2f87416fb22961091c6180027be182e540af52259",
+        "c469153afa8e9cca4fd7d234584940c24e72138089e71f193245ba02722f2c9a",
+        "f74aefe8bb39006e3a81b5c7c6720b01fb8c001a9709a583be5454b16e7136a4",
+        "f9bcfb746cc72c80264f35d1f5a7f96e86ed56a7538ce0f8112cf10ef8f8d5d8",
+        "fd210f041033ccb022ba5e55ab130f5a038339d025ecf3da86b4ad65d5d60c8c"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "commissioning_guideline_v1",
+      "semantic_role": "commissioning_guideline"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "logical_page": "38",
+      "evidence_ids": [
+        "evidence-1151f9d3bc967422a497",
+        "evidence-80bdcb13f4f6136e6663",
+        "evidence-f920af31462fed9124ba",
+        "evidence-b03f17bebf8d6256f252"
+      ],
+      "excluded_evidence_ids": [
+        "evidence-564c437be1d30bcfe8e3",
+        "evidence-6702f43561ea2033c0a4",
+        "evidence-037ab79bf4959131c575",
+        "evidence-e0f68f5a8f1515db9a5f",
+        "evidence-16623856641b0a4179da",
+        "evidence-ff0c2bf05c8a4c761465",
+        "evidence-dd7d321e582a09e8c64e",
+        "evidence-fa7fbaa8f1fa353c133f",
+        "evidence-cc0cc9b5ad8d18daf55e",
+        "evidence-d97d1feeac1020494182",
+        "evidence-29bf61ef14617da69b77",
+        "evidence-37c794343df10c6afbb2",
+        "evidence-a61f1aaf982092d6f123",
+        "evidence-7fdc5f60b251d50e8c36",
+        "evidence-be98cf2155ba37bbfba8",
+        "evidence-73d7983f2961dbac1957",
+        "evidence-945627276300b06f967c",
+        "evidence-9933a11ae001d9e81be0",
+        "evidence-275a06075f3cbfafb050",
+        "evidence-6d4b13a2aef76e118119",
+        "evidence-58b0681fecef67d7900a",
+        "evidence-48a9b279147ae7f8854e",
+        "evidence-c67ab0d3abad799692bb",
+        "evidence-d252e73113071d390b36",
+        "evidence-3257c155b34ca61c0fdb",
+        "evidence-aa006f867e5f059bdd34",
+        "evidence-a3f555823bde343a1ca7",
+        "evidence-3dbd8f5baf4cd777f984",
+        "evidence-7ec49a4e717ce213e920",
+        "evidence-6e040b01e076dd27e025",
+        "evidence-6ca5c84e747247dd2cac",
+        "evidence-f05295d71220b043146d",
+        "evidence-cb1570a207176336e175",
+        "evidence-c3d320fa5a51208f52b9",
+        "evidence-76d815c044376b706547",
+        "evidence-840c48cfd06d990f6bbb",
+        "evidence-84b2ee0440d8cdc68cbc",
+        "evidence-491c96d251a71da3a4fc",
+        "evidence-576efadd73b4896acbef",
+        "evidence-4fdc23b8773eaa8f0841",
+        "evidence-bf82627679cecd340a49",
+        "evidence-b801dbe978e7343ac9ea",
+        "evidence-717b9bc5d75c98812790",
+        "evidence-003aa31d3b85ee003c15",
+        "evidence-75e9ba3e303d46a1a933",
+        "evidence-811957c2fc764acf6e4d",
+        "evidence-43a3681bd1029cd7cc4a",
+        "evidence-39f86e23e4087d875695",
+        "evidence-cfdf13fadd9a6de5a709",
+        "evidence-16946a85619560be2a0e",
+        "evidence-83bd39503671bc92678e",
+        "evidence-1e655b5752ccaed043d5",
+        "evidence-96acf05bbb2774576032",
+        "evidence-6228961c500e446a2ba0",
+        "evidence-45eed8f1bb97f005339e",
+        "evidence-74644aa2b83ceb442370",
+        "evidence-a75c42fe78789478bb4a",
+        "evidence-9a4a04a58c82e8f90dea",
+        "evidence-e4f235ecdc02d4c81efc",
+        "evidence-d5ddb69035264d544b63",
+        "evidence-b3c3c83851d56e298080",
+        "evidence-5b7ca81c433b490ff4eb",
+        "evidence-4b6c7c9f7a996498cf36"
+      ],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "pending_region_review",
+      "source_text_sha256": [
+        "5b19abec7c091a8310ff651b1c7dd71e82737741fe27ca2f6ce94415c772fe6c",
+        "9713527601af908ad8873c0615c943038af32d751e09790d385ef1628c4cea59",
+        "c3d8bb9cb0dd2fa78113cc5926c7b89011f599c94ce9e39f2bcba563700194aa",
+        "dde2bec03e6b4a042339d549dfd3f52c77ed0685e7b034f163a4a9d9b1d0a161"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "commissioning_guideline_v1",
+      "semantic_role": "commissioning_guideline"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+      "revision_id": "rev-a6ea5862f790a65e1dbf",
+      "logical_page": "39",
+      "evidence_ids": [
+        "evidence-c405e4842b346c4fe49d",
+        "evidence-ed662ddc3493bee6680b",
+        "evidence-567ae45b32101d2e7549",
+        "evidence-707e52562b37bc94b829",
+        "evidence-331c72ada0ef7d88c540",
+        "evidence-3a3cda4e75d918424104"
+      ],
+      "excluded_evidence_ids": [
+        "evidence-a865f24ba4fb9abbc5c4",
+        "evidence-e6b8763d506b38b25f4e",
+        "evidence-54036113934df97cedfe",
+        "evidence-56196b4fb46874845772",
+        "evidence-124a235fe0a2b5aeef3b",
+        "evidence-ac9ede9271b5261947b1",
+        "evidence-f68385c428344d96babb",
+        "evidence-78e01fd214d6a486eda5",
+        "evidence-814d113402a0709db5a6",
+        "evidence-8adaab48252db14dc958",
+        "evidence-4989ba6712c08cf70c1e",
+        "evidence-a7e6069dab9da1ee4be4",
+        "evidence-5ae93f4e5b5d10c96876",
+        "evidence-d2e842721494f8c6a74c",
+        "evidence-8d10fe2ca9101ad2245b",
+        "evidence-e3079e91e85998f06575",
+        "evidence-6067b7406df1a1b714ee",
+        "evidence-ee4b60c23fa19dc950e9",
+        "evidence-a5c946cdc825d97367d2"
+      ],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "pending_region_review",
+      "source_text_sha256": [
+        "25696f69b6a4c7edcfa307f9e35db165753225af00a34d5b5d8c3e9966ecf6ce",
+        "2b05ed1ed79db87850cb4d345dedba0e2925f6f01aab84b75dd23129124ff7d1",
+        "60c193b891934067d16430e1d8a5e54c4a004e434bebdebefc27f6bc4f155970",
+        "a9e40a564e3a643b9442a839d2c7d21058d854c9fcd582a0c76684fbdfe338c4",
+        "dde2bec03e6b4a042339d549dfd3f52c77ed0685e7b034f163a4a9d9b1d0a161",
+        "f42a21c177109bc6615b3e1f5b04cc002898b319ace74ed65be31abd49ba2ed3"
+      ],
+      "coverage": [],
       "section_path": "chapter_unknown",
       "section_identity_status": "unresolved",
       "extraction_profile_id": "commissioning_guideline_v1",
@@ -120,10 +787,28 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "logical_page": "3",
       "evidence_ids": [
-        "evidence-be6509fd8df673522604"
+        "evidence-30b2caa6dbcb053dff87",
+        "evidence-12a9a42ee6d96b23224a",
+        "evidence-7f92362f3a1d2bcc8d18",
+        "evidence-c6acb8c7c2c93053f9f1",
+        "evidence-982323e1c68d2f404e5e",
+        "evidence-d86b746ac0951421fc34",
+        "evidence-c22e55681dfaf83c72c9",
+        "evidence-0c7430615255b732de41"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
       "source_text_sha256": [
-        "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c"
+        "3b2a046788ee8334cd49004fe9246fa4b329ca60bf74423a5cd3ea6f9f701118",
+        "3bbc24ab69ebc65ba662b9b09f85da759ff4129203d0129037e387357a1b0c4c",
+        "4b3f56091799a14784a782efdab1a8d71c5d38110db51c69c1adecb63a4e3643",
+        "60901c2bdac54e910de3c5dbec42b156a8b17613e58368b6bb3b5e23fcfadf44",
+        "76958d09e702c69e16621898d46d11240e5c899ee0969a5dec97552c2e7bd574",
+        "8dfb79d8b152b9942e859ee80c10825df82f89660d3374ff31e77008172e80d5",
+        "9c1824560a1d04ac342e8963af6a0a0510af09ca1cd855c1958eb29a34f9c58f",
+        "e353e00c759d703f102e57c30bb38fd87e361e11ca0d98f436676a49e9b6bb6f"
       ],
       "coverage": [
         "range",
@@ -142,10 +827,28 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "logical_page": "13",
       "evidence_ids": [
-        "evidence-bb9c008b78e12b735d94"
+        "evidence-d9139eeb21b8a5ef4f49",
+        "evidence-6c1e3f5d967941c4d495",
+        "evidence-5242b3d07c2aedc910c8",
+        "evidence-ba1fbd27df4a955862ca",
+        "evidence-8cc29b66c4300712bbf8",
+        "evidence-ee65bdbd84c74c8c7535",
+        "evidence-4ef3a989765fd3565b73",
+        "evidence-25d97f174e799be4af76"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
       "source_text_sha256": [
-        "429869e1bf7e077a3f1e83070392ec6d59b9239a68c4c64c1021f02257bbaa2e"
+        "2be4e2946f7e10ffc2f2318b245a92a8c409b1760dad593e5629392743a31a43",
+        "4633c82abd5c1dfc79c1b28f4cf2a96d8c3f04c3a6c604b1dacf548444101725",
+        "4b8760bbf21bf12d5f6535ad37075d80d1dad585afe20788ec107e047aa3374d",
+        "4c94c4f05b4fb996bb5aae33133727e4195ca13be7f91a660696a9ee834d67b3",
+        "52810e364264c8e72931aa2592944a24aabebf32d7ed7a6d6ead477c3377954c",
+        "7b425522eee854e0dd624e274d595931e444a1383d5da34485346536431905dd",
+        "ab46260bc1e256afd190a55b95a4122fb1e024c9fbaa17b3e4e3714d4ff067a8",
+        "fa166a8fb0b703fc5f9c7d8e38bb71e1399ebf44051c46da1b3b4fff882afe35"
       ],
       "coverage": [
         "condition",
@@ -164,10 +867,40 @@
       "revision_id": "rev-be31e11d289998c918fa",
       "logical_page": "14",
       "evidence_ids": [
-        "evidence-97d1de6c7b49cdea31f8"
+        "evidence-e5e2f0aa81b3c986b170",
+        "evidence-bd7a390bbbd64179b2a2",
+        "evidence-e234ec7a06ee72eb0457",
+        "evidence-d5bc09d7460f376d9bb3",
+        "evidence-427fb236f483aee5f69d",
+        "evidence-f9f292fb448b8432c016",
+        "evidence-26023feee77f5460315c",
+        "evidence-ecc226f8cf8925dbd339",
+        "evidence-73225cf647deab065f7c",
+        "evidence-37c6b51e62360d44e42f",
+        "evidence-c293415d58aa4e95c807",
+        "evidence-ee071a514061eaf43095",
+        "evidence-eca0d8db57e27ada2578",
+        "evidence-cf52dd40cde4754c1a3f"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
       "source_text_sha256": [
-        "9038d7e2a19aab6c95a41dd73cd56aebf803b7976adf6c73fea9d621703e1d6a"
+        "2b56b6cb0341abefd78bdc7db6397f29e6710cb81aa0aba87b7ebcc1c8e32cd7",
+        "362f2aee94f62b9c920c0ee51b071096fbffa633251b3c92f61843f715fc1ae5",
+        "40b201f767672d384415ced38c8eff629de77fffcd2af17d54a7fa4071eb70cb",
+        "44dfa3c651520088ff49342a2e80a84ad137dfa9de6d2cb4111227b576475a29",
+        "45bb53bc26f18586c64aae434b15049f19dd8683f511b3fc4242c607ff4f39aa",
+        "6c3934c099c19ff0d331853db6d524b33adacf23d383bd43c9ca4420a65011f1",
+        "81313c6fb036c7fe45162ac01b314c7e21da0b66413e1f1a212b5e30e9c2a1a8",
+        "85ccc6f5d076a005e0d748e41e59e830b0c3f8e293cb999847039fbae0b58dfc",
+        "8f1d858147c2296e11eeb6a6350621ded0c13d71999a6b516b9967fe51021593",
+        "92a8f5724c8fcce6516561eb9d3be17ac94b3447e41db3990d2e28b386a39636",
+        "9b825a8c3a8f579ea7c3156123178fe24a755af111e7046de4e471d2b655a903",
+        "9dc3e30403c2a41303f558678bc472684bda07d58801632e0aaf8d69de7ead19",
+        "b4a7ce61beac1c3b6f615e5c6dd152b87ff2f8ff94ef9f7be05d83b7ead9ad6c",
+        "e86f8ee4b295b10fdf64544d88cd94ad7c74fa4c648b2216848f6098a6a754d0"
       ],
       "coverage": [
         "condition",
@@ -180,16 +913,490 @@
       "semantic_role": "nuclear_safety_regulation"
     },
     {
+      "document_key": "HAF103",
+      "physical_page": 16,
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "logical_page": "18",
+      "evidence_ids": [
+        "evidence-c45fbff2e8966a01820a",
+        "evidence-28b60b4ea010422f97e0",
+        "evidence-fa422c7149508c02140c",
+        "evidence-b3a51c829fd428ba7bdc",
+        "evidence-acea33fbb11accf2c8c9",
+        "evidence-6803796599c4fe8400c1",
+        "evidence-805b2ac93dd30cb918ce",
+        "evidence-962d5525a9d11e6f2e9d"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "33c235503f28079e6c71b33fca3b6ddbbe2f3eae84ee6011da1faf0f6c174743",
+        "72afcb238c16192053d80611572993a59f625e278cbdbe75edf81ba179bc125e",
+        "970fb030328c1465314d835491893fefd5db4161c92e5812b7c5631191c77cfa",
+        "9fe9f77d860e357518dca1087a2f32f71d0b2258dbb3a7185ba5a76d9acc9c34",
+        "a461f1025825631068c9381f9645c0f29166f1556c35814310320106830305a3",
+        "a9df3c077e2517b20ac4e8ba75fcf21a5f00762d4b7698cfe5e1d54629b1eac5",
+        "bbae8bf52480558f177abca474ee8ad5a7b259dade4be1e3d60575e93cc41862",
+        "db29505e12131a48bd49606e90391cc5d13148508ffdec302df7fa2f407fb0b1"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "nuclear_safety_regulation_v1",
+      "semantic_role": "nuclear_safety_regulation"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "logical_page": "31",
+      "evidence_ids": [
+        "evidence-c92c86855db16d8bcac1",
+        "evidence-7144574ea96939629af6",
+        "evidence-c1de3448e44306ed657e",
+        "evidence-4bc36a44a65ebc7937ab",
+        "evidence-e491c577a6ebc2661218"
+      ],
+      "excluded_evidence_ids": [
+        "evidence-3146c9b0a9f911ab72b6"
+      ],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "pending_region_review",
+      "source_text_sha256": [
+        "0ef08e41baecc99b4ae36da0440aa80ccbaaa84ee61d84b2814c207f02848131",
+        "23efab492d0cd4aee4b1d372aed5400b843b129fe6a00b4d4f0378afbaeea3b6",
+        "85c775f788a4da4439c8dfa746de498b98841642a85740ee540207e9694972d9",
+        "da520e5cb51739818d6ee98a510ab92a6a98a25ba08f4cf81b4d3df56c92fea4",
+        "dc30733967501f5376e3e49fa87aea11509923251318a47c102a9dc44290c439"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "nuclear_safety_regulation_v1",
+      "semantic_role": "nuclear_safety_regulation"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 32,
+      "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+      "revision_id": "rev-be31e11d289998c918fa",
+      "logical_page": "34",
+      "evidence_ids": [
+        "evidence-5d167a371d1979e69f8c"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "6ac095e227a0ea1b3a32f9b185fa1f0a52f84cafaf9eedce08b3d1302e01891e"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "nuclear_safety_regulation_v1",
+      "semantic_role": "nuclear_safety_regulation"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 1,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        "ec47891987eb7964fd2680b68fca5da36622789d81e2aaf092b50b0685085ca6"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 12,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "3",
+      "evidence_ids": [
+        "evidence-cdab82d6756da9ca9b60",
+        "evidence-1e5db1eeb743b6d83a48",
+        "evidence-45fb065998724ab918bc",
+        "evidence-f03b74bd1b14ee7e7675",
+        "evidence-a0342a5b693d18bfc6a8",
+        "evidence-93c2b045f2806bb8c879",
+        "evidence-c23dcb2b329f21cc1ef8",
+        "evidence-7088e5537156e1936516",
+        "evidence-ac034e18a583e1553734",
+        "evidence-7b1268f28cbce0cf5fdc",
+        "evidence-c91b0ab098b1ee1d9f2f",
+        "evidence-7bd4ce47ff888f9d2429",
+        "evidence-d60909904b3835e168cf",
+        "evidence-4c8a588a82ce01df113a",
+        "evidence-1dca3e15dce57804ae1c"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-5c1508a40c8c0800ad11"
+      ],
+      "context_only_reasons": {
+        "evidence-5c1508a40c8c0800ad11": "This printed unit continues across a physical-page boundary; the adjacent page is required before extracting a complete claim."
+      },
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "00b4a74cc62815f1dfbcee7ff425bc43edb35439bf891787cfa45368b48c1227",
+        "0b80dd85405debc4028bac4a74731b42e410a19dd14798b63c09e94128e35f2b",
+        "16ed047f75ea3bb8597043c10d056b32632a81fc94acc6074cfe863f406734e3",
+        "1b432953129f541a042894c8da01e8b4ab9f20da8a8b3fab4c039107e883c891",
+        "206b71fbaac5f79d46c718a8517d7b791eceb89fb9d69258c9c5ff114c487b96",
+        "20fd388a64a63855a1fb219e57bd06014233f7a837af84439977e21f43f3f96d",
+        "3c7e94f0d463540cbd48e5739645a9a0e9acbc4c9ee885f7e8768e3c92629d9d",
+        "3e7441d181dde11bdacd63b49fed5e856f449efcabed0008f29a691f257aa6d5",
+        "5cc538df616749fb27aa9197e80a36e5570530e0f763c33fa90c9f06139bc03b",
+        "815d70549a294513b0995791e404bc0d141083e295f26285c6096e871f8513e7",
+        "b29dc537215ce5ff5a4d5dcd9e036f6219df044ef8282df90f96b5128c015361",
+        "bf2e56091680d80bf25642a68c12d41407bde049c291d8974085589ca2211b35",
+        "cf8e6115882bb9fdaec0b3c4eb254fc4a78ae9394411c023c161bdf0e1b4867c",
+        "fb42c9c797c39fecc16623897017406f59e5ec8b579f94d3fef5bfd2fcb5eac3",
+        "fd100fa92d24e38cb225483d14d4807278ea314420abfb61be9faaec47c8ffc7"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 31,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "no_canonical_evidence",
+      "source_text_sha256": [
+        null
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 32,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "23",
+      "evidence_ids": [
+        "evidence-8dcd8762d31d85df0fd2",
+        "evidence-5d9e43ada5f076e6a735",
+        "evidence-d749b8e54218171f5a68",
+        "evidence-12d4e102ab3adc5165d0",
+        "evidence-4d589402a74c8f1e3b35",
+        "evidence-f28f39bb8d70fa1ab7bd",
+        "evidence-2f6a8107d3434caba6db",
+        "evidence-59eb8e82d639490caf83",
+        "evidence-47475cb23b8d2f694fba",
+        "evidence-b00db804ccba860e0607",
+        "evidence-95f9356d1d3df788d1d6",
+        "evidence-dd9697c2530cde3cb685",
+        "evidence-25d618e9bba03e909427",
+        "evidence-b917c85cef08ce5277ed"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "0c35b9427bf74a94050d3386ba0f47f72d6f89c6c392165d7a97a2d827df77b8",
+        "1da1a09003da0b55c7e960fb6a197612a8782f42a4145d541618071fd4c1b7f8",
+        "29c9622cce86924658304e0031e8e6e239381b237c2131d67d9a559a90d4ae0f",
+        "3c8bcc801a6a17bfd61117022305875ddc4f8ee911fe6a961bbf6dccfd122140",
+        "4982d469785211c2f603fd4bce45a2ea8413dd222818625cfbe1ded984a09d99",
+        "4fb857ae132413044129d7f1795839586612f5f615b672121619e6c70f4c0d11",
+        "899d0e2edc1d785039d6e950a021c68c08019e86daccadacbe9da119c7d49cce",
+        "8b736f220fede37ff121e3cde38bc98656784b51ffe69c894b11b5cb34e28621",
+        "b53c4f7be26763ecbe53aad063380298d0b29afc1d3436e326d231a886e3d12f",
+        "ba46f868e79f5e764c720802978dcb0a3859a11cb710c72f4971d1b6d42cd82f",
+        "c839104afd73600985d667a90f50f02c29571600dd89727f207c55c379cc905f",
+        "d4027d75957d934859742f84d63a73aaab394ec54fb672acf31f508577e16781",
+        "d613931dbc85b7a853dd8077a969a61254f6ec7363aeea0cb14ec481305242ff",
+        "fabfaedd4921f78932bfd11753633200bb7ba7c1884240f036dee54a9259104c"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 64,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "55",
+      "evidence_ids": [
+        "evidence-f3148185a15fbc822854",
+        "evidence-4081cb8f372987f9f0db",
+        "evidence-f98e771564a5bf64e816",
+        "evidence-96f84195d16c941359ab",
+        "evidence-37175e52c4ebeda9b966",
+        "evidence-59142f9e06fa96bfc2cd"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-12b0ccf78a426fb03708",
+        "evidence-6a030cdc57c893b0082b"
+      ],
+      "context_only_reasons": {
+        "evidence-12b0ccf78a426fb03708": "This printed unit continues across a physical-page boundary; the adjacent page is required before extracting a complete claim.",
+        "evidence-6a030cdc57c893b0082b": "This printed unit continues across a physical-page boundary; the adjacent page is required before extracting a complete claim."
+      },
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "1176922b419b3a8779e1023c77b110b378dc5648efd8c6af55c47acb017c0703",
+        "18df9643f14dcedee0f53cd72869a02ebe7f6fe47e433cb7fdf0c3430d87ff95",
+        "298b65501a8fe321b061815d7e155c2f82675df09a8b5dd185ea4fc4abdde28c",
+        "5d290dc0267afbea2e8c7cb4a314c4a5614e7c0ceebbb824dcb5d628c602bfa3",
+        "9207702d6a3b90c76d68c179d08a3ad51367fe5b0d061da00b2b36ee74e3b87e",
+        "eac409cc3beb4ed3e2b989b96f2d94b82b53e4924fb7dbd804fdc8b8efe3aa83"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 120,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "111",
+      "evidence_ids": [
+        "evidence-0e1751f4582aaffc6720",
+        "evidence-0015cb3659bb264f91ec",
+        "evidence-821be9b4a535262a8121",
+        "evidence-26a3c83c48d2168160f7",
+        "evidence-5217641d2edf3f96524b",
+        "evidence-3168be1bb8946dd28674",
+        "evidence-ced84c4f4d4e8467d883",
+        "evidence-6362258130d58c635507",
+        "evidence-f7927e2c8335e2cd3f2d",
+        "evidence-e0ac7d4954312406e1d7",
+        "evidence-aa24c43c50fbfce64966",
+        "evidence-35134a110e15fcdf3f01",
+        "evidence-5771271a40b3a89488e1",
+        "evidence-79e0160c620ea2538a07",
+        "evidence-403c539626e97ce4c9cf",
+        "evidence-1c9d1857e1c624a4f333"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "00eba366a0ee397c482220680e3eea5227c0cc1496f291da6e07f8b6832ddea4",
+        "121b25fc84da0ba9cc298c871ce05a7ce24de92ae7e935eb7659d60f99c1c7e2",
+        "30219b0e73b0f39e1cc55c1b19ca03a772d5276edec22ab5a3c153d0e8b30ec9",
+        "604322919daf20e6929165ed3a676c8306d21ca17c8466464b9ae5aedb438125",
+        "6dad99a44045178ea94b0a727c2814c8b71e1843fb78f0481b074edd4a232b41",
+        "79b037cd19e9c34a4ad731d18fa2877885bf798b4dfcdc1586d2e1339b8a4d88",
+        "7a2534438db0b2b450b672ec0508aae9c4b9701b160c2e53235b7cda7f6ff98c",
+        "825938ab980d0fe5191d1a039df2bb4b696e830b7443828d650ea62914cacdf2",
+        "8963b3d62d16bde8a0ba425be1ad6a568d0803e8edb12ddcc567af3363b1006f",
+        "9c4375790ca3c8616b988b159a036ce302324d0f0ec5b97b720e58e65c3f91a0",
+        "a2fbfdb1b94c8d275c2ebb3feb6cacbe4e5d67c26b176895f5843ed2dfa8c09f",
+        "b356e5579dc51dccfa9943ea0b4d7227a3714eb4b08fa557e2c4cdc74ce30a82",
+        "bb6b8b9b58c4ba9f8de3ce8ff7454ed0065480ea87db0e43a02eed654215667b",
+        "c021b08c20b2a7966543a948d9dee8293dad132d487010b90905834dede8f5ba",
+        "d8f6a2a004f0b7a6307010269d8cd38e409fa96280b42d53f8fd13b812df586f",
+        "f07c5a412c2a865a79e43490a2d2e9ed8fe133e6cc09cf6f892a3a5a436e3e45"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 180,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "171",
+      "evidence_ids": [
+        "evidence-e0474cd7cd73a05d1ba9",
+        "evidence-f833ffa9b95b29d32e52",
+        "evidence-82b45776e844cdc83fe3",
+        "evidence-c354b5845a4e94ff74e1"
+      ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [],
+      "context_only_reasons": {},
+      "coverage_status": "extractable",
+      "source_text_sha256": [
+        "351c9fb617e6762b5852be52d8257cd5521f43b7b7bf4de7ccfa0762cfcf229d",
+        "7bafb153766a3b36cb6a7de0c61bafbea4398dc08dd2d11cbb54a33662acc0a8",
+        "cdb51ee0dcf45b17677672a53fd32f1ee7f9cad8b77de305aa6eebd5c1e2d9b4",
+        "d3aaf54fb51940e99eb6c36fbc486c344311a7a44cef16e4504478fdf3c7a8ec"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 244,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-2e5bfbf952af8b741bb8",
+        "evidence-944225384166725f2559",
+        "evidence-78c3b1ac390458da53b9",
+        "evidence-ba241b7890a98d4124a7",
+        "evidence-50c5f9a8b018f6082aa3",
+        "evidence-f18d650113fd22c71f37",
+        "evidence-3780f217f243c453bdfe",
+        "evidence-54f012a9cd0deaf3dc8b",
+        "evidence-43daec39f341bd61ab20",
+        "evidence-e9f22fe21337305b28c7",
+        "evidence-412cdc72f0ed98478286"
+      ],
+      "context_only_reasons": {
+        "evidence-2e5bfbf952af8b741bb8": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-944225384166725f2559": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-78c3b1ac390458da53b9": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-ba241b7890a98d4124a7": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-50c5f9a8b018f6082aa3": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-f18d650113fd22c71f37": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-3780f217f243c453bdfe": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-54f012a9cd0deaf3dc8b": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-43daec39f341bd61ab20": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-e9f22fe21337305b28c7": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-412cdc72f0ed98478286": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction."
+      },
+      "coverage_status": "context_only",
+      "source_text_sha256": [
+        "df44a562fd5c026c4271a4275ca79170d57ab80cbd79ca4f31b50f5e3d312d9c"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 300,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-472dbeebc476bf712da3",
+        "evidence-41751d9f5be54a196138",
+        "evidence-9c1929d959f782813758",
+        "evidence-d17856df5b85d73aec44",
+        "evidence-e4e310216259bfd420c3",
+        "evidence-30e7e115883b1ea2d8a0",
+        "evidence-10b67295c33b70bf327d",
+        "evidence-f0d5f251568260440b2f",
+        "evidence-3015e99979e48cfcdefc",
+        "evidence-9200ca85ea9ea72ddcf7",
+        "evidence-1935170e7dc47d28e772",
+        "evidence-60881f6501cfad77442b",
+        "evidence-e36092b5135eb18d131a",
+        "evidence-94349fcfe708880fc3c8",
+        "evidence-54beba359b8ebdff6046",
+        "evidence-912a843cfaf65ec354fd"
+      ],
+      "context_only_reasons": {
+        "evidence-472dbeebc476bf712da3": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-41751d9f5be54a196138": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-9c1929d959f782813758": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-d17856df5b85d73aec44": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-e4e310216259bfd420c3": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-30e7e115883b1ea2d8a0": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-10b67295c33b70bf327d": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-f0d5f251568260440b2f": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-3015e99979e48cfcdefc": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-9200ca85ea9ea72ddcf7": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-1935170e7dc47d28e772": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-60881f6501cfad77442b": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-e36092b5135eb18d131a": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-94349fcfe708880fc3c8": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-54beba359b8ebdff6046": "Printed formula or figure text is citable only in this original-page region; diagram geometry and engineering claims require separate review.",
+        "evidence-912a843cfaf65ec354fd": "Only the printed figure caption is transcribed; drawing geometry and numeric relationships are unverified."
+      },
+      "coverage_status": "context_only",
+      "source_text_sha256": [
+        "b93817bd8d87f46b3f4bdbad7e79f9b98bd3df6bd2637296cd183c054dfb2f4d"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
       "document_key": "auxiliary_installation_book",
       "physical_page": 360,
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",
       "revision_id": "rev-a2a1d7444e558b2a813a",
       "logical_page": "351",
       "evidence_ids": [
-        "evidence-aa97a9ec78cf7cc57dc5"
+        "evidence-b2344c8b4d0ea55cd50d",
+        "evidence-d7667da7416611074df7"
       ],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-787e28c4005bb4de22e2",
+        "evidence-2d6463169ef770fbc1d0",
+        "evidence-138fc554fc67557d7e98",
+        "evidence-1956478c21eac217b68c",
+        "evidence-16d2728e3f5f41b00550",
+        "evidence-f205c302fab7a451cf0b",
+        "evidence-11d23a498fe663e8118f",
+        "evidence-a8697780ce759ed6d91a",
+        "evidence-0a65ebec99c5a89fbc30"
+      ],
+      "context_only_reasons": {
+        "evidence-787e28c4005bb4de22e2": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-2d6463169ef770fbc1d0": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-138fc554fc67557d7e98": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-1956478c21eac217b68c": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-16d2728e3f5f41b00550": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-f205c302fab7a451cf0b": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-11d23a498fe663e8118f": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-a8697780ce759ed6d91a": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction.",
+        "evidence-0a65ebec99c5a89fbc30": "Original-page body region excludes exam-bank sidebar text; question/answer grouping and cross-page continuation must be checked before extraction."
+      },
+      "coverage_status": "extractable",
       "source_text_sha256": [
-        "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca"
+        "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+        "aa31cc59d02cc3924d77c39d52664b5b6aff5acd2f53ef28b948060ef63a0ae5"
       ],
       "coverage": [
         "numeric_unit",
@@ -200,14 +1407,117 @@
       "section_identity_status": "unresolved",
       "extraction_profile_id": "textbook_v1",
       "semantic_role": "textbook"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 468,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": null,
+      "evidence_ids": [],
+      "excluded_evidence_ids": [],
+      "context_only_evidence_ids": [
+        "evidence-3399b3e9b78a004ba684",
+        "evidence-cec272e47ebb958daea7",
+        "evidence-c4b1e1045d9f5fb0638e",
+        "evidence-4a0ce95b849a358a0b67",
+        "evidence-e2580457281d004b7b05",
+        "evidence-b099610ab1fc71b58ec9",
+        "evidence-083278e96a4efa4998b0",
+        "evidence-1fb0762d71e9dc73a7c9",
+        "evidence-230a8ef0a90ea96e416f",
+        "evidence-8db26041e53e9d81c04c",
+        "evidence-ea70146a7e765dacf561",
+        "evidence-08aba2c4f1e6f675eb27",
+        "evidence-ae83a1e48c1735bfc23c",
+        "evidence-9d8a37a26e535d3abc08",
+        "evidence-bcd263294789b6786cc4",
+        "evidence-11cef7e489f65889b362"
+      ],
+      "context_only_reasons": {
+        "evidence-3399b3e9b78a004ba684": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-cec272e47ebb958daea7": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-c4b1e1045d9f5fb0638e": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-4a0ce95b849a358a0b67": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-e2580457281d004b7b05": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-b099610ab1fc71b58ec9": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-083278e96a4efa4998b0": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-1fb0762d71e9dc73a7c9": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-230a8ef0a90ea96e416f": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-8db26041e53e9d81c04c": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-ea70146a7e765dacf561": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-08aba2c4f1e6f675eb27": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-ae83a1e48c1735bfc23c": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-9d8a37a26e535d3abc08": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-bcd263294789b6786cc4": "Sample exam questions have no printed answer marks; the final question continues on the next page.",
+        "evidence-11cef7e489f65889b362": "Sample exam questions have no printed answer marks; the final question continues on the next page."
+      },
+      "coverage_status": "context_only",
+      "source_text_sha256": [
+        "832ab689a986a798e6176dd8e22fc25db53e7dcb6110ccdc02a8a2472b404e74"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": null,
+      "semantic_role": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 480,
+      "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+      "revision_id": "rev-a2a1d7444e558b2a813a",
+      "logical_page": "471",
+      "evidence_ids": [
+        "evidence-dae7f626f99bd031d3d2",
+        "evidence-4140e37a6453b2d2b518",
+        "evidence-051903f5acd0b9671828",
+        "evidence-0c0b2c5f9929c05625bb",
+        "evidence-898e71d44ad45b470e6d",
+        "evidence-a9d9b6a54fc50a601c78",
+        "evidence-3d2cb54427bddc4c40d8",
+        "evidence-08a6aec7ba9fe37a7d1e"
+      ],
+      "excluded_evidence_ids": [
+        "evidence-8ce8080fe607d285dfea",
+        "evidence-a2068bd4cfa0fd516e29",
+        "evidence-317bd9ecbd778055ca1d",
+        "evidence-74caaaad852c9a3da2db",
+        "evidence-3aa14abf6801c968dba6",
+        "evidence-5a73bd5d3e62f0552818"
+      ],
+      "context_only_evidence_ids": [
+        "evidence-acbe490a8fd1d0da7f05"
+      ],
+      "context_only_reasons": {
+        "evidence-acbe490a8fd1d0da7f05": "Printed drawing/discussion question counts and score 15 disagree; preserve the original cells without arithmetic repair."
+      },
+      "coverage_status": "pending_region_review",
+      "source_text_sha256": [
+        "02f1650c4e79fb8468f3f2243ea3e515048e308003de6f38afd6979c54ddfbbb",
+        "50511e5444d0cdfe2896653bd1e440dd9f133bc56256d04ba319cc8c9d0e5e67",
+        "587a485828489069d97705d5362ab067c88cb32b98c96d9f487fb22be72d0ac7",
+        "7000a5f798fd01a2dc2b03a7f9a7e6b437ceaa8bdf22bbcccdff9ee6cb356497",
+        "a385197e510adb2bccb29cf4ad6fb7bd132fc4d5b002a27c2a7aa6af6aeb563e",
+        "e7838002e3841f2f8a4b81c09138d9efddc2c60467ef4469897fdc1497642d4e",
+        "f9fe82fd9ff0d57435d7283306f09408059735ef88aa24a509d4187de7bc1a6f",
+        "ff4bf5e7ada5efffbbbad654be878c99dcd8d775aa093281c4cb86d50d7e2f6c"
+      ],
+      "coverage": [],
+      "section_path": "chapter_unknown",
+      "section_identity_status": "unresolved",
+      "extraction_profile_id": "textbook_v1",
+      "semantic_role": "textbook"
     }
   ],
   "inputs": {
-    "stage9_exit_audit": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483",
-    "stage10_audit": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d",
-    "stage11_exit_audit": "8ad02076e018a6a0e0823f33ac3455bdf7bbf2fa4d74b4e213a2544dd5ef2c0f",
-    "stage6_evidence_bundle": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9",
-    "stage11_evaluation_sample_registry": "cd19016726e521ad818cffe7c5c1f321b4170494ff547e5b4c54ef4f08d86859",
+    "stage9_exit_audit": "86883d26a013db3602237582f92c0ce41967457ab629c3c0f35d3599c43ca6f4",
+    "stage10_audit": "c7f7c56bb2e6625a111d8122293d6b073ecdce9637df2393d4de86773a41ff9e",
+    "stage11_exit_audit": "a2cd818b012db5f798917764e71e2b7998c8874960351889298390d95b21c961",
+    "stage6_evidence_bundle": "9b80080997cadf653d87289bcf61d279c6b3878efff4cff10771fc26f2ba5453",
+    "stage6_semantic_coverage_audit": "dad70e93117cfd16c56146aa2638a39c087b7503a308e8cf14e07dd16483b7d4",
+    "stage6_source_structure_index": "487d7915d2d6d44db92f6600e285e8cc6376069dec2381e0a7678ded7f0e7cff",
+    "stage11_evaluation_sample_registry": "4d7de2844dcdaf67680a16650a2fd002c6c2b776c44ee2e5da4c1ff8c0bbcf73",
     "stage12_representative_baseline": "76dd35f72c1207db0fc5de8b675f45592cced0b7a4ca7dc2d1236fdcaf5f0836",
     "stage12_profile_routing": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff"
   },

@@ -199,7 +199,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "data" / "stage5" / f"stage5_input_audit_{date.today().isoformat()}.json",
+        default=PROJECT_ROOT / "data" / "stage5" / "stage5_input_audit.json",
     )
     args = parser.parse_args()
     result = audit()

@@ -12,15 +12,19 @@
     },
     "terminology_candidates": {
       "path": "data/stage7/terminology_candidates.json",
-      "sha256": "803b697f951df42a0741e51ac725362d602f8076d3130ee8df6ecff47d77f13e"
+      "sha256": "3e3621b2a25beeb61b26f1390c5ac9fd243c80682a5b22ff33251b7d5c65702a"
     },
     "mapping_shortlist": {
       "path": "data/stage8/ontology_mapping_shortlist.json",
-      "sha256": "93a93d7aa8babad324bee979f3106b3776e99ac6bd76e58af171def3314b8474"
+      "sha256": "35f71bc762814d723bcfba3d0ca8106ea2503de62ede273d7c25e1e704f549f1"
     },
     "review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
-      "sha256": "6787c4a2a2c3829244cf951288abfc37156241f7477bc14fc0b4f56efc010a92"
+      "sha256": "58ebb938051fa5586d7aba58f94962f99715e27639dcee695e7d5f57462dfd8c"
+    },
+    "mapping_rebinding_review": {
+      "path": "data/stage8/stage8_mapping_rebinding_review.json",
+      "sha256": "62bbc612aede51b36018deed8601a0d118791156f36a9fc1251b53ed2d9ef31b"
     },
     "review_queue": {
       "path": "data/stage8/ontology_mapping_review_queue.jsonl",
@@ -38,11 +42,11 @@
     "exit_audit": "data/stage8/stage8_exit_audit.json"
   },
   "counts": {
-    "stage7_candidate_count": 19304,
-    "shortlist_count": 4,
-    "deferred_count": 10,
+    "stage7_candidate_count": 18628,
+    "shortlist_count": 5,
+    "deferred_count": 11,
     "review_pending_count": 0,
-    "accepted_count": 4
+    "accepted_count": 5
   },
   "checks": {
     "contract_stage8": true,
@@ -55,6 +59,7 @@
     "shortlist_content_quality_gate": true,
     "phenomenon_mapping_policy_enforced": true,
     "review_records_match_policy_and_overlay": true,
+    "mapping_rebinding_review_current": true,
     "mapping_matches_current_input_rebuild": true,
     "review_queue_matches_current_input_rebuild": true,
     "owl_matches_current_contract_rebuild": true,
@@ -71,11 +76,11 @@
   "zero_tolerance_errors": [],
   "blockers": [],
   "test_result": {
-    "command": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe -m pytest -q tests/stage8 tests/unit/test_project_state.py",
+    "command": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe -m pytest -q -p no:cacheprovider tests/stage8 tests/unit/test_project_state.py",
     "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
     "status": "passed",
     "returncode": 0,
-    "stdout_tail": "...............................                                          [100%]\n",
+    "stdout_tail": ".................................                                        [100%]\n",
     "stderr_tail": ""
   },
   "next_stage_allowed": true,

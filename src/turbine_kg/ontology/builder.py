@@ -480,11 +480,37 @@ def apply_mapping_review_overlay(mapping_payload: dict, overlay: list[dict]) -> 
             raise ValueError(f"Stage 8 class acceptance requires a valid class_label mapping: {candidate_id}")
         row["candidate_disposition"] = disposition
         confirmation = decision.get("original_page_confirmation")
-        if confirmation not in {None, "confirmed_by_user"}:
+        if confirmation not in {None, "confirmed_by_user", "confirmed_by_three_agent_review"}:
             raise ValueError(f"invalid Stage 8 original-page confirmation: {candidate_id}")
-        if confirmation == "confirmed_by_user":
+        if confirmation == "confirmed_by_three_agent_review":
+            reviewers = decision.get("independent_reviewers")
+            page_checks = decision.get("original_page_checks")
+            if (
+                not isinstance(reviewers, list)
+                or len(reviewers) != 3
+                or len(set(reviewers)) != 3
+                or not all(isinstance(reviewer, str) and reviewer for reviewer in reviewers)
+                or not isinstance(page_checks, list)
+                or not all(
+                    isinstance(check, dict)
+                    and isinstance(check.get("document_key"), str)
+                    and isinstance(check.get("physical_page"), int)
+                    and isinstance(check.get("source_text"), str)
+                    and check["source_text"]
+                    for check in page_checks
+                )
+                or not {
+                    (item.get("document_key"), item.get("physical_page"))
+                    for item in row["source_occurrences"]
+                } <= {
+                    (check["document_key"], check["physical_page"])
+                    for check in page_checks
+                }
+            ):
+                raise ValueError(f"Stage 8 three-agent original-page review lacks provenance: {candidate_id}")
+        if confirmation in {"confirmed_by_user", "confirmed_by_three_agent_review"}:
             row["requires_original_confirmation"] = False
-            row["original_page_confirmation_status"] = "confirmed_by_user"
+            row["original_page_confirmation_status"] = confirmation
             row["review_requirements"] = [
                 item for item in row["review_requirements"]
                 if "OCR-derived" not in item
@@ -498,6 +524,11 @@ def apply_mapping_review_overlay(mapping_payload: dict, overlay: list[dict]) -> 
         row["reviewer"] = decision.get("reviewer", "unknown")
         row["reviewed_at"] = decision.get("reviewed_at")
         row["decision_reason"] = decision.get("decision_reason", "")
+        if confirmation == "confirmed_by_three_agent_review":
+            row["independent_reviewers"] = decision["independent_reviewers"]
+            row["original_page_checks"] = decision["original_page_checks"]
+        if "prior_review_record" in decision:
+            row["prior_review_record"] = decision["prior_review_record"]
         if "hierarchy_relations" in decision:
             relations = decision["hierarchy_relations"]
             if not isinstance(relations, list) or any(

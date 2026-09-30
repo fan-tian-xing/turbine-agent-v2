@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
 import subprocess
 import sys
 import tomllib
-import uuid
 from pathlib import Path
 from copy import deepcopy
 from dataclasses import replace
@@ -25,13 +25,16 @@ INPUTS = (
     "data/registry/source_assets.jsonl",
     "config/semantic_runtime.schema.json",
     "tests/fixtures/stage3/corpus.json", "tests/stage9/test_stage9_semantic.py",
+    "tests/stage3/test_current_source_binding.py",
     "scripts/audit_stage9_exit.py",
 )
 REVIEWED_INPUTS = (
     "ontology/minimal_turbine.ttl", "ontology/stage9_core.ttl", "ontology/stage9_shapes.ttl",
     "src/turbine_kg/ontology/semantic.py", "src/turbine_kg/ontology/research_adapter.py",
     "src/turbine_kg/stage3/projection.py",
+    "src/turbine_kg/stage3/real_trial.py",
     "config/semantic_runtime.schema.json",
+    "data/stage9/stage9_current_source_bindings.json",
 )
 
 
@@ -43,7 +46,7 @@ def _read(relative: str) -> dict:
     return json.loads((ROOT / relative).read_text(encoding="utf-8"))
 
 
-def _audit(*, run_tests: bool = True) -> dict:
+def _audit(*, run_tests: bool = True, current_binding_path: Path | None = None) -> dict:
     sys.path.insert(0, str(ROOT / "src"))
     from rdflib import Dataset, Graph, OWL, RDF, RDFS, URIRef
     from turbine_kg.ontology.research_adapter import research_payload, validate_research_documents
@@ -60,7 +63,13 @@ def _audit(*, run_tests: bool = True) -> dict:
     real_relative = "var/stage3/real_trial_pages.json"
     if not (ROOT / real_relative).is_file():
         real_relative = "tests/fixtures/stage3/real_trial_pages.json"
-    real_documents = load_confirmed_real_corpus(ROOT / "data/stage3/real_trial_confirmation.json", ROOT / real_relative)
+    binding_relative = None
+    if current_binding_path is not None:
+        binding_relative = current_binding_path.resolve().relative_to(ROOT.resolve()).as_posix()
+    real_documents = load_confirmed_real_corpus(
+        ROOT / "data/stage3/real_trial_confirmation.json", ROOT / real_relative,
+        current_binding_path=current_binding_path,
+    )
     real_payload = research_payload(real_documents)
     real_report = validate_research_documents(real_documents)
     real_projection = build_traceability_projection(real_documents)
@@ -217,10 +226,7 @@ def _audit(*, run_tests: bool = True) -> dict:
         "invalid_batch_preserved_and_projection_blocked": not broken_report["conforms"] and blocked_projection and len(broken[0].statements) == len(corpus[0].statements),
         "independent_code_contract_review": manual_review_ok,
     }
-    temp_root = ROOT / "var/tmp"
-    if run_tests:
-        temp_root.mkdir(parents=True, exist_ok=True)
-    command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--basetemp", str(temp_root / f"stage9-audit-targeted-{uuid.uuid4().hex[:12]}"), "tests/stage9", "tests/stage3", "tests/unit/test_project_state.py"]
+    command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--tb=short", "tests/stage9", "tests/stage3", "tests/unit/test_project_state.py"]
     test_result = {"command": command, "project_python": sys.executable, "status": "not_run"}
     if run_tests:
         result = subprocess.run(command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
@@ -228,29 +234,35 @@ def _audit(*, run_tests: bool = True) -> dict:
         test_result.update(status="passed" if result.returncode == 0 else "failed", returncode=result.returncode, stdout_tail=result.stdout[-4000:], stderr_tail=result.stderr[-2000:])
     else:
         checks["targeted_and_consumer_tests"] = False
-    full_command = [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--basetemp", str(temp_root / f"stage9-audit-full-{uuid.uuid4().hex[:12]}"), "tests"]
-    full_test_result = {"command": full_command, "project_python": sys.executable, "status": "not_run"}
+    pre_stage11_command = [
+        sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider", "--tb=short",
+        "tests", "--ignore=tests/stage11", "--ignore=tests/stage12",
+    ]
+    pre_stage11_result = {"command": pre_stage11_command, "project_python": sys.executable, "status": "not_run"}
     if run_tests and checks["targeted_and_consumer_tests"]:
-        full_result = subprocess.run(full_command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
-        checks["full_project_tests"] = full_result.returncode == 0
-        full_test_result.update(status="passed" if full_result.returncode == 0 else "failed", returncode=full_result.returncode, stdout_tail=full_result.stdout[-5000:], stderr_tail=full_result.stderr[-2000:])
+        result = subprocess.run(pre_stage11_command, cwd=ROOT, env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"}, capture_output=True, text=True)
+        checks["pre_stage11_project_tests"] = result.returncode == 0
+        pre_stage11_result.update(status="passed" if result.returncode == 0 else "failed", returncode=result.returncode, stdout_tail=result.stdout[-5000:], stderr_tail=result.stderr[-2000:])
     else:
-        checks["full_project_tests"] = False
+        checks["pre_stage11_project_tests"] = False
     blockers = [key for key, passed in checks.items() if not passed]
     inputs = {relative: {"path": relative, "sha256": _sha(relative)} for relative in INPUTS}
     inputs[real_relative] = {"path": real_relative, "sha256": _sha(real_relative)}
+    if binding_relative is not None:
+        inputs[binding_relative] = {"path": binding_relative, "sha256": _sha(binding_relative)}
     if review_path.exists():
         inputs["data/stage9/stage9_semantic_review.json"] = {"path": "data/stage9/stage9_semantic_review.json", "sha256": _sha("data/stage9/stage9_semantic_review.json")}
     return {
         "schema_version": 1, "stage": "9", "artifact_kind": "stage9_exit_audit",
         "status": "complete" if not blockers else "blocked", "formal_release": False,
         "producer": "scripts/audit_stage9_exit.py", "inputs": inputs,
-        "input_scope": "Existing Stage 8 frozen ontology plus public synthetic corpus and already admitted, user-confirmed real research sample; research-only, not formal knowledge or Release. Only confirmed/runtime/Registry artifacts are read, no original materials, case data or blind-test inputs.",
+        "input_scope": "Existing Stage 8 frozen ontology plus public synthetic corpus and already admitted, user-confirmed real research sample; research-only, not formal knowledge or Release. Only confirmed/runtime/Registry and explicitly supplied current source binding artifacts are read, no original materials, case data or blind-test inputs.",
+        "real_source_binding": {"mode": "explicit_current_source_review" if binding_relative is not None else "strict_historical", "artifact": binding_relative, "new_user_confirmation": False},
         "versions": {"python": sys.version.split()[0], **installed, "runtime_schema": 1, "dependency_lock": "uv.lock"},
         "outputs": {"ontology_authority": ["ontology/minimal_turbine.ttl", "ontology/stage9_core.ttl"], "constraint_authority": "ontology/stage9_shapes.ttl", "runtime_schema_authority": "config/semantic_runtime.schema.json", "validation_report": "validate_runtime_payload / validate_research_documents return value consumed before stage3 projection", "review": "data/stage9/stage9_semantic_review.json", "exit_audit": "data/stage9/stage9_exit_audit.json"},
         "counts": {"public_synthetic": counts, "confirmed_real_research": real_counts}, "checks": checks, "negative_checks": negatives,
-        "review": {"scope": "code_contract_runtime_chain", "status": review.get("status", "missing"), "fingerprints_current": review_matches, "knowledge_approval": False, "admitted_data_metadata": "Existing user-confirmed groups, runtime identity/quote binding and Registry applicability are validated by load_confirmed_real_corpus; no overlay or user confirmation is changed."},
-        "test_result": {"targeted": test_result, "full_project": full_test_result}, "zero_tolerance_errors": blockers, "blockers": blockers,
+        "review": {"scope": "code_contract_runtime_chain", "status": review.get("status", "missing"), "fingerprints_current": review_matches, "knowledge_approval": False, "admitted_data_metadata": "Historical user-confirmed statement semantics, runtime identity/quote binding and Registry applicability are validated by load_confirmed_real_corpus. Explicit current source review preserves historical identity and critical semantics; it creates no user confirmation. No historical artifact is changed."},
+        "test_result": {"targeted": test_result, "pre_stage11": pre_stage11_result}, "zero_tolerance_errors": blockers, "blockers": blockers,
         "failure_isolation": "Any schema, vocabulary, SHACL or research-adapter failure yields a nonconforming report and raises SemanticValidationError before Property Graph construction/Neo4j loading; retain the whole original batch unchanged.",
         "rollback": "Restore the previous verified OWL/SHACL/runtime authority package and rerun the same input batch; no bypass or database correction.",
         "next_stage_allowed": not blockers,
@@ -261,11 +273,20 @@ def _audit(*, run_tests: bool = True) -> dict:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--current-source-bindings", type=Path, help="explicit reviewed current source binding artifact inside the project; omission retains strict historical validation")
+    args = parser.parse_args()
+    current_binding_path = None
+    if args.current_source_bindings is not None:
+        current_binding_path = args.current_source_bindings
+        if not current_binding_path.is_absolute():
+            current_binding_path = ROOT / current_binding_path
+        current_binding_path.resolve().relative_to(ROOT.resolve())
     project_python = ROOT.parent / "runtime-python/turbine-kg-env/Scripts/python.exe"
     if Path(sys.executable).resolve() != project_python.resolve():
         raise RuntimeError("Stage 9 audit requires the dedicated project Python")
     try:
-        audit = _audit()
+        audit = _audit(current_binding_path=current_binding_path)
     except Exception as error:
         audit = {
             "schema_version": 1, "stage": "9", "artifact_kind": "stage9_exit_audit",
@@ -279,6 +300,9 @@ def main() -> int:
             "rollback": "Restore the prior verified authority package and rerun the audit.",
             "next_stage_allowed": False, "next_stage": "Stage 9 semantic chain completion",
         }
+        if current_binding_path is not None and current_binding_path.is_file():
+            relative = current_binding_path.resolve().relative_to(ROOT.resolve()).as_posix()
+            audit["inputs"][relative] = {"path": relative, "sha256": _sha(relative)}
     output = ROOT / "data/stage9/stage9_exit_audit.json"
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

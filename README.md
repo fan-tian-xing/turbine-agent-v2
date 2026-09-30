@@ -8,7 +8,7 @@
 
 阶段产物、构建顺序和使用边界见 [`data/README.md`](data/README.md) 及各阶段目录的 README。原始材料始终是证据来源；OCR 派生件可用于 Document IR、文字适配、候选发现和坐标辅助，但不替代原始材料作为 Evidence 真值。
 
-阶段 5 的 36 页 RapidOCR 结果是一次性质量验收记录，按原始 PDF、样本清单、引擎版本、运行参数和 OCR 代码记录输入指纹；日常退出审计只读取冻结结果，不自动复核。只有负责人明确要求时，才根据指纹判断是否需要重新执行 OCR。
+阶段 5 已完成五份资料的 775 个现存物理页文字适配；阶段 0–5 已复核并清理遗留引用。阶段 6 的 36 页样本退出审计记录 28 页形成 398 条 Evidence、8 页按负向门禁排除，但后续独立原页核查发现 DL5190.3 物理第 25、113 页的图中文字遗漏，按当前用户要求暂缓修复。阶段 7 已按现行输入重建 18,628 条候选并通过退出检查；阶段 8 已对 16 项当前候选完成三方独立原页审核与来源重绑，5 项候选映射接受、11 项暂缓，未发布正式词汇或本体新类。阶段 9 已将旧研发样本的 3 组 4 条引文核对并绑定现行来源，OWL/SHACL 与投影前门禁通过；阶段 10 当前运行缓存与版本影响范围审计通过。阶段 11 的 46 条开发 Gold 已绑定现行 Evidence，退出审计通过；阶段 12 的 Development 正按当前 Evidence 和中文提示词重建，独立 Reserve 仅准备预冻结。原件缺页只记录缺口，不补造内容。五份资料的全文 Evidence 属于阶段 15。
 
 ## 项目边界
 
@@ -24,6 +24,8 @@
 - 磁盘上的 Registry、Evidence、Engineering Statement、审核记录和 Release 产物是可重建的数据权威；Neo4j 仅作为运行投影。
 
 总体建设计划见 `总计划.md`，该文件只记录各阶段目标、任务、交付物和验收要求。
+
+阶段 5 正式文件、哈希和验收范围见 [`data/stage5/stage5_sample_manifest.json`](data/stage5/stage5_sample_manifest.json)、[`data/registry/ocr_validation_report.json`](data/registry/ocr_validation_report.json) 和 [`data/stage5/stage5_exit_audit.json`](data/stage5/stage5_exit_audit.json)。阶段 6 当前样本结果见 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 和 [`data/stage6/stage6_semantic_coverage_audit.json`](data/stage6/stage6_semantic_coverage_audit.json)，须连同上述已知原页缺口理解；阶段 7–11 当前结果见 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json)、[`data/stage8/stage8_exit_audit.json`](data/stage8/stage8_exit_audit.json)、[`data/stage9/stage9_exit_audit.json`](data/stage9/stage9_exit_audit.json)、[`data/stage10/stage10_audit.json`](data/stage10/stage10_audit.json) 和 [`data/stage11/stage11_exit_audit.json`](data/stage11/stage11_exit_audit.json)。阶段 12 以当前中文提示词重建的输出及退出审计为准；旧结果不能充当当前验收。
 
 ## 本地配置
 
@@ -86,7 +88,7 @@ Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` �
 
 阶段 6 的构建顺序和权威产物见 [`data/stage6/README.md`](data/stage6/README.md)。最终退出检查执行 `scripts/audit_stage6_exit.py`；退出记录状态通过且无阻塞项后，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。阶段 7 的输入清单和候选构建分别执行 `scripts/build_stage7_input_manifest.py`、`scripts/build_stage7_terminology.py`，最终退出检查执行 `scripts/audit_stage7_exit.py`。
 
-阶段 8、9、10 的顺序检查分别执行 `scripts/audit_stage8_exit.py`、`scripts/audit_stage9_exit.py`、`scripts/audit_stage10_exit.py`。阶段 10 的实际运行模式为：
+阶段 8、9、10 的顺序检查分别执行 `scripts/audit_stage8_exit.py`、`scripts/audit_stage9_exit.py --current-source-bindings data/stage9/stage9_current_source_bindings.json`、`scripts/audit_stage10_exit.py`。阶段 10 的实际运行模式为：
 
 ```powershell
 & $projectPython scripts/build_stage7_terminology.py --runtime
@@ -95,6 +97,6 @@ Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` �
 
 运行结果写入本地受控缓存，使用范围、输入门禁及生命周期字段见 [`data/stage10/README.md`](data/stage10/README.md)；运行合同见 [`config/runtime_contract.json`](config/runtime_contract.json)。
 
-阶段 11 已完成 Engineering Statement 合同、唯一 Evaluation Sample Registry、逐条语义标注、两轮独立复核和最终裁决。36 页开发/回归 Golden（其中包含阶段 3 的 15 页试点子集）与五份资料各 3 页的 15 页 Statement 留出集分开登记；留出集只由评价入口读取，盲测内容不由本项目读取。辅机第 78 页经过用户确认，按原页实际标示的 A、A、C、B、D、A 回填为 6 条 Gold，跨页题目不纳入；D300N 第 32 页和辅机第 429 页因版面无法可靠回查而隔离。阶段 12 已开放，构建和退出检查见 [`data/stage11/README.md`](data/stage11/README.md)。
+阶段 11 包含 Engineering Statement 合同、唯一 Evaluation Sample Registry、语义标注和裁决。36 页开发/回归 Golden 与 15 页 Statement 留出分开登记；留出只由评价入口读取，盲测不读取。原用户裁决和隔离决定保留。原有 17 条旧 Evidence 来源均已迁移；辅机第 360 页低真空答文拆成 6 条、高真空答文拆成 5 条，当前共有 46 条开发 Gold。现行来源与三方语义复核另记哈希，入口和退出均为 `complete`。阶段 12 仍须独立重验。阶段 11 产物说明见 [`data/stage11/README.md`](data/stage11/README.md)。
 
 阶段 15 的目标是按 Registry 身份对五份资料 775 个唯一物理页完成全文 Evidence、Engineering Statement 和 candidate 图谱处理。开发页、试点页及阶段 14 candidate 都要迁移对账后只处理一次；OCR 仅为派生资产，视觉页、隔离页和非内容页均需有明确处置，正式 candidate 还需通过覆盖、审核、重复加载和隔离 Neo4j 对账门禁。

@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_incomplete_source_exclusions",
+  "document_key": "DLT863",
+  "source_pdf": {
+    "relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+    "sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb"
+  },
+  "ocr_dpi": 170,
+  "selection_semantics": "Exclude only OCR boxes wholly within bbox_pdf_pt; exact selected OCR text/count and next complete clause anchor must match, else fail closed. Source page visual hash binds original page raster.",
+  "regions": [
+    {
+      "document_key": "DLT863",
+      "physical_page": 17,
+      "printed_page": "24",
+      "missing_parent_printed_page": "23",
+      "reason": "excluded_incomplete_source",
+      "source_description": "d)–e) continuation; parent clause on absent printed page 23",
+      "source_pdf_visual_page_sha256_170dpi": "df33154be4592d2c94a80be2b524b94d19c5cce3a9cebe7880b88f75ef296bb7",
+      "bbox_pdf_pt": [
+        63,
+        99,
+        525,
+        179
+      ],
+      "selected_ocr_box_count": 6,
+      "selected_ocr_text_sha256": "57b4aad0b3ed9ac2b1cf566be171086695080484149b0e613de765013e03c92f",
+      "first_selected_text_sha256": "776951337f3f9ee20786b4d63dbf1b02d5fff3d9f58256fb9300cf44fc80d7e3",
+      "last_selected_text_sha256": "cb74b84b1a4fbb46117e99a6c8660b58ab64470beb99e12f394ec7e65ad95cf5",
+      "next_complete_clause_anchor": {
+        "text": "6.7.1.7机组负荷约50%额定负荷时，应投用第二台汽动给水泵，给水泵并泵前宜进行单台给水泵最",
+        "text_sha256": "ec6be09502e245314c023c80985c674139910c0f19bb9e758310a09ed80e9645",
+        "bbox_pdf_pt": [
+          47.01,
+          181.27,
+          511.62,
+          191.01
+        ]
+      },
+      "region_id": "DLT863-p17-missing-parent"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 18,
+      "printed_page": "26",
+      "missing_parent_printed_page": "25",
+      "reason": "excluded_incomplete_source",
+      "source_description": "a)–q) continuation; parent clause on absent printed page 25",
+      "source_pdf_visual_page_sha256_170dpi": "4468c2ef28eaf2630a45cc53c07c774d5e412c5d8b4327ad17c202b37442c2f9",
+      "bbox_pdf_pt": [
+        69,
+        100,
+        525,
+        380
+      ],
+      "selected_ocr_box_count": 34,
+      "selected_ocr_text_sha256": "66faa207d2c59a2ceeb4f784474c41611df67509832db6ea0d025a5a4a089431",
+      "first_selected_text_sha256": "15dce557bffbc9fe7d3b9df1014380a6ea308da2ee400ed1e882b6a4c6f7eaf0",
+      "last_selected_text_sha256": "331a151577cab517b780a4956217263c350dd1fd82c4bb4a519472a04ae05e0f",
+      "next_complete_clause_anchor": {
+        "text": "6.10汽轮机停机",
+        "text_sha256": "409dac93785824e097ba7c4606b14cbda7ee48f1152506a0d57e0b8b4687d045",
+        "bbox_pdf_pt": [
+          52.09,
+          387.95,
+          133.41,
+          400.24
+        ]
+      },
+      "region_id": "DLT863-p18-missing-parent"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 19,
+      "printed_page": "30",
+      "missing_parent_printed_page": "29",
+      "reason": "excluded_incomplete_source",
+      "source_description": "a)–b) continuation; parent clause on absent printed page 29",
+      "source_pdf_visual_page_sha256_170dpi": "565ffcd9b3e53f22c9cbefcafb75124d7037cbbcbca9d2b1f955b953b226702f",
+      "bbox_pdf_pt": [
+        63,
+        100,
+        525,
+        383
+      ],
+      "selected_ocr_box_count": 24,
+      "selected_ocr_text_sha256": "56697a77fbd0a0e39b7bbce2e037810cefa1528ea190dc263f0c53c026e98d5d",
+      "first_selected_text_sha256": "4f4b357f3eb8792b315efa067cab1caf0f2137982246946b7f7701277c432883",
+      "last_selected_text_sha256": "7484f650450be370161ab16015adf9d98385e0a945e2c6ddddd2ec0bd792f5c3",
+      "next_complete_clause_anchor": {
+        "text": "7.3.2轴瓦烧损预防措施",
+        "text_sha256": "bae92bcdc3d155bbe3c74fa3bdf5e115bcd1f441afcd4c37f18a342d9c3aaeff",
+        "bbox_pdf_pt": [
+          46.59,
+          391.34,
+          159.25,
+          401.08
+        ]
+      },
+      "region_id": "DLT863-p19-missing-parent"
+    }
+  ]
+}

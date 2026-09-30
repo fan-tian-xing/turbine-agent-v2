@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_development_disagreement_review",
+  "status": "historical_decisions_pending_current_candidate_rebinding",
+  "decision_basis": "preserved source-reviewed Development judgments; current candidate IDs must be rebound after rerun",
+  "decisions": [
+    {
+      "gold": "stage12-gold-delivery-01",
+      "candidate": "stage12-candidate-5da72c3633924388ce65",
+      "decision": "D",
+      "subtype": "accepted_boundary_merge",
+      "reason": "Adjacent delivery facts are merged without losing the installation fact.",
+      "previous_candidate_id": "stage12-candidate-5da72c3633924388ce65"
+    },
+    {
+      "gold": "stage12-gold-delivery-04",
+      "candidate": "stage12-candidate-b4a636fc85f9d8a634da",
+      "decision": "D",
+      "subtype": "accepted_boundary_merge",
+      "reason": "Foundation and formwork delivery facts remain complete in one statement.",
+      "previous_candidate_id": "stage12-candidate-b4a636fc85f9d8a634da"
+    },
+    {
+      "gold": "stage12-gold-delivery-06",
+      "candidate": "stage12-candidate-4523e2c0189ea7d0c76e",
+      "decision": "D",
+      "subtype": "accepted_boundary_merge",
+      "reason": "Both parallel closure and roof-waterproofing facts are retained.",
+      "previous_candidate_id": "stage12-candidate-4523e2c0189ea7d0c76e"
+    },
+    {
+      "candidate": "stage12-candidate-6be5b994f5a3b8e1395b",
+      "decision": "D",
+      "subtype": "benign_redundant_boundary_split",
+      "reason": "Evidence-supported local cleanup content is a harmless redundant split.",
+      "previous_candidate_id": "stage12-candidate-6be5b994f5a3b8e1395b"
+    },
+    {
+      "candidate": "stage12-candidate-b8cc5d3bdf421c18048a",
+      "decision": "D",
+      "subtype": "acceptable_causal_summary",
+      "reason": "The high-level causal summary is Evidence-supported and directionally correct.",
+      "previous_candidate_id": "stage12-candidate-b8cc5d3bdf421c18048a"
+    },
+    {
+      "gold": "stage12-gold-gasket-material",
+      "decision": "D",
+      "subtype": "entity_granularity",
+      "reason": "The requirement text is complete; only the structured entity granularity differs.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage12-gold-seal-measurements",
+      "decision": "D",
+      "subtype": "entity_scope_granularity",
+      "reason": "All measurement targets and the requirement are retained with finer entity scope.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "real-statement-d300n-p73-lift-clearance",
+      "decision": "D",
+      "subtype": "condition_applicability_granularity",
+      "reason": "The inspection, overhaul and half-cylinder context remain in text and Evidence.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "real-statement-d300n-p73-lift-clearance-s2",
+      "decision": "D",
+      "subtype": "condition_applicability_granularity",
+      "reason": "The same procedure context is represented with a different field partition.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "real-statement-d300n-p73-lift-clearance-s3",
+      "decision": "D",
+      "subtype": "condition_applicability_granularity",
+      "reason": "The cleaning procedure and its context remain complete despite field granularity.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "real-statement-d300n-p73-lift-clearance-s4",
+      "decision": "D",
+      "subtype": "condition_applicability_and_entity_granularity",
+      "reason": "The reset operation is retained; only noncritical scope and entity granularity differ.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-d2c4678c8e96566b0c8f-s2",
+      "decision": "D",
+      "subtype": "applicability_granularity",
+      "reason": "施工准备时 and the broader foundation context are Evidence-supported scope variants.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-090cfb6b41999cdd681c",
+      "decision": "D",
+      "subtype": "compound_entity_split",
+      "reason": "The compound steel, foundation and wall entities are split without information loss.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage12-gold-delivery-05",
+      "candidate": "stage12-candidate-4523e2c0189ea7d0c76e",
+      "decision": "D",
+      "subtype": "accepted_boundary_merge",
+      "reason": "The adjacent delivery requirements remain jointly retrievable and complete.",
+      "previous_candidate_id": "stage12-candidate-4523e2c0189ea7d0c76e"
+    },
+    {
+      "gold": "stage12-gold-delivery-07",
+      "decision": "D",
+      "subtype": "entity_granularity",
+      "reason": "Parallel facility and marking entities are represented at a different granularity.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage12-gold-delivery-11",
+      "decision": "D",
+      "subtype": "entity_granularity",
+      "reason": "Hole, temporary cover and guardrail entities remain represented completely.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-5ef7104eda31c3578f06",
+      "decision": "D",
+      "subtype": "entity_granularity",
+      "reason": "The control-oil pressure adjustment requirement is complete despite entity roles differing.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-5ef7104eda31c3578f06-s3",
+      "decision": "D",
+      "subtype": "entity_granularity",
+      "reason": "The pressure confirmation requirement is complete despite entity granularity.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-5740cf642266fcd6feb4",
+      "decision": "D",
+      "subtype": "entity_selection_granularity",
+      "reason": "The staged commissioning prerequisite and authorization are complete in statement text.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-7121ec273c465f8f2c6f-s2",
+      "decision": "D",
+      "subtype": "compound_entity_split",
+      "reason": "System, equipment and baseline data are a supported split of one compound entity.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-a9ff60d2526222447813",
+      "decision": "D",
+      "subtype": "surface_and_entity_granularity",
+      "reason": "Vacuum establishment and the approximately 60 kPa target are complete.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-a9ff60d2526222447813-s2",
+      "decision": "D",
+      "subtype": "soft_scope_metadata_difference",
+      "reason": "The low-vacuum causal fact is complete; only the noncritical roll-stage scope metadata differs.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-a9ff60d2526222447813-s3",
+      "candidate": "stage12-candidate-6c97bb897ba7feb43ea1",
+      "decision": "A",
+      "subtype": "noncritical_causal_chain_completeness_error",
+      "reason": "The explicit pressure-rise to positive-pressure causal hop is not retained; this is noncritical and not a safety, quantity, polarity or direction error.",
+      "critical": false,
+      "information_coverage": false,
+      "previous_candidate_id": "stage12-candidate-6c97bb897ba7feb43ea1"
+    },
+    {
+      "gold": "stage11-statement-a9ff60d2526222447813-s4",
+      "decision": "D",
+      "subtype": "soft_applicability_difference",
+      "reason": "The positive-pressure to safety-film causal fact is complete; only roll-stage applicability is implicit.",
+      "previous_candidate_id": null
+    },
+    {
+      "gold": "stage11-statement-a9ff60d2526222447813-s5",
+      "decision": "D",
+      "subtype": "entity_and_scope_granularity",
+      "reason": "The thermal-shock causal content is complete with different entity and scope granularity.",
+      "previous_candidate_id": null
+    }
+  ]
+}

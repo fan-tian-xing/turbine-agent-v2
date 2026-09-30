@@ -16,7 +16,7 @@
     "forbidden_splits_for_development": ["acceptance_holdout", "acceptance_holdout_reserve", "blind_test"],
     "profile_routing_manifest": "config/stage12_profile_routing.json",
     "representative_baseline": "data/stage12/stage12_representative_baseline.json",
-    "input_scope_policy": "Stage 12 consumes the frozen representative_page_baseline Evidence slice; it does not create a representative chapter or expand upstream Evidence. Representative-chapter graph expansion belongs to the later candidate-graph stage.",
+    "input_scope_policy": "Stage 12 prepares all 36 Development registry pages and extracts every accepted text Evidence not marked pending_review or context_only by Stage 6. Reviewed region-scoped text remains eligible; unverified table cells, formulas, figures and fragments stay excluded or context-only with source reasons. Stage 6 source-confirmed operation, classification and question groups supply bounded cross-Evidence context; adjacency never creates a group. The eight-page representative baseline remains a regression sample, and a prepared input does not claim complete Stage 6 semantic coverage.",
     "provider_config": "config/stage12_provider.json",
     "prompt": "config/stage12_prompt.txt",
     "provider_response_schema": "config/stage12_extraction_response.schema.json",
@@ -25,13 +25,18 @@
   },
   "architecture": {
     "pipeline": ["Evidence", "extraction_provider", "strict_structured_response", "Candidate Engineering Statement", "deterministic_validation", "Stage 12 Candidate Output"],
-    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. The LLM returns one or more independently retrievable statement texts per Evidence, bounded statement type, coarse relation, source-grounded entity wording with roles, true condition wording and applicability wording only. A statement is split when its proposition independently enters the graph, retrieval and answer support; shared scope, ordering and causal context must remain source-grounded. Deterministic code derives quantity, unit, comparison, negation, modality and relation direction from the returned statement text; it supplies fixed protocol constants and candidate entity class. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
+    "provider_boundary": "The production extraction provider is LLM Candidate Extraction. Evidence and Candidate Statements are many-to-many: every extractable Evidence returns zero, one or more medium-grained statement texts; zero requires a brief auditable no_statement reason, and one Statement may bind multiple source-confirmed Evidence records. It returns bounded statement type, one primary coarse predicate, source-grounded entity wording with roles, true condition wording and applicability wording only. A statement is split only when its proposition independently enters graph retrieval, applicability judgment and answer support; shared acceptance criteria, scope, ordering and causal context remain together when splitting would lose engineering meaning. Deterministic code derives quantity, unit, comparison, negation, modality and relation direction from the returned statement text; it supplies fixed protocol constants and candidate entity class. Provider output is parsed strictly and then bound to canonical Evidence; it is never formal knowledge.",
     "production_provider": "external_llm",
     "fixture_policy": "Fixture is test/offline-only and cannot satisfy the formal Stage 12 extraction or quality gate.",
     "relation_vocabulary": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"],
+    "primary_predicate_policy": "Each Candidate Statement has exactly one primary coarse predicate. Multiple entity, Evidence, scope, quantity and source-group links are structural associations, not an independent Relation knowledge layer or a competing source of truth.",
+    "source_unit_coverage_ledger": "Each extraction response must carry a temporary source-unit coverage ledger that maps every identifiable proposition unit in the current Evidence to one or more Candidate items or to an explicit no_statement, continuation or quarantine disposition. Confirmed cross-Evidence context is reconciled separately through supporting_evidence_ids and source-group outcomes. The ledger is consumed only for coverage reconciliation, failure diagnosis and bounded retry; it is not persisted as formal knowledge, a Relation layer or a substitute for Stage 6 source-page coverage review.",
+    "validation_severity_policy": "Deterministic hard_error is limited to schema, identity and Evidence lineage, explicit quantity/unit/comparison changes, explicit prohibition or negation reversal, confirmed source-group membership errors and other reproducible high-confidence semantic changes. Normative-strength changes, causal or relation direction, character similarity, synonymy, complex clause boundaries, implicit subjects and granularity differences are needs_review signals when semantic equivalence depends on context; they do not by themselves exhaust provider retries or prove model error, but unresolved needs_review cannot satisfy the current quality gate or enter formal knowledge.",
     "unknown_applicability_policy": "known = exact wording is present in the statement and Evidence; temporal/lifecycle/activity scope is distinct from a true antecedent condition; unknown is not not_applicable; absent values are omitted or marked unknown",
   "deterministic_field_derivation": ["quantity", "unit", "comparison", "normative_modality", "negation", "relation_direction", "protocol_constants", "entity_class"],
-    "gold_exhaustive": false
+    "gold_exhaustive": false,
+    "non_exhaustive_gold_policy": "Development Gold is a non-exhaustive human reference. Raw matched-candidate precision is undefined for gating, and raw over-split or matched-field differences remain diagnostic until adjudicated. Evidence-supported Candidates absent from Gold are not automatically errors.",
+    "entity_anchor_policy": "subject_entities must contain at least one Evidence-grounded entity. If an explicit subject role is present, the adapter stably places the first subject at index 0 for the Stage 9 aboutEntity anchor. If no subject role is explicit, the first grounded entity remains the aboutEntity anchor with its source-supported role unchanged; no subject role is invented."
   },
   "extraction_order": ["entity_or_process", "state_phenomenon_parameter", "requirement_constraint_step", "applicability", "evidence_binding"],
   "profiles": {
@@ -55,13 +60,13 @@
     "raw_model_response_persisted": false,
     "strict_response_parser": "config/stage12_extraction_response.schema.json",
     "provider_failure_is_distinct_from_validation_failure": true,
-    "response_max_attempts": 3,
+    "response_max_attempts": 2,
     "transport_max_attempts": 3,
-    "per_evidence_cache": "var/model_runs/stage12/evidence; stores only fully validated structured candidates keyed by Evidence, profile, split, provider metadata, provider configuration, statement Contract, candidate schema, prompt, response schema and semantic source fingerprints; raw model responses are never persisted",
+    "per_evidence_cache": "var/model_runs/stage12/evidence; stores only fully validated structured candidates or a brief no_statement reason keyed by Evidence, Stage 6 source-confirmed group context, profile, split, provider metadata, provider configuration, statement Contract, candidate schema, prompt, response schema and semantic source fingerprints; raw model responses are never persisted",
     "cache_revalidation": "Cache hits still run deterministic validation. Cache key includes Evidence, Contract, Prompt and provider configuration fingerprints.",
     "no_silent_fixture_fallback": true,
-    "stale_cache_pruning": "scripts/build_stage12_candidates.py retains only current Development Evidence cache keys and removes stale or invalid JSON entries; changed Prompt, Schema or semantic source fingerprints require fresh real-provider extraction and are never re-keyed",
-    "run_record_pruning": "Only the latest completed Stage 12 batch record is retained under var/model_runs/stage12/batches",
+    "stale_cache_pruning": "scripts/build_stage12_candidates.py ignores and counts stale or invalid cache entries without deleting or re-keying them; changed Prompt, Schema or semantic source fingerprints require fresh real-provider extraction",
+    "run_record_pruning": "Historical Stage 12 batch records are not deleted automatically",
     "failure_summary": "data/stage12/stage12_real_llm_failure_summary.json; one current overwritten summary containing bounded transport, schema and semantic attempt events",
     "diagnostic_entrypoint": "scripts/diagnose_stage12_real_llm.py --limit 2"
   },
@@ -69,13 +74,14 @@
     "evaluator_version": "stage12-field-evaluator-v7",
     "fields": ["statement_semantic_correctness", "statement_boundary", "statement_type", "entity", "quantity", "unit", "comparison", "negation", "condition", "applicability_meaning", "relation", "relation_direction", "unsupported_addition", "evidence_grounding", "candidate_coverage"],
     "metric_layers": {
-      "statement_level": ["gold_statement_recall", "matched_candidate_precision", "boundary_correctness_matched", "over_split_count", "under_split_or_coverage_gap_count", "unsupported_candidate_count"],
+      "statement_level": ["gold_statement_recall", "boundary_correctness_matched", "over_split_count", "under_split_or_coverage_gap_count", "unsupported_candidate_count"],
       "matched_field_level": ["statement_type", "entity", "relation", "quantity", "negation", "condition", "applicability", "applicability_meaning", "relation_direction"],
       "safety": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_quantity_mismatch_count", "critical_polarity_error_count", "critical_relation_direction_error_count", "critical_omission_count", "critical_error_row_count"],
       "disagreement": ["model_error_count", "gold_error_count", "evaluator_error_count", "acceptable_semantic_equivalence_count", "ambiguous_needs_human_review_count", "boundary_disagreement_count", "adjudicated_information_coverage", "confirmed_noncritical_model_error_rate", "pending_review_count"]
     },
     "legacy_metric_policy": "statement_semantic_correctness is retained as historical exact Gold agreement and must not be interpreted as standalone semantic correctness; unmatched Gold rows are excluded from matched_field_accuracy.",
     "disagreement_policy": "Evaluator reports differences. gold_error, evaluator_error and acceptable_semantic_equivalence require explicit human adjudication and are never inferred solely from Candidate != Gold.",
+    "raw_metric_gate_policy": "Because Gold is non-exhaustive, raw precision, raw over-split counts and unadjudicated matched-field accuracy are observations only and are never hard exit gates.",
     "stop_tuning_rule": "A Development mismatch permits Prompt or production semantic changes only when it demonstrates a generalizable language or engineering rule that survives synthetic counterexamples. Evidence-supported, non-critical granularity disagreements enter adjudication and do not trigger sample-specific tuning.",
     "hard_safety_gate": ["evidence_binding_accuracy", "evidence_semantic_support_accuracy", "unsupported_addition_count", "unsupported_candidate_count", "critical_quantity_mismatch_count", "critical_polarity_error_count", "critical_relation_direction_error_count", "critical_omission_count", "critical_error_row_count"],
     "error_types": ["boundary_error", "statement_type_error", "entity_error", "relation_error", "quantity_error", "unit_error", "comparison_error", "negation_error", "condition_loss", "applicability_error", "relation_direction_error", "unsupported_claim", "duplicate_candidate", "over_split", "unmatched_candidate_review"],
@@ -90,13 +96,13 @@
     "promotion": "No candidate is promoted by evaluation; Stage 13 review and later Release stages own approval.",
     "minimum_observability": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_claim_count": 0, "provider_parse_failures_are_explicit": true, "real_llm_execution_required": true},
     "development_quality_gate": {
-      "policy_version": "stage12-development-gate-v2",
+      "policy_version": "stage12-development-gate-v3",
       "hard_safety": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_addition_count": 0, "unsupported_candidate_count": 0, "critical_quantity_mismatch_count": 0, "critical_polarity_error_count": 0, "critical_relation_direction_error_count": 0, "critical_omission_count": 0, "critical_error_row_count": 0},
-      "coverage": {"adjudicated_information_coverage": 0.95, "matched_candidate_precision": 0.9, "max_over_split_count": 3},
-      "matched_quality": {"statement_type": 0.95, "relation": 0.95, "quantity": 0.95, "negation": 0.95, "relation_direction": 0.95},
+      "coverage": {"adjudicated_information_coverage": 0.95},
+      "supported_candidates": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_addition_count": 0, "unsupported_candidate_count": 0},
       "adjudication": {"max_confirmed_critical_model_errors": 0, "max_confirmed_noncritical_model_error_rate": 0.1, "max_pending_review_count": 0},
-      "soft_observations": ["entity", "condition", "applicability", "applicability_meaning", "statement_boundary"],
-      "threshold_basis": "Conservative engineering minimums for safety, coverage and critical matched fields; not fitted to the current Development scores. Non-critical granularity fields remain observable and require adjudication rather than automatic failure."
+      "soft_observations": ["entity", "condition", "applicability", "applicability_meaning", "statement_boundary", "statement_type", "relation", "quantity", "negation", "relation_direction", "raw_over_split"],
+      "threshold_basis": "The gate uses adjudicated information coverage, Evidence support, zero pending adjudication and zero critical errors. Non-exhaustive-Gold precision, raw over-split and unadjudicated matched-field differences remain observable and require adjudication rather than automatic failure."
     },
     "acceptance_quality_gate": {
       "policy_version": "stage12-acceptance-gate-v2",

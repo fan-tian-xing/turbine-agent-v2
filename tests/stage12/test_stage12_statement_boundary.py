@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.apply_stage12_manual_adjudication import (
     LATEST_USER_ADJUDICATION_DECISIONS,
     _dedupe_preserving_order,
@@ -11,8 +13,14 @@ from turbine_kg.extraction.semantic import (
     HeuristicSemanticExtractor,
     _assemble_candidate,
     _classify_unmatched_candidate,
+    _validate_local_content_support,
+    _validate_local_quantity_meaning,
+    _validate_local_normative_meaning,
+    _negation_fields,
+    source_step_clause_coverage,
     to_stage9_runtime_payload,
     validate_candidate_against_evidence,
+    validate_evidence_candidate_coverage,
     validate_candidate_semantics,
 )
 
@@ -50,18 +58,142 @@ def test_current_gold_negation_is_source_grounded():
 
 def test_prompt_states_semantic_boundary_regression_examples():
     prompt = PROMPT.read_text(encoding="utf-8")
-    assert prompt.startswith("Stage 12 Candidate Extraction Prompt v18")
-    assert "semantically isomorphic" in prompt
-    assert "substantive difference" in prompt
-    assert "never decide the boundary by themselves" in prompt
-    assert "multiple entities" in prompt
-    assert "independently retrievable" in prompt
+    assert prompt.startswith("阶段12 工程陈述候选抽取提示词 v30")
+    assert "最小完整回答单元" in prompt
+    assert "动作与它的方法、直接结果、验收标准" in prompt
+    assert "不同主体、可独立成立的动作或要求" in prompt
+    assert "多个实体" in prompt
+    assert "连续因果解释保留完整因果链" in prompt
+    assert "`predicate` 只表示整条 Statement 的主要粗粒度关系" in prompt
+    assert "source_unit_coverage" in prompt
+    assert "source_unit_ids" in prompt
     assert "60kPa左右" not in prompt
     assert "0.2～0.5mm" not in prompt
     assert "D300-style" not in prompt
-    assert "additional gating prerequisite" in prompt
-    assert "never upgrade `unknown` merely because the whole Evidence contains one scope-looking phrase" in prompt
-    assert "Relation direction follows structured semantics" in prompt
+    assert "真实的准入或成立前置条件" in prompt
+    assert "否则使用 `{" in prompt
+
+
+def test_numbered_items_inherit_explicit_governing_obligation_without_weakening():
+    source = "设备吊装和搬运应符合下列规定：1 吊点设置应正确；2 起吊绳与棱角垫好；3 设备平稳搬运。"
+    _validate_local_normative_meaning("起吊绳与棱角应垫好", source)
+    _validate_local_normative_meaning("设备应平稳搬运", source)
+    with pytest.raises(ValueError, match="normative modality"):
+        _validate_local_normative_meaning("起吊绳与棱角垫好", source)
+
+
+def test_quantity_target_swap_rejected_even_within_one_sentence():
+    source = "A管间隙应不小于10mm且B管间隙应不小于20mm"
+    with pytest.raises(ValueError, match="wrong source clause"):
+        _validate_local_quantity_meaning("A管间隙应不小于20mm且B管间隙应不小于10mm", source)
+
+
+def test_faithful_paraphrase_not_rejected_by_character_overlap():
+    _validate_local_content_support("阀门必须处于关闭状态。", "必须将阀门保持在关闭位置。", "requires")
+
+
+def test_causal_paraphrase_allowed_but_reversed_effect_rejected():
+    source = "轴系偏移会导致轴承振动增大。"
+    _validate_local_content_support("轴系偏移会造成轴承振动加剧。", source, "causes")
+    _validate_local_content_support("轴系偏移会使轴承振幅升高。", source, "causes")
+    with pytest.raises(ValueError, match="causal direction"):
+        _validate_local_content_support("轴系偏移会导致轴承振动减小。", source, "causes")
+
+
+def test_prohibitions_are_negative_constraints():
+    for text in ("阀门不允许开启", "禁止开启阀门", "严禁开启阀门"):
+        assert any(item["polarity"] == "negative" for item in _negation_fields(text))
+
+
+def test_step_coverage_cannot_lose_contrasting_action():
+    source = "打开阀门并检查油压；关闭阀门并检查油压。"
+    assert not source_step_clause_coverage(source, ["打开阀门并检查油压。"])
+    assert source_step_clause_coverage(source, ["打开阀门并检查油压。", "关闭阀门并检查油压。"])
+
+
+def test_scope_cannot_move_to_another_explicitly_scoped_subject():
+    evidence = _synthetic_evidence("在检修期间，A阀门应检查。启动前，B阀门应检查。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    candidate = _assemble_candidate({
+        "statement_text": "在检修期间，B阀门应检查。",
+        "statement_type": "requirement", "predicate": "requires",
+        "subject_entities": [{"surface_form": "B阀门", "role": "subject"}],
+        "conditions": [], "applicability_scope": {"status": "known", "applicability_text": "在检修期间"},
+    }, evidence, profile, "development_regression_golden", 1)
+    with pytest.raises(ValueError, match="different source proposition"):
+        validate_candidate_against_evidence(candidate, evidence)
+
+
+def test_scope_stays_with_its_own_sentence_even_without_second_local_scope():
+    evidence = _synthetic_evidence("在调试阶段，喷嘴应检查。轴承应加热。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    with pytest.raises(ValueError, match="appear in statement text"):
+        _assemble_candidate({
+            "statement_text": "轴承应加热。", "statement_type": "requirement", "predicate": "requires",
+            "subject_entities": [{"surface_form": "轴承", "role": "subject"}],
+            "conditions": [], "applicability_scope": {"status": "known", "applicability_text": "在调试阶段"},
+        }, evidence, profile, "development_regression_golden", 1)
+
+
+def test_reordered_scope_keeps_source_obligation():
+    evidence = _synthetic_evidence("在调试阶段，轴承应加热。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    candidate = _assemble_candidate({
+        "statement_text": "轴承在调试阶段应加热。", "statement_type": "requirement", "predicate": "requires",
+        "subject_entities": [{"surface_form": "轴承", "role": "subject"}],
+        "conditions": [], "applicability_scope": {"status": "known", "applicability_text": "在调试阶段"},
+    }, evidence, profile, "development_regression_golden", 1)
+    validate_candidate_against_evidence(candidate, evidence)
+
+
+@pytest.mark.parametrize("text,kind,predicate", [
+    ("喷嘴应加热。", "requirement", "requires"),
+    ("喷嘴加热。", "fact", "describes"),
+])
+def test_action_cannot_move_to_other_source_subject(text, kind, predicate):
+    evidence = _synthetic_evidence("喷嘴应清洗；轴承应加热。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    candidate = _assemble_candidate({
+        "statement_text": text, "statement_type": kind, "predicate": predicate,
+        "subject_entities": [{"surface_form": "喷嘴", "role": "subject"}],
+        "conditions": [], "applicability_scope": {"status": "unknown"},
+    }, evidence, profile, "development_regression_golden", 1)
+    with pytest.raises(ValueError, match="different source|combines subject"):
+        validate_candidate_against_evidence(candidate, evidence)
+
+
+def test_comma_linked_independent_obligations_keep_subject_action_pairs():
+    evidence = _synthetic_evidence("喷嘴应清洗，轴承应加热。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    candidate = _assemble_candidate({
+        "statement_text": "喷嘴应加热。", "statement_type": "requirement", "predicate": "requires",
+        "subject_entities": [{"surface_form": "喷嘴", "role": "subject"}],
+        "conditions": [], "applicability_scope": {"status": "unknown"},
+    }, evidence, profile, "development_regression_golden", 1)
+    with pytest.raises(ValueError, match="different source|combines subject"):
+        validate_candidate_against_evidence(candidate, evidence)
+
+
+def test_omitted_subject_can_be_restored_on_continuing_clause():
+    evidence = _synthetic_evidence("喷嘴应清洗；随后加热。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    candidate = _assemble_candidate({
+        "statement_text": "喷嘴随后加热。", "statement_type": "procedure", "predicate": "describes",
+        "subject_entities": [{"surface_form": "喷嘴", "role": "subject"}],
+        "conditions": [], "applicability_scope": {"status": "unknown"},
+    }, evidence, profile, "development_regression_golden", 1)
+    validate_candidate_against_evidence(candidate, evidence)
+
+
+def test_omitted_subject_with_repeated_obligation_is_not_a_cross_clause_error():
+    evidence = _synthetic_evidence("喷嘴应清洗，随后应加热。")
+    profile = ExtractionProfile("fixture", "fixture-profile", "standard_or_regulation", ())
+    candidate = _assemble_candidate({
+        "statement_text": "喷嘴应加热。", "statement_type": "requirement", "predicate": "requires",
+        "subject_entities": [{"surface_form": "喷嘴", "role": "subject"}],
+        "conditions": [], "applicability_scope": {"status": "unknown"},
+    }, evidence, profile, "development_regression_golden", 1)
+    validate_candidate_against_evidence(candidate, evidence)
 
 
 def test_causal_antecedent_is_not_duplicated_as_condition():
@@ -383,3 +515,35 @@ def test_reference_only_scope_matches_limitation_without_direct_applicability():
     )
     gold = {"statement_text": text, "document_logical_id": "synthetic-document", "physical_page": 1, "applicability_scope": {"status": "reference_only"}}
     assert _applicability_match(candidate, gold)
+
+
+def test_complete_normative_sentence_cannot_disappear_behind_definition():
+    evidence = _synthetic_evidence(
+        "2. s 为起重机跨度。6）起重机静载试验后，应针对主梁进行上拱测量。"
+        "将起重机小车移至极限位置，测量主"
+    )
+    definition = {"statement_text": "s 为起重机跨度。", "statement_type": "fact"}
+    with pytest.raises(ValueError, match="complete normative source clause"):
+        validate_evidence_candidate_coverage(evidence, [definition])
+    validate_evidence_candidate_coverage(evidence, [definition, {
+        "statement_text": "静载试验结束后须测量主梁上拱。", "statement_type": "requirement",
+    }])
+
+
+def test_complete_definition_cannot_disappear_behind_requirement():
+    evidence = _synthetic_evidence("s 为起重机跨度。起重机应测量主梁上拱。")
+    with pytest.raises(ValueError, match="complete definition source clause"):
+        validate_evidence_candidate_coverage(evidence, [{
+            "statement_text": "起重机应测量主梁上拱。", "statement_type": "requirement",
+        }])
+
+
+def test_evidence_coverage_ignores_intro_trailing_fragment_and_continuation():
+    evidence = _synthetic_evidence("检查应符合下列规定：将起重机小车移至极限位置，测量主")
+    validate_evidence_candidate_coverage(evidence, [])
+    continued = _synthetic_evidence("静载试验后，应测量主梁上拱。")
+    continued["operation_group_context"] = [{
+        "source_review_status": "confirmed",
+        "steps": [{"evidence_ids": ["earlier-evidence", continued["evidence_id"]]}],
+    }]
+    validate_evidence_candidate_coverage(continued, [])

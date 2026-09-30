@@ -53,8 +53,8 @@
       "document_logical_id": "doc-7a1d2e663bf13813d7b7",
       "asset_id": "asset-d146688100212c0aa1fe",
       "relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
-      "selection_reason": "The supplied scan is a complete 28-page PDF covering the printed body and appendices of DL/T 863—2016; use its generic thermal-power commissioning scope as a conditional reference and retain the local OCR derivative for later extraction.",
-      "selected_scope": "DL/T 863—2016 汽轮机启动调试导则, PDF pages 1-28, printed body pages 1-39",
+      "selection_reason": "The supplied DL/T 863—2016 scan has 28 physical pages but lacks 15 printed body pages. Use only source-visible pages as a conditional reference; retain the local OCR derivative for those pages.",
+      "selected_scope": "Supplied PDF physical pages 1-28 only; missing printed body pages 12, 14-23, 25, 27-29 (15 pages).",
       "applicability_scope": [
         "火力发电建设工程新建、扩建、改建机组",
         "汽轮机及其辅助设备分系统试运和整套启动试运",
@@ -64,10 +64,11 @@
       "text_adapter_status": "ocr_validated",
       "ocr_relative_path": "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf",
       "review_method": "Page-by-page visual review of all 28 PDF pages plus local OCR generation and key-page text check.",
-      "review_status": "scope_confirmed_ocr_page_comparison_passed_ocr_page_comparison_and_subagent_spot_check_passed",
+      "review_status": "source_gap_15_printed_pages_confirmed_available_pages_only",
       "blocking_open_reviews": 0,
       "stage2_registration_status": "complete",
-      "formal_extraction_status": "ready_for_stage3"
+      "formal_extraction_status": "ready_for_stage3_available_pages_only",
+      "source_completeness_boundary": "Extract Evidence only from self-contained content on supplied pages. Exclude unheaded continuation fragments after missing-page boundaries; independently complete later clauses remain eligible."
     },
     {
       "document_logical_id": "doc-2e6846eb4bb57309a4ee",

@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_reserve_freeze_manifest",
+  "freeze_status": "prepared_not_approved",
+  "formal_release": false,
+  "approval_token": null,
+  "provider_runtime_fingerprint": null,
+  "source_split": "acceptance_holdout_reserve",
+  "assets": {
+    "reserve_gold": {
+      "path": "data/stage12/stage12_reserve_gold.jsonl",
+      "sha256": "958ab49e6fe8b77bc82af649b4d057d73d5d51373b0fa5b567e4b67d1ecdd791"
+    },
+    "reserve_source_regions": {
+      "path": "data/stage12/stage12_reserve_source_regions.json",
+      "sha256": "c6b768595c5129f6c8fecba1b271dcbbea40db506eb44c74da873eb2b57f2194"
+    },
+    "reserve_gold_reviews": {
+      "path": "data/stage12/stage12_reserve_gold_reviews.json",
+      "sha256": "5c43f9eb5c6a9e28338dbd00ab609e823e570170f798761e6a2e927a5e29a0cb"
+    },
+    "reserve_consistency_audit": {
+      "path": "data/stage12/stage12_reserve_gold_audit.json",
+      "sha256": "ddc229c5e05676fdc5c8c86e90007fbadab88ca7ac2d431f37f9196ab31197cc"
+    },
+    "reserve_evidence": {
+      "path": "data/stage12/stage12_reserve_evidence.jsonl",
+      "sha256": "df333c322d19ffb6d3f6e0776b3ef65820a9de9417f5f992933ceab2b6822858"
+    },
+    "reserve_evidence_builder": {
+      "path": "scripts/build_stage12_reserve_evidence.py",
+      "sha256": "af4587fe71a9d2455562c32cd7cc3f3024602ad65c096728f38bdd65eeee5587"
+    },
+    "evaluation_sample_registry": {
+      "path": "data/stage11/evaluation_sample_registry.json",
+      "sha256": "4d7de2844dcdaf67680a16650a2fd002c6c2b776c44ee2e5da4c1ff8c0bbcf73"
+    },
+    "source_asset_registry": {
+      "path": "data/registry/source_assets.jsonl",
+      "sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897"
+    },
+    "profile_routing": {
+      "path": "config/stage12_profile_routing.json",
+      "sha256": "64a08b68124dc86a04c2f0d1185018d8807866ec41b95dc716972b4e2a876dff"
+    },
+    "stage12_contract": {
+      "path": "config/stage12_statement_contract.json",
+      "sha256": "69c13052bfe5d795033ddfc3e2a9645c37e51d6332f9cd85d4c983acb2004a70"
+    },
+    "extraction_prompt": {
+      "path": "config/stage12_prompt.txt",
+      "sha256": "69e880819106643f49ca53bd1d7ab0d8e1cd98f506497984faa07e8a6f89af55"
+    },
+    "response_schema": {
+      "path": "config/stage12_extraction_response.schema.json",
+      "sha256": "e856c12ae38096097c12874d64de31780ba3de504f621924d8543326060f39b5"
+    },
+    "candidate_schema": {
+      "path": "config/stage12_candidate.schema.json",
+      "sha256": "99c3221fdef4fed0bb59249be20c58dff884683b1733c9c74eb8f29807d53041"
+    },
+    "semantic_validation": {
+      "path": "src/turbine_kg/extraction/semantic.py",
+      "sha256": "c096da9c36b5eddb752973bee1970ea9269aed356bf2c5d8ac069a9834c18c49"
+    },
+    "llm_transport": {
+      "path": "src/turbine_kg/llm_client.py",
+      "sha256": "b1391e540f32d6358888e66a72b767cd14edb527c8191b92a86451eea236d11d"
+    },
+    "stage9_semantic_validation": {
+      "path": "src/turbine_kg/ontology/semantic.py",
+      "sha256": "90f6620373c8cd7cc2818e25fce631c2b15369af3dcaad0c6127e9667164d5de"
+    },
+    "stage9_runtime_schema": {
+      "path": "config/semantic_runtime.schema.json",
+      "sha256": "1cf14ceff2941c3900ae2d2344852ed035a49d91e9433c1e66bff5cc1bfa724a"
+    },
+    "stage9_ontology": {
+      "path": "ontology/stage9_core.ttl",
+      "sha256": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249"
+    },
+    "stage9_shapes": {
+      "path": "ontology/stage9_shapes.ttl",
+      "sha256": "b20b202d2672e81b9fbeb87e8853fd62a021baf7ccf5296152c33850b3c66656"
+    },
+    "stage8_imported_ontology": {
+      "path": "ontology/minimal_turbine.ttl",
+      "sha256": "c513ddbc2c5c167f3ec7d6af1b2d13349a432a318e00c014d06fb96724a25d34"
+    },
+    "canonicalization_logic": {
+      "path": "scripts/build_stage12_candidates.py",
+      "sha256": "28acfb621bc8a39d00958c80631b9eb8641865c67192faf67d26c8f3a1104397"
+    },
+    "provider_config": {
+      "path": "config/stage12_provider.json",
+      "sha256": "a5c588b72107b1233634705a1e9ab9fb28d3a60c467a91961e965dac7ae8b00c"
+    },
+    "reserve_runner": {
+      "path": "scripts/stage12_reserve_pipeline.py",
+      "sha256": "26a4d23537d4979b0bd14c5d1f68cd9aac508c7ef171b6da5bf3b70423971a50"
+    },
+    "reserve_evaluator": {
+      "path": "scripts/stage12_reserve_pipeline.py",
+      "sha256": "26a4d23537d4979b0bd14c5d1f68cd9aac508c7ef171b6da5bf3b70423971a50"
+    },
+    "gold_consistency_audit": {
+      "path": "scripts/build_stage12_reserve_gold.py",
+      "sha256": "e9ddb8f81a9876f6f6f621df7887130cbcf51130e14dc2480a896a8ece0b66b1"
+    },
+    "acceptance_gate": {
+      "path": "scripts/audit_stage12_exit.py",
+      "sha256": "aa28432d5c61bd7ef93e4c81e601bb2a744cc3c5151b1635b9cd8bdf72d3c443"
+    },
+    "stage12_exit_logic": {
+      "path": "scripts/audit_stage12_exit.py",
+      "sha256": "aa28432d5c61bd7ef93e4c81e601bb2a744cc3c5151b1635b9cd8bdf72d3c443"
+    }
+  },
+  "execution_policy": {
+    "real_provider_requires_human_approval": true,
+    "one_shot_only": true,
+    "candidate_must_remain_candidate_only": true,
+    "fixture_allowed_only_for_synthetic_evidence": true
+  },
+  "producer": "scripts/build_stage12_reserve_freeze_manifest.py"
+}

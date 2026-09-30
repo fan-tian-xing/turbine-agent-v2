@@ -13,7 +13,7 @@ tv2:EngineeringStatementShape a sh:NodeShape ;
   sh:property [ sh:path tv2:statementText ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:predicateLabel ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:objectAssertion ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
-  sh:property [ sh:path tv2:normativeModality ; sh:maxCount 1 ; sh:in ("shall" "must" "descriptive") ] ;
+  sh:property [ sh:path tv2:normativeModality ; sh:maxCount 1 ; sh:in ("shall" "must" "permitted" "recommended" "descriptive") ] ;
   sh:property [ sh:path tv2:subjectEntityLabels ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:negationScope ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:property [ sh:path tv2:conditionText ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
@@ -72,7 +72,10 @@ tv2:QuantityValueShape a sh:NodeShape ; sh:targetClass tv2:QuantityValue ;
   sh:property [ sh:path tv2:minimumValue ; sh:maxCount 1 ; sh:lessThanOrEquals tv2:maximumValue ] ;
   sh:property [ sh:path tv2:maximumValue ; sh:maxCount 1 ] ;
   sh:property [ sh:path tv2:unitSymbol ; sh:minCount 1 ; sh:maxCount 1 ;
-    sh:in ("mm" "m" "μm" "MW" "MPa" "kPa" "Pa" "%" "s" "Hz" "r/min" "℃") ] ;
+    sh:in ("mm" "m" "μm" "MW" "MPa" "kPa" "Pa" "%" "s" "Hz" "r/min" "℃"
+           "标准学时" "学时" "mmHg" "Ω" "t/h" "°C" "dB" "小时" "分钟" "min"
+           "圈" "次" "个" "台" "根" "件" "条" "项" "组" "°" "h" "1"
+           "kV" "kg" "bar" "千帕") ] ;
   sh:property [ sh:path tv2:quantityKindLabel ; sh:maxCount 1 ; sh:pattern "\\S" ] ;
   sh:xone (
     [ sh:property [ sh:path tv2:numericValue ; sh:minCount 1 ] ;

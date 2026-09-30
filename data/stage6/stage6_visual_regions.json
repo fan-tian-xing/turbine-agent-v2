@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_reviewed_visual_regions",
+  "review_basis": "original_pdf_visual_review",
+  "semantic_boundary": "Figure geometry and caption are citable visual context only; no unreviewed spatial relationship, dimension, or drawing value becomes a structured claim.",
+  "documents": {
+    "DL5190.3": {
+      "original_relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_relative_path": "DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组(OCR).pdf",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1"
+    },
+    "D300N": {
+      "original_relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_relative_path": "汽轮机本体安装及维护说明书(OCR).pdf",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee"
+    },
+    "auxiliary_installation_book": {
+      "original_relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_relative_path": "汽轮机辅机安装（第二版）(OCR).pdf",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145"
+    }
+  },
+  "regions": [
+    {
+      "region_id": "dl5190-p25-fig-4.5.8-1",
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "logical_page": "14",
+      "figure_label": "图4.5.8-1",
+      "figure_bbox_pdf_pt": [155, 120, 445, 277],
+      "caption": {"physical_page": 25, "logical_page": "14", "bbox_pdf_pt": [229.8, 283.3, 367.8, 293.4], "text": "图4.5.8-1 推力轴承调整机构详图"},
+      "existing_standard_region_id": "dl5190-p25-fig-4.5.8-1"
+    },
+    {
+      "region_id": "dl5190-p25-fig-4.5.8-2",
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "logical_page": "14",
+      "figure_label": "图4.5.8-2",
+      "figure_bbox_pdf_pt": [205, 344, 405, 500],
+      "caption": {"physical_page": 25, "logical_page": "14", "bbox_pdf_pt": [238.8, 504.7, 358.8, 514.8], "text": "图4.5.8-2 金斯伯里推力轴承"},
+      "existing_standard_region_id": "dl5190-p25-fig-4.5.8-2"
+    },
+    {
+      "region_id": "dl5190-p25-fig-4.5.8-3",
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "logical_page": "14",
+      "figure_label": "图4.5.8-3",
+      "figure_bbox_pdf_pt": [177, 555, 435, 773],
+      "figure_text_anchor": {"bbox_pdf_pt": [319, 764.2, 375.6, 771], "text": "推力总间隙（X+Y）"},
+      "caption": {"physical_page": 26, "logical_page": "15", "bbox_pdf_pt": [211.8, 61.8, 385.9, 72], "text": "图4.5.8-3 双楔面、小岛型球座式推力轴承"},
+      "existing_standard_region_id": "dl5190-p25-fig-4.5.8-3"
+    },
+    {
+      "region_id": "dl5190-p86-fig-9.6.2",
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "logical_page": "75",
+      "figure_label": "图9.6.2",
+      "figure_bbox_pdf_pt": [185, 382, 410, 442],
+      "caption": {"physical_page": 86, "logical_page": "75", "bbox_pdf_pt": [211, 442.8, 386.5, 452.9], "text": "图9.6.2 密封瓦在瓦座内的轴向间隙示意图"},
+      "existing_standard_region_id": "dl5190-p86-fig-9.6.2"
+    },
+    {
+      "region_id": "dl5190-p113-fig-12.2.1",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "figure_label": "图12.2.1",
+      "figure_bbox_pdf_pt": [104.4, 511.92, 289.44, 679.38],
+      "caption": {"physical_page": 113, "logical_page": "102", "bbox_pdf_pt": [189.6, 685.6, 408.0, 695.8], "text": "图12.2.1 车轮轮缘内侧与工字钢轨道下翼缘边缘的间隙"},
+      "existing_standard_region_id": "dl5190-p113-fig-12.2.1"
+    },
+    {
+      "region_id": "d300n-p38-fig-2-10-1",
+      "document_key": "D300N",
+      "physical_page": 38,
+      "logical_page": "2-104",
+      "figure_label": "图2-10-1",
+      "figure_bbox_pdf_pt": [145, 165, 451, 310],
+      "caption": {"physical_page": 38, "logical_page": "2-104", "bbox_pdf_pt": [273.2, 362.7, 353.1, 376.6], "text": "图2-10-1"}
+    },
+    {
+      "region_id": "d300n-p38-fig-2-10-2",
+      "document_key": "D300N",
+      "physical_page": 38,
+      "logical_page": "2-104",
+      "figure_label": "图2-10-2",
+      "figure_bbox_pdf_pt": [209, 390, 405, 667],
+      "caption": {"physical_page": 38, "logical_page": "2-104", "bbox_pdf_pt": [279.2, 681.4, 359.6, 695.3], "text": "图2-10-2"}
+    },
+    {
+      "region_id": "aux-p300-fig-d-12",
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 300,
+      "logical_page": "291",
+      "figure_label": "图 D-12",
+      "figure_bbox_pdf_pt": [136.0, 355.0, 274.0, 505.0],
+      "figure_text_anchor": {"bbox_pdf_pt": [193.0, 409.0, 204.0, 421.0], "text": "F₁"},
+      "caption": {"physical_page": 300, "logical_page": "291", "bbox_pdf_pt": [187.5, 509.8, 214.2, 518.0], "text": "图 D-12"}
+    }
+  ]
+}

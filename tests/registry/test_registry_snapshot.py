@@ -39,22 +39,23 @@ def test_registry_counts_and_identity_contract():
     manual_findings = load_jsonl("source_manual_findings.jsonl")
     summary = json.loads((REGISTRY_ROOT / "source_registry_summary.json").read_text(encoding="utf-8"))
 
-    assert len(assets) == 48
+    assert len(assets) == 49
     assert len(documents) == 44
     assert summary["physical_asset_count"] == len(assets)
     assert summary["logical_document_count"] == len(documents)
     assert summary["admitted_source_count"] == sum(
         asset["admission_status"] == "admitted" for asset in assets
     )
+    admitted_document_ids = {
+        document["document_logical_id"]
+        for document in documents
+        if document["document_status"] == "admitted"
+    }
     expected_extractable_documents = {
         asset["document_logical_id"]
         for asset in assets
         if asset["text_adapter_status"] in {"native_text_available", "ocr_validated"}
-        and any(
-            other["document_logical_id"] == asset["document_logical_id"]
-            and other["admission_status"] == "admitted"
-            for other in assets
-        )
+        and asset["document_logical_id"] in admitted_document_ids
     }
     assert summary["independent_extractable_source_count"] == len(expected_extractable_documents)
     assert summary["text_adapter_status_counts"]["native_text_available"] >= 1
@@ -136,7 +137,7 @@ def test_registry_does_not_copy_source_text_or_historical_assets():
     for forbidden in ("旧demo", "quickpicture", "Graph Records", "blind_evaluation"):
         assert forbidden not in registry_text
     for forbidden_field in ("ocr_text", "raw_text", "source_text"):
-        assert forbidden_field not in registry_text
+        assert re.search(r'"' + forbidden_field + r'"\s*:', registry_text) is None
 
 
 def test_registry_schema_and_summary_are_valid_json():
@@ -210,6 +211,7 @@ def test_selected_ocr_derivatives_exist_have_unicode_text_and_pass_validation_ga
         "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf": (28, "汽轮机启动调试导则"),
         "OCR/汽轮机辅机安装（第二版）(OCR).pdf": (480, "汽轮机辅机安装"),
         "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf": (32, "核动力厂调试和运行安全规定"),
+        "OCR/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组(OCR).pdf": (141, "汽轮发电机组"),
     }
     missing = [
         relative_path
@@ -244,9 +246,17 @@ def test_selected_ocr_derivatives_exist_have_unicode_text_and_pass_validation_ga
         "doc-2e6846eb4bb57309a4ee",
     }
     assert all(
-        source["formal_extraction_status"] == "ready_for_stage3"
+        source["formal_extraction_status"] in {
+            "ready_for_stage3", "ready_for_stage3_available_pages_only"
+        }
         for source in selection["selected_sources"]
     )
+    dlt863 = next(
+        source for source in selection["selected_sources"]
+        if source["document_logical_id"] == "doc-7a1d2e663bf13813d7b7"
+    )
+    assert dlt863["formal_extraction_status"] == "ready_for_stage3_available_pages_only"
+    assert "15 pages" in dlt863["selected_scope"]
     assert all(
         source["text_adapter_status"] in {"native_text_available", "ocr_validated"}
         for source in selection["selected_sources"]
@@ -258,9 +268,14 @@ def test_selected_ocr_derivatives_exist_have_unicode_text_and_pass_validation_ga
         asset = assets_by_path[source["relative_path"]]
         document = documents[source["document_logical_id"]]
         assert asset["admission_status"] == "admitted"
-        assert document["document_status"] == "admitted"
-        assert document["open_review_count"] == 0
-        assert asset["completeness_status"] == "complete"
+        if source["document_logical_id"] == "doc-7a1d2e663bf13813d7b7":
+            assert document["document_status"] == "metadata_review_required"
+            assert asset["completeness_status"] == "incomplete"
+            assert source["formal_extraction_status"] == "ready_for_stage3_available_pages_only"
+        else:
+            assert document["document_status"] == "admitted"
+            assert document["open_review_count"] == 0
+            assert asset["completeness_status"] == "complete"
         assert asset["applicability_status"] == "confirmed"
         assert asset["external_processing_status"] != "not_assessed"
         assert asset["applicability_scope_structured"]
@@ -285,6 +300,10 @@ def test_controlled_ocr_derivative_relations_and_haf_excerpt_boundary():
             "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
             "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
         ),
+        (
+            "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+            "OCR/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组(OCR).pdf",
+        ),
     }
     actual_pairs = {
         tuple(relation["asset_paths"])
@@ -307,7 +326,8 @@ def test_controlled_ocr_derivative_relations_and_haf_excerpt_boundary():
         "complete",
     )
     assert haf_ocr["admission_status"] == "duplicate_or_derivative"
-    assert haf_ocr["text_adapter_status"] == "ocr_validated"
+    assert haf_original["text_adapter_status"] == haf_ocr["text_adapter_status"] == "native_text_available"
+    assert haf_original["sha256"] == haf_ocr["sha256"]
     selection = json.loads((REGISTRY_ROOT / "stage2_source_selection.json").read_text(encoding="utf-8"))
     haf_selection = next(
         source

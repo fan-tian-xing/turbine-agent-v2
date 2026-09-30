@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 
@@ -13,6 +14,10 @@ from evaluate_stage6_evidence import (
     validate_persisted_identity,
     validate_table_decision_binding,
 )
+from stage6_auxiliary_supplements import load_supplements as load_auxiliary_supplements
+from stage6_standard_supplements import load_supplements as load_standard_supplements
+from stage5_fingerprint import ocr_fingerprint
+from stage6_page_review_binding import current_stage5_bindings, input_bindings_match
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +36,37 @@ def _jsonl(path: str) -> list[dict]:
     ]
 
 
+def _ocr_review_complete(golden: dict, build_audit: dict) -> bool:
+    names = (
+        "ocr_review_standards.json",
+        "ocr_review_d300n_haf103.json",
+        "ocr_review_auxiliary.json",
+    )
+    try:
+        manifests = [(name, _json(name)) for name in names]
+        rows = [row for _, data in manifests for row in data["pages"]]
+        expected = {(row["document_key"], int(row["physical_page"])): row for row in golden["records"]}
+        assets = {row["asset_id"]: row for row in _jsonl("../registry/source_assets.jsonl")}
+        actual = {(row["document_key"], int(row["physical_page"])) for row in rows}
+        if len(rows) != len(actual) or actual != set(expected) or len(expected) != golden["sample_page_count"]:
+            return False
+        if any(
+            (row["document_key"], int(row["physical_page"])) not in expected
+            or row["original_pdf_sha256"] != assets[expected[(row["document_key"], int(row["physical_page"]))]["original_asset_id"]]["sha256"]
+            or row["ocr_text_status"] not in {"verified", "corrected"}
+            or row["nontext_status"] not in {"none", "region_recorded"}
+            for row in rows
+        ):
+            return False
+        lineage = build_audit.get("ocr_review_inputs", {})
+        return all(
+            lineage.get(name) == hashlib.sha256((STAGE6 / name).read_bytes()).hexdigest()
+            for name in names
+        )
+    except (KeyError, TypeError, ValueError, OSError):
+        return False
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -44,6 +80,10 @@ def main(argv: list[str] | None = None) -> None:
     text_audit = _json("stage6_evidence_build_audit.json")
     quality_audit = _json("stage6_evidence_quality_audit.json")
     table_audit = _json("stage6_table_evidence_audit.json")
+    source_input_fingerprint, _ = ocr_fingerprint()
+    current_inputs = current_stage5_bindings(ROOT, source_input_fingerprint)
+    if not input_bindings_match((golden, text_audit, quality_audit, table_audit), current_inputs):
+        raise SystemExit("Stage 6 source inputs are stale; actual revalidation is required before exit")
     text_items = _jsonl("stage6_evidence_annotations.jsonl")
     table_items = _jsonl("stage6_table_evidence_annotations.jsonl")
     try:
@@ -57,6 +97,31 @@ def main(argv: list[str] | None = None) -> None:
     table_decisions = {
         row["review_id"]: row for row in _jsonl("stage6_table_review_decisions.jsonl")
     }
+    registry_findings = _jsonl("../registry/source_manual_findings.jsonl")
+    dlt863_finding = next(
+        row for row in registry_findings
+        if row.get("finding_id") == "manual-dlt863-page-review"
+    )
+    missing_printed_pages = dlt863_finding.get("missing_printed_body_pages", [])
+    supplemental_prose_pages = {
+        (row["document_key"], int(row["physical_page"]))
+        for row in _jsonl("stage6_page_review_decisions.jsonl")
+        if row.get("review_scope") == "outside_table_prose" and row.get("decision") == "accepted"
+    }
+    supplemental_table_text_pages = {
+        (row["document_key"], int(row["physical_page"]))
+        for row in _jsonl("stage6_page_review_decisions.jsonl")
+        if row.get("review_scope") == "reviewed_table_text_regions" and row.get("decision") == "accepted"
+    }
+    reviewed_standard_pages = {
+        (group["document_key"], int(group["physical_page"]))
+        for group in load_standard_supplements()["evidence_groups"]
+    }
+    reviewed_auxiliary_pages = {
+        ("auxiliary_installation_book", int(group["physical_page"]))
+        for group in load_auxiliary_supplements()["evidence_groups"]
+    }
+    semantic_coverage_audit = _json("stage6_semantic_coverage_audit.json")
 
     expected_text_pages = {
         (row["document_key"], int(row["physical_page"]))
@@ -89,7 +154,9 @@ def main(argv: list[str] | None = None) -> None:
 
     checks = {
         "golden_sample_has_36_pages": golden["sample_page_count"] == 36 == len(golden["records"]),
-        "text_page_scope_exact": actual_text_pages == expected_text_pages,
+        "text_page_scope_exact": actual_text_pages == expected_text_pages | supplemental_prose_pages | supplemental_table_text_pages | reviewed_standard_pages | reviewed_auxiliary_pages,
+        "supplemental_prose_only_on_table_pages": supplemental_prose_pages <= expected_table_pages,
+        "supplemental_table_text_only_on_table_pages": supplemental_table_text_pages <= expected_table_pages,
         "table_page_scope_exact": actual_table_pages == expected_table_pages,
         "negative_pages_not_promoted": not ((actual_text_pages | actual_table_pages) & expected_negative_pages),
         "all_text_evidence_accepted": bool(text_items) and all(row["evidence"]["review_status"] == "accepted" for row in text_items),
@@ -110,6 +177,8 @@ def main(argv: list[str] | None = None) -> None:
             for row in text_items + table_items
         ),
         "text_build_complete": text_audit["status"] == "complete",
+        "ocr_36_page_review_current_and_bound": _ocr_review_complete(golden, text_audit),
+        "whole_page_semantic_coverage_complete": semantic_coverage_audit.get("status") == "complete" and semantic_coverage_audit.get("stage12_input_allowed") is True,
         "evidence_quality_complete": (
             quality_audit["status"] == "complete"
             and all(quality_audit["checks"].values())
@@ -121,6 +190,10 @@ def main(argv: list[str] | None = None) -> None:
         "persisted_evidence_identity_and_text_hashes_recomputed": persisted_identity_ok,
         "table_review_decisions_bind_actual_bbox_headers_and_continuations": table_review_binding_ok,
         "stage7_consumer_reads_canonical_bundle": bool(loaded_canonical_items),
+        "source_missing_page_boundary_recorded": (
+            len(missing_printed_pages) == 15
+            and dlt863_finding.get("missing_printed_body_page_count") == 15
+        ),
     }
     failures = [name for name, passed in checks.items() if not passed]
     status = "complete" if not failures else "blocked"
@@ -131,6 +204,9 @@ def main(argv: list[str] | None = None) -> None:
         "status": status,
         "formal_release": False,
         "authority": "Original materials original PDF pages; OCR is processing assistance only",
+        "inputs": current_inputs,
+        "coverage_scope": "selected existing original PDF pages only; missing printed source pages are not reconstructed",
+        "dlt863_missing_printed_body_pages": missing_printed_pages,
         "golden_sample_page_count": len(golden["records"]),
         "accepted_text_page_count": len(actual_text_pages),
         "accepted_table_page_count": len(actual_table_pages),
@@ -165,6 +241,7 @@ def main(argv: list[str] | None = None) -> None:
             "The six formerly quarantined table pages are accepted only as seven region-scoped table Evidence records.",
             "No unreviewed table data cell is available for a structured numeric claim.",
             "Metadata, navigation and boundary-only pages remain negative gates.",
+            "DLT863 original PDF lacks 15 printed body pages; this record-quality exit does not assert document completeness.",
             "No Engineering Statement, ontology object, Neo4j formal projection or Release was created.",
         ],
         "next_stage_allowed": status == "complete",

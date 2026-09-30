@@ -1,0 +1,407 @@
+{
+  "schema_version": 1,
+  "stage": "6",
+  "artifact_kind": "stage6_semantic_coverage_audit",
+  "coverage_scope": "sampled_existing_original_pdf_pages_only; source-document missing pages are not reconstructed",
+  "status": "complete",
+  "stage12_input_allowed": true,
+  "inputs": {
+    "golden_sample": {
+      "path": "data/stage6/stage6_evidence_golden_sample.json",
+      "sha256": "0f83cf513773a4d494d040beef7ac6b87646b31c7da6c1189335a259d82e7b29"
+    },
+    "evidence_bundle": {
+      "path": "data/stage6/stage6_evidence_bundle.jsonl",
+      "sha256": "9b80080997cadf653d87289bcf61d279c6b3878efff4cff10771fc26f2ba5453"
+    },
+    "coverage_decisions": {
+      "path": "data/stage6/stage6_semantic_coverage_decisions.jsonl",
+      "sha256": "e957056691860b38c1540e31cd25c4f4c13ae301509eff5c17e8200539d7f240"
+    },
+    "source_structure_index": {
+      "path": "data/stage6/stage6_source_structure_index.json",
+      "sha256": "487d7915d2d6d44db92f6600e285e8cc6376069dec2381e0a7678ded7f0e7cff"
+    },
+    "source_review_overrides": {
+      "path": "data/stage6/stage6_source_review_overrides.json",
+      "sha256": "0af11b943156d75e4b3309ee5dbae5a63e0152b823763cbaa3a0a6ab59781a66"
+    },
+    "source_assets": {
+      "path": "data/registry/source_assets.jsonl",
+      "sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897"
+    },
+    "source_manual_findings": {
+      "path": "data/registry/source_manual_findings.jsonl",
+      "sha256": "5180b602e6cfa15e59c67e024b06e4dabe61a1dc5e2bab0e2c2f84c5b0821560"
+    }
+  },
+  "original_pdf_sha256": {
+    "DL5190.3": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+    "D300N": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+    "DLT863": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+    "HAF103": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+    "auxiliary_installation_book": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d"
+  },
+  "source_document_completeness": {
+    "DLT863": {
+      "status": "incomplete",
+      "missing_printed_body_pages": [
+        12,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        25,
+        27,
+        28,
+        29
+      ],
+      "missing_printed_body_page_count": 15
+    }
+  },
+  "page_count": 36,
+  "complete_page_count": 28,
+  "excluded_nonsemantic_page_count": 8,
+  "unresolved_page_count": 0,
+  "confirmed_gap_page_count": 0,
+  "excluded_incomplete_source_count": 5,
+  "unresolved_operation_group_count": 0,
+  "extractability_counts": {
+    "extractable": 322,
+    "context_only": 76,
+    "pending_review": 0
+  },
+  "page_results": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 1,
+      "eligibility": "metadata_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 14,
+      "eligibility": "structured_candidate",
+      "evidence_count": 11,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original body requirements and the page-end 3.2.6 fragment have local Evidence; the incomplete fragment is context-only."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "eligibility": "region_scoped",
+      "evidence_count": 5,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original requirements and three figure regions are represented; figure geometry remains visual-only, and the third caption is bound on physical page 26."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 42,
+      "eligibility": "structured_candidate",
+      "evidence_count": 3,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original complete clauses and opening continuation are represented; incomplete text remains context-only."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "eligibility": "region_scoped",
+      "evidence_count": 12,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original clauses and the axial-clearance diagram are represented; diagram geometry is visual-only and preceding-page context is retained."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "eligibility": "quarantined",
+      "evidence_count": 18,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original clauses, reviewed table region, Figure 12.2.1 and adjacent-page fragments are represented; individual table cells remain quarantined."
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 1,
+      "eligibility": "metadata_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 2,
+      "eligibility": "metadata_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "eligibility": "region_scoped",
+      "evidence_count": 2,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Both original engineering diagrams are represented as reviewed visual-only regions; false OCR strokes and unreadable label are excluded without inferred geometry."
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "eligibility": "quarantined",
+      "evidence_count": 11,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original page 50 table continuation is represented with page-49 item 6 source binding; items 7-9 and record-directory column remain separate, without inferred cell alignment."
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 73,
+      "eligibility": "structured_candidate",
+      "evidence_count": 4,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original six lubrication steps are represented under their headings; printed header, form sign-off and page number are excluded."
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 94,
+      "eligibility": "boundary_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 1,
+      "eligibility": "metadata_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 2,
+      "eligibility": "navigation_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "eligibility": "region_scoped",
+      "evidence_count": 31,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original clauses and seven dual-circuit steps plus the start of the six single-circuit steps are represented and source-indexed; navigation is excluded."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "eligibility": "region_scoped",
+      "evidence_count": 34,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "The six single-circuit steps continued from page 14 and independent hydrogen fill/vent lists are represented and source-indexed."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "eligibility": "quarantined",
+      "evidence_count": 67,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original introductory text and D.1 form labels/units are represented; blank design and measurement fields are not promoted as values."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "eligibility": "quarantined",
+      "evidence_count": 25,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original D.1 continuation and D.2 form headings, positions and printed speed are represented; blank measurement cells remain quarantined."
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "eligibility": "structured_candidate",
+      "evidence_count": 8,
+      "excluded_incomplete_source_count": 1,
+      "status": "complete",
+      "reason": "Original local clauses are represented; 2.1.2 is bound as one reviewed cross-page Evidence unit with page 2; footer excluded."
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "eligibility": "structured_candidate",
+      "evidence_count": 9,
+      "excluded_incomplete_source_count": 1,
+      "status": "complete",
+      "reason": "Original local clauses are represented; opening requirement is bound to page 10 through reviewed cross-page Evidence; footer excluded."
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "eligibility": "structured_candidate",
+      "evidence_count": 14,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original clauses and five 5.1.3 categories are represented and source-indexed; footer excluded."
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 16,
+      "eligibility": "structured_candidate",
+      "evidence_count": 9,
+      "excluded_incomplete_source_count": 1,
+      "status": "complete",
+      "reason": "Original local clauses are represented; opening sentence is bound to page 15 through reviewed cross-page Evidence; footer excluded."
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "eligibility": "quarantined",
+      "evidence_count": 6,
+      "excluded_incomplete_source_count": 1,
+      "status": "complete",
+      "reason": "Original definition prose, five-leaf table region and page-30 continuation are represented; table facts remain region-scoped and footer excluded."
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 32,
+      "eligibility": "structured_candidate",
+      "evidence_count": 2,
+      "excluded_incomplete_source_count": 1,
+      "status": "complete",
+      "reason": "Original local definitions are represented; opening continuation is bound to page 31 through reviewed cross-page Evidence; footer excluded."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 1,
+      "eligibility": "metadata_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 12,
+      "eligibility": "structured_candidate",
+      "evidence_count": 16,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original training rules are represented in 16 reviewed local regions; sidebar/footer excluded and incomplete page-end clause stays context-only."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 31,
+      "eligibility": "boundary_only",
+      "evidence_count": 0,
+      "excluded_incomplete_source_count": 0,
+      "status": "excluded_nonsemantic",
+      "reason": "Golden Sample original-page negative-gate decision"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 32,
+      "eligibility": "region_scoped",
+      "evidence_count": 14,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Six original marked-answer questions each have separately bound stem/options and source-indexed printed answer; no answer is inferred."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 64,
+      "eligibility": "structured_candidate",
+      "evidence_count": 8,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original complete questions and both boundary fragments are represented; incomplete fragments stay context-only and sidebar is excluded."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 120,
+      "eligibility": "structured_candidate",
+      "evidence_count": 16,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Eight original questions each have separately bound stem/options, printed-answer linkage and local source boxes; sidebar is excluded."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 180,
+      "eligibility": "structured_candidate",
+      "evidence_count": 4,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Four original QA units, condenser tasks, bearing categories and Q-η are represented in separate reviewed groups; sidebar excluded."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 244,
+      "eligibility": "structured_candidate",
+      "evidence_count": 11,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original body and acid-wash sequence are represented; adjacent-page continuation remains context-only and sidebar is excluded."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 300,
+      "eligibility": "region_scoped",
+      "evidence_count": 16,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original calculation problem, formula lines, 45.8℃ answer and Figure D-12 are represented; diagram dimensions remain visual-only."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "eligibility": "structured_candidate",
+      "evidence_count": 11,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original p360 question, both low/high vacuum answer paragraphs, source order, and p361 next-question boundary checked; all meaningful body regions represented and sidebar excluded."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 468,
+      "eligibility": "structured_candidate",
+      "evidence_count": 16,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original seven unmarked-answer questions are represented; question 7 continues on page 469, and no answer is inferred."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 480,
+      "eligibility": "quarantined",
+      "evidence_count": 15,
+      "excluded_incomplete_source_count": 0,
+      "status": "complete",
+      "reason": "Original prose requirements, seven-column table context and five printed data rows are represented; contradictory scores remain region-scoped."
+    }
+  ],
+  "errors": []
+}

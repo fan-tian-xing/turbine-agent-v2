@@ -1,0 +1,2690 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_original_pdf_quality_benchmark",
+  "audited_at": "2026-09-28",
+  "authority": "Original materials original PDF; scanned-page text is scored only against independent manual transcription",
+  "ocr_input_fingerprint": "709f84122c98f964064bfd57c675b2ba83eddffa8bba2e5f2893b8f236909701",
+  "fingerprint_components": {
+    "manifest_sha256": "65a37aa094348bb1126f8a6a60d578c5a5e20d298de519bc97f0e7c5a2a5a227",
+    "selected_assets": [
+      {
+        "asset_id": "asset-29ca16b111846e39aabf",
+        "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+        "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813"
+      },
+      {
+        "asset_id": "asset-b2076a7946b782881b44",
+        "relative_path": "OCR/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组(OCR).pdf",
+        "sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1"
+      },
+      {
+        "asset_id": "asset-ffc1d592a5b4e204578c",
+        "relative_path": "汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+        "sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9"
+      },
+      {
+        "asset_id": "asset-dfd1ea84bc8622cede86",
+        "relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+        "sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee"
+      },
+      {
+        "asset_id": "asset-d146688100212c0aa1fe",
+        "relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+        "sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb"
+      },
+      {
+        "asset_id": "asset-e82eacef4b82e06cf31c",
+        "relative_path": "OCR/DLT 863-2016汽轮机启动调试导则(OCR).pdf",
+        "sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7"
+      },
+      {
+        "asset_id": "asset-2e27a3f10284708e2d10",
+        "relative_path": "标准法规/HAF103核动力厂调试和运行安全规定.pdf",
+        "sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+      },
+      {
+        "asset_id": "asset-e4d060422e62fd656770",
+        "relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+        "sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+      },
+      {
+        "asset_id": "asset-115e242947e0a4b46ea5",
+        "relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+        "sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d"
+      },
+      {
+        "asset_id": "asset-6be125e4aa900f01e21b",
+        "relative_path": "OCR/汽轮机辅机安装（第二版）(OCR).pdf",
+        "sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145"
+      }
+    ],
+    "ocr_engine": "rapidocr_onnxruntime",
+    "ocr_engine_version": "1.4.4",
+    "render_dpi": 170,
+    "python_version": "3.12.14",
+    "script_sha256": {
+      "scripts/benchmark_stage5_rapidocr_sample.py": "3926948d8b70d02f71e1d1bc8af33ee48d88ddf9182c653214eda49f79b484e3",
+      "scripts/generate_ocr_pdf.py": "8c9f5e02f8f3c6e58803bddf1fbd1b142c9911706de17c92fd26d08730b0543d",
+      "scripts/stage5_fingerprint.py": "89cd572ebbb0db8c6f6d9dcead7e8769cb3cdb3fb7cff9f5cb31cf21f969afc4",
+      "pyproject.toml": "4674f123154612e8178445d104e5f47476c0b2eab99834132d902363c2906a3a",
+      "uv.lock": "2bf932c38009b0923393f37152a6332f6c37b4abd411829fc51790ea2ece2b44"
+    }
+  },
+  "baseline": "data/stage5/stage5_baseline_benchmark.json",
+  "truth_annotations": "data/stage5/stage5_truth_annotations_2026-09-28.json",
+  "inputs": {
+    "baseline_sha256": "1b5d13a21550ea0b4a4d7169aef0e3dda7516e9dc74f0405ca3ccbfe8605932a",
+    "truth_annotations_sha256": "0b71391ad1016a7630d1048b140a56b30bcffc038c7300f52abe6c717d097d4c",
+    "stage5_table_truth_review_sha256": "31c344012e42fa90b395dc8dbac142ed48198472faf8bb296ee731193c068984"
+  },
+  "sample_page_count": 36,
+  "engines": {
+    "reviewed_pdf": {
+      "scored_text_page_count": 29,
+      "visual_only_or_quarantined_page_count": 7,
+      "char_accuracy_mean": 1.0,
+      "critical_tokens": {
+        "numbers": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "units": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "negations": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        }
+      },
+      "native_geometry_scored_page_count": 12,
+      "bbox_iou_mean": 0.998567,
+      "reading_order_similarity_mean": 1.0,
+      "runtime": {
+        "total_seconds": 1.533728,
+        "mean_page_seconds": 0.042604,
+        "p95_page_seconds": 0.118643
+      }
+    }
+  },
+  "table_quality": {
+    "table_page_count": 6,
+    "cell_accuracy_scored_page_count": 0,
+    "cell_accuracy_status": "quarantined_not_scored",
+    "quarantine_coverage": "6/6"
+  },
+  "records": [
+    {
+      "document_key": "DL5190.3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "f07d7f511946f7d00b2d5a5907d75ba94e3cac324181b9e5eace40910eb62aaa",
+      "truth_scope": "structured_text",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.021324999979697168,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 200,
+          "candidate_char_count": 200,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 12,
+              "candidate_count": 12,
+              "matched_count": 12,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 9,
+              "candidate_count": 9,
+              "matched_count": 9,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 57,
+          "candidate_box_count": 57,
+          "matched_box_count": 57,
+          "bbox_iou_mean": 0.9828,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "physical_page": 14,
+      "categories": [
+        "ordinary_text",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "24114ec7e7f14615ffceaa482427e2608c52b9f6fae8696a5cad1f1a3a098e20",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.012464200030080974,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 1102,
+          "candidate_char_count": 1102,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 51,
+              "candidate_count": 51,
+              "matched_count": 51,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 5,
+              "candidate_count": 5,
+              "matched_count": 5,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 44,
+          "candidate_box_count": 44,
+          "matched_box_count": 44,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "physical_page": 25,
+      "categories": [
+        "figure",
+        "caption",
+        "bbox"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "ac96f9cf8ba82aecb6ba3cecf0c2c7db4609bee22512f0530afc82bdcc52b099",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.13238189998082817,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 457,
+          "candidate_char_count": 457,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 68,
+              "candidate_count": 68,
+              "matched_count": 68,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 8,
+              "candidate_count": 8,
+              "matched_count": 8,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 16,
+          "candidate_box_count": 75,
+          "matched_box_count": 16,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "physical_page": 42,
+      "categories": [
+        "dense_clause_text",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "3ceb4d20e458cfbcc6ee05a6c9eb8e9226df3299eaf55febcd932f428355768b",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.0042628999799489975,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 1079,
+          "candidate_char_count": 1079,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 69,
+              "candidate_count": 69,
+              "matched_count": 69,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 7,
+              "candidate_count": 7,
+              "matched_count": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 47,
+          "candidate_box_count": 47,
+          "matched_box_count": 47,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "physical_page": 86,
+      "categories": [
+        "dense_clause_text",
+        "complex_layout"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "8792c6554114fecc48d11b2a1d406a50e2e31bb1dde065cae858e0eaea57e078",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.005462400033138692,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 1166,
+          "candidate_char_count": 1166,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 52,
+              "candidate_count": 52,
+              "matched_count": 52,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 5,
+              "candidate_count": 5,
+              "matched_count": 5,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 4,
+              "candidate_count": 4,
+              "matched_count": 4,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 44,
+          "candidate_box_count": 45,
+          "matched_box_count": 44,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DL5190.3",
+      "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "physical_page": 113,
+      "categories": [
+        "figure",
+        "caption",
+        "table",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "14f69e9012d987afcf237e0b070e1e40693a5ba5191e133becf1840a29f699d7",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.0049588000401854515,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 49,
+          "candidate_box_count": 51,
+          "matched_box_count": 49,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": {
+        "document_key": "DL5190.3",
+        "physical_page": 113,
+        "logical_page": "102",
+        "role": "table_with_merged_cells_and_figure",
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 2,
+        "header_structure": "表12.1.15含合并单元格；页面下方另有图12.2.1及图注，必须分成独立版面区域",
+        "continuation": null,
+        "finding": "原始页视觉复核确认存在真实两叶列表格，左列为静态刚性说明，右列为低/中/高定位精度要求；包含S/500、S/750、S/1000等关键值。表格与下方图示不得合并为单一文本证据，后续Evidence仍应以原页坐标和人工单元格标注为准。",
+        "original_asset_id": "asset-29ca16b111846e39aabf",
+        "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ]
+        },
+        "processing_asset_id": "asset-b2076a7946b782881b44",
+        "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ]
+        },
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "D300N",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "2e6f75ce914bea4cdf3e56fbdaf95afefb78a7148a2ed4b86c20fe54725f5b5f",
+      "truth_scope": "structured_text",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.1637777000432834,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 76,
+          "candidate_char_count": 76,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 7,
+              "candidate_count": 7,
+              "matched_count": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 3,
+              "candidate_count": 3,
+              "matched_count": 3,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "physical_page": 2,
+      "categories": [
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "1255833c18a736d8ca373de0e6395a2cf00c2b8cbf57a08a3f38ad46fd909e69",
+      "truth_scope": "structured_text",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.08410430001094937,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 29,
+          "candidate_char_count": 29,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "physical_page": 38,
+      "categories": [
+        "figure",
+        "caption",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "cc8c8f91641296320530472f5fcc8eeb81f0ef6d71e55b6f8dba0a00dd94983d",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.10627079999540001,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 71,
+          "candidate_char_count": 71,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 10,
+              "candidate_count": 10,
+              "matched_count": 10,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 3,
+              "candidate_count": 3,
+              "matched_count": 3,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "physical_page": 50,
+      "categories": [
+        "table",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "bc9f5666dc27f0451814c9cc4bfb79ef987aed3033ce445b294f0b7b1a3925dd",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.1126530000474304,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "document_key": "D300N",
+        "physical_page": 50,
+        "logical_page": "2-14-3",
+        "role": "continuation_table",
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 4,
+        "header_structure": "项号、工作内容、附图号、证明书目录",
+        "continuation": {
+          "continues_from_physical_page": 49,
+          "continues_to_physical_page": 51,
+          "label": "续表2-14-1"
+        },
+        "finding": "第6项尾部 g-i 及第7、8、9项；原始页与处理页可见内容一致。OCR文字层不作为单元格顺序权威。",
+        "original_asset_id": "asset-ffc1d592a5b4e204578c",
+        "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ]
+        },
+        "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+        "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ]
+        },
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "D300N",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "physical_page": 73,
+      "categories": [
+        "ordinary_text",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "f46c83fabc78f73974637609960e7c7a486bd23e51090b573a9e74b8adb591a0",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.08964569994714111,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 233,
+          "candidate_char_count": 233,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 11,
+              "candidate_count": 11,
+              "matched_count": 11,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 4,
+              "candidate_count": 4,
+              "matched_count": 4,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "D300N",
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "physical_page": 94,
+      "categories": [
+        "boundary_page",
+        "blank_or_low_text",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "3f2505bc2214a180fd96262ab1cdc614e9b8b8c744217d9a2169a25b6ba2ad4e",
+      "truth_scope": "structured_text",
+      "gate_disposition": "boundary_exception",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.06906529993284494,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 31,
+          "candidate_char_count": 31,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 4,
+              "candidate_count": 4,
+              "matched_count": 4,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "5175eb7c85705bffc7e4ca26eec15a8dec8396b8e33cc0f7f8453433740f1a7b",
+      "truth_scope": "structured_text",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.06642629997804761,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 142,
+          "candidate_char_count": 142,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 11,
+              "candidate_count": 11,
+              "matched_count": 11,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "physical_page": 2,
+      "categories": [
+        "contents",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "45ca5c9549f68b0babdaa68890d2036cdeb3c661c55ff15307f5b84f2446a21c",
+      "truth_scope": "structured_text",
+      "gate_disposition": "navigation_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.007119100075215101,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 417,
+          "candidate_char_count": 417,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 74,
+              "candidate_count": 74,
+              "matched_count": 74,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "physical_page": 14,
+      "categories": [
+        "ordinary_text",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "e12158eaed2e302413cc353a82139e44ee9dcf1cfb7853eaa2a4c7623295d1bc",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.00547600002028048,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 786,
+          "candidate_char_count": 786,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 24,
+              "candidate_count": 24,
+              "matched_count": 24,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 4,
+              "candidate_count": 4,
+              "matched_count": 4,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "physical_page": 15,
+      "categories": [
+        "dense_clause_text",
+        "negative_word_candidate",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "bc21203c6f5889885b9dda62739c34d6a6571897ccddbcff23d704a13e41a77e",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.005212899995967746,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 727,
+          "candidate_char_count": 727,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 26,
+              "candidate_count": 26,
+              "matched_count": 26,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 6,
+              "candidate_count": 6,
+              "matched_count": 6,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "DLT863",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "physical_page": 27,
+      "categories": [
+        "table",
+        "scan_page",
+        "numeric_and_unit"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "c53fec0d724e98937818838b3e4c4206d5a898a733a7e688ab28c1b326aeb61f",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.025303300004452467,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "document_key": "DLT863",
+        "physical_page": 27,
+        "logical_page": "38",
+        "role": "table_start",
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 12,
+        "header_structure": "锅炉、汽轮机、发电机三组；每组项目、单位、设计值、数值",
+        "continuation": {
+          "continues_to_physical_page": 28,
+          "label": "表D.1"
+        },
+        "finding": "表D.1起始页，原始页与处理页可见内容一致；OCR文字层不作为单元格顺序权威。",
+        "original_asset_id": "asset-d146688100212c0aa1fe",
+        "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        },
+        "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+        "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        },
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "DLT863",
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "physical_page": 28,
+      "categories": [
+        "continuation_table",
+        "boundary_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "91053315cf6e65604bc5cc6d86932adeacdb4daf12a1edc5fe43db78d2ee66a4",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.005724900052882731,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "document_key": "DLT863",
+        "physical_page": 28,
+        "logical_page": "39",
+        "role": "continuation_table_and_second_table",
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 12,
+        "header_structure": "上方表D.1续表；下方新表D.2为13个叶子列",
+        "continuation": {
+          "continues_from_physical_page": 27,
+          "label": "表D.1（续）"
+        },
+        "secondary_table": {
+          "label": "表D.2",
+          "leaf_column_count": 13
+        },
+        "finding": "必须把D.1续表和下方D.2分成两个表区域；原始页与处理页可见内容一致。",
+        "original_asset_id": "asset-d146688100212c0aa1fe",
+        "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        },
+        "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+        "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        },
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "HAF103",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "physical_page": 1,
+      "categories": [
+        "scope",
+        "document_identity",
+        "native_text_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "e2359447546423cb42b166a7864cb5c542dfb85db80f600c1614ce5ecfdd66ca",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.008802900090813637,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 388,
+          "candidate_char_count": 388,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 10,
+              "candidate_count": 10,
+              "matched_count": 10,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 21,
+          "candidate_box_count": 21,
+          "matched_box_count": 21,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "physical_page": 11,
+      "categories": [
+        "ordinary_text",
+        "negative_word_candidate",
+        "native_text_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "c584b7d59c1190fb22323d265583130f8a0f6acb9ec847192be29b954a87bc52",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.00217779993545264,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 498,
+          "candidate_char_count": 498,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 16,
+              "candidate_count": 16,
+              "matched_count": 16,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 23,
+          "candidate_box_count": 23,
+          "matched_box_count": 23,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "physical_page": 12,
+      "categories": [
+        "ordinary_text",
+        "negative_word_candidate",
+        "native_text_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "cb0951851b7c086d798fcad1bc45a546c89d511bd18a8bb14cf38ab0c1cf0d37",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.0021340999519452453,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 423,
+          "candidate_char_count": 423,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 20,
+              "candidate_count": 20,
+              "matched_count": 20,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 23,
+          "candidate_box_count": 23,
+          "matched_box_count": 23,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "physical_page": 16,
+      "categories": [
+        "dense_clause_text",
+        "native_text_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "97465b8066213c29856cfa226c4547c25ef18fa498cc892652f445a29b63f183",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.0022112999577075243,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 509,
+          "candidate_char_count": 509,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 16,
+              "candidate_count": 16,
+              "matched_count": 16,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 2,
+              "candidate_count": 2,
+              "matched_count": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 23,
+          "candidate_box_count": 23,
+          "matched_box_count": 23,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "HAF103",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "physical_page": 29,
+      "categories": [
+        "table",
+        "numeric_and_unit",
+        "native_text_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "1ef19aa450eed6c54d0799dd95752f5c7917c4db7e93cb5803953c642e261f51",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.0021147000370547175,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 27,
+          "candidate_box_count": 27,
+          "matched_box_count": 27,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": {
+        "document_key": "HAF103",
+        "physical_page": 29,
+        "logical_page": "31",
+        "role": "nested_header_table",
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 5,
+        "header_structure": "运行状态跨2列；事故工况跨3列；设计扩展工况跨最后2列",
+        "continuation": null,
+        "finding": "无跨页续表；原始页与处理页可见内容一致。",
+        "original_asset_id": "asset-2e27a3f10284708e2d10",
+        "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ]
+        },
+        "processing_asset_id": "asset-e4d060422e62fd656770",
+        "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ]
+        },
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    },
+    {
+      "document_key": "HAF103",
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "physical_page": 32,
+      "categories": [
+        "boundary_page",
+        "ordinary_text",
+        "native_text_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "ddfc5375b5dfda6404f5226d53b7e0bba13d7ae75c94f8c6ee3a6d45832a9e72",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.0007408999372273684,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 126,
+          "candidate_char_count": 126,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "scored_original_native_text_geometry",
+          "truth_box_count": 7,
+          "candidate_box_count": 7,
+          "matched_box_count": 7,
+          "bbox_iou_mean": 1.0,
+          "reading_order_similarity": 1.0
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 1,
+      "categories": [
+        "cover",
+        "document_identity",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "4ad6195dec70c3824a81f1881abb268dced37935a8c7b0b7ae3bbded839007d0",
+      "truth_scope": "structured_text",
+      "gate_disposition": "metadata_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.06593050004448742,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 95,
+          "candidate_char_count": 95,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 12,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "f0dfeec8a17bd111768ec427654fcebe97093bc895c546450c99be54951d9bc6",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.039039900060743093,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 392,
+          "candidate_char_count": 392,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 33,
+              "candidate_count": 33,
+              "matched_count": 33,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 31,
+      "categories": [
+        "blank_or_low_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "boundary_exception",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.021160800009965897,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 32,
+      "categories": [
+        "dense_clause_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "b700c874064b25d9ec2a6833d3f04e6fd6d5278ab798dab5fd1a96bf9bee7ee3",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.03510860004462302,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 378,
+          "candidate_char_count": 378,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 17,
+              "candidate_count": 17,
+              "matched_count": 17,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 25,
+              "candidate_count": 25,
+              "matched_count": 25,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 64,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "9b3cbc92e78227ae960b832232e2861d48e4469e365dd2b2d4fd197639a4e6e5",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.03936119994614273,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 490,
+          "candidate_char_count": 490,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 25,
+              "candidate_count": 25,
+              "matched_count": 25,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 33,
+              "candidate_count": 33,
+              "matched_count": 33,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 120,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "253b69b6c16d3a1f96b9c1eb932859bbfad56d571e9ddbf3b1a2a45f1059fb03",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.04030990006867796,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 549,
+          "candidate_char_count": 549,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 29,
+              "candidate_count": 29,
+              "matched_count": 29,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 21,
+              "candidate_count": 21,
+              "matched_count": 21,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 180,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "7143709fc761217aba35a15d5e0fc5f45d5de7f85ea25cc934e0dea62c94e44a",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.04872149997390807,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 560,
+          "candidate_char_count": 560,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 12,
+              "candidate_count": 12,
+              "matched_count": 12,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 4,
+              "candidate_count": 4,
+              "matched_count": 4,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 244,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "d27be65b74f7cfe0c9189b11358d39734bfed5f390b3ff36c99a74334088e461",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.11864260002039373,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 652,
+          "candidate_char_count": 652,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 20,
+              "candidate_count": 20,
+              "matched_count": 20,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 7,
+              "candidate_count": 7,
+              "matched_count": 7,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 300,
+      "categories": [
+        "figure",
+        "caption",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "7a58448052c4b1faf283a4772a7c3ce18d761444cca82f1ff7a8b904581ab403",
+      "truth_scope": "structured_text",
+      "gate_disposition": "region_scoped_only",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.049754700041376054,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 437,
+          "candidate_char_count": 437,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 28,
+              "candidate_count": 28,
+              "matched_count": 28,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 14,
+              "candidate_count": 14,
+              "matched_count": 14,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 360,
+      "categories": [
+        "dense_clause_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "bcc5c1c5298790b944db12a80cd3b40621c397a10bb28635bcd423e0e0384aeb",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.04946170002222061,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 577,
+          "candidate_char_count": 577,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 10,
+              "candidate_count": 10,
+              "matched_count": 10,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 3,
+              "candidate_count": 3,
+              "matched_count": 3,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 0,
+              "candidate_count": 0,
+              "matched_count": 0,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 468,
+      "categories": [
+        "ordinary_text",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "a86dda95696814f5c6a5f92e99502f1529888c50144dbf14bdcc0458c687edf4",
+      "truth_scope": "structured_text",
+      "gate_disposition": "structured_text_candidate",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.040719599928706884,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "scored",
+          "reference_char_count": 467,
+          "candidate_char_count": 467,
+          "edit_distance": 0,
+          "char_accuracy": 1.0,
+          "critical_tokens": {
+            "numbers": {
+              "reference_count": 25,
+              "candidate_count": 25,
+              "matched_count": 25,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "units": {
+              "reference_count": 12,
+              "candidate_count": 12,
+              "matched_count": 12,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            },
+            "negations": {
+              "reference_count": 1,
+              "candidate_count": 1,
+              "matched_count": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0
+            }
+          }
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": null
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "physical_page": 480,
+      "categories": [
+        "table",
+        "boundary_page",
+        "rotated_page",
+        "scan_page"
+      ],
+      "truth_reference_kind": "original_pdf_independent_visual_transcription",
+      "truth_reference_text_sha256": "f27fe017078940cafeb8c2c25facbb99b9dd0267b091b731ed480ab735210fe7",
+      "truth_scope": "visual_only_or_quarantined",
+      "gate_disposition": "quarantine_structured_ocr",
+      "runtime": {
+        "reviewed_pdf": {
+          "elapsed_seconds": 0.045701100025326014,
+          "operation": "current_pdf_text_and_geometry_extraction",
+          "coordinate_units": "display_pdf_points"
+        }
+      },
+      "text_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored",
+          "reason": "original_page_requires_visual_or_region_level_truth"
+        }
+      },
+      "layout_metrics": {
+        "reviewed_pdf": {
+          "status": "not_scored_scan_page_no_native_geometry"
+        }
+      },
+      "table_metrics": {
+        "document_key": "auxiliary_installation_book",
+        "physical_page": 480,
+        "logical_page": "471",
+        "role": "table",
+        "table_truth_status": "codex_reviewed_structural_truth",
+        "visible_content_match": true,
+        "leaf_column_count": 5,
+        "header_structure": "题型；鉴定等级2列；配分2列，二层表头",
+        "continuation": null,
+        "rotation_mapping": "original rotation=90; OCR derivative rotation=90; current page geometry measured; Evidence uses current original-page coordinates",
+        "finding": "选择、判断、简答/计算、绘图/论述、总计五行；无续表。",
+        "original_asset_id": "asset-115e242947e0a4b46ea5",
+        "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+        "original_page_geometry": {
+          "rotation": 90,
+          "mediabox": [
+            0.0,
+            0.0,
+            842.0399780273438,
+            595.4400024414062
+          ],
+          "cropbox": [
+            269.2909851074219,
+            0.0,
+            842.0399780273438,
+            397.0150146484375
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            397.0150146484375,
+            572.7490234375
+          ]
+        },
+        "processing_asset_id": "asset-6be125e4aa900f01e21b",
+        "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+        "processing_page_geometry": {
+          "rotation": 90,
+          "mediabox": [
+            0.0,
+            0.0,
+            842.0399780273438,
+            595.4400024414062
+          ],
+          "cropbox": [
+            269.2909851074219,
+            0.0,
+            842.0399780273438,
+            397.0150146484375
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            397.0150146484375,
+            572.7490234375
+          ]
+        },
+        "historical_rotation_mapping": {
+          "value": "original rotation=90; OCR derivative rotation=0; visual content retained, coordinate transform remains required",
+          "status": "superseded_old_derivative_geometry"
+        },
+        "cell_text_accuracy_status": "quarantined_not_scored"
+      }
+    }
+  ],
+  "errors": [],
+  "status": "complete_with_quarantine",
+  "boundaries": [
+    "Character and critical-token metrics are scored only where native PDF text or independent manual transcription is available and the Golden Sample disposition permits it.",
+    "Native-text pages additionally score geometry and reading-order similarity against original PDF word boxes.",
+    "Scanned-page text without independent transcription, scanned-page bbox truth and unresolved table cell text remain visual/region-level work; all such pages stay unscored or quarantined.",
+    "Runtime measures current PDF extraction, not the earlier OCR generation or external service cost."
+  ]
+}

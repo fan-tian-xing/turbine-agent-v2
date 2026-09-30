@@ -5,7 +5,7 @@
   "status": "active_for_stage12",
   "default_provider": "external_llm",
   "prompt": {
-    "version": "stage12-candidate-prompt-v18",
+    "version": "stage12-candidate-prompt-v30",
     "path": "config/stage12_prompt.txt"
   },
   "providers": {
@@ -24,7 +24,7 @@
       "permission_env": "LLM_ALLOW_EVIDENCE_SEND",
       "timeout_env": "LLM_TIMEOUT_SECONDS",
       "transport_max_attempts": 3,
-      "response_max_attempts": 3,
+      "response_max_attempts": 2,
       "transient_max_attempts": 2,
       "timeout_max_attempts": 1,
       "backoff_base_seconds": 1.0,

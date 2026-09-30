@@ -1,0 +1,569 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage11_source_rebinding_review",
+  "status": "review_complete",
+  "reviewed_at": "2026-09-29",
+  "reviewers": [
+    "stage8_contract",
+    "stage8_semantics",
+    "stage8_sources"
+  ],
+  "scope": "development_gold_source_migration_only",
+  "formal_release": false,
+  "historical_gold_modified": true,
+  "historical_review_rounds_modified": false,
+  "historical_user_adjudication_modified": false,
+  "reviewed_statement_count": 17,
+  "source_rebinding_approved_count": 17,
+  "requires_adjudication_count": 0,
+  "source_comparison": "same document, revision, original asset, physical page and typographic-normalized full source text; OCR/source span IDs and exact text hashes recorded separately",
+  "boundary": "Current development Gold is rebound to eligible Stage6 Evidence; p360 statement semantics are separately reviewed and hashed. Historical A/B and user adjudication records remain unchanged.",
+  "records": [
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance",
+      "sample_id": "stage11-dev-real-statement-d300n-p73-lift-clearance",
+      "document_key": "D300N",
+      "physical_page": 73,
+      "historical_statement_sha256": "c60c09a5459bc1555f3bb65ffbfb90b50fa19ef57854f4df29ff5d6aeb92a3f1",
+      "historical_evidence_id": "evidence-93fb6fefbfccb828c68c",
+      "current_evidence_id": "evidence-27b7e83ed259cd9d9813",
+      "historical_source_text_sha256": "88df64fd7623fea1c342af33478a79beea3a72a1e094b19e1106d9b79caf6895",
+      "current_source_text_sha256": "11fbe6ce6e459a4006e31c4db2caba4b5e36da5be2c0c60e134d38edfd11bcca",
+      "historical_source_span_ids": [
+        "span-b03e67b67ca2f7982f9f",
+        "span-1ff7863e2265b191b64c",
+        "span-d9a9383049700af1808c"
+      ],
+      "current_source_span_ids": [
+        "span-e7575a9f03802f333f0f",
+        "span-8e1426f9df1be61d8a44",
+        "span-03281d479beac6a9d4ad"
+      ],
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方确认现行原页与来源等价；用户确认4条均为条件性步骤，语气由shall改为descriptive，不作为必做检查。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "2e55e643b283cfbd6a763effb87806cf67f074a19a6a4f7834bc2c887b6c3108"
+    },
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance-s2",
+      "sample_id": "stage11-dev-real-statement-d300n-p73-lift-clearance",
+      "document_key": "D300N",
+      "physical_page": 73,
+      "historical_statement_sha256": "7d1bbe189bf6d16f9b9e2eecb45fb7f866a4d368af4f188d05021fc7d388056c",
+      "historical_evidence_id": "evidence-93fb6fefbfccb828c68c",
+      "current_evidence_id": "evidence-27b7e83ed259cd9d9813",
+      "historical_source_text_sha256": "88df64fd7623fea1c342af33478a79beea3a72a1e094b19e1106d9b79caf6895",
+      "current_source_text_sha256": "11fbe6ce6e459a4006e31c4db2caba4b5e36da5be2c0c60e134d38edfd11bcca",
+      "historical_source_span_ids": [
+        "span-b03e67b67ca2f7982f9f",
+        "span-1ff7863e2265b191b64c",
+        "span-d9a9383049700af1808c"
+      ],
+      "current_source_span_ids": [
+        "span-e7575a9f03802f333f0f",
+        "span-8e1426f9df1be61d8a44",
+        "span-03281d479beac6a9d4ad"
+      ],
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方确认现行原页与来源等价；用户确认4条均为条件性步骤，语气由shall改为descriptive，不作为必做检查。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "c92420f937bd3577ecd17c96804e16e377fd710f76b03d4471b1d95bb33127f2"
+    },
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance-s3",
+      "sample_id": "stage11-dev-real-statement-d300n-p73-lift-clearance",
+      "document_key": "D300N",
+      "physical_page": 73,
+      "historical_statement_sha256": "ad52ec641f62f1e04ce34af9666ab48132ee6ead898c6162935f5207eaed6164",
+      "historical_evidence_id": "evidence-93fb6fefbfccb828c68c",
+      "current_evidence_id": "evidence-27b7e83ed259cd9d9813",
+      "historical_source_text_sha256": "88df64fd7623fea1c342af33478a79beea3a72a1e094b19e1106d9b79caf6895",
+      "current_source_text_sha256": "11fbe6ce6e459a4006e31c4db2caba4b5e36da5be2c0c60e134d38edfd11bcca",
+      "historical_source_span_ids": [
+        "span-b03e67b67ca2f7982f9f",
+        "span-1ff7863e2265b191b64c",
+        "span-d9a9383049700af1808c"
+      ],
+      "current_source_span_ids": [
+        "span-e7575a9f03802f333f0f",
+        "span-8e1426f9df1be61d8a44",
+        "span-03281d479beac6a9d4ad"
+      ],
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方确认现行原页与来源等价；用户确认4条均为条件性步骤，语气由shall改为descriptive，不作为必做检查。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "6d2ba3a392117fcc36620829a53a8003564f21452e8559209a5714dade77953f"
+    },
+    {
+      "statement_id": "real-statement-d300n-p73-lift-clearance-s4",
+      "sample_id": "stage11-dev-real-statement-d300n-p73-lift-clearance",
+      "document_key": "D300N",
+      "physical_page": 73,
+      "historical_statement_sha256": "c3395938f41a3e73cc36628f44ae4c2800a13e31133998368bdd2dfc82a89fa0",
+      "historical_evidence_id": "evidence-93fb6fefbfccb828c68c",
+      "current_evidence_id": "evidence-27b7e83ed259cd9d9813",
+      "historical_source_text_sha256": "88df64fd7623fea1c342af33478a79beea3a72a1e094b19e1106d9b79caf6895",
+      "current_source_text_sha256": "11fbe6ce6e459a4006e31c4db2caba4b5e36da5be2c0c60e134d38edfd11bcca",
+      "historical_source_span_ids": [
+        "span-b03e67b67ca2f7982f9f",
+        "span-1ff7863e2265b191b64c",
+        "span-d9a9383049700af1808c"
+      ],
+      "current_source_span_ids": [
+        "span-e7575a9f03802f333f0f",
+        "span-8e1426f9df1be61d8a44",
+        "span-03281d479beac6a9d4ad"
+      ],
+      "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方确认现行原页与来源等价；用户确认4条均为条件性步骤，语气由shall改为descriptive，不作为必做检查。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "c620e358c3b10397227d90339fa44ece9bc2e0ddd8446ef1591d0348debc6465"
+    },
+    {
+      "statement_id": "real-statement-haf103-p1-scope",
+      "sample_id": "stage11-dev-real-statement-haf103-p1-scope",
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "historical_statement_sha256": "117557693cf727635fa4b2ae83c7861896510419052449741cf9943d60f4cb49",
+      "historical_evidence_id": "evidence-be6509fd8df673522604",
+      "current_evidence_id": "evidence-c6acb8c7c2c93053f9f1",
+      "historical_source_text_sha256": "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c",
+      "current_source_text_sha256": "e353e00c759d703f102e57c30bb38fd87e361e11ca0d98f436676a49e9b6bb6f",
+      "historical_source_span_ids": [
+        "span-de74b8674d912cbab928",
+        "span-7ee3d359d31d1f50b60e",
+        "span-78bf1d1bb60598e23967",
+        "span-68be67cab1947da6a617",
+        "span-739c0ed988bf5bfcf47e"
+      ],
+      "current_source_span_ids": [
+        "span-994766a473172e2c6719",
+        "span-2f2810cdb86fd67ff273",
+        "span-f0f2cbbf02b1f19217b8",
+        "span-a3d61143382da17a3590",
+        "span-a12f00db27036698da83"
+      ],
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "a2ba98d8ed65abb23f97d193442cfc3fc51ef64f2f224de18e704b5659e69c4d"
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06",
+      "sample_id": "stage11-dev-evidence-cd924809c0b4d4b4acc5",
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "historical_statement_sha256": "b99a17d7336786aa7abdd38f83a704ac1b22d6c384eab57a90c7045afe1f10a9",
+      "historical_evidence_id": "evidence-cd924809c0b4d4b4acc5",
+      "current_evidence_id": "evidence-7ef848a90097c69cfd16",
+      "historical_source_text_sha256": "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+      "current_source_text_sha256": "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+      "historical_source_span_ids": [
+        "span-e980d8b30fe999147347",
+        "span-0d55685c3baeb7bf36d7",
+        "span-5a29ee2102fff1fe3446"
+      ],
+      "current_source_span_ids": [
+        "span-5e17ed1273ea5e4d4eb9",
+        "span-f67211c28c8befda21a6"
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "shall",
+      "current_statement_sha256": "2a13c2e58231e4da7a861605cc9ee29a92f3bf586989c329776f4a76c254ec82"
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s2",
+      "sample_id": "stage11-dev-evidence-cd924809c0b4d4b4acc5",
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "historical_statement_sha256": "253176b5664c6ef608ab2780169b410c4c38c53b78b16f17a56ac7db68104ec7",
+      "historical_evidence_id": "evidence-cd924809c0b4d4b4acc5",
+      "current_evidence_id": "evidence-7ef848a90097c69cfd16",
+      "historical_source_text_sha256": "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+      "current_source_text_sha256": "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+      "historical_source_span_ids": [
+        "span-e980d8b30fe999147347",
+        "span-0d55685c3baeb7bf36d7",
+        "span-5a29ee2102fff1fe3446"
+      ],
+      "current_source_span_ids": [
+        "span-5e17ed1273ea5e4d4eb9",
+        "span-f67211c28c8befda21a6"
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "shall",
+      "current_statement_sha256": "25c5ee243726d71130505131fc6969fc007cdf1c264dc548fd9ef50f2a5a47ba"
+    },
+    {
+      "statement_id": "stage11-statement-5ef7104eda31c3578f06-s3",
+      "sample_id": "stage11-dev-evidence-cd924809c0b4d4b4acc5",
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "historical_statement_sha256": "bc137ea4efd65bb9a25f4375abc9a3a3be234c09607ec8ab018dad89a932b8a5",
+      "historical_evidence_id": "evidence-cd924809c0b4d4b4acc5",
+      "current_evidence_id": "evidence-7ef848a90097c69cfd16",
+      "historical_source_text_sha256": "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+      "current_source_text_sha256": "349f5b1be9ae8b5418852d92c04ed219059057d071de4e2b33129699deb5a70c",
+      "historical_source_span_ids": [
+        "span-e980d8b30fe999147347",
+        "span-0d55685c3baeb7bf36d7",
+        "span-5a29ee2102fff1fe3446"
+      ],
+      "current_source_span_ids": [
+        "span-5e17ed1273ea5e4d4eb9",
+        "span-f67211c28c8befda21a6"
+      ],
+      "original_asset_id": "asset-d146688100212c0aa1fe",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "shall",
+      "current_statement_sha256": "e02d603339b86daaa477b6b62654bd2039405fad5a169c473be44f22e4e48056"
+    },
+    {
+      "statement_id": "stage11-statement-5740cf642266fcd6feb4",
+      "sample_id": "stage11-dev-evidence-bb9c008b78e12b735d94",
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "historical_statement_sha256": "cd5c324795a082ae8c3394c00a86d9dd123e9b69babed5423bfe65ce0cf1d086",
+      "historical_evidence_id": "evidence-bb9c008b78e12b735d94",
+      "current_evidence_id": "evidence-ba1fbd27df4a955862ca",
+      "historical_source_text_sha256": "429869e1bf7e077a3f1e83070392ec6d59b9239a68c4c64c1021f02257bbaa2e",
+      "current_source_text_sha256": "7b425522eee854e0dd624e274d595931e444a1383d5da34485346536431905dd",
+      "historical_source_span_ids": [
+        "span-30d20a71616031d6234d",
+        "span-dd1579a00191f5612d77",
+        "span-5fb37995a6c065df8a2f"
+      ],
+      "current_source_span_ids": [
+        "span-e34b29cdf90697b36db2",
+        "span-a06c1cc6d58d623b5ef4",
+        "span-871d8cd6c0f443473d69"
+      ],
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "shall",
+      "current_statement_sha256": "f35693eb1d83364171d5e336ed78dc25be4542da52de6067943992e07abc990d"
+    },
+    {
+      "statement_id": "stage11-statement-7121ec273c465f8f2c6f",
+      "sample_id": "stage11-dev-evidence-97d1de6c7b49cdea31f8",
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "historical_statement_sha256": "76021974e4e467690b0f3ccb0c5f095ce230e5b6ed5ec639580e0fb82ba65ac0",
+      "historical_evidence_id": "evidence-97d1de6c7b49cdea31f8",
+      "current_evidence_id": "evidence-e5e2f0aa81b3c986b170",
+      "historical_source_text_sha256": "9038d7e2a19aab6c95a41dd73cd56aebf803b7976adf6c73fea9d621703e1d6a",
+      "current_source_text_sha256": "45bb53bc26f18586c64aae434b15049f19dd8683f511b3fc4242c607ff4f39aa",
+      "historical_source_span_ids": [
+        "span-0c6f811cda244f2a8f3d",
+        "span-5ada9b535655bf10d5d5",
+        "span-dcea7fbd367833952780"
+      ],
+      "current_source_span_ids": [
+        "span-e93531d6d06061d2f3f6",
+        "span-1a33103a3d91a33c3bd0",
+        "span-68ceb6f2fdd724d07184"
+      ],
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "shall",
+      "current_statement_sha256": "653ecb7be5c37566eaa22323f621c37a3d028e84c6898e80607171b0d4c9385d"
+    },
+    {
+      "statement_id": "stage11-statement-7121ec273c465f8f2c6f-s2",
+      "sample_id": "stage11-dev-evidence-97d1de6c7b49cdea31f8",
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "historical_statement_sha256": "2b8b262f3cff5760f0f0f6b980640c6811d38753831b0146ea7fa21715fa2cfa",
+      "historical_evidence_id": "evidence-97d1de6c7b49cdea31f8",
+      "current_evidence_id": "evidence-e5e2f0aa81b3c986b170",
+      "historical_source_text_sha256": "9038d7e2a19aab6c95a41dd73cd56aebf803b7976adf6c73fea9d621703e1d6a",
+      "current_source_text_sha256": "45bb53bc26f18586c64aae434b15049f19dd8683f511b3fc4242c607ff4f39aa",
+      "historical_source_span_ids": [
+        "span-0c6f811cda244f2a8f3d",
+        "span-5ada9b535655bf10d5d5",
+        "span-dcea7fbd367833952780"
+      ],
+      "current_source_span_ids": [
+        "span-e93531d6d06061d2f3f6",
+        "span-1a33103a3d91a33c3bd0",
+        "span-68ceb6f2fdd724d07184"
+      ],
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方核对当前原件物理页、同段正文、现行Evidence和旧Gold语义；仅来源ID/排版发生变化，旧Statement语义不变。",
+      "current_gold_bound": true,
+      "current_normative_modality": "shall",
+      "current_statement_sha256": "494fb99fe3b72e7a797ca0b2562fc99a276f665fb7ed17f3d37438965f1c6d82"
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813",
+      "sample_id": "stage11-dev-evidence-aa97a9ec78cf7cc57dc5",
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "historical_statement_sha256": "19741387c327c180d7c7d0317f112931db2eda424432dc1ae7b91ded01ab1f3d",
+      "historical_evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "current_evidence_id": "evidence-b2344c8b4d0ea55cd50d",
+      "historical_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "current_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "historical_source_span_ids": [
+        "span-f7c0364069032739d607",
+        "span-08afc36723ab330831ce",
+        "span-f08b9ba56b59a4851941",
+        "span-5f7a7e2af182135e2882",
+        "span-03d5371a8a5e09d2a327"
+      ],
+      "current_source_span_ids": [
+        "span-c77905630710d4f724a0"
+      ],
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "approved_answer",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "原件物理第360页La1F2010完整低真空答文已获阶段6可提取资格；三方复核原页与语义，现行Gold另记拆分审核。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "01c414521153174f7010eb094da5e885ef0c562f996bc695237f349a95ec1c5d",
+      "current_semantic_review_id": "stage11-current-gold-p360-La1F2010"
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s2",
+      "sample_id": "stage11-dev-evidence-aa97a9ec78cf7cc57dc5",
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "historical_statement_sha256": "db59ad721066248c06f4945fb5fe6a6e2f3db45d68dfa880f42964ecc5019333",
+      "historical_evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "current_evidence_id": "evidence-b2344c8b4d0ea55cd50d",
+      "historical_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "current_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "historical_source_span_ids": [
+        "span-f7c0364069032739d607",
+        "span-08afc36723ab330831ce",
+        "span-f08b9ba56b59a4851941",
+        "span-5f7a7e2af182135e2882",
+        "span-03d5371a8a5e09d2a327"
+      ],
+      "current_source_span_ids": [
+        "span-c77905630710d4f724a0"
+      ],
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "approved_answer",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "原件物理第360页La1F2010完整低真空答文已获阶段6可提取资格；三方复核原页与语义，现行Gold另记拆分审核。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "06010ca0c4e8ba803572ea2659d0fe69e4df8f344ea6fef9b1388aa7e8ea6f67",
+      "current_semantic_review_id": "stage11-current-gold-p360-La1F2010"
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s3",
+      "sample_id": "stage11-dev-evidence-aa97a9ec78cf7cc57dc5",
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "historical_statement_sha256": "0f92105798d0dbd39da9e5b454b5240febecf62235f006c5e2321a411324c0f0",
+      "historical_evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "current_evidence_id": "evidence-b2344c8b4d0ea55cd50d",
+      "historical_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "current_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "historical_source_span_ids": [
+        "span-f7c0364069032739d607",
+        "span-08afc36723ab330831ce",
+        "span-f08b9ba56b59a4851941",
+        "span-5f7a7e2af182135e2882",
+        "span-03d5371a8a5e09d2a327"
+      ],
+      "current_source_span_ids": [
+        "span-c77905630710d4f724a0"
+      ],
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "approved_answer",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "原件物理第360页La1F2010完整低真空答文已获阶段6可提取资格；三方复核原页与语义，现行Gold另记拆分审核。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "1275395fb60323a0dc8412f09a439766c195903e3bdec79da90e2203a132cce9",
+      "current_semantic_review_id": "stage11-current-gold-p360-La1F2010"
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s4",
+      "sample_id": "stage11-dev-evidence-aa97a9ec78cf7cc57dc5",
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "historical_statement_sha256": "1056f779c6c8401cb9d9ac04512a19b36c40776b7b23d90ee4115ba2e1a16170",
+      "historical_evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "current_evidence_id": "evidence-b2344c8b4d0ea55cd50d",
+      "historical_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "current_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "historical_source_span_ids": [
+        "span-f7c0364069032739d607",
+        "span-08afc36723ab330831ce",
+        "span-f08b9ba56b59a4851941",
+        "span-5f7a7e2af182135e2882",
+        "span-03d5371a8a5e09d2a327"
+      ],
+      "current_source_span_ids": [
+        "span-c77905630710d4f724a0"
+      ],
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "approved_answer",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "原件物理第360页La1F2010完整低真空答文已获阶段6可提取资格；三方复核原页与语义，现行Gold另记拆分审核。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "f21df9ef69bfe5cdfdb1abf818669320e1edcc1dc211400d777cb8179ab71c4b",
+      "current_semantic_review_id": "stage11-current-gold-p360-La1F2010"
+    },
+    {
+      "statement_id": "stage11-statement-a9ff60d2526222447813-s5",
+      "sample_id": "stage11-dev-evidence-aa97a9ec78cf7cc57dc5",
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "historical_statement_sha256": "75ea2cf0ebf0457cd0a67c7e8245cc6e68d2b18498fd9033c3657b2ba3d911d9",
+      "historical_evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
+      "current_evidence_id": "evidence-b2344c8b4d0ea55cd50d",
+      "historical_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "current_source_text_sha256": "9b1d29714ed577c742c1a4f6ce82b44c22526c7bf4bb5187816638f0b970d0ca",
+      "historical_source_span_ids": [
+        "span-f7c0364069032739d607",
+        "span-08afc36723ab330831ce",
+        "span-f08b9ba56b59a4851941",
+        "span-5f7a7e2af182135e2882",
+        "span-03d5371a8a5e09d2a327"
+      ],
+      "current_source_span_ids": [
+        "span-c77905630710d4f724a0"
+      ],
+      "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "approved_answer",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "原件物理第360页La1F2010完整低真空答文已获阶段6可提取资格；三方复核原页与语义，现行Gold另记拆分审核。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "337f2fd0f665d19a5096d3ad537cf44562c230c1345162ca0cfea0e42e36e314",
+      "current_semantic_review_id": "stage11-current-gold-p360-La1F2010"
+    },
+    {
+      "statement_id": "stage12-gold-scope-reference-only",
+      "sample_id": "stage11-dev-real-statement-haf103-p1-scope",
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "historical_statement_sha256": "7ceb1259c775ac3ad68f219ce2fb65fb7b0755112e4089bfc0ca5b0c53a017ff",
+      "historical_evidence_id": "evidence-be6509fd8df673522604",
+      "current_evidence_id": "evidence-c6acb8c7c2c93053f9f1",
+      "historical_source_text_sha256": "b59051531876de00f4b0855d606666d74bd9aec0e32610134703727f68d4481c",
+      "current_source_text_sha256": "e353e00c759d703f102e57c30bb38fd87e361e11ca0d98f436676a49e9b6bb6f",
+      "historical_source_span_ids": [
+        "span-de74b8674d912cbab928",
+        "span-7ee3d359d31d1f50b60e",
+        "span-78bf1d1bb60598e23967",
+        "span-68be67cab1947da6a617",
+        "span-739c0ed988bf5bfcf47e"
+      ],
+      "current_source_span_ids": [
+        "span-994766a473172e2c6719",
+        "span-2f2810cdb86fd67ff273",
+        "span-f0f2cbbf02b1f19217b8",
+        "span-a3d61143382da17a3590",
+        "span-a12f00db27036698da83"
+      ],
+      "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "source_text_typographically_equivalent": true,
+      "current_extractability": "extractable",
+      "current_evidence_role": "requirement_source",
+      "decision": "source_rebinding_approved",
+      "decision_reason": "三方确认现行原页与来源等价；用户确认可参照仅表示允许参考执行，保留适用范围说明并将shall改为descriptive。",
+      "current_gold_bound": true,
+      "current_normative_modality": "descriptive",
+      "current_statement_sha256": "ddf59072a70e502b41e6d652ce1104e5f341342a52a0fb7aabc2a7b6cfc3d3d6"
+    }
+  ],
+  "current_gold_updated_count": 17,
+  "user_adjudications": [
+    {
+      "decision_id": "stage11-d300n-p73-conditional-procedure-2026-09-29",
+      "source": "user_reply_in_current_thread",
+      "statement_ids": [
+        "real-statement-d300n-p73-lift-clearance",
+        "real-statement-d300n-p73-lift-clearance-s2",
+        "real-statement-d300n-p73-lift-clearance-s3",
+        "real-statement-d300n-p73-lift-clearance-s4"
+      ],
+      "decision": "Keep procedure with original conditions; change normative_modality from shall to descriptive; no unconditional inspection requirement.",
+      "old_modality": "shall",
+      "new_modality": "descriptive"
+    },
+    {
+      "decision_id": "stage11-haf103-p1-reference-only-2026-09-29",
+      "source": "user_reply_in_current_thread",
+      "statement_ids": [
+        "stage12-gold-scope-reference-only"
+      ],
+      "decision": "Keep limitation/limits_scope and original 可参照 wording; change normative_modality from shall to descriptive; no mandatory applicability.",
+      "old_modality": "shall",
+      "new_modality": "descriptive"
+    }
+  ]
+}

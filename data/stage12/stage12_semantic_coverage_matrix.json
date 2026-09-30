@@ -7,8 +7,8 @@
   "generator_version": "stage12-semantic-coverage-v2",
   "generator_sha256": "e9171e7bb34fcf611bb762bfa3aef5c2ad241d72e1b83c54fdff061b0e865cc9",
   "gold_artifact": "data/stage11/stage11_statement_development_samples.jsonl",
-  "gold_sha256": "afbfd629a1bd3cf810bbd811b6804077c3619d1cc988600d7cc25506220ef6f7",
-  "gold_statement_count": 40,
+  "gold_sha256": "11add32b3425660e04b6834b6eefe480b17a302b7e052a8e74a0a74bbd591c18",
+  "gold_statement_count": 46,
   "gold_exhaustive": false,
   "coverage": {
     "documents": {
@@ -22,21 +22,20 @@
       ]
     },
     "statement_type": {
-      "fact": 4,
-      "limitation": 2,
+      "fact": 10,
+      "limitation": 3,
       "procedure": 4,
-      "requirement": 30
+      "requirement": 29
     },
     "predicate": {
-      "causes": 4,
-      "describes": 4,
-      "limits_scope": 2,
-      "requires": 30
+      "causes": 8,
+      "describes": 6,
+      "limits_scope": 3,
+      "requires": 29
     },
     "normative_modality": {
-      "descriptive": 5,
-      "must": 1,
-      "shall": 34
+      "descriptive": 17,
+      "shall": 29
     },
     "quantity": {
       "statement_count": 6,
@@ -55,21 +54,21 @@
       }
     },
     "negation": {
-      "statement_count": 5
+      "statement_count": 6
     },
     "condition": {
       "statement_count": 6
     },
     "applicability": {
-      "statement_count": 40,
+      "statement_count": 46,
       "scope_key_counts": {
         "activity": 16,
-        "applicability_text": 12,
-        "document_key": 23,
+        "applicability_text": 18,
+        "document_key": 29,
         "equipment": 18,
-        "lifecycle_stage": 39,
+        "lifecycle_stage": 45,
         "model": 4,
-        "physical_page": 23,
+        "physical_page": 29,
         "status": 1
       },
       "status_counts": {
@@ -77,7 +76,7 @@
       }
     },
     "entity": {
-      "multi_entity_statement_count": 27,
+      "multi_entity_statement_count": 28,
       "maximum_entities_per_statement": 5
     }
   },

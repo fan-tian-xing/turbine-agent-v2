@@ -1,0 +1,1549 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_auxiliary_source_supplements",
+  "document_key": "auxiliary_installation_book",
+  "source_pdf_relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+  "source_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+  "page_size_pdf_points": [
+    397.015,
+    572.749
+  ],
+  "coordinate_system": "original_pdf_display_points_rotation_90",
+  "review_basis": "original_pdf_visual_review_2026-09-26",
+  "sample_physical_pages": [
+    1,
+    12,
+    31,
+    32,
+    64,
+    120,
+    180,
+    244,
+    300,
+    360,
+    468,
+    480
+  ],
+  "source_span_exclusions": [
+    {
+      "physical_page": 64,
+      "source_span_id": "span-122d22b83e467c7a24f8",
+      "bbox": [
+        364.65,
+        60.56,
+        374.83,
+        72.85
+      ],
+      "source_text": "选",
+      "reason": "vertical exam-bank navigation sidebar"
+    },
+    {
+      "physical_page": 64,
+      "source_span_id": "span-0f1741e509e3f6020c09",
+      "bbox": [
+        374.82,
+        58.87,
+        385.84,
+        70.73
+      ],
+      "source_text": "鉴",
+      "reason": "vertical exam-bank navigation sidebar"
+    },
+    {
+      "physical_page": 64,
+      "source_span_id": "span-fea2062465b37b72c16f",
+      "bbox": [
+        376.09,
+        69.45,
+        385.84,
+        80.05
+      ],
+      "source_text": "定",
+      "reason": "vertical exam-bank navigation sidebar"
+    },
+    {
+      "physical_page": 64,
+      "source_span_id": "span-9190dfd7b88f02068ff0",
+      "bbox": [
+        364.65,
+        79.62,
+        377.79,
+        90.22
+      ],
+      "source_text": "择",
+      "reason": "vertical exam-bank navigation sidebar"
+    },
+    {
+      "physical_page": 64,
+      "source_span_id": "span-cc01a8a772322326e002",
+      "bbox": [
+        375.67,
+        88.94,
+        386.27,
+        101.65
+      ],
+      "source_text": "题",
+      "reason": "vertical exam-bank navigation sidebar"
+    },
+    {
+      "physical_page": 64,
+      "source_span_id": "span-ae4dc3bff8947d301a51",
+      "bbox": [
+        365.5,
+        99.1,
+        375.25,
+        108.43
+      ],
+      "source_text": "题",
+      "reason": "vertical exam-bank navigation sidebar"
+    },
+    {
+      "physical_page": 64,
+      "source_span_id": "span-fb8b2444aeaae0e2c3f4",
+      "bbox": [
+        373.97,
+        99.95,
+        386.27,
+        110.55
+      ],
+      "source_text": "库",
+      "reason": "vertical exam-bank navigation sidebar"
+    }
+  ],
+  "ocr_corrections": [
+    {
+      "physical_page": 32,
+      "source_span_id": "span-7838b74dcaa314674dfb",
+      "bbox": [
+        82.58,
+        404.89,
+        344.76,
+        418.03
+      ],
+      "current_text": "(D)t=273.15xT",
+      "source_text": "(D)t=273.15×T",
+      "reason": "The original page prints a multiplication sign; retain the marked B answer unchanged."
+    }
+  ],
+  "marked_questions": [
+    {
+      "physical_page": 32,
+      "question_id": "La5A1001",
+      "answer_option": "A",
+      "answer_text": "mm",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 32,
+      "question_id": "La5A1002",
+      "answer_option": "A",
+      "answer_text": "矢量",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 32,
+      "question_id": "La5A1003",
+      "answer_option": "B",
+      "answer_text": "平行力",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 32,
+      "question_id": "La5A1004",
+      "answer_option": "B",
+      "answer_text": "T=t+273.15",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 32,
+      "question_id": "La5A1005",
+      "answer_option": "C",
+      "answer_text": "左旋和右旋",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 32,
+      "question_id": "La5A1006",
+      "answer_option": "C",
+      "answer_text": "760",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 64,
+      "question_id": "Lb4A3232",
+      "answer_option": "B",
+      "answer_text": "后弯",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 64,
+      "question_id": "Lb4A3233",
+      "answer_option": "A",
+      "answer_text": "5%~10%",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 64,
+      "question_id": "Lb4A3234",
+      "answer_option": "C",
+      "answer_text": "出口、入口",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 64,
+      "question_id": "Lb4A3235",
+      "answer_option": "C",
+      "answer_text": "机械密封",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 64,
+      "question_id": "Lb4A4236",
+      "answer_option": "C",
+      "answer_text": "25%",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 64,
+      "question_id": "Lb4A4237",
+      "next_question_id": "Lb4A4238",
+      "answer_option": "B",
+      "answer_text": "5%",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "J5A2624",
+      "answer_option": "D",
+      "answer_text": "60°",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "J5A2625",
+      "answer_option": "C",
+      "answer_text": "3/4",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "J5A3626",
+      "answer_option": "B",
+      "answer_text": "W、H",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "Jf5A4627",
+      "answer_option": "B",
+      "answer_text": "0.05~0.20",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "Jf4A1628",
+      "answer_option": "A",
+      "answer_text": "设置拖拉绳",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "J4A1629",
+      "answer_option": "C",
+      "answer_text": "6",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "Jf4A1630",
+      "answer_option": "A",
+      "answer_text": "坚韧的木板",
+      "review_status": "confirmed_original_page"
+    },
+    {
+      "physical_page": 120,
+      "question_id": "Jf4A2631",
+      "answer_option": "C",
+      "answer_text": "不足",
+      "review_status": "confirmed_original_page"
+    }
+  ],
+  "unmarked_questions": [
+    {
+      "physical_page": 468,
+      "question_number": 1,
+      "answer_option": null
+    },
+    {
+      "physical_page": 468,
+      "question_number": 2,
+      "answer_option": null
+    },
+    {
+      "physical_page": 468,
+      "question_number": 3,
+      "answer_option": null
+    },
+    {
+      "physical_page": 468,
+      "question_number": 4,
+      "answer_option": null
+    },
+    {
+      "physical_page": 468,
+      "question_number": 5,
+      "answer_option": null
+    },
+    {
+      "physical_page": 468,
+      "question_number": 6,
+      "answer_option": null
+    },
+    {
+      "physical_page": 468,
+      "question_number": 7,
+      "answer_option": null,
+      "continues_to_physical_page": 469
+    }
+  ],
+  "question_answer_groups": [
+    {
+      "physical_page": 180,
+      "question_id": "La5C3011",
+      "answer_starts": "答：火力发电厂的生产过程",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer"
+    },
+    {
+      "physical_page": 180,
+      "question_id": "La5C3012",
+      "answer_starts": "答：凝汽器的工作任务为",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer",
+      "numbered_items": 4
+    },
+    {
+      "physical_page": 180,
+      "question_id": "La5C3013",
+      "answer_starts": "答：在转速为某一定值的情况下",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer"
+    },
+    {
+      "physical_page": 180,
+      "question_id": "La5C4014",
+      "answer_starts": "答：根据滚动轴承固定时外圈的受力情况",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer",
+      "numbered_items": 3
+    },
+    {
+      "physical_page": 244,
+      "question_id": "Je4C3267",
+      "answer_starts": "答：（1）静泡的酸液配比",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer",
+      "numbered_items": 3
+    },
+    {
+      "physical_page": 244,
+      "question_id": "Je4C3268",
+      "answer_starts": "答：调整密封环径向间隙的方法",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer"
+    },
+    {
+      "physical_page": 244,
+      "question_id": "Je4C3269",
+      "answer_starts": "答：给水泵在检修时",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer"
+    },
+    {
+      "physical_page": 244,
+      "question_id": "Je4C3270",
+      "answer_starts": "答：低压加热器大法兰密封面泄漏",
+      "status": "pending_cross_page_context",
+      "group_kind": "question_answer"
+    },
+    {
+      "physical_page": 360,
+      "question_id": "La1F2009",
+      "answer_starts": "答：不论什么水泵",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer",
+      "numbered_items": 6
+    },
+    {
+      "physical_page": 360,
+      "question_id": "La1F2010",
+      "answer_starts": "答：汽轮机冲转前必须有一定的真空",
+      "status": "confirmed_original_page",
+      "group_kind": "question_answer"
+    }
+  ],
+  "classification_lists": [
+    {
+      "physical_page": 360,
+      "question_id": "La1F2009",
+      "status": "confirmed_original_page",
+      "source_total_items": 6,
+      "items": [
+        "流量",
+        "扬程",
+        "转速",
+        "轴功率",
+        "效率",
+        "比转速"
+      ],
+      "meaning": "parallel pump-performance parameter classes, not ordered procedure steps"
+    }
+  ],
+  "same_page_fragments": [
+    {
+      "physical_page": 12,
+      "source_key": "2.1.5",
+      "parts": [
+        "2.1.5高级技师：在取得技师职业资格的基础上累积不少于",
+        "350标准学时。"
+      ],
+      "complete_original_quote": "2.1.5 高级技师：在取得技师职业资格的基础上累积不少于350标准学时。",
+      "status": "confirmed_original_page_pending_multi_evidence_binding"
+    }
+  ],
+  "cross_page_fragments": [
+    {
+      "physical_page": 12,
+      "source_key": "2.4.1",
+      "local_quote": "培训目的：通过培训达到《职业技能鉴定规范》对本职",
+      "continues_to_physical_page": 13,
+      "continuation_quote": "业的知识和技能要求。",
+      "status": "pending_cross_page_evidence",
+      "reason": "No Stage 6 canonical Evidence on page 13 yet."
+    },
+    {
+      "physical_page": 64,
+      "source_key": "Lb4A3231",
+      "local_quote": "转速、叶轮尺寸的增大而（C）。",
+      "continues_from_physical_page": 63,
+      "status": "pending_cross_page_evidence",
+      "reason": "Question stem begins on page 63."
+    },
+    {
+      "physical_page": 64,
+      "source_key": "Lb4A4238",
+      "local_quote": "除氧器布置在高于给水泵入口14m（A）标高。",
+      "continues_to_physical_page": 65,
+      "continuation_quote": "（A）以上；（B）以下；（C）位置；（D）附近。",
+      "status": "pending_cross_page_evidence",
+      "reason": "Answer options begin on page 65."
+    },
+    {
+      "physical_page": 244,
+      "source_key": "Je4C3270",
+      "local_quote": "另一个原因是大法兰刚性不够而变",
+      "continues_to_physical_page": 245,
+      "continuation_quote": "形，可加焊筋板增加刚性，焊后用车床精加工密封面。",
+      "status": "pending_cross_page_evidence",
+      "reason": "Answer finishes on page 245."
+    },
+    {
+      "physical_page": 468,
+      "source_key": "sample_question_7",
+      "local_quote": "在水处理除盐系统里用作耐酸设备衬里",
+      "continues_to_physical_page": 469,
+      "status": "context_only_unmarked_answer",
+      "reason": "The sample question has a blank answer bracket."
+    }
+  ],
+  "formula_and_figure_regions": [
+    {
+      "physical_page": 300,
+      "region_id": "aux-p300-constant-volume-formula",
+      "region_kind": "formula",
+      "bbox": [
+        110,
+        126,
+        352,
+        292
+      ],
+      "layout_normalized_transcription": [
+        "p₁/T₁=p₂/T₂",
+        "T₂=p₂T₁/p₁",
+        "p₁=p_amb−H₁=760−50=710（mmHg）",
+        "p₂=p_amb−H₂=760−100=660（mmHg）",
+        "T₂=p₂T₁/p₁=660×(70+273.15)/710=318.98（K）",
+        "t₂=318.98−273.15=45.8（℃）"
+      ],
+      "transcription_note": "Six local SourceSpans linearize the original page's printed fractions with /; adjacency in p₂T₁ does not imply a printed multiplication sign. The original fraction geometry remains in the page image; no equation tree is asserted.",
+      "status": "region_scoped_text_bound_geometry_retained",
+      "not_a_source_span": true
+    },
+    {
+      "physical_page": 300,
+      "region_id": "aux-p300-t-section-d12",
+      "region_kind": "figure",
+      "bbox": [
+        128,
+        335,
+        275,
+        526
+      ],
+      "figure_label": "图D-12",
+      "verbatim_transcription": null,
+      "status": "visual_only_diagram_geometry_pending",
+      "not_a_source_span": true
+    }
+  ],
+  "reviewed_region_units": [
+    {
+      "unit_id": "aux-p300-equation-1",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        187,
+        128,
+        222,
+        142
+      ],
+      "source_text": "p₁/T₁=p₂/T₂",
+      "ocr_reference_text": "p₁/T₁=p₂/T₂",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_linearized_fraction"
+    },
+    {
+      "unit_id": "aux-p300-equation-2",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        181,
+        160,
+        226,
+        175
+      ],
+      "source_text": "T₂=p₂T₁/p₁",
+      "ocr_reference_text": "T₂=p₂(T₁/p₁)",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_linearized_fraction"
+    },
+    {
+      "unit_id": "aux-p300-pressure-1",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        117,
+        202,
+        261,
+        217
+      ],
+      "source_text": "p₁=p_amb−H₁=760−50=710（mmHg）",
+      "ocr_reference_text": "p₁=p_amb−H₁=760−50=710（mmHg）",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_linearized_formula"
+    },
+    {
+      "unit_id": "aux-p300-pressure-2",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        115,
+        217,
+        261,
+        231
+      ],
+      "source_text": "p₂=p_amb−H₂=760−100=660（mmHg）",
+      "ocr_reference_text": "p₂=p_amb−H₂=760−100=660（mmHg）",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_linearized_formula"
+    },
+    {
+      "unit_id": "aux-p300-temperature-1",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        111,
+        244,
+        291,
+        259
+      ],
+      "source_text": "T₂=p₂T₁/p₁=660×(70+273.15)/710=318.98（K）",
+      "ocr_reference_text": "T₂=p₂(T₁/p₁)=660×(70+273.15)/710=318.98（K）",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_linearized_fraction"
+    },
+    {
+      "unit_id": "aux-p300-temperature-2",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        136,
+        277,
+        246,
+        292
+      ],
+      "source_text": "t₂=318.98−273.15=45.8（℃）",
+      "ocr_reference_text": "t₂=318.98−273.15=45.8（℃）",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_linearized_formula"
+    },
+    {
+      "unit_id": "aux-p300-figure-caption",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2099",
+      "content_kind": "caption",
+      "bbox": [
+        186,
+        508,
+        216,
+        520
+      ],
+      "source_text": "图 D-12",
+      "ocr_reference_text": "图 D-12",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_caption"
+    },
+    {
+      "unit_id": "aux-p300-figure-legend",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2099",
+      "content_kind": "paragraph",
+      "bbox": [
+        65,
+        519,
+        296,
+        533
+      ],
+      "source_text": "C₁—面积为F₁部分的重心位置；C₂—面积为F₂部分的重心位置；C—T型等断面梁的重心",
+      "ocr_reference_text": "C₁—面积为F₁部分的重心位置；C₂—面积为F₂部分的重心位置；C—T型等断面梁的重心",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_visible_legend_only"
+    },
+    {
+      "unit_id": "aux-p300-question-2098",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        50,
+        355,
+        96
+      ],
+      "source_text": "Jd1D2098在某封闭容器内储存有气体，其真空度H₁=\n50mmHg，温度t₁=70℃，气压计读数p_amb为760mmHg。问将\n气体冷却到什么温度，方可使其真空度变成100mmHg？",
+      "ocr_reference_text": "Jd1D2098在某封闭容器内储存有气体，其真空度H₁=\n50mmHg，温度t₁=70℃，气压计读数p_amb为760mmHg。问将\n气体冷却到什么温度，方可使其真空度变成100mmHg？",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    },
+    {
+      "unit_id": "aux-p300-constant-volume-explanation",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        97,
+        355,
+        126
+      ],
+      "source_text": "解：在封闭容器内气体的状态变化过程是定容过程。在定\n容过程中",
+      "ocr_reference_text": "解：在封闭容器内气体的状态变化过程是定容过程。在定\n容过程中",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    },
+    {
+      "unit_id": "aux-p300-therefore",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        158,
+        90,
+        177
+      ],
+      "source_text": "即",
+      "ocr_reference_text": "即",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    },
+    {
+      "unit_id": "aux-p300-pressure-explanation",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        184,
+        355,
+        201
+      ],
+      "source_text": "式中p₁、p₂分别为原态、终态的绝对压力，即",
+      "ocr_reference_text": "式中p₁、p₂分别为原态、终态的绝对压力，即",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    },
+    {
+      "unit_id": "aux-p300-temperature-explanation",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        232,
+        355,
+        245
+      ],
+      "source_text": "代入计算T₂的公式中，得",
+      "ocr_reference_text": "代入计算T₂的公式中，得",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    },
+    {
+      "unit_id": "aux-p300-answer-2098",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2098",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        290,
+        355,
+        307
+      ],
+      "source_text": "答：需将气体冷却到45.8℃。",
+      "ocr_reference_text": "答：需将气体冷却到45.8℃。",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    },
+    {
+      "unit_id": "aux-p300-question-2099",
+      "physical_page": 300,
+      "source_question_key": "Jd1D2099",
+      "content_kind": "paragraph",
+      "bbox": [
+        40,
+        321,
+        355,
+        353
+      ],
+      "source_text": "Jd1D2099设有匀质T形断面梁，其截面尺寸如图D-12\n所示。试求此梁的重心位置。",
+      "ocr_reference_text": "Jd1D2099设有匀质T形断面梁，其截面尺寸如图D-12\n所示。试求此梁的重心位置。",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_text_region"
+    }
+  ],
+  "supplemental_prose": [
+    {
+      "unit_id": "aux-p480-6.1-heading",
+      "physical_page": 480,
+      "bbox": [
+        60,
+        141,
+        195,
+        153
+      ],
+      "source_text": "6.1 理论知识考试组卷方案",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-6.1-rule",
+      "physical_page": 480,
+      "bbox": [
+        61,
+        164,
+        346,
+        184
+      ],
+      "source_text": "技能鉴定理论知识试卷每卷不应少于五种题型，其题量为45～60题。试卷的题型与题量的分配，见下表。",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-advanced-note",
+      "physical_page": 480,
+      "bbox": [
+        61,
+        370,
+        346,
+        381
+      ],
+      "source_text": "高级技师的试卷，可根据实际情况参照技师试卷命题，综合性、论述性的内容比重加大。",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-6.2-heading",
+      "physical_page": 480,
+      "bbox": [
+        60,
+        408,
+        215,
+        429
+      ],
+      "source_text": "6.2 技能操作考核方案",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-6.2-rule-1",
+      "physical_page": 480,
+      "bbox": [
+        61,
+        437,
+        347,
+        457
+      ],
+      "source_text": "对于技能操作试卷，库内每一个工种的各技术等级下，应最少保证有5套试卷（考核方案），每套试卷应由2～3项典型操作或标准化作业组成，其选项内容互为补充，不得重复。",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-6.2-rule-2",
+      "physical_page": 480,
+      "bbox": [
+        61,
+        482,
+        347,
+        511
+      ],
+      "source_text": "技能操作考核由实际操作与口试或技术答辩两项内容组成，初、中级工实际操作加口试进行，技术答辩一般只在高级工、技师、高级技师中进行，并根据实际情况确定其组织方式和答辩内容。",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-chapter-title",
+      "physical_page": 480,
+      "bbox": [
+        40,
+        45,
+        355,
+        95
+      ],
+      "source_text": "6\n组卷方案",
+      "content_kind": "heading",
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-table-caption",
+      "physical_page": 480,
+      "bbox": [
+        40,
+        196,
+        355,
+        220
+      ],
+      "source_text": "试卷的题型与题量分配（组卷方案）表",
+      "content_kind": "caption",
+      "status": "confirmed_original_page"
+    }
+  ],
+  "table_cells": {
+    "table_id": "aux-p480-exam-composition",
+    "physical_page": 480,
+    "bbox": [
+      61,
+      222,
+      344,
+      362
+    ],
+    "x_grid": [
+      61,
+      124,
+      180,
+      236,
+      290,
+      344
+    ],
+    "y_grid": [
+      255,
+      280,
+      305,
+      320,
+      345,
+      362
+    ],
+    "caption": "试卷的题型与题量分配（组卷方案）表",
+    "printed_header": [
+      {
+        "text": "题型",
+        "columns": [
+          0
+        ]
+      },
+      {
+        "text": "鉴定工程等级",
+        "columns": [
+          1,
+          2
+        ]
+      },
+      {
+        "text": "配分",
+        "columns": [
+          3,
+          4
+        ]
+      },
+      {
+        "text": "初级、中级",
+        "columns": [
+          1
+        ]
+      },
+      {
+        "text": "高级工、技师",
+        "columns": [
+          2
+        ]
+      },
+      {
+        "text": "初级、中级",
+        "columns": [
+          3
+        ]
+      },
+      {
+        "text": "高级工、技师",
+        "columns": [
+          4
+        ]
+      }
+    ],
+    "column_labels": [
+      "题型",
+      "鉴定工程等级：初级、中级",
+      "鉴定工程等级：高级工、技师",
+      "配分：初级、中级",
+      "配分：高级工、技师"
+    ],
+    "rows": [
+      [
+        "选择",
+        "20题（1～2分/题）",
+        "20题（1～2分/题）",
+        "20～40",
+        "20～40"
+      ],
+      [
+        "判断",
+        "20题（1～2分/题）",
+        "20题（1～2分/题）",
+        "20～40",
+        "20～40"
+      ],
+      [
+        "简答/计算",
+        "5题（6分/题）",
+        "5题（5分/题）",
+        "30",
+        "25"
+      ],
+      [
+        "绘图/论述",
+        "1题（10分/题）",
+        "1题（5分/题）\n2题（10分/题）",
+        "10",
+        "15"
+      ],
+      [
+        "总计",
+        "45～55",
+        "47～60",
+        "100",
+        "100"
+      ]
+    ],
+    "status": "confirmed_original_page_cells_pending_canonical_evidence"
+  },
+  "evidence_groups": [
+    {
+      "group_id": "aux-p480-exam-row-0",
+      "physical_page": 480,
+      "row_index": 2,
+      "source_unit_ids": [
+        "aux-p480-exam-composition-r0-c0",
+        "aux-p480-exam-composition-r0-c1",
+        "aux-p480-exam-composition-r0-c2",
+        "aux-p480-exam-composition-r0-c3",
+        "aux-p480-exam-composition-r0-c4"
+      ]
+    },
+    {
+      "group_id": "aux-p480-exam-row-1",
+      "physical_page": 480,
+      "row_index": 3,
+      "source_unit_ids": [
+        "aux-p480-exam-composition-r1-c0",
+        "aux-p480-exam-composition-r1-c1",
+        "aux-p480-exam-composition-r1-c2",
+        "aux-p480-exam-composition-r1-c3",
+        "aux-p480-exam-composition-r1-c4"
+      ]
+    },
+    {
+      "group_id": "aux-p480-exam-row-2",
+      "physical_page": 480,
+      "row_index": 4,
+      "source_unit_ids": [
+        "aux-p480-exam-composition-r2-c0",
+        "aux-p480-exam-composition-r2-c1",
+        "aux-p480-exam-composition-r2-c2",
+        "aux-p480-exam-composition-r2-c3",
+        "aux-p480-exam-composition-r2-c4"
+      ]
+    },
+    {
+      "group_id": "aux-p480-exam-row-3",
+      "physical_page": 480,
+      "row_index": 5,
+      "source_unit_ids": [
+        "aux-p480-exam-composition-r3-c0",
+        "aux-p480-exam-composition-r3-c1",
+        "aux-p480-exam-composition-r3-c2",
+        "aux-p480-exam-composition-r3-c3",
+        "aux-p480-exam-composition-r3-c4"
+      ]
+    },
+    {
+      "group_id": "aux-p480-exam-row-4",
+      "physical_page": 480,
+      "row_index": 6,
+      "source_unit_ids": [
+        "aux-p480-exam-composition-r4-c0",
+        "aux-p480-exam-composition-r4-c1",
+        "aux-p480-exam-composition-r4-c2",
+        "aux-p480-exam-composition-r4-c3",
+        "aux-p480-exam-composition-r4-c4"
+      ]
+    }
+  ],
+  "reviewed_body_regions": [
+    {
+      "unit_id": "aux-p244-Je4C3266-tail",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        50,
+        355,
+        130
+      ],
+      "source_text": "在有裂纹处用砂轮磨削或铲去损伤部位的金属层，加工好坡口\n后，进行补焊处理。\n若是阀体焊补中出现拉裂现象，则需重新对裂纹处磨削并\n重新加工坡口进行补焊，同时要注意焊接工艺并做好简单的、\n必要的热处理工作，以防止再次出现反复。",
+      "ocr_reference_text": "在有裂纹处用砂轮磨削或铲去损伤部位的金属层，加工好坡口\n后，进行补焊处理。\n若是阀体焊补中出现拉裂现象，则需重新对裂纹处磨削并\n重新加工坡口进行补焊，同时要注意焊接工艺并做好简单的、\n必要的热处理工作，以防止再次出现反复。",
+      "source_question_key": "Je4C3266",
+      "group_kind": "cross_page_answer_tail",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3267-question",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        145,
+        355,
+        161
+      ],
+      "source_text": "Je4C3267油管道静泡酸洗的方法是什么？",
+      "ocr_reference_text": "Je4C3267油管道静泡酸洗的方法是什么？",
+      "source_question_key": "Je4C3267",
+      "group_kind": "question",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3267-step1",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        161,
+        355,
+        192
+      ],
+      "source_text": "答：（1）静泡的酸液配比以10%盐酸加入0.2%的缓蚀剂若\n干为宜。浸泡时间一般在4h以上，浸泡前应先碱洗。",
+      "ocr_reference_text": "答：（1）静泡的酸液配比以10%盐酸加入0.2%的缓蚀剂若\n干为宜。浸泡时间一般在4h以上，浸泡前应先碱洗。",
+      "source_question_key": "Je4C3267",
+      "group_kind": "ordered_step",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3267-step2",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        192,
+        355,
+        238
+      ],
+      "source_text": "（2）浸酸后的油管应经清水冲净后再放入钝化液槽中钝\n化，钝化液为 2%的亚硝酸钠溶液（pH值为9.5～10），钝化时\n间一般在3h以上。",
+      "ocr_reference_text": "（2）浸酸后的油管应经清水冲净后再放入钝化液槽中钝\n化，钝化液为 2%的亚硝酸钠溶液（pH值为9.5～10），钝化时\n间一般在3h以上。",
+      "source_question_key": "Je4C3267",
+      "group_kind": "ordered_step",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3267-step3",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        238,
+        355,
+        271
+      ],
+      "source_text": "（3）经钝化后的管子要用清水冲洗干净，然后用压缩空气\n吹干并封闭。",
+      "ocr_reference_text": "（3）经钝化后的管子要用清水冲洗干净，然后用压缩空气\n吹干并封闭。",
+      "source_question_key": "Je4C3267",
+      "group_kind": "ordered_step",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3268-question",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        285,
+        355,
+        300
+      ],
+      "source_text": "Je4C3268如何调整离心泵轴向、径向间隙？",
+      "ocr_reference_text": "Je4C3268如何调整离心泵轴向、径向间隙？",
+      "source_question_key": "Je4C3268",
+      "group_kind": "question",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3268-answer",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        300,
+        355,
+        395
+      ],
+      "source_text": "答：调整密封环径向间隙的方法可根据泵的型式及密封环\n的结构而采用不同的方法：间隙太小时，可研刮密封环或车削\n叶轮；间隙太大时，需调换密封环。密封环的轴向间隙一般调\n整到2～5mm，即略大于泵的轴向窜动值，此间隙可用塞尺测\n量。轴向间隙的调整方法可用车旋密封环和轴套，或在轴套和\n叶轮之间加垫环来进行调整。",
+      "ocr_reference_text": "答：调整密封环径向间隙的方法可根据泵的型式及密封环\n的结构而采用不同的方法：间隙太小时，可研刮密封环或车削\n叶轮；间隙太大时，需调换密封环。密封环的轴向间隙一般调\n整到2～5mm，即略大于泵的轴向窜动值，此间隙可用塞尺测\n量。轴向间隙的调整方法可用车旋密封环和轴套，或在轴套和\n叶轮之间加垫环来进行调整。",
+      "source_question_key": "Je4C3268",
+      "group_kind": "answer",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3269-question",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        407,
+        355,
+        423
+      ],
+      "source_text": "Je4C3269给水泵在检修时，测量泵轴应符合哪些要求？",
+      "ocr_reference_text": "Je4C3269给水泵在检修时，测量泵轴应符合哪些要求？",
+      "source_question_key": "Je4C3269",
+      "group_kind": "question",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3269-answer",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        423,
+        355,
+        455
+      ],
+      "source_text": "答：给水泵在检修时，泵轴的径向晃度应小于0.03mm，\n弯曲度应不大于0.02mm，轴颈的椭圆度和锥度应小于0.02mm。",
+      "ocr_reference_text": "答：给水泵在检修时，泵轴的径向晃度应小于0.03mm，\n弯曲度应不大于0.02mm，轴颈的椭圆度和锥度应小于0.02mm。",
+      "source_question_key": "Je4C3269",
+      "group_kind": "answer",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3270-question",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        469,
+        355,
+        485
+      ],
+      "source_text": "Je4C3270低压加热器大法兰泄漏后应如何处理？",
+      "ocr_reference_text": "Je4C3270低压加热器大法兰泄漏后应如何处理？",
+      "source_question_key": "Je4C3270",
+      "group_kind": "question",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p244-Je4C3270-answer-start",
+      "physical_page": 244,
+      "bbox": [
+        40,
+        485,
+        355,
+        533
+      ],
+      "source_text": "答：低压加热器大法兰密封面泄漏是常见的故障，低压加\n热器水室大法兰更容易泄漏。大法兰泄漏的一个原因是垫片损\n坏或不良，可更换新垫片；另一个原因是大法兰刚性不够而变",
+      "ocr_reference_text": "答：低压加热器大法兰密封面泄漏是常见的故障，低压加\n热器水室大法兰更容易泄漏。大法兰泄漏的一个原因是垫片损\n坏或不良，可更换新垫片；另一个原因是大法兰刚性不够而变",
+      "source_question_key": "Je4C3270",
+      "group_kind": "cross_page_answer_start",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-question",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        53,
+        355,
+        69
+      ],
+      "source_text": "La1F2009水泵的几个主要性能参数是什么？",
+      "ocr_reference_text": "La1F2009水泵的几个主要性能参数是什么？",
+      "source_question_key": "La1F2009",
+      "group_kind": "question",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-intro",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        69,
+        355,
+        101
+      ],
+      "source_text": "答：不论什么水泵，在工作时都具有一定的参数，通常在\n水泵的铭牌中给出，主要有：",
+      "ocr_reference_text": "答：不论什么水泵，在工作时都具有一定的参数，通常在\n水泵的铭牌中给出，主要有：",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_intro",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-item1",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        101,
+        355,
+        133
+      ],
+      "source_text": "（1）流量。单位时间内水泵供出的液体数量，用字母Q来\n表示。",
+      "ocr_reference_text": "（1）流量。单位时间内水泵供出的液体数量，用字母Q来\n表示。",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_item",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-item2",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        133,
+        355,
+        164
+      ],
+      "source_text": "（2）扬程。单位质量的液体通过水泵后所获得的能量，用\n字母H来表示。",
+      "ocr_reference_text": "（2）扬程。单位质量的液体通过水泵后所获得的能量，用\n字母H来表示。",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_item",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-item3",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        164,
+        355,
+        197
+      ],
+      "source_text": "（3）转速。泵轴在每分钟内所转过的圈数，用字母n来表\n示。",
+      "ocr_reference_text": "（3）转速。泵轴在每分钟内所转过的圈数，用字母n来表\n示。",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_item",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-item4",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        197,
+        355,
+        229
+      ],
+      "source_text": "（4）轴功率。由原动机传给水泵泵轴上的功率，用字母N\n来表示。",
+      "ocr_reference_text": "（4）轴功率。由原动机传给水泵泵轴上的功率，用字母N\n来表示。",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_item",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-item5",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        229,
+        355,
+        261
+      ],
+      "source_text": "（5）效率。指被输送的液体实际获得的功率与轴功率的比\n值，用字母η表示。",
+      "ocr_reference_text": "（5）效率。指被输送的液体实际获得的功率与轴功率的比\n值，用字母η表示。",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_item",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2009-item6",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        261,
+        355,
+        341
+      ],
+      "source_text": "（6）比转速。在设计制造水泵时，为了将具有各种各样流\n量、扬程的水泵进行比较，就将某一台泵的实际尺寸几何相似\n地缩小为标准泵。此时标准泵的转数就是实际泵的比转数。比\n转数是从相似理论中引出来的一个综合性参数，它说明流量、\n扬程、转数之间的相互关系。",
+      "ocr_reference_text": "（6）比转速。在设计制造水泵时，为了将具有各种各样流\n量、扬程的水泵进行比较，就将某一台泵的实际尺寸几何相似\n地缩小为标准泵。此时标准泵的转数就是实际泵的比转数。比\n转数是从相似理论中引出来的一个综合性参数，它说明流量、\n扬程、转数之间的相互关系。",
+      "source_question_key": "La1F2009",
+      "group_kind": "classification_item",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2010-question",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        356,
+        355,
+        388
+      ],
+      "source_text": "La1F2010汽轮机冲转条件中，为什么规定要有一定数值\n的真空？",
+      "ocr_reference_text": "La1F2010汽轮机冲转条件中，为什么规定要有一定数值\n的真空？",
+      "source_question_key": "La1F2010",
+      "group_kind": "question",
+      "content_kind": "paragraph",
+      "stage12_extractability": "context_only",
+      "status": "confirmed_original_page_body_region"
+    },
+    {
+      "unit_id": "aux-p360-La1F2010-answer-low-vacuum",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        388,
+        355,
+        468
+      ],
+      "source_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+      "ocr_reference_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
+      "source_question_key": "La1F2010",
+      "group_kind": "answer",
+      "content_kind": "paragraph",
+      "stage12_extractability": "extractable",
+      "status": "confirmed_original_page_body_region",
+      "source_role": "approved_answer",
+      "extractability_reason": "Complete printed question/answer group and next-page boundary checked against the original PDF; textbook explanation only, not a universal standard requirement."
+    },
+    {
+      "unit_id": "aux-p360-La1F2010-answer-high-vacuum",
+      "physical_page": 360,
+      "bbox": [
+        40,
+        468,
+        355,
+        516
+      ],
+      "source_text": "冲动转子时，真空也不能太高，真空过高不仅要延长建立\n真空的时间，也因为通过汽轮机的蒸汽量较少，放热系数小，\n使得汽轮机加热缓慢，转速也不稳定，从而延长启动时间。",
+      "ocr_reference_text": "冲动转子时，真空也不能太高，真空过高不仅要延长建立\n真空的时间，也因为通过汽轮机的蒸汽量较少，放热系数小，\n使得汽轮机加热缓慢，转速也不稳定，从而延长启动时间。",
+      "source_question_key": "La1F2010",
+      "group_kind": "answer",
+      "content_kind": "paragraph",
+      "stage12_extractability": "extractable",
+      "status": "confirmed_original_page_body_region",
+      "source_role": "approved_answer",
+      "extractability_reason": "Complete printed question/answer group and next-page boundary checked against the original PDF; textbook explanation only, not a universal standard requirement."
+    }
+  ],
+  "table_header_units": [
+    {
+      "unit_id": "aux-p480-exam-composition-h0-c0",
+      "physical_page": 480,
+      "bbox": [
+        55,
+        220,
+        124,
+        255
+      ],
+      "source_text": "题型",
+      "ocr_reference_text": "题型",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 0,
+      "column_index": 0,
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-exam-composition-h0-c1",
+      "physical_page": 480,
+      "bbox": [
+        124,
+        220,
+        236,
+        240
+      ],
+      "source_text": "鉴定工程等级",
+      "ocr_reference_text": "鉴定工程等级",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 0,
+      "column_index": 1,
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-exam-composition-h0-c3",
+      "physical_page": 480,
+      "bbox": [
+        236,
+        220,
+        344,
+        240
+      ],
+      "source_text": "配分",
+      "ocr_reference_text": "配分",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 0,
+      "column_index": 3,
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-exam-composition-h1-c1",
+      "physical_page": 480,
+      "bbox": [
+        124,
+        239,
+        180,
+        255
+      ],
+      "source_text": "初级、中级",
+      "ocr_reference_text": "初级、中级",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 1,
+      "column_index": 1,
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-exam-composition-h1-c2",
+      "physical_page": 480,
+      "bbox": [
+        180,
+        239,
+        236,
+        255
+      ],
+      "source_text": "高级工、技师",
+      "ocr_reference_text": "高级工、技师",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 1,
+      "column_index": 2,
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-exam-composition-h1-c3",
+      "physical_page": 480,
+      "bbox": [
+        236,
+        239,
+        290,
+        255
+      ],
+      "source_text": "初级、中级",
+      "ocr_reference_text": "初级、中级",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 1,
+      "column_index": 3,
+      "status": "confirmed_original_page"
+    },
+    {
+      "unit_id": "aux-p480-exam-composition-h1-c4",
+      "physical_page": 480,
+      "bbox": [
+        290,
+        239,
+        344,
+        255
+      ],
+      "source_text": "高级工、技师",
+      "ocr_reference_text": "高级工、技师",
+      "content_kind": "table",
+      "table_key": "aux-p480-exam-composition",
+      "row_index": 1,
+      "column_index": 4,
+      "status": "confirmed_original_page"
+    }
+  ],
+  "reviewed_extractability_groups": [
+    {
+      "group_key": "La1F2010",
+      "document_key": "auxiliary_installation_book",
+      "status": "complete_original_page_review",
+      "original_pages_checked": [
+        360,
+        361
+      ],
+      "next_source_boundary": "La1F3011",
+      "reviewers": [
+        "qa_source_review",
+        "qa_statement_review",
+        "qa_contract_review"
+      ],
+      "user_decision": "approved_for_extraction",
+      "authority_kind": "textbook_explanation",
+      "decision_reason": "Question and both answer paragraphs end on p360; p361 starts a new question. Sidebar excluded; approximate 60 kPa and causal conditions remain source-scoped.",
+      "context_unit_ids": [
+        "aux-p360-La1F2010-question"
+      ],
+      "extractable_unit_ids": [
+        "aux-p360-La1F2010-answer-low-vacuum",
+        "aux-p360-La1F2010-answer-high-vacuum"
+      ],
+      "source_group_kind": "question_answer"
+    }
+  ]
+}

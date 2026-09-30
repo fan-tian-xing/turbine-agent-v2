@@ -2,39 +2,39 @@
   "schema_version": 1,
   "source_root_config_key": "SOURCE_ROOT",
   "ocr_derived_root_config_key": "OCR_DERIVED_ROOT",
-  "physical_asset_count": 48,
+  "physical_asset_count": 49,
   "logical_document_count": 44,
   "admitted_source_count": 5,
-  "independent_extractable_source_count": 5,
-  "duplicate_group_count": 4,
-  "duplicate_relation_count": 4,
-  "review_queue_count": 358,
-  "manual_finding_count": 13,
+  "independent_extractable_source_count": 4,
+  "duplicate_group_count": 5,
+  "duplicate_relation_count": 12,
+  "review_queue_count": 377,
+  "manual_finding_count": 14,
   "admission_status_counts": {
-    "metadata_review_required": 35,
-    "duplicate_or_derivative": 4,
-    "reference_only": 1,
     "admitted": 5,
+    "duplicate_or_derivative": 5,
     "quarantined": 3,
+    "metadata_review_required": 35,
+    "reference_only": 1,
     "excluded_private_evaluation": 0
   },
   "text_layer_status_counts": {
+    "native_text": 24,
     "mixed_or_low_quality": 1,
-    "scan_only": 24,
-    "native_text": 23
+    "scan_only": 24
   },
   "text_adapter_status_counts": {
-    "native_text_available": 18,
+    "native_text_available": 21,
     "not_assessed": 0,
     "ocr_pending_validation": 0,
     "ocr_required": 21,
-    "ocr_validated": 8,
-    "text_review_required": 1
+    "ocr_validated": 5,
+    "text_review_required": 2
   },
   "source_role_counts": {
     "book": 19,
     "manufacturer_manual": 2,
-    "standard_or_regulation": 26,
+    "standard_or_regulation": 27,
     "standards_catalog": 1
   },
   "processing_note": "Metadata and fingerprints only; no source text copied and no Neo4j write performed."

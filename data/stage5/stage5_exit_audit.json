@@ -1,0 +1,83 @@
+{
+  "schema_version": 2,
+  "stage": "5",
+  "artifact_kind": "stage5_exit_audit",
+  "audited_at": "2026-09-28",
+  "status": "complete",
+  "next_stage_allowed": true,
+  "scope": {
+    "expected_documents": 5,
+    "expected_existing_physical_pages": 775,
+    "expected_derived_pdfs": 5,
+    "expected_scanned_pages": 602,
+    "expected_native_pages": 173
+  },
+  "documents": [
+    {
+      "document_key": "DL5190.3",
+      "expected_pages": 141,
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+      "pixel_mismatch_pages": [],
+      "unsearchable_pages": [],
+      "issues": [],
+      "review_basis": "agent_line_table_and_order_review"
+    },
+    {
+      "document_key": "D300N",
+      "expected_pages": 94,
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+      "pixel_mismatch_pages": [],
+      "unsearchable_pages": [],
+      "issues": [],
+      "review_basis": "agent_line_table_and_order_review"
+    },
+    {
+      "document_key": "DLT863",
+      "expected_pages": 28,
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+      "pixel_mismatch_pages": [],
+      "unsearchable_pages": [],
+      "issues": [],
+      "review_basis": "agent_line_table_and_order_review"
+    },
+    {
+      "document_key": "HAF103",
+      "expected_pages": 32,
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "pixel_mismatch_pages": [],
+      "unsearchable_pages": [],
+      "issues": [],
+      "review_basis": "agent_line_table_and_order_review"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "expected_pages": 480,
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+      "pixel_mismatch_pages": [],
+      "unsearchable_pages": [],
+      "issues": [],
+      "review_basis": "explicit_current_pdf_user_acceptance",
+      "user_acceptance": {
+        "confirmation_text": "辅机我确认过了，没问题，可以通过",
+        "accepted_at": "2026-09-28",
+        "accepted_page_ranges": [
+          [
+            1,
+            480
+          ]
+        ],
+        "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+        "agent_line_by_line_reviewed": false,
+        "agent_table_cells_reviewed": false,
+        "agent_reading_order_reviewed": false
+      }
+    }
+  ],
+  "blocking_items": [],
+  "automatic_checks_do_not_prove_ocr_accuracy": true
+}

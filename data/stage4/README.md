@@ -15,11 +15,12 @@
 - `stage3.document_compat.project_document_ir`：仅投影 Page/SourceSpan，不生成阶段 3 的业务适用范围、Evidence 或 Statement；
 - `parse_registered_pdf`：Registry IdentityCatalog → 真实 PyMuPDF → Document IR → 阶段 3 结构投影的最小只读端到端链路；
 - 真实 PyMuPDF 原生文字页的图片会进入 `image` Block/Figure，并保留页面 bbox；扫描页仍只进入 `scan_only`，不伪造 OCR 文本，表格行列恢复留到阶段 5；
-- `stage4_full_parse_audit_2026-09-12.json`：冻结处理单元的全量结构解析、哈希、页序映射和异常页清单；早期 smoke、退出汇总及带日期的旧审计保留为历史记录，不替代当前退出依据；`stage4_dead_code_orphan_audit.json`：阶段 4 范围内的死代码和孤立产物审查。
+- [`stage4_full_parse_audit.json`](stage4_full_parse_audit.json)：当前阶段 5 清单中五份正式 OCR 的全量结构解析、实际文件哈希、页序映射和异常页清单；固定路径是当前结构审计入口，旧日期运行结果不供默认消费者读取。
+- [`stage4_full_parse_exception_review.json`](stage4_full_parse_exception_review.json)：当前原件及派生件的空白页绑定，继承既有原件审核事实；不新增用户批准。`stage4_human_review_2026-09-08.json` 保留原始审核事实。
 - 阶段 4 文档层回归覆盖 Document IR、Identity Catalog 和注册 PDF 链路；项目全量测试数量以最近一次完整 pytest 运行记录为准。
 - 阶段 3 兼容层目前是只读的结构投影桥接，仅提供 Revision/Page/SourceSpan，不替代 Stage 3 的语义 Fixture、Evidence 或 Statement；人工更正已作为不覆盖原始解析结果的 Overlay 记录，表格 SourceSpan 定位已纳入校验。
 
-五份冻结处理单元的全量解析、异常页处置、最终回归和退出审计刷新记录在上述审计文件中；OCR 精度、Golden Sample 和表格行列恢复仍按总计划进入阶段 5。
+默认入口对当前正式 OCR 的全部 775 个现存物理页执行结构解析，校验 Registry 身份、当前文件哈希、页序映射和空白页例外。它不以阶段 5 的逐字逐格验收为前提，也不替代该验收。阶段 3 冻结清单及其用户确认保持原样；只有显式指定 `--historical-frozen --output <独立路径>` 才进入历史结构诊断。OCR 精度、Golden Sample 和表格行列恢复按阶段 5 合同核查。
 
 复跑全量审计（PowerShell）：在仓库根目录执行：
 

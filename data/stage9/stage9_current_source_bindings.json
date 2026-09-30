@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage9_current_source_bindings",
+  "status": "current_source_reviewed",
+  "formal_release": false,
+  "user_confirmation": false,
+  "historical_confirmation_sha256": "afbdadbcccecc68887b3e45cdfc76e33d48145cdcf268931ba2d19ffbdca8055",
+  "historical_runtime_sha256": "762f8ac657a896e5c9b152112850af730b564063eeac71c3db8120384d0c8396",
+  "registry_sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897",
+  "groups": [
+    {
+      "group_id": "confirmation-dl5190-p86",
+      "historical": {
+        "page_id": "real-page-24b258-086",
+        "span_id": "real-span-24b258-086",
+        "document_logical_id": "doc-24b25833ab82e212d1fb",
+        "revision_id": "rev-4c1c24a74e4b364652e3",
+        "asset_id": "asset-29ca16b111846e39aabf",
+        "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+        "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "pdf_page_number": 86,
+        "logical_page": "75"
+      },
+      "current": {
+        "asset_id": "asset-29ca16b111846e39aabf",
+        "document_logical_id": "doc-24b25833ab82e212d1fb",
+        "revision_id": "rev-4c1c24a74e4b364652e3",
+        "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+        "sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "page_id": "current-page-a2957695bded51fc",
+        "pdf_page_number": 86,
+        "logical_page": "75",
+        "source_span": {
+          "span_id": "current-span-a2957695bded51fc",
+          "page_id": "current-page-a2957695bded51fc",
+          "text": "DL / T 5190.3 — 2019 \n75 \n2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的\n垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。密封瓦座内轴\n向两侧面应做涂色检查，接触面应均匀、连续；  \n3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物；  \n4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； \n5 密封瓦座上的丝扣接头应经试装，确认紧固密封。  \n9.7.2 密封瓦检查应符合下列规定： \n1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀；  \n2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙\n应符合制造厂技术要求；  \n3 密封瓦水平结合面螺栓紧固后，上下两半的垂直面应处在同一平面，不得错口，在平板上应用\n0.03mm 塞尺检查不入；  \n4 密封瓦两侧垂直面应光洁，两垂直面间的不平行度应不大于0.03mm； \n5 密封瓦乌金检查应符合4.5.1 的规定； \n6 密封瓦的油孔和环形油室内应光洁、无铁屑、无锈皮等杂物； \n7 密封瓦与轴颈的径向间隙应符合制造厂技术要求； \n8 密封瓦弹簧应无损伤且长度应符合制造厂技术要求； \n9 密封瓦与密封瓦座组装好后，应检查密封瓦间无错口，密封瓦在密封瓦座内沿径向方向活动自如，\n无卡涩； \n10 密封瓦与密封瓦座组装好后，测量密封瓦在瓦座内的轴向间隙即窜动量，应符合制造厂技术要求，\n如图9.6.2 所示。  \n \n图9.6.2 密封瓦在瓦座内的轴向间隙示意图 \n9.7.3 轴密封装置组装应符合下列规定： \n1 核对轴密封装置零件上的钢印标记，应对号就位与图纸相符； \n2 密封瓦座与轴颈应同心，径向间隙差应不大于0.15mm； \n3 在拧紧密封瓦座与端盖之间的垂直结合面螺栓的过程中应持续拨动密封瓦，保证螺栓拧紧后，密封瓦\n在座内灵活、无卡涩； \n4 轴密封装置安装完成后，结合面螺栓应锁紧；  \n5 密封瓦定位销应锁紧，露出部分不得超出外圆弧度，销孔不能穿透瓦壁，销子装好后不得将密封\n瓦卡死；  \n6 密封瓦座与端盖间垫片的材质应符合制造厂技术要求，无要求时可用丁腈橡胶板配制，胶板上螺\n栓孔应大于端盖上的孔径；  \n7 位于端盖上的密封油进出油腔室，应清理干净。经检查合格后，按制造厂技术要求将手孔封闭，\n且严密、无渗漏；  \n8 各油压和气压取样插座应拧紧，不得泄漏；  \n9 轴密封装置对地有绝缘规定时，安装后测量对地绝缘电阻值应符合制造厂技术要求。 \n9.7.4 轴密封装置的油挡间隙应符合制造厂技术要求，无要求时，应符合4.5.10 的规定。油挡对地有绝缘\n规定时，安装完毕后，测量对地绝缘电阻值应符合9.1.11 的规定。 \n9.8 进出水支座 \n9.8.1 水内冷转子进出水支座的安装定位，应在发电机和励磁装置转子最终定位后进行。  \n9.8.2 水内冷转子进水支座的检查与安装应符合下列规定： \n",
+          "text_sha256": "97bd826505e1345012ec65f6a3102c4ff7b8da51039395d2e62e9905f69af665",
+          "complete": true
+        }
+      },
+      "evidence": [
+        {
+          "evidence_id": "real-evidence-dl5190-p86-feeler",
+          "statement_id": "real-statement-dl5190-p86-feeler",
+          "historical_quote": "用0.05mm 塞尺检查应不入",
+          "historical_item_sha256": "da824e19ba3750ff8a303e903510b7abc33b1bff9a6e04101a330d2d609a9aca",
+          "current_quote": "用0.05mm 塞尺检查应不入",
+          "semantic_review": {
+            "status": "same",
+            "reviewer": "Codex_original_pdf_review_2026-09-29",
+            "reviewer_type": "ai_source_review",
+            "reviewed_at": "2026-09-29T00:00:00+08:00",
+            "basis": "Original PDF physical page visually checked; current PDF full-page text and Registry hash checked against the unchanged historical user-confirmed quote, quantity, negation, direction and condition.",
+            "user_confirmation": false,
+            "checks": {
+              "quote_support": "same",
+              "quantity": "same",
+              "negation": "same",
+              "direction": "same",
+              "condition": "same"
+            },
+            "conflicts": []
+          }
+        },
+        {
+          "evidence_id": "real-evidence-dl5190-p86-contact",
+          "statement_id": "real-statement-dl5190-p86-contact",
+          "historical_quote": "接触面积应大于结合面面积的75％且分布均匀",
+          "historical_item_sha256": "021024c68466611b783381240ed55b80a7010bed1ff5fefb9c8bf172d47536c1",
+          "current_quote": "接触面积应大于结合面面积的75％且分布均匀",
+          "semantic_review": {
+            "status": "same",
+            "reviewer": "Codex_original_pdf_review_2026-09-29",
+            "reviewer_type": "ai_source_review",
+            "reviewed_at": "2026-09-29T00:00:00+08:00",
+            "basis": "Original PDF physical page visually checked; current PDF full-page text and Registry hash checked against the unchanged historical user-confirmed quote, quantity, negation, direction and condition.",
+            "user_confirmation": false,
+            "checks": {
+              "quote_support": "same",
+              "quantity": "same",
+              "negation": "same",
+              "direction": "same",
+              "condition": "same"
+            },
+            "conflicts": []
+          }
+        }
+      ],
+      "original_visual_review": {
+        "path": "Original materials/标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+        "physical_page": 86,
+        "reviewed_at": "2026-09-29"
+      }
+    },
+    {
+      "group_id": "confirmation-d300n-p73",
+      "historical": {
+        "page_id": "real-page-af7fa1-073",
+        "span_id": "real-span-af7fa1-073",
+        "document_logical_id": "doc-af7fa1738c5c89599e41",
+        "revision_id": "rev-c700c57426b967b2d2c9",
+        "asset_id": "asset-dfd1ea84bc8622cede86",
+        "relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+        "sha256": "4710a8ecf189c75158e87a3e88e97a8943d8854e1b556c5d1d6448ee45d7431f",
+        "pdf_page_number": 73,
+        "logical_page": "3-5-1"
+      },
+      "current": {
+        "asset_id": "asset-dfd1ea84bc8622cede86",
+        "document_logical_id": "doc-af7fa1738c5c89599e41",
+        "revision_id": "rev-c700c57426b967b2d2c9",
+        "relative_path": "OCR/汽轮机本体安装及维护说明书(OCR).pdf",
+        "sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+        "page_id": "current-page-97099d1a07366aa7",
+        "pdf_page_number": 73,
+        "logical_page": "3-5-1",
+        "source_span": {
+          "span_id": "current-span-97099d1a07366aa7",
+          "page_id": "current-page-97099d1a07366aa7",
+          "text": "汽轮机本体安装及维护说明书\nD300N-000105ASM\n3.5\n主要润滑部位及润滑要求\n1\n前箱滑动面的润滑和清洗\n前箱、基架间装设有自润滑滑块。一般不需抽出检查。\n若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪\n下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块,\n清洗干净。清理好滑块槽后再将滑块复位。\n2\n盘车装置的润滑和维护\n每次大修检查并保证传动系统各轴和齿轮润滑油畅通。\n编制\n校对\n审核\n标审\n录入员\n3-5-1\n",
+          "text_sha256": "14b8f46c2e1af1ea33d1621d54d03f12ac05cc3198729d125040e69f33664aed",
+          "complete": true
+        }
+      },
+      "evidence": [
+        {
+          "evidence_id": "real-evidence-d300n-p73-lift-clearance",
+          "statement_id": "real-statement-d300n-p73-lift-clearance",
+          "historical_quote": "下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开",
+          "historical_item_sha256": "427168e11cb7266a201df7427ee4fe9d40c0be639b0d7e1c38dcdf3c84fce9e7",
+          "current_quote": "下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开",
+          "semantic_review": {
+            "status": "same",
+            "reviewer": "Codex_original_pdf_review_2026-09-29",
+            "reviewer_type": "ai_source_review",
+            "reviewed_at": "2026-09-29T00:00:00+08:00",
+            "basis": "Original PDF physical page visually checked; current PDF full-page text and Registry hash checked against the unchanged historical user-confirmed quote, quantity, negation, direction and condition.",
+            "user_confirmation": false,
+            "checks": {
+              "quote_support": "same",
+              "quantity": "same",
+              "negation": "same",
+              "direction": "same",
+              "condition": "same"
+            },
+            "conflicts": []
+          }
+        }
+      ],
+      "original_visual_review": {
+        "path": "Original materials/汽轮机说明书/汽轮机本体安装及维护说明书.pdf",
+        "physical_page": 73,
+        "reviewed_at": "2026-09-29"
+      }
+    },
+    {
+      "group_id": "confirmation-haf103-p1",
+      "historical": {
+        "page_id": "real-page-a1f2fb-001",
+        "span_id": "real-span-a1f2fb-001",
+        "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+        "revision_id": "rev-be31e11d289998c918fa",
+        "asset_id": "asset-e4d060422e62fd656770",
+        "relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+        "sha256": "24933cf948ee1a77fceb8819a4a5aaa3dcf3da6ec05f5cdcbd473a60e4e1ea22",
+        "pdf_page_number": 1,
+        "logical_page": "3"
+      },
+      "current": {
+        "asset_id": "asset-e4d060422e62fd656770",
+        "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+        "revision_id": "rev-be31e11d289998c918fa",
+        "relative_path": "OCR/HAF103核动力厂调试和运行安全规定-印刷页3-34(OCR).pdf",
+        "sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "page_id": "current-page-0abc8435a8d93991",
+        "pdf_page_number": 1,
+        "logical_page": "3",
+        "source_span": {
+          "span_id": "current-span-0abc8435a8d93991",
+          "page_id": "current-page-0abc8435a8d93991",
+          "text": "— 3 —\n附件\n核动力厂调试和运行安全规定\n1 引言\n1.1 目的\n为实现核动力厂的安全运行，防止或减轻可能危及安全的事件\n发生及其后果，根据《中华人民共和国核安全法》《中华人民共和\n国民用核设施安全监督管理条例》，制定本规定。本规定提出了核\n动力厂调试和运行应当满足的基本安全要求。\n1.2 范围\n本规定适用于陆上固定式核动力厂的管理、调试和运行（含退\n役准备）中有关核安全的方面，不涉及不影响核安全的工业安全和\n由核动力厂运行所引起的非放射性影响。其他类型核动力厂可参照\n本规定执行。\n2 核动力厂营运单位\n2.1 总的要求\n2.1.1 营运单位对核安全负全面责任。这一责任应当涵盖与调\n试和运行相关的一切活动，包括营运单位本身对核动力厂的调试和\n运行活动，以及核动力厂其他相关方所从事的与核安全相关活动。\n2.1.2 控股核动力厂的企业集团应当按照相关规定的要求，在\n核动力厂营运单位人员配置、核安全管理和财务保障等方面，建立\n",
+          "text_sha256": "cda43c3651cec9a469462dc007a4b0d08e47ff0cfad975fb6fd6336df57747ae",
+          "complete": true
+        }
+      },
+      "evidence": [
+        {
+          "evidence_id": "real-evidence-haf103-p1-scope",
+          "statement_id": "real-statement-haf103-p1-scope",
+          "historical_quote": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
+          "historical_item_sha256": "ca309dbca5d4687fc5c4213b6bcb1325e0b2328a7b4e9f4d69f0c824b4a90ede",
+          "current_quote": "本规定适用于陆上固定式核动力厂的管理、调试和运行（含退役准备）中有关核安全的方面",
+          "semantic_review": {
+            "status": "same",
+            "reviewer": "Codex_original_pdf_review_2026-09-29",
+            "reviewer_type": "ai_source_review",
+            "reviewed_at": "2026-09-29T00:00:00+08:00",
+            "basis": "Original PDF physical page visually checked; current PDF full-page text and Registry hash checked against the unchanged historical user-confirmed quote, quantity, negation, direction and condition.",
+            "user_confirmation": false,
+            "checks": {
+              "quote_support": "same",
+              "quantity": "same",
+              "negation": "same",
+              "direction": "same",
+              "condition": "same"
+            },
+            "conflicts": []
+          }
+        }
+      ],
+      "original_visual_review": {
+        "path": "Original materials/标准法规/HAF103核动力厂调试和运行安全规定.pdf",
+        "physical_page": 1,
+        "reviewed_at": "2026-09-29"
+      }
+    }
+  ]
+}

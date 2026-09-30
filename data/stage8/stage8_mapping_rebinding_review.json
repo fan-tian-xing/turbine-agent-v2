@@ -1,0 +1,1651 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage8_mapping_rebinding_review",
+  "status": "review_complete",
+  "reviewed_at": "2026-09-29",
+  "reviewers": [
+    "qa_contract_review",
+    "qa_statement_review",
+    "qa_source_review"
+  ],
+  "formal_release": false,
+  "reviewed_candidate_count": 16,
+  "changed_fingerprint_count": 13,
+  "added_selected_source_count": 1,
+  "review_boundary": "Same candidate, mapping and preserved selected sources; one newly selected p360 source independently checked against the original. Prior review records and scope remain nested in the overlay.",
+  "records": [
+    {
+      "candidate_id": "term-046bedfa01a1d941213f",
+      "normalized_form": "螺栓",
+      "candidate_type": "component",
+      "mapped_class": "Component",
+      "mapping_kind": "class_label",
+      "decision": "accepted",
+      "historical_candidate_content_fingerprint": "8036e4d53a13d59752bbbd1b167f2fdd8c4db562f582e448dace97ceac114692",
+      "current_candidate_content_fingerprint": "77468b46da1e522bfe9ebc7d9230a0d51adc692711a1c40d83de48a56ba0474b",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "text_start": 288,
+          "text_end": 290,
+          "matched_text": "螺栓"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "text_start": 288,
+          "text_end": 290,
+          "matched_text": "螺栓"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [
+        {
+          "document_key": "D300N",
+          "physical_page": 50,
+          "source_text": "螺栓"
+        }
+      ],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-c41be95ae938085cbe1e",
+      "normalized_form": "隔板",
+      "candidate_type": "component",
+      "mapped_class": "Component",
+      "mapping_kind": "class_label",
+      "decision": "accepted",
+      "historical_candidate_content_fingerprint": "e26c859a0a4c197abdba8ff3a55c28badf267186a957028c2db8f52448c320c0",
+      "current_candidate_content_fingerprint": "610032fedc6c71e99d34b599f7ceb292bd7a9c58095d976d5e59ca513aac797a",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 37,
+          "text_end": 39,
+          "matched_text": "隔板"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 37,
+          "text_end": 39,
+          "matched_text": "隔板"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [
+        {
+          "document_key": "D300N",
+          "physical_page": 50,
+          "source_text": "隔板上半安装"
+        },
+        {
+          "document_key": "DL5190.3",
+          "physical_page": 18,
+          "source_text": "隔板"
+        }
+      ],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-6276f7217aa3e69267bb",
+      "normalized_form": "汽轮机",
+      "candidate_type": "equipment",
+      "mapped_class": "Equipment",
+      "mapping_kind": "class_label",
+      "decision": "accepted",
+      "historical_candidate_content_fingerprint": "07d2dff4db0a565c538f4c50f765ad2aaff60788bbb0dfb90218da7d2c783dc4",
+      "current_candidate_content_fingerprint": "98c018247fb69d5aab5fa77aa1f68efcfb0943b76fbf555ad4df8eeac41debc7",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 180,
+          "page_id": "page-8775a65254722ba7528c",
+          "text_fingerprint": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-82b45776e844cdc83fe3",
+            "evidence-c354b5845a4e94ff74e1",
+            "evidence-e0474cd7cd73a05d1ba9",
+            "evidence-f833ffa9b95b29d32e52"
+          ],
+          "text_start": 241,
+          "text_end": 244,
+          "matched_text": "汽轮机"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 180,
+          "page_id": "page-8775a65254722ba7528c",
+          "text_fingerprint": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-82b45776e844cdc83fe3",
+            "evidence-c354b5845a4e94ff74e1",
+            "evidence-e0474cd7cd73a05d1ba9",
+            "evidence-f833ffa9b95b29d32e52"
+          ],
+          "text_start": 241,
+          "text_end": 244,
+          "matched_text": "汽轮机"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 360,
+          "page_id": "page-22bdfc6e1f0a6e7f5a5d",
+          "text_fingerprint": "02a444ea11f1d8ee761412be4818c530f74883635206039e6fa283455e7c452d",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-b2344c8b4d0ea55cd50d",
+            "evidence-d7667da7416611074df7"
+          ],
+          "text_start": 2,
+          "text_end": 5,
+          "matched_text": "汽轮机"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 360,
+          "page_id": "page-22bdfc6e1f0a6e7f5a5d",
+          "text_fingerprint": "02a444ea11f1d8ee761412be4818c530f74883635206039e6fa283455e7c452d",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-b2344c8b4d0ea55cd50d",
+            "evidence-d7667da7416611074df7"
+          ],
+          "text_start": 2,
+          "text_end": 5,
+          "matched_text": "汽轮机"
+        }
+      ],
+      "current_original_page_checks": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "physical_page": 180,
+          "source_text": "汽轮机"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "physical_page": 360,
+          "source_text": "答：汽轮机冲转前必须有一定的真空",
+          "evidence_ids": [
+            "evidence-b2344c8b4d0ea55cd50d",
+            "evidence-d7667da7416611074df7"
+          ],
+          "direct_matching_evidence_id": "evidence-b2344c8b4d0ea55cd50d",
+          "evidence_ids_scope": "page_level_sources; only direct_matching_evidence_id anchors text_start=2,text_end=5"
+        }
+      ],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-c73419149c73e36780ed",
+      "normalized_form": "设备",
+      "candidate_type": "equipment",
+      "mapped_class": "Equipment",
+      "mapping_kind": "class_label",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "b3376bdcb2ad8a819949c59bd04aef0916ce539097ce69ddf3c4a4814578e4bb",
+      "current_candidate_content_fingerprint": "1c5a4f0a41e915554c5e27145012129846fdbb48b12dccf290f23fdf58b47c07",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 14,
+          "page_id": "page-9c34fb1fae6fb5744901",
+          "text_fingerprint": "73f047fec2f6cecc69e278a5b63f554e1dccf365cee281c3564bf84c5a7b3b3c",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-0be2ce5c91d61eba812d",
+            "evidence-111e9dc5263ec94003bb",
+            "evidence-1e86e29287bd6425e7b3",
+            "evidence-291b8c352838ac7ecc80",
+            "evidence-5e43b0eec278db704a21",
+            "evidence-93817b2f4dd1e670ad57",
+            "evidence-cbce7568bef677f62bac",
+            "evidence-d1d85bdc4f5607d42b43",
+            "evidence-dcf187ed12ba60c79047",
+            "evidence-f706744108453c894d4c"
+          ],
+          "text_start": 599,
+          "text_end": 601,
+          "matched_text": "设备"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 14,
+          "page_id": "page-dc4a67bda37fb6cf7fa5",
+          "text_fingerprint": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-02b8e76eb765a7cd6db9",
+            "evidence-02fecb5773dde6cd01e4",
+            "evidence-1bfcc9ab9e3c1f2c5eb9",
+            "evidence-202210743447409c3fab",
+            "evidence-21c96b71e0daa868dabd",
+            "evidence-257184909857bc95884c",
+            "evidence-2e6ceb3a4df913d5bb1a",
+            "evidence-378b18aaebd0628243c8",
+            "evidence-4637bf41419eac752546",
+            "evidence-51e3bcecc735117e1fd4",
+            "evidence-52a60eede93bd92c2766",
+            "evidence-56738c679ea4849cee87",
+            "evidence-650975a896876ca7c13f",
+            "evidence-6b9b30a51d949aec8140",
+            "evidence-7850d683fff9325daaf0",
+            "evidence-7df2aae933c522d24b63",
+            "evidence-7ef848a90097c69cfd16",
+            "evidence-829375cd80df8834b573",
+            "evidence-88aa5b0dfe0527e37668",
+            "evidence-8921b80e9e5cedb20485",
+            "evidence-8ea08aa663f548894f05",
+            "evidence-9cb932403ffa1be5eeb5",
+            "evidence-af9973f894c2326502fd",
+            "evidence-b490108e4fa09c6a08ef",
+            "evidence-c50ac8705f328705c073",
+            "evidence-cd2a00746a928ad8fdf8",
+            "evidence-ce0c6fca6810fa2b60b7",
+            "evidence-ef399d007ee48326e817",
+            "evidence-f4c6cdcf23ebf8865c1a",
+            "evidence-f6624d44d000470f19a7",
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "text_start": 471,
+          "text_end": 476,
+          "matched_text": "设备"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 11,
+          "page_id": "page-e331aa8c29549c3d93e8",
+          "text_fingerprint": "3299f203db6f1b422de55b48da503946e87fad620791d9c9c88cd27f00a368bc",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-25d97f174e799be4af76",
+            "evidence-4ef3a989765fd3565b73",
+            "evidence-5242b3d07c2aedc910c8",
+            "evidence-6c1e3f5d967941c4d495",
+            "evidence-8cc29b66c4300712bbf8",
+            "evidence-ba1fbd27df4a955862ca",
+            "evidence-d55f2e446c3f49296354",
+            "evidence-d9139eeb21b8a5ef4f49",
+            "evidence-ee65bdbd84c74c8c7535"
+          ],
+          "critical_signals": [
+            "applicability"
+          ],
+          "text_start": 335,
+          "text_end": 337,
+          "matched_text": "设备"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 32,
+          "page_id": "page-e48ad00884f67f04bba0",
+          "text_fingerprint": "fc2eac25a8ab3842f8de7fbc8c1c2d4aeab90d3ea9ed2aa6d86b1415c1ad5cc3",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-5d167a371d1979e69f8c",
+            "evidence-9f42c50b7e2f53da3d41"
+          ],
+          "text_start": 38,
+          "text_end": 40,
+          "matched_text": "设备"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 14,
+          "page_id": "page-9c34fb1fae6fb5744901",
+          "text_fingerprint": "73f047fec2f6cecc69e278a5b63f554e1dccf365cee281c3564bf84c5a7b3b3c",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-0be2ce5c91d61eba812d",
+            "evidence-111e9dc5263ec94003bb",
+            "evidence-1e86e29287bd6425e7b3",
+            "evidence-291b8c352838ac7ecc80",
+            "evidence-5e43b0eec278db704a21",
+            "evidence-93817b2f4dd1e670ad57",
+            "evidence-cbce7568bef677f62bac",
+            "evidence-d1d85bdc4f5607d42b43",
+            "evidence-dcf187ed12ba60c79047",
+            "evidence-f706744108453c894d4c"
+          ],
+          "text_start": 599,
+          "text_end": 601,
+          "matched_text": "设备"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 14,
+          "page_id": "page-dc4a67bda37fb6cf7fa5",
+          "text_fingerprint": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-02b8e76eb765a7cd6db9",
+            "evidence-02fecb5773dde6cd01e4",
+            "evidence-1bfcc9ab9e3c1f2c5eb9",
+            "evidence-202210743447409c3fab",
+            "evidence-21c96b71e0daa868dabd",
+            "evidence-257184909857bc95884c",
+            "evidence-2e6ceb3a4df913d5bb1a",
+            "evidence-378b18aaebd0628243c8",
+            "evidence-4637bf41419eac752546",
+            "evidence-51e3bcecc735117e1fd4",
+            "evidence-52a60eede93bd92c2766",
+            "evidence-56738c679ea4849cee87",
+            "evidence-650975a896876ca7c13f",
+            "evidence-6b9b30a51d949aec8140",
+            "evidence-7850d683fff9325daaf0",
+            "evidence-7df2aae933c522d24b63",
+            "evidence-7ef848a90097c69cfd16",
+            "evidence-829375cd80df8834b573",
+            "evidence-88aa5b0dfe0527e37668",
+            "evidence-8921b80e9e5cedb20485",
+            "evidence-8ea08aa663f548894f05",
+            "evidence-9cb932403ffa1be5eeb5",
+            "evidence-af9973f894c2326502fd",
+            "evidence-b490108e4fa09c6a08ef",
+            "evidence-c50ac8705f328705c073",
+            "evidence-cd2a00746a928ad8fdf8",
+            "evidence-ce0c6fca6810fa2b60b7",
+            "evidence-ef399d007ee48326e817",
+            "evidence-f4c6cdcf23ebf8865c1a",
+            "evidence-f6624d44d000470f19a7",
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "text_start": 471,
+          "text_end": 476,
+          "matched_text": "设备"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 11,
+          "page_id": "page-e331aa8c29549c3d93e8",
+          "text_fingerprint": "3299f203db6f1b422de55b48da503946e87fad620791d9c9c88cd27f00a368bc",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-25d97f174e799be4af76",
+            "evidence-4ef3a989765fd3565b73",
+            "evidence-5242b3d07c2aedc910c8",
+            "evidence-6c1e3f5d967941c4d495",
+            "evidence-8cc29b66c4300712bbf8",
+            "evidence-ba1fbd27df4a955862ca",
+            "evidence-d55f2e446c3f49296354",
+            "evidence-d9139eeb21b8a5ef4f49",
+            "evidence-ee65bdbd84c74c8c7535"
+          ],
+          "critical_signals": [
+            "applicability"
+          ],
+          "text_start": 335,
+          "text_end": 337,
+          "matched_text": "设备"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 32,
+          "page_id": "page-e48ad00884f67f04bba0",
+          "text_fingerprint": "fc2eac25a8ab3842f8de7fbc8c1c2d4aeab90d3ea9ed2aa6d86b1415c1ad5cc3",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-5d167a371d1979e69f8c",
+            "evidence-9f42c50b7e2f53da3d41"
+          ],
+          "text_start": 38,
+          "text_end": 40,
+          "matched_text": "设备"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-3b6dcb39dcd046633f29",
+      "normalized_form": "低压",
+      "candidate_type": "phenomenon",
+      "mapped_class": null,
+      "mapping_kind": "defer",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "1d2dd91807ce4710a9c0bffcbc5050e6a4d6d48ff5bd5ed5aed5196a3c47c2bc",
+      "current_candidate_content_fingerprint": "af934c4fed6cfb0029d746efe26db3c6f3aafbaf86d671116bf03f1ecaa9d209",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 220,
+          "text_end": 222,
+          "matched_text": "低压"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 220,
+          "text_end": 222,
+          "matched_text": "低压"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-cce59fd641e5b6fe8ad9",
+      "normalized_form": "振动",
+      "candidate_type": "phenomenon",
+      "mapped_class": null,
+      "mapping_kind": "defer",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "f75c28f97a091d75edc4945915405f7ead3fc1d4f7e308ca3ba4da1d84231c34",
+      "current_candidate_content_fingerprint": "43dff557c3862fc387555809de76a330fd564721aaa5a57277f6597aff1e9ee9",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 72,
+          "page_id": "page-9020497c5a9e3cc08091",
+          "text_fingerprint": "89fa59a0f3fde6d630691f12b3d74e73b5684142091c30dbd172c326baec93cb",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 169,
+          "text_end": 171,
+          "matched_text": "振动"
+        },
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 94,
+          "page_id": "page-96a0d769b71214961e45",
+          "text_fingerprint": "d2af677f11b96de21968eadd4f37975da4341a514c5a8e01ab01728a956dd604",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "interlock_or_protection"
+          ],
+          "text_start": 1253,
+          "text_end": 1255,
+          "matched_text": "振动"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 11,
+          "page_id": "page-c0773cc2a02e490efb7e",
+          "text_fingerprint": "e65333ccd0d34ba0d5a67c02a73355cf3634adb47a0a7684fc0b8f72098b45ce",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 343,
+          "text_end": 345,
+          "matched_text": "振动"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 24,
+          "page_id": "page-e597991b4b6dd05319df",
+          "text_fingerprint": "5513cb36a0c575fedcc4a12b614e85e6de6f9b1199eff6b7843b0685dde79f6e",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 79,
+          "text_end": 81,
+          "matched_text": "振动"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 72,
+          "page_id": "page-9020497c5a9e3cc08091",
+          "text_fingerprint": "89fa59a0f3fde6d630691f12b3d74e73b5684142091c30dbd172c326baec93cb",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 169,
+          "text_end": 171,
+          "matched_text": "振动"
+        },
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 94,
+          "page_id": "page-96a0d769b71214961e45",
+          "text_fingerprint": "d2af677f11b96de21968eadd4f37975da4341a514c5a8e01ab01728a956dd604",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "interlock_or_protection"
+          ],
+          "text_start": 1253,
+          "text_end": 1255,
+          "matched_text": "振动"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 11,
+          "page_id": "page-c0773cc2a02e490efb7e",
+          "text_fingerprint": "e65333ccd0d34ba0d5a67c02a73355cf3634adb47a0a7684fc0b8f72098b45ce",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 343,
+          "text_end": 345,
+          "matched_text": "振动"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 24,
+          "page_id": "page-e597991b4b6dd05319df",
+          "text_fingerprint": "5513cb36a0c575fedcc4a12b614e85e6de6f9b1199eff6b7843b0685dde79f6e",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 79,
+          "text_end": 81,
+          "matched_text": "振动"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-f38ea4e839eaf2de2f95",
+      "normalized_form": "汽轮机本体安装及维护",
+      "candidate_type": "process",
+      "mapped_class": "ProcedureDefinition",
+      "mapping_kind": "class_label",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "e60bc839b8d86ebcefd1e573fa323320341469076b07e7549f6d68396e2c486c",
+      "current_candidate_content_fingerprint": "e60bc839b8d86ebcefd1e573fa323320341469076b07e7549f6d68396e2c486c",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 3,
+          "page_id": "page-708c70644d4cd4a32585",
+          "text_fingerprint": "31d028c042dbfcbd70eea177af6163b39485b85f185ed4a60ccf0b98c84a08cd",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 0,
+          "text_end": 10,
+          "matched_text": "汽轮机本体安装及维护"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 3,
+          "page_id": "page-708c70644d4cd4a32585",
+          "text_fingerprint": "31d028c042dbfcbd70eea177af6163b39485b85f185ed4a60ccf0b98c84a08cd",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 0,
+          "text_end": 10,
+          "matched_text": "汽轮机本体安装及维护"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-71b9d9c035c0eb73dcfb",
+      "normalized_form": "地脚螺栓",
+      "candidate_type": "component",
+      "mapped_class": "Component",
+      "mapping_kind": "class_label",
+      "decision": "accepted",
+      "historical_candidate_content_fingerprint": "e944f7a6c95470ddb9520b796e189a726801078e99ac1a7c5de08a60a68af69a",
+      "current_candidate_content_fingerprint": "1e8d26320e4ef3c4f61618500dd0249873c016958ab3dba9282e5582a2487881",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 14,
+          "page_id": "page-9c34fb1fae6fb5744901",
+          "text_fingerprint": "73f047fec2f6cecc69e278a5b63f554e1dccf365cee281c3564bf84c5a7b3b3c",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-0be2ce5c91d61eba812d",
+            "evidence-111e9dc5263ec94003bb",
+            "evidence-1e86e29287bd6425e7b3",
+            "evidence-291b8c352838ac7ecc80",
+            "evidence-5e43b0eec278db704a21",
+            "evidence-93817b2f4dd1e670ad57",
+            "evidence-cbce7568bef677f62bac",
+            "evidence-d1d85bdc4f5607d42b43",
+            "evidence-dcf187ed12ba60c79047",
+            "evidence-f706744108453c894d4c"
+          ],
+          "text_start": 152,
+          "text_end": 156,
+          "matched_text": "地脚螺栓"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 14,
+          "page_id": "page-9c34fb1fae6fb5744901",
+          "text_fingerprint": "73f047fec2f6cecc69e278a5b63f554e1dccf365cee281c3564bf84c5a7b3b3c",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-0be2ce5c91d61eba812d",
+            "evidence-111e9dc5263ec94003bb",
+            "evidence-1e86e29287bd6425e7b3",
+            "evidence-291b8c352838ac7ecc80",
+            "evidence-5e43b0eec278db704a21",
+            "evidence-93817b2f4dd1e670ad57",
+            "evidence-cbce7568bef677f62bac",
+            "evidence-d1d85bdc4f5607d42b43",
+            "evidence-dcf187ed12ba60c79047",
+            "evidence-f706744108453c894d4c"
+          ],
+          "text_start": 152,
+          "text_end": 156,
+          "matched_text": "地脚螺栓"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [
+        {
+          "document_key": "DL5190.3",
+          "physical_page": 14,
+          "source_text": "地脚螺栓孔位置"
+        },
+        {
+          "document_key": "DL5190.3",
+          "physical_page": 20,
+          "source_text": "地脚螺栓检查"
+        },
+        {
+          "document_key": "D300N",
+          "physical_page": 10,
+          "source_text": "地脚螺栓"
+        }
+      ],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-9f7eb495ce16f810288e",
+      "normalized_form": "循环",
+      "candidate_type": "component",
+      "mapped_class": "Component",
+      "mapping_kind": "class_label",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "44c193df06ce1ed5f1ac78531778d637c9770ff83a581f39bad46593b2bd655e",
+      "current_candidate_content_fingerprint": "0d767fa1f3fc56b33558502e1807e22f83d647daf618cabc89009aae4726804a",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 180,
+          "page_id": "page-8775a65254722ba7528c",
+          "text_fingerprint": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-82b45776e844cdc83fe3",
+            "evidence-c354b5845a4e94ff74e1",
+            "evidence-e0474cd7cd73a05d1ba9",
+            "evidence-f833ffa9b95b29d32e52"
+          ],
+          "text_start": 323,
+          "text_end": 325,
+          "matched_text": "循环"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 180,
+          "page_id": "page-8775a65254722ba7528c",
+          "text_fingerprint": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-82b45776e844cdc83fe3",
+            "evidence-c354b5845a4e94ff74e1",
+            "evidence-e0474cd7cd73a05d1ba9",
+            "evidence-f833ffa9b95b29d32e52"
+          ],
+          "text_start": 323,
+          "text_end": 325,
+          "matched_text": "循环"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-aadbfee9b6b9b84269a8",
+      "normalized_form": "腐蚀",
+      "candidate_type": "phenomenon",
+      "mapped_class": "Situation",
+      "mapping_kind": "class_label",
+      "decision": "accepted",
+      "historical_candidate_content_fingerprint": "448e4bcf52daa95fad4ce1f2f992bb1cb77e1800cbf2cf56e6e0e4b4f76dae1c",
+      "current_candidate_content_fingerprint": "f6379148a307986a3a6fca7e21c7931457bc22af193fbe1b9cdd2ddc42e9bfd2",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 180,
+          "page_id": "page-8775a65254722ba7528c",
+          "text_fingerprint": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-82b45776e844cdc83fe3",
+            "evidence-c354b5845a4e94ff74e1",
+            "evidence-e0474cd7cd73a05d1ba9",
+            "evidence-f833ffa9b95b29d32e52"
+          ],
+          "text_start": 394,
+          "text_end": 396,
+          "matched_text": "腐蚀"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 180,
+          "page_id": "page-8775a65254722ba7528c",
+          "text_fingerprint": "7aaf5861c84c55a45c94888760a074c9a0033865588128c12791209c9e979e8f",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-82b45776e844cdc83fe3",
+            "evidence-c354b5845a4e94ff74e1",
+            "evidence-e0474cd7cd73a05d1ba9",
+            "evidence-f833ffa9b95b29d32e52"
+          ],
+          "text_start": 394,
+          "text_end": 396,
+          "matched_text": "腐蚀"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "physical_page": 180,
+          "source_text": "腐蚀作用"
+        }
+      ],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-eef132ac34940162415b",
+      "normalized_form": "系统",
+      "candidate_type": "equipment",
+      "mapped_class": "Equipment",
+      "mapping_kind": "class_label",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "01e344c38eced23c7ef6b8df35e83b615583c00f9a813b838152ef7b762470fc",
+      "current_candidate_content_fingerprint": "2c6921573a4270c97761cd586eadba8276c6d93d5d91dfe767b9b7f264fe3e1a",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 42,
+          "page_id": "page-4214dc616d97d0a40994",
+          "text_fingerprint": "4d87787eb07b00c18d1e253725a530bdad502885fd1a45ba2b40b75be862af2a",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-1c9fddbea2b4314811fd",
+            "evidence-dbde98bb246113f0c7d9"
+          ],
+          "text_start": 1048,
+          "text_end": 1050,
+          "matched_text": "系统"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 14,
+          "page_id": "page-dc4a67bda37fb6cf7fa5",
+          "text_fingerprint": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-02b8e76eb765a7cd6db9",
+            "evidence-02fecb5773dde6cd01e4",
+            "evidence-1bfcc9ab9e3c1f2c5eb9",
+            "evidence-202210743447409c3fab",
+            "evidence-21c96b71e0daa868dabd",
+            "evidence-257184909857bc95884c",
+            "evidence-2e6ceb3a4df913d5bb1a",
+            "evidence-378b18aaebd0628243c8",
+            "evidence-4637bf41419eac752546",
+            "evidence-51e3bcecc735117e1fd4",
+            "evidence-52a60eede93bd92c2766",
+            "evidence-56738c679ea4849cee87",
+            "evidence-650975a896876ca7c13f",
+            "evidence-6b9b30a51d949aec8140",
+            "evidence-7850d683fff9325daaf0",
+            "evidence-7df2aae933c522d24b63",
+            "evidence-7ef848a90097c69cfd16",
+            "evidence-829375cd80df8834b573",
+            "evidence-88aa5b0dfe0527e37668",
+            "evidence-8921b80e9e5cedb20485",
+            "evidence-8ea08aa663f548894f05",
+            "evidence-9cb932403ffa1be5eeb5",
+            "evidence-af9973f894c2326502fd",
+            "evidence-b490108e4fa09c6a08ef",
+            "evidence-c50ac8705f328705c073",
+            "evidence-cd2a00746a928ad8fdf8",
+            "evidence-ce0c6fca6810fa2b60b7",
+            "evidence-ef399d007ee48326e817",
+            "evidence-f4c6cdcf23ebf8865c1a",
+            "evidence-f6624d44d000470f19a7",
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "text_start": 510,
+          "text_end": 512,
+          "matched_text": "系统"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 11,
+          "page_id": "page-e331aa8c29549c3d93e8",
+          "text_fingerprint": "3299f203db6f1b422de55b48da503946e87fad620791d9c9c88cd27f00a368bc",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-25d97f174e799be4af76",
+            "evidence-4ef3a989765fd3565b73",
+            "evidence-5242b3d07c2aedc910c8",
+            "evidence-6c1e3f5d967941c4d495",
+            "evidence-8cc29b66c4300712bbf8",
+            "evidence-ba1fbd27df4a955862ca",
+            "evidence-d55f2e446c3f49296354",
+            "evidence-d9139eeb21b8a5ef4f49",
+            "evidence-ee65bdbd84c74c8c7535"
+          ],
+          "text_start": 511,
+          "text_end": 513,
+          "matched_text": "系统"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 32,
+          "page_id": "page-e48ad00884f67f04bba0",
+          "text_fingerprint": "fc2eac25a8ab3842f8de7fbc8c1c2d4aeab90d3ea9ed2aa6d86b1415c1ad5cc3",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-5d167a371d1979e69f8c",
+            "evidence-9f42c50b7e2f53da3d41"
+          ],
+          "text_start": 78,
+          "text_end": 80,
+          "matched_text": "系统"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 42,
+          "page_id": "page-4214dc616d97d0a40994",
+          "text_fingerprint": "4d87787eb07b00c18d1e253725a530bdad502885fd1a45ba2b40b75be862af2a",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-1c9fddbea2b4314811fd",
+            "evidence-dbde98bb246113f0c7d9"
+          ],
+          "text_start": 1048,
+          "text_end": 1050,
+          "matched_text": "系统"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 14,
+          "page_id": "page-dc4a67bda37fb6cf7fa5",
+          "text_fingerprint": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-02b8e76eb765a7cd6db9",
+            "evidence-02fecb5773dde6cd01e4",
+            "evidence-1bfcc9ab9e3c1f2c5eb9",
+            "evidence-202210743447409c3fab",
+            "evidence-21c96b71e0daa868dabd",
+            "evidence-257184909857bc95884c",
+            "evidence-2e6ceb3a4df913d5bb1a",
+            "evidence-378b18aaebd0628243c8",
+            "evidence-4637bf41419eac752546",
+            "evidence-51e3bcecc735117e1fd4",
+            "evidence-52a60eede93bd92c2766",
+            "evidence-56738c679ea4849cee87",
+            "evidence-650975a896876ca7c13f",
+            "evidence-6b9b30a51d949aec8140",
+            "evidence-7850d683fff9325daaf0",
+            "evidence-7df2aae933c522d24b63",
+            "evidence-7ef848a90097c69cfd16",
+            "evidence-829375cd80df8834b573",
+            "evidence-88aa5b0dfe0527e37668",
+            "evidence-8921b80e9e5cedb20485",
+            "evidence-8ea08aa663f548894f05",
+            "evidence-9cb932403ffa1be5eeb5",
+            "evidence-af9973f894c2326502fd",
+            "evidence-b490108e4fa09c6a08ef",
+            "evidence-c50ac8705f328705c073",
+            "evidence-cd2a00746a928ad8fdf8",
+            "evidence-ce0c6fca6810fa2b60b7",
+            "evidence-ef399d007ee48326e817",
+            "evidence-f4c6cdcf23ebf8865c1a",
+            "evidence-f6624d44d000470f19a7",
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "text_start": 510,
+          "text_end": 512,
+          "matched_text": "系统"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 11,
+          "page_id": "page-e331aa8c29549c3d93e8",
+          "text_fingerprint": "3299f203db6f1b422de55b48da503946e87fad620791d9c9c88cd27f00a368bc",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-25d97f174e799be4af76",
+            "evidence-4ef3a989765fd3565b73",
+            "evidence-5242b3d07c2aedc910c8",
+            "evidence-6c1e3f5d967941c4d495",
+            "evidence-8cc29b66c4300712bbf8",
+            "evidence-ba1fbd27df4a955862ca",
+            "evidence-d55f2e446c3f49296354",
+            "evidence-d9139eeb21b8a5ef4f49",
+            "evidence-ee65bdbd84c74c8c7535"
+          ],
+          "text_start": 511,
+          "text_end": 513,
+          "matched_text": "系统"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 32,
+          "page_id": "page-e48ad00884f67f04bba0",
+          "text_fingerprint": "fc2eac25a8ab3842f8de7fbc8c1c2d4aeab90d3ea9ed2aa6d86b1415c1ad5cc3",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-5d167a371d1979e69f8c",
+            "evidence-9f42c50b7e2f53da3d41"
+          ],
+          "text_start": 78,
+          "text_end": 80,
+          "matched_text": "系统"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-c87f5a6deaa0a13c0567",
+      "normalized_form": "轴承振动",
+      "candidate_type": "phenomenon",
+      "mapped_class": null,
+      "mapping_kind": "defer",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "b1ff758c9aa95e4b7927e866a2c34761ac3a7f1d50d12136adec986390b8fb32",
+      "current_candidate_content_fingerprint": "81fc212d173fe3bd4ef6d97ab7351f77cfbc0aa55292b6a1de94f31ef18d41c0",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 22,
+          "page_id": "page-0c906b7783f31a57ec10",
+          "text_fingerprint": "929d157c6637c954b8745e30bc7836e493ddb35e25f82b79b5ef835b1b138d3f",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 426,
+          "text_end": 430,
+          "matched_text": "轴承振动"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 63,
+          "page_id": "page-b16557c8b6a61115b2eb",
+          "text_fingerprint": "1df1d7acaba76d1a2050f0aa87e8c5867f1fc04ef7bb4f83bc564cc42c7dacc1",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "comparator"
+          ],
+          "text_start": 199,
+          "text_end": 203,
+          "matched_text": "轴承振动"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 22,
+          "page_id": "page-0c906b7783f31a57ec10",
+          "text_fingerprint": "929d157c6637c954b8745e30bc7836e493ddb35e25f82b79b5ef835b1b138d3f",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 426,
+          "text_end": 430,
+          "matched_text": "轴承振动"
+        },
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 63,
+          "page_id": "page-b16557c8b6a61115b2eb",
+          "text_fingerprint": "1df1d7acaba76d1a2050f0aa87e8c5867f1fc04ef7bb4f83bc564cc42c7dacc1",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "comparator"
+          ],
+          "text_start": 199,
+          "text_end": 203,
+          "matched_text": "轴承振动"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-1dd988febace6fe80f96",
+      "normalized_form": "汽轮机本体安装",
+      "candidate_type": "process",
+      "mapped_class": "ProcedureDefinition",
+      "mapping_kind": "class_label",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "80596619a3389d4ac5f9bbf0f2278b6d11ade2e3f0f27ce41b418fd8e49c2f9f",
+      "current_candidate_content_fingerprint": "80596619a3389d4ac5f9bbf0f2278b6d11ade2e3f0f27ce41b418fd8e49c2f9f",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 3,
+          "page_id": "page-708c70644d4cd4a32585",
+          "text_fingerprint": "31d028c042dbfcbd70eea177af6163b39485b85f185ed4a60ccf0b98c84a08cd",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 0,
+          "text_end": 7,
+          "matched_text": "汽轮机本体安装"
+        },
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 35,
+          "page_id": "page-24d9fa6ff1d8763dbc3a",
+          "text_fingerprint": "2d8d334620cd6fb328610587876b65f2f53c95e5e92092c02bfc2716724251a3",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 33,
+          "text_end": 40,
+          "matched_text": "汽轮机本体安装"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 3,
+          "page_id": "page-708c70644d4cd4a32585",
+          "text_fingerprint": "31d028c042dbfcbd70eea177af6163b39485b85f185ed4a60ccf0b98c84a08cd",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 0,
+          "text_end": 7,
+          "matched_text": "汽轮机本体安装"
+        },
+        {
+          "document_key": "DL5190.3",
+          "document_logical_id": "doc-24b25833ab82e212d1fb",
+          "revision_id": "rev-4c1c24a74e4b364652e3",
+          "physical_page": 35,
+          "page_id": "page-24d9fa6ff1d8763dbc3a",
+          "text_fingerprint": "2d8d334620cd6fb328610587876b65f2f53c95e5e92092c02bfc2716724251a3",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 33,
+          "text_end": 40,
+          "matched_text": "汽轮机本体安装"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-9d2f374e9e460329208a",
+      "normalized_form": "检查",
+      "candidate_type": "action",
+      "mapped_class": "StepDefinition",
+      "mapping_kind": "class_label",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "6a586b67ec41dac4adf39fbb0578054a1957e725794a9e07ca05569f9dd50884",
+      "current_candidate_content_fingerprint": "7acffb2eff4a1d9ef7b5904488d6cf73fbd12c7c202968274b9ca859976d7d55",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 57,
+          "text_end": 59,
+          "matched_text": "检查"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 14,
+          "page_id": "page-dc4a67bda37fb6cf7fa5",
+          "text_fingerprint": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-02b8e76eb765a7cd6db9",
+            "evidence-02fecb5773dde6cd01e4",
+            "evidence-1bfcc9ab9e3c1f2c5eb9",
+            "evidence-202210743447409c3fab",
+            "evidence-21c96b71e0daa868dabd",
+            "evidence-257184909857bc95884c",
+            "evidence-2e6ceb3a4df913d5bb1a",
+            "evidence-378b18aaebd0628243c8",
+            "evidence-4637bf41419eac752546",
+            "evidence-51e3bcecc735117e1fd4",
+            "evidence-52a60eede93bd92c2766",
+            "evidence-56738c679ea4849cee87",
+            "evidence-650975a896876ca7c13f",
+            "evidence-6b9b30a51d949aec8140",
+            "evidence-7850d683fff9325daaf0",
+            "evidence-7df2aae933c522d24b63",
+            "evidence-7ef848a90097c69cfd16",
+            "evidence-829375cd80df8834b573",
+            "evidence-88aa5b0dfe0527e37668",
+            "evidence-8921b80e9e5cedb20485",
+            "evidence-8ea08aa663f548894f05",
+            "evidence-9cb932403ffa1be5eeb5",
+            "evidence-af9973f894c2326502fd",
+            "evidence-b490108e4fa09c6a08ef",
+            "evidence-c50ac8705f328705c073",
+            "evidence-cd2a00746a928ad8fdf8",
+            "evidence-ce0c6fca6810fa2b60b7",
+            "evidence-ef399d007ee48326e817",
+            "evidence-f4c6cdcf23ebf8865c1a",
+            "evidence-f6624d44d000470f19a7",
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 51,
+          "text_end": 53,
+          "matched_text": "检查"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 16,
+          "page_id": "page-602f37997979dc914dbb",
+          "text_fingerprint": "a6c08cf47b4ed97c039a5696f62ecf73a61b7bdd211ebc27558cb61dbcbce80e",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-28b60b4ea010422f97e0",
+            "evidence-6803796599c4fe8400c1",
+            "evidence-805b2ac93dd30cb918ce",
+            "evidence-962d5525a9d11e6f2e9d",
+            "evidence-acea33fbb11accf2c8c9",
+            "evidence-b3a51c829fd428ba7bdc",
+            "evidence-c45fbff2e8966a01820a",
+            "evidence-c66886e5d1c21578acd8",
+            "evidence-fa422c7149508c02140c"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 254,
+          "text_end": 256,
+          "matched_text": "检查"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "D300N",
+          "document_logical_id": "doc-af7fa1738c5c89599e41",
+          "revision_id": "rev-c700c57426b967b2d2c9",
+          "physical_page": 50,
+          "page_id": "page-54a59a434c4c1486b07f",
+          "text_fingerprint": "c015fe4d94fcd52d63dfc9c1586df43a2f9f2d83a9e2ca77437ae4f0b8000a17",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-135e7de5767264fb4302",
+            "evidence-420b708af268c44addd0",
+            "evidence-7765942414f315376d8b"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 57,
+          "text_end": 59,
+          "matched_text": "检查"
+        },
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 14,
+          "page_id": "page-dc4a67bda37fb6cf7fa5",
+          "text_fingerprint": "e6e7f48c066570b30a6586693b5db69d717ddf0109f2292563a809dc924f67e2",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-02b8e76eb765a7cd6db9",
+            "evidence-02fecb5773dde6cd01e4",
+            "evidence-1bfcc9ab9e3c1f2c5eb9",
+            "evidence-202210743447409c3fab",
+            "evidence-21c96b71e0daa868dabd",
+            "evidence-257184909857bc95884c",
+            "evidence-2e6ceb3a4df913d5bb1a",
+            "evidence-378b18aaebd0628243c8",
+            "evidence-4637bf41419eac752546",
+            "evidence-51e3bcecc735117e1fd4",
+            "evidence-52a60eede93bd92c2766",
+            "evidence-56738c679ea4849cee87",
+            "evidence-650975a896876ca7c13f",
+            "evidence-6b9b30a51d949aec8140",
+            "evidence-7850d683fff9325daaf0",
+            "evidence-7df2aae933c522d24b63",
+            "evidence-7ef848a90097c69cfd16",
+            "evidence-829375cd80df8834b573",
+            "evidence-88aa5b0dfe0527e37668",
+            "evidence-8921b80e9e5cedb20485",
+            "evidence-8ea08aa663f548894f05",
+            "evidence-9cb932403ffa1be5eeb5",
+            "evidence-af9973f894c2326502fd",
+            "evidence-b490108e4fa09c6a08ef",
+            "evidence-c50ac8705f328705c073",
+            "evidence-cd2a00746a928ad8fdf8",
+            "evidence-ce0c6fca6810fa2b60b7",
+            "evidence-ef399d007ee48326e817",
+            "evidence-f4c6cdcf23ebf8865c1a",
+            "evidence-f6624d44d000470f19a7",
+            "evidence-fa46378641d9939dee2f"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 51,
+          "text_end": 53,
+          "matched_text": "检查"
+        },
+        {
+          "document_key": "HAF103",
+          "document_logical_id": "doc-a1f2fbf6ee4b0277e46a",
+          "revision_id": "rev-be31e11d289998c918fa",
+          "physical_page": 16,
+          "page_id": "page-602f37997979dc914dbb",
+          "text_fingerprint": "a6c08cf47b4ed97c039a5696f62ecf73a61b7bdd211ebc27558cb61dbcbce80e",
+          "text_origin": "ocr_text",
+          "source_kind": "accepted_stage6_evidence",
+          "evidence_ids": [
+            "evidence-28b60b4ea010422f97e0",
+            "evidence-6803796599c4fe8400c1",
+            "evidence-805b2ac93dd30cb918ce",
+            "evidence-962d5525a9d11e6f2e9d",
+            "evidence-acea33fbb11accf2c8c9",
+            "evidence-b3a51c829fd428ba7bdc",
+            "evidence-c45fbff2e8966a01820a",
+            "evidence-c66886e5d1c21578acd8",
+            "evidence-fa422c7149508c02140c"
+          ],
+          "critical_signals": [
+            "acceptance_or_verification"
+          ],
+          "text_start": 254,
+          "text_end": 256,
+          "matched_text": "检查"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-16e3caf09e0115d697c4",
+      "normalized_form": "氧化处理→发黑处理",
+      "candidate_type": "synonym_candidate",
+      "mapped_class": null,
+      "mapping_kind": "alias_relation",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "69a093b27f539d5fdc9e6f8845f3e3b11d2b674f376f5d7aa92d2f247f8e852f",
+      "current_candidate_content_fingerprint": "2de9854294474123d519b3ea52e05035eee515cad5e4412d5b81fbde3cc78a58",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 175,
+          "page_id": "page-9c49967e4b8976691361",
+          "text_fingerprint": "955b2686bd53e2aa14d24ef98f33b9f6467bb61ad0f01afe5aba8ef30613c434",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 448,
+          "text_end": 458,
+          "matched_text": "氧化处理→发黑处理"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "auxiliary_installation_book",
+          "document_logical_id": "doc-2e6846eb4bb57309a4ee",
+          "revision_id": "rev-a2a1d7444e558b2a813a",
+          "physical_page": 175,
+          "page_id": "page-9c49967e4b8976691361",
+          "text_fingerprint": "955b2686bd53e2aa14d24ef98f33b9f6467bb61ad0f01afe5aba8ef30613c434",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "text_start": 448,
+          "text_end": 458,
+          "matched_text": "氧化处理→发黑处理"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    },
+    {
+      "candidate_id": "term-ed1f3e67dbdaf21d5030",
+      "normalized_form": "不同负荷工况",
+      "candidate_type": "applicability_condition",
+      "mapped_class": "ApplicabilityScope",
+      "mapping_kind": "scope_value",
+      "decision": "deferred",
+      "historical_candidate_content_fingerprint": "f4f975cd341826ee3b45ff0cde85c185dd351ce0d6a806874d57fc1d3182c661",
+      "current_candidate_content_fingerprint": "f4f975cd341826ee3b45ff0cde85c185dd351ce0d6a806874d57fc1d3182c661",
+      "old_selected_source_occurrences": [
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 17,
+          "page_id": "page-1d53732cefdc573d0be2",
+          "text_fingerprint": "1ccfca4cdcc329f87103ffb8c118847e8ba895d182f8c87eec0474811b363533",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "applicability"
+          ],
+          "text_start": 546,
+          "text_end": 552,
+          "matched_text": "不同负荷工况"
+        }
+      ],
+      "new_selected_source_occurrences": [
+        {
+          "document_key": "DLT863",
+          "document_logical_id": "doc-7a1d2e663bf13813d7b7",
+          "revision_id": "rev-a6ea5862f790a65e1dbf",
+          "physical_page": 17,
+          "page_id": "page-1d53732cefdc573d0be2",
+          "text_fingerprint": "1ccfca4cdcc329f87103ffb8c118847e8ba895d182f8c87eec0474811b363533",
+          "text_origin": "ocr_text",
+          "source_kind": "page_text",
+          "critical_signals": [
+            "applicability"
+          ],
+          "text_start": 546,
+          "text_end": 552,
+          "matched_text": "不同负荷工况"
+        }
+      ],
+      "selected_sources_preserved": true,
+      "added_source_occurrences": [],
+      "current_original_page_checks": [],
+      "current_original_confirmation_required": true,
+      "decision_preserved": true
+    }
+  ]
+}

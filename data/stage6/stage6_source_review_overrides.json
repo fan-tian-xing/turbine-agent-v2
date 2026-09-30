@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_source_review_overrides",
+  "original_pdf_sha256": {
+    "D300N": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+    "DLT863": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+    "HAF103": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+    "auxiliary_installation_book": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d"
+  },
+  "supplemental_prose_regions": [
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "y_ranges": [
+        [
+          198,
+          305
+        ],
+        [
+          453,
+          502
+        ],
+        [
+          513,
+          591
+        ],
+        [
+          602,
+          650
+        ],
+        [
+          660,
+          739
+        ]
+      ],
+      "reason": "Original-page prose outside the reviewed table; final group is a cross-page fragment."
+    }
+  ],
+  "ocr_box_edits": [
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "x0": 195.0,
+      "y0": 484.0,
+      "expected_text": "）",
+      "replacement_text": "c)"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "x0": 193.0,
+      "y0": 810.0,
+      "expected_text": "(P",
+      "replacement_text": "d)"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 12,
+      "x0": 223.0,
+      "y0": 1039.0,
+      "expected_text": "具备本职业（工种）.基础知识培训的教室和教学设备。",
+      "replacement_text": "具备本职业（工种）基础知识培训的教室和教学设备。"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 32,
+      "x0": 196.0,
+      "y0": 1187.0,
+      "expected_text": "La5A1006-个标准大气压相当于（C）mmHg。",
+      "replacement_text": "La5A1006一个标准大气压相当于（C）mmHg。"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 120,
+      "x0": 203.0,
+      "y0": 1000.0,
+      "expected_text": "Jf4A1630于斤顶在使用时应放平整，并在上下端垫以",
+      "replacement_text": "Jf4A1630千斤顶在使用时应放平整，并在上下端垫以"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "x0": 156.0,
+      "y0": 587.0,
+      "expected_text": "值，用字母n表示。",
+      "replacement_text": "值，用字母η表示。"
+    }
+  ],
+  "ocr_margin_exclusions": [
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 64,
+      "x0_min": 850,
+      "y0_max": 270,
+      "expected_count": 7,
+      "expected_text_sha256": "f3568baa3365a9ece3b5e9a54ad0926f48fdfc48d4b2fe1c9947e95e05f9ed37"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 120,
+      "x0_min": 850,
+      "y0_max": 320,
+      "expected_count": 7,
+      "expected_text_sha256": "c0de44b035d2c9b447639d593849aade2ff45d62b68039934a119ce80f23092c"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 180,
+      "x0_min": 850,
+      "y0_max": 320,
+      "expected_count": 7,
+      "expected_text_sha256": "6142706a3ac09b528847eb1caea1b409670f626a8aba5fac73c03d222b64f9bc"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 244,
+      "x0_min": 850,
+      "y0_max": 320,
+      "expected_count": 7,
+      "expected_text_sha256": "2fd425e6c8c9caa9e645211fb9968d8d3ea1cfe3b7cefbd730d5c4c38da2f5b5"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 360,
+      "x0_min": 850,
+      "y0_max": 320,
+      "expected_count": 5,
+      "expected_text_sha256": "2ff7275934a61e79078c4fcefeda4a4e894c8ed0fa6cea24dff8c58074b3f08e"
+    }
+  ],
+  "extractability_decisions": [
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "match": "all",
+      "status": "pending_review",
+      "reason": "Diagram OCR contains unverified labels and spatial relations."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 300,
+      "match": "all",
+      "status": "context_only",
+      "reason": "Only six formula lines and the printed 图 D-12 caption/legend are bound to original-page regions; diagram geometry remains visual-only and cannot support extracted engineering claims."
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 468,
+      "match": "all",
+      "status": "context_only",
+      "reason": "Sample exam questions have no printed answer marks; the final question continues on the next page."
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "match": "text_prefix",
+      "value": "证明书目录\n",
+      "status": "context_only",
+      "reason": "Record-directory column provides source context for table item 8; it is not an independent engineering requirement."
+    }
+  ],
+  "source_fragment_exclusions": [
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "expected_text_sha256": "fc068caba1d888c56f5a0ae70960f51ac52a8ebe2bc1f47c0e006bf74d55ca1a",
+      "reason": "Printed standard header, verified against original physical page 14",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "expected_text_sha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5",
+      "reason": "Printed page number, verified against original physical page 14",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "expected_text_sha256": "fc068caba1d888c56f5a0ae70960f51ac52a8ebe2bc1f47c0e006bf74d55ca1a",
+      "reason": "Printed standard header, verified against original physical page 15",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "expected_text_sha256": "4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8",
+      "reason": "Printed page number, verified against original physical page 15",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "expected_text_sha256": "68c3686eb1269bbc384729318d3b71e58c623671382110cb0df36f7c81ee20c8",
+      "reason": "Cross-page 2.1.2 clause continues on page 2",
+      "kind": "excluded_incomplete_source"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 1,
+      "expected_text_sha256": "fe51d0051a648924b2efa2ef8bd94525b8847e7e93f614f8a63d741720e3078f",
+      "reason": "Printed page footer",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "expected_text_sha256": "8847ce097d0d6ec75860db0f369929999a9905102f05a72c3985d1de15fa8487",
+      "reason": "Opening clause continues from page 10",
+      "kind": "excluded_incomplete_source"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 11,
+      "expected_text_sha256": "4f3a851dda156186f672ef4f0e81e0a3d032ef019c66d80b3ad23ba94544967b",
+      "reason": "Printed page footer",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 12,
+      "expected_text_sha256": "5abfa79c307a8ffeeea8ae9a688f141055e02fadd1f72b1f513eec050da9924b",
+      "reason": "Printed page footer",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 16,
+      "expected_text_sha256": "457f51989c7e97c3302a99b45f009f11843fbf83b88914f0e0aa221c482a1971",
+      "reason": "Opening clause continues from page 15",
+      "kind": "excluded_incomplete_source"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 16,
+      "expected_text_sha256": "22bf54f6f15bd972e278c1553b852c9c3301a1339e9174d31cf187f9bbbaf165",
+      "reason": "Printed page footer",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "expected_text_sha256": "5c03be6c816c847414503b4e09f4b8ad2e988f969ee1075c5e6b8c26b743cf9b",
+      "reason": "Definition continues on page 30",
+      "kind": "excluded_incomplete_source"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 29,
+      "expected_text_sha256": "6260bcca816a66be364bda20a2b0c6a1e7e0f4ef13d4cd77ad9c4d55bf5c3867",
+      "reason": "Printed page footer",
+      "kind": "navigation_only"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 32,
+      "expected_text_sha256": "43443af27333542831797626068ce26013e053601a2fff796f3d2290ea51fc0d",
+      "reason": "Opening definition continues from page 31",
+      "kind": "excluded_incomplete_source"
+    },
+    {
+      "document_key": "HAF103",
+      "physical_page": 32,
+      "expected_text_sha256": "6d0bed4548858f3dc90fd747cc934da982d84dcadd17ad66bc83d7b26a99b66c",
+      "reason": "Printed page footer",
+      "kind": "navigation_only"
+    }
+  ],
+  "reviewed_table_text_regions": [
+    {
+      "document_key": "D300N",
+      "physical_page": 50,
+      "reason": "Original PDF visual review confirms independent table items 7–9 and the separate record-directory column. Table item 6 g–i is source-bound together with physical page 49 in the reviewed cross-page unit.",
+      "regions": [
+        {
+          "region_id": "item-7-bearing-upper",
+          "expected_text_sha256": "d5c72a8d744bcfc39d25e60f52587a58ad3b8cbe46de5845ce8b90127862f4fa",
+          "rectangles": [
+            {
+              "x0": 68,
+              "y0": 352,
+              "x1": 360,
+              "y1": 383
+            }
+          ]
+        },
+        {
+          "region_id": "item-8-bearing-box-upper",
+          "expected_text_sha256": "8a9cea68ba7bf011bd9c972f8883cd5817350a4d98f857ffa55a9f1f5c6148ef",
+          "rectangles": [
+            {
+              "x0": 68,
+              "y0": 382,
+              "x1": 360,
+              "y1": 565
+            }
+          ]
+        },
+        {
+          "region_id": "item-8-record-directory",
+          "expected_text_sha256": "c0de1f5c3bc39aa56e04ea4975e63010472b759e9ec3e8dc0bf16aa75e8d34b2",
+          "rectangles": [
+            {
+              "x0": 420,
+              "y0": 150,
+              "x1": 540,
+              "y1": 173
+            },
+            {
+              "x0": 420,
+              "y0": 425,
+              "x1": 540,
+              "y1": 550
+            }
+          ]
+        },
+        {
+          "region_id": "item-9-diaphragm-upper",
+          "expected_text_sha256": "1d04d6e255ba8737cf2d2a5da126baf062f813184c6036f5df1b818e00267694",
+          "rectangles": [
+            {
+              "x0": 68,
+              "y0": 565,
+              "x1": 360,
+              "y1": 641
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "omitted_incomplete_source_regions": [],
+  "ocr_box_exclusions": [
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "x0": 559.0,
+      "y0": 693.0,
+      "expected_text": "对接间厚",
+      "reason": "Original diagram label is visually unreadable at supplied resolution; OCR output cannot be verified."
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "x0": 766.0,
+      "y0": 1003.0,
+      "expected_text": "Te99999999R",
+      "reason": "OCR interpreted drawing strokes as characters; no such source text exists."
+    }
+  ],
+  "reviewed_page_body_bounds": [
+    {"document_key": "DL5190.3", "physical_page": 14, "y_min": 56.0, "y_max": 785.0},
+    {"document_key": "DL5190.3", "physical_page": 25, "y_min": 56.0, "y_max": 785.0},
+    {"document_key": "DL5190.3", "physical_page": 42, "y_min": 56.0, "y_max": 785.0},
+    {"document_key": "DL5190.3", "physical_page": 86, "y_min": 56.0, "y_max": 785.0},
+    {"document_key": "DL5190.3", "physical_page": 113, "y_min": 56.0, "y_max": 785.0},
+    {"document_key": "D300N", "physical_page": 38, "y_min": 130.0, "y_max": 700.0},
+    {"document_key": "D300N", "physical_page": 73, "y_min": 130.0, "y_max": 700.0}
+  ],
+  "reviewed_span_splits": [
+    {
+      "document_key": "DL5190.3", "physical_page": 14,
+      "source_text_sha256": "5d7f84fd82012cfc18d84d97dbb70d5909fe9d376850640e0f989f17caf7b29f",
+      "segments": [
+        {"segment_id": "p14-complete-3.2.4-3.2.5", "bbox_pdf_pt": [56.6, 638.9, 539, 760], "text_sha256": "7b45b5f6fb065f9bac2b0c261b44d18bbf55893ba68e9b7ae5e9e860959ea555", "disposition": "structured", "stage12_extractability": "source_text"},
+        {"segment_id": "p14-incomplete-3.2.6", "bbox_pdf_pt": [56.6, 763.7, 539, 775.6], "text_sha256": "abea7ac10431a82cea2c83e8ec0dd41a3ed0bda0d410245ad2626c277583afdf", "disposition": "region_scoped", "stage12_extractability": "context_only"}
+      ]
+    },
+    {
+      "document_key": "DL5190.3", "physical_page": 42,
+      "source_text_sha256": "f8bca02353bdc4c0544c9c1b59fc79dbf328a6137e9262822080796cc1cf43bf",
+      "segments": [
+        {"segment_id": "p42-continuation-5.4.6", "bbox_pdf_pt": [77.7, 59.5, 438.1, 87], "text_sha256": "fc6dc2b66e5a51e6d0b0e9f6f38aea61a18adc3b1f44489fb5d52d81d145ecfc", "disposition": "region_scoped", "stage12_extractability": "context_only"},
+        {"segment_id": "p42-complete-5.4.7-5.4.11", "bbox_pdf_pt": [56.6, 90.7, 544, 491.9], "text_sha256": "ff99e23c26e1e79c4ca37d07b493993838c73b385795538866b4fc182fe3c9f1", "disposition": "structured", "stage12_extractability": "source_text"}
+      ]
+    },
+    {
+      "document_key": "DL5190.3", "physical_page": 113,
+      "source_text_sha256": "22f4cecc8adad8559243bdf80053f85a854516d6b05ce1f6b67f45c13d8a0c0f",
+      "segments": [
+        {"segment_id": "p113-figure-legend", "bbox_pdf_pt": [116.6, 699.9, 276.3, 711.8], "text_sha256": "1d574a1d9aedfae0342fb399d7351fdb02a80c20ec67e3b5498a697163eb90c8", "disposition": "visual_only", "stage12_extractability": "context_only"},
+        {"segment_id": "p113-complete-12.2.2-12.2.3-1", "bbox_pdf_pt": [56.6, 715.5, 422, 758.6], "text_sha256": "66c189e1014eda6149249034f5279a3f9cf16ccb4ecd3bc83e1daad70155d1f9", "disposition": "structured", "stage12_extractability": "source_text"},
+        {"segment_id": "p113-tail-12.2.3-2", "bbox_pdf_pt": [77.7, 762.3, 296, 774.1], "text_sha256": "c0245955c8694efaa19c2c46041edda913d68b2a7e374eb0a8471150f957251c", "disposition": "region_scoped", "stage12_extractability": "context_only"}
+      ]
+    }
+  ],
+  "reviewed_context_evidence": [
+    {"document_key": "DL5190.3", "physical_page": 113, "source_text_sha256": "772a4ced85e9fd56dc2c6bdd5b9a539c26e5f2f17a1154cac14ab71b36333844", "status": "context_only", "reason": "Continuation of the preceding page's clause; its opening condition is absent from this page."},
+    {"document_key": "DL5190.3", "physical_page": 113, "source_text_sha256": "5db04a72d2635aff830ecbd4fbca0dca2ed243bf1f6306fde97d0c4c6969be6c", "status": "context_only", "reason": "Printed figure caption is visual context and is separately bound to the figure rectangle."},
+    {"document_key": "D300N", "physical_page": 73, "source_text_sha256": "990d8236fad2012f14a9c471ccacc34733c71ffbc4ff7b08b3d2c19de5c08c7d", "status": "context_only", "reason": "Section heading supplies context but is not an independent installation requirement."}
+  ]
+}

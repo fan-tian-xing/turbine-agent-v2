@@ -5,6 +5,15 @@
   "status": "complete",
   "formal_release": false,
   "authority": "Original materials original PDF pages; OCR is processing assistance only",
+  "inputs": {
+    "source_input_fingerprint": "709f84122c98f964064bfd57c675b2ba83eddffa8bba2e5f2893b8f236909701",
+    "stage5_sample_manifest_sha256": "65a37aa094348bb1126f8a6a60d578c5a5e20d298de519bc97f0e7c5a2a5a227",
+    "source_assets_sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897",
+    "full_corpus_reviews_sha256": "6c62e391ce1721e1a2bf3a97dcc131c550fa1e2332e233a034c562dfba4acc8f",
+    "stage5_truth_annotations_sha256": "0b71391ad1016a7630d1048b140a56b30bcffc038c7300f52abe6c717d097d4c",
+    "stage5_table_truth_review_sha256": "31c344012e42fa90b395dc8dbac142ed48198472faf8bb296ee731193c068984",
+    "review_decisions_sha256": "e8c26cc061b0abf0f1111220d4b46ed085f1a94bec051cc410bf17ed76c23b73"
+  },
   "reviewed_page_count": 6,
   "accepted_page_count": 6,
   "table_region_count": 7,

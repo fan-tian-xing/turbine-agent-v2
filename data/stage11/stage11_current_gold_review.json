@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage11_current_gold_review",
+  "status": "review_complete",
+  "reviewed_at": "2026-09-29",
+  "formal_release": false,
+  "reviewers": [
+    "qa_contract_review",
+    "qa_statement_review",
+    "qa_source_review"
+  ],
+  "user_decision": "retain_auxiliary_p360_question_answer; split_count_delegated_for_review",
+  "historical_user_adjudication_preserved": true,
+  "original_page_review": {
+    "document_key": "auxiliary_installation_book",
+    "physical_pages": [
+      360,
+      361
+    ],
+    "question_key": "La1F2010",
+    "next_question_key": "La1F3011",
+    "reviewed_evidence_ids": [
+      "evidence-b2344c8b4d0ea55cd50d",
+      "evidence-d7667da7416611074df7"
+    ]
+  },
+  "reviewed_sample_count": 6,
+  "records": [
+    {
+      "sample_id": "stage11-dev-evidence-97d1de6c7b49cdea31f8",
+      "historical_adjudication_output_sha256": "f54f786c1e4a9047b1ab8150fca1df080271c89fed18a4bfa90f416d9a15e00c",
+      "historical_adjudicated_statement_count": 2,
+      "current_gold_sha256": "ee49598ec1e5b6a6028bc1c970e8242bd66c11cd20ec029aaa9291dd82e0bd3c",
+      "current_statement_count": 2,
+      "current_statement_ids": [
+        "stage11-statement-7121ec273c465f8f2c6f",
+        "stage11-statement-7121ec273c465f8f2c6f-s2"
+      ],
+      "current_statement_sha256": {
+        "stage11-statement-7121ec273c465f8f2c6f": "653ecb7be5c37566eaa22323f621c37a3d028e84c6898e80607171b0d4c9385d",
+        "stage11-statement-7121ec273c465f8f2c6f-s2": "494fb99fe3b72e7a797ca0b2562fc99a276f665fb7ed17f3d37438965f1c6d82"
+      },
+      "semantic_review_scope": "source_migration_only"
+    },
+    {
+      "sample_id": "stage11-dev-evidence-aa97a9ec78cf7cc57dc5",
+      "historical_adjudication_output_sha256": "ad64bcd27ac337a323dedf3ef8bdc7d253e171fa8327b3de0896c97884d2db68",
+      "historical_adjudicated_statement_count": 5,
+      "current_gold_sha256": "56db70a362c1b36aff53ec3921c826cad277906b2d6806d1b0bb54e6717ce5d6",
+      "current_statement_count": 11,
+      "current_statement_ids": [
+        "stage11-statement-a9ff60d2526222447813",
+        "stage11-statement-a9ff60d2526222447813-h1",
+        "stage11-statement-a9ff60d2526222447813-h2",
+        "stage11-statement-a9ff60d2526222447813-h3",
+        "stage11-statement-a9ff60d2526222447813-h4",
+        "stage11-statement-a9ff60d2526222447813-h5",
+        "stage11-statement-a9ff60d2526222447813-s1b",
+        "stage11-statement-a9ff60d2526222447813-s2",
+        "stage11-statement-a9ff60d2526222447813-s3",
+        "stage11-statement-a9ff60d2526222447813-s4",
+        "stage11-statement-a9ff60d2526222447813-s5"
+      ],
+      "current_statement_sha256": {
+        "stage11-statement-a9ff60d2526222447813": "01c414521153174f7010eb094da5e885ef0c562f996bc695237f349a95ec1c5d",
+        "stage11-statement-a9ff60d2526222447813-h1": "71a4a7003a501315dd830c46cfe495bf5764958be633ae2e5be6a934b7b5ae6a",
+        "stage11-statement-a9ff60d2526222447813-h2": "9a22731584ed856c8eb9fba5db6077d04f07d945b0ef23b8c114bbb2df27c031",
+        "stage11-statement-a9ff60d2526222447813-h3": "d6729ceacc81cecf5bed6c5e8e18917a188a47789cd8b1f3cb2317bfed643581",
+        "stage11-statement-a9ff60d2526222447813-h4": "83fef7d954662d13e21bcc15a5e8e0b1b0fb7a40c220f8abace1b8e617085eab",
+        "stage11-statement-a9ff60d2526222447813-h5": "7146146b3755d0e07276b59114e8185748655c062bd061ced7d023f64f58cc49",
+        "stage11-statement-a9ff60d2526222447813-s1b": "219fc0f33e8099118d74424a7b4a0810a8ebe7fceb6e5773e41c2203b20e0a52",
+        "stage11-statement-a9ff60d2526222447813-s2": "06010ca0c4e8ba803572ea2659d0fe69e4df8f344ea6fef9b1388aa7e8ea6f67",
+        "stage11-statement-a9ff60d2526222447813-s3": "1275395fb60323a0dc8412f09a439766c195903e3bdec79da90e2203a132cce9",
+        "stage11-statement-a9ff60d2526222447813-s4": "f21df9ef69bfe5cdfdb1abf818669320e1edcc1dc211400d777cb8179ab71c4b",
+        "stage11-statement-a9ff60d2526222447813-s5": "337f2fd0f665d19a5096d3ad537cf44562c230c1345162ca0cfea0e42e36e314"
+      },
+      "semantic_review_scope": "full_statement_semantics"
+    },
+    {
+      "sample_id": "stage11-dev-evidence-bb9c008b78e12b735d94",
+      "historical_adjudication_output_sha256": "04bf7120cbb560417146dc23ecbdbf2dc5904ccb3aee139d4cbf597a01b5c065",
+      "historical_adjudicated_statement_count": 1,
+      "current_gold_sha256": "384a7ecfacdc5e6172693f33abdca45f597e2dca0e294e2f8969a43c59d75ba3",
+      "current_statement_count": 1,
+      "current_statement_ids": [
+        "stage11-statement-5740cf642266fcd6feb4"
+      ],
+      "current_statement_sha256": {
+        "stage11-statement-5740cf642266fcd6feb4": "f35693eb1d83364171d5e336ed78dc25be4542da52de6067943992e07abc990d"
+      },
+      "semantic_review_scope": "source_migration_only"
+    },
+    {
+      "sample_id": "stage11-dev-evidence-cd924809c0b4d4b4acc5",
+      "historical_adjudication_output_sha256": "908b7dd96913be876426b515a8ecb19f97c8a63ed126fc212e9fa1bcb78b5fc0",
+      "historical_adjudicated_statement_count": 3,
+      "current_gold_sha256": "be053f5e0dc7ec23f99fd457207e9d3e38ca43098ed41d6cb729801398be1635",
+      "current_statement_count": 3,
+      "current_statement_ids": [
+        "stage11-statement-5ef7104eda31c3578f06",
+        "stage11-statement-5ef7104eda31c3578f06-s2",
+        "stage11-statement-5ef7104eda31c3578f06-s3"
+      ],
+      "current_statement_sha256": {
+        "stage11-statement-5ef7104eda31c3578f06": "2a13c2e58231e4da7a861605cc9ee29a92f3bf586989c329776f4a76c254ec82",
+        "stage11-statement-5ef7104eda31c3578f06-s2": "25c5ee243726d71130505131fc6969fc007cdf1c264dc548fd9ef50f2a5a47ba",
+        "stage11-statement-5ef7104eda31c3578f06-s3": "e02d603339b86daaa477b6b62654bd2039405fad5a169c473be44f22e4e48056"
+      },
+      "semantic_review_scope": "source_migration_only"
+    },
+    {
+      "sample_id": "stage11-dev-real-statement-d300n-p73-lift-clearance",
+      "historical_adjudication_output_sha256": null,
+      "historical_adjudicated_statement_count": null,
+      "current_gold_sha256": "2e3dcf071d9a8607895334ec22004d0583f0ea48773221c44850702c3345d461",
+      "current_statement_count": 4,
+      "current_statement_ids": [
+        "real-statement-d300n-p73-lift-clearance",
+        "real-statement-d300n-p73-lift-clearance-s2",
+        "real-statement-d300n-p73-lift-clearance-s3",
+        "real-statement-d300n-p73-lift-clearance-s4"
+      ],
+      "current_statement_sha256": {
+        "real-statement-d300n-p73-lift-clearance": "2e55e643b283cfbd6a763effb87806cf67f074a19a6a4f7834bc2c887b6c3108",
+        "real-statement-d300n-p73-lift-clearance-s2": "c92420f937bd3577ecd17c96804e16e377fd710f76b03d4471b1d95bb33127f2",
+        "real-statement-d300n-p73-lift-clearance-s3": "6d2ba3a392117fcc36620829a53a8003564f21452e8559209a5714dade77953f",
+        "real-statement-d300n-p73-lift-clearance-s4": "c620e358c3b10397227d90339fa44ece9bc2e0ddd8446ef1591d0348debc6465"
+      },
+      "semantic_review_scope": "source_migration_only"
+    },
+    {
+      "sample_id": "stage11-dev-real-statement-haf103-p1-scope",
+      "historical_adjudication_output_sha256": null,
+      "historical_adjudicated_statement_count": null,
+      "current_gold_sha256": "2e5481cb3687d6a9649abc02dc2ac2d213ee9627ee49361af56fc4395b1d2985",
+      "current_statement_count": 2,
+      "current_statement_ids": [
+        "real-statement-haf103-p1-scope",
+        "stage12-gold-scope-reference-only"
+      ],
+      "current_statement_sha256": {
+        "real-statement-haf103-p1-scope": "a2ba98d8ed65abb23f97d193442cfc3fc51ef64f2f224de18e704b5659e69c4d",
+        "stage12-gold-scope-reference-only": "ddf59072a70e502b41e6d652ce1104e5f341342a52a0fb7aabc2a7b6cfc3d3d6"
+      },
+      "semantic_review_scope": "source_migration_only"
+    }
+  ]
+}

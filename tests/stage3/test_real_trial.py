@@ -14,10 +14,11 @@ RUNTIME_CORPUS = PROJECT_ROOT / "var" / "stage3" / "real_trial_pages.json"
 if not RUNTIME_CORPUS.is_file():
     RUNTIME_CORPUS = PROJECT_ROOT / "tests" / "fixtures" / "stage3" / "real_trial_pages.json"
 BENCHMARK = PROJECT_ROOT / "data" / "stage3" / "real_trial_benchmark.json"
+CURRENT_SOURCE_BINDINGS = PROJECT_ROOT / "data" / "stage9" / "stage9_current_source_bindings.json"
 
 
 def test_confirmed_real_pages_run_through_retrieval_and_claim_validation():
-    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS)
+    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS, current_binding_path=CURRENT_SOURCE_BINDINGS)
     cases = json.loads(BENCHMARK.read_text(encoding="utf-8"))["cases"]
     for case in cases:
         statement = next(
@@ -46,7 +47,7 @@ def test_confirmed_real_pages_run_through_retrieval_and_claim_validation():
 
 
 def test_confirmed_real_pages_have_a_deduplicated_traceability_projection():
-    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS)
+    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS, current_binding_path=CURRENT_SOURCE_BINDINGS)
     projection = build_traceability_projection(corpus)
     node_ids = {node["id"] for node in projection["nodes"]}
     edge_keys = {(edge["from"], edge["to"], edge["type"]) for edge in projection["edges"]}
@@ -61,7 +62,7 @@ def test_confirmed_real_pages_have_a_deduplicated_traceability_projection():
 
 
 def test_confirmed_real_sources_are_bound_to_registry_applicability():
-    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS)
+    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS, current_binding_path=CURRENT_SOURCE_BINDINGS)
     assets = {
         item["asset_id"]: item
         for item in (

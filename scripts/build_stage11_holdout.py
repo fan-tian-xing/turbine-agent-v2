@@ -31,8 +31,8 @@ HOLDOUT_PAGES = {
     "auxiliary_installation_book": (78, 229, 429),
 }
 RESERVE_PAGES = {
-    "DL5190.3": (26,), "D300N": (8,), "DLT863": (8,), "HAF103": (4,),
-    "auxiliary_installation_book": (80,),
+    "DL5190.3": (29,), "D300N": (10,), "DLT863": (9,), "HAF103": (5,),
+    "auxiliary_installation_book": (81,),
 }
 
 
@@ -305,7 +305,7 @@ def build() -> tuple[list[dict], list[dict], dict]:
                 "independence": {"statement": True, "entity_alignment_algorithm": True},
                 "label_artifact": None,
                 "evidence_artifact": None,
-                "allowed_consumers": ["stage11_holdout_selector"],
+                "allowed_consumers": ["stage11_holdout_selector", "stage12_reserve_evidence_builder", "stage12_reserve_freeze_manifest"],
                 "review_status": "reserved",
                 "frozen": True,
             })

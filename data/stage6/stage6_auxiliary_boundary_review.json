@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_auxiliary_boundary_review_proposal",
+  "document_key": "auxiliary_installation_book",
+  "original_pdf_relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+  "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+  "ocr_pdf_filename": "汽轮机辅机安装（第二版）(OCR).pdf",
+  "ocr_pdf_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+  "coordinate_system": "original_pdf_display_points_rotation_90",
+  "reviewed_original_physical_pages": [
+    243,
+    244,
+    245,
+    360,
+    468,
+    469
+  ],
+  "sample_physical_pages": [
+    244,
+    360,
+    468
+  ],
+  "reviewed_at": "2026-09-29",
+  "source_units": [
+    {
+      "unit_id": "aux-p243-Je4C3266-start",
+      "physical_page": 243,
+      "bbox": [
+        40,
+        460,
+        360,
+        533
+      ],
+      "source_text": "Je4C3266 阀门本体泄漏故障应如何处理？\n答：对由于制作时浇注质量不好而产生砂眼、裂纹，使阀门机械强度降低、发生泄漏的情况，应对怀疑有裂纹处打磨光亮，然后用煤油或4%的硝酸溶液浸蚀即可显示出裂纹的痕迹，",
+      "ocr_reference_text": "Je4C3266阀门本体泄漏故障应如何处理？\n答：对由于制作时浇注质量不好而产生砂眼、裂纹，使阀\n门机械强度降低、发生泄漏的情况，应对怀疑有裂纹处打磨光\n亮，然后用煤油或4%的硝酸溶液浸蚀即可显示出裂纹的痕迹，",
+      "role": "cross_page_answer_start",
+      "stage12_extractability": "context_only_until_cross_page_binding"
+    },
+    {
+      "unit_id": "aux-p245-Je4C3270-tail",
+      "physical_page": 245,
+      "bbox": [
+        54,
+        53,
+        351,
+        73
+      ],
+      "source_text": "形，可加焊筋板增加刚性，焊后用车床精加工密封面。",
+      "ocr_reference_text": "形，可加焊筋板增加刚性，焊后用车床精加工密封面。",
+      "role": "cross_page_answer_end",
+      "stage12_extractability": "context_only_until_cross_page_binding"
+    },
+    {
+      "unit_id": "aux-p469-question-7-option-d",
+      "physical_page": 469,
+      "bbox": [
+        40,
+        50,
+        360,
+        75
+      ],
+      "source_text": "（D）环氧煤焦油玻璃钢。",
+      "ocr_reference_text": "（D）环氧煤焦油玻璃钢。",
+      "role": "unmarked_question_option_continuation",
+      "stage12_extractability": "question_context_only"
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "aux-Je4C3266",
+      "sample_page": 244,
+      "kind": "cross_page_answer",
+      "physical_pages": [
+        243,
+        244
+      ],
+      "question_key": "Je4C3266",
+      "current_sample_evidence_count": 1,
+      "source_unit_ids": [
+        "aux-p243-Je4C3266-start"
+      ],
+      "boundary": "p244 begins inside the answer; its local Evidence fragment does not form a standalone question or answer",
+      "integration_status": "pending_page_243_canonical_evidence"
+    },
+    {
+      "group_id": "aux-Je4C3267",
+      "sample_page": 244,
+      "kind": "ordered_three_step_answer",
+      "physical_pages": [
+        244
+      ],
+      "question_key": "Je4C3267",
+      "current_sample_evidence_count": 4,
+      "step_labels": [
+        "（1）",
+        "（2）",
+        "（3）"
+      ],
+      "integration_status": "source_group_reviewed_pending_canonical_binding"
+    },
+    {
+      "group_id": "aux-Je4C3268",
+      "sample_page": 244,
+      "kind": "question_answer",
+      "physical_pages": [
+        244
+      ],
+      "question_key": "Je4C3268",
+      "current_sample_evidence_count": 2,
+      "integration_status": "source_group_reviewed_pending_canonical_binding"
+    },
+    {
+      "group_id": "aux-Je4C3269",
+      "sample_page": 244,
+      "kind": "question_answer",
+      "physical_pages": [
+        244
+      ],
+      "question_key": "Je4C3269",
+      "current_sample_evidence_count": 2,
+      "integration_status": "source_group_reviewed_pending_canonical_binding"
+    },
+    {
+      "group_id": "aux-Je4C3270",
+      "sample_page": 244,
+      "kind": "cross_page_question_answer",
+      "physical_pages": [
+        244,
+        245
+      ],
+      "question_key": "Je4C3270",
+      "current_sample_evidence_count": 2,
+      "page_244_end": "大法兰刚性不够而变",
+      "page_245_begin": "形，可加焊筋板增加刚性，焊后用车床精加工密封面。",
+      "source_unit_ids": [
+        "aux-p245-Je4C3270-tail"
+      ],
+      "integration_status": "pending_page_245_canonical_evidence"
+    },
+    {
+      "group_id": "aux-La1F2009",
+      "sample_page": 360,
+      "kind": "classification_list",
+      "physical_pages": [
+        360
+      ],
+      "question_key": "La1F2009",
+      "current_sample_evidence_count": 8,
+      "source_total_items": 6,
+      "items": [
+        {
+          "label": "流量",
+          "symbol": "Q"
+        },
+        {
+          "label": "扬程",
+          "symbol": "H"
+        },
+        {
+          "label": "转速",
+          "symbol": "n"
+        },
+        {
+          "label": "轴功率",
+          "symbol": "N"
+        },
+        {
+          "label": "效率",
+          "symbol": "η"
+        },
+        {
+          "label": "比转速",
+          "symbol": null
+        }
+      ],
+      "item_semantics": "parallel pump-performance parameter classes; printed numbers are list labels, not a procedure",
+      "integration_status": "source_group_reviewed_pending_canonical_binding"
+    },
+    {
+      "group_id": "aux-La1F2010",
+      "sample_page": 360,
+      "kind": "question_answer",
+      "physical_pages": [
+        360
+      ],
+      "question_key": "La1F2010",
+      "current_sample_evidence_count": 3,
+      "boundary": "both low-vacuum and high-vacuum paragraphs belong to this answer",
+      "integration_status": "source_group_reviewed_pending_canonical_binding"
+    }
+  ],
+  "unmarked_sample_questions": {
+    "physical_page": 468,
+    "heading": "中级汽轮机辅机安装知识要求试卷",
+    "printed_section_heading": "一、选择题（每题1分，共25分）",
+    "current_heading_evidence_ocr_error": null,
+    "question_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "current_evidence_per_question": 2,
+    "printed_answer_options_per_question": 4,
+    "selected_answers": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "question_7_option_d_source_unit_id": "aux-p469-question-7-option-d",
+    "semantic_use": "question_context_only",
+    "integration_status": "pending_page_469_option_and_heading_correction_binding",
+    "heading_review_note": "Current rebuilt Evidence prints 一、选择题 as on the original page."
+  }
+}

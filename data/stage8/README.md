@@ -2,6 +2,8 @@
 
 本目录只记录 Stage 8 的最小本体设计和候选映射审核入口。`config/ontology_contract.json` 是本阶段设计输入，`ontology/minimal_turbine.ttl` 是由脚本生成的 OWL 设计产物；本阶段不建立 SHACL、EngineeringCase、正式运行词汇或 Release。
 
+阶段 8 已按当前阶段 7 候选重建，三位独立子智能体回查原始 PDF 后对 16 项当前候选达成一致：5 项候选类映射接受、11 项暂缓，审核队列为空，退出审计 `complete`。本轮阶段 7 重建使 13 项内容指纹变化，逐项来源等价性及旧/新指纹记录在 `stage8_mapping_rebinding_review.json`；“汽轮机”新增辅机原件物理第 360 页来源已单独核验。接受仅是候选映射审核，不是正式词汇、本体新增类或 Release。Overlay 的 `prior_review_record` 保留旧用户或代理裁决及上轮指纹，`confirmed_by_three_agent_review` 与旧 `confirmed_by_user` 明确区分。
+
 当前链路：
 
 ```text
@@ -16,6 +18,8 @@ Stage 7 candidate_only 候选 + 业务能力问题 + Ontology Contract
 
 Stage 8 短名单是“概念映射审核入口”，不是最终本体。候选资格来自 Stage 7 的完整候选集合和业务能力问题；已接受的 Stage 6 原页 Evidence 优先作为审核证据，但不是进入短名单的硬门槛。只有 Stage 7 页面出现而没有 Stage 6 Evidence 的候选，也可以进入短名单，并必须回原始页面确认。孤立数值、句子/适用范围片段、要求/核验活动词以及动作、缩写、同义/旧称和 OCR 变体不进入本轮短名单。数值只有在后续结构化参数抽取中与参数名、对象、条件和证据绑定后，才可能形成 QuantityValue 数据。
 
-ontology_mapping_review_overlay.jsonl 是独立的 Stage 8 审核记录，按候选指纹绑定用户的接受或暂缓决定，不修改 Stage 7 候选真源。最终 shortlist 只保留 `mapping_review_decision`；`review_status` 仅存在于审核队列中表示待办任务，避免形成双状态。具体映射决定由 Overlay 消费后进入 shortlist，数量和审核对账以 `stage8_exit_audit.json` 为准。任何接受决定仍保持 promotion_status=candidate_only，不会自动进入正式本体或运行词汇。构建脚本不签发退出审计，独立 `audit_stage8_exit.py` 是唯一退出记录 Producer。
+ontology_mapping_review_overlay.jsonl 是独立的 Stage 8 审核记录，按当前候选指纹绑定接受或暂缓决定，不修改 Stage 7 候选真源。最终 shortlist 只保留 `mapping_review_decision`；`review_status` 仅存在于审核队列中表示待办任务，避免形成双状态。三方原页复核的每个接受项记录审阅者和原件物理页，其中“地脚螺栓”同时记录第 14 页复合词语境与第 20 页独立部件语境。原件确认只及于本轮所列来源页。具体映射决定由 Overlay 消费后进入 shortlist，数量和审核对账以 `stage8_exit_audit.json` 为准。任何接受决定仍保持 promotion_status=candidate_only，不会自动进入正式本体或运行词汇。构建脚本不签发退出审计，独立 `audit_stage8_exit.py` 是唯一退出记录 Producer。
+
+“氧化处理也称发黑处理”已在辅机原件物理第 175 页核实；本轮合同未实现带适用范围的 alias 映射，因此仍暂缓，不再使用旧记录中“原页未证实同义”的理由。“设备”属于已存在的 Equipment 类中文标签泛称，暂缓作为独立候选。
 
 本轮增加的是建模模式覆盖审计，不是批量扩充短名单。`modeling_pattern_coverage` 只从 Stage 7 的真实候选中为 Equipment、Component、Situation、Quantity Kind、Process/Procedure、层级、alias 和 Applicability 各保留 1～3 个代表样本；探针候选的 defer 只表示本轮不晋级正式类或运行词汇，仍用于验证最小本体能否承载该模式。普通“振动”按 Quantity Kind 方向记录，只有带异常状态的复合概念才考虑 Situation。

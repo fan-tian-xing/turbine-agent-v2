@@ -20,6 +20,9 @@ CONFIRMATION = ROOT / "data/stage3/real_trial_confirmation.json"
 REAL_RUNTIME = ROOT / "var/stage3/real_trial_pages.json"
 if not REAL_RUNTIME.is_file():
     REAL_RUNTIME = ROOT / "tests/fixtures/stage3/real_trial_pages.json"
+CURRENT_BINDING = ROOT / "data/stage9/stage9_current_source_bindings.json"
+if not CURRENT_BINDING.is_file():
+    CURRENT_BINDING = None
 
 
 @pytest.fixture
@@ -101,6 +104,17 @@ def test_all_existing_statement_types_are_supported(payload, statement_type):
 
 def test_unknown_statement_type_is_rejected(payload):
     _node(payload, "EngineeringStatement")["properties"]["statementType"] = "invented"
+    _fails(payload)
+
+
+@pytest.mark.parametrize("modality", ["shall", "must", "permitted", "recommended", "descriptive"])
+def test_controlled_normative_modality_accepts_each_contract_value(payload, modality):
+    _node(payload, "EngineeringStatement")["properties"]["normativeModality"] = modality
+    assert validate_runtime_payload(payload)["conforms"] is True
+
+
+def test_controlled_normative_modality_rejects_an_unregistered_value(payload):
+    _node(payload, "EngineeringStatement")["properties"]["normativeModality"] = "optional"
     _fails(payload)
 
 
@@ -212,7 +226,7 @@ def test_evidence_and_statement_must_bind_to_the_same_object(documents, payload)
 
 
 def test_confirmed_real_research_sample_consumes_the_same_gate_and_preserves_locations():
-    documents = load_confirmed_real_corpus(CONFIRMATION, REAL_RUNTIME)
+    documents = load_confirmed_real_corpus(CONFIRMATION, REAL_RUNTIME, current_binding_path=CURRENT_BINDING)
     payload = research_payload(documents)
     report = validate_research_documents(documents)
     assert report["conforms"] is True, report
@@ -253,7 +267,7 @@ def test_source_identity_and_page_quote_are_checked_before_conversion(documents,
 
 @pytest.mark.parametrize("change", ["fabricated_evidence", "assembled_spans"])
 def test_real_evidence_must_be_a_quote_in_one_bound_source_span(change):
-    documents = load_confirmed_real_corpus(CONFIRMATION, REAL_RUNTIME)
+    documents = load_confirmed_real_corpus(CONFIRMATION, REAL_RUNTIME, current_binding_path=CURRENT_BINDING)
     document = documents[0]
     evidence = document.evidence[0]
     if change == "fabricated_evidence":

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "stage": "5",
+  "artifact_kind": "stage5_source_gap_record",
+  "document_key": "DLT863",
+  "original_relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+  "supplied_pdf_physical_page_count": 28,
+  "missing_printed_body_pages": [
+    12,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    25,
+    27,
+    28,
+    29
+  ],
+  "missing_count": 15,
+  "treatment": "record_gap_only_do_not_reconstruct_missing_content",
+  "continuation_rule": "exclude_unheaded_continuation_fragments_after_missing_pages_until_a_complete_heading_and_context_are_present",
+  "evidence_created_for_missing_pages": false
+}

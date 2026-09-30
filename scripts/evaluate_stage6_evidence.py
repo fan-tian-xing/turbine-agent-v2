@@ -5,15 +5,24 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from collections import defaultdict
 from pathlib import Path
 
 from turbine_kg.documents.ids import evidence_id, evidence_version_id
 from turbine_kg.documents.models import BBox
 
+from stage6_cross_page_supplements import load_supplements as load_cross_page_supplements
+from stage6_auxiliary_supplements import load_supplements as load_auxiliary_supplements
+from stage6_standard_supplements import load_supplements as load_standard_supplements
+from stage6_visual_regions import load_regions as load_visual_regions
+from stage6_page_review_binding import page_review_fingerprint, current_stage5_bindings, input_bindings_match
+from stage5_fingerprint import ocr_fingerprint
+
 
 ROOT = Path(__file__).resolve().parents[1]
 STAGE6 = ROOT / "data" / "stage6"
+REFERENCE_EXCLUSIONS = STAGE6 / "stage6_reference_token_exclusions.json"
 
 
 def _rows(name: str) -> list[dict]:
@@ -35,7 +44,18 @@ def _ratio(numerator: int, denominator: int) -> dict:
 def _bbox(value: dict | None) -> BBox | None:
     if value is None:
         return None
-    return BBox(float(value["x0"]), float(value["y0"]), float(value["x1"]), float(value["y1"]))
+    # Evidence IDs include BBox's serialized numeric representation. Preserve
+    # reviewed integer coordinates instead of changing 539 to 539.0 here.
+    return BBox(value["x0"], value["y0"], value["x1"], value["y1"])
+
+
+def _intersects(left: dict, right: dict) -> bool:
+    return (
+        float(left["x0"]) < float(right["x1"])
+        and float(right["x0"]) < float(left["x1"])
+        and float(left["y0"]) < float(right["y1"])
+        and float(right["y0"]) < float(left["y1"])
+    )
 
 
 def recompute_evidence_identity(row: dict) -> tuple[str, str]:
@@ -131,6 +151,47 @@ def validate_table_decision_binding(row: dict, decision: dict | None) -> bool:
     )
 
 
+def validate_visual_binding(row: dict, region: dict | None) -> bool:
+    """Allow only a caption bound to a SHA-checked original drawing region."""
+    if region is None or row.get("source_supplement_kind") != "reviewed_visual_only":
+        return False
+    evidence = row["evidence"]
+    caption = region["caption"]
+    locations = evidence.get("locations", [])
+    contexts = evidence.get("figure_context", [])
+    same_page = caption["physical_page"] == region["physical_page"]
+    if len(locations) != 1 or len(contexts) != 1:
+        return False
+    location, context = locations[0], contexts[0]
+    return (
+        row["document_key"] == region["document_key"]
+        and row["input"]["physical_page"] == region["physical_page"]
+        and row.get("visual_region_id") == region["region_id"]
+        and row.get("figure_physical_page") == region["physical_page"]
+        and row.get("figure_bbox_pdf_pt") == region["figure_bbox_pdf_pt"]
+        and row.get("caption_physical_page") == caption["physical_page"]
+        and row.get("cross_page_caption") == (not same_page)
+        and row.get("semantic_use") == "visual_context_only"
+        and row.get("stage12_extractability") == "context_only"
+        and evidence["disposition"] == "visual_only"
+        and evidence["content_kind"] == "caption"
+        and evidence["source_text"] == caption["text"]
+        and evidence["effective_text"] == caption["text"]
+        and len(evidence["source_span_ids"]) == 1
+        and location["source_span_id"] == evidence["source_span_ids"][0]
+        and location["physical_page"] == caption["physical_page"]
+        and location["logical_page"] == caption["logical_page"]
+        and isinstance(location.get("bbox"), dict)
+        and all(abs(float(location["bbox"][key]) - value) < 0.1
+                for key, value in zip(("x0", "y0", "x1", "y1"), caption["bbox_pdf_pt"]))
+        and context["context_kind"] == "whole_figure"
+        and bool(context.get("figure_id"))
+        and context["caption_source_span_ids"] == (
+            evidence["source_span_ids"] if same_page else []
+        )
+    )
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -146,6 +207,7 @@ def main(argv: list[str] | None = None) -> None:
     )
     args = parser.parse_args(argv)
     golden = json.loads((STAGE6 / "stage6_evidence_golden_sample.json").read_text(encoding="utf-8"))
+    reference_exclusions = json.loads(REFERENCE_EXCLUSIONS.read_text(encoding="utf-8"))
     annotations = _rows("stage6_evidence_annotations.jsonl")
     table_annotations = _rows("stage6_table_evidence_annotations.jsonl")
     review_queue = _rows("stage6_evidence_page_review_queue.jsonl")
@@ -153,11 +215,27 @@ def main(argv: list[str] | None = None) -> None:
     table_decisions = _rows("stage6_table_review_decisions.jsonl")
     build_audit = json.loads((STAGE6 / "stage6_evidence_build_audit.json").read_text(encoding="utf-8"))
     table_audit = json.loads((STAGE6 / "stage6_table_evidence_audit.json").read_text(encoding="utf-8"))
+    source_input_fingerprint, _ = ocr_fingerprint()
 
     golden_by_page = {
         (row["document_key"], row["physical_page"]): row
         for row in golden["records"]
     }
+    exclusion_rows = reference_exclusions.get("records", [])
+    exclusions_by_page = {
+        (row["document_key"], row["physical_page"]): row for row in exclusion_rows
+    }
+    exclusions_valid = (
+        reference_exclusions.get("schema_version") == 1
+        and len(exclusions_by_page) == len(exclusion_rows)
+        and all(
+            key in golden_by_page
+            and row.get("original_pdf_sha256") == golden_by_page[key]["original_sha256"]
+            and row.get("review_scope") == "navigation_or_visual_only_region_checked_against_original"
+            and bool(row.get("reason"))
+            for key, row in exclusions_by_page.items()
+        )
+    )
     positive_pages = {
         key for key, row in golden_by_page.items()
         if row["evidence_eligibility"] in {"structured_candidate", "region_scoped"}
@@ -182,6 +260,51 @@ def main(argv: list[str] | None = None) -> None:
         if row["decision"] == "accepted_region_scoped"
     }
     table_decision_by_id = {row["review_id"]: row for row in table_decisions}
+    supplemental_prose_pages = {
+        (row["document_key"], int(row["physical_page"]))
+        for row in decisions
+        if row.get("review_scope") == "outside_table_prose" and row.get("decision") == "accepted"
+    }
+    supplemental_table_text_pages = {
+        (row["document_key"], int(row["physical_page"]))
+        for row in decisions
+        if row.get("review_scope") == "reviewed_table_text_regions" and row.get("decision") == "accepted"
+    }
+    standard_supplements = load_standard_supplements()
+    reviewed_standard_pages = {
+        (group["document_key"], int(group["physical_page"]))
+        for group in standard_supplements["evidence_groups"]
+    }
+    auxiliary_supplements = load_auxiliary_supplements()
+    reviewed_auxiliary_pages = {
+        ("auxiliary_installation_book", int(group["physical_page"]))
+        for group in auxiliary_supplements["evidence_groups"]
+    }
+    cross_page_units = {
+        unit["source_unit_id"]: unit
+        for unit in load_cross_page_supplements()["source_units"]
+    }
+    visual_regions = {
+        region["region_id"]: region for region in load_visual_regions()["regions"]
+    }
+    table_boxes_by_page: dict[tuple[str, int], list[dict]] = defaultdict(list)
+    for row in table_decisions:
+        table_boxes_by_page[(row["document_key"], int(row["physical_page"]))].append(row["bbox"])
+    supplemental_prose_outside_tables = all(
+        not _intersects(location["bbox"], table_bbox)
+        for row in annotations
+        if not row.get("source_supplement_kind")
+        if (row["document_key"], row["input"]["physical_page"]) in supplemental_prose_pages
+        for location in row["evidence"]["locations"]
+        for table_bbox in table_boxes_by_page[(row["document_key"], row["input"]["physical_page"])]
+    )
+    supplemental_table_text_inside_tables = all(
+        any(_intersects(location["bbox"], table_bbox) for table_bbox in table_boxes_by_page[(row["document_key"], row["input"]["physical_page"])])
+        for row in annotations
+        if not row.get("source_supplement_kind")
+        if (row["document_key"], row["input"]["physical_page"]) in supplemental_table_text_pages
+        for location in row["evidence"]["locations"]
+    )
 
     authority_pass = 0
     page_identity_pass = 0
@@ -203,12 +326,6 @@ def main(argv: list[str] | None = None) -> None:
     except (KeyError, TypeError, ValueError) as exc:
         merged_annotations = []
         failures.append(f"canonical_merge:{exc}")
-    if args.build_canonical and merged_annotations:
-        canonical_path = STAGE6 / "stage6_evidence_bundle.jsonl"
-        canonical_path.write_text(
-            "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in merged_annotations),
-            encoding="utf-8",
-        )
     for row in all_annotations:
         evidence = row["evidence"]
         key = (row["document_key"], row["input"]["physical_page"])
@@ -224,11 +341,33 @@ def main(argv: list[str] | None = None) -> None:
             and evidence["authority_basis"].startswith("original_pdf_")
         )
         authority_pass += authority_ok
-        page_ok = all(
-            location["physical_page"] == truth["physical_page"]
-            and location["logical_page"] == truth["logical_page"]
-            for location in evidence["locations"]
-        )
+        source_supplement_kind = row.get("source_supplement_kind")
+        cross_page_unit_id = row.get("cross_page_source_unit_id")
+        visual_binding = validate_visual_binding(
+            row, visual_regions.get(row.get("visual_region_id")),
+        ) if source_supplement_kind == "reviewed_visual_only" else False
+        if source_supplement_kind == "reviewed_visual_only":
+            page_ok = visual_binding
+        elif source_supplement_kind == "cross_page_reviewed" and cross_page_unit_id in cross_page_units:
+            unit = cross_page_units[cross_page_unit_id]
+            expected_pages = {
+                (fragment["physical_page"], fragment["logical_page"])
+                for fragment in unit["fragments"]
+            }
+            page_ok = (
+                unit["document_key"] == row["document_key"]
+                and truth["physical_page"] in unit["physical_pages"]
+                and {(location["physical_page"], location["logical_page"])
+                     for location in evidence["locations"]} == expected_pages
+            )
+        else:
+            page_ok = all(
+                location["physical_page"] == truth["physical_page"]
+                and location["logical_page"] == truth["logical_page"]
+                for location in evidence["locations"]
+            )
+            if cross_page_unit_id is not None:
+                page_ok = False
         page_identity_pass += page_ok
         bbox_ok = bool(evidence["locations"]) and all(location["bbox"] is not None for location in evidence["locations"])
         bbox_pass += bbox_ok
@@ -237,7 +376,21 @@ def main(argv: list[str] | None = None) -> None:
             and evidence["effective_text"] == evidence["source_text"]
         )
         text_integrity_pass += text_ok
-        allowed = evidence["disposition"] == "region_scoped" if truth["evidence_eligibility"] in {"region_scoped", "quarantined"} else evidence["disposition"] in {"structured", "region_scoped"}
+        if source_supplement_kind == "reviewed_visual_only":
+            allowed = visual_binding
+        elif source_supplement_kind == "cross_page_reviewed":
+            allowed = cross_page_unit_id in cross_page_units and evidence["disposition"] in {"structured", "region_scoped"}
+        elif source_supplement_kind == "standard_reviewed":
+            allowed = key in reviewed_standard_pages and evidence["disposition"] in {"structured", "region_scoped"}
+        elif source_supplement_kind == "auxiliary_reviewed":
+            allowed = key in reviewed_auxiliary_pages and (
+                evidence["disposition"] == "region_scoped"
+                or (key == ("auxiliary_installation_book", 480)
+                    and evidence["content_kind"] == "paragraph"
+                    and evidence["disposition"] == "structured")
+            )
+        else:
+            allowed = evidence["disposition"] == "region_scoped" if truth["evidence_eligibility"] in {"region_scoped", "quarantined"} else evidence["disposition"] in {"structured", "region_scoped"}
         disposition_pass += allowed
         review_id = row.get("page_review_id", row.get("review_id"))
         reviewed = evidence["review_status"] == "accepted" and review_id in (decision_ids | table_decision_ids)
@@ -256,11 +409,11 @@ def main(argv: list[str] | None = None) -> None:
     reviewed_page_fingerprint_pass = 0
     reference_token_pass = 0
     reference_token_page_count = 0
+    checked_exclusion_pages = set()
     for key, page_rows in annotations_by_page.items():
         review_id = page_rows[0]["page_review_id"]
-        page_fingerprint = hashlib.sha256(
-            "\x1f".join(row["evidence"]["evidence_id"] for row in page_rows).encode("utf-8")
-        ).hexdigest()
+        page_fingerprint = page_review_fingerprint([row["evidence"] for row in page_rows],
+                                                   source_input_fingerprint=source_input_fingerprint)
         decision = decision_by_id.get(review_id)
         reviewed_page_fingerprint_pass += bool(
             decision
@@ -271,25 +424,41 @@ def main(argv: list[str] | None = None) -> None:
         tokens = truth.get("reference_tokens")
         if tokens:
             reference_token_page_count += 1
-            page_text = "\n".join(row["evidence"]["source_text"] for row in page_rows)
+            page_text = re.sub(r"\s+", "", "\n".join(
+                row["evidence"]["source_text"] for row in page_rows))
             expected_numbers = set(tokens.get("numbers", []))
             if truth.get("logical_page"):
                 expected_numbers.discard(str(truth["logical_page"]))
             expected_units = set(tokens.get("units", []))
             expected_negations = set(tokens.get("negations", {}))
+            missing = {
+                "numbers": sorted(value for value in expected_numbers if re.sub(r"\s+", "", value) not in page_text),
+                "units": sorted(value for value in expected_units if re.sub(r"\s+", "", value) not in page_text),
+                "negations": sorted(value for value in expected_negations if re.sub(r"\s+", "", value) not in page_text),
+            }
+            exclusion = exclusions_by_page.get(key)
+            if exclusion:
+                checked_exclusion_pages.add(key)
             token_ok = (
-                all(number in page_text for number in expected_numbers)
-                and all(unit in page_text for unit in expected_units)
-                and all(value in page_text for value in expected_negations)
+                all(not values for values in missing.values()) if exclusion is None
+                else missing == exclusion.get("excluded_reference_tokens")
+                and all(
+                    re.sub(r"\s+", "", value) in re.sub(r"\s+", "", truth["reference_text"])
+                    for values in missing.values() for value in values
+                )
             )
             reference_token_pass += token_ok
+    exclusions_valid = exclusions_valid and checked_exclusion_pages == set(exclusions_by_page)
 
     checks = {
-        "positive_page_coverage": annotation_pages == positive_pages,
+        "positive_page_coverage": annotation_pages == positive_pages | supplemental_prose_pages | supplemental_table_text_pages | reviewed_standard_pages | reviewed_auxiliary_pages,
+        "supplemental_prose_only_on_reviewed_table_pages": supplemental_prose_pages <= table_pages,
+        "supplemental_table_text_only_on_reviewed_table_pages": supplemental_table_text_pages <= table_pages,
         "negative_pages_excluded": annotation_pages.isdisjoint(negative_pages),
         "reviewed_table_page_coverage": table_annotation_pages == table_pages,
         "negative_pages_excluded_from_table_evidence": table_annotation_pages.isdisjoint(negative_pages),
-        "table_regions_are_not_in_text_evidence": annotation_pages.isdisjoint(table_pages),
+        "table_regions_are_not_in_text_evidence": supplemental_prose_outside_tables,
+        "reviewed_table_text_is_inside_reviewed_table_region": supplemental_table_text_inside_tables,
         "no_remaining_review_queue": not review_queue,
         "all_table_regions_remain_non_cell_scoped": all(
             row["evidence"]["disposition"] == "region_scoped"
@@ -297,12 +466,15 @@ def main(argv: list[str] | None = None) -> None:
             for row in table_annotations
         ),
         "build_audit_complete": build_audit["status"] == "complete",
+        "reviewed_pdf_inputs_current": input_bindings_match(
+            (golden, build_audit, table_audit), current_stage5_bindings(ROOT, source_input_fingerprint)),
         "table_audit_complete": table_audit["status"] == "complete",
         "evidence_ids_unique": len(evidence_ids) == len(set(evidence_ids)),
         "evidence_version_ids_unique": len(version_ids) == len(set(version_ids)),
         "all_evidence_zero_tolerance_checks_pass": not failures,
-        "all_accepted_page_fingerprints_match_reviewed_text_and_bboxes": reviewed_page_fingerprint_pass == len(positive_pages),
+        "all_accepted_page_fingerprints_match_reviewed_text_and_bboxes": reviewed_page_fingerprint_pass == len(annotation_pages),
         "all_available_reference_numbers_units_and_negations_retained": reference_token_pass == reference_token_page_count,
+        "reference_token_exclusions_bound_to_reviewed_pages": exclusions_valid,
         "persisted_evidence_ids_recomputed": identity_pass == len(all_annotations),
         "persisted_evidence_version_ids_recomputed": version_identity_pass == len(all_annotations),
         "persisted_source_text_hashes_recomputed": source_hash_pass == len(all_annotations),
@@ -317,15 +489,19 @@ def main(argv: list[str] | None = None) -> None:
         "formal_release": False,
         "producer": "scripts/evaluate_stage6_evidence.py",
         "inputs": {
+            **current_stage5_bindings(ROOT, source_input_fingerprint),
             "golden_sample": "data/stage6/stage6_evidence_golden_sample.json",
             "evidence_annotations": "data/stage6/stage6_evidence_annotations.jsonl",
             "table_evidence_annotations": "data/stage6/stage6_table_evidence_annotations.jsonl",
             "review_decisions": "data/stage6/stage6_page_review_decisions.jsonl",
+            "reference_token_exclusions": "data/stage6/stage6_reference_token_exclusions.json",
             "table_review_decisions": "data/stage6/stage6_table_review_decisions.jsonl",
         },
         "counts": {
             "golden_pages": len(golden_by_page),
             "positive_pages": len(positive_pages),
+            "supplemental_prose_pages": len(supplemental_prose_pages),
+            "supplemental_table_text_pages": len(supplemental_table_text_pages),
             "accepted_text_evidence": sum(row["evidence"]["review_status"] == "accepted" for row in annotations),
             "accepted_table_region_evidence": sum(row["evidence"]["review_status"] == "accepted" for row in table_annotations),
             "reviewed_table_pages": len(table_pages),
@@ -343,7 +519,7 @@ def main(argv: list[str] | None = None) -> None:
             "persisted_source_text_hash": _ratio(source_hash_pass, len(all_annotations)),
             "table_review_decision_binding": _ratio(table_decision_binding_pass, len(table_annotations)),
             "table_region_resolution": _ratio(len(table_annotation_pages), len(table_pages)),
-            "reviewed_page_text_bbox_fingerprint_binding": _ratio(reviewed_page_fingerprint_pass, len(positive_pages)),
+            "reviewed_page_text_bbox_fingerprint_binding": _ratio(reviewed_page_fingerprint_pass, len(annotation_pages)),
             "reference_number_unit_negation_retention": _ratio(reference_token_pass, reference_token_page_count),
         },
         "checks": checks,
@@ -364,6 +540,12 @@ def main(argv: list[str] | None = None) -> None:
             "No Engineering Statement, ontology object, Neo4j projection or Release was created.",
         ],
     }
+    if args.build_canonical and audit["status"] == "complete":
+        canonical_path = STAGE6 / "stage6_evidence_bundle.jsonl"
+        canonical_path.write_text(
+            "".join(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n" for row in merged_annotations),
+            encoding="utf-8",
+        )
     output = args.output
     output.write_text(json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": audit["status"], "counts": audit["counts"]}))

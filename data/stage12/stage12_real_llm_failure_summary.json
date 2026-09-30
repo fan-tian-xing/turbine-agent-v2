@@ -2,227 +2,340 @@
   "schema_version": 1,
   "stage": "12",
   "artifact_kind": "stage12_real_llm_failure_summary",
-  "status": "completed",
+  "status": "incomplete",
   "run_kind": "development_batch",
   "source_split": "development_regression_golden",
   "formal_release": false,
   "holdout_used_for_tuning": false,
   "blind_read": false,
   "evidence_ids": [
-    "evidence-93fb6fefbfccb828c68c",
+    "evidence-7765942414f315376d8b",
+    "evidence-420b708af268c44addd0",
+    "evidence-707b018f73814962a790",
+    "evidence-27b7e83ed259cd9d9813",
+    "evidence-0ca5335ba51f60a440b7",
+    "evidence-93817b2f4dd1e670ad57",
+    "evidence-5e43b0eec278db704a21",
     "evidence-111e9dc5263ec94003bb",
+    "evidence-291b8c352838ac7ecc80",
     "evidence-cbce7568bef677f62bac",
-    "evidence-08795eed23203e43aa25",
+    "evidence-0be2ce5c91d61eba812d",
+    "evidence-dcf187ed12ba60c79047",
+    "evidence-1e86e29287bd6425e7b3",
+    "evidence-f706744108453c894d4c",
+    "evidence-d1d85bdc4f5607d42b43",
+    "evidence-20c6634ca8f8c0b8255a",
+    "evidence-47c0c1c5c2cc5862af5c",
+    "evidence-1c9fddbea2b4314811fd",
+    "evidence-dbde98bb246113f0c7d9",
     "evidence-44dd2f79786c9a998c97",
-    "evidence-cd924809c0b4d4b4acc5",
-    "evidence-be6509fd8df673522604",
-    "evidence-bb9c008b78e12b735d94",
-    "evidence-97d1de6c7b49cdea31f8",
-    "evidence-aa97a9ec78cf7cc57dc5"
+    "evidence-08795eed23203e43aa25",
+    "evidence-8705d6a085ca6938d91c",
+    "evidence-2e31b1dc2edc735b0ba1",
+    "evidence-1398e3de0cb467cd78de",
+    "evidence-dbc588031d0de048376e",
+    "evidence-df4b3bf1070b1fd1417a",
+    "evidence-89b55d3f54808b4c991b",
+    "evidence-13bcaa9188c6bc037f89",
+    "evidence-5e29689f3d56101093c3",
+    "evidence-2c4d7edc853057b71287",
+    "evidence-322492d1f752594b3c30",
+    "evidence-3afd349ec25b2c196c39",
+    "evidence-b8f2e82a2002d672e821",
+    "evidence-51b9ee54e4b128a87dac",
+    "evidence-5ad2635166a959fdf71c",
+    "evidence-1a8bffdfb5f9b0ebd2e3",
+    "evidence-bcde87a89c9a202c297f",
+    "evidence-4550b0028e202aa432ec",
+    "evidence-bb6358aad7860008a619",
+    "evidence-6b9b30a51d949aec8140",
+    "evidence-02b8e76eb765a7cd6db9",
+    "evidence-7ef848a90097c69cfd16",
+    "evidence-1bfcc9ab9e3c1f2c5eb9",
+    "evidence-7850d683fff9325daaf0",
+    "evidence-829375cd80df8834b573",
+    "evidence-02fecb5773dde6cd01e4",
+    "evidence-21c96b71e0daa868dabd",
+    "evidence-f6624d44d000470f19a7",
+    "evidence-4637bf41419eac752546",
+    "evidence-b490108e4fa09c6a08ef",
+    "evidence-c50ac8705f328705c073",
+    "evidence-8921b80e9e5cedb20485",
+    "evidence-8ea08aa663f548894f05",
+    "evidence-88aa5b0dfe0527e37668",
+    "evidence-52a60eede93bd92c2766",
+    "evidence-56738c679ea4849cee87",
+    "evidence-378b18aaebd0628243c8",
+    "evidence-202210743447409c3fab",
+    "evidence-ef399d007ee48326e817",
+    "evidence-af9973f894c2326502fd",
+    "evidence-cd2a00746a928ad8fdf8",
+    "evidence-650975a896876ca7c13f",
+    "evidence-ce0c6fca6810fa2b60b7",
+    "evidence-f4c6cdcf23ebf8865c1a",
+    "evidence-7df2aae933c522d24b63",
+    "evidence-257184909857bc95884c",
+    "evidence-9cb932403ffa1be5eeb5",
+    "evidence-fa46378641d9939dee2f",
+    "evidence-2e6ceb3a4df913d5bb1a",
+    "evidence-51e3bcecc735117e1fd4",
+    "evidence-9621e1540ab96385c2c1",
+    "evidence-98c9dd569ee66f0de55f",
+    "evidence-51a3af3750db9355ea4e",
+    "evidence-4f79a7760a62a42b87a4",
+    "evidence-4931f3d3bc2090ffb4e2",
+    "evidence-5c964a2aec7393ddd482",
+    "evidence-1d14a9fc412be6ff2aa6",
+    "evidence-f08c8719095e081e2692",
+    "evidence-99f58cb919b12046ed2c",
+    "evidence-f1025cd6a275b6b47374",
+    "evidence-41770a7092ba421ef446",
+    "evidence-55a189d274af8d0538e7",
+    "evidence-5a5e1543b0682eff0e57",
+    "evidence-f2bdf5aa7d1c8c43611c",
+    "evidence-4a4591a4fdb26e1acbe7",
+    "evidence-85a1a9ef8cd5d05f4582",
+    "evidence-f4b7118a4a82582a673b",
+    "evidence-d8e4ed72d830fff0a13e",
+    "evidence-1db05e0af4db4b01f5cf",
+    "evidence-6a106e960ea6e37a4bce",
+    "evidence-2fb8632e741d57bbd935",
+    "evidence-52d40466085559dda91c",
+    "evidence-1b57903c1f463f08b7a6",
+    "evidence-9506072e7ddcf593b0b2",
+    "evidence-5eaa1072bd44a58bb50c",
+    "evidence-c666b1d75a6b5848f748",
+    "evidence-fb504c1ff8aca79680ca",
+    "evidence-c61e5ba3a5464dd6d668",
+    "evidence-cc36c8d0adb6bd5d0bc9",
+    "evidence-404b6f10d05f944ac3ff",
+    "evidence-c1e7b707ec66dc30081f",
+    "evidence-730d85e280a4e926afaa",
+    "evidence-30833eb2f3915b8ebf28",
+    "evidence-cc64a6dc901e388c8f5b",
+    "evidence-1151f9d3bc967422a497",
+    "evidence-80bdcb13f4f6136e6663",
+    "evidence-f920af31462fed9124ba",
+    "evidence-b03f17bebf8d6256f252",
+    "evidence-c405e4842b346c4fe49d",
+    "evidence-ed662ddc3493bee6680b",
+    "evidence-567ae45b32101d2e7549",
+    "evidence-707e52562b37bc94b829",
+    "evidence-331c72ada0ef7d88c540",
+    "evidence-3a3cda4e75d918424104",
+    "evidence-30b2caa6dbcb053dff87",
+    "evidence-12a9a42ee6d96b23224a",
+    "evidence-7f92362f3a1d2bcc8d18",
+    "evidence-c6acb8c7c2c93053f9f1",
+    "evidence-982323e1c68d2f404e5e",
+    "evidence-d86b746ac0951421fc34",
+    "evidence-c22e55681dfaf83c72c9",
+    "evidence-0c7430615255b732de41",
+    "evidence-d9139eeb21b8a5ef4f49",
+    "evidence-6c1e3f5d967941c4d495",
+    "evidence-5242b3d07c2aedc910c8",
+    "evidence-ba1fbd27df4a955862ca",
+    "evidence-8cc29b66c4300712bbf8",
+    "evidence-ee65bdbd84c74c8c7535",
+    "evidence-4ef3a989765fd3565b73",
+    "evidence-25d97f174e799be4af76",
+    "evidence-e5e2f0aa81b3c986b170",
+    "evidence-bd7a390bbbd64179b2a2",
+    "evidence-e234ec7a06ee72eb0457",
+    "evidence-d5bc09d7460f376d9bb3",
+    "evidence-427fb236f483aee5f69d",
+    "evidence-f9f292fb448b8432c016",
+    "evidence-26023feee77f5460315c",
+    "evidence-ecc226f8cf8925dbd339",
+    "evidence-73225cf647deab065f7c",
+    "evidence-37c6b51e62360d44e42f",
+    "evidence-c293415d58aa4e95c807",
+    "evidence-ee071a514061eaf43095",
+    "evidence-eca0d8db57e27ada2578",
+    "evidence-cf52dd40cde4754c1a3f",
+    "evidence-c45fbff2e8966a01820a",
+    "evidence-28b60b4ea010422f97e0",
+    "evidence-fa422c7149508c02140c",
+    "evidence-b3a51c829fd428ba7bdc",
+    "evidence-acea33fbb11accf2c8c9",
+    "evidence-6803796599c4fe8400c1",
+    "evidence-805b2ac93dd30cb918ce",
+    "evidence-962d5525a9d11e6f2e9d",
+    "evidence-c92c86855db16d8bcac1",
+    "evidence-7144574ea96939629af6",
+    "evidence-c1de3448e44306ed657e",
+    "evidence-4bc36a44a65ebc7937ab",
+    "evidence-e491c577a6ebc2661218",
+    "evidence-5d167a371d1979e69f8c",
+    "evidence-cdab82d6756da9ca9b60",
+    "evidence-1e5db1eeb743b6d83a48",
+    "evidence-45fb065998724ab918bc",
+    "evidence-f03b74bd1b14ee7e7675",
+    "evidence-a0342a5b693d18bfc6a8",
+    "evidence-93c2b045f2806bb8c879",
+    "evidence-c23dcb2b329f21cc1ef8",
+    "evidence-7088e5537156e1936516",
+    "evidence-ac034e18a583e1553734",
+    "evidence-7b1268f28cbce0cf5fdc",
+    "evidence-c91b0ab098b1ee1d9f2f",
+    "evidence-7bd4ce47ff888f9d2429",
+    "evidence-d60909904b3835e168cf",
+    "evidence-4c8a588a82ce01df113a",
+    "evidence-1dca3e15dce57804ae1c",
+    "evidence-8dcd8762d31d85df0fd2",
+    "evidence-5d9e43ada5f076e6a735",
+    "evidence-d749b8e54218171f5a68",
+    "evidence-12d4e102ab3adc5165d0",
+    "evidence-4d589402a74c8f1e3b35",
+    "evidence-f28f39bb8d70fa1ab7bd",
+    "evidence-2f6a8107d3434caba6db",
+    "evidence-59eb8e82d639490caf83",
+    "evidence-47475cb23b8d2f694fba",
+    "evidence-b00db804ccba860e0607",
+    "evidence-95f9356d1d3df788d1d6",
+    "evidence-dd9697c2530cde3cb685",
+    "evidence-25d618e9bba03e909427",
+    "evidence-b917c85cef08ce5277ed",
+    "evidence-f3148185a15fbc822854",
+    "evidence-4081cb8f372987f9f0db",
+    "evidence-f98e771564a5bf64e816",
+    "evidence-96f84195d16c941359ab",
+    "evidence-37175e52c4ebeda9b966",
+    "evidence-59142f9e06fa96bfc2cd",
+    "evidence-0e1751f4582aaffc6720",
+    "evidence-0015cb3659bb264f91ec",
+    "evidence-821be9b4a535262a8121",
+    "evidence-26a3c83c48d2168160f7",
+    "evidence-5217641d2edf3f96524b",
+    "evidence-3168be1bb8946dd28674",
+    "evidence-ced84c4f4d4e8467d883",
+    "evidence-6362258130d58c635507",
+    "evidence-f7927e2c8335e2cd3f2d",
+    "evidence-e0ac7d4954312406e1d7",
+    "evidence-aa24c43c50fbfce64966",
+    "evidence-35134a110e15fcdf3f01",
+    "evidence-5771271a40b3a89488e1",
+    "evidence-79e0160c620ea2538a07",
+    "evidence-403c539626e97ce4c9cf",
+    "evidence-1c9d1857e1c624a4f333",
+    "evidence-e0474cd7cd73a05d1ba9",
+    "evidence-f833ffa9b95b29d32e52",
+    "evidence-82b45776e844cdc83fe3",
+    "evidence-c354b5845a4e94ff74e1",
+    "evidence-b2344c8b4d0ea55cd50d",
+    "evidence-d7667da7416611074df7",
+    "evidence-dae7f626f99bd031d3d2",
+    "evidence-4140e37a6453b2d2b518",
+    "evidence-051903f5acd0b9671828",
+    "evidence-0c0b2c5f9929c05625bb",
+    "evidence-898e71d44ad45b470e6d",
+    "evidence-a9d9b6a54fc50a601c78",
+    "evidence-3d2cb54427bddc4c40d8",
+    "evidence-08a6aec7ba9fe37a7d1e"
   ],
+  "input_manifest_sha256": "06112f209546f137d344cc5f6dc0747a946136b02795e5da1bbcd5295309b794",
   "counts": {
     "transport_failure": 0,
     "schema_failure": 0,
-    "semantic_validation_failure": 0,
-    "success": 2,
-    "attempts": 2,
+    "semantic_validation_failure": 10,
+    "success": 0,
+    "attempts": 10,
+    "model_call_count": 10,
+    "elapsed_seconds": 266.845,
     "retry_recovered": 0,
     "fallback_triggered": 0,
     "fallback_success": 0,
     "provider_counts": {
-      "primary": 2
+      "primary": 5
     },
-    "root_cause_counts": {}
-  },
-  "failures": [],
-  "attempts": [
-    {
-      "evidence_id": "evidence-97d1de6c7b49cdea31f8",
-      "attempt": 1,
-      "outcome": "success",
-      "failure_type": null,
-      "field": null,
-      "validator_reason": null,
-      "exception_type": null,
-      "message": null,
-      "provider_alias": "primary",
-      "endpoint_alias": "primary",
-      "root_cause": null,
-      "status_code": null,
-      "elapsed_seconds": null,
-      "fallback_eligible": false,
-      "fallback_triggered": false,
-      "fallback_provider": null,
-      "fallback_result": null,
-      "semantic_attempts": null,
-      "evidence_value_or_text": "4.2.8从核动力厂每个系统初始通电和运行开始，营运单位应\n当保存运行和维修记录，并收集和保存系统及设备的基准数据，以\n有利于确保核动力厂的安全和后续的安全评价。",
-      "model_value_or_text": {
-        "status": "ok",
-        "candidates": [
-          {
-            "statement_text": "从核动力厂每个系统初始通电和运行开始，营运单位应当保存运行和维修记录，以有利于确保核动力厂的安全和后续的安全评价。",
-            "statement_type": "requirement",
-            "predicate": "requires",
-            "subject_entities": [
-              {
-                "surface_form": "营运单位",
-                "role": "subject"
-              },
-              {
-                "surface_form": "运行和维修记录",
-                "role": "object"
-              }
-            ],
-            "conditions": [],
-            "applicability_scope": {
-              "status": "known",
-              "applicability_text": "从核动力厂每个系统初始通电和运行开始"
-            }
-          },
-          {
-            "statement_text": "从核动力厂每个系统初始通电和运行开始，营运单位应当收集和保存系统及设备的基准数据，以有利于确保核动力厂的安全和后续的安全评价。",
-            "statement_type": "requirement",
-            "predicate": "requires",
-            "subject_entities": [
-              {
-                "surface_form": "营运单位",
-                "role": "subject"
-              },
-              {
-                "surface_form": "系统",
-                "role": "object"
-              },
-              {
-                "surface_form": "设备",
-                "role": "object"
-              },
-              {
-                "surface_form": "基准数据",
-                "role": "object"
-              }
-            ],
-            "conditions": [],
-            "applicability_scope": {
-              "status": "known",
-              "applicability_text": "从核动力厂每个系统初始通电和运行开始"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "evidence_id": "evidence-aa97a9ec78cf7cc57dc5",
-      "attempt": 1,
-      "outcome": "success",
-      "failure_type": null,
-      "field": null,
-      "validator_reason": null,
-      "exception_type": null,
-      "message": null,
-      "provider_alias": "primary",
-      "endpoint_alias": "primary",
-      "root_cause": null,
-      "status_code": null,
-      "elapsed_seconds": null,
-      "fallback_eligible": false,
-      "fallback_triggered": false,
-      "fallback_provider": null,
-      "fallback_result": null,
-      "semantic_attempts": null,
-      "evidence_value_or_text": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。",
-      "model_value_or_text": {
-        "status": "ok",
-        "candidates": [
-          {
-            "statement_text": "汽轮机冲转前必须有一定的真空，一般为60kPa左右",
-            "statement_type": "requirement",
-            "predicate": "requires",
-            "subject_entities": [
-              {
-                "surface_form": "汽轮机",
-                "role": "subject"
-              },
-              {
-                "surface_form": "真空",
-                "role": "quantity_target"
-              }
-            ],
-            "conditions": [],
-            "applicability_scope": {
-              "status": "known",
-              "applicability_text": "汽轮机冲转前"
-            }
-          },
-          {
-            "statement_text": "若真空过低，转子转动就需要较多的新蒸汽",
-            "statement_type": "fact",
-            "predicate": "causes",
-            "subject_entities": [
-              {
-                "surface_form": "真空",
-                "role": "subject"
-              },
-              {
-                "surface_form": "转子",
-                "role": "object"
-              },
-              {
-                "surface_form": "新蒸汽",
-                "role": "object"
-              }
-            ],
-            "conditions": [],
-            "applicability_scope": {
-              "status": "unknown"
-            }
-          },
-          {
-            "statement_text": "过多的乏汽突然排至凝汽器，凝汽器汽侧压力瞬间升高过多",
-            "statement_type": "fact",
-            "predicate": "causes",
-            "subject_entities": [
-              {
-                "surface_form": "乏汽",
-                "role": "subject"
-              },
-              {
-                "surface_form": "凝汽器",
-                "role": "object"
-              },
-              {
-                "surface_form": "凝汽器汽侧压力",
-                "role": "quantity_target"
-              }
-            ],
-            "conditions": [],
-            "applicability_scope": {
-              "status": "unknown"
-            }
-          }
-        ]
-      }
+    "root_cause_counts": {},
+    "failure_field_counts": {
+      "quantity": 1,
+      "semantic": 4
     }
-  ],
+  },
+  "unresolved_failures": {
+    "evidence-d7667da7416611074df7": [
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "field": "semantic",
+        "validator_reason": "candidate changed an explicit source prohibition",
+        "provider_alias": "primary"
+      },
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "validator_reason": "external LLM response failed Stage 12 semantic validation after 2 attempts"
+      }
+    ],
+    "evidence-0e1751f4582aaffc6720": [
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "field": "quantity",
+        "validator_reason": "candidate contains an unsupported quantity, unit, or comparison operator",
+        "provider_alias": "primary"
+      },
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "validator_reason": "external LLM response failed Stage 12 semantic validation after 2 attempts"
+      }
+    ],
+    "evidence-051903f5acd0b9671828": [
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "field": "semantic",
+        "validator_reason": "candidate changed an explicit source prohibition",
+        "provider_alias": "primary"
+      },
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "validator_reason": "external LLM response failed Stage 12 semantic validation after 2 attempts"
+      }
+    ],
+    "evidence-d1d85bdc4f5607d42b43": [
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "field": "semantic",
+        "validator_reason": "candidate changed an explicit source prohibition",
+        "provider_alias": "primary"
+      },
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "validator_reason": "external LLM response failed Stage 12 semantic validation after 2 attempts"
+      }
+    ],
+    "evidence-1c9fddbea2b4314811fd": [
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "field": "semantic",
+        "validator_reason": "candidate combines subject and action from different source clauses",
+        "provider_alias": "primary"
+      },
+      {
+        "attempt": 1,
+        "failure_type": "semantic_validation_failure",
+        "validator_reason": "external LLM response failed Stage 12 semantic validation after 2 attempts"
+      }
+    ]
+  },
   "cache_maintenance": {
-    "current_valid": 8,
-    "stale_deleted": 0,
-    "batch_records_deleted": 1
+    "current_valid": 218,
+    "stale_ignored": 0,
+    "stale_deleted": 0
   },
   "progress": {
-    "total_evidence": 10,
-    "valid_cached_evidence": 10,
-    "attempted_this_run": [
-      "evidence-97d1de6c7b49cdea31f8",
-      "evidence-aa97a9ec78cf7cc57dc5"
-    ],
-    "succeeded_this_run": [
-      "evidence-97d1de6c7b49cdea31f8",
-      "evidence-aa97a9ec78cf7cc57dc5"
-    ],
-    "failed_evidence_ids": [],
-    "remaining_evidence_ids": [],
-    "batch_complete": true,
-    "current_artifact_status": "current_artifact_available"
+    "total_evidence": 223,
+    "valid_cached_evidence": 218,
+    "batch_complete": false,
+    "current_artifact_status": "current_artifact_not_available"
   },
   "raw_model_response_persisted": false,
   "sensitive_transport_data_persisted": false,

@@ -12,7 +12,7 @@ except ImportError:  # pragma: no cover - compatibility with older PyMuPDF impor
 from .catalog import IdentityCatalog
 from .models import AssetPageRef, AssetRef, Document, DocumentIR, DocumentRevision, BBox
 from .parser import parse_page_inputs
-from .profiles import LayoutProfile, PageInput, RawTextBlock
+from .profiles import LayoutProfile, PageCapability, PageInput, RawTextBlock
 
 
 def _image_coverage(page) -> float:
@@ -25,18 +25,23 @@ def _image_coverage(page) -> float:
     for item in image_info:
         bbox = item.get("bbox")
         if bbox:
-            covered += max(0.0, float(bbox[2] - bbox[0])) * max(0.0, float(bbox[3] - bbox[1]))
+            visible = _clip_bbox(bbox, page)
+            covered += max(0.0, visible.x1 - visible.x0) * max(0.0, visible.y1 - visible.y0)
     return min(1.0, covered / page_area)
 
 
 def _clip_bbox(raw_bbox, page) -> BBox:
+    # PyMuPDF extraction is already relative to the unrotated CropBox. Apply
+    # the page rotation once to match rendered/display coordinates; adding
+    # the CropBox origin again would shift text on cropped source PDFs.
+    displayed = pymupdf.Rect(raw_bbox) * page.rotation_matrix
     width = float(page.rect.width)
     height = float(page.rect.height)
     return BBox(
-        max(0.0, min(width, float(raw_bbox[0]))),
-        max(0.0, min(height, float(raw_bbox[1]))),
-        max(0.0, min(width, float(raw_bbox[2]))),
-        max(0.0, min(height, float(raw_bbox[3]))),
+        max(0.0, min(width, float(displayed.x0))),
+        max(0.0, min(height, float(displayed.y0))),
+        max(0.0, min(width, float(displayed.x1))),
+        max(0.0, min(height, float(displayed.y1))),
     )
 
 
@@ -63,6 +68,18 @@ def _image_boxes(page) -> tuple[BBox, ...]:
         _clip_bbox(item["bbox"], page)
         for item in image_info
         if item.get("bbox")
+    )
+
+
+def inspect_pdf_page(page) -> PageCapability:
+    """Measure the current PDF page without borrowing a prior parsing run."""
+    text = page.get_text("text").strip()
+    return PageCapability(
+        has_extractable_text=bool(text),
+        text_character_count=len(text),
+        image_coverage=_image_coverage(page),
+        rotation_deg=int(page.rotation or 0),
+        text_block_count=len(_native_blocks(page)),
     )
 
 

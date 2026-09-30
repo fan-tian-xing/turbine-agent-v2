@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 from datetime import date
 import importlib.util
 import json
@@ -14,13 +15,18 @@ import numpy as np
 import pymupdf
 
 from turbine_kg.settings import PROJECT_ROOT, Settings
-from stage5_fingerprint import ocr_fingerprint
+from turbine_kg.documents.catalog import load_identity_catalog
+from turbine_kg.documents.pdf import inspect_pdf_page
+from turbine_kg.documents.profiles import LayoutProfile, choose_page_mode
+from stage5_fingerprint import ocr_fingerprint, sha256_file
 
 
 SAMPLE_MANIFEST = PROJECT_ROOT / "data" / "stage5" / "stage5_sample_manifest.json"
-INPUT_AUDIT = PROJECT_ROOT / "data" / "stage5" / f"stage5_input_audit_{date.today().isoformat()}.json"
-STAGE4_AUDIT = PROJECT_ROOT / "data" / "stage4" / "stage4_full_parse_audit_2026-09-09.json"
+INPUT_AUDIT = PROJECT_ROOT / "data" / "stage5" / "stage5_input_audit.json"
 REGISTRY_ASSETS = PROJECT_ROOT / "data" / "registry" / "source_assets.jsonl"
+REVISION_CATALOG = PROJECT_ROOT / "config/revision_identity.tsv"
+DERIVED_LINKS = PROJECT_ROOT / "config/derived_asset_links.tsv"
+FULL_REVIEW = PROJECT_ROOT / "data/registry/ocr_validation_report.json"
 NUMBER_PATTERN = re.compile(r"(?<![A-Za-z])[-+]?\d+(?:[,.]\d+)?(?:\s*[-~至]\s*\d+(?:[,.]\d+)?)?")
 UNIT_PATTERN = re.compile(r"(?:mm|cm|m|MPa|kPa|Pa|℃|°C|V|kV|A|Hz|MW|kW|rpm|%|毫米|厘米|米|兆帕|千帕)", re.IGNORECASE)
 NEGATION_TERMS = ("不得", "不应", "禁止", "严禁", "不准", "无须", "除非", "未")
@@ -43,12 +49,48 @@ def _resolve(asset: dict, settings: Settings) -> Path:
     raise ValueError(f"unsupported asset root/path: {asset['asset_id']}")
 
 
-def _page_modes(stage4_document: dict) -> dict[int, str]:
-    modes: dict[int, str] = {}
-    for mode, pages in stage4_document["output"]["page_mode_page_numbers"].items():
-        for page in pages:
-            modes[int(page)] = mode
-    return modes
+def _current_page_mode(page, profile: LayoutProfile) -> tuple[str, dict]:
+    capability = inspect_pdf_page(page)
+    return choose_page_mode(capability, profile), {
+        "adapter": "current_pdf_page_capability_v1",
+        "capability": asdict(capability),
+        "layout_profile": asdict(profile),
+    }
+
+
+def _registered_inputs(item: dict, assets: dict, catalog, settings: Settings) -> tuple[Path, Path]:
+    original = catalog.asset_for_id(item["original_asset_id"])
+    processing = catalog.asset_for_id(item["processing_asset_id"])
+    if (original.asset_kind != "original"
+            or original.document_logical_id != item["document_logical_id"]
+            or (original.document_logical_id, original.revision_id)
+            != (processing.document_logical_id, processing.revision_id)
+            or original.relative_path != item.get("original_relative_path", item["processing_relative_path"])
+            or processing.relative_path != item["processing_relative_path"]):
+        raise ValueError(f"current baseline source identity differs: {item['document_key']}")
+    if original.asset_id != processing.asset_id and (
+            processing.asset_kind != "derived_ocr" or processing.derived_from_asset_id != original.asset_id):
+        raise ValueError("baseline processing asset is not derived from its registered authority")
+    paths = []
+    for identity in (processing, original):
+        asset = assets[identity.asset_id]
+        path = _resolve(asset, settings)
+        if sha256_file(path) != identity.sha256:
+            raise ValueError(f"baseline PDF bytes differ from current Registry: {identity.asset_id}")
+        paths.append(path)
+    return tuple(paths)
+
+
+def _reviewed_blank_pages(item: dict, assets: dict, reviews: dict) -> tuple[set[int], str]:
+    review = reviews.get(item["document_key"], {})
+    if any(review.get(role + "_sha256") != assets[item[role + "_asset_id"]]["sha256"]
+           for role in ("original", "processing")):
+        return set(), "not_bound"
+    blank = review.get("blank_pages")
+    if (not isinstance(blank, list) or len(blank) != len(set(blank))
+            or any(type(page) is not int or not 1 <= page <= item["page_count"] for page in blank)):
+        raise ValueError("current full-review blank-page declaration is invalid")
+    return set(blank), "bound_to_current_pdf"
 
 
 def _table_count(page) -> int | None:
@@ -149,9 +191,15 @@ def benchmark() -> dict:
     input_fingerprint, fingerprint_components = ocr_fingerprint()
     sample = json.loads(SAMPLE_MANIFEST.read_text(encoding="utf-8"))
     input_audit = json.loads(INPUT_AUDIT.read_text(encoding="utf-8"))
-    stage4 = json.loads(STAGE4_AUDIT.read_text(encoding="utf-8"))
+    if (input_audit.get("status") != "pass" or input_audit.get("errors") != []
+            or input_audit.get("input_fingerprint") != input_fingerprint
+            or input_audit.get("fingerprint_components") != fingerprint_components):
+        raise ValueError("current Stage 5 input audit must pass for this exact input fingerprint")
     assets = _load_jsonl(REGISTRY_ASSETS)
-    stage4_by_asset = {row["processing_asset"]["asset_id"]: row for row in stage4["documents"]}
+    catalog = load_identity_catalog(REGISTRY_ASSETS, REVISION_CATALOG, DERIVED_LINKS)
+    profile = LayoutProfile()
+    reviews = ({row["document_key"]: row for row in json.loads(FULL_REVIEW.read_text(encoding="utf-8")).get("full_corpus_reviews", [])}
+               if FULL_REVIEW.is_file() else {})
     sample_by_doc_page = {
         (item["document_key"], int(page.get("physical_page", page["pdf_page"]))): page
         for item in sample["documents"]
@@ -163,9 +211,8 @@ def benchmark() -> dict:
     for item in sample["documents"]:
         processing = assets[item["processing_asset_id"]]
         original = assets[item["original_asset_id"]]
-        processing_path = _resolve(processing, settings)
-        original_path = _resolve(original, settings)
-        modes = _page_modes(stage4_by_asset[item["processing_asset_id"]])
+        processing_path, original_path = _registered_inputs(item, assets, catalog, settings)
+        reviewed_blank, review_binding = _reviewed_blank_pages(item, assets, reviews)
         processed_pages = 0
         failed_pages = []
         processing_doc = pymupdf.open(processing_path)
@@ -175,6 +222,7 @@ def benchmark() -> dict:
         for index, processing_page in enumerate(processing_doc):
             page_number = index + 1
             try:
+                mode, mode_basis = _current_page_mode(processing_page, profile)
                 record = {
                     "document_key": item["document_key"],
                     "document_logical_id": item["document_logical_id"],
@@ -182,7 +230,10 @@ def benchmark() -> dict:
                     "original_asset_id": item["original_asset_id"],
                     "pdf_page": page_number,
                     "physical_page": page_number,
-                    "page_mode": modes.get(page_number, "unknown"),
+                    "page_mode": mode,
+                    "page_mode_basis": mode_basis,
+                    "reviewed_blank": page_number in reviewed_blank,
+                    "full_review_binding_status": review_binding,
                     "is_golden_sample": (item["document_key"], page_number) in sample_by_doc_page,
                     "sample_categories": sample_by_doc_page.get((item["document_key"], page_number), {}).get("categories", []),
                     "processing_metrics": {
@@ -196,12 +247,15 @@ def benchmark() -> dict:
                 processed_pages += 1
             except Exception as exc:  # pragma: no cover - defensive audit boundary
                 failed_pages.append({"pdf_page": page_number, "error": f"{type(exc).__name__}: {exc}"})
+                errors.append(f"{item['document_key']} physical page {page_number}: {type(exc).__name__}: {exc}")
         processing_doc.close()
         original_doc.close()
         documents.append({
             "document_key": item["document_key"],
             "processing_asset_id": item["processing_asset_id"],
             "original_asset_id": item["original_asset_id"],
+            "processing_sha256": processing["sha256"],
+            "original_sha256": original["sha256"],
             "page_count": item["page_count"],
             "processed_page_count": processed_pages,
             "failed_page_count": len(failed_pages),
@@ -267,6 +321,8 @@ def benchmark() -> dict:
         "candidate_engine_inventory": _module_status(),
         "current_baseline": {
             "processing_source": "registered native PDF or existing validated OCR derivative",
+            "page_classification": "current registered PDF; no historical Stage 4 page modes",
+            "layout_profile": asdict(profile),
             "table_detector": "PyMuPDF find_tables when available",
             "truth_status": "Golden Sample text/critical-token truth still requires manual annotation before accuracy scores can be claimed",
             "low_text_accounting": {
@@ -276,7 +332,7 @@ def benchmark() -> dict:
                 "interpretation": "The candidate count is not a full-batch low-text count; use the all-page count for full-batch reporting.",
             },
         },
-        "status": "baseline_ready_for_manual_truth",
+        "status": "baseline_incomplete" if errors else "baseline_ready_for_manual_truth",
         "errors": errors,
         "boundaries": [
             "This baseline is not an OCR accuracy pass/fail result.",
@@ -291,14 +347,14 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        default=PROJECT_ROOT / "data" / "stage5" / f"stage5_baseline_benchmark_{date.today().isoformat()}.json",
+        default=PROJECT_ROOT / "data" / "stage5" / "stage5_baseline_benchmark.json",
     )
     args = parser.parse_args()
     result = benchmark()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "output": str(args.output), "pages": result["actual"]["page_count"]}, ensure_ascii=False))
-    return 0 if not result["errors"] else 1
+    return 0 if not result["errors"] and result["actual"]["failed_page_count"] == 0 else 1
 
 
 if __name__ == "__main__":

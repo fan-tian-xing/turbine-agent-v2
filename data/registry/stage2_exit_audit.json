@@ -9,7 +9,7 @@
   "checks": {
     "registry_baseline": {
       "status": "pass",
-      "evidence": "data/registry/source_registry_summary.json records 48 physical assets, 44 logical documents and the configured SOURCE_ROOT/OCR_DERIVED_ROOT boundary."
+      "evidence": "data/registry/source_registry_summary.json currently records 49 physical assets, 44 logical documents and the configured SOURCE_ROOT/OCR_DERIVED_ROOT boundary; the 2026-09-09 Stage 2 closure remains a historical gate."
     },
     "identity_and_revision_contract": {
       "status": "pass",
@@ -29,7 +29,7 @@
     },
     "stage2b_research_trial_admission": {
       "status": "pass",
-      "evidence": "data/registry/stage2_source_selection.json records 5 selected processing units with blocking_open_reviews=0 and validated text-adapter status; data/stage3/initial_batch_manifest.json freezes the Stage 3 research-trial pages."
+      "evidence": "data/registry/stage2_source_selection.json records 5 selected processing units for the research trial. DL/T 863 is restricted to the 28 supplied physical pages because 15 printed body pages are absent; unheaded fragments across those gaps are excluded from Evidence. data/stage3/initial_batch_manifest.json freezes the Stage 3 research-trial pages."
     },
     "formal_first_batch_admission": {
       "status": "deferred_to_stage15",

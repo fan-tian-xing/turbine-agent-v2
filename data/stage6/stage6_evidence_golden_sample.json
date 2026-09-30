@@ -7,12 +7,54 @@
   "authority": "Stage 5 Original materials truth annotations plus original-page review",
   "contract": "config/evidence_contract.json",
   "inputs": {
-    "stage5_truth_annotations": "data/stage5/stage5_truth_annotations_2026-09-10.json",
-    "stage5_table_truth_review": "data/stage5/stage5_table_truth_review_2026-09-09.json",
-    "stage5_exit_audit": "data/stage5/stage5_exit_audit_2026-09-10.json",
-    "stage5_exit_audit_sha256": "1a0bbb8912177b36ccdedc57f2614d5671dd0b2845060fcad19e54bed14585a2",
-    "stage5_rapidocr_benchmark": "data/stage5/stage5_rapidocr_sample_benchmark_2026-09-10.json",
-    "stage5_rapidocr_benchmark_sha256": "935f98c46130710c1bbf2e1708993d0d8e2bbc4855ec91d96d4a3fa2dac12d9b"
+    "source_input_fingerprint": "709f84122c98f964064bfd57c675b2ba83eddffa8bba2e5f2893b8f236909701",
+    "stage5_truth_annotations": "data/stage5/stage5_truth_annotations_2026-09-28.json",
+    "stage5_truth_annotations_sha256": "0b71391ad1016a7630d1048b140a56b30bcffc038c7300f52abe6c717d097d4c",
+    "stage5_table_truth_review": "data/stage5/stage5_table_truth_review.json",
+    "stage5_table_truth_review_sha256": "31c344012e42fa90b395dc8dbac142ed48198472faf8bb296ee731193c068984",
+    "stage5_sample_manifest": "data/stage5/stage5_sample_manifest.json",
+    "source_assets": "data/registry/source_assets.jsonl",
+    "full_corpus_reviews": "data/registry/ocr_validation_report.json",
+    "stage5_sample_manifest_sha256": "65a37aa094348bb1126f8a6a60d578c5a5e20d298de519bc97f0e7c5a2a5a227",
+    "source_assets_sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897",
+    "full_corpus_reviews_sha256": "6c62e391ce1721e1a2bf3a97dcc131c550fa1e2332e233a034c562dfba4acc8f",
+    "reviewed_pdfs": [
+      {
+        "document_key": "DL5190.3",
+        "original_asset_id": "asset-29ca16b111846e39aabf",
+        "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "processing_asset_id": "asset-b2076a7946b782881b44",
+        "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1"
+      },
+      {
+        "document_key": "D300N",
+        "original_asset_id": "asset-ffc1d592a5b4e204578c",
+        "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+        "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+        "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee"
+      },
+      {
+        "document_key": "DLT863",
+        "original_asset_id": "asset-d146688100212c0aa1fe",
+        "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+        "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+        "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7"
+      },
+      {
+        "document_key": "HAF103",
+        "original_asset_id": "asset-2e27a3f10284708e2d10",
+        "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "processing_asset_id": "asset-e4d060422e62fd656770",
+        "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1"
+      },
+      {
+        "document_key": "auxiliary_installation_book",
+        "original_asset_id": "asset-115e242947e0a4b46ea5",
+        "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+        "processing_asset_id": "asset-6be125e4aa900f01e21b",
+        "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145"
+      }
+    ]
   },
   "producer": "scripts/build_stage6_evidence_golden_sample.py",
   "consumers": [
@@ -24,7 +66,7 @@
   "structured_candidate_count": 15,
   "region_scoped_count": 7,
   "quarantined_count": 6,
-  "text_reference_count": 10,
+  "text_reference_count": 29,
   "zero_tolerance": [
     "physical page must be present and one-based",
     "logical page must not be invented",
@@ -38,6 +80,9 @@
       "sample_id": "stage6-sample-001",
       "document_key": "DL5190.3",
       "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
       "physical_page": 1,
       "logical_page": null,
       "truth_source": "Original materials original PDF",
@@ -51,13 +96,12 @@
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": "ICS 27.100 P 61 备案号：60035-2017 中华人民共和国电力行业标准 P DL / T 5190.3 — 2019 代替DL / T 5190.3 — 2012 电力建设施工技术规范 第3 部分：汽轮发电机组 Technical specification for thermal power erection and construction- Part 3：steam turbine generator unit 2019-6-4发布 2019-10-01实施 国家能源局 发 布",
-      "reference_text_sha256": "55fcbc115c836b2e2e76209984cb5c5dded441f7dce25d23e28abc5dca7b8d10",
+      "reference_text": "ICS 27.100 P 61 中华人民共和国电力行业标准 P DL / T 5190.3 — 2019 代替DL / T 5190.3 — 2012 电力建设施工技术规范 第3 部分：汽轮发电机组 Technical specification for thermal power erection and construction- Part 3：steam turbine generator unit 2019-6-4发布 2019-10-01实施 国家能源局 发 布",
+      "reference_text_sha256": "f07d7f511946f7d00b2d5a5907d75ba94e3cac324181b9e5eace40910eb62aaa",
       "reference_tokens": {
         "numbers": [
           "27.100",
           "61",
-          "60035-2017",
           "5190.3",
           "2019",
           "5190.3",
@@ -82,7 +126,7 @@
         ],
         "negations": {}
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -90,6 +134,9 @@
       "sample_id": "stage6-sample-002",
       "document_key": "DL5190.3",
       "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
       "physical_page": 14,
       "logical_page": "3",
       "truth_source": "Original materials original PDF",
@@ -166,7 +213,7 @@
           "未": 1
         }
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -174,6 +221,9 @@
       "sample_id": "stage6-sample-003",
       "document_key": "DL5190.3",
       "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
       "physical_page": 25,
       "logical_page": "14",
       "truth_source": "Original materials original PDF",
@@ -182,14 +232,14 @@
         "caption",
         "bbox"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "region_scoped",
       "source_span_requirement": {
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": "DL / T 5190.3 — 2019 14 5 推力间隙测量应连续进行两次，两次间隙测量值偏差应不大于0.03mm，推力间隙应符合制造厂技术 要求； 6 金斯伯里推力轴承，如图4.5.8-1、4.5.8-2 所示，可通过推力轴承调整机构移动推力瓦外套测量推 力间隙； 图4.5.8-1 推力轴承调整机构详图 1—推力瓦块；2—调整块固定螺栓；3—下部调整块；4—支持块；5—支持环； 6—外壳衬板；7—油封环；8—调整块；9—调整块销子；10—防转键； 11—防转键固定螺栓；12—外壳；13—轴承座；14—节流孔螺栓；15—螺母 图4.5.8-2 金斯伯里推力轴承 1—固定楔块；2、9—调整垫片；3—可调楔块；4—调整螺栓支座压板；5、11—六角螺栓； 6—调整螺栓拼帽；7—调整螺栓；8—销紧钢丝；10—弹簧垫圈",
-      "reference_text_sha256": "01ad4b75407c7b1b9847d8b9ba88f046eeeff62afd8fa18d175c7540687c29cb",
+      "reference_text": "DL / T 5190.3 — 2019 14 5 推力间隙测量应连续进行两次，两次间隙测量值偏差应不大于0.03mm，推力间隙应符合制造厂技术 要求； 6 金斯伯里推力轴承，如图4.5.8-1、4.5.8-2 所示，可通过推力轴承调整机构移动推力瓦外套测量推 力间隙； 图4.5.8-1 推力轴承调整机构详图 1—推力瓦块；2—调整块固定螺栓；3—下部调整块；4—支持块；5—支持环； 6—外壳衬板；7—油封环；8—调整块；9—调整块销子；10—防转键； 11—防转键固定螺栓；12—外壳；13—轴承座；14—节流孔螺栓；15—螺母 图4.5.8-2 金斯伯里推力轴承 1—固定楔块；2、9—调整垫片；3—可调楔块；4—调整螺栓支座压板；5、11—六角螺栓； 6—调整螺栓拼帽；7—调整螺栓；8—销紧钢丝；10—弹簧垫圈 A—A 油入口 推力轴承解体机构 排油 A A A 14 15 11 10 9 8 7 6 5 4 3 2 1 6 7 12 13 1 2 3 4 5 6 7 8 9 10 11 轴承箱与瓦套两侧总间隙c 瓦套 推力瓦块 球面座 推力盘 a X Y 推力总间隙（X+Y） 推 力 轴 承 调 整 机 构 推 力 轴 承 中 心 密封环间隙a 油封总间隙b",
+      "reference_text_sha256": "ac96f9cf8ba82aecb6ba3cecf0c2c7db4609bee22512f0530afc82bdcc52b099",
       "reference_tokens": {
         "numbers": [
           "5190.3",
@@ -231,14 +281,49 @@
           "6",
           "7",
           "8",
-          "10"
+          "10",
+          "14",
+          "15",
+          "11",
+          "10",
+          "9",
+          "8",
+          "7",
+          "6",
+          "5",
+          "4",
+          "3",
+          "2",
+          "1",
+          "6",
+          "7",
+          "12",
+          "13",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11"
         ],
         "units": [
-          "mm"
+          "mm",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "a",
+          "a"
         ],
         "negations": {}
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -246,6 +331,9 @@
       "sample_id": "stage6-sample-004",
       "document_key": "DL5190.3",
       "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
       "physical_page": 42,
       "logical_page": "31",
       "truth_source": "Original materials original PDF",
@@ -347,7 +435,7 @@
           "不应": 1
         }
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -355,6 +443,9 @@
       "sample_id": "stage6-sample-005",
       "document_key": "DL5190.3",
       "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
       "physical_page": 86,
       "logical_page": "75",
       "truth_source": "Original materials original PDF",
@@ -362,14 +453,14 @@
         "dense_clause_text",
         "complex_layout"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "region_scoped",
       "source_span_requirement": {
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": "DL / T 5190.3 — 2019 75 2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的 垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。密封瓦座内轴 向两侧面应做涂色检查，接触面应均匀、连续； 3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物； 4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； 5 密封瓦座上的丝扣接头应经试装，确认紧固密封。 9.7.2 密封瓦检查应符合下列规定： 1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀； 2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙 应符合制造厂技术要求； 3 密封瓦水平结合面螺栓紧固后，上下两半的垂直面应处在同一平面，不得错口，在平板上应用 0.03mm 塞尺检查不入； 4 密封瓦两侧垂直面应光洁，两垂直面间的不平行度应不大于0.03mm； 5 密封瓦乌金检查应符合4.5.1 的规定； 6 密封瓦的油孔和环形油室内应光洁、无铁屑、无锈皮等杂物； 7 密封瓦与轴颈的径向间隙应符合制造厂技术要求； 8 密封瓦弹簧应无损伤且长度应符合制造厂技术要求； 9 密封瓦与密封瓦座组装好后，应检查密封瓦间无错口，密封瓦在密封瓦座内沿径向方向活动自如， 无卡涩； 10 密封瓦与密封瓦座组装好后，测量密封瓦在瓦座内的轴向间隙即窜动量，应符合制造厂技术要求， 如图9.6.2 所示。 图9.6.2 密封瓦在瓦座内的轴向间隙示意图 9.7.3 轴密封装置组装应符合下列规定： 1 核对轴密封装置零件上的钢印标记，应对号就位与图纸相符； 2 密封瓦座与轴颈应同心，径向间隙差应不大于0.15mm； 3 在拧紧密封瓦座与端盖之间的垂直结合面螺栓的过程中应持续拨动密封瓦，保证螺栓拧紧后，密封瓦 在座内灵活、无卡涩； 4 轴密封装置安装完成后，结合面螺栓应锁紧； 5 密封瓦定位销应锁紧，露出部分不得超出外圆弧度，销孔不能穿透瓦壁，销子装好后不得将密封 瓦卡死； 6 密封瓦座与端盖间垫片的材质应符合制造厂技术要求，无要求时可用丁腈橡胶板配制，胶板上螺 栓孔应大于端盖上的孔径； 7 位于端盖上的密封油进出油腔室，应清理干净。经检查合格后，按制造厂技术要求将手孔封闭， 且严密、无渗漏； 8 各油压和气压取样插座应拧紧，不得泄漏； 9 轴密封装置对地有绝缘规定时，安装后测量对地绝缘电阻值应符合制造厂技术要求。 9.7.4 轴密封装置的油挡间隙应符合制造厂技术要求，无要求时，应符合4.5.10 的规定。油挡对地有绝缘 规定时，安装完毕后，测量对地绝缘电阻值应符合9.1.11 的规定。 9.8 进出水支座 9.8.1 水内冷转子进出水支座的安装定位，应在发电机和励磁装置转子最终定位后进行。 9.8.2 水内冷转子进水支座的检查与安装应符合下列规定：",
-      "reference_text_sha256": "7e3719b084640e87a454b75bf4b63267c58cb149421ec810ed0d1febd5146bbe",
+      "reference_text": "DL / T 5190.3 — 2019 75 2 在紧好水平结合面螺栓的情况下，密封瓦与密封瓦座配合的环形垂直面、密封瓦座与端盖配合的 垂直结合面应平整、无错口，在水平结合面处检查外部接口，用0.05mm 塞尺检查应不入。密封瓦座内轴 向两侧面应做涂色检查，接触面应均匀、连续； 3 各垂直结合面应光洁，油室、油孔应清洁、畅通，无铁屑、无锈皮等杂物； 4 密封瓦座垫片应无破损，规格尺寸应与密封瓦座相匹配，材质应符合制造厂技术要求； 5 密封瓦座上的丝扣接头应经试装，确认紧固密封。 9.7.2 密封瓦检查应符合下列规定： 1 密封瓦水平结合面应接触良好，接触面积应大于结合面面积的75％且分布均匀； 2 用千分尺测量密封瓦厚度、孔径、密封瓦槽宽度及与密封瓦相对应处的大轴直径、各部配合间隙 应符合制造厂技术要求； 3 密封瓦水平结合面螺栓紧固后，上下两半的垂直面应处在同一平面，不得错口，在平板上应用 0.03mm 塞尺检查不入； 4 密封瓦两侧垂直面应光洁，两垂直面间的不平行度应不大于0.03mm； 5 密封瓦乌金检查应符合4.5.1 的规定； 6 密封瓦的油孔和环形油室内应光洁、无铁屑、无锈皮等杂物； 7 密封瓦与轴颈的径向间隙应符合制造厂技术要求； 8 密封瓦弹簧应无损伤且长度应符合制造厂技术要求； 9 密封瓦与密封瓦座组装好后，应检查密封瓦间无错口，密封瓦在密封瓦座内沿径向方向活动自如， 无卡涩； 10 密封瓦与密封瓦座组装好后，测量密封瓦在瓦座内的轴向间隙即窜动量，应符合制造厂技术要求， 如图9.6.2 所示。 图9.6.2 密封瓦在瓦座内的轴向间隙示意图 9.7.3 轴密封装置组装应符合下列规定： 1 核对轴密封装置零件上的钢印标记，应对号就位与图纸相符； 2 密封瓦座与轴颈应同心，径向间隙差应不大于0.15mm； 3 在拧紧密封瓦座与端盖之间的垂直结合面螺栓的过程中应持续拨动密封瓦，保证螺栓拧紧后，密封瓦 在座内灵活、无卡涩； 4 轴密封装置安装完成后，结合面螺栓应锁紧； 5 密封瓦定位销应锁紧，露出部分不得超出外圆弧度，销孔不能穿透瓦壁，销子装好后不得将密封 瓦卡死； 6 密封瓦座与端盖间垫片的材质应符合制造厂技术要求，无要求时可用丁腈橡胶板配制，胶板上螺 栓孔应大于端盖上的孔径； 7 位于端盖上的密封油进出油腔室，应清理干净。经检查合格后，按制造厂技术要求将手孔封闭， 且严密、无渗漏； 8 各油压和气压取样插座应拧紧，不得泄漏； 9 轴密封装置对地有绝缘规定时，安装后测量对地绝缘电阻值应符合制造厂技术要求。 9.7.4 轴密封装置的油挡间隙应符合制造厂技术要求，无要求时，应符合4.5.10 的规定。油挡对地有绝缘 规定时，安装完毕后，测量对地绝缘电阻值应符合9.1.11 的规定。 9.8 进出水支座 9.8.1 水内冷转子进出水支座的安装定位，应在发电机和励磁装置转子最终定位后进行。 9.8.2 水内冷转子进水支座的检查与安装应符合下列规定： a",
+      "reference_text_sha256": "8792c6554114fecc48d11b2a1d406a50e2e31bb1dde065cae858e0eaea57e078",
       "reference_tokens": {
         "numbers": [
           "5190.3",
@@ -429,13 +520,14 @@
           "mm",
           "mm",
           "mm",
-          "mm"
+          "mm",
+          "a"
         ],
         "negations": {
           "不得": 1
         }
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "DL5190.3",
         "physical_page": 86,
@@ -443,7 +535,53 @@
         "role": "complex_layout_not_table",
         "table_truth_status": "not_applicable",
         "visible_content_match": true,
-        "finding": "条款、图示和连续正文页面，不是表格；从表格候选降级为复杂版面候选。"
+        "finding": "条款、图示和连续正文页面，不是表格；从表格候选降级为复杂版面候选。",
+        "original_asset_id": "asset-29ca16b111846e39aabf",
+        "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ]
+        },
+        "processing_asset_id": "asset-b2076a7946b782881b44",
+        "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ]
+        }
       },
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -451,6 +589,9 @@
       "sample_id": "stage6-sample-006",
       "document_key": "DL5190.3",
       "original_asset_id": "asset-29ca16b111846e39aabf",
+      "processing_asset_id": "asset-b2076a7946b782881b44",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
       "physical_page": 113,
       "logical_page": "102",
       "truth_source": "Original materials original PDF",
@@ -460,7 +601,7 @@
         "table",
         "numeric_and_unit"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "quarantined",
       "source_span_requirement": {
         "minimum": 1,
@@ -469,7 +610,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "DL5190.3",
         "physical_page": 113,
@@ -480,7 +621,53 @@
         "leaf_column_count": 2,
         "header_structure": "表12.1.15含合并单元格；页面下方另有图12.2.1及图注，必须分成独立版面区域",
         "continuation": null,
-        "finding": "原始页视觉复核确认存在真实两叶列表格，左列为静态刚性说明，右列为低/中/高定位精度要求；包含S/500、S/750、S/1000等关键值。表格与下方图示不得合并为单一文本证据，后续Evidence仍应以原页坐标和人工单元格标注为准。"
+        "finding": "原始页视觉复核确认存在真实两叶列表格，左列为静态刚性说明，右列为低/中/高定位精度要求；包含S/500、S/750、S/1000等关键值。表格与下方图示不得合并为单一文本证据，后续Evidence仍应以原页坐标和人工单元格标注为准。",
+        "original_asset_id": "asset-29ca16b111846e39aabf",
+        "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ]
+        },
+        "processing_asset_id": "asset-b2076a7946b782881b44",
+        "processing_sha256": "7188dca9590aad62f7ffdf842fb69545f78402c2c313ce0f113f4b55b8c182b1",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.219970703125,
+            842.0
+          ]
+        }
       },
       "review_boundary": "quarantined_structured_regions_require_region_or_cell_review"
     },
@@ -488,6 +675,9 @@
       "sample_id": "stage6-sample-007",
       "document_key": "D300N",
       "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
       "physical_page": 1,
       "logical_page": null,
       "truth_source": "Original materials original PDF",
@@ -502,10 +692,26 @@
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "版本号：A 东方汽轮机厂 N-300-16.7/537/537-8型（合缸） 汽轮机本体安装及维护说明书 编号 D300N-000105ASM 第全册 2001年5月",
+      "reference_text_sha256": "2e6f75ce914bea4cdf3e56fbdaf95afefb78a7148a2ed4b86c20fe54725f5b5f",
+      "reference_tokens": {
+        "numbers": [
+          "300-16.7",
+          "537",
+          "537-8",
+          "00",
+          "000105",
+          "2001",
+          "5"
+        ],
+        "units": [
+          "A",
+          "A",
+          "M"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -513,6 +719,9 @@
       "sample_id": "stage6-sample-008",
       "document_key": "D300N",
       "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
       "physical_page": 2,
       "logical_page": null,
       "truth_source": "Original materials original PDF",
@@ -526,10 +735,20 @@
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "编号 D300N-000105ASM 编制 校对 审核 会签 审定 批准",
+      "reference_text_sha256": "1255833c18a736d8ca373de0e6395a2cf00c2b8cbf57a08a3f38ad46fd909e69",
+      "reference_tokens": {
+        "numbers": [
+          "00",
+          "000105"
+        ],
+        "units": [
+          "A",
+          "M"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -537,6 +756,9 @@
       "sample_id": "stage6-sample-009",
       "document_key": "D300N",
       "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
       "physical_page": 38,
       "logical_page": "2-10-4",
       "truth_source": "Original materials original PDF",
@@ -551,10 +773,29 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "汽轮机本体安装及维护说明书 D300N-000105ASM 支撑条 间隙测点 管道 对接间隙 阀门或管道 图2-10-1 1 2 H a b 图2-10-2 2-10-4",
+      "reference_text_sha256": "cc8c8f91641296320530472f5fcc8eeb81f0ef6d71e55b6f8dba0a00dd94983d",
+      "reference_tokens": {
+        "numbers": [
+          "00",
+          "000105",
+          "2-10",
+          "-1",
+          "1",
+          "2",
+          "2-10",
+          "-2",
+          "2-10",
+          "-4"
+        ],
+        "units": [
+          "A",
+          "M",
+          "a"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -562,6 +803,9 @@
       "sample_id": "stage6-sample-010",
       "document_key": "D300N",
       "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
       "physical_page": 50,
       "logical_page": "2-14-3",
       "truth_source": "Original materials original PDF",
@@ -579,7 +823,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "D300N",
         "physical_page": 50,
@@ -594,7 +838,53 @@
           "continues_to_physical_page": 51,
           "label": "续表2-14-1"
         },
-        "finding": "第6项尾部 g-i 及第7、8、9项；原始页与处理页可见内容一致。OCR文字层不作为单元格顺序权威。"
+        "finding": "第6项尾部 g-i 及第7、8、9项；原始页与处理页可见内容一致。OCR文字层不作为单元格顺序权威。",
+        "original_asset_id": "asset-ffc1d592a5b4e204578c",
+        "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ]
+        },
+        "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+        "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2755737304688,
+            842.0972290039062
+          ]
+        }
       },
       "review_boundary": "quarantined_structured_regions_require_region_or_cell_review"
     },
@@ -602,6 +892,9 @@
       "sample_id": "stage6-sample-011",
       "document_key": "D300N",
       "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
       "physical_page": 73,
       "logical_page": "3-5-1",
       "truth_source": "Original materials original PDF",
@@ -616,10 +909,31 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "汽轮机本体安装及维护说明书 D300N-000105ASM 3.5 主要润滑部位及润滑要求 1 前箱滑动面的润滑和清洗 前箱、基架间装设有自润滑滑块。一般不需抽出检查。 若需检查，可在大修时，在半空缸状态下，向上微微抬起高中压外缸前猫爪，使猫爪 下垫片脱开0.2～0.5mm。再将前箱微微抬起0.1～0.15mm，与滑块脱开，抽出基架上滑块, 清洗干净。清理好滑块槽后再将滑块复位。 2 盘车装置的润滑和维护 每次大修检查并保证传动系统各轴和齿轮润滑油畅通。 编制 校对 审核 标审 录入员 3-5-1",
+      "reference_text_sha256": "f46c83fabc78f73974637609960e7c7a486bd23e51090b573a9e74b8adb591a0",
+      "reference_tokens": {
+        "numbers": [
+          "00",
+          "000105",
+          "3.5",
+          "1",
+          "0.2",
+          "0.5",
+          "0.1",
+          "0.15",
+          "2",
+          "3-5",
+          "-1"
+        ],
+        "units": [
+          "A",
+          "M",
+          "mm",
+          "mm"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -627,6 +941,9 @@
       "sample_id": "stage6-sample-012",
       "document_key": "D300N",
       "original_asset_id": "asset-ffc1d592a5b4e204578c",
+      "processing_asset_id": "asset-dfd1ea84bc8622cede86",
+      "original_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "processing_sha256": "92b815e5f081a555db7a936a14689c3282d6be5a36593ab70e4625f6e43b2dee",
       "physical_page": 94,
       "logical_page": "3-3-4",
       "truth_source": "Original materials original PDF",
@@ -641,10 +958,22 @@
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "机本体安装及维护说明书 D300N-000105ASM 3-3-4",
+      "reference_text_sha256": "3f2505bc2214a180fd96262ab1cdc614e9b8b8c744217d9a2169a25b6ba2ad4e",
+      "reference_tokens": {
+        "numbers": [
+          "00",
+          "000105",
+          "3-3",
+          "-4"
+        ],
+        "units": [
+          "A",
+          "M"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -652,6 +981,9 @@
       "sample_id": "stage6-sample-013",
       "document_key": "DLT863",
       "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
       "physical_page": 1,
       "logical_page": null,
       "truth_source": "Original materials original PDF",
@@ -666,10 +998,29 @@
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "ICS 27.100 F 29 DL 备案号：56222-2016 中华人民共和国电力行业标准 DL/T 863—2016 代替 DL/T 863—2004 汽轮机启动调试导则 Guide of turbine start-up commissioning 2016-08-16发布 2016-12-01实施 国家能源局 发布",
+      "reference_text_sha256": "5175eb7c85705bffc7e4ca26eec15a8dec8396b8e33cc0f7f8453433740f1a7b",
+      "reference_tokens": {
+        "numbers": [
+          "27.100",
+          "29",
+          "56222-2016",
+          "863",
+          "2016",
+          "863",
+          "2004",
+          "2016-08",
+          "-16",
+          "2016-12",
+          "-01"
+        ],
+        "units": [
+          "a",
+          "mm"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -677,6 +1028,9 @@
       "sample_id": "stage6-sample-014",
       "document_key": "DLT863",
       "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
       "physical_page": 2,
       "logical_page": "I",
       "truth_source": "Original materials original PDF",
@@ -684,16 +1038,97 @@
         "contents",
         "scan_page"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "navigation_only",
       "source_span_requirement": {
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "DL/T 863—2016 目次 前言 III 1范围 1 2 规范性引用文件 1 3 术语和定义 1 4总则 2 4.1工作组织 2 4.2 能力资格 3 4.3 计量管理 3 4.4 调试措施 3 4.5工作内容 3 5分部试运 3 5.1一般规定 3 5.2分系统试运主要调试项目及注意事项 4 6汽轮机整套启动试运 17 6.1一般规定 17 6.2汽轮机启动前应投运的系统 18 6.3 系统投运注意事项 20 6.4 汽轮机启动前检查 20 6.5 汽轮机启动方式 21 6.6 汽轮机空负荷试运 22 6.7 汽轮机带负荷试运 23 6.8 汽轮机满负荷试运 25 6.9汽轮机禁止启动条件 25 6.10汽轮机停机 26 6.11整套启动试运注意事项 28 7 汽轮机典型事故处理 28 7.1 汽轮机油系统火灾 28 7.2 汽轮机超速 29 7.3 汽轮机大轴弯曲、轴瓦烧损 29 7.4 汽轮机甩负荷 30 7.5 汽轮机进水 31 7.6 循环水中断 31 7.7全厂失电 31 8调试文件 32 8.1一般规定 32 8.2汽轮机分系统调试技术文件 32 8.3汽轮机整套启动调试技术文件 32 I",
+      "reference_text_sha256": "45ca5c9549f68b0babdaa68890d2036cdeb3c661c55ff15307f5b84f2446a21c",
+      "reference_tokens": {
+        "numbers": [
+          "863",
+          "2016",
+          "1",
+          "1",
+          "2",
+          "1",
+          "3",
+          "1",
+          "4",
+          "2",
+          "4.1",
+          "2",
+          "4.2",
+          "3",
+          "4.3",
+          "3",
+          "4.4",
+          "3",
+          "4.5",
+          "3",
+          "5",
+          "3",
+          "5.1",
+          "3",
+          "5.2",
+          "4",
+          "6",
+          "17",
+          "6.1",
+          "17",
+          "6.2",
+          "18",
+          "6.3",
+          "20",
+          "6.4",
+          "20",
+          "6.5",
+          "21",
+          "6.6",
+          "22",
+          "6.7",
+          "23",
+          "6.8",
+          "25",
+          "6.9",
+          "25",
+          "6.10",
+          "26",
+          "6.11",
+          "28",
+          "7",
+          "28",
+          "7.1",
+          "28",
+          "7.2",
+          "29",
+          "7.3",
+          "29",
+          "7.4",
+          "30",
+          "7.5",
+          "31",
+          "7.6",
+          "31",
+          "7.7",
+          "31",
+          "8",
+          "32",
+          "8.1",
+          "32",
+          "8.2",
+          "32",
+          "8.3",
+          "32"
+        ],
+        "units": [],
+        "negations": {
+          "禁止": 1
+        }
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -701,6 +1136,9 @@
       "sample_id": "stage6-sample-015",
       "document_key": "DLT863",
       "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
       "physical_page": 14,
       "logical_page": "10",
       "truth_source": "Original materials original PDF",
@@ -709,16 +1147,50 @@
         "scan_page",
         "numeric_and_unit"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "region_scoped",
       "source_span_requirement": {
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "DL/T 863—2016 5.2.12.2调试注意事项 调试过程应注意的事项： a）在确认蓄能器隔离后，进行控制油系统压力试验，检查管道及接口无泄漏； b） 控制油压力调整时应先缓慢调节油泵出口溢流阀提高系统压力，然后调整出口母管泄压阀， 确保系统安全泄压阀正常动作，再调节油泵出口溢流阀，确认系统压力满足设计要求； c）主汽阀、调节汽阀关闭时间应小于0.3s（包括延迟时间）。 5.2.13发电机内冷水系统 5.2.13.1主要调试项目内容 发电机内冷水系统调试项目和内容如下： a） 确认发电机内冷水系统管道水冲洗合格； b） 发电机内冷水系统冷却水泵试运； c) 发电机内冷水系统热交换器投运； d) 配合进行离子交换器投运； e） 内冷水系统流量、压力调整； f） 内冷水流量与发电机进出水压差测试，确定断水保护定值； g)内冷水泵联锁保护实校，记录内冷水泵联锁启动时间与最低流量。 5.2.13.2调试注意事项 调试过程应注意的事项： a） 发电机内冷水系统首次启动前，应进行注水排空，先外部管道注水排空，后内部管道注水排空； b） 发电机内冷水箱是否充氮，应按照设备供货商要求； c)发电机内冷水系统投运初期，为确保水质满足设计要求，系统宜充分换水。 5.2.14发电机密封油系统 5.2.14.1主要调试项目内容 发电机密封油系统调试项目和内容如下： a） 确认汽轮机密封油系统冲洗合格。 b) 交流、直流及高压备用密封油泵试运、密封油排烟风机试运。 c) 第三路油源（润滑油系统供油）试运。 d） 密封油系统调整（双流环）： 1） 调整空侧密封油泵出口压力和密封油差压调节阀至设计值； 2) 调整氢侧密封油泵出口压力和平衡阀至设计值，使氢侧与空侧密封油压差符合要求； 3) 高压备用油路调整； 4） 氢侧油箱油位调整； 5) 浮动油量调整； 6） 空侧、氢侧冷油器投运； 7）消泡箱液位及发电机漏液开关实校。 e） 密封油系统调整（单流环）： 1）油泵出口压力调整； 10",
+      "reference_text_sha256": "e12158eaed2e302413cc353a82139e44ee9dcf1cfb7853eaa2a4c7623295d1bc",
+      "reference_tokens": {
+        "numbers": [
+          "863",
+          "2016",
+          "5.2",
+          "12.2",
+          "0.3",
+          "5.2",
+          "13",
+          "5.2",
+          "13.1",
+          "5.2",
+          "13.2",
+          "5.2",
+          "14",
+          "5.2",
+          "14.1",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "1",
+          "10"
+        ],
+        "units": [
+          "a",
+          "a",
+          "a",
+          "a"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -726,6 +1198,9 @@
       "sample_id": "stage6-sample-016",
       "document_key": "DLT863",
       "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
       "physical_page": 15,
       "logical_page": "11",
       "truth_source": "Original materials original PDF",
@@ -734,16 +1209,54 @@
         "negative_word_candidate",
         "scan_page"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "region_scoped",
       "source_span_requirement": {
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "DL/T 863—2016 2） 油氢压差、浮动油流量调整，数值应满足设备供货商要求； 3） 冷油器投运； 4） 真空油箱真空泵试转； 5） 真空油箱油位、真空调整； 6）消泡箱液位及发电机漏液开关实校。 f） 密封油排油烟风机试转及负压调整。 g） 直流油泵带载能力试验。 h） 密封油压扰动试验：密封油系统联锁保护实校，记录油泵联锁启动时间和系统最低油氢 差压。 5.2.14.2调试注意事项 调试过程应注意的事项： a） 确认消泡箱高液位报警信号正确，防止密封油从消泡箱进入发电机； b） 密封油系统首次启动前，确认氢侧回油箱、真空油箱的液位开关固定装置拆除，回油管道坡 度应满足设计要求； c） 密封油系统运行时，应保持排油烟风机连续运行。 5.2.15发电机氢冷系统 5.2.15.1主要调试项目内容 发电机氢冷系统调试项目和内容如下： a） 确认发电机气密性试验合格。 b） 确认氢系统纯度检测装置调试合格。 c） 确认氢系统湿度监测装置调试合格。 d） 确认漏氢报警装置调试合格。 e） 确认二氧化碳加热装置可用。 f） 氢气干燥系统循环风机投运。 g） 气体干燥器试运及投运。 h）发电机充氢置换： 1）二氧化碳置换空气，二氧化碳浓度应达到95%以上； 2）氢气置换二氧化碳，氢气浓度达到96%以上； 3）发电机氢气压力调整。 i）氢气冷却器投运，氢温调整试验。 j）发电机排氢置换： 1）二氧化碳置换氢气，二氧化碳浓度达到96%以上； 2）空气置换二氧化碳。 5.2.15.2调试注意事项 调试过程应注意的事项： a） 发电机气密性试验结果应满足设备供货商或DL 5190.3提出的要求； b） 发电机氢气置换范围包括供氢管道； c） 置换所用的气体纯度、湿度应满足设备供货商或DL/T 651提出的要求； d）发电机置换气体可在转子静止或盘车状态下进行； 11",
+      "reference_text_sha256": "bc21203c6f5889885b9dda62739c34d6a6571897ccddbcff23d704a13e41a77e",
+      "reference_tokens": {
+        "numbers": [
+          "863",
+          "2016",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "5.2",
+          "14.2",
+          "5.2",
+          "15",
+          "5.2",
+          "15.1",
+          "1",
+          "95",
+          "2",
+          "96",
+          "3",
+          "1",
+          "96",
+          "2",
+          "5.2",
+          "15.2",
+          "5190.3",
+          "651",
+          "11"
+        ],
+        "units": [
+          "a",
+          "a",
+          "%",
+          "%",
+          "%",
+          "a"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -751,6 +1264,9 @@
       "sample_id": "stage6-sample-017",
       "document_key": "DLT863",
       "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
       "physical_page": 27,
       "logical_page": "38",
       "truth_source": "Original materials original PDF",
@@ -759,7 +1275,7 @@
         "scan_page",
         "numeric_and_unit"
       ],
-      "visual_review_status": "fail",
+      "visual_review_status": "pass",
       "evidence_eligibility": "quarantined",
       "source_span_requirement": {
         "minimum": 1,
@@ -768,7 +1284,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "DLT863",
         "physical_page": 27,
@@ -782,7 +1298,53 @@
           "continues_to_physical_page": 28,
           "label": "表D.1"
         },
-        "finding": "表D.1起始页，原始页与处理页可见内容一致；OCR文字层不作为单元格顺序权威。"
+        "finding": "表D.1起始页，原始页与处理页可见内容一致；OCR文字层不作为单元格顺序权威。",
+        "original_asset_id": "asset-d146688100212c0aa1fe",
+        "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        },
+        "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+        "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        }
       },
       "review_boundary": "quarantined_structured_regions_require_region_or_cell_review"
     },
@@ -790,6 +1352,9 @@
       "sample_id": "stage6-sample-018",
       "document_key": "DLT863",
       "original_asset_id": "asset-d146688100212c0aa1fe",
+      "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+      "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
       "physical_page": 28,
       "logical_page": "39",
       "truth_source": "Original materials original PDF",
@@ -798,7 +1363,7 @@
         "boundary_page",
         "scan_page"
       ],
-      "visual_review_status": "fail",
+      "visual_review_status": "pass",
       "evidence_eligibility": "quarantined",
       "source_span_requirement": {
         "minimum": 1,
@@ -807,7 +1372,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "DLT863",
         "physical_page": 28,
@@ -825,7 +1390,53 @@
           "label": "表D.2",
           "leaf_column_count": 13
         },
-        "finding": "必须把D.1续表和下方D.2分成两个表区域；原始页与处理页可见内容一致。"
+        "finding": "必须把D.1续表和下方D.2分成两个表区域；原始页与处理页可见内容一致。",
+        "original_asset_id": "asset-d146688100212c0aa1fe",
+        "original_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        },
+        "processing_asset_id": "asset-e82eacef4b82e06cf31c",
+        "processing_sha256": "c3471c40103e9ec886b77fd351425f43de310c48b9f2c2baba393f3cc209a2a7",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.3200073242188,
+            841.9200439453125
+          ]
+        }
       },
       "review_boundary": "quarantined_structured_regions_require_region_or_cell_review"
     },
@@ -833,13 +1444,16 @@
       "sample_id": "stage6-sample-019",
       "document_key": "HAF103",
       "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
       "physical_page": 1,
       "logical_page": "3",
       "truth_source": "Original materials original PDF",
       "categories": [
         "scope",
         "document_identity",
-        "scan_page"
+        "native_text_page"
       ],
       "visual_review_status": "pass",
       "evidence_eligibility": "structured_candidate",
@@ -865,7 +1479,7 @@
         "units": [],
         "negations": {}
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -873,13 +1487,16 @@
       "sample_id": "stage6-sample-020",
       "document_key": "HAF103",
       "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
       "physical_page": 11,
       "logical_page": "13",
       "truth_source": "Original materials original PDF",
       "categories": [
         "ordinary_text",
         "negative_word_candidate",
-        "scan_page"
+        "native_text_page"
       ],
       "visual_review_status": "pass",
       "evidence_eligibility": "structured_candidate",
@@ -911,7 +1528,7 @@
         "units": [],
         "negations": {}
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -919,13 +1536,16 @@
       "sample_id": "stage6-sample-021",
       "document_key": "HAF103",
       "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
       "physical_page": 12,
       "logical_page": "14",
       "truth_source": "Original materials original PDF",
       "categories": [
         "ordinary_text",
         "negative_word_candidate",
-        "scan_page"
+        "native_text_page"
       ],
       "visual_review_status": "pass",
       "evidence_eligibility": "structured_candidate",
@@ -961,7 +1581,7 @@
         "units": [],
         "negations": {}
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -969,12 +1589,15 @@
       "sample_id": "stage6-sample-022",
       "document_key": "HAF103",
       "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
       "physical_page": 16,
       "logical_page": "18",
       "truth_source": "Original materials original PDF",
       "categories": [
         "dense_clause_text",
-        "scan_page"
+        "native_text_page"
       ],
       "visual_review_status": "pass",
       "evidence_eligibility": "structured_candidate",
@@ -1008,7 +1631,7 @@
           "未": 1
         }
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1016,13 +1639,16 @@
       "sample_id": "stage6-sample-023",
       "document_key": "HAF103",
       "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
       "physical_page": 29,
       "logical_page": "31",
       "truth_source": "Original materials original PDF",
       "categories": [
         "table",
         "numeric_and_unit",
-        "scan_page"
+        "native_text_page"
       ],
       "visual_review_status": "pass",
       "evidence_eligibility": "quarantined",
@@ -1033,7 +1659,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "HAF103",
         "physical_page": 29,
@@ -1044,7 +1670,53 @@
         "leaf_column_count": 5,
         "header_structure": "运行状态跨2列；事故工况跨3列；设计扩展工况跨最后2列",
         "continuation": null,
-        "finding": "无跨页续表；原始页与处理页可见内容一致。"
+        "finding": "无跨页续表；原始页与处理页可见内容一致。",
+        "original_asset_id": "asset-2e27a3f10284708e2d10",
+        "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "original_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ]
+        },
+        "processing_asset_id": "asset-e4d060422e62fd656770",
+        "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+        "processing_page_geometry": {
+          "rotation": 0,
+          "mediabox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "cropbox": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            595.2999877929688,
+            841.9000244140625
+          ]
+        }
       },
       "review_boundary": "quarantined_structured_regions_require_region_or_cell_review"
     },
@@ -1052,13 +1724,16 @@
       "sample_id": "stage6-sample-024",
       "document_key": "HAF103",
       "original_asset_id": "asset-2e27a3f10284708e2d10",
+      "processing_asset_id": "asset-e4d060422e62fd656770",
+      "original_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
+      "processing_sha256": "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1",
       "physical_page": 32,
       "logical_page": "34",
       "truth_source": "Original materials original PDF",
       "categories": [
         "boundary_page",
         "ordinary_text",
-        "scan_page"
+        "native_text_page"
       ],
       "visual_review_status": "pass",
       "evidence_eligibility": "structured_candidate",
@@ -1075,7 +1750,7 @@
         "units": [],
         "negations": {}
       },
-      "reference_kind": "original_pdf_native_text_visual_confirmed",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1083,6 +1758,9 @@
       "sample_id": "stage6-sample-025",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 1,
       "logical_page": null,
       "truth_source": "Original materials original PDF",
@@ -1097,10 +1775,18 @@
         "minimum": 1,
         "coordinates_required": false
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "11-072职业技能鉴定指导书 职业标准·试题库 （第二版） 电力行业职业技能鉴定指导中心编 中国电力出版社 CHINA ELECTRIC POWER PRESS EPSI 汽轮机辅机安装 汽 轮 机 安 装 专 业 电 力 工 程",
+      "reference_text_sha256": "4ad6195dec70c3824a81f1881abb268dced37935a8c7b0b7ae3bbded839007d0",
+      "reference_tokens": {
+        "numbers": [
+          "11-072"
+        ],
+        "units": [
+          "A"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -1108,6 +1794,9 @@
       "sample_id": "stage6-sample-026",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 12,
       "logical_page": "3",
       "truth_source": "Original materials original PDF",
@@ -1122,10 +1811,48 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "2 职业技能培训 2.1培训期限 2.1.1初级工：累积不少于500标准学时。 2.1.2中级工：在取得初级职业资格的基础上累积不少于400 标准学时。 2.1.3高级工：在取得中级职业资格的基础上累积不少于400 标准学时。 2.1.4技师：在取得高级职业资格的基础上累积不少于500标 准学时。 2.1.5高级技师：在取得技师职业资格的基础上累积不少于 350标准学时。 2.2培训教师资格 2.2.1具有中级以上专业技术资格的工程技术人员和技师可担 任初、中级工的培训教师。 2.2.2具有高级以上专业技术资格的工程技术人员和高级技师 可担任高级工、技师和高级技师的培训教师。 2.3培训场地设备 2.3.1具备本职业（工种）基础知识培训的教室和教学设备。 2.3.3生产现场实际设备。 2.4培训项目 2.4.1培训目的：通过培训达到《职业技能鉴定规范》对本职 3 2.3.2具有基本技能训练的实习场地及实际操作训练设备。",
+      "reference_text_sha256": "f0dfeec8a17bd111768ec427654fcebe97093bc895c546450c99be54951d9bc6",
+      "reference_tokens": {
+        "numbers": [
+          "2",
+          "2.1",
+          "2.1",
+          "1",
+          "500",
+          "2.1",
+          "2",
+          "400",
+          "2.1",
+          "3",
+          "400",
+          "2.1",
+          "4",
+          "500",
+          "2.1",
+          "5",
+          "350",
+          "2.2",
+          "2.2",
+          "1",
+          "2.2",
+          "2",
+          "2.3",
+          "2.3",
+          "1",
+          "2.3",
+          "3",
+          "2.4",
+          "2.4",
+          "1",
+          "3",
+          "2.3",
+          "2"
+        ],
+        "units": [],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1133,6 +1860,9 @@
       "sample_id": "stage6-sample-027",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 31,
       "logical_page": null,
       "truth_source": "Original materials original PDF",
@@ -1150,7 +1880,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "visual_or_metadata_only; not_structured_evidence"
     },
@@ -1158,6 +1888,9 @@
       "sample_id": "stage6-sample-028",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 32,
       "logical_page": "23",
       "truth_source": "Original materials original PDF",
@@ -1172,10 +1905,60 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "4.1 理论知识（含技能笔试） 试题 4.1.1 选择题 La5A1001机械制图中长度尺寸未标识时单位是（A）。 La5A1002力是具有大小和方向的量，所以是（A）。 （A）矢量；（B）向量；（C）标量；（D）代数量。 La5A1003 两个大小相等、方向相反不在一条直线上的 （B）组成的力系，称为力偶。 （A）力；（B）平行力；（C）力矩；（D）作用力。 La5A1004摄氏温标与绝对温标的关系为（B）。 螺纹旋向有（C）。 （A）左旋；（B）右旋；（C）左旋和右旋；（D）无左右 之分。 23 (A) mm; (B) cm; (C) m; (D) km。 (A)T=t-273.15; (B)T=t+273.15; (C)T=t; (D)t=273.15×T。 La5A1005 La5A1006一个标准大气压相当于（C）mmHg。 (A) 1000; (B) 13.6; (C) 760; (D) 1。 选 择 题 鉴 定 试 题 库",
+      "reference_text_sha256": "b700c874064b25d9ec2a6833d3f04e6fd6d5278ab798dab5fd1a96bf9bee7ee3",
+      "reference_tokens": {
+        "numbers": [
+          "4.1",
+          "4.1",
+          "1",
+          "001",
+          "002",
+          "003",
+          "004",
+          "23",
+          "273.15",
+          "273.15",
+          "273.15",
+          "005",
+          "006",
+          "1000",
+          "13.6",
+          "760",
+          "1"
+        ],
+        "units": [
+          "a",
+          "A",
+          "A",
+          "a",
+          "A",
+          "A",
+          "A",
+          "a",
+          "A",
+          "A",
+          "a",
+          "A",
+          "A",
+          "A",
+          "mm",
+          "cm",
+          "m",
+          "m",
+          "A",
+          "a",
+          "A",
+          "a",
+          "A",
+          "mm",
+          "A"
+        ],
+        "negations": {
+          "未": 1
+        }
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1183,6 +1966,9 @@
       "sample_id": "stage6-sample-029",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 64,
       "logical_page": "55",
       "truth_source": "Original materials original PDF",
@@ -1197,10 +1983,76 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "转速、叶轮尺寸的增大而（C）。 （A）降低；（B）不变；（C）增高；（D）不定。 选 择 题 鉴 定 试 题 库 Lb4A3232通常，离心式水泵大多选用的是（B）式叶片。 （A）前弯；（B）后弯；（C）上弯；（D）下弯。 Lb4A3233给水泵的推力轴承能够承担转子轴向推力的 (A)。 (A) 5%~10%; (B) 20%~30%; (C) 40%~50%; (D) 60%~ Lb4A3234给水泵外筒体的自由端是由端盖（）封住 的，而传动端则是由端盖（）封住的。（C） （A）入口、进口；（B）入口、出口；（C）出口、入口； （D）出口、轴承。 Lb4A3235给水泵的两端轴封均是选用（C）装置来加以 密封的。 （A）填料函；（B）磁性密封；（C）机械密封；（D）浮动环。 Lb4A4236两块斜垫铁错开的面积，不应超过该垫铁面积 的(C)。 (A) 20%; (B) 15%; (C) 25%; (D) 30%。 Lb4A4237凝汽器铜管涡流探伤或水压试验时，应抽查铜 管总数的（B）。 Lb4A4238为了不使给水泵内的水高温汽化，一般均将除 氧器布置在高于给水泵入口14m（A）标高。 55 80%。 (A) 3%; (B) 5%; (C) 7%; (D) 1%。",
+      "reference_text_sha256": "9b3cbc92e78227ae960b832232e2861d48e4469e365dd2b2d4fd197639a4e6e5",
+      "reference_tokens": {
+        "numbers": [
+          "232",
+          "233",
+          "5",
+          "10",
+          "20",
+          "30",
+          "40",
+          "50",
+          "60",
+          "234",
+          "235",
+          "236",
+          "20",
+          "15",
+          "25",
+          "30",
+          "237",
+          "238",
+          "14",
+          "55",
+          "80",
+          "3",
+          "5",
+          "7",
+          "1"
+        ],
+        "units": [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "%",
+          "%",
+          "%",
+          "%",
+          "%",
+          "%",
+          "%",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "%",
+          "%",
+          "%",
+          "%",
+          "A",
+          "A",
+          "m",
+          "A",
+          "%",
+          "A",
+          "%",
+          "%",
+          "%",
+          "%"
+        ],
+        "negations": {
+          "不应": 1
+        }
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1208,6 +2060,9 @@
       "sample_id": "stage6-sample-030",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 120,
       "logical_page": "111",
       "truth_source": "Original materials original PDF",
@@ -1222,10 +2077,68 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "Jf5A2624 三脚架在使用时，备板的支点与地面夹角应不 小于 (D)。 (A) 45°; (B) 30°; (C) 50°;(D) 60°。 杆牙距的（C）。 (A) 1/2; (B) 1/3; (C) 3/4; (D) 2/3。 Jf5A3626在检修施工过程中，按照质量保证体系的不同 要求而确定的质量控制点分为（）点和（）点两类。（B） (A) M、H; (B) W、H; (C) V、H; (D) K、H。 Jf5A4627通常，钎焊时的焊缝应选择为（B）mm。 (A) 0~0.05; (B) 0.05~0.20; (C) 0.50~0.80; (D) 0.80~ 1.10。 Jf4A1628滚运设备在下坡时，应（A）防止滑坡。 （A）设置拖拉绳；（B）用撬杠撬；（C）用人力顶；（D）以上 均可以。 Jf4A1629 钢丝绳作吊挂和捆绑用安全系数应不小于（C）。 (A) 4; (B) 5; (C) 6; (D) 7。 （A）以防止千斤顶在受力时打滑。 （A）坚韧的木板；（B）铁板；（C）涂油的铁板；（D）纸板。 中压外缸法兰结合漏汽的主要原因之一。 （A）充足；（B）过盈；（C）不足；（D）增加。 111 Jf5A2625螺旋千斤顶在使用时，每次顶升量不得超过螺 Jf4A1630千斤顶在使用时应放平整，并在上下端垫以 Jf4A2631汽缸法兰螺栓的预紧力（C），这也是形成高、 选 择 题 鉴 定 试 题 库",
+      "reference_text_sha256": "253b69b6c16d3a1f96b9c1eb932859bbfad56d571e9ddbf3b1a2a45f1059fb03",
+      "reference_tokens": {
+        "numbers": [
+          "624",
+          "45",
+          "30",
+          "50",
+          "60",
+          "1",
+          "2",
+          "1",
+          "3",
+          "3",
+          "4",
+          "2",
+          "3",
+          "626",
+          "627",
+          "0~0.05",
+          "0.05~0.20",
+          "0.50~0.80",
+          "0.80~ 1.10",
+          "628",
+          "629",
+          "4",
+          "5",
+          "6",
+          "7",
+          "111",
+          "625",
+          "630",
+          "631"
+        ],
+        "units": [
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "M",
+          "V",
+          "A",
+          "mm",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A",
+          "A"
+        ],
+        "negations": {
+          "不得": 1
+        }
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1233,6 +2146,9 @@
       "sample_id": "stage6-sample-031",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 180,
       "logical_page": "171",
       "truth_source": "Original materials original PDF",
@@ -1247,10 +2163,32 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "La5C3011简述火力发电厂的生产过程及主要系统。 答：火力发电厂的生产过程就是通过高温燃烧，把燃料的 化学能转变为热能，再将水加热成为高温高压的蒸汽，利用蒸 汽推动汽轮发电机做功，从而将热能最终转变成电能。 火力发电厂的生产过程中主要包括有汽水系统、燃烧系统、 热控系统和电气系统，此外还有供水系统、化学水处理系统、 输煤系统、除尘系统等辅助系统和设施。 La5C3012凝汽器的工作任务是什么？ 答：凝汽器的工作任务为： （1）在汽轮机的排汽口建立并保持高度的真空，使蒸汽在 汽轮机内膨胀到尽可能低的压力，将更多的热能转变为机械能； （2）将补给水加热到一定的温度，并进行初步的除氧； （3）把汽轮机的排汽凝结成水并作为锅炉给水，维持工质 循环使用，提高火力发电厂的经济性； （4）排除做功后的蒸汽在凝结过程中析出的不凝结性气 体，提高蒸汽凝结的换热效率，减少不凝结气体中氧气等的 腐蚀作用。 La5C3013水泵的特性曲线是什么？ 答：在转速为某一定值的情况下，扬程与流量的关系曲线 即Q-H 曲线，就是一般指的特性曲线（Q-N关系曲线；Q-η关 系曲线也属于特性曲线）。 La5C4014滚动轴承的轴向有哪些固定方式？ 答：根据滚动轴承固定时外圈的受力情况可分以下几种固 定方式： （1）单侧受力固定； （2）双侧受力固定； （3）自由固定。 171 鉴 定 试 题 库 简 答 题",
+      "reference_text_sha256": "7143709fc761217aba35a15d5e0fc5f45d5de7f85ea25cc934e0dea62c94e44a",
+      "reference_tokens": {
+        "numbers": [
+          "011",
+          "012",
+          "1",
+          "2",
+          "3",
+          "4",
+          "013",
+          "014",
+          "1",
+          "2",
+          "3",
+          "171"
+        ],
+        "units": [
+          "a",
+          "a",
+          "a",
+          "a"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1258,6 +2196,9 @@
       "sample_id": "stage6-sample-032",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 244,
       "logical_page": "235",
       "truth_source": "Original materials original PDF",
@@ -1272,10 +2213,43 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "在有裂纹处用砂轮磨削或铲去损伤部位的金属层，加工好坡口 鉴 简定 后，进行补焊处理。 答试 题 若是阀体焊补中出现拉裂现象，则需重新对裂纹处磨削并 题库 重新加工坡口进行补焊，同时要注意焊接工艺并做好简单的、 必要的热处理工作，以防止再次出现反复。 Je4C3267油管道静泡酸洗的方法是什么？ 答：（1）静泡的酸液配比以10%盐酸加入0.2%的缓蚀剂若 干为宜。浸泡时间一般在4h以上，浸泡前应先碱洗。 （2）浸酸后的油管应经清水冲净后再放入钝化液槽中钝 化，钝化液为 2%的亚硝酸钠溶液（pH值为9.5～10），钝化时 间一般在3h以上。 （3）经钝化后的管子要用清水冲洗干净，然后用压缩空气 吹干并封闭。 Je4C3268如何调整离心泵轴向、径向间隙？ 答：调整密封环径向间隙的方法可根据泵的型式及密封环 的结构而采用不同的方法：间隙太小时，可研刮密封环或车削 叶轮；间隙太大时，需调换密封环。密封环的轴向间隙一般调 整到2～5mm，即略大于泵的轴向窜动值，此间隙可用塞尺测 量。轴向间隙的调整方法可用车旋密封环和轴套，或在轴套和 叶轮之间加垫环来进行调整。 Je4C3269给水泵在检修时，测量泵轴应符合哪些要求？ 答：给水泵在检修时，泵轴的径向晃度应小于0.03mm， 弯曲度应不大于0.02mm，轴颈的椭圆度和锥度应小于0.02mm。 Je4C3270低压加热器大法兰泄漏后应如何处理？ 答：低压加热器大法兰密封面泄漏是常见的故障，低压加 热器水室大法兰更容易泄漏。大法兰泄漏的一个原因是垫片损 坏或不良，可更换新垫片；另一个原因是大法兰刚性不够而变 235",
+      "reference_text_sha256": "d27be65b74f7cfe0c9189b11358d39734bfed5f390b3ff36c99a74334088e461",
+      "reference_tokens": {
+        "numbers": [
+          "267",
+          "1",
+          "10",
+          "0.2",
+          "4",
+          "2",
+          "2",
+          "9.5",
+          "10",
+          "3",
+          "3",
+          "268",
+          "2",
+          "5",
+          "269",
+          "0.03",
+          "0.02",
+          "0.02",
+          "270",
+          "235"
+        ],
+        "units": [
+          "%",
+          "%",
+          "%",
+          "mm",
+          "mm",
+          "mm",
+          "mm"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1283,6 +2257,9 @@
       "sample_id": "stage6-sample-033",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 300,
       "logical_page": "291",
       "truth_source": "Original materials original PDF",
@@ -1292,16 +2269,64 @@
         "rotated_page",
         "scan_page"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "region_scoped",
       "source_span_requirement": {
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "Jd1D2098在某封闭容器内储存有气体，其真空度H₁= 鉴 计 定 50mmHg，温度t₁=70℃，气压计读数p_amb为760mmHg。问将 算试 气体冷却到什么温度，方可使其真空度变成100mmHg？ 题 题 库 解：在封闭容器内气体的状态变化过程是定容过程。在定 容过程中 p₁/T₁=p₂/T₂ T₂=p₂(T₁/p₁) 即 式中p₁、p₂分别为原态、终态的绝对压力，即 p₁=p_amb−H₁=760−50=710（mmHg） p₂=p_amb−H₂=760−100=660（mmHg） 代入计算T₂的公式中，得 T₂=p₂(T₁/p₁)=660×(70+273.15)/710=318.98（K） t₂=318.98−273.15=45.8（℃） 答：需将气体冷却到45.8℃。 Jd1D2099设有匀质T形断面梁，其截面尺寸如图D-12 所示。试求此梁的重心位置。 y 10 F₁ C₁ 90 C C₂ 10 F₂ x 90 图 D-12 C₁—面积为F₁部分的重心位置；C₂—面积为F₂部分的重心位置；C—T型等断面梁的重心 291",
+      "reference_text_sha256": "7a58448052c4b1faf283a4772a7c3ce18d761444cca82f1ff7a8b904581ab403",
+      "reference_tokens": {
+        "numbers": [
+          "098",
+          "50",
+          "70",
+          "760",
+          "100",
+          "760",
+          "50",
+          "710",
+          "760",
+          "100",
+          "660",
+          "660",
+          "70",
+          "+273.15",
+          "710",
+          "318.98",
+          "318.98",
+          "273.15",
+          "45.8",
+          "45.8",
+          "099",
+          "12",
+          "10",
+          "90",
+          "10",
+          "90",
+          "12",
+          "291"
+        ],
+        "units": [
+          "mm",
+          "℃",
+          "a",
+          "m",
+          "mm",
+          "mm",
+          "a",
+          "m",
+          "mm",
+          "a",
+          "m",
+          "mm",
+          "℃",
+          "℃"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1309,6 +2334,9 @@
       "sample_id": "stage6-sample-034",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 360,
       "logical_page": "351",
       "truth_source": "Original materials original PDF",
@@ -1323,10 +2351,29 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "La1F2009水泵的几个主要性能参数是什么？ 鉴 论 定 答：不论什么水泵，在工作时都具有一定的参数，通常在 述试 题 水泵的铭牌中给出，主要有： 题库 （1）流量。单位时间内水泵供出的液体数量，用字母Q来 表示。 （2）扬程。单位质量的液体通过水泵后所获得的能量，用 字母H来表示。 （3）转速。泵轴在每分钟内所转过的圈数，用字母n来表 示。 （4）轴功率。由原动机传给水泵泵轴上的功率，用字母N 来表示。 （5）效率。指被输送的液体实际获得的功率与轴功率的比 值，用字母η表示。 （6）比转速。在设计制造水泵时，为了将具有各种各样流 量、扬程的水泵进行比较，就将某一台泵的实际尺寸几何相似 地缩小为标准泵。此时标准泵的转数就是实际泵的比转数。比 转数是从相似理论中引出来的一个综合性参数，它说明流量、 扬程、转数之间的相互关系。 La1F2010汽轮机冲转条件中，为什么规定要有一定数值 的真空？ 答：汽轮机冲转前必须有一定的真空，一般为60kPa左右， 若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突 然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器 汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和 转子造成较大的热冲击。 冲动转子时，真空也不能太高，真空过高不仅要延长建立 真空的时间，也因为通过汽轮机的蒸汽量较少，放热系数小， 使得汽轮机加热缓慢，转速也不稳定，从而延长启动时间。 351",
+      "reference_text_sha256": "bcc5c1c5298790b944db12a80cd3b40621c397a10bb28635bcd423e0e0384aeb",
+      "reference_tokens": {
+        "numbers": [
+          "009",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "010",
+          "60",
+          "351"
+        ],
+        "units": [
+          "a",
+          "a",
+          "kPa"
+        ],
+        "negations": {}
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1334,6 +2381,9 @@
       "sample_id": "stage6-sample-035",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 468,
       "logical_page": "459",
       "truth_source": "Original materials original PDF",
@@ -1348,10 +2398,55 @@
         "minimum": 1,
         "coordinates_required": true
       },
-      "reference_text": null,
-      "reference_text_sha256": null,
-      "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_text": "5 试卷样例 中级汽轮机辅机安装知识要求试卷 一、选择题（每题1分，共25分） 下列每题都有4个答案，其中每空只有一个正确答案，将 正确答案填入括号内。 1．无热位移的管道，其吊架应（）安装。 （A）垂直；（B）水平；（C）有一定倾斜度；（D）倾斜20°。 2.管道进行水压试验时，试验压力一般为工作压力的 （ ）倍。 (A) 1.5; (B) 1.25; (C) 1.15; (D) 1.10。 3.打水压检查阀门的严密性，其压力保持时间不少于 （）min，无泄漏为合格。 (A) 5; (B) 4; (C) 3; (D) 2。 4.氧气管道严密性试验时，每小时漏气量不得超过 （ )。 (A) 2%; (B) 1.5%; (C) 1%; (D) 0.5%。 5.（）适用于小型设备的吊装或短距离牵引。 （A）千斤顶；（B）链条葫芦；（C）滑轮和滑轮组；（D）绞 车。 6.钢材在各种介质的侵蚀作用下，被破坏的现象称为 （）。 （A）偏析；（B）氧化；（C）腐蚀；（D）生锈。 7.在水处理除盐系统里用作耐酸设备衬里、耐酸管道、耐 酸阀门及耐酸泵等玻璃钢一般为（）。 （A）环氧玻璃钢；（B）聚酯玻璃钢；（C）酚醛玻璃钢； 459",
+      "reference_text_sha256": "a86dda95696814f5c6a5f92e99502f1529888c50144dbf14bdcc0458c687edf4",
+      "reference_tokens": {
+        "numbers": [
+          "5",
+          "1",
+          "25",
+          "4",
+          "1",
+          "20",
+          "2",
+          "1.5",
+          "1.25",
+          "1.15",
+          "1.10",
+          "3",
+          "5",
+          "4",
+          "3",
+          "2",
+          "4",
+          "2",
+          "1.5",
+          "1",
+          "0.5",
+          "5",
+          "6",
+          "7",
+          "459"
+        ],
+        "units": [
+          "A",
+          "A",
+          "m",
+          "A",
+          "A",
+          "%",
+          "%",
+          "%",
+          "%",
+          "A",
+          "A",
+          "A"
+        ],
+        "negations": {
+          "不得": 1
+        }
+      },
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": null,
       "review_boundary": "original_page_location_and_text_must_be_rechecked"
     },
@@ -1359,6 +2454,9 @@
       "sample_id": "stage6-sample-036",
       "document_key": "auxiliary_installation_book",
       "original_asset_id": "asset-115e242947e0a4b46ea5",
+      "processing_asset_id": "asset-6be125e4aa900f01e21b",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
       "physical_page": 480,
       "logical_page": "471",
       "truth_source": "Original materials original PDF",
@@ -1368,7 +2466,7 @@
         "rotated_page",
         "scan_page"
       ],
-      "visual_review_status": "uncertain",
+      "visual_review_status": "pass",
       "evidence_eligibility": "quarantined",
       "source_span_requirement": {
         "minimum": 1,
@@ -1377,7 +2475,7 @@
       "reference_text": null,
       "reference_text_sha256": null,
       "reference_tokens": null,
-      "reference_kind": "original_pdf_visual_only_unscored",
+      "reference_kind": "original_pdf_independent_visual_transcription",
       "table_context": {
         "document_key": "auxiliary_installation_book",
         "physical_page": 480,
@@ -1388,8 +2486,58 @@
         "leaf_column_count": 5,
         "header_structure": "题型；鉴定等级2列；配分2列，二层表头",
         "continuation": null,
-        "rotation_mapping": "original rotation=90; OCR derivative rotation=0; visual content retained, coordinate transform remains required",
-        "finding": "选择、判断、简答/计算、绘图/论述、总计五行；无续表。"
+        "rotation_mapping": "original rotation=90; OCR derivative rotation=90; current page geometry measured; Evidence uses current original-page coordinates",
+        "finding": "选择、判断、简答/计算、绘图/论述、总计五行；无续表。",
+        "original_asset_id": "asset-115e242947e0a4b46ea5",
+        "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+        "original_page_geometry": {
+          "rotation": 90,
+          "mediabox": [
+            0.0,
+            0.0,
+            842.0399780273438,
+            595.4400024414062
+          ],
+          "cropbox": [
+            269.2909851074219,
+            0.0,
+            842.0399780273438,
+            397.0150146484375
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            397.0150146484375,
+            572.7490234375
+          ]
+        },
+        "processing_asset_id": "asset-6be125e4aa900f01e21b",
+        "processing_sha256": "f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145",
+        "processing_page_geometry": {
+          "rotation": 90,
+          "mediabox": [
+            0.0,
+            0.0,
+            842.0399780273438,
+            595.4400024414062
+          ],
+          "cropbox": [
+            269.2909851074219,
+            0.0,
+            842.0399780273438,
+            397.0150146484375
+          ],
+          "rect": [
+            0.0,
+            0.0,
+            397.0150146484375,
+            572.7490234375
+          ]
+        },
+        "historical_rotation_mapping": {
+          "value": "original rotation=90; OCR derivative rotation=0; visual content retained, coordinate transform remains required",
+          "status": "superseded_old_derivative_geometry"
+        }
       },
       "review_boundary": "quarantined_structured_regions_require_region_or_cell_review"
     }

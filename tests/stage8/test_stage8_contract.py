@@ -117,6 +117,30 @@ def test_stage8_overlay_class_acceptance_requires_a_valid_mapping(kind, target):
         apply_mapping_review_overlay({"shortlist": [row], "modeling_pattern_definitions": []}, [decision])
 
 
+def test_stage8_three_agent_confirmation_requires_reviewers_and_source_page():
+    contract = _read("config/ontology_contract.json")
+    row = select_mapping_shortlist(contract, [_synthetic_phenomenon("腐蚀")], [])[0]
+    decision = {
+        "candidate_id": row["candidate_id"],
+        "candidate_content_fingerprint": row["candidate_content_fingerprint"],
+        "decision": "accepted", "disposition": "class",
+        "original_page_confirmation": "confirmed_by_three_agent_review",
+        "independent_reviewers": ["review_a", "review_b", "review_c"],
+        "original_page_checks": [{
+            "document_key": "synthetic-document", "physical_page": 1,
+            "source_text": "腐蚀",
+        }],
+    }
+    payload = {"shortlist": [row], "modeling_pattern_definitions": []}
+    reviewed = apply_mapping_review_overlay(payload, [decision])
+    assert reviewed["shortlist"][0]["original_page_confirmation_status"] == "confirmed_by_three_agent_review"
+    assert reviewed["shortlist"][0]["requires_original_confirmation"] is False
+    with pytest.raises(ValueError, match="lacks provenance"):
+        apply_mapping_review_overlay(payload, [{**decision, "independent_reviewers": ["review_a"]}])
+    with pytest.raises(ValueError, match="lacks provenance"):
+        apply_mapping_review_overlay(payload, [{**decision, "original_page_checks": []}])
+
+
 @pytest.mark.parametrize("label", ["振动", "未见异常", "疑似故障"])
 def test_stage8_policy_applies_to_pinned_and_coverage_candidates(label):
     contract = _read("config/ontology_contract.json")
@@ -267,9 +291,9 @@ def test_stage8_persisted_artifacts_are_consistent():
     assert render_turtle(contract) == (ROOT / "ontology/minimal_turbine.ttl").read_text(encoding="utf-8")
     assert mapping["status"] == "review_complete_candidate_only"
     assert mapping["automatic_promotion"] is False
-    assert len(mapping["shortlist"]) == 4
-    assert len(mapping["deferred_candidates"]) == 10
-    assert sum(row["mapping_review_decision"] == "accepted" for row in mapping["shortlist"]) == 4
+    assert len(mapping["shortlist"]) == 5
+    assert len(mapping["deferred_candidates"]) == 11
+    assert sum(row["mapping_review_decision"] == "accepted" for row in mapping["shortlist"]) == 5
     assert sum(row["mapping_review_decision"] == "pending_manual_review" for row in mapping["shortlist"]) == 0
     assert all(row["candidate_disposition"] in mapping["candidate_disposition_schema"] for row in mapping["shortlist"])
     assert set(mapping["inputs"]) == {
@@ -296,7 +320,7 @@ def test_stage8_persisted_artifacts_are_consistent():
     assert entry["status"] == "complete"
     assert entry["next_stage_allowed"] is True
     assert entry["checks"]["manual_mapping_review_complete"] is True
-    assert entry["counts"]["shortlist_count"] == 4
+    assert entry["counts"]["shortlist_count"] == 5
     assert entry["counts"]["review_pending_count"] == 0
     assert entry["counts"]["original_page_confirmation_pending_count"] == 0
     assert entry["checks"]["numeric_only_values_excluded"] is True
@@ -321,3 +345,21 @@ def test_stage8_persisted_artifacts_are_consistent():
         for pattern in coverage.values()
         for representative in pattern["representatives"]
     )
+
+
+def test_stage8_rebinding_review_rejects_unreviewed_new_source():
+    from scripts.audit_stage8_exit import _rebinding_review_current
+
+    review = _read("data/stage8/stage8_mapping_rebinding_review.json")
+    overlay = [
+        json.loads(line)
+        for line in (ROOT / "data/stage8/ontology_mapping_review_overlay.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    mapping = _read("data/stage8/ontology_mapping_shortlist.json")
+    mapped = {row["candidate_id"]: row for row in mapping["shortlist"] + mapping["deferred_candidates"]}
+    assert _rebinding_review_current(review, overlay, mapped)
+    corrupted = json.loads(json.dumps(review, ensure_ascii=False))
+    changed = next(record for record in corrupted["records"] if record["added_source_occurrences"])
+    changed["current_original_page_checks"] = changed["current_original_page_checks"][:-1]
+    assert not _rebinding_review_current(corrupted, overlay, mapped)

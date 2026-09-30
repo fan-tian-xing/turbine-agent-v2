@@ -9,13 +9,13 @@ from pathlib import Path
 import pymupdf
 
 from turbine_kg.documents.catalog import load_identity_catalog
-from turbine_kg.documents.ids import stable_id
 from turbine_kg.documents.models import record_value
-from turbine_kg.documents.page_identity import apply_page_identity
-from turbine_kg.documents.pdf import parse_registered_pdf
 from turbine_kg.documents.table_review import apply_reviewed_table_regions
 from turbine_kg.evidence import TableContext, build_evidence
 from turbine_kg.settings import Settings
+from build_stage6_golden_evidence import _parse_reviewed_page, _reviewed_documents
+from stage5_fingerprint import ocr_fingerprint, sha256_file
+from stage6_page_review_binding import current_stage5_bindings
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -23,6 +23,7 @@ STAGE6 = ROOT / "data" / "stage6"
 DECISIONS = STAGE6 / "stage6_table_review_decisions.jsonl"
 ANNOTATIONS = STAGE6 / "stage6_table_evidence_annotations.jsonl"
 AUDIT = STAGE6 / "stage6_table_evidence_audit.json"
+STAGE5 = ROOT / "data/stage5"
 
 DOCUMENTS = {
     "DL5190.3": {
@@ -70,6 +71,20 @@ def _jsonl(path: Path, rows: list[dict]) -> None:
     )
 
 
+def _validate_review_bindings(decisions: list[dict], *, documents: dict, catalog,
+                              source_input_fingerprint: str) -> None:
+    """Do not carry historical table acceptance onto a changed processing PDF."""
+    for row in decisions:
+        document = documents[row["document_key"]]
+        original = catalog.asset_for_path(document["original"])
+        processing = catalog.asset_for_path(document["registered"])
+        expected = {"source_input_fingerprint": source_input_fingerprint,
+                    "original_asset_id": original.asset_id, "original_sha256": original.sha256,
+                    "processing_asset_id": processing.asset_id, "processing_sha256": processing.sha256}
+        if any(row.get(field) != value for field, value in expected.items()):
+            raise ValueError(f"table review requires revalidation for current PDF: {row['review_id']}")
+
+
 def main() -> None:
     settings = Settings.from_environment()
     catalog = load_identity_catalog(
@@ -77,6 +92,14 @@ def main() -> None:
         ROOT / "config/revision_identity.tsv",
         ROOT / "config/derived_asset_links.tsv",
     )
+    review_path = ROOT / "data/registry/ocr_validation_report.json"
+    manifest_path = STAGE5 / "stage5_sample_manifest.json"
+    documents = _reviewed_documents(
+        json.loads(manifest_path.read_text(encoding="utf-8")),
+        json.loads(review_path.read_text(encoding="utf-8")),
+        catalog=catalog, settings=settings, definitions=DOCUMENTS,
+    )
+    source_input_fingerprint, _ = ocr_fingerprint()
     decisions = [
         json.loads(line) for line in DECISIONS.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
@@ -84,6 +107,8 @@ def main() -> None:
         raise ValueError("duplicate Stage 6 table review IDs")
     if any(row["decision"] != "accepted_region_scoped" for row in decisions):
         raise ValueError("unaccepted table review decision cannot build Evidence")
+    _validate_review_bindings(decisions, documents=documents, catalog=catalog,
+                              source_input_fingerprint=source_input_fingerprint)
 
     by_page: dict[tuple[str, int], list[dict]] = defaultdict(list)
     for row in decisions:
@@ -92,23 +117,11 @@ def main() -> None:
     annotations: list[dict] = []
     page_results = []
     for (document_key, physical_page), regions in sorted(by_page.items()):
-        document = DOCUMENTS[document_key]
+        document = documents[document_key]
         processing = document["processing"]
-        pdf_path = (
-            settings.source_root / document["original"]
-            if processing is None
-            else settings.ocr_derived_root / processing
-        )
-        ir = parse_registered_pdf(
-            pdf_path,
-            document["registered"],
-            catalog,
-            title=document["title"],
-            page_indices=(physical_page - 1,),
-            parser_version="stage6-reviewed-table-region-document-ir-v1",
-            parsing_run_id=stable_id("run", "stage6-reviewed-table-regions-v1", document["registered"], physical_page),
-        )
-        ir = apply_page_identity(ir, {physical_page: regions[0]["logical_page"]})
+        ir, _ = _parse_reviewed_page({"physical_page": physical_page,
+                                      "logical_page": regions[0]["logical_page"]},
+                                     document, catalog=catalog, settings=settings)
         original_path = settings.source_root / document["original"]
         with pymupdf.open(original_path) as original_pdf:
             original_page = original_pdf[physical_page - 1]
@@ -197,6 +210,8 @@ def main() -> None:
         "status": "complete",
         "formal_release": False,
         "authority": "Original materials original PDF pages; OCR is processing assistance only",
+        "inputs": {**current_stage5_bindings(ROOT, source_input_fingerprint),
+                   "review_decisions_sha256": sha256_file(DECISIONS)},
         "reviewed_page_count": len(page_results),
         "accepted_page_count": len(page_results),
         "table_region_count": len(annotations),

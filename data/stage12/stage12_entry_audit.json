@@ -4,21 +4,22 @@
   "artifact_kind": "stage12_entry_audit",
   "status": "in_progress",
   "formal_release": false,
-  "basis": "Stage 11 exit gate is complete; Stage 12 implementation is being repaired under a frozen development page baseline.",
-  "scope": "representative_page_baseline",
+  "basis": "Stage 11 exit gate is complete. Stage 12 uses the current 36-page Development manifest and current Evidence. The independent Reserve is prepared for pre-freeze only; model acceptance has not run.",
+  "scope": "36_page_development_and_independent_reserve_preparation",
   "next_stage_allowed": false,
   "stage13_formal_entry": "blocked",
   "stage13_verification_mode": "FROZEN_BY_USER",
   "blockers": [
     "development_quality_gate",
-    "acceptance_holdout_exposed",
-    "reserve_independent_gold_not_ready",
-    "representative_chapter_scope_resolved"
+    "development_candidate_rebuild_pending",
+    "independent_reserve_not_approved_or_executed"
   ],
   "inputs": {
     "stage11_exit_audit": "data/stage11/stage11_exit_audit.json",
     "stage12_statement_contract": "config/stage12_statement_contract.json",
-    "stage12_representative_baseline": "data/stage12/stage12_representative_baseline.json"
+    "stage12_input_manifest": "data/stage12/stage12_input_manifest.json",
+    "stage6_semantic_coverage_audit": "data/stage6/stage6_semantic_coverage_audit.json",
+    "stage12_reserve_gold_audit": "data/stage12/stage12_reserve_gold_audit.json"
   },
   "consumer": "data/project_state.json"
 }

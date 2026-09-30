@@ -1,31 +1,57 @@
-Stage 12 Candidate Extraction Prompt v18
+阶段12 工程陈述候选抽取提示词 v30
 
-You extract candidate Engineering Statements from the supplied Evidence context.
+任务：仅依据输入的 Evidence 及已确认来源上下文，产生 0 到多条可独立引用的候选 Engineering Statement。不得补充常识、猜测缺文或给出超出原文的工程建议。所有自然语言内容使用中文；JSON 字段名、枚举值和协议常量使用结构规范规定的值。
 
-Rules:
-- Use only the supplied Evidence. Do not add facts from general knowledge.
-- Return strict JSON matching the Stage 12 extraction response schema. The adapter supplies fixed top-level protocol fields `schema_version=1` and `response_kind=stage12_candidate_extraction`; you may omit them.
-- The nested fields have strict object shapes: `subject_entities` is an array of objects like `{"surface_form":"exact Evidence wording","role":"subject"}`; `conditions` is an array of objects like `{"surface_form":"exact Evidence wording"}`; `applicability_scope` is one object, either `{"status":"unknown"}` or `{"status":"known","applicability_text":"exact Evidence wording"}`. Never replace these objects with strings, arrays of strings, or objects with a `text`/`surface_form` field in place of the required shape.
-- For each independently retrievable engineering proposition return one candidate. A proposition should be separate when it can independently enter a knowledge graph, be retrieved, and support an answer. For semantically isomorphic parallel items, merge them into one Statement with multiple entities when they differ only by object/component/attribute nouns and share the same predicate, requirement, condition, method, result, acceptance criterion, causal relation and applicability. Split when any parallel part has a substantive difference in requirement content, action, condition, method, result, acceptance criterion, causal relation or applicability. Surface conjunctions such as `、`, `和`, `及`, `以及` and `或` never decide the boundary by themselves.
-- Make candidates atomic: split only when the semantic propositions are independently retrievable or have materially different engineering meaning. Split each distinct normative “应”/“必须” clause, each distinct procedure step in an ordered sequence, and each explicit cause/effect proposition when it independently enters the graph or supports an answer. Do not merge materially different delivery conditions, inspection results, or causal consequences into one candidate, and do not omit an explicit causal proposition merely because another requirement appears in the same paragraph.
-- Keep conjunctive acceptance criteria together when they apply to the same subject and express one combined required state. A method/action followed by its direct result or acceptance criterion remains one Statement when the latter cannot stand as complete engineering knowledge without the former; do not split mechanically on “ensure”, “confirm”, “so that” or similar connectives. Split only when coordinated items are independently retrievable or have materially different subjects, actions or results. A preceding clause's local condition must not be copied into a neighboring candidate unless its grammar and meaning scope that candidate. Temporal, lifecycle, activity and rule-domain wording belongs in `applicability_scope`, while a true prerequisite that gates permission belongs in `conditions`; classify by meaning, not by “when/if/in” keywords. When a proposition contains normative `应`/`必须`, use `requirement` even if it lists ordered actions; use `procedure` only when the primary meaning is an operational method without normative obligation.
-- When splitting a sequence or causal chain, preserve only the scope and process context that semantically governs each resulting proposition. Preserve ordering words such as first/then/again and causal direction in the statement text and relation direction; do not populate `conditions` for a causal antecedent unless the Evidence states a separate prerequisite that gates the proposition.
-- Remove document organization from `statement_text`: chapter numbers, list numbers, headings, and lead-ins such as “应具备下列条件” or “应做下列工作” are not part of the concrete statement. Inherited scope from the Evidence may remain in applicability when reliably supported.
-- `statement_type` expresses the normative nature of the proposition, not the surface action verb. A rule stating what must be done or satisfied is `requirement`, including mandatory clearance checks, design verification, confirmation and measurement checks. Use `procedure` only for a primarily operational method/sequence whose main meaning is how to perform the operation. Use `fact` for descriptive facts and explicit causal mechanisms, `limitation` for explicit inclusion/exclusion or scope boundaries, and `verification` only for a genuinely verification-result proposition rather than a requirement containing a check action.
-- Use only coarse relations: `requires` for obligations, prerequisites and threshold requirements; `prohibits` for explicit prohibitions; `describes` for procedural/descriptive content not better represented by another relation; `causes` for explicit causal claims; `verifies` for genuine verification claims; `limits_scope` for explicit rule-scope boundaries. Never emit a legacy sentence-specific predicate.
-- Keep condition, applicability, method and requirement content distinct. Classify a phrase by its semantic role, never by an introductory word. A condition is a prerequisite/state that gates whether the proposition may or must occur. Applicability identifies the lifecycle, activity, operating domain, equipment class or other scope in which the rule applies. A causal antecedent is represented by `causes`; it is not a condition unless a separate gate also governs that causal proposition. A method, instrument, action, direct result or acceptance criterion is statement content, not a condition.
-- Preserve `unknown` applicability when the Evidence does not state a scope. `unknown` is not `not_applicable`. Do not invent model, capacity, equipment state, lifecycle, activity, operating state or condition. You may inherit a source scope only when the supplied Evidence context reliably establishes it. “May be referenced” is reference-only scope, not direct applicability.
-- A scope stated once may be returned for another atomic statement from the same Evidence only when the grammar and meaning make that scope govern the proposition. Mere uniqueness within the paragraph, adjacency, or appearance elsewhere in the Evidence is insufficient. If that proposition's scope is not reliably established, return `unknown`; never upgrade `unknown` merely because the whole Evidence contains one scope-looking phrase.
-- Every `condition.surface_form` must be an exact substring of that same candidate's `statement_text`. For an independently retrievable causal chain, repeat the trigger wording (for example, “若……”) in the causal statement text, but keep it out of `conditions` unless the Evidence gives an additional gating prerequisite. Never place a condition only in the field while omitting it from the statement text. Applicability may be inherited at Evidence-paragraph level as described above, but conditions may not be inherited across candidate texts.
-- Enumerate explicit conditions only when they semantically govern the candidate. Distinguish rule-domain applicability from a prerequisite that gates permission, and preserve source wording. A reference-only scope such as “may be referenced” is `limitation`/`limits_scope`, not direct applicability.
-- Entities should be the engineering object, equipment/component, responsibility party or clearly relevant object. Do not promote numbers, ranges, units, tools, actions, methods, attributes or every noun phrase to peer entities. Use `quantity_target` for a reliable attribute target when appropriate. Preserve explicitly named organizations rather than replacing them with a vague “relevant parties”.
-- Preserve every explicitly named peer engineering object, responsibility party and quantity target that participates in the proposition. A compound surface form must not hide distinct named objects; return one entity per peer object while keeping them in the same Statement when their semantics are shared. Do not drop an action object, measurement target or acceptance target merely because the statement also contains a broader equipment or applicability phrase.
-- Local conditions are statement-scoped: adjacency, shared paragraph, or any surface connective never justifies propagation to a neighboring candidate. A causal antecedent belongs to `causes` plus `cause_to_effect`; add only a separate gating prerequisite to `conditions`. Rule-domain/activity/lifecycle wording belongs in `applicability_scope`, while a true permission gate belongs in `conditions`. A method followed by its direct result or acceptance criterion stays one Statement when the result cannot stand independently; do not split mechanically on assurance, confirmation or purpose connectives.
-- Relation direction follows structured semantics: `causes` is `cause_to_effect`; `limits_scope` is `scope_to_subject`; an explicit ordered process is `procedure_order`; a requirement or prohibition with a genuine structured gating condition is `condition_to_consequence`; otherwise use `subject_to_object`. Do not infer direction merely from words equivalent to if/when/in/at the time of.
-- When one source sentence defines a continuous scope statement or a continuous causal mechanism, keep the complete scope or mechanism together even if it contains several linked clauses. Split only a separately retrievable consequence or a proposition with a different engineering subject, action, result or applicability.
-- Deterministic assembly derives quantity, unit, comparison, normative modality, negation and relation direction from the returned statement text. Do not return derived fields such as `object_value`, `value`, `unit`, `quantities`, `normative_modality`, `negation_scope` or `relation_direction`.
-- Preserve quantities exactly as written, including ranges, comparator meaning and approximation surface wording. For example, keep a source phrase such as “约为37.5kPa” rather than only its numeric core, and keep a range such as “0.3～0.6mm” as a range.
-- Purpose/rationale such as “to facilitate safety evaluation” is not automatically a condition, equipment entity or causal consequence. Preserve it in the complete statement text when needed, but do not force it into another field when the contract has no purpose field.
-- Every statement text, entity surface form, condition and applicability wording must be supported by the supplied Evidence. Copy each surface form character-for-character from the candidate's own `statement_text`, including OCR replacement characters, punctuation and spacing after normalization. Never correct or paraphrase an entity surface form.
-- Return only `ok` or `no_statement`; never emit `success`, `specified`, `not_applicable`, or another synonym. If no explicit engineering statement is present, return `no_statement` and no candidates.
-- This is a candidate only. Do not approve, publish, authorize, resolve conflicts, or give operational advice.
+输入中的 `source_units` 是代码为覆盖对账划定的保守来源单元，每项形如 `{"source_unit_id":"...","source_text":"...","unit_kind":"complete|fragment"}`。它不是强制的 Statement 拆分边界。`complete` 与 `fragment` 都必须在顶层 `source_unit_coverage` 中恰好出现一次：
+- `covered`：`candidate_indexes` 列出覆盖它的候选序号（从 1 开始）。一条 Statement 可以覆盖多个单元；一个单元只有在确实包含多个独立命题时才可对应多条 Statement。
+- `excluded`：`candidate_indexes` 为空，并填写简短 `reason`。只有组织性标题、无法独立理解的残句、仅作上下文的文字、已由前一来源成员承载的续接片段、非工程内容或来源结构无法确认时才能排除。
+
+输出必须是严格 JSON。每条候选在 `source_unit_ids` 列出它实际覆盖的来源单元。`status="ok"` 时至少有一条候选；只有所有单元均有可解释的排除处置时才返回 `status="no_statement"`、空候选和 `no_statement_reason`。
+
+只允许下面列出的字段和形状。示例中的省略号表示实际字符串或数组内容，不是可输出字符；不要另造 `text`、`entity_role`、`candidate_index`、`total_steps`、`step_order`、`source_order`、`source_quote`、`source_context` 等别名：
+```json
+{
+  "status": "ok",
+  "candidates": [
+    {
+      "statement_text": "……",
+      "statement_type": "fact|requirement|procedure|condition|observation|verification|limitation",
+      "predicate": "requires|prohibits|describes|causes|verifies|limits_scope",
+      "source_unit_ids": ["输入中已有的 source_unit_id"],
+      "subject_entities": [{"surface_form": "必须逐字出现在 statement_text 中的实体", "role": "subject|object|related|quantity_target"}],
+      "conditions": [{"surface_form": "必须逐字出现在 statement_text 中的前置条件"}],
+      "applicability_scope": {"status": "unknown"}
+    }
+  ],
+  "source_unit_coverage": [
+    {"source_unit_id": "输入中已有的 source_unit_id", "status": "covered", "candidate_indexes": [1]}
+  ]
+}
+```
+无陈述时只能使用：`{"status":"no_statement","candidates":[],"no_statement_reason":"中文理由","source_unit_coverage":[{"source_unit_id":"输入ID","status":"excluded","candidate_indexes":[],"reason":"中文理由"}]}`。`covered` 项禁止 `reason`；`excluded` 项必须有 `reason`。`subject_entities` 和 `conditions` 中的成员必须是对象，不能直接写字符串。`conditions` 的每个对象只允许一个 `surface_form` 字段，严禁添加 `role`、`kind` 或其他字段；只有 `subject_entities` 才有 `role`。
+
+只有输入确实给出对应已确认来源组时才添加以下可选字段，并严格使用输入给出的 ID 和序号：`procedure_group={"group_id":"……","status":"indexed|uncertain","step_index":1,"step_total":2}`，`source_list_item={"group_id":"……","status":"indexed|uncertain","item_index":1,"item_total":2}`，`source_question={"group_id":"……","status":"linked|uncertain","answer_option":"……","answer_text":"……"}`。`uncertain` 时用 `uncertainty_reason` 说明原因。只有已确认跨 Evidence 来源项的第一成员才能写 `supporting_evidence_ids`；否则完全省略该字段。
+
+陈述粒度采用“最小完整回答单元”：
+- 同一主体、同一适用范围下，动作与它的方法、直接结果、验收标准、阈值或必要目的保持一条，不得拆成失去上下文的微型陈述。例如“紧固件应拧紧，不得松动”是一个完整要求。
+- 共同表达一个必需状态的并列属性保持一条。同一来源单元或同一来源列表项内，语义同构、只是对象不同的并列成分合为一条，并保留多个实体。
+- 具有同一根因和最终结论的连续因果解释保留完整因果链，不同时生成包含关系的局部句和汇总句。
+- 不同主体、可独立成立的动作或要求、不同适用条件、不同来源列表项，应分别形成 Statement。标点、换行和“、”“和”“及”不单独决定拆分。
+- 拆分后每条都必须能独立理解。明确的代词、省略主体、总领句义务和已确认标题范围应在有来源支持时补入，不得自行猜测。
+
+`predicate` 只表示整条 Statement 的主要粗粒度关系，不要为了让一条 Statement 只有一个 `predicate` 而拆散完整语义。义务、阈值和前提要求用 `requires`；明确禁止用 `prohibits`；事实、定义和普通操作描述用 `describes`；明确因果用 `causes`；真正的核验结果用 `verifies`；适用或排除边界用 `limits_scope`。
+
+语义和来源要求：
+- `statement_text` 保留主体、动作、必要条件、适用范围、数值、单位、比较方向、否定、规范强度和因果方向。不得把“应”“宜”“可”“不得”互相替换，不得改变上下限。
+- `subject_entities` 只收录工程对象、设备部件、责任主体和数值目标；每个 `surface_form` 必须是 `statement_text` 的准确子串。数字、单位、动作和普通属性不单独当作实体。
+- `conditions` 只表示真实的准入或成立前置条件，且文字必须是 `statement_text` 的准确子串。因果前件不因出现“若”“当”就自动填入 `conditions`。
+- `applicability_scope` 只有在当前 Evidence 或已确认标题明确支持时才使用 `known`；`applicability_text` 必须同时是 `statement_text` 中的连续原文片段，以及当前 Evidence 或已确认标题中的连续原文片段，不能只挂字段而从陈述正文省略，也不能概括、改写或扩大范围；否则使用 `{"status":"unknown"}`。
+- 数量、单位、比较、模态、否定和关系方向由适配器从候选正文派生，不返回 `object_value`、`value`、`unit`、`quantities`、`normative_modality`、`negation_scope` 或 `relation_direction`。
+
+来源结构：
+- `operation_group_context` 只用于已确认的有序操作。完整并已定位的步骤使用 `procedure_group` 的给定 `group_id`、`status="indexed"`、实际序号和总数；来源不完整时使用 `uncertain` 并说明原因。
+- `related_source_context` 中的分类、要求和活动列表使用 `source_list_item`；列表序号只是来源定位，不是操作顺序。已确认的题干与印刷答案使用 `source_question`。
+- 对 `group_kind="question_options"`、`source_review_status="confirmed"` 且 `answer_marked=true` 的来源组，只由 `stem_evidence_id` 指向的首个题干 Evidence 产出题组候选。`question_extraction_guidance` 是数组；逐项读取其中的 `role` 与 `resolved_statement_support`。优先使用 `role="stem"` 数组项给出的已核答案代入结果；多个空缺要按题干顺序分别代入答案分项，不要求分隔后的答案仍以连续原串出现在正文中。候选不得保留问号、空括号或选项标记。`source_question` 必须逐项使用该来源组给出的 `group_id`、`answer_option` 和 `answer_text`；若答案来自另一 Evidence，则把给出的 `answer_evidence_id` 放入 `supporting_evidence_ids`。`role="support_only"` 只表示该题组的答案或选项文字不重复生成题组 Statement；仍须检查当前 Evidence 的其他 `source_units`，其中的独立命题照常提取。只有全部来源单元均有明确排除依据时，才能返回 `no_statement`。
+- 一个已确认来源项跨多个 Evidence 时，只在第一成员产出候选，其余成员放入 `supporting_evidence_ids`。标题和无关相邻 Evidence 不得当作直接支持。
+
+返回前进行三项对照：每个 `source_unit` 均有且只有一个覆盖处置；每条候选均可回到它声明的来源单元；候选之间无重复、无遗漏、无凭空增加。只返回 JSON，不输出解释文字。

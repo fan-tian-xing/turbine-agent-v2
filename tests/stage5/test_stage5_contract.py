@@ -1,306 +1,265 @@
+"""Stage 5 full-corpus exit gate regression tests."""
+
+from __future__ import annotations
+
+import hashlib
 import json
 from pathlib import Path
-import sys
+from shutil import copyfile
+from types import SimpleNamespace
 
+import pymupdf
 import pytest
 
-import audit_stage5_exit
-import audit_stage5_inputs
-import benchmark_stage5_rapidocr_sample
+import audit_stage5_exit as gate
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-STAGE5_ROOT = PROJECT_ROOT / "data" / "stage5"
+def _sha(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def _latest(pattern: str) -> Path:
-    candidates = sorted(STAGE5_ROOT.glob(pattern))
-    assert candidates, f"no artifact matches {pattern}"
-    return candidates[-1]
+def _pdf(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    pdf = pymupdf.open()
+    page = pdf.new_page(width=240, height=180)
+    page.insert_text((20, 40), text)
+    pdf.save(path)
+    pdf.close()
 
 
-def test_stage5_sample_manifest_is_frozen_to_five_documents_and_36_pages():
-    manifest = json.loads((STAGE5_ROOT / "stage5_sample_manifest.json").read_text(encoding="utf-8"))
-
-    assert manifest["status"] == "frozen_for_initial_review"
-    assert manifest["sample_page_count"] == 36
-    assert len(manifest["documents"]) == 5
-    assert sum(len(document["sample_pages"]) for document in manifest["documents"]) == 36
-    assert all(document["page_count"] > 0 for document in manifest["documents"])
-    assert all(
-        page["physical_page"] == page["pdf_page"]
-        for document in manifest["documents"]
-        for page in document["sample_pages"]
-    )
-
-
-def test_stage5_input_and_rapidocr_audit_have_no_page_failures():
-    input_audit = json.loads(_latest("stage5_input_audit_*.json").read_text(encoding="utf-8"))
-    baseline = json.loads(_latest("stage5_baseline_benchmark_*.json").read_text(encoding="utf-8"))
-    rapidocr = json.loads(_latest("stage5_rapidocr_sample_benchmark_*.json").read_text(encoding="utf-8"))
-
-    assert input_audit["status"] == "pass"
-    assert input_audit["sample_page_count"] == 36
-    assert baseline["actual"]["page_count"] == 775
-    assert baseline["actual"]["failed_page_count"] == 0
-    assert baseline["actual"]["low_text_record_count_all_pages"] == 3
-    assert baseline["actual"]["low_text_candidate_count_excluding_expected_exception_modes"] == 1
-    assert rapidocr["actual"]["sample_page_count"] == 36
-    assert rapidocr["actual"]["failed_page_count"] == 0
-
-
-def test_stage5_rapidocr_artifact_records_reusable_fingerprint_payload():
-    rapidocr = json.loads(_latest("stage5_rapidocr_sample_benchmark_*.json").read_text(encoding="utf-8"))
-    assert rapidocr["input_fingerprint"]
-    assert all(
-        "text" in row["fresh_rapidocr"]
-        and "boxes" in row["fresh_rapidocr"]
-        and row["fresh_rapidocr"]["elapsed_seconds"] > 0
-        for row in rapidocr["records"]
-    )
-
-
-def test_stage5_exit_audit_is_frozen_read_only():
-    audit = json.loads(_latest("stage5_exit_audit_*.json").read_text(encoding="utf-8"))
-    assert audit["audit_mode"] == "frozen_stage5_artifact_read_only"
-    assert audit["automatic_recheck"] is False
-    provenance = audit["artifact_provenance"]
-    assert provenance["fingerprint_comparison_performed"] is True
-    assert provenance["fingerprint_match_status"] == "matched"
-    assert "selected_artifacts" in provenance
-
-
-def test_stage5_exit_audit_closes_after_visual_gate_and_keeps_boundaries():
-    exit_audit = json.loads(_latest("stage5_exit_audit_*.json").read_text(encoding="utf-8"))
-
-    assert exit_audit["status"] == "complete_with_quarantine"
-    assert exit_audit["closure_status"] == "closed_with_quarantine"
-    assert exit_audit["formal_release"] is False
-    assert exit_audit["owner_confirmed_quality_policy"]["content_must_match_original_exactly"] is True
-    assert exit_audit["owner_confirmed_quality_policy"]["similarity_is_acceptance_metric"] is False
-    assert all(exit_audit["checks"].values())
-    assert exit_audit["blocking_items"] == []
-    assert exit_audit["owner_review_needed_in_chat"] == []
-
-
-def test_stage5_page_identity_distinguishes_physical_and_logical_pages():
-    identity = json.loads(_latest("stage5_page_identity_audit_*.json").read_text(encoding="utf-8"))
-
-    assert identity["status"] == "page_identity_reconciled"
-    d300n = next(item for item in identity["records"] if item["document_key"] == "D300N")
-    aux = next(item for item in identity["records"] if item["document_key"] == "auxiliary_installation_book")
-    assert (d300n["physical_pdf_page"], d300n["logical_page_label"], d300n["page_role"]) == (94, "3-3-4", "blank_boundary_page")
-    assert (aux["physical_pdf_page"], aux["logical_page_label"], aux["page_role"]) == (300, "291", "formula_figure_text_page")
-    assert all(item["source_page_visual_match"] for item in identity["records"])
-
-
-def test_stage5_original_pdf_quality_benchmark_is_complete_with_explicit_quarantine():
-    candidates = sorted(STAGE5_ROOT.glob("stage5_quality_benchmark_*.json"))
-    assert candidates, "quality benchmark artifact has not been generated"
-    report = json.loads(candidates[-1].read_text(encoding="utf-8"))
-    assert report["authority"].startswith("Original materials")
-    assert report["status"] == "complete_with_quarantine"
-    assert report["sample_page_count"] == 36
-    assert report["errors"] == []
-    assert report["engines"]["rapidocr"]["scored_text_page_count"] > 0
-    assert report["engines"]["rapidocr"]["runtime"]["total_seconds"] > 0
-    assert report["table_quality"]["quarantine_coverage"] == "6/6"
-    assert report["ocr_input_fingerprint"] == json.loads(
-        _latest("stage5_rapidocr_sample_benchmark_*.json").read_text(encoding="utf-8")
-    )["input_fingerprint"]
-
-
-def test_stage5_scan_truth_never_reuses_registered_ocr_as_truth():
-    truth = json.loads(_latest("stage5_truth_annotations_*.json").read_text(encoding="utf-8"))
-    assert all(
-        row["reference_kind"] != "original_pdf_visual_reviewed_transcription"
-        for row in truth["records"]
-    )
-
-
-def test_stage5_quarantined_table_pages_cannot_be_structured_text_scored():
-    truth = json.loads(_latest("stage5_truth_annotations_*.json").read_text(encoding="utf-8"))
-    quarantined = [
-        row for row in truth["records"]
-        if row["gate_disposition"] == "quarantine_structured_ocr"
-    ]
-    assert len(quarantined) == 6
-    assert all(not row["structured_text_scoring_allowed"] for row in quarantined)
-    assert all(
-        row["structured_text_scoring_allowed"]
-        or row["gate_disposition"] == "quarantine_structured_ocr"
-        or row["reference_kind"] == "original_pdf_visual_only_unscored"
-        for row in truth["records"]
-    )
-
-
-def test_stage5_latest_exit_audit_consumes_original_pdf_quality_benchmark():
-    candidates = sorted(STAGE5_ROOT.glob("stage5_exit_audit_*.json"))
-    assert candidates, "Stage 5 exit audit artifact has not been generated"
-    audit = json.loads(candidates[-1].read_text(encoding="utf-8"))
-    assert audit["status"] == "complete_with_quarantine"
-    assert audit["checks"]["original_pdf_quality_benchmark_recorded"] is True
-    assert audit["quality_benchmark"]["status"] == "complete_with_quarantine"
-    assert audit["next_stage_allowed"] is True
-    assert "Stage 6" in audit["next_stage_message"]
-    assert audit["next_stage_inputs"]
-
-
-def test_stage5_latest_exit_audit_closes_runtime_and_orphan_review():
-    audit = json.loads(_latest("stage5_exit_audit_*.json").read_text(encoding="utf-8"))
-
-    assert audit["checks"]["runtime_environment_audit_pass"] is True
-    assert audit["checks"]["dead_code_orphan_output_review"] is True
-    assert audit["dead_code_orphan_output_review"]["status"] == "pass"
-    assert audit["artifact_provenance"]["runtime_environment_audit"].startswith("data/stage5/")
-    assert audit["artifact_provenance"]["review_queue"].startswith("data/stage5/")
-
-
-def _configure_input_audit(monkeypatch, tmp_path, registry_sha256: str):
-    pdf_path = tmp_path / "document.pdf"
-    pdf_path.write_bytes(b"fixture")
-    asset = {
-        "asset_id": "asset-fixture",
-        "source_root_id": "source",
-        "relative_path": "document.pdf",
-        "sha256": registry_sha256,
+@pytest.fixture()
+def corpus(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
+    keys = ["scan_a", "scan_b", "scan_c", "native_copy", "native_only"]
+    monkeypatch.setattr(gate, "EXPECTED_DOCUMENTS", 5)
+    monkeypatch.setattr(gate, "EXPECTED_PAGES", 5)
+    monkeypatch.setattr(gate, "EXPECTED_DERIVED", 4)
+    monkeypatch.setattr(gate, "EXPECTED_SCANNED_PAGES", 3)
+    monkeypatch.setattr(gate, "EXPECTED_NATIVE_PAGES", 2)
+    source = tmp_path / "source"
+    derived = tmp_path / "derived"
+    documents = []
+    assets = []
+    reviews = []
+    paths = {}
+    for index, key in enumerate(keys):
+        source_relative = f"{key}.pdf"
+        original = source / source_relative
+        _pdf(original, f"visible page {index}")
+        original_asset = f"original-{key}"
+        assets.append({
+            "asset_id": original_asset,
+            "source_root_id": "source",
+            "relative_path": source_relative,
+            "sha256": _sha(original),
+        })
+        if index < 4:
+            processed_relative = f"OCR/{key}(OCR).pdf"
+            processed = derived / f"{key}(OCR).pdf"
+            processed.parent.mkdir(parents=True, exist_ok=True)
+            copyfile(original, processed)
+            processed_asset = f"processed-{key}"
+            assets.append({
+                "asset_id": processed_asset,
+                "source_root_id": "ocr_derived",
+                "relative_path": processed_relative,
+                "sha256": _sha(processed),
+            })
+        else:
+            processed_relative = source_relative
+            processed = original
+            processed_asset = original_asset
+        documents.append({
+            "document_key": key,
+            "original_asset_id": original_asset,
+            "processing_asset_id": processed_asset,
+            "original_relative_path": source_relative,
+            "processing_relative_path": processed_relative,
+            "page_count": 1,
+        })
+        reviews.append({
+            "document_key": key,
+            "original_sha256": _sha(original),
+            "processing_sha256": _sha(processed),
+            "reviewed_page_ranges": [[1, 1]],
+            "line_by_line_reviewed": True,
+            "table_cells_reviewed": True,
+            "reading_order_reviewed": True,
+            "blank_pages": [],
+            "source_unreadable_pages": [],
+            "unresolved_text_count": 0,
+            "unresolved_table_cell_count": 0,
+            "unresolved_page_mapping_count": 0,
+        })
+        paths[key] = (original, processed)
+    manifest = {
+        "documents": documents,
+        "full_page_processing": {
+            "total_existing_physical_pages": 5,
+            "scanned_page_count": 3,
+            "native_text_page_count": 2,
+            "scanned_documents": keys[:3],
+            "native_text_documents": keys[3:],
+        },
     }
-    sample_path = tmp_path / "sample.json"
-    sample_path.write_text(
-        json.dumps(
-            {
-                "scope": "fixture",
-                "sample_page_count": 1,
-                "documents": [
-                    {
-                        "document_key": "fixture",
-                        "document_logical_id": "doc-fixture",
-                        "processing_asset_id": "asset-fixture",
-                        "original_asset_id": "asset-fixture",
-                        "page_count": 1,
-                        "sample_pages": [{"physical_page": 1, "pdf_page": 1}],
-                    }
-                ],
-            }
-        ),
+    manifest_path = tmp_path / "manifest.json"
+    registry_path = tmp_path / "assets.jsonl"
+    review_path = tmp_path / "review.json"
+    state = {
+        "manifest": manifest,
+        "assets": assets,
+        "reviews": reviews,
+        "manifest_path": manifest_path,
+        "registry_path": registry_path,
+        "review_path": review_path,
+        "settings": SimpleNamespace(source_root=source, ocr_derived_root=derived),
+        "paths": paths,
+    }
+    _save(state)
+    return state
+
+
+def _save(state: dict) -> None:
+    state["manifest_path"].write_text(json.dumps(state["manifest"]), encoding="utf-8")
+    state["registry_path"].write_text(
+        "\n".join(json.dumps(row) for row in state["assets"]) + "\n",
+        encoding="utf-8",
+    )
+    state["review_path"].write_text(
+        json.dumps({"full_corpus_reviews": state["reviews"]}),
         encoding="utf-8",
     )
 
-    class FixtureSettings:
-        source_root = tmp_path
-        ocr_derived_root = tmp_path
 
-        @classmethod
-        def from_environment(cls):
-            return cls()
-
-    monkeypatch.setattr(audit_stage5_inputs, "Settings", FixtureSettings)
-    monkeypatch.setattr(audit_stage5_inputs, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(audit_stage5_inputs, "SAMPLE_MANIFEST", sample_path)
-    monkeypatch.setattr(audit_stage5_inputs, "_load_assets", lambda: {asset["asset_id"]: asset})
-    monkeypatch.setattr(audit_stage5_inputs, "ocr_fingerprint", lambda: ("fixture-input", {}))
-    monkeypatch.setattr(audit_stage5_inputs, "_page_summary", lambda path: {"page_count": 1})
-    return pdf_path
-
-
-def test_stage5_input_audit_hashes_each_physical_file_once(monkeypatch, tmp_path):
-    pdf_path = _configure_input_audit(monkeypatch, tmp_path, "fixture-sha256")
-    calls = []
-
-    def fake_sha256(path):
-        calls.append(path.resolve())
-        return "fixture-sha256"
-
-    monkeypatch.setattr(audit_stage5_inputs, "_sha256", fake_sha256)
-    result = audit_stage5_inputs.audit()
-
-    assert result["status"] == "pass"
-    assert calls == [pdf_path.resolve()]
-
-
-def test_stage5_input_audit_hash_mismatch_is_a_blocking_error(monkeypatch, tmp_path):
-    _configure_input_audit(monkeypatch, tmp_path, "registry-sha256")
-    monkeypatch.setattr(audit_stage5_inputs, "_sha256", lambda path: "actual-sha256")
-
-    result = audit_stage5_inputs.audit()
-
-    assert result["status"] == "fail"
-    assert any("SHA-256 differs from Registry" in error for error in result["errors"])
-
-
-def test_stage5_exit_uses_one_explicit_frozen_provenance_set():
-    frozen = audit_stage5_exit._load_frozen_artifacts()
-
-    assert frozen["input_fingerprint"]
-    assert frozen["review_snapshot_date"] == "2026-09-09"
-    assert set(frozen["paths"]) == {
-        "input_audit",
-        "baseline",
-        "rapidocr",
-        "engine_decision",
-        "quality",
-        "tables",
-        "table_truth",
-        "page_identity",
-        "golden_review",
-        "sample",
-    }
-    assert not hasattr(audit_stage5_exit, "read_latest")
-
-
-def test_stage5_exit_rejects_cross_batch_fingerprint_mix(tmp_path, monkeypatch):
-    root = tmp_path / "data" / "stage5"
-    root.mkdir(parents=True)
-    monkeypatch.setattr(audit_stage5_exit, "PROJECT_ROOT", tmp_path)
-    monkeypatch.setattr(audit_stage5_exit, "STAGE5_ROOT", root)
-    names = dict(audit_stage5_exit.FROZEN_PROVENANCE)
-    for key in ("input_audit", "baseline", "rapidocr", "engine_decision", "quality"):
-        payload = {
-            "input_fingerprint": "batch-a",
-            "ocr_input_fingerprint": "batch-a",
-        }
-        if key == "quality":
-            payload["ocr_input_fingerprint"] = "batch-b"
-        if key == "baseline":
-            payload["input_audit"] = "data/stage5/" + names["input_audit"]
-        if key in {"engine_decision", "quality"}:
-            payload["ocr_artifact"] = "data/stage5/" + names["rapidocr"]
-        (root / names[key]).write_text(
-            json.dumps(payload),
-            encoding="utf-8",
-        )
-    for name in (
-        "stage5_table_baseline_2026-09-09.json",
-        "stage5_table_truth_review_2026-09-09.json",
-        "stage5_page_identity_audit_2026-09-09.json",
-        "stage5_golden_sample_review_2026-09-09.json",
-        "stage5_sample_manifest.json",
-    ):
-        (root / name).write_text("{}", encoding="utf-8")
-    with pytest.raises(ValueError, match="one input fingerprint"):
-        audit_stage5_exit._load_frozen_artifacts()
-
-
-def test_stage5_blocking_items_are_derived_from_failed_boolean_checks():
-    checks = {name: True for name in audit_stage5_exit.BLOCKING_MESSAGES}
-    checks["input_audit_pass"] = False
-    checks["rapidocr_zero_failures"] = False
-
-    assert audit_stage5_exit._derive_blocking_items(checks) == [
-        "The Stage 5 input audit has blocking discrepancies.",
-        "The frozen RapidOCR sample contains failed pages.",
-    ]
-
-
-def test_stage5_rapidocr_cache_mismatch_does_not_rerun_without_force(monkeypatch, tmp_path):
-    cached = tmp_path / "cached.json"
-    monkeypatch.setattr(benchmark_stage5_rapidocr_sample, "ocr_fingerprint", lambda: ("new", {}))
-    monkeypatch.setattr(benchmark_stage5_rapidocr_sample, "find_matching_artifact", lambda pattern, fingerprint: cached)
-    monkeypatch.setattr(
-        benchmark_stage5_rapidocr_sample,
-        "benchmark",
-        lambda: pytest.fail("OCR must not rerun without --force"),
+def _audit(state: dict) -> dict:
+    return gate.audit(
+        state["manifest_path"],
+        state["registry_path"],
+        state["review_path"],
+        state["settings"],
     )
-    monkeypatch.setattr(sys, "argv", ["benchmark_stage5_rapidocr_sample.py", "--output", str(tmp_path / "new.json")])
 
-    assert benchmark_stage5_rapidocr_sample.main() == 0
+
+def test_complete_current_five_document_review_can_pass(corpus: dict) -> None:
+    result = _audit(corpus)
+    assert result["status"] == "complete"
+    assert result["next_stage_allowed"] is True
+    assert result["blocking_items"] == []
+
+
+def test_missing_derived_pdf_blocks(corpus: dict) -> None:
+    corpus["paths"]["scan_b"][1].unlink()
+    result = _audit(corpus)
+    assert result["status"] == "blocked"
+    assert any("processed PDF missing" in issue for issue in result["blocking_items"])
+
+
+def test_wrong_visible_page_blocks_even_when_hashes_updated(corpus: dict) -> None:
+    processed = corpus["paths"]["scan_a"][1]
+    replacement = processed.with_suffix(".new.pdf")
+    _pdf(replacement, "different visible page")
+    replacement.replace(processed)
+    current_sha = _sha(processed)
+    next(row for row in corpus["assets"] if row["asset_id"] == "processed-scan_a")["sha256"] = current_sha
+    next(row for row in corpus["reviews"] if row["document_key"] == "scan_a")["processing_sha256"] = current_sha
+    _save(corpus)
+    result = _audit(corpus)
+    assert result["status"] == "blocked"
+    assert result["documents"][0]["pixel_mismatch_pages"] == [1]
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        (lambda row: row.update(reviewed_page_ranges=[]), "does not cover every physical page"),
+        (lambda row: row.update(processing_sha256="old"), "processed SHA-256 is stale"),
+        (lambda row: row.update(unresolved_table_cell_count=1), "unresolved_table_cell_count is not zero"),
+        (lambda row: row.update(reading_order_reviewed=False), "reading-order review not confirmed"),
+    ],
+)
+def test_incomplete_or_stale_manual_review_blocks(
+    corpus: dict, change, message: str
+) -> None:
+    change(corpus["reviews"][0])
+    _save(corpus)
+    result = _audit(corpus)
+    assert result["status"] == "blocked"
+    assert any(message in issue for issue in result["blocking_items"])
+
+
+def test_historical_sample_review_does_not_count(corpus: dict) -> None:
+    corpus["review_path"].write_text(
+        json.dumps({"reviews": [{"document_key": "scan_a", "comparison_status": "passed"}]}),
+        encoding="utf-8",
+    )
+    result = _audit(corpus)
+    assert result["status"] == "blocked"
+    assert any("full_corpus_reviews missing" in issue for issue in result["blocking_items"])
+
+
+def test_explicit_user_acceptance_of_exact_pdf_can_close_review_gate(corpus: dict) -> None:
+    review = corpus["reviews"][0]
+    review.update(
+        line_by_line_reviewed=False,
+        table_cells_reviewed=False,
+        reading_order_reviewed=False,
+        unresolved_text_count=None,
+        unresolved_table_cell_count=None,
+        unresolved_page_mapping_count=None,
+        user_acceptance={
+            "accepted": True,
+            "acceptance_kind": "user_confirmation_of_current_ocr_delivery",
+            "confirmation_text": "我确认当前资料可以通过",
+            "original_sha256": review["original_sha256"],
+            "processing_sha256": review["processing_sha256"],
+            "accepted_page_ranges": [[1, 1]],
+            "does_not_assert_agent_line_by_line_or_cell_review": True,
+        },
+    )
+    _save(corpus)
+    result = _audit(corpus)
+    assert result["status"] == "complete"
+    assert result["documents"][0]["review_basis"] == "explicit_current_pdf_user_acceptance"
+    assert review["line_by_line_reviewed"] is False
+
+
+@pytest.mark.parametrize("invalid", ["old_sha", "partial_pages", "false_method_claim"])
+def test_user_acceptance_must_bind_exact_full_pdf(corpus: dict, invalid: str) -> None:
+    review = corpus["reviews"][0]
+    review["line_by_line_reviewed"] = False
+    review["user_acceptance"] = {
+        "accepted": True,
+        "acceptance_kind": "user_confirmation_of_current_ocr_delivery",
+        "confirmation_text": "我确认当前资料可以通过",
+        "original_sha256": review["original_sha256"],
+        "processing_sha256": review["processing_sha256"],
+        "accepted_page_ranges": [[1, 1]],
+        "does_not_assert_agent_line_by_line_or_cell_review": True,
+    }
+    if invalid == "old_sha":
+        review["user_acceptance"]["processing_sha256"] = "historical"
+    elif invalid == "partial_pages":
+        review["user_acceptance"]["accepted_page_ranges"] = []
+    else:
+        review["user_acceptance"]["does_not_assert_agent_line_by_line_or_cell_review"] = False
+    _save(corpus)
+    result = _audit(corpus)
+    assert result["status"] == "blocked"
+    assert any("user acceptance is not bound" in item for item in result["blocking_items"])
+
+
+def test_unsearchable_nonblank_page_blocks(corpus: dict) -> None:
+    original, processed = corpus["paths"]["scan_a"]
+    blank = processed.with_suffix(".new.pdf")
+    pdf = pymupdf.open()
+    page = pdf.new_page(width=240, height=180)
+    page.draw_rect(pymupdf.Rect(20, 30, 180, 70), fill=(0, 0, 0))
+    pdf.save(blank)
+    pdf.close()
+    blank.replace(processed)
+    sha = _sha(processed)
+    next(row for row in corpus["assets"] if row["asset_id"] == "processed-scan_a")["sha256"] = sha
+    next(row for row in corpus["reviews"] if row["document_key"] == "scan_a")["processing_sha256"] = sha
+    _save(corpus)
+    result = _audit(corpus)
+    assert result["status"] == "blocked"
+    assert result["documents"][0]["unsearchable_pages"] == [1]

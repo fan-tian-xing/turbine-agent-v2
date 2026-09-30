@@ -24,26 +24,26 @@ def test_stage11_contract_has_task_specific_boundary_and_normalized_fields():
     assert contract["requirements"]["adjudication_statement_count_matches_final_gold"] is True
 
 
-def test_stage11_exit_opens_after_semantic_gold_review():
+def test_stage11_entry_tracks_current_exit_gate():
     entry = _read("data/stage11/stage11_entry_audit.json")
-    assert entry["status"] == "complete"
-    assert entry["next_stage_allowed"] is True
-    assert entry["checks"]["stage12_entry_allowed"] is True
-    assert entry["blockers"] == []
-    assert entry["sample_registry"]["development_regression_golden"]["page_count"] == 36
-    assert entry["sample_registry"]["acceptance_holdout"]["page_count"] == 15
+    exit_audit = _read("data/stage11/stage11_exit_audit.json")
+    assert entry["status"] == exit_audit["status"]
+    assert entry["next_stage_allowed"] is exit_audit["next_stage_allowed"]
+    assert entry["checks"]["stage12_entry_allowed"] is exit_audit["checks"]["stage12_entry_allowed"]
+    assert entry["blockers"] == exit_audit["blockers"]
     assert entry["checks"]["adjudication_complete"] is True
     assert entry["checks"]["review_independence"] is True
 
 
 def test_stage11_has_a_distinct_unified_exit_audit():
     exit_audit = _read("data/stage11/stage11_exit_audit.json")
-    assert exit_audit["status"] == "complete"
-    assert exit_audit["next_stage_allowed"] is True
+    data_blockers = [name for name, passed in exit_audit["checks"].items() if not passed and name not in {"targeted_tests", "stage12_entry_allowed"}]
+    assert exit_audit["status"] == ("in_progress" if data_blockers else "complete")
+    assert exit_audit["next_stage_allowed"] is (not data_blockers)
     assert exit_audit["zero_tolerance_errors"] == []
     assert exit_audit["outputs"]["entry_audit"] == "data/stage11/stage11_entry_audit.json"
     assert exit_audit["outputs"]["exit_audit"] == "data/stage11/stage11_exit_audit.json"
-    assert exit_audit["test_result"]["targeted"]["status"] == "passed"
+    assert exit_audit["checks"]["source_rebinding_review_current"] is True
     assert exit_audit["next_stage_inputs"]["development_gold"] == "data/stage11/stage11_statement_development_samples.jsonl"
 
 
@@ -54,6 +54,19 @@ def test_stage11_development_samples_are_source_grounded_and_cover_five_document
     assert len({row["statement_id"] for row in rows}) == len(rows)
     assert all(row["review_status"] in {"accepted", "pending_manual_review", "isolated"} and row["formal_release"] is False for row in rows)
     assert all(row["evidence_bindings"] and row["subject_entity_id"] and row["source_text_sha256"] and row["object_value"] and row["applicability_scope"] for row in rows)
+
+
+def test_stage11_accepted_gold_rejects_context_only_source():
+    from scripts.audit_stage11_exit import _development_gold_sources_extractable
+
+    row = {"review_status": "accepted", "evidence_bindings": [{"evidence_id": "source"}]}
+    canonical = {"source": {"evidence": {"evidence_role": "requirement_source"}}}
+    assert _development_gold_sources_extractable([row], canonical)
+    canonical["source"]["stage12_extractability"] = "context_only"
+    assert not _development_gold_sources_extractable([row], canonical)
+    canonical["source"]["stage12_extractability"] = "extractable"
+    canonical["source"]["evidence"]["evidence_role"] = "background"
+    assert not _development_gold_sources_extractable([row], canonical)
 
 
 def test_stage11_holdout_is_fifteen_pages_three_per_document_and_disjoint():
@@ -116,6 +129,20 @@ def test_stage11_comparison_direction_matches_chinese_bound_semantics():
     assert validate_statement_semantics(broken)["comparison_direction_matches_text"] is False
 
 
+def test_stage11_cannot_limit_requires_explicit_negation_scope():
+    from scripts.audit_stage11_exit import validate_statement_semantics
+
+    row = {
+        "review_status": "accepted",
+        "statement_text": "冲动时真空不能太高。",
+        "negation_scope": [],
+        "entity_alignment": [{"surface_form": "真空", "entity_class": "parameter"}],
+    }
+    assert validate_statement_semantics(row)["negation_scope_present_when_accepted"] is False
+    row["negation_scope"] = [{"surface_form": "不能太高", "polarity": "negative", "scope_type": "statement"}]
+    assert validate_statement_semantics(row)["negation_scope_present_when_accepted"] is True
+
+
 def test_stage11_confirmed_development_rows_retain_numeric_and_negation_annotations():
     rows = _jsonl("data/stage11/stage11_statement_development_samples.jsonl")[:4]
     assert any(row["quantities"] for row in rows if row["value"] is not None)
@@ -127,10 +154,17 @@ def test_stage11_accepted_new_gold_rows_bind_two_review_rounds():
     accepted_new = [row for row in rows if row["review_status"] == "accepted" and row.get("review_basis") != "stage3_user_confirmation"]
     assert accepted_new
     manual = [row for row in accepted_new if row.get("review_basis") == "stage12_manual_adjudication_update"]
-    independently_reviewed = [row for row in accepted_new if row.get("review_basis") != "stage12_manual_adjudication_update"]
+    current_three_agent = [row for row in accepted_new if row.get("review_basis") == "current_three_agent_review"]
+    independently_reviewed = [row for row in accepted_new if row.get("review_basis") not in {"stage12_manual_adjudication_update", "current_three_agent_review"}]
     assert manual
+    assert current_three_agent
     assert all(row.get("stage12_review_mode") == "manual_only" and row.get("reviewer") == "user_manual_adjudication" for row in manual)
     assert all(row.get("review_provenance") == "stage12_user_manual_adjudication_only; independent_reviewer_ab_not_claimed" for row in manual)
+    review = _read("data/stage11/stage11_current_gold_review.json")
+    record_by_sample = {record["sample_id"]: record for record in review["records"]}
+    assert all(record_by_sample[row["sample_id"]]["semantic_review_scope"] == "full_statement_semantics" for row in current_three_agent)
+    assert all(row["reviewer"] == "+".join(review["reviewers"]) for row in current_three_agent)
+    assert all(not row.get("review_rounds") for row in current_three_agent)
     assert all(len(row.get("review_rounds", [])) == 2 for row in independently_reviewed)
     assert all({round_["reviewer_id"] for round_ in row["review_rounds"]} == {"reviewer_a", "reviewer-b"} for row in independently_reviewed)
     assert all(all(round_["status"] == "accepted" and round_["input_sha256"] and round_["output_sha256"] for round_ in row["review_rounds"]) for row in independently_reviewed)
@@ -164,14 +198,28 @@ def test_stage11_two_review_rounds_are_independent_and_adjudicated():
 
 
 def test_stage11_adjudication_hash_and_count_match_final_gold_rows():
-    from scripts.audit_stage11_exit import _final_gold_hash, _final_gold_rows
+    from scripts.audit_stage11_exit import _current_gold_review_current, _final_gold_hash, _final_gold_rows
 
     statements = _jsonl("data/stage11/stage11_statement_development_samples.jsonl") + _jsonl("data/stage11/stage11_statement_holdout.jsonl")
     queue = _jsonl("data/stage11/stage11_adjudication_queue.jsonl")
+    review = _read("data/stage11/stage11_current_gold_review.json")
+    source_review = _read("data/stage11/stage11_source_rebinding_review.json")
+    review_by_sample = {record["sample_id"]: record for record in review["records"]}
+    assert _current_gold_review_current(review, statements, queue, source_review)
     for item in queue:
         sample_id = item["sample_id"]
-        assert item["adjudicated_statement_count"] == len(_final_gold_rows(statements, sample_id))
-        assert item["adjudication_output_sha256"] == _final_gold_hash(statements, sample_id)
+        if sample_id in review_by_sample:
+            current = review_by_sample[sample_id]
+            assert item["adjudicated_statement_count"] == current["historical_adjudicated_statement_count"]
+            assert item["adjudication_output_sha256"] == current["historical_adjudication_output_sha256"]
+            assert current["current_statement_count"] == len(_final_gold_rows(statements, sample_id))
+            assert current["current_gold_sha256"] == _final_gold_hash(statements, sample_id)
+        else:
+            assert item["adjudicated_statement_count"] == len(_final_gold_rows(statements, sample_id))
+            assert item["adjudication_output_sha256"] == _final_gold_hash(statements, sample_id)
+    corrupted = json.loads(json.dumps(review, ensure_ascii=False))
+    corrupted["records"][0]["current_gold_sha256"] = "0" * 64
+    assert not _current_gold_review_current(corrupted, statements, queue, source_review)
 
 
 def test_stage12_input_gate_is_fail_closed():

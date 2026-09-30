@@ -29,32 +29,33 @@ def test_project_state_is_the_current_state_source():
 def test_project_state_references_matching_stage_exit_audits():
     state = _read_json("data/project_state.json")
 
-    for stage in ("2", "3", "4", "5", "6", "7"):
+    for stage in ("2", "3", "4"):
         stage_state = state["stages"][stage]
         audit_path = stage_state["exit_audit"]
         audit = _read_json(audit_path)
         assert audit["stage"] == stage
         assert audit["status"] == stage_state["status"]
 
-    current_stage = state["stages"][str(state["current_stage"])]
-    if state["current_stage_status"] == "complete":
-        current_audit = _read_json(current_stage["exit_audit"])
-        assert current_audit["status"] == state["current_stage_status"]
-        assert bool(current_audit["next_stage_allowed"]) == (state["next_stage_status"] == "ready")
+    stage5 = state["stages"]["5"]
+    audit = _read_json(stage5["exit_audit"])
+    assert audit["stage"] == "5"
+    assert audit["status"] == stage5["status"]
+    assert audit["next_stage_allowed"] is (stage5["status"] == "complete")
+    if state["current_stage"] > 5:
+        assert audit["next_stage_allowed"] is True
     else:
-        assert state["current_stage_status"] == "in_progress"
-        assert current_stage["status"] == "in_progress"
-        assert current_stage.get("entry_record")
-        entry = _read_json(current_stage["entry_record"])
-        assert entry["stage"] == str(state["current_stage"])
-        assert entry["status"] == "in_progress"
+        assert state["current_stage"] == 5
+    for stage in map(str, range(state["current_stage"] + 1, 13)):
+        assert state["stages"][stage]["status"] == "needs_revalidation"
+    assert state["stages"]["13"]["status"] == "blocked"
 
 
-def test_stage12_project_state_keeps_project_status_not_artifact_details():
+def test_stage12_historical_state_keeps_status_not_artifact_details():
     state = _read_json("data/project_state.json")
     stage12 = state["stages"]["12"]
 
     assert stage12["status"] == state["current_stage_status"]
+    assert stage12["status"] != "complete"
     assert stage12["development_evaluation"] == "data/stage12/stage12_development_evaluation.json"
     assert stage12["exit_audit"] == "data/stage12/stage12_exit_audit.json"
     for detailed_field in (

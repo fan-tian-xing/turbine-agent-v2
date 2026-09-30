@@ -8,7 +8,7 @@
   "inputs": {
     "data/stage8/stage8_exit_audit.json": {
       "path": "data/stage8/stage8_exit_audit.json",
-      "sha256": "ec1a349fee8848c171216fe5fac70bd5a9bb130158fc31b350c23f076e0db8fe"
+      "sha256": "2d545f274d0928967b8805132c6d9166eb03ac56200795740fd39845dc8ad400"
     },
     "ontology/minimal_turbine.ttl": {
       "path": "ontology/minimal_turbine.ttl",
@@ -16,11 +16,11 @@
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
-      "sha256": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249"
+      "sha256": "8ecc1eb849310c0ba85bb54b02577ca05007e9a6f91b64e9a0ace6a063f78b63"
     },
     "ontology/stage9_shapes.ttl": {
       "path": "ontology/stage9_shapes.ttl",
-      "sha256": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56"
+      "sha256": "f1420a6c15cf1884fa6ce1edb41e195e3472844280e7b4bfb77820a2a97d3bdf"
     },
     "src/turbine_kg/ontology/semantic.py": {
       "path": "src/turbine_kg/ontology/semantic.py",
@@ -44,7 +44,7 @@
     },
     "pyproject.toml": {
       "path": "pyproject.toml",
-      "sha256": "9d4e5482e3e412a5db47e66d90440cf68ff2358a861341bd32aa94c56b2090db"
+      "sha256": "4674f123154612e8178445d104e5f47476c0b2eab99834132d902363c2906a3a"
     },
     "uv.lock": {
       "path": "uv.lock",
@@ -52,7 +52,7 @@
     },
     "src/turbine_kg/stage3/real_trial.py": {
       "path": "src/turbine_kg/stage3/real_trial.py",
-      "sha256": "117d24e10c60fa426906454245ac8c0fe5293d513c3641a03e556da76a5be406"
+      "sha256": "0c0d16e14c12e7782f7337cfda634b0f9a7dd6920bee1d3fbcd6d83537b55187"
     },
     "data/stage3/real_trial_confirmation.json": {
       "path": "data/stage3/real_trial_confirmation.json",
@@ -60,7 +60,7 @@
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
-      "sha256": "e336425b3d9b4879db84010af23564464a035460b573b764b439129e82309471"
+      "sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897"
     },
     "config/semantic_runtime.schema.json": {
       "path": "config/semantic_runtime.schema.json",
@@ -72,22 +72,35 @@
     },
     "tests/stage9/test_stage9_semantic.py": {
       "path": "tests/stage9/test_stage9_semantic.py",
-      "sha256": "790496faa6606fdce5dc2b559dea46bb3362a2b3b040970a7e14b16fb4324ff1"
+      "sha256": "8ec83a467924daeadbecb6379d56493b2ce54b24916dfd5320cd22ec7d61c33f"
+    },
+    "tests/stage3/test_current_source_binding.py": {
+      "path": "tests/stage3/test_current_source_binding.py",
+      "sha256": "d9de6eac65ef827ccb08f20bc5579153cf41ad63b2e61e5ad704d3ecde0f1a38"
     },
     "scripts/audit_stage9_exit.py": {
       "path": "scripts/audit_stage9_exit.py",
-      "sha256": "d270132adfeabf12f85141176698617b1607191b16d56da90d6d04c826c11eed"
+      "sha256": "628cdb4b79754fe65aa0a264c7f1d5e41e0ec650f08c09c9a41aeceb668392eb"
     },
     "var/stage3/real_trial_pages.json": {
       "path": "var/stage3/real_trial_pages.json",
       "sha256": "762f8ac657a896e5c9b152112850af730b564063eeac71c3db8120384d0c8396"
     },
+    "data/stage9/stage9_current_source_bindings.json": {
+      "path": "data/stage9/stage9_current_source_bindings.json",
+      "sha256": "a71d1a3754d3c81df6b7acde5d96bc4731595a56ab5a175b849669f1defb7cc4"
+    },
     "data/stage9/stage9_semantic_review.json": {
       "path": "data/stage9/stage9_semantic_review.json",
-      "sha256": "7800f00cb00c1404da9114df949fd3f1b220577c395a2b75c16a4cfbae25dc26"
+      "sha256": "2726de7fe69a64aa75dec1de2a9725be9aaac05faa793ac221dcee2383554392"
     }
   },
-  "input_scope": "Existing Stage 8 frozen ontology plus public synthetic corpus and already admitted, user-confirmed real research sample; research-only, not formal knowledge or Release. Only confirmed/runtime/Registry artifacts are read, no original materials, case data or blind-test inputs.",
+  "input_scope": "Existing Stage 8 frozen ontology plus public synthetic corpus and already admitted, user-confirmed real research sample; research-only, not formal knowledge or Release. Only confirmed/runtime/Registry and explicitly supplied current source binding artifacts are read, no original materials, case data or blind-test inputs.",
+  "real_source_binding": {
+    "mode": "explicit_current_source_review",
+    "artifact": "data/stage9/stage9_current_source_bindings.json",
+    "new_user_confirmation": false
+  },
   "versions": {
     "python": "3.12.14",
     "rdflib": "7.6.0",
@@ -163,7 +176,7 @@
     "invalid_batch_preserved_and_projection_blocked": true,
     "independent_code_contract_review": true,
     "targeted_and_consumer_tests": true,
-    "full_project_tests": true
+    "pre_stage11_project_tests": true
   },
   "negative_checks": {
     "unknown_schema_field": true,
@@ -183,7 +196,7 @@
     "status": "passed",
     "fingerprints_current": true,
     "knowledge_approval": false,
-    "admitted_data_metadata": "Existing user-confirmed groups, runtime identity/quote binding and Registry applicability are validated by load_confirmed_real_corpus; no overlay or user confirmation is changed."
+    "admitted_data_metadata": "Historical user-confirmed statement semantics, runtime identity/quote binding and Registry applicability are validated by load_confirmed_real_corpus. Explicit current source review preserves historical identity and critical semantics; it creates no user confirmation. No historical artifact is changed."
   },
   "test_result": {
     "targeted": {
@@ -194,8 +207,7 @@
         "-q",
         "-p",
         "no:cacheprovider",
-        "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-targeted-1a0c2bb3f792",
+        "--tb=short",
         "tests/stage9",
         "tests/stage3",
         "tests/unit/test_project_state.py"
@@ -203,10 +215,10 @@
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 59%]\n.................................................                        [100%]\n",
+      "stdout_tail": "........................................................................ [ 46%]\n........................................................................ [ 92%]\n...........                                                              [100%]\n",
       "stderr_tail": ""
     },
-    "full_project": {
+    "pre_stage11": {
       "command": [
         "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
         "-m",
@@ -214,14 +226,15 @@
         "-q",
         "-p",
         "no:cacheprovider",
-        "--basetemp",
-        "D:\\本体\\汽轮机安调项目\\项目初期demo\\新版demo\\var\\tmp\\stage9-audit-full-af89bee9dad9",
-        "tests"
+        "--tb=short",
+        "tests",
+        "--ignore=tests/stage11",
+        "--ignore=tests/stage12"
       ],
       "project_python": "D:\\本体\\汽轮机安调项目\\项目初期demo\\runtime-python\\turbine-kg-env\\Scripts\\python.exe",
       "status": "passed",
       "returncode": 0,
-      "stdout_tail": "........................................................................ [ 21%]\n........................................................................ [ 43%]\n........................................................................ [ 65%]\n........................................................................ [ 87%]\n........................................                                 [100%]\n",
+      "stdout_tail": "........................................................................ [ 15%]\n........................................................................ [ 30%]\n........................................................................ [ 46%]\n........................................................................ [ 61%]\n........................................................................ [ 77%]\n........................................................................ [ 92%]\n.................................                                        [100%]\n",
       "stderr_tail": ""
     }
   },

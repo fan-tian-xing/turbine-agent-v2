@@ -2,10 +2,15 @@
   "schema_version": 1,
   "artifact_kind": "project_state",
   "state_authority": "This file is the only project-level current-state source; stage exit audits remain evidence records.",
-  "updated_at": "2026-09-20",
+  "updated_at": "2026-09-29",
+  "execution_control": {
+    "status": "stage12_development_rebuild_in_progress",
+    "resume_condition": "完成当前36页Development真实模型重建与回归；独立Reserve只预冻结，本轮不运行最终验收。阶段13保持冻结。",
+    "basis": "阶段6–11现行退出审计通过；阶段12通用抽取修复后正在重跑Development。新Reserve已从未暴露页面建立5个已核选区和28条Gold，并准备预冻结清单。"
+  },
   "current_stage": 12,
-  "current_stage_status": "in_progress",
-  "current_stage_scope": "llm_candidate_extraction_and_deterministic_validation_on_representative_page_baseline",
+  "current_stage_status": "development_rebuild_in_progress_reserve_prepared",
+  "current_stage_scope": "development_candidate_rebuild_and_independent_reserve_preparation",
   "next_stage": 13,
   "next_stage_status": "blocked",
   "formal_release": false,
@@ -26,38 +31,52 @@
     "3": {
       "status": "complete",
       "exit_audit": "data/stage3/stage3_exit_audit.json",
-      "repair_audit": "data/stage3/stage3_claim_validation_repair_audit.json"
+      "repair_audit": "data/stage3/stage3_claim_validation_repair_audit.json",
+      "basis": "阶段3原研究试验历史闭环保留；冻结清单不代表当前OCR版本已完成实证重放。历史测试的旧OCR指纹与当前Registry不一致，不作为Stage6入口门；后续阶段9使用前再重验。"
     },
     "4": {
       "status": "pass",
-      "exit_audit": "data/stage4/stage4_full_parse_audit_2026-09-12.json"
+      "exit_audit": "data/stage4/stage4_full_parse_audit.json",
+      "scope": "current_reviewed_processing_PDFs_of_five_frozen_original_sources_775_pages",
+      "basis": "当前五份OCR共775页结构解析重验通过，解析失败0页，辅机输入绑定当前PDF；此结构门禁不证明OCR全文文字准确。"
     },
     "5": {
-      "status": "complete_with_quarantine",
-      "exit_audit": "data/stage5/stage5_exit_audit_2026-09-12.json"
+      "status": "complete",
+      "scope": "five_sources_775_existing_physical_pages",
+      "exit_audit": "data/stage5/stage5_exit_audit.json",
+      "basis": "当前五份775页OCR文件身份、页面像素和文字可提取检查通过；辅机当前f5哈希的480页由用户明确确认“没问题，可以通过”，作为用户验收而非助手逐字逐格核验，Stage5出口complete。阶段0–5独立复核与清理后已进入Stage6。",
+      "input_audit": "data/stage5/stage5_input_audit.json",
+      "baseline": "data/stage5/stage5_baseline_benchmark.json",
+      "table_baseline": "data/stage5/stage5_table_baseline.json",
+      "table_truth": "data/stage5/stage5_table_truth_review.json"
     },
     "6": {
       "status": "complete",
+      "basis": "现行36页样本有398条Evidence（391文字/图形、7表格区域），24项退出检查通过；辅机第360页两段完整答文现为approved_answer/extractable。独立原页核查另发现DL5190.3物理第25、113页图中文字未进入Evidence，该缺口依用户要求暂缓；样本不代表775页全文Evidence。",
       "scope": "golden_sample_only",
       "exit_audit": "data/stage6/stage6_exit_audit.json",
       "quality_audit": "data/stage6/stage6_evidence_quality_audit.json",
-      "table_audit": "data/stage6/stage6_table_evidence_audit.json"
+      "table_audit": "data/stage6/stage6_table_evidence_audit.json",
+      "semantic_coverage_audit": "data/stage6/stage6_semantic_coverage_audit.json"
     },
     "7": {
       "status": "complete",
       "scope": "candidate_terminology_and_capability_templates_only",
       "exit_audit": "data/stage7/stage7_exit_audit.json",
-      "input_manifest": "data/stage7/terminology_input_manifest.json"
+      "input_manifest": "data/stage7/terminology_input_manifest.json",
+      "basis": "现行775页输入重新绑定，731页可用于候选文字分析，18,628条候选仅为candidate_only；30项退出检查通过。辅机OCR按阶段5当前PDF的明确用户验收使用，不宣称助手逐行逐格复核。"
     },
     "8": {
       "status": "complete",
       "scope": "minimal_owl_design_and_candidate_mapping_review",
+      "basis": "16项候选保留5项接受、11项暂缓；阶段7重建造成的13条指纹变更经三方审核逐项重绑，汽轮机新增辅机原件第360页来源已补核；审核队列0、独立退出审计无阻塞，仍无正式Release。",
       "entry_record": "data/stage8/stage8_entry_audit.json",
       "exit_audit": "data/stage8/stage8_exit_audit.json",
       "ontology_contract": "config/ontology_contract.json",
       "mapping_shortlist": "data/stage8/ontology_mapping_shortlist.json",
       "review_queue": "data/stage8/ontology_mapping_review_queue.jsonl",
-      "review_overlay": "data/stage8/ontology_mapping_review_overlay.jsonl"
+      "review_overlay": "data/stage8/ontology_mapping_review_overlay.jsonl",
+      "mapping_rebinding_review": "data/stage8/stage8_mapping_rebinding_review.json"
     },
     "9": {
       "status": "complete",
@@ -71,7 +90,9 @@
       "shapes": "ontology/stage9_shapes.ttl",
       "runtime_schema": "config/semantic_runtime.schema.json",
       "review": "data/stage9/stage9_semantic_review.json",
-      "runtime_module": "src/turbine_kg/ontology/semantic.py"
+      "runtime_module": "src/turbine_kg/ontology/semantic.py",
+      "basis": "当前阶段8审计、OWL/SHACL、本地RDF运行消费者和三组历史研发样本显式现行来源绑定均通过；4条引文未改写，阶段11之前项目回归通过；无正式Release。",
+      "current_source_bindings": "data/stage9/stage9_current_source_bindings.json"
     },
     "10": {
       "status": "complete",
@@ -86,7 +107,8 @@
         "stage9_exit": "data/stage9/stage9_exit_audit.json",
         "stage10_exit": "data/stage10/stage10_audit.json",
         "controlled_registry": "data/registry/source_assets.jsonl"
-      }
+      },
+      "basis": "当前Stage9退出审计、Registry身份及阶段7结构化缓存运行验证通过，阶段11之前回归通过；缓存仅为可重验本地运行产物。"
     },
     "11": {
       "status": "complete",
@@ -99,18 +121,20 @@
       "acceptance_holdout": "data/stage11/stage11_statement_holdout.jsonl",
       "holdout_evidence": "data/stage11/stage11_holdout_evidence.jsonl",
       "next_stage": 12,
-      "next_stage_status": "ready"
+      "next_stage_status": "needs_revalidation",
+      "basis": "当前46条开发Gold及50条留出Statement通过审计；17条旧Evidence来源绑定已迁移，辅机第360页La1F2010两段答文形成低真空6条和高真空5条描述性Statement，均回绑可提取Evidence并保留历史裁决哈希。阶段12待独立重验，不由本次阶段11通过自动完成。",
+      "source_rebinding_review": "data/stage11/stage11_source_rebinding_review.json",
+      "current_gold_review": "data/stage11/stage11_current_gold_review.json"
     },
     "12": {
-      "status": "in_progress",
-      "scope": "llm_candidate_extraction_and_deterministic_validation_on_representative_page_baseline",
+      "status": "development_rebuild_in_progress_reserve_prepared",
+      "scope": "36_page_development_extraction_and_independent_reserve_preparation",
       "entry_record": "data/stage12/stage12_entry_audit.json",
       "exit_audit": "data/stage12/stage12_exit_audit.json",
       "statement_contract": "config/stage12_statement_contract.json",
       "input_manifest": "data/stage12/stage12_input_manifest.json",
       "development_candidates": "data/stage12/stage12_development_candidates.json",
       "development_evaluation": "data/stage12/stage12_development_evaluation.json",
-      "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
       "provider_config": "config/stage12_provider.json",
       "provider_response_schema": "config/stage12_extraction_response.schema.json",
       "prompt": "config/stage12_prompt.txt",
@@ -120,7 +144,12 @@
       "fixture_robustness_evaluation": "data/stage12/stage12_fixture_robustness_evaluation.json",
       "external_processing_change_control": "data/change_control/retroactive_change_stage12_external_processing_permission.json",
       "next_stage": 13,
-      "next_stage_status": "blocked"
+      "next_stage_status": "blocked",
+      "reserve_source_regions": "data/stage12/stage12_reserve_source_regions.json",
+      "reserve_evidence": "data/stage12/stage12_reserve_evidence.jsonl",
+      "reserve_gold": "data/stage12/stage12_reserve_gold.jsonl",
+      "reserve_gold_audit": "data/stage12/stage12_reserve_gold_audit.json",
+      "reserve_freeze_manifest": "data/stage12/stage12_reserve_freeze_manifest.json"
     },
     "13": {
       "status": "blocked",
@@ -132,8 +161,9 @@
     }
   },
   "boundaries": [
-    "阶段 6 Evidence 仅覆盖 36 页 Golden Sample，不代表 775 页全文 Evidence 已完成。",
-    "阶段 5 隔离边界继续保留；未逐格确认的表格数值不得进入结构化 Claim。",
+    "阶段0–5当前入口已复核；阶段6退出审计曾通过，但DL5190.3物理第25、113页图中文字缺口已由独立原页核查发现，按用户本轮要求暂缓处理；36页样本不代表775页全文覆盖。",
+    "阶段7–11均按现行OCR、Evidence、候选、语义权威及运行来源完成退出重验；阶段11开发Gold为46条。阶段12 Development 正在按当前 Evidence 与中文提示词重建，独立 Reserve 仅准备预冻结，尚未运行最终验收。",
+    "阶段 5 未逐格确认的表格数值不得进入结构化 Claim。",
     "阶段 15A/15B 才是首批五份资料的全文 Evidence 与正式准入处理门。",
     "当前没有正式 Release；阶段 3 的试验投影和阶段 6 的样本 Evidence 不等于正式发布。",
     "阶段 7 候选不得自动 promotion。阶段 8 根据业务能力问题筛选 ontology mapping shortlist；被选中的高风险、缩写、OCR-only、同义/旧称候选必须完成相应审核，审核通过前不得进入正式本体或运行词汇。",

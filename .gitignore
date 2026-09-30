@@ -25,6 +25,7 @@ env/
 # Runtime and generated data
 /var/
 /docker-data/
+/新建文件夹/
 /data/staging/
 /data/private_evaluation/
 /tests/private_evaluation/

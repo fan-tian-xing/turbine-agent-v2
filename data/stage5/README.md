@@ -1,46 +1,60 @@
-# 阶段 5：OCR、版面解析和页面 Golden Sample
+# Stage 5 全页 OCR 与版面核查
 
-阶段 5 只处理当前首批五份资料，不做全库一次性 OCR，不形成正式 Evidence、Release 或阶段 15 的正式首批准入。项目当前状态唯一以 `../project_state.json` 为准，阶段 5 的门禁证据见 `stage5_exit_audit_2026-09-12.json`。
+## 当前范围
 
-冻结范围及 Golden Sample 页面分层、原始资料和处理资产边界以 `stage5_sample_manifest.json` 为准。`audit_stage5_inputs.py` 先核对原件、OCR 派生件、页数、页序边界和 Registry SHA-256，再允许进入 OCR/版面/表格基准测试。
+Stage 5 覆盖五份已提供资料的全部 775 个现存物理页：
 
-审核边界：主智能体对照原件的页面核对属于 AI 原页复核，不能称为用户人工审核；审核主体和决定以正式 Review 记录为准。疑难页面先做区域级隔离，只有数字、单位、否定词或表格关系确实无法判定时，才在聊天窗口提交负责人。项目只使用 RapidOCR；低置信度或复杂页面回到原始页复核，不以相似度替代原始页真值。
+- D300N：94 页，扫描件，重建 OCR。
+- DL/T 863—2016：28 页，扫描件，重建 OCR；原件缺少的 15 个印刷正文页见 [`stage5_source_gaps.json`](stage5_source_gaps.json)，不得据此补造 Evidence。
+- HAF103：32 页（印刷页 3–34），原件已有原生中文文字层；核验后沿用同名派生 PDF 路径。
+- 辅机教材：480 页，扫描件，重建 OCR。
+- DL/T 5190.3—2019：141 页，保留原生文字层并逐页核验。封面不可见的白色残留文字和部分插图标注在派生 PDF 上校正或补入文字层；校正版已交付，原件只读。
 
-阶段 5 的全量运行记录应覆盖冻结输入的全部页面，但人工精度真值主要覆盖冻结 Golden Sample 和所有高风险异常页。原始 PDF 保持只读，OCR 派生结果写入 `OCR_DERIVED_ROOT`。
+36 页 Golden Sample 只用于质量抽查，不能代表全文 OCR 完成。页面编号以 PDF 物理页为准；资料印刷页号单独保留。
 
-所有命令必须使用项目专用解释器：`D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe`。不要使用 Codex 通用 Python 代替。
+## 已执行流程与复核规则
 
-当前基线命令（在仓库根目录执行）：
+1. 先处理 DL/T 863 全部 28 个现存页，输出到 OCR_DERIVED_ROOT 下的候选路径。
+2. 检查全部 28 页的原图、文字层、版面顺序与页码对应；逐个核对表格单元格、行列关系、表头与空值。
+3. 若发现原页清晰可辨但 OCR 漏读或错识，直接在派生 PDF 的原位文字层校正，再对原页复核；表格归属未确认时保持阻塞。未通过前不启动其他材料。本轮不修改 OCR 生成代码。
+4. DL/T 863 通过后，依次处理 D300N、核验 HAF103 原生文字并建立同名派生 PDF、处理辅机教材，最后逐页检查 DL/T 5190.3 原生文字。
+5. 复核原件时按页、行及可读表格单元格检查文字和结构。辅机当前 PDF 采用用户明确验收的例外，不宣称助手已独立逐行逐格复核全部 480 页；实际审核标志以当前退出审计为准。
+6. 五份材料完成后已交付稳定路径的 PDF，并同步白名单、Registry 和下游输入指纹；当前阶段 5 退出审计已通过。
+
+## 处理要求
+
+- 区域级分流：PyMuPDF 负责原生 PDF 文字读取、页面渲染及搜索层输出；RapidOCR 识别正文文字框；PaddleOCR 的通用版面模型识别页面内文字、表格和图示区域，表格区域再使用结构模型形成内存候选。复杂或低置信度表格可调用 MinerU 形成第二候选。
+- 统一的 Text、Table、Figure Block 仅在单页处理过程中保存在内存中，包含页码、坐标、阅读顺序、单元格跨度和空值状态；不生成表格 JSON 或 OCR 布局 sidecar。OCR PDF 保留原扫描页图像和按坐标写入的可搜索文字层，作为阶段 6 的输入。
+- 低置信度文字保留供检查，不静默丢弃。公式和图示保留原图，提取可读公式文字、图题和标注，不推断图形关系。
+- 原页清楚而识别错误的内容，经对照后写入最终版面/PDF结果。原页本身不可辨或裁切的局部片段记录来源限制，只转录可辨部分，不猜补，也不宣称已恢复缺失内容；原页可读而 OCR 未正确转录的内容属于未解决项，阻塞该份文件验收。
+- 缺失的印刷页不推造。DL/T 863 缺页之后没有完整标题支持的无标题续项排除。
+- 相似度只用于发现疑点，不能替代原页对照或证明准确率。
+
+## 当前命令
+
+项目 OCR 使用指定运行环境：
 
 ```powershell
 $projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
 $env:PYTHONPATH = "src;scripts"
-& $projectPython scripts/audit_stage5_inputs.py
-& $projectPython scripts/benchmark_stage5_baseline.py
-& $projectPython scripts/benchmark_stage5_rapidocr_sample.py
-& $projectPython scripts/audit_stage5_tables.py
-& $projectPython scripts/decide_stage5_engines.py
-& $projectPython scripts/audit_stage5_exit.py
-& $projectPython scripts/audit_stage5_page_identity.py
-& $projectPython scripts/audit_project_runtime.py
 ```
 
-阶段 5 退出审计还会消费专用运行环境审计和阶段 5 复核队列，显式检查运行环境、冻结产物消费者以及已解决复核项；对应结果记录在 `stage5_exit_audit_2026-09-12.json` 的 `dead_code_orphan_output_review` 中。
+OCR 识别依赖在 `pyproject.toml` 中锁定。模型缓存放在 `runtime-python/cache/`，不属于 OCR 输出；复核期间的候选 PDF 只是临时文件，正式交付保留校正后的 OCR PDF 和必要的当前验收记录，不保留页级表格 JSON 或校正文稿。
 
-阶段 5 的 36 页 OCR 和质量复核是一次性验收记录，不纳入日常自动复核。`audit_stage5_exit.py` 只读取已经冻结的结果，不会因为日期变化或指纹变化自动触发 OCR。只有负责人明确要求复核时，才执行 `benchmark_stage5_rapidocr_sample.py --force`，再重建真值、质量报告和退出审计。已有结果仍记录输入指纹，供人工决定是否需要复核。
+以当前固定路径的 `stage5_exit_audit.json` 核验全文文件和逐页复核状态。36 页样本基准及旧版日期审计不能代替全文 OCR 结果。
 
-如需重建原始 PDF 真值和定量质量报告，按以下顺序执行：
+当前 [`stage5_input_audit.json`](stage5_input_audit.json) 已按最新 Registry 快照通过；`stage5_baseline_benchmark.json` 已重建775页机械基准，`stage5_table_baseline.json` 已重建7页样本表格结构候选。原页表格结构、36页 Golden Sample 转录和真值记录均已重新绑定当前五份 PDF；`stage5_quality_benchmark_2026-09-28.json` 为当前36页样本质量结果，其中表格单元格独立评分仍隔离。用户明确确认当前辅机 PDF 可以通过，验收绑定当前辅机哈希和全部480页，且不写成助手逐行、逐格亲自复核。`stage5_exit_audit.json` 已重跑，五份文件的可读取文字与原图像素检查通过，结果为 `complete`、`next_stage_allowed=true`。阶段 0–5 已复核和清理；Stage 6 当前36页样本已通过退出审计。
 
-```powershell
-& $projectPython scripts/build_stage5_truth_annotations.py
-& $projectPython scripts/benchmark_stage5_quality.py
-& $projectPython scripts/audit_stage5_exit.py
-```
+原页表格结构事实经当前页面几何和图像检查后可继续用于定位；它不能证明当前 OCR 单元格文字准确，也不代表阶段 6 已逐格接受 Evidence，不会自动解除表格隔离。独立 RapidOCR 对比工具可用于显式实验，质量工具默认比较当前正式 PDF 与独立原页转录；这类诊断不替代全文人工复核或正式退出门禁。
 
-输入数量、冻结 OCR 成败、版面分类与原始页结构复核结果以退出审计及其关联质量报告为准。低置信度、关键数字或复杂版面回到 Original materials 原始页复核，不用复核结果覆盖原件。相似度只用于发现疑点，不代表字符准确率；无法可靠恢复的表格、公式、图示和阅读顺序只能保留原始页视觉依据，不能直接进入结构化 Evidence。规则线检测只产生候选区域，不代表单元格文字已经准确。
+## 完成门禁
 
-新增的 `stage5_truth_annotations_*.json` 和 `stage5_quality_benchmark_*.json` 使用 `Original materials` 原始 PDF 作为真值来源，记录可评分文本区域的字符、数字、单位、否定词、原生页面几何、阅读顺序和本地耗时指标；扫描页只有存在独立人工转录时才允许文字定量评分，不能把处理链生成的 OCR 文字再当作真值。复杂表格和没有独立文字真值的扫描页，其 bbox/cell/字符结果明确保留为隔离状态。质量报告状态 `complete_with_quarantine` 表示定量复核已完成且所有未确认结构均已隔离，不表示复杂表格 cell-level accuracy 已通过。
+Stage 5 检查775个现存物理页的文件身份、页级覆盖、可读取性和原图像素。通常还要求助手逐行、逐格、读序核对且未解决项为零；若用户明确验收某份当前交付 PDF，可用绑定原件与处理件 SHA-256、全页范围的用户验收替代该份的助手全文复核声明，出口审计单独记录 `explicit_current_pdf_user_acceptance`，助手复核标志仍保持真实值。此处“775 页”描述现存 PDF 页，不代表缺失的15个印刷正文页已恢复；样本表格评分隔离及后续 Evidence 准入仍须分别处理。
 
-页码约定：阶段 5 的 `physical_page` 是从 1 开始的物理 PDF 页码，`pdf_page` 仅作为兼容字段且必须与之相等；资料自身页脚、章节页号或图纸编号另记为 `logical_page_label`。具体页码映射与边界页复核结果见 `stage5_page_identity_audit_2026-09-09.json`。
+## 当前逐份验收依据（2026-09-28）
 
-负责人已确认质量原则：进入 Evidence 的内容必须与原始资料完全一致，尤其是中文字符、数字、小数点、单位、否定词、表格行列/续表关系、公式含义以及图文对应关系。相似度只用于发现疑点，不能作为通过标准；无法准确还原的公式、图示或复杂表格只能保留人工视觉证据，不得直接进入结构化 Evidence。
+辅机正式OCR累计修正27处已核实文字差异（24页）；2项误判已撤回，原书自身的疑似错字及尺寸不一致按原页保留。27处不是全文错误数。既有窄框扩宽5488条后，本轮又直接修复16页文字层：14–25页按表格单元格重排读取顺序且原坐标不变；371页侧栏恢复竖排定位；427/430页数字归位并对齐选区；124页补入标准ActualText下标语义。MuPDF提取下标后仍有排版空白，需仅对下标组归一化；427页1～2k/g保留原书换行。当前验收与机械校验见 [`ocr_validation_report.json`](../registry/ocr_validation_report.json)。
+
+辅机 OCR 当前为SHA-256 `f5d20d20a2b2eae0da5ed99fb2152da500b95f35940caa673575c242ef5ce145`，27,392,189字节，266,824个可提取字符。480页扫描像素、页面几何和原字符库存验证保持，已核实文字修正保留，目标读取顺序和选区验证通过；NUL/替代字符和页外字框检查通过。Stage 5按当前用户验收完成；该验收不表示助手另行完成480页逐行、逐格复核。Stage 6 当前36页样本已按当前 PDF 和原件重验通过。
+
+阶段 6 的 36 页样本已按现行输入重建并通过退出审计；此结论不代表五份资料的全文 Evidence 已完成。独立原页检查发现的 DL5190.3 物理第 25、113 页图中文字缺口按用户安排暂缓处理，详见 [`../stage6/README.md`](../stage6/README.md)。阶段 7–11 也已按现行输入通过，阶段 12 仍待重验，项目现状以 [`../project_state.json`](../project_state.json) 为准。

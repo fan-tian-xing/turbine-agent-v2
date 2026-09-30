@@ -1,0 +1,163 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_reference_token_exclusions",
+  "scope": "Only tokens intentionally outside textual Evidence; their source remains in original PDF or visual-only Evidence region.",
+  "records": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 14,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "2019",
+          "5190.3"
+        ],
+        "units": [],
+        "negations": []
+      },
+      "reason": "Printed standard header excluded from engineering Evidence.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "10",
+          "11",
+          "12",
+          "13",
+          "15",
+          "2019",
+          "5190.3",
+          "7",
+          "9"
+        ],
+        "units": [
+          "A",
+          "a"
+        ],
+        "negations": []
+      },
+      "reason": "Printed standard header and internal labels of retained visual-only diagrams.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 42,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "2019",
+          "5190.3"
+        ],
+        "units": [],
+        "negations": []
+      },
+      "reason": "Printed standard header excluded from engineering Evidence.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "2019",
+          "5190.3"
+        ],
+        "units": [
+          "a"
+        ],
+        "negations": []
+      },
+      "reason": "Printed standard header and internal label of retained visual-only figure.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 38,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "-4",
+          "00",
+          "000105"
+        ],
+        "units": [
+          "A",
+          "M",
+          "a"
+        ],
+        "negations": []
+      },
+      "reason": "Document header/page code and internal labels of retained visual-only diagrams.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "D300N",
+      "physical_page": 73,
+      "original_pdf_sha256": "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "-1",
+          "00",
+          "000105",
+          "3-5"
+        ],
+        "units": [
+          "A",
+          "M"
+        ],
+        "negations": []
+      },
+      "reason": "Document header and printed footer/page code excluded from engineering Evidence.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "2016",
+          "863"
+        ],
+        "units": [],
+        "negations": []
+      },
+      "reason": "Printed standard header excluded from engineering Evidence.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "2016",
+          "863"
+        ],
+        "units": [],
+        "negations": []
+      },
+      "reason": "Printed standard header excluded from engineering Evidence.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    },
+    {
+      "document_key": "auxiliary_installation_book",
+      "physical_page": 300,
+      "original_pdf_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d",
+      "excluded_reference_tokens": {
+        "numbers": [
+          "90"
+        ],
+        "units": [],
+        "negations": []
+      },
+      "reason": "Internal dimension labels of retained visual-only Figure D-12.",
+      "review_scope": "navigation_or_visual_only_region_checked_against_original"
+    }
+  ]
+}

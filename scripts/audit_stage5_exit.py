@@ -1,338 +1,349 @@
-"""Assemble the current Stage 5 gate without falsely closing it."""
+"""Audit the current 775-page Stage 5 delivery.
+
+This gate verifies file identity, page order, visible-page preservation, searchable
+text and a review record bound to the current bytes. It cannot infer OCR accuracy
+from machine checks; the line and table review requires an explicit visual review record.
+"""
 
 from __future__ import annotations
 
 from datetime import date
+import hashlib
 import json
 from pathlib import Path
 
-from turbine_kg.settings import PROJECT_ROOT
+import pymupdf
+
+from turbine_kg.settings import PROJECT_ROOT, Settings
 
 
-STAGE5_ROOT = PROJECT_ROOT / "data" / "stage5"
-TODAY = date.today().isoformat()
-FROZEN_PROVENANCE = {
-    "input_audit": "stage5_input_audit_2026-09-10.json",
-    "baseline": "stage5_baseline_benchmark_2026-09-10.json",
-    "rapidocr": "stage5_rapidocr_sample_benchmark_2026-09-10.json",
-    "engine_decision": "stage5_engine_decision_2026-09-10.json",
-    "quality": "stage5_quality_benchmark_2026-09-10.json",
-    "review_snapshot_date": "2026-09-09",
-}
-BLOCKING_MESSAGES = {
-    "frozen_provenance_consistent": "Frozen Stage 5 provenance is inconsistent.",
-    "sample_manifest_five_documents": "The frozen sample manifest does not contain five documents.",
-    "sample_manifest_36_pages": "The frozen sample manifest does not contain 36 pages.",
-    "sample_manifest_physical_page_contract": "The physical-page contract is not satisfied.",
-    "input_audit_pass": "The Stage 5 input audit has blocking discrepancies.",
-    "full_baseline_775_pages": "The full baseline does not cover 775 pages.",
-    "full_baseline_zero_failures": "The full baseline contains failed pages.",
-    "rapidocr_sample_36_pages": "The frozen RapidOCR sample does not cover 36 pages.",
-    "rapidocr_zero_failures": "The frozen RapidOCR sample contains failed pages.",
-    "engine_choice_recorded": "The Stage 5 OCR engine choice is not recorded as RapidOCR.",
-    "table_candidate_scope_corrected": "The frozen table candidate scope is inconsistent.",
-    "table_structural_truth_complete": "Table structural truth is incomplete.",
-    "table_cell_accuracy_boundary_explicit": "The table cell accuracy boundary is not explicit.",
-    "golden_sample_visual_review_complete": "The 36-page Golden Sample visual review is incomplete.",
-    "page_identity_reconciled": "Page identity reconciliation is incomplete.",
-    "original_pdf_quality_benchmark_recorded": "The Original PDF quality benchmark is incomplete.",
-    "runtime_environment_audit_pass": "The Stage 5 runtime environment audit is missing or failed.",
-    "dead_code_orphan_output_review": "The Stage 5 dead-code/orphan-output review is incomplete.",
-}
+MANIFEST = PROJECT_ROOT / "data" / "stage5" / "stage5_sample_manifest.json"
+REGISTRY = PROJECT_ROOT / "data" / "registry" / "source_assets.jsonl"
+REVIEW = PROJECT_ROOT / "data" / "registry" / "ocr_validation_report.json"
+EXIT_AUDIT = PROJECT_ROOT / "data" / "stage5" / "stage5_exit_audit.json"
+EXPECTED_DOCUMENTS = 5
+EXPECTED_PAGES = 775
+EXPECTED_DERIVED = 5
+EXPECTED_SCANNED_PAGES = 602
+EXPECTED_NATIVE_PAGES = 173
+UNRESOLVED_FIELDS = (
+    "unresolved_text_count",
+    "unresolved_table_cell_count",
+    "unresolved_page_mapping_count",
+)
 
 
-def _relative_artifact_path(path: Path) -> str:
-    return str(path.relative_to(PROJECT_ROOT)).replace("\\", "/")
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
-def _derive_blocking_items(checks: dict[str, bool]) -> list[str]:
-    return [
-        message for name, message in BLOCKING_MESSAGES.items() if not checks.get(name, False)
-    ]
+def _load_json(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _load_frozen_artifacts(provenance: dict[str, str] | None = None) -> dict:
-    """Load one explicitly frozen artifact set and verify its identity links.
+def _asset_path(asset: dict, settings: Settings) -> Path:
+    root = asset.get("source_root_id")
+    relative = str(asset.get("relative_path", ""))
+    if root == "source":
+        return settings.source_root / relative
+    if root == "ocr_derived" and relative.startswith("OCR/"):
+        return settings.ocr_derived_root / relative[4:]
+    raise ValueError(f"unknown asset root/path: {root!r} {relative!r}")
 
-    The exit audit is intentionally read-only.  It must not select each input
-    independently by recency because that can silently combine different
-    Stage 5 runs.  ``provenance`` is injectable for tests and future frozen
-    batches; the default names the currently approved historical snapshot.
-    """
 
-    selected = dict(FROZEN_PROVENANCE)
-    if provenance:
-        selected.update(provenance)
-    names = {
-        key: selected[key]
-        for key in ("input_audit", "baseline", "rapidocr", "engine_decision", "quality")
-    }
-    review_date = selected["review_snapshot_date"]
-    names.update(
-        {
-            "tables": f"stage5_table_baseline_{review_date}.json",
-            "table_truth": f"stage5_table_truth_review_{review_date}.json",
-            "page_identity": f"stage5_page_identity_audit_{review_date}.json",
-            "golden_review": f"stage5_golden_sample_review_{review_date}.json",
-            "sample": "stage5_sample_manifest.json",
-        }
-    )
+def _reviewed_pages(ranges: object, page_count: int) -> bool:
+    if not isinstance(ranges, list):
+        return False
+    covered: set[int] = set()
+    for item in ranges:
+        if not isinstance(item, list) or len(item) != 2:
+            return False
+        first, last = item
+        if type(first) is not int or type(last) is not int:
+            return False
+        if first < 1 or last > page_count or first > last:
+            return False
+        current = set(range(first, last + 1))
+        if covered & current:
+            return False
+        covered.update(current)
+    return covered == set(range(1, page_count + 1))
 
-    paths = {key: STAGE5_ROOT / name for key, name in names.items()}
-    missing = [str(path) for path in paths.values() if not path.is_file()]
-    if missing:
-        raise FileNotFoundError("missing frozen Stage 5 artifacts: " + ", ".join(missing))
-    artifacts = {
-        key: json.loads(path.read_text(encoding="utf-8"))
-        for key, path in paths.items()
-    }
 
-    input_fingerprint = artifacts["input_audit"].get("input_fingerprint")
-    fingerprint_fields = {
-        "baseline": "input_fingerprint",
-        "rapidocr": "input_fingerprint",
-        "engine_decision": "ocr_input_fingerprint",
-        "quality": "ocr_input_fingerprint",
-    }
-    if not input_fingerprint or any(
-        artifacts[key].get(field) != input_fingerprint
-        for key, field in fingerprint_fields.items()
+def _page_numbers(value: object, page_count: int) -> set[int] | None:
+    if not isinstance(value, list) or any(
+        not isinstance(number, int) or number < 1 or number > page_count
+        for number in value
     ):
-        raise ValueError("frozen Stage 5 artifacts do not share one input fingerprint")
-
-    expected_links = {
-        "baseline": ("input_audit", "input_audit"),
-        "engine_decision": ("rapidocr", "ocr_artifact"),
-        "quality": ("rapidocr", "ocr_artifact"),
-    }
-    for artifact_key, (target_key, field) in expected_links.items():
-        declared = artifacts[artifact_key].get(field)
-        expected = _relative_artifact_path(paths[target_key])
-        if declared != expected:
-            raise ValueError(
-                f"frozen {artifact_key} does not point to the selected {target_key}: "
-                f"{declared!r} != {expected!r}"
-            )
-    return {
-        "input_fingerprint": input_fingerprint,
-        "review_snapshot_date": review_date,
-        "paths": paths,
-        "artifacts": artifacts,
-    }
+        return None
+    if len(value) != len(set(value)):
+        return None
+    return set(value)
 
 
-def _load_latest_runtime_environment_audit() -> tuple[Path, dict]:
-    candidates = sorted(STAGE5_ROOT.glob("stage5_runtime_environment_audit_*.json"))
-    if not candidates:
-        raise FileNotFoundError("missing Stage 5 runtime environment audit")
-    path = candidates[-1]
-    return path, json.loads(path.read_text(encoding="utf-8"))
-
-
-def _load_review_queue(review_snapshot_date: str) -> tuple[Path, list[dict]]:
-    path = STAGE5_ROOT / f"stage5_review_queue_{review_snapshot_date}.jsonl"
-    if not path.is_file():
-        raise FileNotFoundError(f"missing Stage 5 review queue: {path}")
-    rows = [
-        json.loads(line)
-        for line in path.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    ]
-    return path, rows
-
-
-def audit(provenance: dict[str, str] | None = None) -> dict:
-    frozen = _load_frozen_artifacts(provenance)
-    paths = frozen["paths"]
-    artifacts = frozen["artifacts"]
-    input_audit = artifacts["input_audit"]
-    baseline = artifacts["baseline"]
-    rapidocr = artifacts["rapidocr"]
-    engine_decision = artifacts["engine_decision"]
-    quality = artifacts["quality"]
-    tables = artifacts["tables"]
-    table_truth = artifacts["table_truth"]
-    page_identity = artifacts["page_identity"]
-    sample = artifacts["sample"]
-    golden_review = artifacts["golden_review"]
-    quality_path = paths["quality"]
-    runtime_environment_path, runtime_environment_audit = _load_latest_runtime_environment_audit()
-    review_queue_path, review_queue = _load_review_queue(frozen["review_snapshot_date"])
-    review_records_resolved = bool(review_queue) and all(
-        (
-            row.get("status", "").startswith("resolved_")
-            or row.get("status", "").startswith("codex_reviewed_")
-        )
-        and row.get("user_escalation_required") is False
-        for row in review_queue
+def _current_user_acceptance(
+    value: object, original_sha: str, processing_sha: str, page_count: int
+) -> bool:
+    """A user's explicit outcome acceptance is distinct from an agent's review method."""
+    return (
+        isinstance(value, dict)
+        and value.get("accepted") is True
+        and value.get("acceptance_kind") == "user_confirmation_of_current_ocr_delivery"
+        and isinstance(value.get("confirmation_text"), str)
+        and bool(value["confirmation_text"].strip())
+        and value.get("original_sha256") == original_sha
+        and value.get("processing_sha256") == processing_sha
+        and _reviewed_pages(value.get("accepted_page_ranges"), page_count)
+        and value.get("does_not_assert_agent_line_by_line_or_cell_review") is True
     )
-    selected_artifacts_present = all(path.is_file() for path in paths.values())
-    dead_code_orphan_review_pass = (
-        selected_artifacts_present
-        and runtime_environment_audit.get("status") == "pass"
-        and review_records_resolved
+
+
+def _same_visible_page(original: pymupdf.Page, processed: pymupdf.Page) -> bool:
+    # Compare pixels, not PDF objects: hidden OCR text may change the PDF bytes.
+    if original.rect != processed.rect:
+        return False
+    left = original.get_pixmap(matrix=pymupdf.Matrix(1, 1), alpha=False)
+    right = processed.get_pixmap(matrix=pymupdf.Matrix(1, 1), alpha=False)
+    return (
+        left.width == right.width
+        and left.height == right.height
+        and left.samples == right.samples
     )
-    low_similarity_scanned = [
-        {
-            "document_key": item["document_key"],
-            "pdf_page": item["pdf_page"],
-            "fresh_vs_registered_similarity": item["fresh_vs_registered_similarity"],
-            "status": "codex_first_pass_complete_user_escalation_only_if_uncertain",
-        }
-        for item in rapidocr["records"]
-        if not item["source_has_native_text"] and item["fresh_vs_registered_similarity"] < 0.97
-    ]
-    checks = {
-        "frozen_provenance_consistent": True,
-        "sample_manifest_five_documents": len(sample["documents"]) == 5,
-        "sample_manifest_36_pages": sample["sample_page_count"] == 36,
-        "sample_manifest_physical_page_contract": all(
-            int(page["physical_page"]) == int(page["pdf_page"])
-            for document in sample["documents"]
-            for page in document["sample_pages"]
-        ),
-        "input_audit_pass": input_audit["status"] == "pass",
-        "full_baseline_775_pages": baseline["actual"]["page_count"] == 775,
-        "full_baseline_zero_failures": baseline["actual"]["failed_page_count"] == 0,
-        "rapidocr_sample_36_pages": rapidocr["actual"]["sample_page_count"] == 36,
-        "rapidocr_zero_failures": rapidocr["actual"]["failed_page_count"] == 0,
-        "engine_choice_recorded": (
-            engine_decision["selection"]["primary_engine"] == "rapidocr_onnxruntime"
-        ),
-        "table_candidate_scope_corrected": (
-            tables["candidate_count"] == 7
-            and tables["table_candidate_count"] == 6
-            and tables["complex_layout_not_table_count"] == 1
-        ),
-        "table_structural_truth_complete": (
-            len(table_truth["records"]) == 7
-            and all(
-                item["visible_content_match"]
-                and item["table_truth_status"] in {"codex_reviewed_structural_truth", "not_applicable"}
-                and (
-                    item["table_truth_status"] == "not_applicable"
-                    or item.get("leaf_column_count") is not None
-                )
-                for item in table_truth["records"]
-            )
-        ),
-        "table_cell_accuracy_boundary_explicit": (
-            tables["table_candidate_count"] == 6
-            and sum(
-                item["cell_text_accuracy_status"] == "not_scored_manual_truth_required"
-                for item in tables["candidates"]
-            ) == 6
-        ),
-        "golden_sample_visual_review_complete": bool(
-            golden_review
-            and golden_review.get("sample_page_count") == 36
-            and golden_review.get("reviewed_page_count") == 36
-            and golden_review.get("status") == "codex_reviewed_for_stage5_gate"
-            and golden_review.get("summary", {}).get("quarantined_structured_pages") == 6
-        ),
-        "page_identity_reconciled": page_identity["status"] == "page_identity_reconciled" and all(item["source_page_visual_match"] for item in page_identity["records"]),
-        "original_pdf_quality_benchmark_recorded": bool(
-            quality
-            and quality.get("status") == "complete_with_quarantine"
-            and quality.get("sample_page_count") == sample["sample_page_count"]
-            and not quality.get("errors")
-            and quality.get("table_quality", {}).get("quarantine_coverage") == "6/6"
-        ),
-        "runtime_environment_audit_pass": runtime_environment_audit.get("status") == "pass",
-        "dead_code_orphan_output_review": dead_code_orphan_review_pass,
-    }
-    next_stage_allowed = all(checks.values())
-    blocking_items = _derive_blocking_items(checks)
-    return {
-        "schema_version": 1,
+
+
+def audit(
+    manifest_path: Path = MANIFEST,
+    registry_path: Path = REGISTRY,
+    review_path: Path = REVIEW,
+    settings: Settings | None = None,
+) -> dict:
+    settings = settings or Settings.from_environment()
+    issues: list[str] = []
+    documents: list[dict] = []
+    result = {
+        "schema_version": 2,
         "stage": "5",
         "artifact_kind": "stage5_exit_audit",
-        "audited_at": TODAY,
-        "status": "complete_with_quarantine" if next_stage_allowed else "awaiting_golden_sample_review",
-        "closure_status": "closed_with_quarantine" if next_stage_allowed else "open",
-        "formal_release": False,
-        "owner_confirmed_quality_policy": {
-            "content_must_match_original_exactly": True,
-            "critical_tokens": ["Chinese characters", "digits", "decimal points", "units", "negation terms"],
-            "layout_requirements": ["table row/column and continuation relationships", "formula meaning", "figure/caption association"],
-            "similarity_is_acceptance_metric": False,
-            "unresolved_visual_content_must_not_enter_structured_evidence": True,
+        "audited_at": date.today().isoformat(),
+        "status": "blocked",
+        "next_stage_allowed": False,
+        "scope": {
+            "expected_documents": EXPECTED_DOCUMENTS,
+            "expected_existing_physical_pages": EXPECTED_PAGES,
+            "expected_derived_pdfs": EXPECTED_DERIVED,
+            "expected_scanned_pages": EXPECTED_SCANNED_PAGES,
+            "expected_native_pages": EXPECTED_NATIVE_PAGES,
         },
-        "checks": checks,
-        "completed_scope": {
-            "document_count": len(sample["documents"]),
-            "page_count": baseline["actual"]["page_count"],
-            "golden_sample_page_count": sample["sample_page_count"],
-            "rapidocr_sample_page_count": rapidocr["actual"]["sample_page_count"],
-            "table_candidate_count": tables["candidate_count"],
-            "actual_table_page_count": tables["table_candidate_count"],
-            "complex_layout_not_table_count": tables["complex_layout_not_table_count"],
-            "table_cell_accuracy_status": "not_scored_for_quarantined_structured_regions",
-            "low_text_record_count_all_pages": baseline["actual"]["low_text_record_count_all_pages"],
-            "low_text_candidate_count_excluding_expected_exception_modes": baseline["actual"]["low_text_candidate_count_excluding_expected_exception_modes"],
-        },
-        "low_similarity_scanned_pages": low_similarity_scanned,
-        "quality_benchmark": (
-            {
-                "path": _relative_artifact_path(quality_path),
-                "status": quality["status"],
-                "authority": quality["authority"],
-                "rapidocr": quality["engines"]["rapidocr"],
-                "table_quality": quality["table_quality"],
-            }
-            if quality
-            else {"status": "not_run"}
-        ),
-        "audit_mode": "frozen_stage5_artifact_read_only",
-        "automatic_recheck": False,
-        "manual_recheck_trigger": "仅在负责人明确要求或主动确认原始资料/OCR代码发生变化时重新执行阶段5复核",
-        "next_stage_allowed": next_stage_allowed,
-        "next_stage_message": (
-            "Stage 6 may begin for original-page-verified, reliably locatable regions; quarantined pages and structured regions require region/cell review first."
-            if next_stage_allowed
-            else "Stage 6 is blocked until the Stage 5 visual and quality gates close."
-        ),
-        "next_stage_inputs": [
-            "data/stage5/stage5_sample_manifest.json",
-            "data/stage5/stage5_truth_annotations_*.json",
-            "data/stage5/stage5_quality_benchmark_*.json",
-            "data/stage5/stage5_exit_audit_*.json",
-            "Original materials original PDF pages",
-        ],
-        "artifact_provenance": {
-            "input_fingerprint": frozen["input_fingerprint"],
-            "review_snapshot_date": frozen["review_snapshot_date"],
-            "selected_artifacts": {
-                key: _relative_artifact_path(path) for key, path in paths.items()
-            },
-            "runtime_environment_audit": _relative_artifact_path(runtime_environment_path),
-            "review_queue": _relative_artifact_path(review_queue_path),
-            "fingerprint_comparison_performed": True,
-            "fingerprint_match_status": "matched",
-        },
-        "dead_code_orphan_output_review": {
-            "status": "pass" if dead_code_orphan_review_pass else "blocked",
-            "runtime_environment_audit_consumer": "Stage 5 exit audit runtime gate",
-            "resolved_review_queue_consumer": "Stage 5 exit audit and manual review boundary",
-            "selected_frozen_artifact_consumer": "Stage 5 exit checks and Stage 6 approved-input boundary",
-            "temporary_or_quarantined_outputs_consumed_as_structured_evidence": False,
-        },
-        "blocking_items": blocking_items,
-        "owner_review_needed_in_chat": [],
-        "boundaries": [
-            "本审计不把 RapidOCR 与既有文本的相似度当作 OCR 准确率。",
-            "规则线检测只产生表格候选区域，不代表单元格解析已通过。",
-            "表格或图示无法可靠结构化时，只保留原始页视觉依据并隔离出正式 Evidence 流程。",
-        ],
+        "documents": documents,
+        "blocking_items": issues,
+        "automatic_checks_do_not_prove_ocr_accuracy": True,
     }
+    for label, path in (
+        ("manifest", manifest_path),
+        ("Registry", registry_path),
+        ("full-page review", review_path),
+    ):
+        if not path.is_file():
+            issues.append(f"{label}: missing {path}")
+    if issues:
+        return result
+    try:
+        manifest = _load_json(manifest_path)
+        registry_rows = [
+            json.loads(line)
+            for line in registry_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        ]
+        report = _load_json(review_path)
+    except (OSError, ValueError, TypeError) as exc:
+        issues.append(f"input file cannot be read: {exc}")
+        return result
+
+    items = manifest.get("documents", [])
+    full_scope = manifest.get("full_page_processing", {})
+    if len(items) != EXPECTED_DOCUMENTS:
+        issues.append(f"manifest document count: {len(items)} != {EXPECTED_DOCUMENTS}")
+    if len({item.get("document_key") for item in items}) != len(items):
+        issues.append("manifest document keys are duplicated")
+    page_total = sum(int(item.get("page_count", 0)) for item in items)
+    if page_total != EXPECTED_PAGES:
+        issues.append(f"manifest physical page total: {page_total} != {EXPECTED_PAGES}")
+    for field, expected in (
+        ("total_existing_physical_pages", EXPECTED_PAGES),
+        ("scanned_page_count", EXPECTED_SCANNED_PAGES),
+        ("native_text_page_count", EXPECTED_NATIVE_PAGES),
+    ):
+        if full_scope.get(field) != expected:
+            issues.append(f"manifest {field}: {full_scope.get(field)!r} != {expected}")
+    derived_count = sum(
+        str(item.get("processing_relative_path", "")).startswith("OCR/")
+        for item in items
+    )
+    if derived_count != EXPECTED_DERIVED:
+        issues.append(f"derived PDF count: {derived_count} != {EXPECTED_DERIVED}")
+    scanned_keys = full_scope.get("scanned_documents")
+    native_keys = full_scope.get("native_text_documents")
+    if not isinstance(scanned_keys, list) or not isinstance(native_keys, list):
+        issues.append("manifest scanned/native document classification is missing")
+    else:
+        scoped_keys = {item.get("document_key") for item in items}
+        if (
+            set(scanned_keys) & set(native_keys)
+            or set(scanned_keys) | set(native_keys) != scoped_keys
+            or len(scanned_keys) + len(native_keys) != len(items)
+        ):
+            issues.append("manifest scanned/native document classification is inconsistent")
+        page_counts = {item.get("document_key"): int(item.get("page_count", 0)) for item in items}
+        if sum(page_counts.get(key, 0) for key in scanned_keys) != EXPECTED_SCANNED_PAGES:
+            issues.append("manifest scanned document page sum is incorrect")
+        if sum(page_counts.get(key, 0) for key in native_keys) != EXPECTED_NATIVE_PAGES:
+            issues.append("manifest native document page sum is incorrect")
+
+    assets = {row.get("asset_id"): row for row in registry_rows}
+    reviews = report.get("full_corpus_reviews")
+    if not isinstance(reviews, list):
+        reviews = []
+        issues.append("full_corpus_reviews missing; historical sample reviews cannot close the gate")
+    review_map = {row.get("document_key"): row for row in reviews if isinstance(row, dict)}
+    if len(review_map) != len(reviews):
+        issues.append("full_corpus_reviews contains duplicate or invalid document keys")
+    if set(review_map) != {item.get("document_key") for item in items}:
+        issues.append("full_corpus_reviews document set differs from manifest")
+
+    for item in items:
+        key = str(item.get("document_key", ""))
+        expected_pages = int(item.get("page_count", 0))
+        source_asset = assets.get(item.get("original_asset_id"))
+        processed_asset = assets.get(item.get("processing_asset_id"))
+        entry = {
+            "document_key": key,
+            "expected_pages": expected_pages,
+            "original_sha256": None,
+            "processing_sha256": None,
+            "pixel_mismatch_pages": [],
+            "unsearchable_pages": [],
+            "issues": [],
+        }
+        documents.append(entry)
+        local = entry["issues"]
+        if source_asset is None or processed_asset is None:
+            local.append("source or processed asset missing from Registry")
+            issues.append(f"{key}: missing Registry asset")
+            continue
+        try:
+            source_path = _asset_path(source_asset, settings)
+            processed_path = _asset_path(processed_asset, settings)
+        except ValueError as exc:
+            local.append(str(exc))
+            issues.append(f"{key}: invalid Registry asset path")
+            continue
+        if item.get("original_relative_path", item.get("processing_relative_path")) != source_asset.get("relative_path"):
+            local.append("manifest original path differs from Registry")
+        if item.get("processing_relative_path") != processed_asset.get("relative_path"):
+            local.append("manifest processed path differs from Registry")
+        if not source_path.is_file():
+            local.append(f"original PDF missing: {source_path}")
+        if not processed_path.is_file():
+            local.append(f"processed PDF missing: {processed_path}")
+        if local:
+            issues.extend(f"{key}: {message}" for message in local)
+            continue
+
+        original_sha = _sha256(source_path)
+        processing_sha = _sha256(processed_path)
+        entry["original_sha256"] = original_sha
+        entry["processing_sha256"] = processing_sha
+        if original_sha != source_asset.get("sha256"):
+            local.append("original SHA-256 differs from current Registry")
+        if processing_sha != processed_asset.get("sha256"):
+            local.append("processed SHA-256 differs from current Registry")
+        review = review_map.get(key)
+        if review is None:
+            local.append("current full-page manual review missing")
+            review = {}
+        else:
+            if review.get("original_sha256") != original_sha:
+                local.append("manual review original SHA-256 is stale")
+            if review.get("processing_sha256") != processing_sha:
+                local.append("manual review processed SHA-256 is stale")
+            if not _reviewed_pages(review.get("reviewed_page_ranges"), expected_pages):
+                local.append("manual line/table review does not cover every physical page")
+            acceptance = review.get("user_acceptance")
+            user_accepted = _current_user_acceptance(
+                acceptance, original_sha, processing_sha, expected_pages
+            )
+            if acceptance is not None and not user_accepted:
+                local.append("user acceptance is not bound to this exact complete PDF")
+            entry["review_basis"] = (
+                "explicit_current_pdf_user_acceptance"
+                if user_accepted else "agent_line_table_and_order_review"
+            )
+            if user_accepted:
+                entry["user_acceptance"] = {
+                    "confirmation_text": acceptance["confirmation_text"],
+                    "accepted_at": acceptance.get("accepted_at"),
+                    "accepted_page_ranges": acceptance["accepted_page_ranges"],
+                    "processing_sha256": processing_sha,
+                    "agent_line_by_line_reviewed": review.get("line_by_line_reviewed"),
+                    "agent_table_cells_reviewed": review.get("table_cells_reviewed"),
+                    "agent_reading_order_reviewed": review.get("reading_order_reviewed"),
+                }
+            if not user_accepted:
+                if review.get("line_by_line_reviewed") is not True:
+                    local.append("line-by-line review not confirmed")
+                if review.get("table_cells_reviewed") is not True:
+                    local.append("table-cell review not confirmed")
+                if review.get("reading_order_reviewed") is not True:
+                    local.append("reading-order review not confirmed")
+                for field in UNRESOLVED_FIELDS:
+                    if review.get(field) != 0:
+                        local.append(f"{field} is not zero")
+        blank = _page_numbers(review.get("blank_pages"), expected_pages)
+        unreadable = _page_numbers(review.get("source_unreadable_pages"), expected_pages)
+        if blank is None or unreadable is None:
+            local.append("blank/source-unreadable page lists missing or invalid")
+            blank, unreadable = set(), set()
+        if blank & unreadable:
+            local.append("same page marked both blank and source-unreadable")
+        try:
+            with pymupdf.open(source_path) as original, pymupdf.open(processed_path) as processed:
+                if len(original) != expected_pages:
+                    local.append(f"original page count {len(original)} != {expected_pages}")
+                if len(processed) != expected_pages:
+                    local.append(f"processed page count {len(processed)} != {expected_pages}")
+                for index in range(min(len(original), len(processed), expected_pages)):
+                    number = index + 1
+                    if source_path != processed_path and not _same_visible_page(
+                        original[index], processed[index]
+                    ):
+                        entry["pixel_mismatch_pages"].append(number)
+                    if not processed[index].get_text().strip() and number not in blank | unreadable:
+                        entry["unsearchable_pages"].append(number)
+        except (OSError, ValueError, RuntimeError) as exc:
+            local.append(f"PDF read/render failure: {exc}")
+        if entry["pixel_mismatch_pages"]:
+            local.append(f"visible page mismatch: {entry['pixel_mismatch_pages']}")
+        if entry["unsearchable_pages"]:
+            local.append(f"no extractable text: {entry['unsearchable_pages']}")
+        issues.extend(f"{key}: {message}" for message in local)
+
+    result["status"] = "complete" if not issues else "blocked"
+    result["next_stage_allowed"] = not issues
+    return result
 
 
 def main() -> int:
-    output = STAGE5_ROOT / f"stage5_exit_audit_{TODAY}.json"
     result = audit()
-    output.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"status": result["status"], "output": str(output)}, ensure_ascii=False))
-    return 0 if all(result["checks"].values()) else 1
+    EXIT_AUDIT.write_text(
+        json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(json.dumps({"status": result["status"], "output": str(EXIT_AUDIT)}, ensure_ascii=False))
+    return 0 if result["next_stage_allowed"] else 1
 
 
 if __name__ == "__main__":

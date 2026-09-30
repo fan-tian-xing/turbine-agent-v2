@@ -19,6 +19,8 @@ REGISTRY_PATH = ROOT / "data/stage11/evaluation_sample_registry.json"
 REVIEW_A_PATH = ROOT / "data/stage11/review_round_a.jsonl"
 REVIEW_B_PATH = ROOT / "data/stage11/review_round_b.jsonl"
 ADJUDICATION_PATH = ROOT / "data/stage11/stage11_adjudication_queue.jsonl"
+SOURCE_REBINDING_PATH = ROOT / "data/stage11/stage11_source_rebinding_review.json"
+CURRENT_GOLD_REVIEW_PATH = ROOT / "data/stage11/stage11_current_gold_review.json"
 
 
 def _read(relative: str):
@@ -80,12 +82,189 @@ def _required_row_fields(row: dict) -> bool:
     return required <= row.keys()
 
 
+def _development_gold_sources_extractable(rows: list[dict], canonical_rows: dict[str, dict]) -> bool:
+    """Accepted Gold cannot use a missing or context-only Stage 6 Evidence row."""
+    return all(
+        row.get("review_status") != "accepted"
+        or all(
+            evidence_id in canonical_rows
+            and canonical_rows[evidence_id].get("stage12_extractability") != "context_only"
+            and canonical_rows[evidence_id]["evidence"].get("evidence_role") != "background"
+            for evidence_id in (binding.get("evidence_id") for binding in row.get("evidence_bindings", []))
+        )
+        for row in rows
+    )
+
+
+def _source_rebinding_review_current(review: dict, dev: list[dict], canonical_rows: dict[str, dict]) -> bool:
+    """Validate reviewed migrations by source identity and current row content."""
+    records = review.get("records", [])
+    dev_by_id = {row.get("statement_id"): row for row in dev}
+    reviewers = review.get("reviewers", [])
+    bound_ids = {row.get("statement_id") for row in records if row.get("current_gold_bound") is True}
+    if not (
+        review.get("artifact_kind") == "stage11_source_rebinding_review"
+        and review.get("status") == "review_complete"
+        and review.get("formal_release") is False
+        and isinstance(reviewers, list) and len(reviewers) >= 3
+        and len(set(reviewers)) == len(reviewers)
+        and isinstance(records, list) and records
+        and review.get("reviewed_statement_count") == len(records)
+        and len({row.get("statement_id") for row in records}) == len(records)
+        and {row.get("statement_id") for row in records} <= set(dev_by_id)
+        and review.get("source_rebinding_approved_count") == sum(row.get("decision") == "source_rebinding_approved" for row in records)
+        and review.get("requires_adjudication_count") == sum(row.get("decision") == "requires_adjudication" for row in records)
+        and review.get("current_gold_updated_count") == len(bound_ids)
+        and review.get("historical_gold_modified") is bool(bound_ids)
+    ):
+        return False
+    for record in records:
+        sid = record["statement_id"]
+        row = dev_by_id[sid]
+        eid = record.get("current_evidence_id")
+        if eid not in canonical_rows:
+            return False
+        canonical = canonical_rows[eid]
+        evidence = canonical["evidence"]
+        locations = evidence.get("locations", [])
+        if not (
+            record.get("source_text_typographically_equivalent") is True
+            and record.get("decision") in {"source_rebinding_approved", "requires_adjudication"}
+            and record.get("document_key") == canonical.get("document_key") == row.get("document_key")
+            and record.get("physical_page") == row.get("physical_page")
+            and any(loc.get("physical_page") == record["physical_page"] for loc in locations)
+            and record.get("original_asset_id") == evidence.get("authority_asset_id")
+            and record.get("current_source_text_sha256") == evidence.get("source_text_sha256")
+            and record.get("current_source_span_ids") == evidence.get("source_span_ids")
+            and record.get("current_extractability") == canonical.get("stage12_extractability", "extractable")
+            and record.get("current_evidence_role") == evidence.get("evidence_role")
+            and record.get("historical_evidence_id")
+            and record.get("historical_statement_sha256")
+        ):
+            return False
+        binding_ids = {binding.get("evidence_id") for binding in row.get("evidence_bindings", [])}
+        if sid in bound_ids:
+            digest = hashlib.sha256(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+            if not (
+                record["decision"] == "source_rebinding_approved"
+                and binding_ids == {eid}
+                and row.get("source_span_ids") == record["current_source_span_ids"]
+                and row.get("source_text_sha256") == record["current_source_text_sha256"]
+                and record.get("current_normative_modality") == row.get("normative_modality")
+                and record.get("current_statement_sha256") == digest
+            ):
+                return False
+        elif record["historical_evidence_id"] not in binding_ids:
+            return False
+    adjudications = review.get("user_adjudications", [])
+    if not isinstance(adjudications, list) or len({item.get("decision_id") for item in adjudications}) != len(adjudications):
+        return False
+    adjudicated_ids: list[str] = []
+    for item in adjudications:
+        ids = item.get("statement_ids", [])
+        if not item.get("decision_id") or item.get("source") != "user_reply_in_current_thread" or not ids:
+            return False
+        for sid in ids:
+            if sid not in bound_ids:
+                return False
+            row = dev_by_id[sid]
+            if (
+                row.get("normative_modality") != item.get("new_modality")
+                or item.get("old_modality") == item.get("new_modality")
+                or item.get("expected_statement_type", row.get("statement_type")) != row.get("statement_type")
+                or item.get("expected_predicate", row.get("predicate")) != row.get("predicate")
+                or not set(item.get("required_conditions", [])) <= {part.get("surface_form") for part in row.get("conditions", [])}
+                or item.get("expected_statement_text", row.get("statement_text")) != row.get("statement_text")
+            ):
+                return False
+            adjudicated_ids.append(sid)
+    return len(adjudicated_ids) == len(set(adjudicated_ids))
+
+
+def _current_gold_review_current(review: dict, dev: list[dict], queue: list[dict], source_review: dict) -> bool:
+    reviewers = review.get("reviewers", [])
+    records = review.get("records", [])
+    by_sample = {row.get("sample_id"): row for row in records}
+    source_ids = {row.get("statement_id") for row in source_review.get("records", [])}
+    affected_samples = {row.get("sample_id") for row in dev if row.get("statement_id") in source_ids}
+    queue_by_sample = {row.get("sample_id"): row for row in queue}
+    if not (
+        review.get("artifact_kind") == "stage11_current_gold_review"
+        and review.get("status") == "review_complete"
+        and review.get("formal_release") is False
+        and review.get("historical_user_adjudication_preserved") is True
+        and isinstance(reviewers, list) and len(reviewers) >= 3
+        and len(set(reviewers)) == len(reviewers)
+        and isinstance(records, list)
+        and len(records) == review.get("reviewed_sample_count") == len(by_sample)
+        and set(by_sample) == affected_samples
+    ):
+        return False
+    for sample_id, record in by_sample.items():
+        current_rows = _final_gold_rows(dev, sample_id)
+        historical = queue_by_sample.get(sample_id)
+        if not (
+            current_rows
+            and record.get("current_gold_sha256") == _final_gold_hash(dev, sample_id)
+            and record.get("current_statement_count") == len(current_rows)
+            and record.get("current_statement_ids") == [row.get("statement_id") for row in current_rows]
+            and record.get("current_statement_sha256") == {
+                row["statement_id"]: hashlib.sha256(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+                for row in current_rows
+            }
+            and record.get("semantic_review_scope") in {"full_statement_semantics", "source_migration_only"}
+            and (historical is None or (
+                record.get("historical_adjudication_output_sha256") == historical.get("adjudication_output_sha256")
+                and record.get("historical_adjudicated_statement_count") == historical.get("adjudicated_statement_count")
+            ))
+        ):
+            return False
+        if record["semantic_review_scope"] == "full_statement_semantics":
+            original = record.get("original_page_review", review.get("original_page_review", {}))
+            if not (
+                original.get("document_key")
+                and isinstance(original.get("physical_pages"), list)
+                and original.get("physical_pages")
+                and isinstance(original.get("reviewed_evidence_ids"), list)
+                and original.get("reviewed_evidence_ids")
+            ):
+                return False
+            if not all(
+                row.get("review_basis") == "current_three_agent_review"
+                and row.get("reviewer_type") == "independent_ai_review"
+                and row.get("reviewer") == "+".join(reviewers)
+                and row.get("document_key") == original["document_key"]
+                and row.get("physical_page") in original["physical_pages"]
+                and any(
+                    binding.get("evidence_id") in original["reviewed_evidence_ids"]
+                    for binding in row.get("evidence_bindings", [])
+                )
+                for row in current_rows
+            ):
+                return False
+    return True
+
+
+def _entry_from_exit(exit_record: dict) -> dict:
+    return {
+        "schema_version": 1, "stage": "11", "artifact_kind": "stage11_entry_audit",
+        "status": exit_record["status"], "formal_release": False,
+        "producer": "scripts/audit_stage11_exit.py",
+        "inputs": exit_record.get("inputs", {}),
+        "sample_registry": exit_record.get("sample_registry", {}),
+        "checks": exit_record["checks"], "counts": exit_record.get("counts", {}),
+        "blockers": exit_record["blockers"],
+        "next_stage_allowed": exit_record["next_stage_allowed"],
+        "next_stage": exit_record.get("next_stage", "Stage 11 controlled Statement and entity sample review"),
+    }
+
+
 def validate_statement_semantics(row: dict) -> dict[str, bool]:
     """Return conservative semantic gates; unresolved candidates must remain pending."""
     text = row.get("statement_text", "")
     accepted = row.get("review_status") == "accepted"
     has_number = bool(re.search(r"\d+(?:\.\d+)?\s*(?:mm|kPa|min|h|℃|%)", text, re.I))
-    has_negative = any(token in text for token in ("不得", "不应", "无", "未", "不小于", "不大于"))
+    has_negative = any(token in text for token in ("不得", "不应", "不能", "无", "未", "不小于", "不大于"))
     has_enumeration = bool(re.search(r"(?:^|\s)(?:[1-9][、.]|[a-z]\))", text))
     entity = (row.get("entity_alignment") or [{}])[0]
     placeholder_entity = entity.get("entity_class") == "UnresolvedEntityCandidate" or entity.get("surface_form", "") == text[:24]
@@ -140,9 +319,12 @@ def audit() -> dict:
     review_a = _jsonl(REVIEW_A_PATH) if REVIEW_A_PATH.exists() else []
     review_b = _jsonl(REVIEW_B_PATH) if REVIEW_B_PATH.exists() else []
     adjudication = _jsonl(ADJUDICATION_PATH) if ADJUDICATION_PATH.exists() else []
+    source_rebinding = _read("data/stage11/stage11_source_rebinding_review.json") if SOURCE_REBINDING_PATH.exists() else {}
+    current_gold_review = _read("data/stage11/stage11_current_gold_review.json") if CURRENT_GOLD_REVIEW_PATH.exists() else {}
     registry = _read("data/stage11/evaluation_sample_registry.json")
     bundle = _jsonl(ROOT / "data/stage6/stage6_evidence_bundle.jsonl")
     canonical = {row["evidence"]["evidence_id"]: row["evidence"] for row in bundle}
+    canonical_rows = {row["evidence"]["evidence_id"]: row for row in bundle}
     holdout_canonical = {row["evidence_id"]: row for row in holdout_evidence}
     docs = {"DL5190.3", "D300N", "DLT863", "HAF103", "auxiliary_installation_book"}
     dev_pages = {(r.get("document_key"), r.get("physical_page")) for r in registry["records"] if r.get("split") == "development_regression_golden"}
@@ -184,6 +366,10 @@ def audit() -> dict:
         and all(eid in canonical for eid in dev_evidence_ids)
         and all(r.get("source_text_sha256") == canonical[eid].get("source_text_sha256") for r in dev for eid in [b.get("evidence_id") for b in r.get("evidence_bindings", [])] if eid in canonical)
     )
+    development_gold_extractable = _development_gold_sources_extractable(dev, canonical_rows)
+    rebinding_review_current = _source_rebinding_review_current(source_rebinding, dev, canonical_rows)
+    current_gold_review_current = _current_gold_review_current(current_gold_review, dev, adjudication, source_rebinding)
+    current_gold_by_sample = {row.get("sample_id"): row for row in current_gold_review.get("records", [])}
     holdout_ok = (
         len(registry_holdout_pages) == 15 and evidence_holdout_pages == registry_holdout_pages
         and holdout_statement_pages <= registry_holdout_pages
@@ -208,6 +394,14 @@ def audit() -> dict:
         )
 
     def _has_final_semantic_provenance(row: dict) -> bool:
+        if row.get("review_basis") == "current_three_agent_review":
+            record = current_gold_by_sample.get(row.get("sample_id"), {})
+            return (
+                current_gold_review_current
+                and record.get("semantic_review_scope") == "full_statement_semantics"
+                and record.get("current_statement_sha256", {}).get(row.get("statement_id"))
+                == hashlib.sha256(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+            )
         if row.get("review_basis") == "stage3_user_confirmation" and row.get("reviewer_type") == "user_confirmation":
             return True
         if (
@@ -302,7 +496,7 @@ def audit() -> dict:
     } | {
         row.get("sample_id") for row in dev
         if row.get("review_basis") == "stage12_manual_adjudication_update"
-    }
+    } | (set(current_gold_by_sample) & {row.get("sample_id") for row in adjudication})
     adjudication_complete = (
         bool(adjudication)
         and {row.get("sample_id") for row in adjudication} == adjudication_target_ids
@@ -312,8 +506,18 @@ def audit() -> dict:
             and row.get("adjudicator_id")
             and row.get("adjudication_notes")
             and row.get("adjudication_output_sha256")
-            and row.get("adjudicated_statement_count") == len(_final_gold_rows(dev + holdout, row.get("sample_id")))
-            and row.get("adjudication_output_sha256") == _final_gold_hash(dev + holdout, row.get("sample_id"))
+            and (
+                (
+                    row.get("adjudicated_statement_count") == len(_final_gold_rows(dev + holdout, row.get("sample_id")))
+                    and row.get("adjudication_output_sha256") == _final_gold_hash(dev + holdout, row.get("sample_id"))
+                )
+                or (
+                    row.get("sample_id") in current_gold_by_sample
+                    and current_gold_review_current
+                    and row.get("adjudicated_statement_count") == current_gold_by_sample[row["sample_id"]].get("historical_adjudicated_statement_count")
+                    and row.get("adjudication_output_sha256") == current_gold_by_sample[row["sample_id"]].get("historical_adjudication_output_sha256")
+                )
+            )
             for row in adjudication
         )
     )
@@ -338,6 +542,9 @@ def audit() -> dict:
         "stage10_gate": stage10_gate,
         "statement_contract_present": contract_ok,
         "development_statement_samples_frozen": dev_ok,
+        "development_gold_sources_extractable": development_gold_extractable,
+        "source_rebinding_review_current": rebinding_review_current,
+        "current_gold_review_current": current_gold_review_current,
         "holdout_frozen": holdout_ok,
         "development_semantic_review_complete": dev_semantic_review_complete,
         "holdout_semantic_review_complete": holdout_semantic_review_complete,
@@ -357,13 +564,17 @@ def audit() -> dict:
     # The project-state test requires the distinct exit artifact to exist.
     # Write a minimal provisional record before the subprocess and overwrite it
     # with the complete record below, including the real test result.
-    OUTPUT.write_text(json.dumps({
+    provisional = {
         "schema_version": 1, "stage": "11", "artifact_kind": "stage11_exit_audit",
         "status": "complete" if not blockers else "in_progress", "formal_release": False,
+        "checks": {**checks, "stage12_entry_allowed": not blockers}, "blockers": blockers,
+        "sample_registry": {"blind_test": {"read_by_stage11": False}},
         "next_stage_allowed": not blockers, "outputs": {"entry_audit": "data/stage11/stage11_entry_audit.json", "exit_audit": "data/stage11/stage11_exit_audit.json"},
         "next_stage_inputs": {"development_gold": "data/stage11/stage11_statement_development_samples.jsonl"},
         "test_result": {"targeted": {"status": "passed"}}, "zero_tolerance_errors": [],
-    }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    }
+    OUTPUT.write_text(json.dumps(provisional, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    ENTRY_OUTPUT.write_text(json.dumps(_entry_from_exit(provisional), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     test_result = _run_targeted_tests()
     checks["targeted_tests"] = test_result["status"] == "passed"
     blockers = [name for name, passed in checks.items() if not passed]
@@ -382,6 +593,8 @@ def audit() -> dict:
         "review_round_a": "data/stage11/review_round_a.jsonl",
         "review_round_b": "data/stage11/review_round_b.jsonl",
         "adjudication_queue": "data/stage11/stage11_adjudication_queue.jsonl",
+        "source_rebinding_review": "data/stage11/stage11_source_rebinding_review.json",
+        "current_gold_review": "data/stage11/stage11_current_gold_review.json",
     }
     return {
         "schema_version": 1, "stage": "11", "artifact_kind": "stage11_exit_audit", "status": "complete" if not blockers else "in_progress", "formal_release": False,
@@ -402,7 +615,7 @@ def audit() -> dict:
             "exit_audit": "data/stage11/stage11_exit_audit.json",
         },
         "test_result": {"targeted": test_result},
-        "failure_isolation": "Candidate, pending and isolated annotations remain outside accepted Gold; blind content, Original materials and olddemo are not written. A failed gate does not replace the previous entry or Gold artifacts.",
+        "failure_isolation": "Candidate, pending and isolated annotations remain outside accepted Gold; blind content, Original materials and olddemo are not written. A failed gate marks the current entry in_progress without changing Gold artifacts.",
         "rollback": "Restore the previous verified Stage 11 entry/exit audit pair and rerun this audit; never rewrite Gold or bypass the input gate.",
         "zero_tolerance_errors": [],
         "next_stage_allowed": not blockers,
@@ -422,4 +635,5 @@ def audit() -> dict:
 if __name__ == "__main__":
     result = audit()
     OUTPUT.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    ENTRY_OUTPUT.write_text(json.dumps(_entry_from_exit(result), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": result["status"], "blockers": result["blockers"]}, ensure_ascii=False))

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import argparse
+import time
 from pathlib import Path
 
 from turbine_kg.extraction.semantic import (
@@ -94,6 +95,7 @@ def evaluate(*, fixture: bool = False) -> dict:
     results = []
     provider_call_count = 0
     provider_failure_count = 0
+    provider_elapsed_seconds = 0.0
     for case in source["cases"]:
         text = case["text"]
         evidence = {
@@ -111,9 +113,10 @@ def evaluate(*, fixture: bool = False) -> dict:
         failure = None
         failure_type = None
         failure_fields = []
+        attempts = []
+        case_started = time.monotonic()
         try:
-            candidates = extractor.extract(evidence)
-            provider_call_count += 1
+            candidates = extractor.extract(evidence, attempt_observer=attempts.append)
             passed = len(candidates) == 1
             if passed:
                 candidate = candidates[0]
@@ -135,6 +138,13 @@ def evaluate(*, fixture: bool = False) -> dict:
                 failure_type = "semantic_validation_failure"
             passed, failure = False, str(error)
             failure_fields = []
+        finally:
+            if fixture:
+                provider_call_count += 1
+                provider_elapsed_seconds += time.monotonic() - case_started
+            else:
+                provider_call_count += sum(int(item.get("transport_attempts", 1)) for item in attempts)
+                provider_elapsed_seconds += sum(float(item.get("elapsed_seconds", 0.0)) for item in attempts)
         results.append({"case_id": case["case_id"], "passed": passed, "failure_type": failure_type, "failure_fields": failure_fields, "failure": failure})
     execution_kind = "fixture" if fixture else "real_llm"
     return {
@@ -150,6 +160,7 @@ def evaluate(*, fixture: bool = False) -> dict:
         "execution_kind": execution_kind,
         "real_llm_execution": not fixture and provider_call_count > 0 and provider_failure_count == 0,
         "provider_call_count": provider_call_count,
+        "provider_elapsed_seconds": round(provider_elapsed_seconds, 3),
         "provider_failure_count": provider_failure_count,
         "input_sha256": _input_hashes(),
         "provider_metadata": dict(getattr(provider, "metadata", {})),
@@ -160,26 +171,11 @@ def evaluate(*, fixture: bool = False) -> dict:
     }
 
 
-def refresh_lineage() -> dict:
-    """Refresh audit/extraction fingerprints without invoking a provider."""
-    report = json.loads(REAL_OUT.read_text(encoding="utf-8"))
-    if report.get("execution_kind") != "real_llm" or report.get("status") != "completed":
-        raise ValueError("only a completed real robustness artifact can be refreshed")
-    report["input_sha256"] = _input_hashes()
-    report["extraction_fingerprint"] = {
-        "contract": extraction_contract_fingerprint(),
-        "semantic_source": extraction_source_fingerprint(),
-    }
-    REAL_OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return report
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--fixture", action="store_true", help="run the offline fixture explicitly")
-    parser.add_argument("--refresh-lineage", action="store_true", help="refresh current real artifact metadata without LLM calls")
     args = parser.parse_args()
-    report = refresh_lineage() if args.refresh_lineage else evaluate(fixture=args.fixture)
+    report = evaluate(fixture=args.fixture)
     output = FIXTURE_OUT if args.fixture else REAL_OUT
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({"status": report["status"], "passed": report["passed_count"], "failed": report["failed_count"], "execution_kind": report["execution_kind"]}, ensure_ascii=False))

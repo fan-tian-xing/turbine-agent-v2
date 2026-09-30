@@ -8,11 +8,11 @@
   "inputs": {
     "terminology_input_manifest": {
       "path": "data/stage7/terminology_input_manifest.json",
-      "sha256": "347dc00235a8a45fa8087aa1f0927389f21b585bc42e992d745f8fe07c158a49"
+      "sha256": "cf654c3d0e35a82731786af50fcbf95e1249efd12f8a1ee082a405ec4e19dede"
     },
     "terminology_candidates": {
       "path": "data/stage7/terminology_candidates.json",
-      "sha256": "803b697f951df42a0741e51ac725362d602f8076d3130ee8df6ecff47d77f13e"
+      "sha256": "3e3621b2a25beeb61b26f1390c5ac9fd243c80682a5b22ff33251b7d5c65702a"
     },
     "business_capability_questions": {
       "path": "data/stage7/business_capability_questions.json",
@@ -24,7 +24,7 @@
     },
     "mapping_review_overlay": {
       "path": "data/stage8/ontology_mapping_review_overlay.jsonl",
-      "sha256": "6787c4a2a2c3829244cf951288abfc37156241f7477bc14fc0b4f56efc010a92"
+      "sha256": "58ebb938051fa5586d7aba58f94962f99715e27639dcee695e7d5f57462dfd8c"
     }
   },
   "outputs": {
@@ -34,9 +34,9 @@
     "exit_audit": "data/stage8/stage8_exit_audit.json"
   },
   "counts": {
-    "shortlist_count": 4,
-    "reviewed_accepted_count": 4,
-    "reviewed_deferred_count": 10,
+    "shortlist_count": 5,
+    "reviewed_accepted_count": 5,
+    "reviewed_deferred_count": 11,
     "review_pending_count": 0,
     "original_page_confirmation_pending_count": 0
   },

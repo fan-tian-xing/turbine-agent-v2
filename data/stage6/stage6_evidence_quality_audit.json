@@ -6,64 +6,73 @@
   "formal_release": false,
   "producer": "scripts/evaluate_stage6_evidence.py",
   "inputs": {
+    "source_input_fingerprint": "709f84122c98f964064bfd57c675b2ba83eddffa8bba2e5f2893b8f236909701",
+    "stage5_sample_manifest_sha256": "65a37aa094348bb1126f8a6a60d578c5a5e20d298de519bc97f0e7c5a2a5a227",
+    "source_assets_sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897",
+    "full_corpus_reviews_sha256": "6c62e391ce1721e1a2bf3a97dcc131c550fa1e2332e233a034c562dfba4acc8f",
+    "stage5_truth_annotations_sha256": "0b71391ad1016a7630d1048b140a56b30bcffc038c7300f52abe6c717d097d4c",
+    "stage5_table_truth_review_sha256": "31c344012e42fa90b395dc8dbac142ed48198472faf8bb296ee731193c068984",
     "golden_sample": "data/stage6/stage6_evidence_golden_sample.json",
     "evidence_annotations": "data/stage6/stage6_evidence_annotations.jsonl",
     "table_evidence_annotations": "data/stage6/stage6_table_evidence_annotations.jsonl",
     "review_decisions": "data/stage6/stage6_page_review_decisions.jsonl",
+    "reference_token_exclusions": "data/stage6/stage6_reference_token_exclusions.json",
     "table_review_decisions": "data/stage6/stage6_table_review_decisions.jsonl"
   },
   "counts": {
     "golden_pages": 36,
     "positive_pages": 22,
-    "accepted_text_evidence": 280,
+    "supplemental_prose_pages": 1,
+    "supplemental_table_text_pages": 1,
+    "accepted_text_evidence": 391,
     "accepted_table_region_evidence": 7,
     "reviewed_table_pages": 6,
     "negative_gate_pages": 8
   },
   "metrics": {
     "original_authority_integrity": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "physical_logical_page_accuracy": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "bbox_presence": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "source_effective_text_integrity": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "golden_disposition_compliance": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "accepted_review_binding": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "persisted_evidence_identity": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "persisted_evidence_version_identity": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "persisted_source_text_hash": {
-      "numerator": 287,
-      "denominator": 287,
+      "numerator": 398,
+      "denominator": 398,
       "rate": 1.0
     },
     "table_review_decision_binding": {
@@ -77,31 +86,36 @@
       "rate": 1.0
     },
     "reviewed_page_text_bbox_fingerprint_binding": {
-      "numerator": 22,
-      "denominator": 22,
+      "numerator": 28,
+      "denominator": 28,
       "rate": 1.0
     },
     "reference_number_unit_negation_retention": {
-      "numerator": 9,
-      "denominator": 9,
+      "numerator": 22,
+      "denominator": 22,
       "rate": 1.0
     }
   },
   "checks": {
     "positive_page_coverage": true,
+    "supplemental_prose_only_on_reviewed_table_pages": true,
+    "supplemental_table_text_only_on_reviewed_table_pages": true,
     "negative_pages_excluded": true,
     "reviewed_table_page_coverage": true,
     "negative_pages_excluded_from_table_evidence": true,
     "table_regions_are_not_in_text_evidence": true,
+    "reviewed_table_text_is_inside_reviewed_table_region": true,
     "no_remaining_review_queue": true,
     "all_table_regions_remain_non_cell_scoped": true,
     "build_audit_complete": true,
+    "reviewed_pdf_inputs_current": true,
     "table_audit_complete": true,
     "evidence_ids_unique": true,
     "evidence_version_ids_unique": true,
     "all_evidence_zero_tolerance_checks_pass": true,
     "all_accepted_page_fingerprints_match_reviewed_text_and_bboxes": true,
     "all_available_reference_numbers_units_and_negations_retained": true,
+    "reference_token_exclusions_bound_to_reviewed_pages": true,
     "persisted_evidence_ids_recomputed": true,
     "persisted_evidence_version_ids_recomputed": true,
     "persisted_source_text_hashes_recomputed": true,

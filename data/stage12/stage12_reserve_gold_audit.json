@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "stage": "12",
+  "artifact_kind": "stage12_reserve_gold_audit",
+  "status": "reviewed_pre_execution",
+  "gold_status": "reviewed_and_frozen_for_selected_regions",
+  "freeze_eligibility": "READY_TO_FREEZE",
+  "coverage_scope": "all_semantic_units_in_selected_regions_only",
+  "reviewer_id": "codex_original_page_semantic_review_2026-09-29",
+  "adjudication_validation": {
+    "complete_current_and_independently_provenanced": true
+  },
+  "region_count": 5,
+  "gold_statement_count": 28,
+  "per_region_gold_count": {
+    "D300N:10": 8,
+    "DL5190.3:29": 9,
+    "DLT863:9": 8,
+    "HAF103:5": 2,
+    "auxiliary_installation_book:81": 1
+  },
+  "inputs": {
+    "reserve_evidence": {
+      "path": "data/stage12/stage12_reserve_evidence.jsonl",
+      "sha256": "df333c322d19ffb6d3f6e0776b3ef65820a9de9417f5f992933ceab2b6822858"
+    },
+    "source_reviews": {
+      "path": "data/stage12/stage12_reserve_gold_reviews.json",
+      "sha256": "5c43f9eb5c6a9e28338dbd00ab609e823e570170f798761e6a2e927a5e29a0cb"
+    }
+  },
+  "reserve_model_invocations": 0,
+  "formal_release": false,
+  "producer": "scripts/build_stage12_reserve_gold.py"
+}

@@ -21,12 +21,12 @@ def _paths() -> tuple[Path, Path, Path]:
 
 def test_registry_identity_catalog_preserves_current_ids() -> None:
     catalog = load_identity_catalog(*_paths())
-    assert len(catalog.assets) == 48
+    assert len(catalog.assets) == 49
     assert len(catalog.revisions) == 44
-    assert len(catalog.path_aliases) == 48
+    assert len(catalog.path_aliases) == 49
     assert len({asset.document_logical_id for asset in catalog.assets}) == 44
     derived = [asset for asset in catalog.assets if asset.asset_kind == "derived_ocr"]
-    assert len(derived) == 4
+    assert len(derived) == 5
     assert all(asset.derived_from_asset_id for asset in derived)
     for asset in catalog.assets:
         assert catalog.asset_for_path(asset.relative_path).asset_id == asset.asset_id

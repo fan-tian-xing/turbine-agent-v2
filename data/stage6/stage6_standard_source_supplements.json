@@ -1,0 +1,6559 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_standard_source_supplements",
+  "authority": "Original materials original PDF; OCR is processing assistance only",
+  "original_pdf_sha256": {
+    "DL5190.3": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+    "DLT863": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb"
+  },
+  "source_units": [
+    {
+      "unit_id": "dl5190-p113-native-01",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "200mm，待起重机及负荷静止后测量桥架垂直静挠度值，此值与起重机跨度的比值即为起重\n机的静态刚性。起重机的静态刚性应符合制造厂技术要求，无要求时，应符合表12.1.15 的规\n定；",
+      "bbox": [
+        114.24,
+        60.6,
+        538.73,
+        103.43
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-02",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "caption",
+      "source_text": "表12.1.15  起重机静态刚性要求",
+      "bbox": [
+        233.52,
+        115.34,
+        363.99,
+        125.3
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "document_context_only"
+    },
+    {
+      "unit_id": "dl5190-p113-native-03",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "注：1. ƒ为额定起重量和小车自重在主梁跨中所产生的垂直静挠度。",
+      "bbox": [
+        75.48,
+        183.58,
+        298.58,
+        191.88
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-04",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "2. s 为起重机跨度。 \n        6） 起重机静载试验后，应针对主梁进行上拱测量。将起重机小车移至起重机极限位置，测量主",
+      "bbox": [
+        56.7,
+        195.76,
+        538.56,
+        218.63
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-05",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "梁上拱最高点（跨度中部）的上拱值应在S/10 范围内，且其值不应小于0.7S/1000。",
+      "bbox": [
+        119.7,
+        222.6,
+        507.29,
+        234.23
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-06",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "12.1.16 桥式起重机动负荷试运转应符合下列规定： \n1 各机构的动负荷试运转应分别进行。联合试运转应符合制造厂技术要求； \n2 各机构的动负荷试运转应全行程进行，起重量应为额定起重量的1.1 倍。累计启动及运行时间，电\n动的起重机应不少于1h，手动的起重机应不少于10min；",
+      "bbox": [
+        56.7,
+        239.16,
+        538.62,
+        297.59
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-07",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "3 试验中的检查应符合下列规定： \n1） 起重机行走平稳，无特殊振动、无卡涩、无冲击。 \n2） 车轮无卡轨现象和异声。 \n3） 各轴承温度正常。 \n4） 各变速部分、转动部分声音正常，机构传动灵活、可靠。 \n5） 大小钩制动器灵活、可靠，各制动器、制动带温度宜为50℃～60℃。 \n6） 电动机及其控制设备运行情况正常，限位开关、安全保护、连锁保护装置动作准确、可靠。 \n12.1.17 桥式起重机安装前、安装过程中、投入使用前应按照TSG Q7016《起重机械安装改造重大维修监\n督检验规则》和TSG Q0002《起重机械安全技术监察规程—桥式起重机》的规定向当地特种设备监察部门\n告知并接受监察。",
+      "bbox": [
+        56.7,
+        301.56,
+        538.68,
+        453.59
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-08",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "heading",
+      "source_text": "12.2  电动（手动）葫芦",
+      "bbox": [
+        241.03,
+        469.56,
+        356.87,
+        481.19
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "document_context_only"
+    },
+    {
+      "unit_id": "dl5190-p113-native-09",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "12.2.1 电动葫芦车轮轮缘内侧与工字钢轨道下翼缘边缘的间隙C 应为 3mm〜5mm，如图12.2.1 所示。",
+      "bbox": [
+        56.71,
+        497.16,
+        526.85,
+        511.5
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-p113-native-10",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "caption",
+      "source_text": "图12.2.1 车轮轮缘内侧与工字钢轨道下翼缘边缘的间隙",
+      "bbox": [
+        189.66,
+        685.7,
+        407.91,
+        695.66
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "document_context_only"
+    },
+    {
+      "unit_id": "dl5190-p113-native-11",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "paragraph",
+      "source_text": "C 一车轮轮缘内与工字钢轨道下翼缘边缘的间隙 \n12.2.2  连接运行小车两墙板的螺栓，螺母的锁件（锁紧装置）必须装配正确。 \n12.2.3  电动葫芦安装前检查应符合下列规定： \n1  制动环无破损，无油脂。制动轮轴向串动值应为1.5mm~3 mm； \n2  减速箱齿轮应无损伤，行走轮转动应灵活；",
+      "bbox": [
+        56.7,
+        699.96,
+        421.61,
+        773.99
+      ],
+      "text_origin": "native_text",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": true,
+      "semantic_use": "printed_standard_source"
+    },
+    {
+      "unit_id": "dl5190-12.1.15-left",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "table",
+      "source_text": "起重机的静态刚性（引用GB/T14405-2011通用桥式起重机）",
+      "bbox": [
+        153.0,
+        128.0,
+        294.0,
+        180.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "document_context_only",
+      "table_key": "dl5190-12.1.15",
+      "row_index": 0,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dl5190-12.1.15-limit-1",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "table",
+      "source_text": "低定位精度要求ƒ≤S/500",
+      "bbox": [
+        295.0,
+        128.0,
+        442.0,
+        145.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "printed_standard_source",
+      "table_key": "dl5190-12.1.15",
+      "row_index": 0,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dl5190-12.1.15-limit-2",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "table",
+      "source_text": "中定位精度要求ƒ≤S/750",
+      "bbox": [
+        295.0,
+        145.0,
+        442.0,
+        162.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "printed_standard_source",
+      "table_key": "dl5190-12.1.15",
+      "row_index": 1,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dl5190-12.1.15-limit-3",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "logical_page": "102",
+      "content_kind": "table",
+      "source_text": "高定位精度要求ƒ≤S/1000",
+      "bbox": [
+        295.0,
+        162.0,
+        442.0,
+        180.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "printed_standard_source",
+      "table_key": "dl5190-12.1.15",
+      "row_index": 2,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-appendix",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "heading",
+      "source_text": "附录D（资料性附录）\n整套启动试运记录",
+      "bbox": [
+        213.0,
+        123.0,
+        371.0,
+        169.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p27-d1-intro",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "paragraph",
+      "source_text": "D.1 机组额定负荷时主要运行参数记录见表D.1。",
+      "bbox": [
+        52.0,
+        178.0,
+        350.0,
+        195.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p27-d1-caption",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "caption",
+      "source_text": "表D.1 机组额定负荷主要运行参数记录表",
+      "bbox": [
+        189.0,
+        198.0,
+        413.0,
+        217.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p27-project-name-label",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "paragraph",
+      "source_text": "工程名称",
+      "bbox": [
+        82.0,
+        218.0,
+        133.0,
+        234.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p27-unit-number-label",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "paragraph",
+      "source_text": "机组号",
+      "bbox": [
+        330.0,
+        218.0,
+        364.0,
+        235.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p27-d1-group-0",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "锅炉主要运行指标",
+      "bbox": [
+        54.0,
+        235.0,
+        210.0,
+        251.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-group-1",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "汽轮机主要运行指标",
+      "bbox": [
+        210.0,
+        235.0,
+        362.0,
+        251.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-group-2",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "发电机主要运行指标",
+      "bbox": [
+        362.0,
+        235.0,
+        520.3,
+        251.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "项目",
+      "bbox": [
+        54.0,
+        251.0,
+        126.7,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "单位",
+      "bbox": [
+        126.7,
+        251.0,
+        158.3,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c02",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "设计值",
+      "bbox": [
+        158.3,
+        251.0,
+        184.3,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 2
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c03",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "数值",
+      "bbox": [
+        184.3,
+        251.0,
+        210.0,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "项目",
+      "bbox": [
+        210.0,
+        251.0,
+        282.3,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "单位",
+      "bbox": [
+        282.3,
+        251.0,
+        310.0,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c06",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "设计值",
+      "bbox": [
+        310.0,
+        251.0,
+        337.7,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 6
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c07",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "数值",
+      "bbox": [
+        337.7,
+        251.0,
+        362.0,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 7
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "项目",
+      "bbox": [
+        362.0,
+        251.0,
+        438.0,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "单位",
+      "bbox": [
+        438.0,
+        251.0,
+        469.7,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c10",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "设计值",
+      "bbox": [
+        469.7,
+        251.0,
+        495.0,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 10
+    },
+    {
+      "unit_id": "dlt863-p27-d1-header-c11",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "数值",
+      "bbox": [
+        495.0,
+        251.0,
+        520.3,
+        278.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 0,
+      "column_index": 11
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r01-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "汽包/分离器压力",
+      "bbox": [
+        54.0,
+        278.3,
+        126.7,
+        294.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 1,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r01-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        126.7,
+        278.3,
+        158.3,
+        294.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 1,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r02-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "过热蒸汽压力",
+      "bbox": [
+        54.0,
+        294.3,
+        126.7,
+        310.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 2,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r02-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        126.7,
+        294.3,
+        158.3,
+        310.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 2,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r03-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "过热蒸汽温度（左）",
+      "bbox": [
+        54.0,
+        310.0,
+        126.7,
+        337.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 3,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r03-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        310.0,
+        158.3,
+        337.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 3,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r04-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "过热蒸汽温度（右）",
+      "bbox": [
+        54.0,
+        337.7,
+        126.7,
+        365.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 4,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r04-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        337.7,
+        158.3,
+        365.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 4,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r05-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "过热蒸汽流量",
+      "bbox": [
+        54.0,
+        365.0,
+        126.7,
+        380.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 5,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r05-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "t/h",
+      "bbox": [
+        126.7,
+        365.0,
+        158.3,
+        380.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 5,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r06-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "再热器出口蒸汽压力",
+      "bbox": [
+        54.0,
+        380.7,
+        126.7,
+        408.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 6,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r06-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        126.7,
+        380.7,
+        158.3,
+        408.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 6,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r07-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "再热器入口汽温",
+      "bbox": [
+        54.0,
+        408.3,
+        126.7,
+        424.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 7,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r07-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        408.3,
+        158.3,
+        424.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 7,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r08-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "再热器出口汽温（左）",
+      "bbox": [
+        54.0,
+        424.3,
+        126.7,
+        451.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 8,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r08-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        424.3,
+        158.3,
+        451.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 8,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r09-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "再热器出口汽温（右）",
+      "bbox": [
+        54.0,
+        451.7,
+        126.7,
+        479.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 9,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r09-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        451.7,
+        158.3,
+        479.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 9,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r10-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "给水温度",
+      "bbox": [
+        54.0,
+        479.0,
+        126.7,
+        506.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 10,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r10-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        479.0,
+        158.3,
+        506.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 10,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r11-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "给水流量",
+      "bbox": [
+        54.0,
+        506.7,
+        126.7,
+        534.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 11,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r11-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "t/h",
+      "bbox": [
+        126.7,
+        506.7,
+        158.3,
+        534.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 11,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r12-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "排烟温度",
+      "bbox": [
+        54.0,
+        534.0,
+        126.7,
+        550.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 12,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r12-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        126.7,
+        534.0,
+        158.3,
+        550.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 12,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r13-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "烟气含氧量",
+      "bbox": [
+        54.0,
+        550.0,
+        126.7,
+        577.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 13,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r13-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "%",
+      "bbox": [
+        126.7,
+        550.0,
+        158.3,
+        577.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 13,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r14-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "总燃料量",
+      "bbox": [
+        54.0,
+        577.3,
+        126.7,
+        604.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 14,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r14-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "t/h",
+      "bbox": [
+        126.7,
+        577.3,
+        158.3,
+        604.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 14,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r15-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "总一次风量",
+      "bbox": [
+        54.0,
+        604.7,
+        126.7,
+        632.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 15,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r15-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "t/h",
+      "bbox": [
+        126.7,
+        604.7,
+        158.3,
+        632.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 15,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r16-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "总二次风量",
+      "bbox": [
+        54.0,
+        632.0,
+        126.7,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 16,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r16-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "t/h",
+      "bbox": [
+        126.7,
+        632.0,
+        158.3,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 16,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r17-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "脱硫效率",
+      "bbox": [
+        54.0,
+        659.0,
+        126.7,
+        686.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 17,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r17-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "%",
+      "bbox": [
+        126.7,
+        659.0,
+        158.3,
+        686.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 17,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r18-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "脱硝效率",
+      "bbox": [
+        54.0,
+        686.3,
+        126.7,
+        702.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 18,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r18-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "%",
+      "bbox": [
+        126.7,
+        686.3,
+        158.3,
+        702.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 18,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r19-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "SO₂排放浓度",
+      "bbox": [
+        54.0,
+        702.0,
+        126.7,
+        717.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 19,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r19-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "mg/m³",
+      "bbox": [
+        126.7,
+        702.0,
+        158.3,
+        717.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 19,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r20-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "NOₓ排放浓度",
+      "bbox": [
+        54.0,
+        717.7,
+        126.7,
+        733.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 20,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r20-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "mg/m³",
+      "bbox": [
+        126.7,
+        717.7,
+        158.3,
+        733.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 20,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r21-c00",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "烟尘排放浓度",
+      "bbox": [
+        54.0,
+        733.7,
+        126.7,
+        749.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 21,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r21-c01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "mg/m³",
+      "bbox": [
+        126.7,
+        733.7,
+        158.3,
+        749.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 21,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r01-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "主蒸汽压力",
+      "bbox": [
+        210.0,
+        278.3,
+        282.3,
+        294.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 1,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r01-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        278.3,
+        310.0,
+        294.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 1,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r02-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "主蒸汽温度",
+      "bbox": [
+        210.0,
+        294.3,
+        282.3,
+        310.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 2,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r02-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        294.3,
+        310.0,
+        310.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 2,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r03-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "再热蒸汽压力",
+      "bbox": [
+        210.0,
+        310.0,
+        282.3,
+        337.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 3,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r03-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        310.0,
+        310.0,
+        337.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 3,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r04-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "再热蒸汽温度",
+      "bbox": [
+        210.0,
+        337.7,
+        282.3,
+        365.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 4,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r04-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        337.7,
+        310.0,
+        365.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 4,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r05-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "高压缸排汽压力",
+      "bbox": [
+        210.0,
+        365.0,
+        282.3,
+        380.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 5,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r05-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        365.0,
+        310.0,
+        380.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 5,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r06-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "高压缸排汽温度",
+      "bbox": [
+        210.0,
+        380.7,
+        282.3,
+        408.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 6,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r06-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        380.7,
+        310.0,
+        408.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 6,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r07-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "中压缸排汽压力",
+      "bbox": [
+        210.0,
+        408.3,
+        282.3,
+        424.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 7,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r07-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        408.3,
+        310.0,
+        424.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 7,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r08-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "中压缸排汽温度",
+      "bbox": [
+        210.0,
+        424.3,
+        282.3,
+        451.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 8,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r08-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        424.3,
+        310.0,
+        451.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 8,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r09-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "凝汽器真空",
+      "bbox": [
+        210.0,
+        451.7,
+        282.3,
+        479.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 9,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r09-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "kPa",
+      "bbox": [
+        282.3,
+        451.7,
+        310.0,
+        479.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 9,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r10-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "低压缸排汽温度",
+      "bbox": [
+        210.0,
+        479.0,
+        282.3,
+        506.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 10,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r10-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        479.0,
+        310.0,
+        506.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 10,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r11-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "循环水入口温度",
+      "bbox": [
+        210.0,
+        506.7,
+        282.3,
+        534.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 11,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r11-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        506.7,
+        310.0,
+        534.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 11,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r12-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "循环水出口温度",
+      "bbox": [
+        210.0,
+        534.0,
+        282.3,
+        550.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 12,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r12-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        534.0,
+        310.0,
+        550.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 12,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r13-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "低压加热器入口温度",
+      "bbox": [
+        210.0,
+        550.0,
+        282.3,
+        577.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 13,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r13-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        550.0,
+        310.0,
+        577.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 13,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r14-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "低压加热器出口温度",
+      "bbox": [
+        210.0,
+        577.3,
+        282.3,
+        604.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 14,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r14-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        577.3,
+        310.0,
+        604.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 14,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r15-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "低压加热器出口流量",
+      "bbox": [
+        210.0,
+        604.7,
+        282.3,
+        632.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 15,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r15-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "t/h",
+      "bbox": [
+        282.3,
+        604.7,
+        310.0,
+        632.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 15,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r16-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "高压加热器入口温度",
+      "bbox": [
+        210.0,
+        632.0,
+        282.3,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 16,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r16-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        632.0,
+        310.0,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 16,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r17-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "高压加热器出口温度",
+      "bbox": [
+        210.0,
+        659.0,
+        282.3,
+        686.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 17,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r17-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        282.3,
+        659.0,
+        310.0,
+        686.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 17,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r18-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "一段抽汽压力",
+      "bbox": [
+        210.0,
+        686.3,
+        282.3,
+        702.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 18,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r18-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        686.3,
+        310.0,
+        702.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 18,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r19-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "二段抽汽压力",
+      "bbox": [
+        210.0,
+        702.0,
+        282.3,
+        717.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 19,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r19-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        702.0,
+        310.0,
+        717.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 19,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r20-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "三段抽汽压力",
+      "bbox": [
+        210.0,
+        717.7,
+        282.3,
+        733.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 20,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r20-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        717.7,
+        310.0,
+        733.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 20,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r21-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "四段抽汽压力",
+      "bbox": [
+        210.0,
+        733.7,
+        282.3,
+        749.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 21,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r21-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        733.7,
+        310.0,
+        749.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 21,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r22-c04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "五段抽汽压力",
+      "bbox": [
+        210.0,
+        749.3,
+        282.3,
+        764.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 22,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r22-c05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        282.3,
+        749.3,
+        310.0,
+        764.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 22,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r01-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "有功功率",
+      "bbox": [
+        362.0,
+        278.3,
+        438.0,
+        294.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 1,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r01-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MW",
+      "bbox": [
+        438.0,
+        278.3,
+        469.7,
+        294.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 1,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r02-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "无功功率",
+      "bbox": [
+        362.0,
+        294.3,
+        438.0,
+        310.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 2,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r02-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MVAR",
+      "bbox": [
+        438.0,
+        294.3,
+        469.7,
+        310.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 2,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r03-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子电压",
+      "bbox": [
+        362.0,
+        310.0,
+        438.0,
+        337.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 3,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r03-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "kV",
+      "bbox": [
+        438.0,
+        310.0,
+        469.7,
+        337.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 3,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r04-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子电流（A）",
+      "bbox": [
+        362.0,
+        337.7,
+        438.0,
+        365.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 4,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r04-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "kA",
+      "bbox": [
+        438.0,
+        337.7,
+        469.7,
+        365.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 4,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r05-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子电流（B）",
+      "bbox": [
+        362.0,
+        365.0,
+        438.0,
+        380.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 5,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r05-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "kA",
+      "bbox": [
+        438.0,
+        365.0,
+        469.7,
+        380.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 5,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r06-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子电流（C）",
+      "bbox": [
+        362.0,
+        380.7,
+        438.0,
+        408.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 6,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r06-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "kA",
+      "bbox": [
+        438.0,
+        380.7,
+        469.7,
+        408.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 6,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r07-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "频率",
+      "bbox": [
+        362.0,
+        408.3,
+        438.0,
+        424.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 7,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r07-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "Hz",
+      "bbox": [
+        438.0,
+        408.3,
+        469.7,
+        424.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 7,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r08-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子绕组最高温度",
+      "bbox": [
+        362.0,
+        424.3,
+        438.0,
+        451.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 8,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r08-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        424.3,
+        469.7,
+        451.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 8,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r09-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子绕组最低温度",
+      "bbox": [
+        362.0,
+        451.7,
+        438.0,
+        479.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 9,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r09-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        451.7,
+        469.7,
+        479.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 9,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r10-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子铁芯最高温度",
+      "bbox": [
+        362.0,
+        479.0,
+        438.0,
+        506.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 10,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r10-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        479.0,
+        469.7,
+        506.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 10,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r11-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子铁芯最低温度",
+      "bbox": [
+        362.0,
+        506.7,
+        438.0,
+        534.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 11,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r11-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        506.7,
+        469.7,
+        534.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 11,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r12-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "发电机励磁电压",
+      "bbox": [
+        362.0,
+        534.0,
+        438.0,
+        550.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 12,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r12-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "V",
+      "bbox": [
+        438.0,
+        534.0,
+        469.7,
+        550.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 12,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r13-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "发电机励磁电流",
+      "bbox": [
+        362.0,
+        550.0,
+        438.0,
+        577.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 13,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r13-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "A",
+      "bbox": [
+        438.0,
+        550.0,
+        469.7,
+        577.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 13,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r14-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "定子冷却水出口温度",
+      "bbox": [
+        362.0,
+        577.3,
+        438.0,
+        604.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 14,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r14-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        577.3,
+        469.7,
+        604.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 14,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r15-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "氢冷器出口氢气温度（励端）",
+      "bbox": [
+        362.0,
+        604.7,
+        438.0,
+        632.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 15,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r15-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        604.7,
+        469.7,
+        632.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 15,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r16-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "氢冷器出口氢气温度（汽端）",
+      "bbox": [
+        362.0,
+        632.0,
+        438.0,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 16,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r16-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "℃",
+      "bbox": [
+        438.0,
+        632.0,
+        469.7,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 16,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r17-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "氢纯度",
+      "bbox": [
+        362.0,
+        659.0,
+        438.0,
+        686.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 17,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r17-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "%",
+      "bbox": [
+        438.0,
+        659.0,
+        469.7,
+        686.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 17,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r18-c08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "氢压",
+      "bbox": [
+        362.0,
+        686.3,
+        438.0,
+        702.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 18,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p27-d1-r18-c09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "logical_page": "38",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        438.0,
+        686.3,
+        469.7,
+        702.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p27",
+      "row_index": 18,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p28-d1-caption",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "caption",
+      "source_text": "表D.1（续）",
+      "bbox": [
+        272.0,
+        102.0,
+        351.0,
+        119.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c00",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "项目",
+      "bbox": [
+        67.3,
+        120.7,
+        139.7,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "单位",
+      "bbox": [
+        139.7,
+        120.7,
+        171.3,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c02",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "设计值",
+      "bbox": [
+        171.3,
+        120.7,
+        197.3,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 2
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "数值",
+      "bbox": [
+        197.3,
+        120.7,
+        223.7,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c04",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "项目",
+      "bbox": [
+        223.7,
+        120.7,
+        296.0,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c05",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "单位",
+      "bbox": [
+        296.0,
+        120.7,
+        323.3,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c06",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "设计值",
+      "bbox": [
+        323.3,
+        120.7,
+        349.5,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 6
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c07",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "数值",
+      "bbox": [
+        349.5,
+        120.7,
+        375.7,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 7
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c08",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "项目",
+      "bbox": [
+        375.7,
+        120.7,
+        451.7,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c09",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "单位",
+      "bbox": [
+        451.7,
+        120.7,
+        483.0,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c10",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "设计值",
+      "bbox": [
+        483.0,
+        120.7,
+        508.3,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 10
+    },
+    {
+      "unit_id": "dlt863-p28-d1-header-c11",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "数值",
+      "bbox": [
+        508.3,
+        120.7,
+        533.7,
+        148.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 0,
+      "column_index": 11
+    },
+    {
+      "unit_id": "dlt863-p28-d1-r1-c4",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "六段抽汽压力",
+      "bbox": [
+        223.7,
+        148.7,
+        296.0,
+        165.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 1,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p28-d1-r1-c5",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        296.0,
+        148.7,
+        323.3,
+        165.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 1,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p28-d1-r2-c4",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "七段抽汽压力",
+      "bbox": [
+        223.7,
+        165.0,
+        296.0,
+        180.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 2,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p28-d1-r2-c5",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        296.0,
+        165.0,
+        323.3,
+        180.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 2,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p28-d1-r3-c4",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "八段抽汽压力",
+      "bbox": [
+        223.7,
+        180.7,
+        296.0,
+        196.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 3,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p28-d1-r3-c5",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "MPa",
+      "bbox": [
+        296.0,
+        180.7,
+        323.3,
+        196.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d1-p28",
+      "row_index": 3,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p28-d1-sign-label-0",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "调试单位（签字）：",
+      "bbox": [
+        77.0,
+        196.3,
+        173.0,
+        212.2
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d1-sign-label-1",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "生产单位（签字）：",
+      "bbox": [
+        77.0,
+        212.2,
+        173.0,
+        228.1
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d1-sign-label-2",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "监理单位（签字）：",
+      "bbox": [
+        77.0,
+        228.1,
+        173.0,
+        244.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-intro",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "D.2 机组整套试运汽轮发电机组轴振记录见表D.2",
+      "bbox": [
+        67.0,
+        252.0,
+        457.0,
+        271.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-caption",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "caption",
+      "source_text": "表D.2 机组整套试运汽轮发电机组轴振记录表",
+      "bbox": [
+        194.0,
+        274.0,
+        437.0,
+        290.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-project-name-label",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "工程名称",
+      "bbox": [
+        74.0,
+        292.0,
+        114.0,
+        307.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-unit-number-label",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "机组号",
+      "bbox": [
+        251.0,
+        292.0,
+        284.0,
+        307.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-date",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "日期",
+      "bbox": [
+        67.7,
+        308.0,
+        118.7,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 0
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-state",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "运行状态",
+      "bbox": [
+        118.7,
+        308.0,
+        241.0,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-position",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "位置",
+      "bbox": [
+        241.0,
+        308.0,
+        268.0,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-vibration",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "轴振动值 μm",
+      "bbox": [
+        268.0,
+        308.0,
+        534.0,
+        335.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-1",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "1号",
+      "bbox": [
+        268.0,
+        335.0,
+        297.7,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 4
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-2",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "2号",
+      "bbox": [
+        297.7,
+        335.0,
+        327.3,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 5
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-3",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "3号",
+      "bbox": [
+        327.3,
+        335.0,
+        357.0,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 6
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-4",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "4号",
+      "bbox": [
+        357.0,
+        335.0,
+        386.3,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 7
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-5",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "5号",
+      "bbox": [
+        386.3,
+        335.0,
+        416.3,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 8
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-6",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "6号",
+      "bbox": [
+        416.3,
+        335.0,
+        446.0,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 9
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-7",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "7号",
+      "bbox": [
+        446.0,
+        335.0,
+        475.3,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 10
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-8",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "8号",
+      "bbox": [
+        475.3,
+        335.0,
+        505.0,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 11
+    },
+    {
+      "unit_id": "dlt863-p28-d2-header-shaft-9",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "9号",
+      "bbox": [
+        505.0,
+        335.0,
+        534.0,
+        350.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 0,
+      "column_index": 12
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r01-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "空负荷",
+      "bbox": [
+        118.7,
+        350.7,
+        191.3,
+        366.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 1,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r01-c02",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "3000r/min",
+      "bbox": [
+        191.3,
+        350.7,
+        241.0,
+        366.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 1,
+      "column_index": 2
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r02-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽压力 MPa",
+      "bbox": [
+        118.7,
+        366.3,
+        191.3,
+        392.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 2,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r02-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "x",
+      "bbox": [
+        241.0,
+        366.3,
+        268.0,
+        392.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 2,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r03-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽温度 ℃",
+      "bbox": [
+        118.7,
+        392.7,
+        191.3,
+        420.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 3,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r03-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "y",
+      "bbox": [
+        241.0,
+        392.7,
+        268.0,
+        420.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 3,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r04-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "并网\nMW",
+      "bbox": [
+        118.7,
+        420.3,
+        191.3,
+        446.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 4,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r05-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽压力 MPa",
+      "bbox": [
+        118.7,
+        446.0,
+        191.3,
+        472.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 5,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r05-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "x",
+      "bbox": [
+        241.0,
+        446.0,
+        268.0,
+        472.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 5,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r06-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽温度 ℃",
+      "bbox": [
+        118.7,
+        472.3,
+        191.3,
+        499.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 6,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r06-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "y",
+      "bbox": [
+        241.0,
+        472.3,
+        268.0,
+        499.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 6,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r07-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "首次满负荷\nMW",
+      "bbox": [
+        118.7,
+        499.7,
+        191.3,
+        525.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 7,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r08-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽压力 MPa",
+      "bbox": [
+        118.7,
+        525.7,
+        191.3,
+        552.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 8,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r08-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "x",
+      "bbox": [
+        241.0,
+        525.7,
+        268.0,
+        552.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 8,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r09-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽温度 ℃",
+      "bbox": [
+        118.7,
+        552.0,
+        191.3,
+        579.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 9,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r09-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "y",
+      "bbox": [
+        241.0,
+        552.0,
+        268.0,
+        579.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 9,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r10-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "额定负荷\nMW",
+      "bbox": [
+        118.7,
+        579.3,
+        191.3,
+        605.3
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 10,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r11-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽压力 MPa",
+      "bbox": [
+        118.7,
+        605.3,
+        191.3,
+        631.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 11,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r11-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "x",
+      "bbox": [
+        241.0,
+        605.3,
+        268.0,
+        631.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 11,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r12-c01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "主蒸汽温度 ℃",
+      "bbox": [
+        118.7,
+        631.7,
+        191.3,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 12,
+      "column_index": 1
+    },
+    {
+      "unit_id": "dlt863-p28-d2-r12-c03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "table",
+      "source_text": "y",
+      "bbox": [
+        241.0,
+        631.7,
+        268.0,
+        659.0
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only",
+      "table_key": "dlt863-d2-p28",
+      "row_index": 12,
+      "column_index": 3
+    },
+    {
+      "unit_id": "dlt863-p28-d2-sign-label-0",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "施工单位（签字）：",
+      "bbox": [
+        77.0,
+        659.0,
+        174.0,
+        674.7
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-sign-label-1",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "调试单位（签字）：",
+      "bbox": [
+        77.0,
+        674.7,
+        174.0,
+        690.4
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-sign-label-2",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "生产单位（签字）：",
+      "bbox": [
+        77.0,
+        690.4,
+        174.0,
+        706.1
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-sign-label-3",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "监理单位（签字）：",
+      "bbox": [
+        77.0,
+        706.1,
+        174.0,
+        721.8
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    },
+    {
+      "unit_id": "dlt863-p28-d2-sign-label-4",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "logical_page": "39",
+      "content_kind": "paragraph",
+      "source_text": "建设单位（签字）：",
+      "bbox": [
+        77.0,
+        721.8,
+        174.0,
+        737.5
+      ],
+      "text_origin": "manual_correction",
+      "review_basis": "original_pdf_visual_review",
+      "evidence_role": "requirement_source",
+      "reuse_existing": false,
+      "semantic_use": "form_template_context_only"
+    }
+  ],
+  "evidence_groups": [
+    {
+      "group_id": "group-dl5190-p113-native-01",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-01"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-02",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "document_context_only",
+      "source_unit_ids": [
+        "dl5190-p113-native-02"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-03",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-03"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-04",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-04"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-05",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-05"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-06",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-06"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-07",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-07"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-08",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "document_context_only",
+      "source_unit_ids": [
+        "dl5190-p113-native-08"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-09",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-09"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-10",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "document_context_only",
+      "source_unit_ids": [
+        "dl5190-p113-native-10"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-p113-native-11",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-p113-native-11"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-12.1.15-left",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "document_context_only",
+      "source_unit_ids": [
+        "dl5190-12.1.15-left"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-12.1.15-limit-1",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-12.1.15-limit-1"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-12.1.15-limit-2",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-12.1.15-limit-2"
+      ]
+    },
+    {
+      "group_id": "group-dl5190-12.1.15-limit-3",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "semantic_use": "printed_standard_source",
+      "source_unit_ids": [
+        "dl5190-12.1.15-limit-3"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-appendix",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-appendix"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-intro",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-intro"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-caption",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-caption"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-project-identifiers",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-project-name-label",
+        "dlt863-p27-unit-number-label"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-headers",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-group-0",
+        "dlt863-p27-d1-group-1",
+        "dlt863-p27-d1-group-2",
+        "dlt863-p27-d1-header-c00",
+        "dlt863-p27-d1-header-c01",
+        "dlt863-p27-d1-header-c02",
+        "dlt863-p27-d1-header-c03",
+        "dlt863-p27-d1-header-c04",
+        "dlt863-p27-d1-header-c05",
+        "dlt863-p27-d1-header-c06",
+        "dlt863-p27-d1-header-c07",
+        "dlt863-p27-d1-header-c08",
+        "dlt863-p27-d1-header-c09",
+        "dlt863-p27-d1-header-c10",
+        "dlt863-p27-d1-header-c11"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r01-c00",
+        "dlt863-p27-d1-r01-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r01-c04",
+        "dlt863-p27-d1-r01-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r01",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r01-c08",
+        "dlt863-p27-d1-r01-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r02",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r02-c00",
+        "dlt863-p27-d1-r02-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r02",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r02-c04",
+        "dlt863-p27-d1-r02-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r02",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r02-c08",
+        "dlt863-p27-d1-r02-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r03",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r03-c00",
+        "dlt863-p27-d1-r03-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r03",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r03-c04",
+        "dlt863-p27-d1-r03-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r03",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r03-c08",
+        "dlt863-p27-d1-r03-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r04-c00",
+        "dlt863-p27-d1-r04-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r04-c04",
+        "dlt863-p27-d1-r04-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r04",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r04-c08",
+        "dlt863-p27-d1-r04-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r05-c00",
+        "dlt863-p27-d1-r05-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r05-c04",
+        "dlt863-p27-d1-r05-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r05",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r05-c08",
+        "dlt863-p27-d1-r05-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r06",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r06-c00",
+        "dlt863-p27-d1-r06-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r06",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r06-c04",
+        "dlt863-p27-d1-r06-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r06",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r06-c08",
+        "dlt863-p27-d1-r06-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r07",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r07-c00",
+        "dlt863-p27-d1-r07-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r07",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r07-c04",
+        "dlt863-p27-d1-r07-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r07",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r07-c08",
+        "dlt863-p27-d1-r07-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r08-c00",
+        "dlt863-p27-d1-r08-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r08-c04",
+        "dlt863-p27-d1-r08-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r08",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r08-c08",
+        "dlt863-p27-d1-r08-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r09-c00",
+        "dlt863-p27-d1-r09-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r09-c04",
+        "dlt863-p27-d1-r09-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r09",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r09-c08",
+        "dlt863-p27-d1-r09-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r10",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r10-c00",
+        "dlt863-p27-d1-r10-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r10",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r10-c04",
+        "dlt863-p27-d1-r10-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r10",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r10-c08",
+        "dlt863-p27-d1-r10-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r11",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r11-c00",
+        "dlt863-p27-d1-r11-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r11",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r11-c04",
+        "dlt863-p27-d1-r11-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r11",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r11-c08",
+        "dlt863-p27-d1-r11-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r12",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r12-c00",
+        "dlt863-p27-d1-r12-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r12",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r12-c04",
+        "dlt863-p27-d1-r12-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r12",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r12-c08",
+        "dlt863-p27-d1-r12-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r13",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r13-c00",
+        "dlt863-p27-d1-r13-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r13",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r13-c04",
+        "dlt863-p27-d1-r13-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r13",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r13-c08",
+        "dlt863-p27-d1-r13-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r14",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r14-c00",
+        "dlt863-p27-d1-r14-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r14",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r14-c04",
+        "dlt863-p27-d1-r14-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r14",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r14-c08",
+        "dlt863-p27-d1-r14-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r15",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r15-c00",
+        "dlt863-p27-d1-r15-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r15",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r15-c04",
+        "dlt863-p27-d1-r15-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r15",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r15-c08",
+        "dlt863-p27-d1-r15-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r16",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r16-c00",
+        "dlt863-p27-d1-r16-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r16",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r16-c04",
+        "dlt863-p27-d1-r16-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r16",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r16-c08",
+        "dlt863-p27-d1-r16-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r17",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r17-c00",
+        "dlt863-p27-d1-r17-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r17",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r17-c04",
+        "dlt863-p27-d1-r17-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r17",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r17-c08",
+        "dlt863-p27-d1-r17-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r18",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r18-c00",
+        "dlt863-p27-d1-r18-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r18",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r18-c04",
+        "dlt863-p27-d1-r18-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-generator-r18",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r18-c08",
+        "dlt863-p27-d1-r18-c09"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r19",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r19-c00",
+        "dlt863-p27-d1-r19-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r19",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r19-c04",
+        "dlt863-p27-d1-r19-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r20",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r20-c00",
+        "dlt863-p27-d1-r20-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r20",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r20-c04",
+        "dlt863-p27-d1-r20-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-boiler-r21",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r21-c00",
+        "dlt863-p27-d1-r21-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r21",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r21-c04",
+        "dlt863-p27-d1-r21-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p27-d1-turbine-r22",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p27-d1-r22-c04",
+        "dlt863-p27-d1-r22-c05"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d1-caption",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d1-caption"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d1-headers",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d1-header-c00",
+        "dlt863-p28-d1-header-c01",
+        "dlt863-p28-d1-header-c02",
+        "dlt863-p28-d1-header-c03",
+        "dlt863-p28-d1-header-c04",
+        "dlt863-p28-d1-header-c05",
+        "dlt863-p28-d1-header-c06",
+        "dlt863-p28-d1-header-c07",
+        "dlt863-p28-d1-header-c08",
+        "dlt863-p28-d1-header-c09",
+        "dlt863-p28-d1-header-c10",
+        "dlt863-p28-d1-header-c11"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d1-r1",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d1-r1-c4",
+        "dlt863-p28-d1-r1-c5"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d1-r2",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d1-r2-c4",
+        "dlt863-p28-d1-r2-c5"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d1-r3",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d1-r3-c4",
+        "dlt863-p28-d1-r3-c5"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d1-signatures",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d1-sign-label-0",
+        "dlt863-p28-d1-sign-label-1",
+        "dlt863-p28-d1-sign-label-2"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-intro",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-intro"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-caption",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-caption"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-project-identifiers",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-project-name-label",
+        "dlt863-p28-d2-unit-number-label"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-headers",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-header-date",
+        "dlt863-p28-d2-header-state",
+        "dlt863-p28-d2-header-position",
+        "dlt863-p28-d2-header-vibration",
+        "dlt863-p28-d2-header-shaft-1",
+        "dlt863-p28-d2-header-shaft-2",
+        "dlt863-p28-d2-header-shaft-3",
+        "dlt863-p28-d2-header-shaft-4",
+        "dlt863-p28-d2-header-shaft-5",
+        "dlt863-p28-d2-header-shaft-6",
+        "dlt863-p28-d2-header-shaft-7",
+        "dlt863-p28-d2-header-shaft-8",
+        "dlt863-p28-d2-header-shaft-9"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r01",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r01-c01",
+        "dlt863-p28-d2-r01-c02"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r02",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r02-c01",
+        "dlt863-p28-d2-r02-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r03",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r03-c01",
+        "dlt863-p28-d2-r03-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r04",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r04-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r05",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r05-c01",
+        "dlt863-p28-d2-r05-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r06",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r06-c01",
+        "dlt863-p28-d2-r06-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r07",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r07-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r08",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r08-c01",
+        "dlt863-p28-d2-r08-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r09",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r09-c01",
+        "dlt863-p28-d2-r09-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r10",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r10-c01"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r11",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r11-c01",
+        "dlt863-p28-d2-r11-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-r12",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-r12-c01",
+        "dlt863-p28-d2-r12-c03"
+      ]
+    },
+    {
+      "group_id": "group-dlt863-p28-d2-signatures",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "semantic_use": "form_template_context_only",
+      "source_unit_ids": [
+        "dlt863-p28-d2-sign-label-0",
+        "dlt863-p28-d2-sign-label-1",
+        "dlt863-p28-d2-sign-label-2",
+        "dlt863-p28-d2-sign-label-3",
+        "dlt863-p28-d2-sign-label-4"
+      ]
+    }
+  ],
+  "form_schema": [
+    {
+      "field_id": "dlt863-p27-project-name",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "template_role": "project_name",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        134.0,
+        217.0,
+        207.0,
+        235.0
+      ]
+    },
+    {
+      "field_id": "dlt863-p27-unit-number",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "template_role": "unit_number",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        322.0,
+        217.0,
+        523.5,
+        235.0
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d1-sign-0",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "调试单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        174.0,
+        196.3,
+        534.0,
+        212.2
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d1-sign-1",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "生产单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        174.0,
+        212.2,
+        534.0,
+        228.1
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d1-sign-2",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "监理单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        174.0,
+        228.1,
+        534.0,
+        244.0
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-project-name",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "project_name",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        131.0,
+        291.0,
+        240.0,
+        308.0
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-unit-number",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "unit_number",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        308.0,
+        291.0,
+        534.0,
+        308.0
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-sign-0",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "施工单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        175.0,
+        659.0,
+        534.0,
+        674.7
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-sign-1",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "调试单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        175.0,
+        674.7,
+        534.0,
+        690.4
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-sign-2",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "生产单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        175.0,
+        690.4,
+        534.0,
+        706.1
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-sign-3",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "监理单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        175.0,
+        706.1,
+        534.0,
+        721.8
+      ]
+    },
+    {
+      "field_id": "dlt863-p28-d2-sign-4",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "template_role": "建设单位签字",
+      "value": null,
+      "is_observation": false,
+      "bbox": [
+        175.0,
+        721.8,
+        534.0,
+        737.5
+      ]
+    }
+  ],
+  "blank_cell_rules": [
+    {
+      "rule_id": "d1-p27-design-and-measured",
+      "table_key": "dlt863-d1-p27",
+      "row_range": [
+        1,
+        22
+      ],
+      "columns": [
+        2,
+        3,
+        6,
+        7,
+        10,
+        11
+      ],
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d1-p27-boiler-final-unassigned",
+      "table_key": "dlt863-d1-p27",
+      "rows": [
+        22
+      ],
+      "columns": [
+        0,
+        1
+      ],
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d1-p27-generator-tail-unassigned",
+      "table_key": "dlt863-d1-p27",
+      "row_range": [
+        19,
+        22
+      ],
+      "columns": [
+        8,
+        9
+      ],
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d1-p28-continuation-blanks",
+      "table_key": "dlt863-d1-p28",
+      "row_range": [
+        1,
+        3
+      ],
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d2-p28-four-date-fields",
+      "table_key": "dlt863-d2-p28",
+      "rows": [
+        1,
+        4,
+        7,
+        10
+      ],
+      "columns": [
+        0
+      ],
+      "merged_row_span": 3,
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d2-p28-unfilled-state-values",
+      "table_key": "dlt863-d2-p28",
+      "row_range": [
+        2,
+        12
+      ],
+      "columns": [
+        2
+      ],
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d2-p28-state-row-position",
+      "table_key": "dlt863-d2-p28",
+      "rows": [
+        1,
+        4,
+        7,
+        10
+      ],
+      "columns": [
+        3
+      ],
+      "value": null,
+      "is_observation": false
+    },
+    {
+      "rule_id": "d2-p28-nine-vibration-columns",
+      "table_key": "dlt863-d2-p28",
+      "row_range": [
+        1,
+        12
+      ],
+      "columns": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "value": null,
+      "is_observation": false
+    }
+  ],
+  "tables": [
+    {
+      "table_key": "dl5190-12.1.15",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "title": "表12.1.15 起重机静态刚性要求",
+      "bbox": [
+        152,
+        126,
+        443,
+        181
+      ],
+      "row_count": 3,
+      "column_count": 2,
+      "text_origin": "native_text",
+      "merged_cells": [
+        {
+          "row_index": 0,
+          "column_index": 0,
+          "row_span": 3,
+          "column_span": 1
+        }
+      ],
+      "header_hierarchy": [
+        "左侧三行合并：起重机的静态刚性（引用GB/T 14405-2011通用桥式起重机）",
+        "右侧低、中、高定位精度各一行"
+      ]
+    },
+    {
+      "table_key": "dlt863-d1-p27",
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "title": "表D.1 机组额定负荷主要运行参数记录表",
+      "bbox": [
+        52.5,
+        217,
+        523.5,
+        768
+      ],
+      "row_count": 23,
+      "column_count": 12,
+      "text_origin": "manual_correction",
+      "header_hierarchy": [
+        "锅炉、汽轮机、发电机三组",
+        "每组项目/单位/设计值/数值四列"
+      ],
+      "continuation_to_physical_page": 28
+    },
+    {
+      "table_key": "dlt863-d1-p28",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "title": "表D.1（续）",
+      "bbox": [
+        66.5,
+        119.5,
+        536.5,
+        246.5
+      ],
+      "row_count": 4,
+      "column_count": 12,
+      "text_origin": "manual_correction",
+      "header_hierarchy": [
+        "继承物理27页锅炉/汽轮机/发电机三组，每组项目/单位/设计值/数值"
+      ],
+      "continuation_from_physical_page": 27
+    },
+    {
+      "table_key": "dlt863-d2-p28",
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "title": "表D.2 机组整套试运汽轮发电机组轴振记录表",
+      "bbox": [
+        66,
+        290.5,
+        537,
+        741
+      ],
+      "row_count": 13,
+      "column_count": 13,
+      "text_origin": "manual_correction",
+      "merged_cells": [
+        {
+          "row_index": 1,
+          "column_index": 0,
+          "row_span": 3,
+          "column_span": 1
+        },
+        {
+          "row_index": 4,
+          "column_index": 0,
+          "row_span": 3,
+          "column_span": 1
+        },
+        {
+          "row_index": 7,
+          "column_index": 0,
+          "row_span": 3,
+          "column_span": 1
+        },
+        {
+          "row_index": 10,
+          "column_index": 0,
+          "row_span": 3,
+          "column_span": 1
+        }
+      ],
+      "header_hierarchy": [
+        "日期",
+        "运行状态：工况/数值",
+        "位置",
+        "轴振动值 μm：1号至9号"
+      ]
+    }
+  ],
+  "visual_regions": [
+    {
+      "region_id": "dl5190-p25-fig-4.5.8-1",
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "figure_label": "图4.5.8-1",
+      "bbox": [
+        155,
+        120,
+        445,
+        277
+      ],
+      "review_basis": "original_pdf_visual_review",
+      "visible_labels": [
+        "A-A",
+        "油入口",
+        "排油",
+        "推力轴承调整机构",
+        "推力轴承中心"
+      ],
+      "same_page_caption": "图4.5.8-1 推力轴承调整机构详图"
+    },
+    {
+      "region_id": "dl5190-p25-fig-4.5.8-2",
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "figure_label": "图4.5.8-2",
+      "bbox": [
+        205,
+        344,
+        405,
+        500
+      ],
+      "review_basis": "original_pdf_visual_review",
+      "visible_labels": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+      ],
+      "same_page_caption": "图4.5.8-2 金斯伯里推力轴承"
+    },
+    {
+      "region_id": "dl5190-p25-fig-4.5.8-3",
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "figure_label": "图4.5.8-3",
+      "bbox": [
+        177,
+        555,
+        435,
+        773
+      ],
+      "review_basis": "original_pdf_visual_review",
+      "visible_labels": [
+        "轴承箱与瓦套两侧总间隙c",
+        "密封环间隙a",
+        "油封总间隙b",
+        "X",
+        "Y",
+        "推力总间隙（X+Y）",
+        "瓦套",
+        "推力瓦块",
+        "球面座",
+        "推力盘"
+      ],
+      "cross_page_caption": {
+        "physical_page": 26,
+        "text": "图4.5.8-3 双楔面、小岛型球座式推力轴承"
+      }
+    },
+    {
+      "region_id": "dl5190-p86-fig-9.6.2",
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "figure_label": "图9.6.2",
+      "bbox": [
+        185,
+        382,
+        410,
+        442
+      ],
+      "review_basis": "original_pdf_visual_review",
+      "visible_labels": [
+        "a"
+      ],
+      "same_page_caption": "图9.6.2 密封瓦在瓦座内的轴向间隙示意图"
+    },
+    {
+      "region_id": "dl5190-p113-fig-12.2.1",
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "figure_label": "图12.2.1",
+      "bbox": [
+        104.4,
+        511.92,
+        289.44,
+        679.38
+      ],
+      "review_basis": "original_pdf_visual_review",
+      "visible_labels": [
+        "C",
+        "C"
+      ],
+      "same_page_caption": "图12.2.1 车轮轮缘内侧与工字钢轨道下翼缘边缘的间隙"
+    }
+  ],
+  "source_boundaries": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "preceding_physical_page": 112,
+      "following_physical_page": 114,
+      "notes": "12.1.15(5) begins on printed 101; 12.2.3 continues on printed 103."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_pages": [
+        14,
+        15
+      ],
+      "parent": "5.2.14.1 e) 密封油系统调整（单流环）",
+      "child_positions": [
+        {
+          "physical_page": 14,
+          "labels": [
+            "1）"
+          ]
+        },
+        {
+          "physical_page": 15,
+          "labels": [
+            "2）",
+            "3）",
+            "4）",
+            "5）",
+            "6）"
+          ]
+        }
+      ],
+      "after_child_six": "5.2.14.1 f)、g)、h) are siblings, not children of e)."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "printed_page": "11",
+      "next_physical_page": 16,
+      "next_printed_page": "13",
+      "missing_printed_pages": [
+        12
+      ],
+      "boundary": "5.2.15.2 a)–d) visible; no complete list or next-page clause may be inferred."
+    }
+  ],
+  "source_structure": [
+    {
+      "group_id": "dlt863-5.2.14.1-d",
+      "physical_pages": [
+        14
+      ],
+      "parent": "5.2.14.1 d)",
+      "parent_evidence_id": "evidence-cd2a00746a928ad8fdf8",
+      "child_labels": [
+        "1）",
+        "2）",
+        "3）",
+        "4）",
+        "5）",
+        "6）",
+        "7）"
+      ],
+      "child_evidence_ids": [
+        "evidence-650975a896876ca7c13f",
+        "evidence-ce0c6fca6810fa2b60b7",
+        "evidence-f4c6cdcf23ebf8865c1a",
+        "evidence-7df2aae933c522d24b63",
+        "evidence-257184909857bc95884c",
+        "evidence-9cb932403ffa1be5eeb5",
+        "evidence-fa46378641d9939dee2f"
+      ],
+      "status": "visible_complete"
+    },
+    {
+      "group_id": "dlt863-5.2.14.1-e",
+      "physical_pages": [
+        14,
+        15
+      ],
+      "parent": "5.2.14.1 e)",
+      "parent_evidence_id": "evidence-2e6ceb3a4df913d5bb1a",
+      "child_labels": [
+        "1）",
+        "2）",
+        "3）",
+        "4）",
+        "5）",
+        "6）"
+      ],
+      "child_evidence_ids": [
+        "evidence-51e3bcecc735117e1fd4",
+        "evidence-9621e1540ab96385c2c1",
+        "evidence-98c9dd569ee66f0de55f",
+        "evidence-51a3af3750db9355ea4e",
+        "evidence-4f79a7760a62a42b87a4",
+        "evidence-4931f3d3bc2090ffb4e2"
+      ],
+      "status": "visible_complete",
+      "continuation_from_physical_page": 14,
+      "continuation_to_physical_page": 15
+    },
+    {
+      "group_id": "dlt863-5.2.15.1-h",
+      "physical_pages": [
+        15
+      ],
+      "parent": "5.2.15.1 h)",
+      "parent_evidence_id": "evidence-52d40466085559dda91c",
+      "child_labels": [
+        "1）",
+        "2）",
+        "3）"
+      ],
+      "child_evidence_ids": [
+        "evidence-1b57903c1f463f08b7a6",
+        "evidence-9506072e7ddcf593b0b2",
+        "evidence-5eaa1072bd44a58bb50c"
+      ],
+      "status": "visible_complete"
+    },
+    {
+      "group_id": "dlt863-5.2.15.1-j",
+      "physical_pages": [
+        15
+      ],
+      "parent": "5.2.15.1 j)",
+      "parent_evidence_id": "evidence-fb504c1ff8aca79680ca",
+      "child_labels": [
+        "1）",
+        "2）"
+      ],
+      "child_evidence_ids": [
+        "evidence-c61e5ba3a5464dd6d668",
+        "evidence-cc36c8d0adb6bd5d0bc9"
+      ],
+      "status": "visible_complete"
+    },
+    {
+      "group_id": "dlt863-5.2.15.2",
+      "physical_pages": [
+        15
+      ],
+      "parent": "5.2.15.2 调试注意事项",
+      "parent_evidence_id": "evidence-404b6f10d05f944ac3ff",
+      "child_labels": [
+        "a)",
+        "b)",
+        "c)",
+        "d)"
+      ],
+      "child_evidence_ids": [
+        "evidence-c1e7b707ec66dc30081f",
+        "evidence-730d85e280a4e926afaa",
+        "evidence-30833eb2f3915b8ebf28",
+        "evidence-cc64a6dc901e388c8f5b"
+      ],
+      "status": "source_incomplete_after_printed_11",
+      "missing_next_printed_page": 12
+    }
+  ]
+}

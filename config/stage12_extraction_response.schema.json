@@ -4,14 +4,45 @@
   "title": "Stage 12 structured extraction provider response",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "response_kind", "status", "candidates"],
+  "required": ["schema_version", "response_kind", "status", "candidates", "source_unit_coverage"],
   "properties": {
     "schema_version": {"const": 1},
     "response_kind": {"const": "stage12_candidate_extraction"},
     "status": {"enum": ["ok", "no_statement"]},
     "candidates": {"type": "array", "items": {"$ref": "#/$defs/candidate"}},
+    "source_unit_coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source_unit_coverage"}
+    },
+    "no_statement_reason": {"type": "string", "minLength": 3, "maxLength": 200},
     "provider_metadata": {"type": "object", "additionalProperties": {"type": ["string", "number", "boolean", "null"]}}
   },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "ok"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "candidates": {"minItems": 1},
+          "source_unit_coverage": {"contains": {"properties": {"status": {"const": "covered"}}, "required": ["status"]}}
+        },
+        "not": {"required": ["no_statement_reason"]}
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "no_statement"}}, "required": ["status"]},
+      "then": {
+        "required": ["no_statement_reason"],
+        "properties": {"candidates": {"maxItems": 0}},
+        "not": {
+          "properties": {
+            "source_unit_coverage": {"contains": {"properties": {"status": {"const": "covered"}}, "required": ["status"]}}
+          },
+          "required": ["source_unit_coverage"]
+        }
+      }
+    }
+  ],
   "$defs": {
     "entity": {
       "type": "object", "additionalProperties": false,
@@ -23,17 +54,91 @@
       "required": ["surface_form"],
       "properties": {"surface_form": {"type": "string", "minLength": 1}}
     },
+    "source_unit_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_unit_id", "status", "candidate_indexes"],
+      "properties": {
+        "source_unit_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["covered", "excluded"]},
+        "candidate_indexes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "reason": {"type": "string", "minLength": 3, "maxLength": 200}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "covered"}}, "required": ["status"]},
+          "then": {
+            "properties": {"candidate_indexes": {"minItems": 1}},
+            "not": {"required": ["reason"]}
+          }
+        },
+        {
+          "if": {"properties": {"status": {"const": "excluded"}}, "required": ["status"]},
+          "then": {
+            "required": ["reason"],
+            "properties": {"candidate_indexes": {"maxItems": 0}}
+          }
+        }
+      ]
+    },
     "candidate": {
       "type": "object", "additionalProperties": false,
-      "required": ["statement_text", "statement_type", "predicate", "subject_entities", "conditions", "applicability_scope"],
+      "required": ["statement_text", "statement_type", "predicate", "source_unit_ids", "subject_entities", "conditions", "applicability_scope"],
       "properties": {
         "statement_text": {"type": "string", "minLength": 1},
         "statement_type": {"enum": ["fact", "requirement", "procedure", "condition", "observation", "verification", "limitation"]},
         "predicate": {"enum": ["requires", "prohibits", "describes", "causes", "verifies", "limits_scope"]},
+        "source_unit_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "subject_entities": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/entity"}},
         "conditions": {"type": "array", "items": {"$ref": "#/$defs/condition"}},
-        "applicability_scope": {"type": "object", "additionalProperties": false, "required": ["status"], "properties": {"status": {"enum": ["known", "unknown"]}, "applicability_text": {"type": "string", "minLength": 1}}}
-      }
+        "procedure_group": {"type": "object", "additionalProperties": false, "required": ["group_id", "status"], "properties": {"group_id": {"type": "string", "minLength": 1}, "status": {"enum": ["indexed", "uncertain"]}, "step_index": {"type": "integer", "minimum": 1}, "step_total": {"type": "integer", "minimum": 1}, "uncertainty_reason": {"type": "string", "minLength": 3, "maxLength": 200}}},
+        "source_list_item": {"type": "object", "additionalProperties": false, "required": ["group_id", "status"], "properties": {"group_id": {"type": "string", "minLength": 1}, "status": {"enum": ["indexed", "uncertain"]}, "item_index": {"type": "integer", "minimum": 1}, "item_total": {"type": "integer", "minimum": 1}, "uncertainty_reason": {"type": "string", "minLength": 3, "maxLength": 200}}},
+        "source_question": {"type": "object", "additionalProperties": false, "required": ["group_id", "status"], "properties": {"group_id": {"type": "string", "minLength": 1}, "status": {"enum": ["linked", "uncertain"]}, "answer_option": {"type": "string", "minLength": 1}, "answer_text": {"type": "string", "minLength": 1}, "uncertainty_reason": {"type": "string", "minLength": 3, "maxLength": 200}}},
+        "supporting_evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "applicability_scope": {
+          "type": "object", "additionalProperties": false, "required": ["status"],
+          "properties": {"status": {"enum": ["known", "unknown"]}, "applicability_text": {"type": "string", "minLength": 1}},
+          "allOf": [
+            {"if": {"properties": {"status": {"const": "known"}}, "required": ["status"]}, "then": {"required": ["applicability_text"]}},
+            {"if": {"properties": {"status": {"const": "unknown"}}, "required": ["status"]}, "then": {"not": {"required": ["applicability_text"]}}}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"required": ["procedure_group"], "properties": {"procedure_group": {"properties": {"status": {"const": "indexed"}}, "required": ["status"]}}},
+          "then": {"properties": {"procedure_group": {"required": ["step_index", "step_total"], "not": {"required": ["uncertainty_reason"]}}}}
+        },
+        {
+          "if": {"required": ["procedure_group"], "properties": {"procedure_group": {"properties": {"status": {"const": "uncertain"}}, "required": ["status"]}}},
+          "then": {"properties": {"procedure_group": {"required": ["uncertainty_reason"], "not": {"anyOf": [{"required": ["step_index"]}, {"required": ["step_total"]}]}}}}
+        },
+        {
+          "if": {"required": ["source_list_item"], "properties": {"source_list_item": {"properties": {"status": {"const": "indexed"}}, "required": ["status"]}}},
+          "then": {"properties": {"source_list_item": {"required": ["item_index", "item_total"], "not": {"required": ["uncertainty_reason"]}}}}
+        },
+        {
+          "if": {"required": ["source_list_item"], "properties": {"source_list_item": {"properties": {"status": {"const": "uncertain"}}, "required": ["status"]}}},
+          "then": {"properties": {"source_list_item": {"required": ["uncertainty_reason"], "not": {"anyOf": [{"required": ["item_index"]}, {"required": ["item_total"]}]}}}}
+        },
+        {
+          "if": {"required": ["source_question"], "properties": {"source_question": {"properties": {"status": {"const": "linked"}}, "required": ["status"]}}},
+          "then": {"properties": {"source_question": {"required": ["answer_option", "answer_text"], "not": {"required": ["uncertainty_reason"]}}}}
+        },
+        {
+          "if": {"required": ["source_question"], "properties": {"source_question": {"properties": {"status": {"const": "uncertain"}}, "required": ["status"]}}},
+          "then": {"properties": {"source_question": {"required": ["uncertainty_reason"], "not": {"anyOf": [{"required": ["answer_option"]}, {"required": ["answer_text"]}]}}}}
+        },
+        {"not": {"anyOf": [
+          {"required": ["procedure_group", "source_list_item"]},
+          {"required": ["procedure_group", "source_question"]},
+          {"required": ["source_list_item", "source_question"]}
+        ]}}
+      ]
     }
   }
 }

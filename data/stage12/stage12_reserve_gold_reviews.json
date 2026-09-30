@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage12_reserve_gold_reviews",
+  "status": "original_review_complete_before_reserve_model_run",
+  "coverage_scope": "all_semantic_units_in_selected_regions_only",
+  "reviewer_id": "codex_original_page_semantic_review_2026-09-29",
+  "review_basis": "Each selected region was read in the original PDF image and checked against the current OCR text layer before any new Reserve model call.",
+  "regions": [
+    {
+      "document_key": "D300N", "physical_page": 10, "source_locator": "2-3 基架就位正文",
+      "statements": [
+        {"text": "汽轮发电机的基础混凝土层固化及检查合格后，基架和地脚螺栓的就位工作可准备进行。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "基架和地脚螺栓的就位工作", "subject_class": "process", "conditions": ["基础混凝土层固化及检查合格后"]},
+        {"text": "基架和地脚螺栓就位时，同时确认汽轮发电机中心线及冷凝器纵、横向中心线的位置正确。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "汽轮发电机中心线", "subject_class": "parameter", "object": "冷凝器纵、横向中心线"},
+        {"text": "基架应支承于水泥垫块上。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "基架", "subject_class": "component", "object": "水泥垫块"},
+        {"text": "基架与混凝土之间应紧密接触。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "基架与混凝土之间", "subject_class": "component"},
+        {"text": "水泥垫块应保持足够的强度。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "水泥垫块", "subject_class": "component"},
+        {"text": "先将低压缸基架就位，再逐步向电机侧和前轴承箱侧安装基架。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "低压缸基架", "subject_class": "component"},
+        {"text": "基架安装就位后，安装汽轮发电机组地脚螺栓并预紧。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "汽轮发电机组地脚螺栓", "subject_class": "component"},
+        {"text": "基架就位工作按表2-3-1顺序进行。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "基架就位工作", "subject_class": "process"}
+      ]
+    },
+    {
+      "document_key": "DL5190.3", "physical_page": 29, "source_locator": "4.8.1 喷嘴检查与安装",
+      "statements": [
+        {"text": "喷嘴外观检查应无裂纹、铸砂、焊瘤和油污。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "喷嘴", "subject_class": "component", "negation": ["无裂纹、铸砂、焊瘤和油污"]},
+        {"text": "喷嘴组与喷嘴槽或蒸汽室的结合面应用涂色法检查，接触面积应大于75％。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "结合面", "subject_class": "component", "quantity": {"surface_form": "大于75％", "value": 75, "unit": "％", "operator": "gt"}},
+        {"text": "喷嘴组与喷嘴槽或蒸汽室的密封面应无贯通缺陷。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "密封面", "subject_class": "component", "negation": ["无贯通缺陷"]},
+        {"text": "散装喷嘴间结合面及喷嘴组两端面定位键与定位销的间隙应不大于0.04mm。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "间隙", "subject_class": "parameter", "quantity": {"surface_form": "不大于0.04mm", "value": 0.04, "unit": "mm", "operator": "lte"}},
+        {"text": "组装好的喷嘴或喷嘴组应无松动。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "组装好的喷嘴或喷嘴组", "subject_class": "component", "negation": ["无松动"]},
+        {"text": "喷嘴组出汽侧端面应平齐。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "喷嘴组出汽侧端面", "subject_class": "component"},
+        {"text": "单头螺栓紧固后，其丝杆端部与栽丝孔底部应留有不小于1.00mm的间隙。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "丝杆端部与栽丝孔底部", "subject_class": "component", "quantity": {"surface_form": "不小于1.00mm", "value": 1.0, "unit": "mm", "operator": "gte"}, "conditions": ["单头螺栓紧固后"]},
+        {"text": "单头螺栓的紧固力矩与伸长量应符合制造厂技术要求，并作记录。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "紧固力矩与伸长量", "subject_class": "parameter", "object": "制造厂技术要求"},
+        {"text": "喷嘴紧固所用螺栓与销钉应在扣大盖前点焊或铆固。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "螺栓与销钉", "subject_class": "component", "applicability": "扣大盖前"}
+      ]
+    },
+    {
+      "document_key": "DLT863", "physical_page": 9, "source_locator": "5.2.4.1 闭式冷却水系统主要调试项目",
+      "statements": [
+        {"text": "稳压水箱排放冲洗至水质清澈、无杂物。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "稳压水箱", "subject_class": "component"},
+        {"text": "闭式冷却水泵试运。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "闭式冷却水泵", "subject_class": "component"},
+        {"text": "对系统母管和用户支管进行循环冲洗。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "系统母管和用户支管", "subject_class": "component"},
+        {"text": "循环冲洗2h后，停泵放水并清洗滤网。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "滤网", "subject_class": "component", "quantity": {"surface_form": "2h", "value": 2, "unit": "h", "operator": "eq"}, "conditions": ["循环冲洗2h后"]},
+        {"text": "重复循环冲洗至水质清澈、无杂物。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "循环冲洗", "subject_class": "process"},
+        {"text": "闭式冷却水系统投运时，调整压力、温度、水位及自动控制。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "闭式冷却水系统", "subject_class": "system"},
+        {"text": "对闭式冷却水泵联锁保护进行动态校验。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "闭式冷却水泵联锁保护", "subject_class": "system"},
+        {"text": "对停机（应急）冷却水泵进行试转及调整。", "type": "procedure", "predicate": "describes", "modality": "descriptive", "subject": "停机（应急）冷却水泵", "subject_class": "component"}
+      ]
+    },
+    {
+      "document_key": "HAF103", "physical_page": 5, "source_locator": "2.3.1 经验反馈",
+      "statements": [
+        {"text": "营运单位应当建立经验反馈体系。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "营运单位", "subject_class": "organization", "object": "经验反馈体系"},
+        {"text": "营运单位应定期或不定期通过自我评估或同行评估评价经验反馈体系的有效性。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "营运单位", "subject_class": "organization", "object": "经验反馈体系的有效性"}
+      ]
+    },
+    {
+      "document_key": "auxiliary_installation_book", "physical_page": 81, "source_locator": "Lc4A3351 卷扬机选择题",
+      "statements": [
+        {"text": "卷扬机工作时，其卷筒上余留钢丝绳圈数应不少于3圈。", "type": "requirement", "predicate": "requires", "modality": "shall", "subject": "卷筒", "subject_class": "component", "quantity": {"surface_form": "不少于3圈", "value": 3, "unit": "圈", "operator": "gte"}, "conditions": ["卷扬机工作时"], "answer_injection": {"question_id": "Lc4A3351", "marked_option": "A", "option_text": "3"}}
+      ]
+    }
+  ]
+}

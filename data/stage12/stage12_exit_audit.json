@@ -3,9 +3,9 @@
   "stage": "12",
   "artifact_kind": "stage12_exit_audit",
   "status": "in_progress",
-  "implementation_status": "complete",
+  "implementation_status": "in_progress",
   "quality_status": "quality_not_accepted",
-  "pipeline_ready": true,
+  "pipeline_ready": false,
   "quality_accepted": false,
   "reserve_ready": false,
   "historical_holdout_status": "exposed_not_eligible",
@@ -17,15 +17,15 @@
   "inputs": {
     "data/stage9/stage9_exit_audit.json": {
       "path": "data/stage9/stage9_exit_audit.json",
-      "sha256": "c76799a028ba5046d7fdab4b13062d1b87fc07a1bb98ed6db612f65e57848483"
+      "sha256": "4e592204a59a1fdf81a665ed1d21714561c1d4c75a91d5a3681aa8af769d0ce7"
     },
     "data/stage10/stage10_audit.json": {
       "path": "data/stage10/stage10_audit.json",
-      "sha256": "47fcf88c090c21fa0349e3746cbc1d498715d6d8ce7b98f88e755d0ec0084f3d"
+      "sha256": "1db4b0980aca5ef1cabfc0bfe55c0742fd0db124e93d69cdf18fd29826254496"
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "8ad02076e018a6a0e0823f33ac3455bdf7bbf2fa4d74b4e213a2544dd5ef2c0f"
+      "sha256": "0f259a1df8282713ceebdd31bcb2de38e4670b8d51100a4853ef47397260b03f"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
@@ -49,19 +49,19 @@
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "d1d5c591faf39be69ba0ab120b39da641ee11dc1ae73ed8edb60d5b12390b970"
+      "sha256": "dab0b12284507c085be3abbcf4422d8269171255cf68030d12161bd0e2ddd488"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "925e30d65d5a916ab07a794bb14c84a2c337af00e3a19f0e63747670fec24314"
+      "sha256": "f5cb7041935165df286d4d1a8eabb301b7eb5f2ff9ea213e710e054e52a64076"
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "45a5253f67ee57b850c6aff58a0531f70e34ce35ab7a8a51c4b7653194c16d93"
+      "sha256": "e790996d307ad388f0e21723197a3e0718ab4d9b07297b9ebfe935ce9733e906"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "a0630982711e5956fe97661f6adfae6dc6295df58ef4bc45c739f8a294f8143e"
+      "sha256": "43207f4097fde2ac940bf958126c6f7ce0993700a64a0179a5f6f70b311f3dff"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
@@ -69,7 +69,7 @@
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "ec1d1bab2854258441bb3432cd18de74108174672ab2ddb4c475259e3ca21f64"
+      "sha256": "8f5b6a95b6bd212a24ce2a8fb27fa40d9d017dd8264f4ddbe3a4e49f8799251b"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
@@ -77,23 +77,23 @@
     },
     "ontology/stage9_shapes.ttl": {
       "path": "ontology/stage9_shapes.ttl",
-      "sha256": "642430d3af0e13dc0a92e6b77bb090bd25d7812b54a8f6f73fedb2601bef2f56"
+      "sha256": "b20b202d2672e81b9fbeb87e8853fd62a021baf7ccf5296152c33850b3c66656"
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "aee3eb19ade9fa153f60c93478d6dd6899b6582daf6a9cc5a2e6d0c15def5e71"
+      "sha256": "f9259302315bc4eaea46cc4c8cbe586f22c39ad186d601fae701642bd7352dce"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "ffa4e2070bfa3b23be5b691107afc6fd338ce0615f8e4652397af0479f8de51d"
+      "sha256": "a19045f8b2a45fb9338e90c3a5d4f7f1aa28ef0c4e7c520d19215259076984c4"
     },
     "data/stage12/stage12_development_disagreement_adjudication.json": {
       "path": "data/stage12/stage12_development_disagreement_adjudication.json",
-      "sha256": "5621182f833a8c688f594ea0713fcc1fb4c1c68c181485425bb3a4ab601207ca"
+      "sha256": "12a18d14ed6539718876876cc5014509def74f6b729ba7e95c5e8bec3fd173ef"
     },
     "data/stage12/stage12_holdout_evaluation.json": {
       "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "9eb8431e2ee70934caec91dfa7cf22b258c1db358187f0848b72434016d90bde"
+      "sha256": "a56d0d3c39a21320f19ac964d7971209d85670ea71c6d6c4ec0a7ad3dd8073c3"
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
@@ -113,7 +113,7 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "7755ba2dec5d34280ab7a4e98142dc016aae3b7c368f3d9f32cfbc7a1aedce17"
+      "sha256": "973426d7e94c887dd1a30935130db48679b9dfc26108c0034378fb6acb3d72d6"
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
@@ -148,10 +148,10 @@
     "runtime_cache": "var/model_runs/stage12"
   },
   "checks": {
-    "stage11_exit_gate": true,
+    "stage11_exit_gate": false,
     "stage11_internal_lineage_current": true,
     "label_free_development_manifest": true,
-    "manifest_input_lineage_current": true,
+    "manifest_input_lineage_current": false,
     "representative_baseline_frozen": true,
     "representative_input_scope_declared": true,
     "five_documents_represented": true,
@@ -164,7 +164,7 @@
     "real_llm_execution_verified": true,
     "producer_reexecution_current": true,
     "stale_cache_zero": true,
-    "candidate_input_lineage_current": true,
+    "candidate_input_lineage_current": false,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
     "development_evaluation_present": true,
@@ -219,7 +219,7 @@
     "real_llm_execution_verified": true,
     "producer_reexecution_current": true,
     "stale_cache_zero": true,
-    "candidate_input_lineage_current": true,
+    "candidate_input_lineage_current": false,
     "candidate_schema_and_stage9_gate": true,
     "canonical_evidence_consumed": true,
     "profile_routes_are_unique_and_consumed": true,
@@ -243,6 +243,9 @@
   "zero_tolerance_errors": [],
   "blockers": [
     "acceptance_quality_gate",
+    "candidate_input_lineage_current",
+    "manifest_input_lineage_current",
+    "stage11_exit_gate",
     "upstream_reserve_gold_not_ready"
   ],
   "next_stage_allowed": false,

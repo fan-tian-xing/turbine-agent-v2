@@ -62,6 +62,30 @@ def test_merged_candidate_can_cover_two_gold_statements():
     assert report["adjudication_validation"]["pending_review_count"] == 0
 
 
+def test_unmatched_gold_cannot_be_covered_by_review_without_existing_candidate():
+    gold = [_gold("g1", "甲完成")]
+    adjudication = {"artifact_kind": "synthetic", "decisions": [_decision("g1", "missing-candidate", "D")]}
+    report = compare_candidates([], gold, adjudication=adjudication)
+    assert report["adjudicated_information_coverage"] == 0.0
+
+
+def test_unmatched_gold_cannot_borrow_unrelated_existing_candidate():
+    gold = [_gold("g1", "甲完成"), _gold("g2", "乙完成")]
+    gold[1]["evidence_bindings"] = [{"evidence_id": "e-2", "support_type": "direct"}]
+    candidate = _candidate("c1", "甲完成")
+    adjudication = {"artifact_kind": "synthetic", "decisions": [_decision("g2", "c1", "D")]}
+    report = compare_candidates([candidate], gold, adjudication=adjudication)
+    assert report["adjudicated_information_coverage"] == 0.5
+
+
+def test_same_evidence_reviewed_paraphrase_can_cover_unmatched_gold():
+    gold = [_gold("g1", "喷嘴安装前须完成外观检查")]
+    candidate = _candidate("c1", "外观检验合格是装配喷嘴的前提")
+    adjudication = {"artifact_kind": "synthetic", "decisions": [_decision("g1", "c1", "D")]}
+    report = compare_candidates([candidate], gold, adjudication=adjudication)
+    assert report["adjudicated_information_coverage"] == 1.0
+
+
 def test_entity_granularity_difference_can_be_accepted_without_model_error():
     gold = [_gold("g1", "密封瓦座垫片材质应符合制造厂技术要求")]
     candidate = _candidate("c1", gold[0]["statement_text"])
@@ -103,13 +127,13 @@ def test_critical_quantity_negation_and_direction_metrics_are_not_adjudicated_aw
 def test_development_gate_uses_information_coverage_and_noncritical_tolerance():
     development = {
         "safety_metrics": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_addition_count": 0, "unsupported_candidate_count": 0, "critical_quantity_mismatch_count": 0, "critical_polarity_error_count": 0, "critical_relation_direction_error_count": 0, "critical_omission_count": 0, "critical_error_row_count": 0},
-        "coverage_metrics": {"matched_candidate_precision": 1.0, "over_split_count": 0},
+        "coverage_metrics": {"matched_candidate_precision": 0.2, "over_split_count": 9},
         "matched_field_accuracy": {"statement_type": 1.0, "relation": 1.0, "quantity": 1.0, "negation": 1.0, "relation_direction": 1.0},
         "adjudicated_information_coverage": 0.975,
         "adjudicated_disagreement_summary": {"confirmed_critical_model_error_count": 0, "confirmed_noncritical_model_error_rate": 0.025, "pending_review_count": 0},
         "adjudication_validation": {"pending_review_count": 0, "extra_adjudication_count": 0},
     }
-    policy = {"hard_safety": development["safety_metrics"], "coverage": {"adjudicated_information_coverage": 0.95, "matched_candidate_precision": 0.9, "max_over_split_count": 3}, "matched_quality": development["matched_field_accuracy"], "adjudication": {"max_confirmed_critical_model_errors": 0, "max_confirmed_noncritical_model_error_rate": 0.1, "max_pending_review_count": 0}}
+    policy = {"hard_safety": development["safety_metrics"], "coverage": {"adjudicated_information_coverage": 0.95}, "supported_candidates": {"evidence_binding_accuracy": 1.0, "evidence_semantic_support_accuracy": 1.0, "unsupported_addition_count": 0, "unsupported_candidate_count": 0}, "adjudication": {"max_confirmed_critical_model_errors": 0, "max_confirmed_noncritical_model_error_rate": 0.1, "max_pending_review_count": 0}}
     passed, details = _development_quality_gate(development, policy)
     assert passed is True
     assert details["coverage"]["adjudicated_information_coverage"] is True

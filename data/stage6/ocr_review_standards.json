@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "artifact_kind": "stage6_standard_pdf_ocr_review",
+  "coordinate_system": "original_pdf_points; physical page numbers are one-based",
+  "status_semantics": {
+    "verified": "Visible printed text was checked against the original page and needs no text repair.",
+    "corrected": "This review record supplies the original-page correction; the derived OCR PDF itself is not silently rewritten.",
+    "pending": "A visible original-page reading remains unresolved.",
+    "region_recorded": "The original image/table region and readable labels are recorded; spatial interpretation remains visual context."
+  },
+  "sources": {
+    "DL5190.3": {
+      "original_relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "text_layer": "original_pdf_native_text",
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813"
+    },
+    "DLT863": {
+      "original_relative_path": "标准法规/DLT 863-2016汽轮机启动调试导则.pdf",
+      "text_layer": "derived_ocr_pdf_and_stage5_rapidocr_boxes",
+      "derived_ocr_filename": "DLT 863-2016汽轮机启动调试导则(OCR).pdf",
+      "derived_ocr_pdf_sha256": "fc255bb60ffaeef51109f395853d36b04be2922ed1e1e2dbba5081ef6aeeec65",
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb"
+    }
+  },
+  "pages": [
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 1,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "source_text_layer_artifact",
+          "bbox_pdf_pt": [70.92, 59.43, 174.17, 71.74],
+          "observed_text": "备案号：60035-2017",
+          "verified_text": null,
+          "action": "Exclude from visible-page transcription. A 4x original-PDF render of this exact region shows ICS 27.100 and P 61 but no filing-number line."
+        },
+        {
+          "kind": "cover_graphic",
+          "bbox_pdf_pt": [389, 43, 510, 105],
+          "observed_text": null,
+          "verified_text": "DL",
+          "action": "Keep as a cover-logo visual region; do not merge it with nearby standard identifier."
+        }
+      ],
+      "coverage_note": "All other visible cover titles, dates and publisher are present in the original native text layer. Excluding the invisible source-text artifact completes visible cover text."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 14,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "coverage_note": "Original native text matches the visible clauses 3.1.1–3.2.6 and numbered lists. The final 3.2.6 sentence continues onto the next physical page; preserve that source boundary without inventing the continuation."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 25,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "figure_text_and_geometry",
+          "bbox_pdf_pt": [155, 120, 445, 277],
+          "observed_text": "图4.5.8-1 caption and numbered legend are extracted; labels and spatial connections inside the drawing are not reconstructed.",
+          "verified_text": "图4.5.8-1 推力轴承调整机构详图",
+          "verified_labels": ["A-A", "油入口", "排油", "推力轴承调整机构", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"],
+          "action": "Retain image-region bbox and visually verified labels; keep drawing relationships pending."
+        },
+        {
+          "kind": "figure_text_and_geometry",
+          "bbox_pdf_pt": [205, 344, 405, 500],
+          "observed_text": "图4.5.8-2 caption and numbered legend are extracted without reliable drawing-to-number links.",
+          "verified_text": "图4.5.8-2 金斯伯里推力轴承",
+          "verified_labels": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
+          "action": "Bind each numbered callout to the original image region before treating it as structured content."
+        },
+        {
+          "kind": "cross_page_figure_caption",
+          "bbox_pdf_pt": [177, 555, 435, 773],
+          "observed_text": "The third bearing drawing and its in-figure labels are absent from extracted page-25 text; its caption starts on physical page 26.",
+          "verified_text": "图4.5.8-3 双楔面、小岛型球座式推力轴承",
+          "verified_text_physical_page": 26,
+          "verified_labels": ["轴承箱与瓦套两侧总间隙c", "密封环间隙a", "油封总间隙b", "X", "Y", "推力总间隙（X+Y）", "瓦套", "推力瓦块", "球面座", "推力盘"],
+          "action": "Keep the image on p25 and the caption on p26 as separate original-page sources; do not fabricate a p25 caption SourceSpan."
+        }
+      ],
+      "coverage_note": "Visible clause 4.5.8 items 5–6 and the first two figure captions/legends match native text. Readable in-figure labels are listed above; the three vector drawings retain image-region context without inferred geometry."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 42,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "ocr_text_status": "verified",
+      "nontext_status": "none",
+      "issues": [],
+      "coverage_note": "Original native text matches the visible closing 5.4.6 items and clauses 5.4.7–5.4.16, including 1.1/1.25 pressure multipliers and 60% flushing-pipe area. Opening items 4–5 inherit 5.4.6 from p41."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 86,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "figure_text_and_geometry",
+          "bbox_pdf_pt": [185, 382, 410, 442],
+          "observed_text": "The native layer has the 图9.6.2 caption but not a reliable transcription of the small axial-clearance diagram and its dimension marks.",
+          "verified_text": "图9.6.2 密封瓦在瓦座内的轴向间隙示意图",
+          "verified_labels": ["a"],
+          "action": "Keep the printed figure number exactly as shown, record the original image region, and leave diagram geometry pending."
+        }
+      ],
+      "coverage_note": "Visible 9.7.2–9.8.2 prose is extractable and the diagram's readable a mark is recorded. The figure appears amid 9.7.2 yet is printed 图9.6.2; do not silently renumber or infer geometry."
+    },
+    {
+      "document_key": "DL5190.3",
+      "physical_page": 113,
+      "original_pdf_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+      "ocr_text_status": "verified",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "table_structure",
+          "bbox_pdf_pt": [152, 126, 443, 181],
+          "observed_text": "Table text is native-extractable but the three right-hand limits and one merged left-hand criterion lose cell relationships in linear text.",
+          "verified_text": "低定位精度要求ƒ≤S/500；中定位精度要求ƒ≤S/750；高定位精度要求ƒ≤S/1000",
+          "action": "Use three row-level cell locations with the merged left header; retain S/500, S/750 and S/1000 exactly."
+        },
+        {
+          "kind": "figure_geometry",
+          "bbox_pdf_pt": [104.4, 511.92, 289.44, 679.38],
+          "observed_text": "Figure 12.2.1 and C callouts have a caption/legend, but the wheel-to-rail spatial relation is not represented by text extraction.",
+          "verified_text": "图12.2.1 车轮轮缘内侧与工字钢轨道下翼缘边缘的间隙",
+          "verified_labels": ["C"],
+          "action": "Retain the original image-region bbox and printed C labels; geometry remains visual-only pending review."
+        }
+      ],
+      "coverage_note": "Native text visibly covers 12.1.15 continuation, note definitions, 12.1.16–12.1.17 and 12.2.1–12.2.3. The table and diagram require source-layout structure; no new OCR transcription is needed for the prose."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 1,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "issues": [
+        {
+          "kind": "cover_reading_order",
+          "bbox_pdf_pt": [52, 20, 535, 770],
+          "observed_text": "ICS27.100DL; F29; 2016-12-01实施2016-08-16发布",
+          "verified_text": "ICS 27.100；F 29；2016-08-16 发布；2016-12-01 实施",
+          "date_regions_pdf_pt": [
+            {"bbox": [53.79, 707.29, 159.25, 721.27], "verified_text": "2016-08-16 发布"},
+            {"bbox": [421.84, 706.45, 528.99, 720.42], "verified_text": "2016-12-01 实施"}
+          ],
+          "action": "Separate the large DL logo from ICS, retain the original left-to-right release/implementation date association, and preserve title and replacement-standard lines."
+        }
+      ],
+      "coverage_note": "The scanned cover has no native text. OCR contains the major metadata but merges unrelated regions and reverses the two dated events."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 2,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "ocr_text_status": "corrected",
+      "nontext_status": "none",
+      "issues": [
+        {
+          "kind": "missing_toc_line",
+          "bbox_pdf_pt": [61, 179, 530, 197],
+          "observed_text": null,
+          "verified_text": "前言 …… III",
+          "action": "Restore this printed table-of-contents row as navigation text."
+        },
+        {
+          "kind": "toc_row_structure",
+          "bbox_pdf_pt": [61, 197, 530, 772],
+          "observed_text": "规范性引用文件2；术语和定义3；汽轮机启动前应投运的系统.186.2；.266.10汽轮机停机",
+          "verified_text": "2 规范性引用文件 …… 1；3 术语和定义 …… 1；6.2 汽轮机启动前应投运的系统 …… 18；6.10 汽轮机停机 …… 26",
+          "corrected_toc_rows": [
+            ["前言", "III"], ["1 范围", "1"], ["2 规范性引用文件", "1"], ["3 术语和定义", "1"],
+            ["4 总则", "2"], ["4.1 工作组织", "2"], ["4.2 能力资格", "3"], ["4.3 计量管理", "3"],
+            ["4.4 调试措施", "3"], ["4.5 工作内容", "3"], ["5 分部试运", "3"], ["5.1 一般规定", "3"],
+            ["5.2 分系统试运主要调试项目及注意事项", "4"], ["6 汽轮机整套启动试运", "17"],
+            ["6.1 一般规定", "17"], ["6.2 汽轮机启动前应投运的系统", "18"],
+            ["6.3 系统投运注意事项", "20"], ["6.4 汽轮机启动前检查", "20"],
+            ["6.5 汽轮机启动方式", "21"], ["6.6 汽轮机空负荷试运", "22"],
+            ["6.7 汽轮机带负荷试运", "23"], ["6.8 汽轮机满负荷试运", "25"],
+            ["6.9 汽轮机禁止启动条件", "25"], ["6.10 汽轮机停机", "26"],
+            ["6.11 整套启动试运注意事项", "28"], ["7 汽轮机典型事故处理", "28"],
+            ["7.1 汽轮机油系统火灾", "28"], ["7.2 汽轮机超速", "29"],
+            ["7.3 汽轮机大轴弯曲、轴瓦烧损", "29"], ["7.4 汽轮机甩负荷", "30"],
+            ["7.5 汽轮机进水", "31"], ["7.6 循环水中断", "31"], ["7.7 全厂失电", "31"],
+            ["8 调试文件", "32"], ["8.1 一般规定", "32"],
+            ["8.2 汽轮机分系统调试技术文件", "32"], ["8.3 汽轮机整套启动调试技术文件", "32"]
+          ],
+          "action": "Rebuild the entire visible contents list through 8.3 as ordered tuples (section number, title, printed page), preserving indentation and not treating dotted leaders as clause text."
+        }
+      ],
+      "coverage_note": "The contents page is navigation, but the OCR has lost row/column association and at least the first entry. It cannot be marked text-complete from the flattened string."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 14,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "ocr_text_status": "corrected",
+      "nontext_status": "none",
+      "issues": [
+        {
+          "kind": "list_label_glyph",
+          "bbox_pdf_pt": [82.59, 204.99, 93.6, 213.88],
+          "observed_text": "）",
+          "verified_text": "c)",
+          "action": "Restore 5.2.12.2 c) before '主汽阀、调节汽阀关闭时间应小于0.3s（包括延迟时间）' at the same visual line."
+        },
+        {
+          "kind": "list_label_glyph",
+          "bbox_pdf_pt": [81.74, 343.06, 93.6, 354.07],
+          "observed_text": "(P",
+          "verified_text": "d)",
+          "action": "Restore 5.2.13.1 d) before '配合进行离子交换器投运；'. The 5.2.14.1 d) dual-flow seal-oil label is a separate correctly read box. This glyph repair is independently specified in existing Stage 6 OCR box overrides."
+        },
+        {
+          "kind": "list_reading_order",
+          "bbox_pdf_pt": [61, 144, 536, 753],
+          "observed_text": "Multiple b)/c)/d)/e) and numbered 2)–7) labels follow the previous sentence in OCR text order.",
+          "verified_text": "5.2.12.2 a–c；5.2.13.1 a–g；5.2.13.2 a–c；5.2.14.1 a–d with d) 1–7, then e) 1）",
+          "corrected_outline": [
+            ["5.2.12.2", "a", "b", "c"],
+            ["5.2.13.1", "a", "b", "c", "d", "e", "f", "g"],
+            ["5.2.13.2", "a", "b", "c"],
+            ["5.2.14.1", "a", "b", "c", "d", "d/1", "d/2", "d/3", "d/4", "d/5", "d/6", "d/7", "e", "e/1"]
+          ],
+          "action": "Sort OCR boxes by original line geometry and attach each left-column label to its own sentence; retain the d)/e) parent-child boundaries."
+        }
+      ],
+      "coverage_note": "Original-page lexical content is readable. The two wrong glyphs and complete list order are specified above; the printed clause wording remains in the Stage 5 OCR boxes. Bottom e) 1） continues as 2）–6） on physical p15."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 15,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "ocr_text_status": "corrected",
+      "nontext_status": "none",
+      "issues": [
+        {
+          "kind": "cross_page_list_hierarchy",
+          "bbox_pdf_pt": [88, 105, 539, 244],
+          "observed_text": "OCR places 2）–6） and f)/g)/h) after adjacent text; h) splits inside '最低油氢差压'.",
+          "verified_text": "p15 starts with 5.2.14.1 e) 2）–6）；f）、g）、h） are sibling items after e), not children; h) ends '系统最低油氢差压。'",
+          "corrected_h_item": "h） 密封油压扰动试验：密封油系统联锁保护实校，记录油泵联锁启动时间和系统最低油氢差压。",
+          "corrected_outline": ["5.2.14.1 e/2", "e/3", "e/4", "e/5", "e/6", "f", "g", "h"],
+          "action": "Attach 2）–6） to the e) parent on p14, then begin sibling f/g/h items; repair the h) line break without changing the printed wording."
+        },
+        {
+          "kind": "list_reading_order",
+          "bbox_pdf_pt": [88, 270, 539, 778],
+          "observed_text": "Several 5.2.14.2, 5.2.15.1 and 5.2.15.2 item letters and 1）–3） numbers are emitted after their clauses.",
+          "verified_text": "5.2.14.2 a–c；5.2.15.1 a–j with h) 1–3 and j) 1–2；5.2.15.2 a–d",
+          "corrected_outline": [
+            ["5.2.14.2", "a", "b", "c"],
+            ["5.2.15.1", "a", "b", "c", "d", "e", "f", "g", "h", "h/1", "h/2", "h/3", "i", "j", "j/1", "j/2"],
+            ["5.2.15.2", "a", "b", "c", "d"]
+          ],
+          "action": "Reorder by original line boxes, preserving each parent item and numbered child."
+        }
+      ],
+      "coverage_note": "Original-page lexical content is readable and the deterministic list order is specified above. Physical p15 is printed 11; printed 12 is absent. Visible 5.2.15.2 a–d are source-valid, but no following item or missing-page sentence may be synthesized."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 27,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "correction_source": {
+        "path": "data/stage6/stage6_standard_source_supplements.json",
+        "source_unit_count": 142,
+        "table_keys": ["dlt863-d1-p27"]
+      },
+      "issues": [
+        {
+          "kind": "form_table_flattened",
+          "bbox_pdf_pt": [52.5, 217, 523.5, 768],
+          "observed_text": "The OCR interleaves boiler, turbine and generator cells, reverses group-header order and detaches units from parameter rows; some ℃ symbols become C or stray quote marks.",
+          "verified_text": "表D.1 has boiler/turbine/generator groups, each with 项目/单位/设计值/数值. There are 21 boiler, 22 turbine and 18 generator printed parameter-and-unit rows on p27.",
+          "action": "Restore each nonempty original cell to its own row/column bbox. Keep all 设计值 and 数值 cells blank; do not create measurements or imply that printed units are values."
+        },
+        {
+          "kind": "table_continuation",
+          "bbox_pdf_pt": [219, 749, 317, 768],
+          "observed_text": "五段抽汽压力 appears as an isolated OCR tail line.",
+          "verified_text": "五段抽汽压力 | MPa",
+          "action": "Keep as the last turbine parameter row on p27; link D.1 continuation on physical p28."
+        }
+      ],
+      "coverage_note": "Printed page 38. All 142 nonempty page source units and the blank template schema are bound to original-page positions in the cited source supplement. OCR text is corrected there; table geometry remains recorded context rather than inferred measurements."
+    },
+    {
+      "document_key": "DLT863",
+      "physical_page": 28,
+      "original_pdf_sha256": "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb",
+      "ocr_text_status": "corrected",
+      "nontext_status": "region_recorded",
+      "correction_source": {
+        "path": "data/stage6/stage6_standard_source_supplements.json",
+        "source_unit_count": 65,
+        "table_keys": ["dlt863-d1-p28", "dlt863-d2-p28"]
+      },
+      "issues": [
+        {
+          "kind": "continued_form_table_flattened",
+          "bbox_pdf_pt": [66.5, 119.5, 536.5, 246.5],
+          "observed_text": "OCR emits the D.1 repeated headers as one sequence and the three continuation parameters without their turbine-column context.",
+          "verified_text": "表D.1（续）：六段抽汽压力 | MPa；七段抽汽压力 | MPa；八段抽汽压力 | MPa",
+          "action": "Attach these three rows to the turbine group inherited from p27; leave every design/recorded value slot and all signature fields empty."
+        },
+        {
+          "kind": "form_table_flattened",
+          "bbox_pdf_pt": [66, 290.5, 537, 741],
+          "observed_text": "OCR collapses 日期/运行状态/位置/轴振动值 μm and 1号–9号 headers and loses the four three-row state blocks; x/y appear as free text.",
+          "verified_text": "表D.2 has four groups: 空负荷, 并网, 首次满负荷, 额定负荷. 3000r/min is printed in the first group's state-value cell; x/y are printed position markers. All date, power/pressure/temperature entry slots and nine vibration-value columns are blank.",
+          "action": "Restore row/column and merged-date-cell geometry from the original image. Preserve 3000r/min and x/y as printed template context, not observations."
+        }
+      ],
+      "coverage_note": "Printed page 39. All 65 nonempty page source units, including D.1 continuation and D.2 printed labels, are bound to original-page positions in the cited source supplement. Eight signature labels are printed; measured and signed values remain blank."
+    }
+  ]
+}

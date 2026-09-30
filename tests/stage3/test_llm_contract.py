@@ -14,10 +14,11 @@ from turbine_kg.stage3.real_trial import load_confirmed_real_corpus
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONFIRMATION = PROJECT_ROOT / "data" / "stage3" / "real_trial_confirmation.json"
 RUNTIME_CORPUS = PROJECT_ROOT / "var" / "stage3" / "real_trial_pages.json"
+CURRENT_SOURCE_BINDINGS = PROJECT_ROOT / "data" / "stage9" / "stage9_current_source_bindings.json"
 
 
 def _make_hit():
-    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS)
+    corpus = load_confirmed_real_corpus(CONFIRMATION, RUNTIME_CORPUS, current_binding_path=CURRENT_SOURCE_BINDINGS)
     document = corpus[0]
     statement = document.statements[0]
     evidence = document.evidence[0]

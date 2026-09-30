@@ -13,12 +13,12 @@
   "provider_call_count": 6,
   "provider_failure_count": 0,
   "input_sha256": {
-    "prompt": "a0630982711e5956fe97661f6adfae6dc6295df58ef4bc45c739f8a294f8143e",
-    "contract": "4a3d96b1ba2e89d81556fbb996b74446fec8a4e777f445edcbe4ff510e88186e",
+    "prompt": "43207f4097fde2ac940bf958126c6f7ce0993700a64a0179a5f6f70b311f3dff",
+    "contract": "4fc681077676bd4889f0036fb82c6013620082ea367840c88b97e485234c4476",
     "response_schema": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f",
-    "candidate_schema": "925e30d65d5a916ab07a794bb14c84a2c337af00e3a19f0e63747670fec24314",
-    "semantic_source": "847e7e9cfa7b1141c00666a71dc49ac6b732bedf2ee2038f62d0a6379c27057e",
-    "provider_config": "45a5253f67ee57b850c6aff58a0531f70e34ce35ab7a8a51c4b7653194c16d93",
+    "candidate_schema": "f5cb7041935165df286d4d1a8eabb301b7eb5f2ff9ea213e710e054e52a64076",
+    "semantic_source": "64322646c0cd57233cca2b2880ee4cc8575af0a6e4d26d7f1a7cfc36e21cbced",
+    "provider_config": "e790996d307ad388f0e21723197a3e0718ab4d9b07297b9ebfe935ce9733e906",
     "cases": "5c98c5a0f151131472234287fd1ecff836993df0f211427f3a0da99caa2a3765"
   },
   "provider_metadata": {
@@ -92,7 +92,7 @@
     }
   ],
   "extraction_fingerprint": {
-    "contract": "4a3d96b1ba2e89d81556fbb996b74446fec8a4e777f445edcbe4ff510e88186e",
-    "semantic_source": "847e7e9cfa7b1141c00666a71dc49ac6b732bedf2ee2038f62d0a6379c27057e"
+    "contract": "4fc681077676bd4889f0036fb82c6013620082ea367840c88b97e485234c4476",
+    "semantic_source": "64322646c0cd57233cca2b2880ee4cc8575af0a6e4d26d7f1a7cfc36e21cbced"
   }
 }

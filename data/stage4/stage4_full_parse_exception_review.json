@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "stage": "4",
+  "artifact_kind": "full_parse_exception_review",
+  "reviewed_at": "2026-09-09",
+  "scope": "The two approved intentional blank original pages; approval follows unchanged original identity and bytes independently of current OCR route.",
+  "items": [
+    {
+      "source_original_asset_id": "asset-29ca16b111846e39aabf",
+      "relative_path": "标准法规/DL5190.3—2019电力建设施工技术规范第3部分：汽轮发电机组.pdf",
+      "pdf_page_number": 11,
+      "page_mode": "review_required",
+      "finding": "Visually blank separator page between the English contents and the Chinese main text.",
+      "disposition": "approved_intentional_blank_page",
+      "original_sha256": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813"
+    },
+    {
+      "source_original_asset_id": "asset-115e242947e0a4b46ea5",
+      "relative_path": "2.书籍/260824 扫描文件/汽轮机辅机安装（第二版）.pdf",
+      "pdf_page_number": 31,
+      "page_mode": "scan_only",
+      "finding": "Visually blank separator page between the chapter divider and the first page of section 4.1.",
+      "disposition": "approved_intentional_blank_page",
+      "original_sha256": "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d"
+    }
+  ],
+  "status": "pass",
+  "boundary": "This review approves only the two intentional blank-page exceptions. It does not rate OCR text accuracy or table-cell recovery.",
+  "migrated_at": "2026-09-28",
+  "formal_release": false,
+  "new_user_confirmation": false,
+  "approval_basis": "preserved_existing_original_page_review",
+  "historical_approval": {
+    "former_repository_path": "data/stage4/stage4_full_parse_exception_review_2026-09-09.json",
+    "git_blob_oid": "1cb93f8cd15d0459aa2d9be32167c95f6d734855",
+    "path_state": "removed_from_current_tree",
+    "sha256": "5a4333af12758234b68c9548479fe70ed48f2534682676e908e74e6ee8a11c14",
+    "reviewed_at": "2026-09-09",
+    "note": "Original blank-page decisions preserved unchanged; this migration creates no new user confirmation. The former file is available as the recorded Git blob, not as a current filesystem path. Historical page_mode records the prior parser route, not a new routing decision."
+  }
+}

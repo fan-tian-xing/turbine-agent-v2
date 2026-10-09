@@ -11,7 +11,24 @@
   "execution_kind": "fixture",
   "real_llm_execution": false,
   "provider_call_count": 6,
+  "provider_elapsed_seconds": 0.031,
   "provider_failure_count": 0,
+  "input_sha256": {
+    "prompt": "f4fdb5afe189339edcd4e47ce7d8a06244041232e8887373b6e878305b38e7ad",
+    "contract": "e85b7a8e1e8bd9ebf122b542f90dcd9177002a36aa7ce63f95e607e1e9476f0b",
+    "response_schema": "e755dfd03992f8d3de195837ce2136ef5c5712c2731e16e77e5828c9e9e89fe0",
+    "candidate_schema": "843a6e4fd8827d26eeec36865f6152d6920cdfa7ba21f58448a36da8e6841d7d",
+    "semantic_source": "50bf5bb8300d1e211f3e49415217a17d8091e9b2add3a41a49471fa872aa1a0e",
+    "provider_config": "83f07540e225123ce5ccc87ceb3750c6d8d4aa7983c8459d3db46f18af29307e",
+    "cases": "5c98c5a0f151131472234287fd1ecff836993df0f211427f3a0da99caa2a3765"
+  },
+  "provider_metadata": {
+    "provider_id": "deterministic_fixture_v1",
+    "mode": "fixture",
+    "model_config_identifier": "deterministic-fixture-v1",
+    "prompt_version": "stage12-candidate-prompt-v30",
+    "response_schema_version": 3
+  },
   "case_count": 6,
   "passed_count": 6,
   "failed_count": 0,

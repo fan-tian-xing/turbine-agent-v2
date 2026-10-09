@@ -19,6 +19,6 @@ $projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-pytho
 & $projectPython -m pytest -q -p no:cacheprovider tests/stage11
 ```
 
-当前 46 条 Gold 含人工裁决及新的三方语义复核，不能直接重跑候选构建脚本覆盖。阶段 12 仍须独立重验，阶段 11 的通过不使阶段 12 旧结果自动有效。
+当前 46 条 Gold 含人工裁决及新的三方语义复核，不能直接重跑候选构建脚本覆盖。阶段 12 正按现行输入独立重建；失效的旧 Candidate、Evaluation、分歧汇总和真实 Robustness 结果已删除，阶段 11 的通过不替代阶段 12 重验。
 
 AI 交叉审核记录只能表示待执行的审核轮次，不能由 builder 直接写成 accepted；最终需要独立复核记录和真实语义标注。阶段 15 将按五份资料 775 个唯一物理页统一迁移并全文处理，样本页只处理一次，OCR 派生件不重复计为资料。

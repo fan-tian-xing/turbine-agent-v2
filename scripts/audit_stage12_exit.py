@@ -40,6 +40,13 @@ def _read(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _read_optional(path: Path) -> dict:
+    """Treat an unavailable rebuild output as absent, never as old current data."""
+    if not path.is_file():
+        return {}
+    return _read(path)
+
+
 def _reserve_acceptance_lineage(acceptance: dict) -> bool:
     """Bind final Reserve metrics to the approved one-shot candidate run."""
     manifest_path = STAGE12 / "stage12_reserve_freeze_manifest.json"
@@ -584,8 +591,10 @@ def audit() -> dict:
     baseline = _read(STAGE12 / "stage12_representative_baseline.json")
     routing = _read(ROOT / "config/stage12_profile_routing.json")
     registry = _read(ROOT / "data/stage11/evaluation_sample_registry.json")
-    candidate = _read(STAGE12 / "stage12_development_candidates.json")
-    development = _read(STAGE12 / "stage12_development_evaluation.json")
+    candidate_path = STAGE12 / "stage12_development_candidates.json"
+    development_path = STAGE12 / "stage12_development_evaluation.json"
+    candidate = _read_optional(candidate_path)
+    development = _read_optional(development_path)
     coverage_matrix = _read(STAGE12 / "stage12_semantic_coverage_matrix.json")
     failure_summary = _read(STAGE12 / "stage12_real_llm_failure_summary.json") if (STAGE12 / "stage12_real_llm_failure_summary.json").exists() else {}
     stage6_coverage_path = ROOT / "data/stage6/stage6_semantic_coverage_audit.json"
@@ -642,13 +651,14 @@ def audit() -> dict:
     quality_thresholds = contract["evaluation"]["development_quality_gate"]
     acceptance_policy = contract["evaluation"]["acceptance_quality_gate"]
     development_quality = development.get("field_accuracy", {})
-    adjudication = _read(OUTPUT_PATH)
+    adjudication = _read_optional(OUTPUT_PATH)
     raw_evaluation = _read(RAW_EVALUATION_PATH) if RAW_EVALUATION_PATH.is_file() else {}
     review_record = _read(REVIEW_PATH) if REVIEW_PATH.is_file() else {}
     raw_lineage_current = (
         RAW_EVALUATION_PATH.is_file()
         and REVIEW_PATH.is_file()
-        and raw_evaluation.get("input_sha256", {}).get("candidate") == _sha(STAGE12 / "stage12_development_candidates.json")
+        and candidate_path.is_file()
+        and raw_evaluation.get("input_sha256", {}).get("candidate") == _sha(candidate_path)
         and raw_evaluation.get("input_sha256", {}).get("gold") == _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl")
         and adjudication.get("source_sha256", {}).get("evaluation") == _sha(RAW_EVALUATION_PATH)
         and adjudication.get("source_sha256", {}).get("review") == _sha(REVIEW_PATH)
@@ -698,7 +708,7 @@ def audit() -> dict:
     stored_eval_matches = all(development.get(key) == dev_recomputed.get(key) for key in ("gold_statement_count", "candidate_count", "field_totals", "field_correct", "field_accuracy", "matched_field_totals", "matched_field_correct", "matched_field_accuracy", "coverage_metrics", "safety_metrics", "disagreement_summary", "adjudicated_disagreement_summary", "adjudicated_information_coverage", "adjudication_validation", "error_counts", "unmatched_gold", "unmatched_candidates", "gold_mismatch_count", "gold_mismatch_details", "evidence_binding", "evidence_semantic_support"))
     cached_review_diagnostics.sort(key=lambda item: (item["evidence_id"], item.get("candidate_id", ""), item["code"], item["message"]))
     review_diagnostics_current = candidate.get("review_diagnostics") == cached_review_diagnostics and validated_real_cache_count == len(expected_cache_key_to_evidence_id)
-    dev_input_hashes_match = all(development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
+    dev_input_hashes_match = all(path.is_file() and development.get("input_sha256", {}).get(key) == _sha(path) for key, path in {
         "candidate": STAGE12 / "stage12_development_candidates.json",
         "gold": ROOT / "data/stage11/stage11_statement_development_samples.jsonl",
         "manifest": STAGE12 / "stage12_input_manifest.json",
@@ -807,7 +817,7 @@ def audit() -> dict:
         "canonical_evidence_consumed": lineage_ok,
         "profile_routes_are_unique_and_consumed": profile_ok and len(routing.get("entries", [])) == 5 and {item.get("extraction_profile") for item in candidate.get("candidates", [])} == {entry.get("extraction_profile_id") for entry in routing.get("entries", [])},
         "development_evaluation_present": development.get("status") == "completed" and development.get("evaluator_version") == "stage12-field-evaluator-v7" and development.get("holdout_used_for_tuning") is False and development.get("real_llm_execution") is True and development.get("gold_statement_count") == development_gold_count and stored_eval_matches and dev_input_hashes_match,
-        "development_adjudication_current": raw_lineage_current and adjudication.get("artifact_kind") == "stage12_development_disagreement_adjudication" and adjudication.get("status") == "completed" and adjudication.get("source_sha256", {}).get("gold") == _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl") and adjudication.get("source_sha256", {}).get("candidate") == _sha(STAGE12 / "stage12_development_candidates.json") and development.get("raw_evaluation_sha256") == adjudication.get("source_sha256", {}).get("evaluation"),
+        "development_adjudication_current": raw_lineage_current and adjudication.get("artifact_kind") == "stage12_development_disagreement_adjudication" and adjudication.get("status") == "completed" and adjudication.get("source_sha256", {}).get("gold") == _sha(ROOT / "data/stage11/stage11_statement_development_samples.jsonl") and candidate_path.is_file() and adjudication.get("source_sha256", {}).get("candidate") == _sha(candidate_path) and development.get("raw_evaluation_sha256") == adjudication.get("source_sha256", {}).get("evaluation"),
         "exposed_holdout_excluded_from_acceptance": contract.get("evaluation", {}).get("acceptance_lifecycle", {}).get("current_holdout_eligible_for_final_acceptance") is False,
         "grounding_zero_tolerance": development.get("error_counts", {}).get("unsupported_claim") == 0,
         "no_ontology_or_release_write": candidate.get("inputs", {}).get("stage12_statement_contract") == "config/stage12_statement_contract.json",

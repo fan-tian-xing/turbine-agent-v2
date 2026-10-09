@@ -10,6 +10,6 @@
 
 阶段 8 最终映射中的唯一审核事实是 `mapping_review_decision`；`ontology_mapping_review_queue.jsonl` 的 `review_status` 只表示待办任务状态。阶段 9 的 OWL/SHACL 语义权威和阶段 10 的知识生命周期合同、结构化缓存及退出审计分别位于 `ontology/`、`config/runtime_*` 和 `stage10/stage10_audit.json`。Stage 10 缓存属于本地运行产物，不是知识真源，也不覆盖冻结的 Stage 7 候选。
 
-阶段 11 的 46 条开发 Gold 和来源迁移见 [`stage11/README.md`](stage11/README.md)；旧双轮审核与用户裁决哈希保留为历史，当前 Gold 的复核与哈希另行记录。阶段 12 旧产物不因阶段 11 通过而自动有效。
+阶段 11 的 46 条开发 Gold 和来源迁移见 [`stage11/README.md`](stage11/README.md)；旧双轮审核与用户裁决哈希保留为历史，当前 Gold 的复核与哈希另行记录。阶段 12 已删除失效的旧 Candidate、Evaluation、分歧汇总和真实 Robustness 结果；当前退出审计已覆盖为 `in_progress`。Development 未形成完整当前批次时，以 `stage12/stage12_real_llm_failure_summary.json`、通过现行指纹复核的逐 Evidence 缓存和 `project_state.json` 表示进度，不能消费旧成功结果。
 
 临时解析数据写入 `data/staging/`；私有评测材料写入 `data/private_evaluation/`。这两类内容不进入 Git。大体积运行产物、缓存、日志和 OCR 派生 PDF 统一写入 `var/`：当前 OCR PDF 位于 `var/derived/ocr`，由 `OCR_DERIVED_ROOT` 指向，不能落入只读 `SOURCE_ROOT`；`var/stage3` 保存已确认研发试点的运行输入。Neo4j 数据与日志统一写入 `docker-data/`。

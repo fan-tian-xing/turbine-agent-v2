@@ -46,23 +46,23 @@
     },
     "stage12_contract": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "69c13052bfe5d795033ddfc3e2a9645c37e51d6332f9cd85d4c983acb2004a70"
+      "sha256": "42da21921ea078b3d8f6c8082d5fe99887dfa26a6c1447325f4637597794b4d8"
     },
     "extraction_prompt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "69e880819106643f49ca53bd1d7ab0d8e1cd98f506497984faa07e8a6f89af55"
+      "sha256": "f4fdb5afe189339edcd4e47ce7d8a06244041232e8887373b6e878305b38e7ad"
     },
     "response_schema": {
       "path": "config/stage12_extraction_response.schema.json",
-      "sha256": "e856c12ae38096097c12874d64de31780ba3de504f621924d8543326060f39b5"
+      "sha256": "e755dfd03992f8d3de195837ce2136ef5c5712c2731e16e77e5828c9e9e89fe0"
     },
     "candidate_schema": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "99c3221fdef4fed0bb59249be20c58dff884683b1733c9c74eb8f29807d53041"
+      "sha256": "843a6e4fd8827d26eeec36865f6152d6920cdfa7ba21f58448a36da8e6841d7d"
     },
     "semantic_validation": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "c096da9c36b5eddb752973bee1970ea9269aed356bf2c5d8ac069a9834c18c49"
+      "sha256": "50bf5bb8300d1e211f3e49415217a17d8091e9b2add3a41a49471fa872aa1a0e"
     },
     "llm_transport": {
       "path": "src/turbine_kg/llm_client.py",
@@ -78,11 +78,11 @@
     },
     "stage9_ontology": {
       "path": "ontology/stage9_core.ttl",
-      "sha256": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249"
+      "sha256": "8ecc1eb849310c0ba85bb54b02577ca05007e9a6f91b64e9a0ace6a063f78b63"
     },
     "stage9_shapes": {
       "path": "ontology/stage9_shapes.ttl",
-      "sha256": "b20b202d2672e81b9fbeb87e8853fd62a021baf7ccf5296152c33850b3c66656"
+      "sha256": "f1420a6c15cf1884fa6ce1edb41e195e3472844280e7b4bfb77820a2a97d3bdf"
     },
     "stage8_imported_ontology": {
       "path": "ontology/minimal_turbine.ttl",
@@ -90,31 +90,31 @@
     },
     "canonicalization_logic": {
       "path": "scripts/build_stage12_candidates.py",
-      "sha256": "28acfb621bc8a39d00958c80631b9eb8641865c67192faf67d26c8f3a1104397"
+      "sha256": "a05d61b4ae4b5d18f268cdbe7b9a5449d268e062466652f0998109b1a1012261"
     },
     "provider_config": {
       "path": "config/stage12_provider.json",
-      "sha256": "a5c588b72107b1233634705a1e9ab9fb28d3a60c467a91961e965dac7ae8b00c"
+      "sha256": "83f07540e225123ce5ccc87ceb3750c6d8d4aa7983c8459d3db46f18af29307e"
     },
     "reserve_runner": {
       "path": "scripts/stage12_reserve_pipeline.py",
-      "sha256": "26a4d23537d4979b0bd14c5d1f68cd9aac508c7ef171b6da5bf3b70423971a50"
+      "sha256": "0a38eeaec3d70a981f35d5e37894dce4322e76351e6497ca3f6673985cc9b33c"
     },
     "reserve_evaluator": {
       "path": "scripts/stage12_reserve_pipeline.py",
-      "sha256": "26a4d23537d4979b0bd14c5d1f68cd9aac508c7ef171b6da5bf3b70423971a50"
+      "sha256": "0a38eeaec3d70a981f35d5e37894dce4322e76351e6497ca3f6673985cc9b33c"
     },
     "gold_consistency_audit": {
       "path": "scripts/build_stage12_reserve_gold.py",
-      "sha256": "e9ddb8f81a9876f6f6f621df7887130cbcf51130e14dc2480a896a8ece0b66b1"
+      "sha256": "cfd325d63e894a65e0d0eb4e9e17347004bb0b636fd5756ef6cee40504fb315f"
     },
     "acceptance_gate": {
       "path": "scripts/audit_stage12_exit.py",
-      "sha256": "aa28432d5c61bd7ef93e4c81e601bb2a744cc3c5151b1635b9cd8bdf72d3c443"
+      "sha256": "2398394c184c05134eff2c043d9c0c66fe6e2deab516be1a89e9ea4a1edfaa7b"
     },
     "stage12_exit_logic": {
       "path": "scripts/audit_stage12_exit.py",
-      "sha256": "aa28432d5c61bd7ef93e4c81e601bb2a744cc3c5151b1635b9cd8bdf72d3c443"
+      "sha256": "2398394c184c05134eff2c043d9c0c66fe6e2deab516be1a89e9ea4a1edfaa7b"
     }
   },
   "execution_policy": {

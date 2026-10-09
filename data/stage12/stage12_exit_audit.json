@@ -6,30 +6,36 @@
   "implementation_status": "in_progress",
   "quality_status": "quality_not_accepted",
   "pipeline_ready": false,
+  "prefreeze_ready": false,
   "quality_accepted": false,
-  "reserve_ready": false,
+  "reserve_ready": true,
+  "reserve_execution_consumed": false,
+  "reserve_consistency_status": "READY_TO_FREEZE",
+  "reserve_llm_calls": 0,
+  "ignored_historical_cache_count": 0,
+  "invalid_current_key_cache_count": 0,
   "historical_holdout_status": "exposed_not_eligible",
   "final_acceptance_source": "independent_reserve",
-  "reserve_gold_status": "not_prepared",
+  "reserve_gold_status": "reviewed_and_frozen_for_selected_regions",
   "reserve_acceptance_status": "not_prepared",
   "formal_release": false,
   "producer": "scripts/audit_stage12_exit.py",
   "inputs": {
     "data/stage9/stage9_exit_audit.json": {
       "path": "data/stage9/stage9_exit_audit.json",
-      "sha256": "4e592204a59a1fdf81a665ed1d21714561c1d4c75a91d5a3681aa8af769d0ce7"
+      "sha256": "86883d26a013db3602237582f92c0ce41967457ab629c3c0f35d3599c43ca6f4"
     },
     "data/stage10/stage10_audit.json": {
       "path": "data/stage10/stage10_audit.json",
-      "sha256": "1db4b0980aca5ef1cabfc0bfe55c0742fd0db124e93d69cdf18fd29826254496"
+      "sha256": "c7f7c56bb2e6625a111d8122293d6b073ecdce9637df2393d4de86773a41ff9e"
     },
     "data/stage11/stage11_exit_audit.json": {
       "path": "data/stage11/stage11_exit_audit.json",
-      "sha256": "0f259a1df8282713ceebdd31bcb2de38e4670b8d51100a4853ef47397260b03f"
+      "sha256": "a2cd818b012db5f798917764e71e2b7998c8874960351889298390d95b21c961"
     },
     "data/stage11/evaluation_sample_registry.json": {
       "path": "data/stage11/evaluation_sample_registry.json",
-      "sha256": "cd19016726e521ad818cffe7c5c1f321b4170494ff547e5b4c54ef4f08d86859"
+      "sha256": "4d7de2844dcdaf67680a16650a2fd002c6c2b776c44ee2e5da4c1ff8c0bbcf73"
     },
     "data/stage12/stage12_representative_baseline.json": {
       "path": "data/stage12/stage12_representative_baseline.json",
@@ -41,63 +47,75 @@
     },
     "data/stage12/stage12_input_manifest.json": {
       "path": "data/stage12/stage12_input_manifest.json",
-      "sha256": "f74fa0b6922fd129ce85b535c5a115173a61b45becbd233ba36a8e45cc63173d"
+      "sha256": "06112f209546f137d344cc5f6dc0747a946136b02795e5da1bbcd5295309b794"
     },
     "data/stage6/stage6_evidence_bundle.jsonl": {
       "path": "data/stage6/stage6_evidence_bundle.jsonl",
-      "sha256": "74b3b212b029a4bf4d463e69b3f4710a87b716617ee45beb8e484eb1c99f43a9"
+      "sha256": "9b80080997cadf653d87289bcf61d279c6b3878efff4cff10771fc26f2ba5453"
+    },
+    "data/stage6/stage6_semantic_coverage_audit.json": {
+      "path": "data/stage6/stage6_semantic_coverage_audit.json",
+      "sha256": "dad70e93117cfd16c56146aa2638a39c087b7503a308e8cf14e07dd16483b7d4"
+    },
+    "data/stage6/stage6_source_structure_index.json": {
+      "path": "data/stage6/stage6_source_structure_index.json",
+      "sha256": "487d7915d2d6d44db92f6600e285e8cc6376069dec2381e0a7678ded7f0e7cff"
     },
     "config/stage12_statement_contract.json": {
       "path": "config/stage12_statement_contract.json",
-      "sha256": "dab0b12284507c085be3abbcf4422d8269171255cf68030d12161bd0e2ddd488"
+      "sha256": "42da21921ea078b3d8f6c8082d5fe99887dfa26a6c1447325f4637597794b4d8"
     },
     "config/stage12_candidate.schema.json": {
       "path": "config/stage12_candidate.schema.json",
-      "sha256": "f5cb7041935165df286d4d1a8eabb301b7eb5f2ff9ea213e710e054e52a64076"
+      "sha256": "843a6e4fd8827d26eeec36865f6152d6920cdfa7ba21f58448a36da8e6841d7d"
     },
     "config/stage12_provider.json": {
       "path": "config/stage12_provider.json",
-      "sha256": "e790996d307ad388f0e21723197a3e0718ab4d9b07297b9ebfe935ce9733e906"
+      "sha256": "83f07540e225123ce5ccc87ceb3750c6d8d4aa7983c8459d3db46f18af29307e"
     },
     "config/stage12_prompt.txt": {
       "path": "config/stage12_prompt.txt",
-      "sha256": "43207f4097fde2ac940bf958126c6f7ce0993700a64a0179a5f6f70b311f3dff"
+      "sha256": "f4fdb5afe189339edcd4e47ce7d8a06244041232e8887373b6e878305b38e7ad"
     },
     "config/stage12_extraction_response.schema.json": {
       "path": "config/stage12_extraction_response.schema.json",
-      "sha256": "31f5569f324e867915130e7f0853ef10023930912a538b5fb7e6128add434a3f"
+      "sha256": "e755dfd03992f8d3de195837ce2136ef5c5712c2731e16e77e5828c9e9e89fe0"
     },
     "src/turbine_kg/extraction/semantic.py": {
       "path": "src/turbine_kg/extraction/semantic.py",
-      "sha256": "8f5b6a95b6bd212a24ce2a8fb27fa40d9d017dd8264f4ddbe3a4e49f8799251b"
+      "sha256": "50bf5bb8300d1e211f3e49415217a17d8091e9b2add3a41a49471fa872aa1a0e"
     },
     "ontology/stage9_core.ttl": {
       "path": "ontology/stage9_core.ttl",
-      "sha256": "7b3d5fb5d9eff828db4a24874a6d8799b80014becfbbcdd52f1d1ead0fc86249"
+      "sha256": "8ecc1eb849310c0ba85bb54b02577ca05007e9a6f91b64e9a0ace6a063f78b63"
     },
     "ontology/stage9_shapes.ttl": {
       "path": "ontology/stage9_shapes.ttl",
-      "sha256": "b20b202d2672e81b9fbeb87e8853fd62a021baf7ccf5296152c33850b3c66656"
+      "sha256": "f1420a6c15cf1884fa6ce1edb41e195e3472844280e7b4bfb77820a2a97d3bdf"
     },
     "data/stage12/stage12_development_candidates.json": {
       "path": "data/stage12/stage12_development_candidates.json",
-      "sha256": "f9259302315bc4eaea46cc4c8cbe586f22c39ad186d601fae701642bd7352dce"
+      "sha256": null
+    },
+    "data/stage12/stage12_development_raw_evaluation.json": {
+      "path": "data/stage12/stage12_development_raw_evaluation.json",
+      "sha256": null
+    },
+    "data/stage12/stage12_development_disagreement_review.json": {
+      "path": "data/stage12/stage12_development_disagreement_review.json",
+      "sha256": "b406723fcfbd338319c4c3febd75fdfcee8e6c4a14f496524c2b2f44be1bcba2"
     },
     "data/stage12/stage12_development_evaluation.json": {
       "path": "data/stage12/stage12_development_evaluation.json",
-      "sha256": "a19045f8b2a45fb9338e90c3a5d4f7f1aa28ef0c4e7c520d19215259076984c4"
+      "sha256": null
     },
     "data/stage12/stage12_development_disagreement_adjudication.json": {
       "path": "data/stage12/stage12_development_disagreement_adjudication.json",
-      "sha256": "12a18d14ed6539718876876cc5014509def74f6b729ba7e95c5e8bec3fd173ef"
-    },
-    "data/stage12/stage12_holdout_evaluation.json": {
-      "path": "data/stage12/stage12_holdout_evaluation.json",
-      "sha256": "a56d0d3c39a21320f19ac964d7971209d85670ea71c6d6c4ec0a7ad3dd8073c3"
+      "sha256": null
     },
     "data/stage12/stage12_semantic_coverage_matrix.json": {
       "path": "data/stage12/stage12_semantic_coverage_matrix.json",
-      "sha256": "1cd84adfafd12b6a1eb9e91d8c0d977ba204f10034134d6c54ce4dbb4ceee759"
+      "sha256": "06378a378e905ba92f1d61073681b4067d1c8599db607aaf546aec5aa5bcf7ab"
     },
     "scripts/build_stage12_semantic_coverage_matrix.py": {
       "path": "scripts/build_stage12_semantic_coverage_matrix.py",
@@ -105,7 +123,7 @@
     },
     "scripts/build_stage12_development_adjudication.py": {
       "path": "scripts/build_stage12_development_adjudication.py",
-      "sha256": "d6c2f2b722353e8abcb43df67388078a05228aa30f141d7bb8837e581aa000e5"
+      "sha256": "37d7adc2ce2e9548e5b8efe905275fa1ef9537023872807783e9a3c3cb75e77f"
     },
     "data/stage12/stage12_robustness_cases.json": {
       "path": "data/stage12/stage12_robustness_cases.json",
@@ -113,27 +131,51 @@
     },
     "data/stage12/stage12_robustness_evaluation.json": {
       "path": "data/stage12/stage12_robustness_evaluation.json",
-      "sha256": "973426d7e94c887dd1a30935130db48679b9dfc26108c0034378fb6acb3d72d6"
+      "sha256": null
     },
     "data/stage12/stage12_fixture_robustness_evaluation.json": {
       "path": "data/stage12/stage12_fixture_robustness_evaluation.json",
-      "sha256": "f25e5c4eebc77e8a2d84b430ff43841935a3b806038cd4c54d6a8eb35c3163c2"
+      "sha256": "a1c20be6e490da1e1a6bd4ec170aa268401424ba3b07197c50467311a301847c"
     },
     "data/stage12/stage12_real_llm_failure_summary.json": {
       "path": "data/stage12/stage12_real_llm_failure_summary.json",
-      "sha256": "1ee0c7fdb73e08377f3cad66c1d1db884732e5f59979129487e3c72920b32d7a"
+      "sha256": "cfb47ba04c5ac7baa27900289834456b1d53a0f7ad3496bf0877ca67f9d83479"
+    },
+    "data/stage12/stage12_reserve_source_regions.json": {
+      "path": "data/stage12/stage12_reserve_source_regions.json",
+      "sha256": "c6b768595c5129f6c8fecba1b271dcbbea40db506eb44c74da873eb2b57f2194"
+    },
+    "data/stage12/stage12_reserve_evidence.jsonl": {
+      "path": "data/stage12/stage12_reserve_evidence.jsonl",
+      "sha256": "df333c322d19ffb6d3f6e0776b3ef65820a9de9417f5f992933ceab2b6822858"
+    },
+    "data/stage12/stage12_reserve_gold_reviews.json": {
+      "path": "data/stage12/stage12_reserve_gold_reviews.json",
+      "sha256": "5c43f9eb5c6a9e28338dbd00ab609e823e570170f798761e6a2e927a5e29a0cb"
+    },
+    "data/stage12/stage12_reserve_gold.jsonl": {
+      "path": "data/stage12/stage12_reserve_gold.jsonl",
+      "sha256": "958ab49e6fe8b77bc82af649b4d057d73d5d51373b0fa5b567e4b67d1ecdd791"
+    },
+    "data/stage12/stage12_reserve_gold_audit.json": {
+      "path": "data/stage12/stage12_reserve_gold_audit.json",
+      "sha256": "ddc229c5e05676fdc5c8c86e90007fbadab88ca7ac2d431f37f9196ab31197cc"
+    },
+    "data/stage12/stage12_reserve_freeze_manifest.json": {
+      "path": "data/stage12/stage12_reserve_freeze_manifest.json",
+      "sha256": "a2426cca69fab833c7c5e3a397a050393ba7a964ce6ea8db1e579c5270bc3c0d"
     },
     "data/registry/source_assets.jsonl": {
       "path": "data/registry/source_assets.jsonl",
-      "sha256": "37660f93255b4b8a95094b4dbdecf43cb6ac3f5615afeb50d828f8372e280bdf"
+      "sha256": "07a9b3953be64a79b4c6e83509811bab944e3774b27de0632b31879cc00a3897"
     },
     "data/registry/source_manual_findings.jsonl": {
       "path": "data/registry/source_manual_findings.jsonl",
-      "sha256": "026e5c6ba78d2b736b4e71e6290cf76766919401ad79d646a3e86124e8ea3762"
+      "sha256": "5180b602e6cfa15e59c67e024b06e4dabe61a1dc5e2bab0e2c2f84c5b0821560"
     },
     "data/project_state.json": {
       "path": "data/project_state.json",
-      "sha256": "ec464bb3d4d22525857a9d277067b92ea4aeb3e677574b42a23bdadfeea1f92e"
+      "sha256": "98b124a81499e9080c4b16bef71115fac9c2e4a37fa362922c2f8a5f45c538b5"
     }
   },
   "outputs": {
@@ -141,101 +183,122 @@
     "development_candidates": "data/stage12/stage12_development_candidates.json",
     "development_evaluation": "data/stage12/stage12_development_evaluation.json",
     "development_adjudication": "data/stage12/stage12_development_disagreement_adjudication.json",
-    "holdout_evaluation": "data/stage12/stage12_holdout_evaluation.json",
+    "reserve_gold": "data/stage12/stage12_reserve_gold.jsonl",
+    "reserve_freeze_manifest": "data/stage12/stage12_reserve_freeze_manifest.json",
     "reserve_acceptance": "data/stage12/stage12_reserve_acceptance.json",
     "real_llm_failure_summary": "data/stage12/stage12_real_llm_failure_summary.json",
     "exit_audit": "data/stage12/stage12_exit_audit.json",
     "runtime_cache": "var/model_runs/stage12"
   },
   "checks": {
-    "stage11_exit_gate": false,
+    "stage11_exit_gate": true,
     "stage11_internal_lineage_current": true,
+    "stage6_semantic_coverage_complete": true,
+    "stage6_source_structure_current": true,
+    "development_registry_coverage": false,
+    "development_evidence_outcomes_complete": false,
+    "operation_group_source_confirmed": false,
+    "operation_group_steps_complete": false,
+    "context_group_source_confirmed": true,
+    "context_group_items_complete": false,
+    "question_group_source_confirmed": true,
+    "question_group_pairs_complete": false,
+    "development_manifest_frozen": true,
     "label_free_development_manifest": true,
-    "manifest_input_lineage_current": false,
-    "representative_baseline_frozen": true,
-    "representative_input_scope_declared": true,
+    "manifest_input_lineage_current": true,
+    "representative_baseline_frozen": false,
+    "development_input_scope_declared": true,
     "five_documents_represented": true,
     "representative_coverage": true,
-    "candidate_only_boundary": true,
+    "candidate_only_boundary": false,
     "no_holdout_or_blind_in_candidate": true,
     "candidate_pages_are_manifest_pages": true,
-    "candidate_schema_and_stage9_gate": true,
+    "candidate_schema_and_stage9_gate": false,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": true,
-    "producer_reexecution_current": true,
+    "real_llm_execution_verified": false,
+    "producer_reexecution_current": false,
     "stale_cache_zero": true,
+    "review_diagnostics_current": false,
     "candidate_input_lineage_current": false,
     "canonical_evidence_consumed": true,
-    "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": true,
-    "development_adjudication_current": true,
-    "independent_holdout_evaluation_present": true,
-    "holdout_result_not_written_to_development": true,
-    "holdout_exclusions_accounted": true,
-    "grounding_zero_tolerance": true,
-    "historical_holdout_grounding_observed": true,
-    "no_ontology_or_release_write": true,
-    "robustness_evaluation_present": true,
-    "real_llm_failure_summary_current": true,
+    "profile_routes_are_unique_and_consumed": false,
+    "development_evaluation_present": false,
+    "development_adjudication_current": false,
+    "exposed_holdout_excluded_from_acceptance": true,
+    "grounding_zero_tolerance": false,
+    "no_ontology_or_release_write": false,
+    "robustness_evaluation_present": false,
+    "real_llm_failure_summary_current": false,
     "semantic_coverage_matrix_current": true,
     "reserve_registry_ready_for_independent_preparation": true,
-    "development_quality_gate": true,
-    "robustness_quality_gate": true,
+    "development_quality_gate": false,
+    "robustness_quality_gate": false,
     "acceptance_quality_gate": false
   },
   "development_gate_details": {
     "hard_safety": {
-      "evidence_binding_accuracy": true,
-      "evidence_semantic_support_accuracy": true,
-      "unsupported_addition_count": true,
-      "unsupported_candidate_count": true,
-      "critical_quantity_mismatch_count": true,
-      "critical_polarity_error_count": true,
-      "critical_relation_direction_error_count": true,
-      "critical_omission_count": true,
-      "critical_error_row_count": true
+      "evidence_binding_accuracy": false,
+      "evidence_semantic_support_accuracy": false,
+      "unsupported_addition_count": false,
+      "unsupported_candidate_count": false,
+      "critical_quantity_mismatch_count": false,
+      "critical_polarity_error_count": false,
+      "critical_relation_direction_error_count": false,
+      "critical_omission_count": false,
+      "critical_error_row_count": false
     },
     "coverage": {
-      "adjudicated_information_coverage": true,
-      "matched_candidate_precision": true,
-      "over_split_count": true
+      "adjudicated_information_coverage": false
     },
-    "matched_quality": {
-      "statement_type": true,
-      "relation": true,
-      "quantity": true,
-      "negation": true,
-      "relation_direction": true
+    "supported_candidates": {
+      "evidence_binding_accuracy": false,
+      "evidence_semantic_support_accuracy": false,
+      "unsupported_addition_count": false,
+      "unsupported_candidate_count": false
     },
     "adjudication": {
       "confirmed_critical_model_errors": true,
-      "confirmed_noncritical_model_error_rate": true,
-      "pending_review_count": true,
-      "adjudication_records_are_current": true
+      "confirmed_noncritical_model_error_rate": false,
+      "pending_review_count": false,
+      "adjudication_records_are_current": false
     }
   },
   "pipeline_checks": {
+    "stage11_exit_gate": true,
+    "stage6_semantic_coverage_complete": true,
+    "stage6_source_structure_current": true,
+    "development_registry_coverage": false,
+    "development_evidence_outcomes_complete": false,
+    "operation_group_source_confirmed": false,
+    "operation_group_steps_complete": false,
+    "context_group_source_confirmed": true,
+    "context_group_items_complete": false,
+    "question_group_source_confirmed": true,
+    "question_group_pairs_complete": false,
+    "development_manifest_frozen": true,
+    "development_input_scope_declared": true,
     "provider_contract_ready": true,
-    "real_llm_execution_verified": true,
-    "producer_reexecution_current": true,
+    "real_llm_execution_verified": false,
+    "producer_reexecution_current": false,
     "stale_cache_zero": true,
     "candidate_input_lineage_current": false,
-    "candidate_schema_and_stage9_gate": true,
+    "candidate_schema_and_stage9_gate": false,
     "canonical_evidence_consumed": true,
-    "profile_routes_are_unique_and_consumed": true,
-    "development_evaluation_present": true,
-    "development_adjudication_current": true,
-    "holdout_result_not_written_to_development": true,
-    "real_llm_failure_summary_current": true,
+    "profile_routes_are_unique_and_consumed": false,
+    "development_evaluation_present": false,
+    "development_adjudication_current": false,
+    "exposed_holdout_excluded_from_acceptance": true,
+    "real_llm_failure_summary_current": false,
     "semantic_coverage_matrix_current": true
   },
   "gates": {
     "REAL_LLM_SINGLE_CALL_VERIFIED": true,
-    "REAL_LLM_BATCH_EXECUTION": true,
-    "PRODUCTION_LLM_PIPELINE_READY": true,
-    "DEVELOPMENT_QUALITY_GATE": true,
-    "ROBUSTNESS_QUALITY_GATE": true,
+    "REAL_LLM_BATCH_EXECUTION": false,
+    "PRODUCTION_LLM_PIPELINE_READY": false,
+    "DEVELOPMENT_QUALITY_GATE": false,
+    "ROBUSTNESS_QUALITY_GATE": false,
     "INDEPENDENT_ACCEPTANCE": false,
+    "PREFREEZE_READY": false,
     "STAGE12_EXIT": false
   },
   "failure_isolation": "Invalid candidates remain outside accepted Gold, formal knowledge, Release and Neo4j. Holdout evaluation writes metrics only; failed runtime validation never replaces a successful cache entry.",
@@ -244,9 +307,27 @@
   "blockers": [
     "acceptance_quality_gate",
     "candidate_input_lineage_current",
-    "manifest_input_lineage_current",
-    "stage11_exit_gate",
-    "upstream_reserve_gold_not_ready"
+    "candidate_only_boundary",
+    "candidate_schema_and_stage9_gate",
+    "context_group_items_complete",
+    "development_adjudication_current",
+    "development_evaluation_present",
+    "development_evidence_outcomes_complete",
+    "development_quality_gate",
+    "development_registry_coverage",
+    "grounding_zero_tolerance",
+    "no_ontology_or_release_write",
+    "operation_group_source_confirmed",
+    "operation_group_steps_complete",
+    "producer_reexecution_current",
+    "profile_routes_are_unique_and_consumed",
+    "question_group_pairs_complete",
+    "real_llm_execution_verified",
+    "real_llm_failure_summary_current",
+    "representative_baseline_frozen",
+    "review_diagnostics_current",
+    "robustness_evaluation_present",
+    "robustness_quality_gate"
   ],
   "next_stage_allowed": false,
   "next_stage": "Stage 13 formal entry blocked by user freeze; no Stage 13 preparation in this run",

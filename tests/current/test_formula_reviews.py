@@ -1,0 +1,149 @@
+from copy import deepcopy
+
+import pytest
+
+from turbine_kg.knowledge.extract import _complete_values, _statement_identity, extract
+from turbine_kg.knowledge.reviews import (
+    confirm_formula_source, confirm_statement_formula, formula_source_binding,
+    verified_formula_representation, apply_formula_reviews,
+)
+from turbine_kg.ontology.registry import OntologyRegistry
+
+
+def source():
+    return {'id':'source-formula','document_id':'doc','revision_id':'rev',
+            'kind':'paragraph','text':'OCR expression has uncertain symbols.',
+            'locator':{'original_hash':'original-hash','physical_page':12,'bbox':[10,20,100,50]}}
+
+
+def formula():
+    return {'expression':'z=x*(1-r)','variables':[{'symbol':'z','meaning':'length result'},
+        {'symbol':'x','meaning':'input length'},{'symbol':'r','meaning':'relative change','range':{'lower':0.01,'upper':0.03}}],
+        'units':{'z':'mm','x':'mm','r':'1'},'conditions':None}
+
+
+def reviewed_source(**overrides):
+    original=source()
+    arguments={'binding':formula_source_binding(original),'raw_text':original['text'],
+               'verified_text':'Confirmed expression z=x*(1-r).','formula':formula(),
+               'user_confirmation':{'confirmed':True,'actor':'user','note':'I confirm this expression and the supplied variable meanings and units.'}}
+    arguments.update(overrides)
+    return confirm_formula_source(original,**arguments)
+
+
+def statement():
+    return {'id':'same-existing-statement','document_id':'doc','revision_id':'rev','type':'fact','entities':[],
+            'supports':[{'evidence_id':'evidence','member_keys':['native-member']}],
+            'formulas':[{'expression':None,'variables':None,'units':None,'conditions':None}]}
+
+
+def evidence():
+    return {'id':'evidence','document_id':'doc','revision_id':'rev',
+            'members':[{'member_key':'native-member','source_id':'source-formula','locator':source()['locator']}]}
+
+
+def test_confirmed_expression_display_is_independent_of_completeness_and_calculation():
+    corrected=reviewed_source()
+    assert corrected['text']==source()['text']
+    assert corrected['attributes']['human_verified_representation']['raw_text']==source()['text']
+    result=confirm_statement_formula(statement(),corrected,evidence(),formula_index=0,registry=OntologyRegistry())
+    saved=result['formulas'][0]
+    assert result['id']==statement()['id'] and len(result['formulas'])==1
+    assert saved['expression_status']==saved['read_certainty']==saved['display_status']=='confirmed'
+    assert saved['completeness']=='incomplete' and saved['missing_fields']==['conditions']
+    assert saved['calculation_status']=='not_calculated' and 'result' not in saved
+    assert saved['units']['r']=='1' and saved['variables'][-1]['range']=={'lower':0.01,'upper':0.03}
+    assert statement()['formulas'][0]['expression'] is None
+
+
+@pytest.mark.parametrize('field', ['id','document_id','revision_id','text'])
+def test_stale_source_review_is_not_usable_after_record_or_raw_content_changes(field):
+    corrected=reviewed_source();corrected[field]='changed'
+    assert verified_formula_representation(corrected) is None
+
+
+@pytest.mark.parametrize('field,value', [('original_hash','new-hash'),('physical_page',13),('bbox',[0,0,10,10])])
+def test_review_remains_bound_to_original_file_page_and_region(field,value):
+    corrected=reviewed_source();corrected['locator'][field]=value
+    assert verified_formula_representation(corrected) is None
+
+
+def test_review_requires_explicit_user_confirmation_and_raw_content_binding():
+    for proof in ({}, {'confirmed':True,'actor':'model','note':'guessed'}, {'confirmed':True,'actor':'user','note':''}):
+        with pytest.raises(ValueError,match='用户明确确认'):reviewed_source(user_confirmation=proof)
+    with pytest.raises(ValueError,match='原始文本'):reviewed_source(raw_text='other OCR')
+    invalid=formula();invalid['units']['r']=1
+    with pytest.raises(ValueError,match='字符串'):reviewed_source(formula=invalid)
+
+
+def test_missing_units_are_not_assumed_dimensionless_and_uncertain_expression_is_not_confirmed():
+    item=statement();candidate=formula();candidate['units']['r']=None
+    candidate.update(expression_status='confirmed',read_certainty='uncertain')
+    item['formulas']=[candidate];_complete_values(item,OntologyRegistry())
+    saved=item['formulas'][0]
+    assert saved['units']['r'] is None and 'units' in saved['missing_fields']
+    assert saved['expression_status']=='uncertain' and saved['display_status']=='needs_confirmation'
+
+
+def test_review_cannot_update_unrelated_partial_member_or_other_document():
+    corrected=reviewed_source()
+    for change in ('source','partial','document','bbox'):
+        other=evidence()
+        if change=='source':other['members'][0]['source_id']='other-source'
+        if change=='partial':other['members'][0]['locator']['char_range']=[1,10]
+        if change=='document':other['document_id']='other-doc'
+        if change=='bbox':other['members'][0]['locator']['bbox']=[0,0,10,10]
+        with pytest.raises(ValueError):confirm_statement_formula(statement(),corrected,other,formula_index=0,registry=OntologyRegistry())
+
+
+def test_formula_review_metadata_does_not_create_a_new_fact_identity():
+    registry=OntologyRegistry();first=statement();first['text']='formula method';first['formulas']=[formula()]
+    second=deepcopy(first);second['formulas'][0].update(expression_status='confirmed',read_certainty='confirmed',
+        display_status='confirmed',source_review={'status':'confirmed_user','binding':formula_source_binding(source())})
+    assert _statement_identity(first,'doc',registry)==_statement_identity(second,'doc',registry)
+
+
+def portable_annotations():
+    from hashlib import sha256
+    original=source();review=reviewed_source()['attributes']['human_verified_representation']
+    return {'original-hash':{'formula_reviews':[{'original_hash':'original-hash','physical_page':12,
+        'bbox_pdf_pt':original['locator']['bbox'],'raw_text_sha256':sha256(original['text'].encode('utf-8')).hexdigest(),
+        **{key:deepcopy(review[key]) for key in ('verified_text','formula','user_confirmation')}}]}}
+
+
+def test_portable_review_rebinds_new_source_and_document_only_with_exact_raw_ocr_region():
+    original=source();original.update(id='new-source',revision_id='new-rev',document_id='new-doc')
+    updated=apply_formula_reviews(original,portable_annotations())
+    review=verified_formula_representation(updated)
+    assert review['binding']['source_id']=='new-source' and review['binding']['document_id']=='new-doc'
+    assert updated['text']==original['text'] and original.get('attributes') is None
+    for field,value in [('original_hash','other'),('physical_page',13),('bbox',[0,0,10,10])]:
+        altered=deepcopy(original);altered['locator'][field]=value
+        assert 'human_verified_representation' not in apply_formula_reviews(altered,portable_annotations()).get('attributes',{})
+    altered=deepcopy(original);altered['text']+='changed OCR'
+    assert 'human_verified_representation' not in apply_formula_reviews(altered,portable_annotations()).get('attributes',{})
+    invalid=portable_annotations();invalid['original-hash']['formula_reviews'][0]['user_confirmation']['actor']='model'
+    with pytest.raises(ValueError,match='用户明确确认'):apply_formula_reviews(original,invalid)
+
+
+def test_save_page_applies_review_after_binding_persisted_source_versions(monkeypatch):
+    from turbine_kg.documents.ir import ParsedPage, SourceUnit
+    from turbine_kg.knowledge.store import KnowledgeStore
+    import turbine_kg.knowledge.reviews as reviews
+    original=source();captured=[]
+    actual=reviews.apply_formula_reviews
+    def apply(row,annotations):
+        captured.append(row)
+        return actual(row,portable_annotations())
+    monkeypatch.setattr(reviews,'apply_formula_reviews',apply)
+    class MemoryStore(KnowledgeStore):
+        def __init__(self):self.saved={}
+        def put(self,label,rows):self.saved.setdefault(label,[]).extend(deepcopy(rows))
+        def edges(self,*args):pass
+        def query(self,*args):return []
+    store=MemoryStore();unit=SourceUnit('new-source','paragraph',original['text'],original['locator'],'ocr_text',0)
+    store.save_page(ParsedPage(12,None,100,100,{},sources=[unit]),'doc','new-rev')
+    saved=store.saved['SourceText'][0]
+    assert captured[0]['document_id']=='doc'
+    assert verified_formula_representation(saved)['binding']['revision_id']=='new-rev'
+    assert saved['text']==original['text'] and set(store.saved)=={'Page','SourceText','Picture'}

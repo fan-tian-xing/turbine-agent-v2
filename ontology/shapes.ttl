@@ -1,0 +1,143 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix tk: <https://turbine.local/ontology#> .
+
+tk:Evidence a rdfs:Class ;
+    rdfs:label "来源证据"@zh-CN ;
+    skos:definition "按可独立理解与引用的上下文组装的资料原文及其来源定位。"@zh-CN .
+
+tk:Mention a rdfs:Class ;
+    rdfs:label "来源提及"@zh-CN ;
+    skos:definition "原文对对象或活动的名称提及；只内嵌保存于知识记录，不代表实际实例或独立检索节点。"@zh-CN .
+
+tk:OntologyClass a rdfs:Class ;
+    rdfs:label "类存储代理"@zh-CN ;
+    skos:definition "对应已审定本体类的图存储表示；不是领域业务类或现场实例。"@zh-CN .
+
+tk:Statement a rdfs:Class ;
+    rdfs:label "知识记录"@zh-CN ;
+    skos:definition "表达一项有来源的要求、作业、检查、状态、原因或措施的记录。"@zh-CN .
+
+tk:TechnicalDocument a rdfs:Class ;
+    rdfs:label "资料记录"@zh-CN ;
+    skos:definition "书籍或规范的版本及来源标识记录。"@zh-CN .
+
+tk:ActivityCategoryShape a sh:NodeShape ;
+    sh:not [ sh:or ( [ sh:class tk:PhysicalObject ] ) ] ;
+    sh:targetClass tk:Activity .
+
+tk:PhysicalObjectCategoryShape a sh:NodeShape ;
+    sh:not [ sh:or ( [ sh:class tk:Activity ] ) ] ;
+    sh:targetClass tk:PhysicalObject .
+
+tk:has_anomalyShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_anomaly ] ;
+    sh:targetSubjectsOf tk:has_anomaly .
+
+tk:has_causeShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_cause ] ;
+    sh:targetSubjectsOf tk:has_cause .
+
+tk:has_inspectionShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_inspection ] ;
+    sh:targetSubjectsOf tk:has_inspection .
+
+tk:has_measureShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_measure ] ;
+    sh:targetSubjectsOf tk:has_measure .
+
+tk:has_procedureShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_procedure ] ;
+    sh:targetSubjectsOf tk:has_procedure .
+
+tk:has_requirementShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_requirement ] ;
+    sh:targetSubjectsOf tk:has_requirement .
+
+tk:has_stepShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_step ] ;
+    sh:targetSubjectsOf tk:has_step .
+
+tk:has_verificationShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Mention ] [ sh:class tk:OntologyClass ] [ sh:class tk:PhysicalObject ] [ sh:class tk:Activity ] [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:has_verification ] ;
+    sh:targetSubjectsOf tk:has_verification .
+
+tk:part_ofShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:node [ sh:or ( [ sh:class tk:PhysicalObject ;
+                        sh:property [ sh:class tk:PhysicalObject ;
+                                sh:path tk:part_of ] ] [ sh:class tk:OntologyClass ;
+                        sh:property [ sh:class tk:OntologyClass ;
+                                sh:path tk:part_of ] ] [ sh:class tk:Mention ;
+                        sh:property [ sh:class tk:Mention ;
+                                sh:path tk:part_of ] ] [ sh:class tk:Mention ;
+                        sh:property [ sh:class tk:OntologyClass ;
+                                sh:path tk:part_of ] ] [ sh:class tk:OntologyClass ;
+                        sh:property [ sh:class tk:Mention ;
+                                sh:path tk:part_of ] ] ) ] ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:PhysicalObject ] [ sh:class tk:OntologyClass ] [ sh:class tk:Mention ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:PhysicalObject ] [ sh:class tk:OntologyClass ] [ sh:class tk:Mention ] ) ;
+            sh:path tk:part_of ] ;
+    sh:targetSubjectsOf tk:part_of .
+
+tk:step_precedesShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Statement ] ) ;
+            sh:path tk:step_precedes ] ;
+    sh:targetSubjectsOf tk:step_precedes .
+
+tk:supported_byShape a sh:NodeShape ;
+    sh:message "关系方向、端点类别及概念/实例组合必须符合注册表"@zh-CN ;
+    sh:nodeKind sh:IRI ;
+    sh:or ( [ sh:class tk:Statement ] ) ;
+    sh:property [ sh:nodeKind sh:IRI ;
+            sh:or ( [ sh:class tk:Evidence ] ) ;
+            sh:path tk:supported_by ] ;
+    sh:targetSubjectsOf tk:supported_by .

@@ -1,0 +1,662 @@
+{
+  "version": "4",
+  "namespace": "https://turbine.local/ontology#",
+  "classes": [
+    {
+      "id": "PhysicalObject",
+      "zh": "物理对象",
+      "parent": "Thing",
+      "definition": "实际存在的物理对象；通用设备名称属于概念，不代表现场实例。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#PhysicalObject",
+        "neo4j_label": "PhysicalObject"
+      },
+      "extractable": true
+    },
+    {
+      "id": "Equipment",
+      "zh": "设备",
+      "parent": "PhysicalObject",
+      "definition": "有明确身份的实际设备实例。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Equipment",
+        "neo4j_label": "Equipment"
+      },
+      "extractable": true
+    },
+    {
+      "id": "Component",
+      "zh": "部件",
+      "parent": "PhysicalObject",
+      "definition": "有明确身份的实际部件实例。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Component",
+        "neo4j_label": "Component"
+      },
+      "extractable": true
+    },
+    {
+      "id": "Tool",
+      "zh": "工具",
+      "parent": "PhysicalObject",
+      "definition": "有明确身份的实际工具实例。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Tool",
+        "neo4j_label": "Tool"
+      },
+      "extractable": true
+    },
+    {
+      "id": "ActualActivity",
+      "zh": "已发生活动",
+      "parent": "Thing",
+      "definition": "在时间、位置和参与对象明确的现场已经发生或被报告发生的活动；不等同于规范步骤。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#ActualActivity",
+        "neo4j_label": "ActualActivity"
+      },
+      "extractable": true
+    },
+    {
+      "id": "InformationEntity",
+      "zh": "信息实体",
+      "parent": "Thing",
+      "definition": "关于对象、规范、条件和来源的信息。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#InformationEntity",
+        "neo4j_label": "InformationEntity"
+      },
+      "extractable": false
+    },
+    {
+      "id": "Concept",
+      "zh": "领域概念",
+      "parent": "InformationEntity",
+      "definition": "通用术语或类别概念；不表示编号设备、已执行活动或确实发生的原因。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Concept",
+        "neo4j_label": "Concept"
+      },
+      "extractable": true
+    },
+    {
+      "id": "ProcedureDefinition",
+      "zh": "作业规范",
+      "parent": "InformationEntity",
+      "definition": "作业程序的规范性定义；不声明该程序在现场已经执行。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#ProcedureDefinition",
+        "neo4j_label": "ProcedureDefinition"
+      },
+      "extractable": true
+    },
+    {
+      "id": "StepDefinition",
+      "zh": "步骤定义",
+      "parent": "InformationEntity",
+      "definition": "规范程序中定义的步骤，可有定义顺序；不声明实际活动顺序。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#StepDefinition",
+        "neo4j_label": "StepDefinition"
+      },
+      "extractable": true
+    },
+    {
+      "id": "Statement",
+      "zh": "工程陈述",
+      "parent": "InformationEntity",
+      "definition": "有来源支持的工程陈述，保留对象角色、适用条件、强度、否定和可能性。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Statement",
+        "neo4j_label": "Statement"
+      },
+      "extractable": false
+    },
+    {
+      "id": "Condition",
+      "zh": "工程条件",
+      "parent": "InformationEntity",
+      "definition": "陈述的明确适用条件与例外；未知条件不能当作不适用。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Condition",
+        "neo4j_label": "Condition"
+      },
+      "extractable": false,
+      "storage_representation": "embedded_statement_field"
+    },
+    {
+      "id": "Quantity",
+      "zh": "量值",
+      "parent": "InformationEntity",
+      "definition": "有对象、单位、比较关系和测量位置的来源量值。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Quantity",
+        "neo4j_label": "Quantity"
+      },
+      "extractable": false,
+      "storage_representation": "embedded_statement_field"
+    },
+    {
+      "id": "Formula",
+      "zh": "公式",
+      "parent": "InformationEntity",
+      "definition": "来源公式表达式、变量、单位和适用条件；记录公式不代表已计算。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Formula",
+        "neo4j_label": "Formula"
+      },
+      "extractable": false,
+      "storage_representation": "embedded_statement_field"
+    },
+    {
+      "id": "Case",
+      "zh": "案例",
+      "parent": "InformationEntity",
+      "definition": "过去案例的事实和工况；其措施不能直接继承至当前现场。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Case",
+        "neo4j_label": "Case"
+      },
+      "extractable": false
+    },
+    {
+      "id": "Evidence",
+      "zh": "来源证据",
+      "parent": "InformationEntity",
+      "definition": "来源成员的有序组合；支持成员逐段引用，表格单元格不是独立证据。",
+      "aliases": [],
+      "class_mapping": {
+        "rdf": "https://turbine.local/ontology#Evidence",
+        "neo4j_label": "Evidence"
+      },
+      "extractable": false
+    }
+  ],
+  "relations": [
+    {
+      "id": "broader_concept",
+      "zh": "上位概念",
+      "domain": [
+        "Concept"
+      ],
+      "range": [
+        "Concept"
+      ],
+      "navigation": true,
+      "definition": "来源明确的概念上下位关系，子概念指向上位概念；只扩大召回，不复制量值、措施或条件。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": []
+    },
+    {
+      "id": "part_of",
+      "zh": "组成于",
+      "domain": [
+        "PhysicalObject",
+        "Concept"
+      ],
+      "range": [
+        "PhysicalObject",
+        "Concept"
+      ],
+      "navigation": true,
+      "definition": "来源明确的部件指向整体；概念组成与真实对象组成必须分别连接。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "endpoint_pairs": [
+        [
+          "Concept",
+          "Concept"
+        ],
+        [
+          "PhysicalObject",
+          "PhysicalObject"
+        ]
+      ]
+    },
+    {
+      "id": "has_requirement",
+      "zh": "要求",
+      "domain": [
+        "Concept",
+        "PhysicalObject",
+        "ProcedureDefinition",
+        "StepDefinition"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "requirement",
+        "parameter"
+      ],
+      "definition": "对象指向要求或参数陈述，参数只属于quantity_target；配合对象不自动承接要求。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_procedure",
+      "zh": "程序",
+      "domain": [
+        "Concept",
+        "PhysicalObject"
+      ],
+      "range": [
+        "Statement",
+        "ProcedureDefinition"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "procedure",
+        "step"
+      ],
+      "definition": "对象指向作业程序陈述或程序定义；规范不表示现场执行。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_anomaly",
+      "zh": "异常",
+      "domain": [
+        "Concept",
+        "PhysicalObject"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "anomaly",
+        "observation"
+      ],
+      "definition": "对象指向来源支持的异常或观察陈述，不据此确定原因。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_inspection",
+      "zh": "检查",
+      "domain": [
+        "Concept",
+        "PhysicalObject",
+        "ProcedureDefinition",
+        "StepDefinition",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "inspection"
+      ],
+      "definition": "对象指向来源支持的检查陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_cause",
+      "zh": "有依据的可能原因",
+      "domain": [
+        "Concept",
+        "PhysicalObject",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "cause"
+      ],
+      "definition": "对象或异常陈述指向来源支持的原因陈述；可能原因必须保留可能性，相关性不能作为确证。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_measure",
+      "zh": "措施",
+      "domain": [
+        "Concept",
+        "PhysicalObject",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "measure"
+      ],
+      "definition": "对象或异常陈述指向来源支持的措施陈述，必须携带其条件、限制及验证依据。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_verification",
+      "zh": "验证",
+      "domain": [
+        "Concept",
+        "PhysicalObject",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "verification"
+      ],
+      "definition": "对象或措施陈述指向来源支持的验证陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "related",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_condition",
+      "zh": "成立条件",
+      "domain": [
+        "Statement",
+        "ProcedureDefinition"
+      ],
+      "range": [
+        "Condition"
+      ],
+      "navigation": false,
+      "definition": "陈述或程序定义指向明确适用条件；来源位置与适用工况分别表示。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": false,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "storage_representation": "embedded_statement_field"
+    },
+    {
+      "id": "has_quantity",
+      "zh": "量值或参数",
+      "domain": [
+        "Statement"
+      ],
+      "range": [
+        "Quantity",
+        "Formula"
+      ],
+      "navigation": false,
+      "definition": "陈述指向量值或公式，不直接宣称计算完成。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": false,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "storage_representation": "embedded_statement_field"
+    },
+    {
+      "id": "has_step",
+      "zh": "包含步骤定义",
+      "domain": [
+        "ProcedureDefinition"
+      ],
+      "range": [
+        "StepDefinition"
+      ],
+      "navigation": true,
+      "definition": "程序定义指向所属步骤定义；不是实际活动记录。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": []
+    },
+    {
+      "id": "step_precedes",
+      "zh": "步骤定义先于",
+      "domain": [
+        "StepDefinition"
+      ],
+      "range": [
+        "StepDefinition"
+      ],
+      "navigation": true,
+      "definition": "规范步骤定义指向后续步骤定义；不是现场实际活动顺序。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": []
+    },
+    {
+      "id": "activity_precedes",
+      "zh": "实际活动先于",
+      "domain": [
+        "ActualActivity"
+      ],
+      "range": [
+        "ActualActivity"
+      ],
+      "navigation": true,
+      "definition": "实际活动指向后续实际活动；必须具有来源支持，不由规范步骤推得。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": []
+    },
+    {
+      "id": "supported_by",
+      "zh": "证据支持",
+      "domain": [
+        "Statement"
+      ],
+      "range": [
+        "Evidence"
+      ],
+      "navigation": false,
+      "definition": "陈述指向证据；支持绑定记录具体member_keys，可多对多。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": false,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": []
+    }
+  ],
+  "concepts": [
+    {
+      "label": "汽轮机",
+      "aliases": [
+        "汽轮机本体",
+        "汽轮机本机"
+      ]
+    },
+    {
+      "label": "隔板",
+      "aliases": []
+    },
+    {
+      "label": "吊耳",
+      "aliases": [
+        "吊装耳"
+      ]
+    },
+    {
+      "label": "卸扣",
+      "aliases": [
+        "卸卡",
+        "卡环"
+      ]
+    },
+    {
+      "label": "销轴",
+      "aliases": [
+        "卸扣销轴"
+      ]
+    },
+    {
+      "label": "密封瓦座",
+      "aliases": []
+    },
+    {
+      "label": "起重机",
+      "aliases": [
+        "吊车"
+      ]
+    },
+    {
+      "label": "推力轴承",
+      "aliases": []
+    }
+  ],
+  "statement_roles": [
+    {
+      "id": "subject",
+      "zh": "主对象",
+      "definition": "陈述直接提出要求、活动或状态的对象。"
+    },
+    {
+      "id": "object",
+      "zh": "作用或配合对象",
+      "definition": "参与活动或配合关系的对象，不自动承接主对象的要求或量值。"
+    },
+    {
+      "id": "related",
+      "zh": "相关对象",
+      "definition": "来源明确关联的对象；关联不等同于确证原因。"
+    },
+    {
+      "id": "quantity_target",
+      "zh": "量值对象",
+      "definition": "参数或量值实际属于的对象，角色变化不改变实体身份。"
+    }
+  ],
+  "statement_types": [
+    "requirement",
+    "parameter",
+    "procedure",
+    "step",
+    "anomaly",
+    "observation",
+    "inspection",
+    "cause",
+    "measure",
+    "verification",
+    "fact",
+    "limitation"
+  ],
+  "navigation_policy": {
+    "hierarchy": "recall_expansion_only",
+    "business_hop_limit": 2,
+    "follow_statement_conditions": true,
+    "inherit_quantities": false,
+    "inherit_measures": false,
+    "requires_supported_statement": true,
+    "source_and_condition_edges_count_as_business_hops": false
+  },
+  "extraction_rules": [
+    "实体身份不包含subject/object/related/quantity_target角色，角色保留在陈述关联中。",
+    "通用设备、工具和作业方法名称是Concept；真实实例需明确身份，规范步骤不是ActualActivity。",
+    "semantic_relations兼容当前陈述的source_entity/target_entity零基序号；跨陈述用source_ref/target_ref:{statement_id:批次内extraction_id,entity_index:零基序号}引用实体，省略entity_index则引用该Statement；每条跨陈述关系必须单独提供supports。",
+    "没有明确来源的上下位、部件、步骤与实际活动顺序不得推断；概念part_of不得连接真实实例。",
+    "类别层级与broader_concept、part_of、step_precedes、activity_precedes分别存储，不通过层级继承数值、条件或措施。",
+    "要求、程序、异常、原因、措施和验证导航均经过有条件的Statement；模态、否定及可能性必须保留。",
+    "quantity_target必须标识来源中量值实际所属的对象；作用或配合对象的object身份不能使该量值改变归属。",
+    "来源位置不等同于适用条件；缺失、不完整或无法解析的条件求值为unknown。",
+    "conditions/quantities/formulas内嵌于Statement，验证时可投影临时RDF信息实体，不重复持久化附属节点。",
+    "只将有明确术语或对象身份且可独立关联的实体写入entities；标点、版面编号、整句、设备列表和普通修饰不得凑成概念；重要实体不因仅出现一次被过滤。",
+    "已登记别名统一名称，未登记的疑似近义词保持独立；概念关系、定义关系与实际对象关系分开。",
+    "has_step只表示来源明确的程序步骤归属；step_precedes要求明确执行先后，编号顺序不能直接推断操作顺序。",
+    "实体标签与陈述概括优先使用中文原文名称；text写独立完整工程事实，共享注释或范围条件不得因不同证据包装重复抽取。"
+  ],
+  "storage_policy": {
+    "statement_embedded_fields": {
+      "conditions": "Condition",
+      "quantities": "Quantity",
+      "formulas": "Formula"
+    },
+    "validation_projection": "temporary_rdf_only",
+    "concept_identity": "ontology_version_and_normalized_label",
+    "statement_identity": "document_semantics_and_original_source_anchors",
+    "retrieval_projection": "embedded_in_evidence"
+  }
+}

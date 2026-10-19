@@ -1,11 +1,13 @@
-# 语义权威包
+# 本体与存储合同
 
-Stage 8 的 `config/ontology_contract.json` 是最小设计输入，`minimal_turbine.ttl` 由 `scripts/build_stage8_ontology.py` 重建，保留五个顶层类、八个运行类及其固定 IRI。候选映射和审核不自动晋级为正式词汇或 Release，审核事实以独立 Overlay 为准。
+`config/ontology_registry.json` 是机器定义入口。
 
-Stage 9 工程语义权威由 `minimal_turbine.ttl` 和 `stage9_core.ttl` 的本地组合，以及 `stage9_shapes.ttl` 构成。运行 Schema 的唯一结构真源是 `config/semantic_runtime.schema.json`；类、属性、数据类型与端点由 OWL 声明，基数、断言类型、单位及交叉字段约束由 SHACL 声明。
+- `classes`：物理对象、活动及设备／部件／系统／工具等基础业务类。
+- `domain_classes`：可跨资料复用的具体种类，不含书籍章节限定。
+- `record_types`：来源提及、类存储代理、知识记录、来源证据、资料记录；这些不是业务分类树的分支。
+- `relations`：允许的方向、端点类型、知识类型和角色。
+- `storage_policy`：提及只内嵌保存；现行抽取把条件、量值和公式保留在完整断言文字中，不要求另拆计算字段。既有结构化字段的兼容约束不代表现行抽取必填。
 
-运行输入是包含 `nodes` 与 `relations` 的 JSON bundle。`validate_runtime_payload` 执行 Schema → RDF Dataset → OWL 词汇检查 → pySHACL → Validation Report。
+`core.ttl` 与 `shapes.ttl` 由 `OntologyRegistry.authority()` 生成。类层次一直连接到 `owl:Thing`；存储代理的结构约束独立声明。`ontology_design.md` 介绍初版设计、验收问题和实际核对的公开定义代码。
 
-阶段 10 只在 OWL/SHACL 语义链之外增加稳定身份、Revision 生命周期和可重验结构化缓存。其可选批次字段由 `config/runtime_run.schema.json` 定义，跨模块约束由 `config/runtime_contract.json` 定义；缓存和任何临时投影不会成为本体或知识真源。
-
-Stage 8 另有 `modeling_pattern_coverage` 覆盖审计：它只验证少量真实 Stage 7 candidate 能否代表八种后续建模模式，不扩大最小 OWL，不生成正式词汇。
+模型获得可抽取类型、业务类定义和关系合同。程序校验抽取格式与来源绑定；回答依据来自 Evidence。既有本体合同文件用于读取已绑定的记录，本体调整时按受影响范围更新映射。

@@ -1,0 +1,37 @@
+{
+  "budget": {
+    "seconds": 240,
+    "max_rounds": 4,
+    "calls_per_round": 6,
+    "max_images": 4,
+    "text_limit": 20000,
+    "statement_page": 40,
+    "row_page": 20,
+    "business_hops": 2
+  },
+  "transport": {
+    "transient_attempts": 2,
+    "backoff_seconds": 1,
+    "max_backoff_seconds": 20
+  },
+  "model_routing": {
+    "enabled_provider_prefixes": [
+      "llm"
+    ],
+    "stage_models": {
+      "extraction": {
+        "llm": "llm_fallback"
+      }
+    }
+  },
+  "offline": {
+    "semantic_workers": 2,
+    "semantic_seconds": 300,
+    "extraction_retries": 2
+  },
+  "parser": {
+    "version": "document-parser-2",
+    "image_scale": 2.0,
+    "model_cache": "../runtime-python/model-cache/hub"
+  }
+}

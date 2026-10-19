@@ -112,16 +112,6 @@ def _group_lines(boxes: list[dict]) -> list[list[dict]]:
     return lines
 
 
-def grouped_text(result: list) -> str:
-    """Compatibility helper for the 36-page RapidOCR engine comparison."""
-    boxes = [
-        _box_record(box, text, float(score), index)
-        for index, (box, text, score) in enumerate(result or [])
-        if text
-    ]
-    return "\n".join("".join(item["text"] for item in line) for line in _group_lines(boxes))
-
-
 def default_font_file() -> Path | None:
     configured = os.environ.get("OCR_FONT_FILE")
     if configured:

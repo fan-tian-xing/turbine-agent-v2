@@ -1,0 +1,548 @@
+{
+  "version": "2",
+  "design": "默认题集验证当前已入库范围，其他章节和资料题归generality，使用前先完成相应入库。无已配置Skill时只运行通用规划；启用Skill后可显式对照。同一知识快照、模型、问题与预算分别检查来源引用、共同知识项覆盖和问题完整性；引用通过率不代表工程语义正确率。",
+  "cases": [
+    {
+      "id": "tank-section-reference",
+      "tags": [
+        "prose",
+        "section_reference",
+        "multiple_objects"
+      ],
+      "turns": [
+        "储水箱、高位膨胀水箱安装应符合什么规定？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            41,
+            42,
+            43,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "id": "flat-bottom-tank-reference",
+      "tags": [
+        "prose",
+        "clause_reference",
+        "condition"
+      ],
+      "turns": [
+        "直接置放在混凝土基础上的平底箱罐安装应符合什么规定？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            43,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thrust-repeatability",
+      "tags": [
+        "prose",
+        "quantity",
+        "modality"
+      ],
+      "turns": [
+        "按DL5190.3，推力间隙测量需要连续几次？两次测量值的偏差要求是什么，最终推力间隙依据什么确定？"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            24,
+            25
+          ]
+        }
+      ],
+      "phase": "generality"
+    },
+    {
+      "id": "bearing-default-condition",
+      "tags": [
+        "condition",
+        "manufacturer_default"
+      ],
+      "turns": [
+        "按DL5190.3，制造厂对轴瓦紧力没有要求时，圆柱形和球形轴瓦分别如何选值？测量方法有什么限制？"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            26
+          ]
+        }
+      ],
+      "phase": "generality"
+    },
+    {
+      "id": "crane-merged-table",
+      "tags": [
+        "complex_table",
+        "merged_rows",
+        "formula_variables"
+      ],
+      "turns": [
+        "表12.1.15中起重机静态刚性低、中、高定位精度要求分别是什么？ƒ和S各表示什么，什么时候采用该表？"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            112,
+            113
+          ]
+        }
+      ],
+      "required_source_kinds": [
+        "table"
+      ],
+      "phase": "generality"
+    },
+    {
+      "id": "crane-cross-page-condition",
+      "tags": [
+        "cross_page",
+        "condition",
+        "procedure"
+      ],
+      "turns": [
+        "按DL5190.3检查桥式起重机静态刚性时，小车位置、加载重量、离地高度和测量时机分别是什么？请把跨页的前提与测量要求连起来引用。"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "procedure",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            112,
+            113
+          ]
+        }
+      ],
+      "require_all_reference_pages": true,
+      "phase": "generality"
+    },
+    {
+      "id": "thrust-image-caption-cross-page",
+      "tags": [
+        "image",
+        "cross_page_caption"
+      ],
+      "turns": [
+        "请实际读取图4.5.8-3双楔面、小岛型球座式推力轴承，区分图片中能看清的间隙标识和文字要求；看不清的内容请说明。"
+      ],
+      "knowledge_items": [
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            25,
+            26
+          ]
+        }
+      ],
+      "require_pixels": true,
+      "phase": "generality"
+    },
+    {
+      "id": "hoist-image-gap",
+      "tags": [
+        "image",
+        "quantity_target"
+      ],
+      "turns": [
+        "请实际读取图12.2.1：间隙C量在车轮和轨道的哪两个部位之间？文字给出的要求是多少？图片解读和文字来源分开。"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            113
+          ]
+        }
+      ],
+      "require_pixels": true,
+      "phase": "generality"
+    },
+    {
+      "id": "seal-seat-requirements",
+      "tags": [
+        "prose",
+        "condition",
+        "negation"
+      ],
+      "turns": [
+        "密封瓦座检查垂直结合面时需要处于什么状态？0.05mm塞尺和涂色检查各检查什么，合格要求是什么？"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            85,
+            86
+          ]
+        }
+      ],
+      "phase": "generality"
+    },
+    {
+      "id": "seal-jam-anomaly-measures",
+      "tags": [
+        "anomaly",
+        "measures",
+        "verification"
+      ],
+      "turns": [
+        "拧紧密封瓦座与端盖的垂直结合面螺栓后密封瓦卡涩，先查哪些安装要求、步骤和检查？请给有依据的条件性处理方向与验证，不能把可能原因当成已确认原因。"
+      ],
+      "knowledge_items": [
+        "anomaly",
+        "cause",
+        "requirement",
+        "procedure",
+        "inspection",
+        "measure",
+        "verification"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            86
+          ]
+        }
+      ],
+      "phase": "generality"
+    },
+    {
+      "id": "lifting-lug-boundary",
+      "tags": [
+        "object_roles",
+        "missing_parameter"
+      ],
+      "turns": [
+        "DL5190.3对发电机定子专用吊耳的固定螺栓有什么要求？这些规定能否给出卸扣销轴或吊耳孔的尺寸？如果没有尺寸来源，请明确缺口。"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            82
+          ]
+        }
+      ],
+      "expected_gap": "卸扣销轴或吊耳孔尺寸未给出",
+      "phase": "generality"
+    },
+    {
+      "id": "body-installation-sequence",
+      "phase": "generality",
+      "tags": [
+        "manual",
+        "model_scope",
+        "procedure",
+        "cross_page_table"
+      ],
+      "turns": [
+        "现场机型确认是D300N。按汽轮机本体安装及维护说明书，推力轴承安装调整如何记录、装配和测量？之后盘动转子还要复查什么？请说明该说明书的适用范围。"
+      ],
+      "knowledge_items": [
+        "procedure",
+        "inspection",
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "汽轮机本体安装及维护说明书",
+          "physical_pages": [
+            5,
+            49,
+            50
+          ]
+        }
+      ]
+    },
+    {
+      "id": "auxiliary-horizontal-pump",
+      "phase": "generality",
+      "tags": [
+        "auxiliary_book",
+        "complex_table",
+        "formula"
+      ],
+      "turns": [
+        "按汽轮机辅机安装第二版4.2.1测量卧式泵轴窜的单项操作，百分表如何装设、怎样读取两端读数、轴窜值怎样取得？区分操作质量要求与扣分项，不把考核分数当工程参数。"
+      ],
+      "knowledge_items": [
+        "procedure",
+        "inspection",
+        "parameter"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "汽轮机辅机安装",
+          "physical_pages": [
+            408
+          ]
+        }
+      ],
+      "required_source_kinds": [
+        "table"
+      ]
+    },
+    {
+      "id": "thrust-multiple-source-scope",
+      "phase": "generality",
+      "tags": [
+        "multiple_sources",
+        "scope_difference",
+        "unknown_applicability",
+        "no_false_conflict"
+      ],
+      "turns": [
+        "现场机型尚未确认。请分别查DL5190.3和汽轮机本体安装及维护说明书关于推力轴承安装、推力间隙测量与复查的要求，分开引用两份资料，说明说明书的明确适用范围。不要把不同范围或互相补充的要求当成冲突，也不要直接替现场确认适用；还需要补充哪些信息？"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "procedure",
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            24,
+            25
+          ]
+        },
+        {
+          "title_contains": "汽轮机本体安装及维护说明书",
+          "physical_pages": [
+            5,
+            49,
+            50
+          ]
+        }
+      ],
+      "required_source_kinds": [
+        "text",
+        "table"
+      ],
+      "expected_gap": "现场机型及制造厂技术要求尚未确认，D300N说明书的现场适用性未知"
+    },
+    {
+      "id": "multi-object-correction",
+      "tags": [
+        "session",
+        "multiple_objects",
+        "correction",
+        "unknown_applicability"
+      ],
+      "turns": [
+        "机型还不清楚。密封瓦座和推力轴承都在检查，请分别查相关安装要求和检查项目，两个对象的间隙要求不要混用。",
+        "更正现场信息：推力轴承两次推力间隙测量差是0.04mm；密封瓦座垂直结合面用0.05mm塞尺能够插入。其他条件未确认。请分别说明已知检查要求、还缺什么现场条件，不替我确认原因。"
+      ],
+      "knowledge_items": [
+        "requirement",
+        "parameter",
+        "inspection"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            25,
+            86
+          ]
+        }
+      ],
+      "session_objects": [
+        "密封瓦座",
+        "推力轴承"
+      ],
+      "phase": "generality"
+    },
+    {
+      "id": "hydrostatic-pressure-below-limit",
+      "tags": [
+        "quantity",
+        "manufacturer_default"
+      ],
+      "turns": [
+        "制造厂没有规定试验压力时，压力容器严密性水压试验采用工作压力的1.20倍，是否符合要求？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            37
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hydrostatic-pressure-above-limit",
+      "tags": [
+        "quantity",
+        "manufacturer_default"
+      ],
+      "turns": [
+        "制造厂没有规定试验压力时，压力容器严密性水压试验采用工作压力的1.30倍，是否满足压力要求？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            37
+          ]
+        }
+      ]
+    },
+    {
+      "id": "condenser-shell-deformation",
+      "tags": [
+        "anomaly",
+        "quantity",
+        "measures"
+      ],
+      "turns": [
+        "凝汽器壳体现场组装时测得每米弯曲4mm，应该怎么处理？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            37
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cooling-tube-obstruction",
+      "tags": [
+        "anomaly",
+        "procedure",
+        "negation"
+      ],
+      "turns": [
+        "凝汽器冷却管穿装时受阻，应该怎么办？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            38
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deaerator-installation",
+      "tags": [
+        "prose",
+        "section_reference",
+        "activity_scope"
+      ],
+      "turns": [
+        "除氧器安装应符合什么规定？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            37,
+            44
+          ]
+        }
+      ]
+    },
+    {
+      "id": "deaerator-installation-record",
+      "tags": [
+        "prose",
+        "list_item",
+        "citation_selection"
+      ],
+      "turns": [
+        "辅助设备安装质量验收时，除氧器需要提交什么施工技术记录？"
+      ],
+      "knowledge_items": [
+        "requirement"
+      ],
+      "reference_locations": [
+        {
+          "title_contains": "DL5190.3",
+          "physical_pages": [
+            47
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix tk: <https://turbine.local/ontology#> .
+
+tk:AirCoolingDevice a owl:Class ;
+    rdfs:label "空冷装置"@zh-CN ;
+    rdfs:subClassOf tk:System ;
+    skos:definition "以空气为最终冷却介质，通过换热设备及辅助设施排出热量的工程系统。"@zh-CN .
+
+tk:Assembly a owl:Class ;
+    rdfs:label "组装"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "将部件按规定位置组合并连接为整体的活动。"@zh-CN ;
+    tk:alias "装配"@zh-CN .
+
+tk:Condenser a owl:Class ;
+    rdfs:label "凝汽器"@zh-CN ;
+    rdfs:seeAlso <https://www.gevernova.com/gas-power/products/heat-exchangers> ;
+    rdfs:subClassOf tk:HeatExchanger ;
+    skos:definition "通过移除汽轮机排汽的热量，使蒸汽凝结为液态水的热交换设备。"@zh-CN .
+
+tk:CoolingTube a owl:Class ;
+    rdfs:label "冷却管"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "供冷却介质流动并参与换热的管状部件。"@zh-CN .
+
+tk:Deaerator a owl:Class ;
+    rdfs:label "除氧器"@zh-CN ;
+    rdfs:seeAlso <https://www.spiraxsarco.com/learn-about-steam/the-boiler-house/pressurised-deaerators> ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "用于去除水中溶解氧及其他溶解气体的设备。"@zh-CN .
+
+tk:DesuperheatingPressureReducingDevice a owl:Class ;
+    rdfs:label "减温减压装置"@zh-CN ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "将蒸汽温度和压力降低至所需工况的设备。"@zh-CN ;
+    tk:alias "减温减压器"@zh-CN .
+
+tk:Diffuser a owl:Class ;
+    rdfs:label "扩散管"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "通过流道扩展使流体减速并回收静压的部件。"@zh-CN .
+
+tk:HighPressureHeater a owl:Class ;
+    rdfs:label "高压加热器"@zh-CN ;
+    rdfs:seeAlso <https://www.gevernova.com/content/dam/gepower-steam/global/en_US/documents/Steam-Product-Catalog.pdf> ;
+    rdfs:subClassOf tk:HeatExchanger,
+        tk:Heater ;
+    skos:definition "布置于回热系统高压给水段、利用蒸汽加热给水的加热器。"@zh-CN .
+
+tk:HydrostaticTightnessTest a owl:Class ;
+    rdfs:label "严密性水压试验"@zh-CN ;
+    rdfs:subClassOf tk:HydrostaticTest ;
+    skos:definition "以水为试验介质施加压力，检验对象严密性的试验。"@zh-CN .
+
+tk:Inspection a owl:Class ;
+    rdfs:label "检查"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "通过观察、测量或核查评价对象状态及符合性的活动。"@zh-CN .
+
+tk:Installation a owl:Class ;
+    rdfs:label "安装"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "将设备或部件就位、连接并形成预定装配状态的活动。"@zh-CN .
+
+tk:LowPressureHeater a owl:Class ;
+    rdfs:label "低压加热器"@zh-CN ;
+    rdfs:seeAlso <https://www.gevernova.com/content/dam/gepower-steam/global/en_US/documents/Steam-Product-Catalog.pdf> ;
+    rdfs:subClassOf tk:HeatExchanger,
+        tk:Heater ;
+    skos:definition "布置于回热系统低压凝结水段、利用蒸汽加热凝结水的加热器。"@zh-CN .
+
+tk:Nozzle a owl:Class ;
+    rdfs:label "喷嘴"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "用于形成、加速或定向输送流体射流的流道部件。"@zh-CN ;
+    skos:scopeNote "此处指形成流体射流的喷嘴，不将工艺设备的接管接口自动视为同义词。"@zh-CN .
+
+tk:PipeCompensator a owl:Class ;
+    rdfs:label "管道补偿器"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "装入管路、用于补偿管道位移或变形的部件。"@zh-CN .
+
+tk:PressureVessel a owl:Class ;
+    rdfs:label "压力容器"@zh-CN ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "用于容纳承压介质的封闭容器。"@zh-CN .
+
+tk:Shell a owl:Class ;
+    rdfs:label "壳体"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "构成设备外部边界、容纳或支承内部结构的部件。"@zh-CN .
+
+tk:SteamJetEjector a owl:Class ;
+    rdfs:label "射汽抽气器"@zh-CN ;
+    rdfs:seeAlso <https://www.s-k.com/steam-jet-vacuum/single-stage-steam-jet-ejectors/> ;
+    rdfs:subClassOf tk:Ejector ;
+    skos:definition "以蒸汽为工作介质，利用高速蒸汽射流卷吸并排出气体或蒸汽的抽气器。"@zh-CN .
+
+tk:SupportSpring a owl:Class ;
+    rdfs:label "支持弹簧"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "用于支承载荷并允许弹性位移的弹簧部件。"@zh-CN ;
+    tk:alias "支撑弹簧"@zh-CN .
+
+tk:SurfaceHeatExchanger a owl:Class ;
+    rdfs:label "表面式热交换器"@zh-CN ;
+    rdfs:subClassOf tk:HeatExchanger ;
+    skos:definition "通过固体传热壁面在相互隔离的介质之间传递热量的热交换器。"@zh-CN .
+
+tk:Tool a owl:Class ;
+    rdfs:label "工具"@zh-CN ;
+    rdfs:subClassOf tk:PhysicalObject ;
+    skos:definition "用于辅助安装、检查或操作的物理对象。"@zh-CN .
+
+tk:TrialOperation a owl:Class ;
+    rdfs:label "试运行"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "在正式运行前通过运行设备或系统检查其功能和运行状态的活动。"@zh-CN .
+
+tk:TubeBundle a owl:Class ;
+    rdfs:label "管束"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "由多根管按规定布局组成的部件组合。"@zh-CN .
+
+tk:TubeExpansion a owl:Class ;
+    rdfs:label "胀接"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "通过管端塑性扩张形成连接的作业。"@zh-CN .
+
+tk:TubeInsertion a owl:Class ;
+    rdfs:label "穿管"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "将管材穿入相应孔或支承结构的作业。"@zh-CN ;
+    tk:alias "穿装"@zh-CN .
+
+tk:TubeSheet a owl:Class ;
+    rdfs:label "管板"@zh-CN ;
+    rdfs:subClassOf tk:Component ;
+    skos:definition "开设管孔并用于定位或连接换热管的板状部件。"@zh-CN .
+
+tk:VacuumSystem a owl:Class ;
+    rdfs:label "真空系统"@zh-CN ;
+    rdfs:subClassOf tk:System ;
+    skos:definition "由抽气设备、连接管路及辅助对象组成，用于建立或维持低于大气压力工况的工程系统。"@zh-CN .
+
+tk:WaterJetEjector a owl:Class ;
+    rdfs:label "射水抽气器"@zh-CN ;
+    rdfs:seeAlso <https://www.s-k.com/exhausters-compressors/single-nozzle-water-jet-exhausters/> ;
+    rdfs:subClassOf tk:Ejector ;
+    skos:definition "以压力水为工作介质，利用高速水射流卷吸并排出气体或蒸汽的抽气器。"@zh-CN .
+
+tk:WaterJetPump a owl:Class ;
+    rdfs:label "射水泵"@zh-CN ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "向射水抽气器供给有压工作水的泵。"@zh-CN ;
+    skos:scopeNote "名称指射水抽气系统的供水泵，与利用水射流抽气的射水抽气器区分。"@zh-CN .
+
+tk:WaterTank a owl:Class ;
+    rdfs:label "水箱"@zh-CN ;
+    rdfs:subClassOf tk:Tank ;
+    skos:definition "用于容纳水的箱罐。"@zh-CN .
+
+tk:Welding a owl:Class ;
+    rdfs:label "焊接"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "通过焊接方法使材料形成连接或堆敷的作业。"@zh-CN .
+
+tk:has_anomaly a owl:ObjectProperty ;
+    rdfs:label "异常"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象与描述其异常或观察结果的陈述。"@zh-CN .
+
+tk:has_cause a owl:ObjectProperty ;
+    rdfs:label "有依据的可能原因"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity tk:Statement ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象或异常陈述与解释其原因的陈述。"@zh-CN ;
+    skos:scopeNote "原因的确定性或可能性由陈述表达，关联本身不等同于确证原因。"@zh-CN .
+
+tk:has_inspection a owl:ObjectProperty ;
+    rdfs:label "检查"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity tk:Statement ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象、程序、步骤或陈述与相应的检查陈述。"@zh-CN .
+
+tk:has_measure a owl:ObjectProperty ;
+    rdfs:label "措施"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity tk:Statement ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象或异常陈述与针对它的处置措施陈述。"@zh-CN .
+
+tk:has_procedure a owl:ObjectProperty ;
+    rdfs:label "程序"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象与针对该对象的作业程序陈述或程序定义。"@zh-CN .
+
+tk:has_requirement a owl:ObjectProperty ;
+    rdfs:label "要求"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象、程序或步骤与其工程要求或参数陈述。"@zh-CN ;
+    skos:scopeNote "量值要求关联量值实际所属的对象，配合对象不自动承接要求。"@zh-CN .
+
+tk:has_step a owl:ObjectProperty ;
+    rdfs:label "包含步骤定义"@zh-CN ;
+    rdfs:domain tk:Statement ;
+    rdfs:range tk:Statement ;
+    skos:definition "来源明确的程序记录与步骤记录归属。"@zh-CN ;
+    skos:scopeNote "表示程序规定的步骤组织，不表示现场已经执行。"@zh-CN .
+
+tk:has_verification a owl:ObjectProperty ;
+    rdfs:label "验证"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity tk:Statement ) ] ;
+    rdfs:range tk:Statement ;
+    skos:definition "连接对象或措施陈述与评价其状态或效果的验证陈述。"@zh-CN .
+
+tk:ontology a owl:Ontology ;
+    owl:versionIRI <https://turbine.local/ontology#version/1fadcd34ae5f809e923b7271439de264564e6b2970c81933923496487fa23abd> ;
+    owl:versionInfo "10" .
+
+tk:part_of a owl:ObjectProperty ;
+    rdfs:label "组成于"@zh-CN ;
+    rdfs:domain [ a owl:Class ;
+            owl:unionOf ( tk:PhysicalObject tk:OntologyClass tk:Mention ) ] ;
+    rdfs:range [ a owl:Class ;
+            owl:unionOf ( tk:PhysicalObject tk:OntologyClass tk:Mention ) ] ;
+    skos:definition "来源明确的部分与整体关系；类代理之间描述种类层面的组成，不能据此断言某个实际设备的归属。"@zh-CN ;
+    skos:scopeNote "种类之间的组成关联与实际对象之间的组成事实分别表示，不跨层混接。"@zh-CN .
+
+tk:step_precedes a owl:ObjectProperty ;
+    rdfs:label "步骤定义先于"@zh-CN ;
+    rdfs:domain tk:Statement ;
+    rdfs:range tk:Statement ;
+    skos:definition "来源明确规定的步骤记录执行先后；条款编号不自动表示顺序。"@zh-CN ;
+    skos:scopeNote "规定顺序与实际活动顺序分别表示。"@zh-CN .
+
+tk:supported_by a owl:ObjectProperty ;
+    rdfs:label "证据支持"@zh-CN ;
+    rdfs:domain tk:Statement ;
+    rdfs:range tk:Evidence ;
+    skos:definition "连接陈述与支持该陈述的来源证据。"@zh-CN ;
+    skos:scopeNote "支持关系定位到证据中的具体成员，可以多对多。"@zh-CN .
+
+tk:HydrostaticTest a owl:Class ;
+    rdfs:label "水压试验"@zh-CN ;
+    rdfs:subClassOf tk:TestActivity ;
+    skos:definition "以水为试验介质施加压力，检验对象性能或状态的试验。"@zh-CN .
+
+tk:Tank a owl:Class ;
+    rdfs:label "箱罐"@zh-CN ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "用于容纳、储存或缓冲介质的箱形或罐形设备。"@zh-CN .
+
+tk:TestActivity a owl:Class ;
+    rdfs:label "试验"@zh-CN ;
+    rdfs:subClassOf tk:Activity ;
+    skos:definition "在规定条件下施加作用或开展测量，以确定对象性能、状态或符合性的活动。"@zh-CN .
+
+tk:Ejector a owl:Class ;
+    rdfs:label "抽气器"@zh-CN ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "利用工作流体射流卷吸并排出气体或蒸汽的抽气设备。"@zh-CN .
+
+tk:Heater a owl:Class ;
+    rdfs:label "加热器"@zh-CN ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "向介质或对象提供热量以提高其温度的设备。"@zh-CN ;
+    skos:scopeNote "本类采用广义加热设备含义，不限定热源或加热原理。"@zh-CN .
+
+tk:System a owl:Class ;
+    rdfs:label "工程系统"@zh-CN ;
+    rdfs:subClassOf tk:PhysicalObject ;
+    skos:definition "由相互作用的物理对象组成、共同实现工程功能的整体。"@zh-CN .
+
+tk:HeatExchanger a owl:Class ;
+    rdfs:label "热交换器"@zh-CN ;
+    rdfs:seeAlso <https://www.gevernova.com/gas-power/products/heat-exchangers> ;
+    rdfs:subClassOf tk:Equipment ;
+    skos:definition "在不同温度的介质之间传递热量的设备。"@zh-CN ;
+    skos:scopeNote "包含通过壁面传热或介质直接接触传热的设备。"@zh-CN .
+
+tk:Component a owl:Class ;
+    rdfs:label "部件"@zh-CN ;
+    rdfs:subClassOf tk:PhysicalObject ;
+    skos:definition "构成设备或系统的结构或功能单元；具体所属整体由组成关系表达。"@zh-CN .
+
+tk:Equipment a owl:Class ;
+    rdfs:label "设备"@zh-CN ;
+    rdfs:subClassOf tk:PhysicalObject ;
+    skos:definition "为实现工程功能而设计的物理对象。"@zh-CN .
+
+tk:PhysicalObject a owl:Class ;
+    rdfs:label "物理对象"@zh-CN ;
+    rdfs:subClassOf owl:Thing ;
+    skos:definition "具有物质组成、可作为安装或检查对象的实体。"@zh-CN .
+
+tk:Activity a owl:Class ;
+    rdfs:label "活动"@zh-CN ;
+    rdfs:subClassOf owl:Thing ;
+    skos:definition "由参与对象在一定时间内进行的操作或过程。"@zh-CN .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( tk:PhysicalObject tk:Activity ) .

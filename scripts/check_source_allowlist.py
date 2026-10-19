@@ -7,7 +7,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from turbine_kg.registry.source_inputs import load_allowlist, validate_source_allowlist
+from turbine_kg.documents.source_inputs import load_allowlist, validate_source_allowlist
 from turbine_kg.settings import Settings
 
 
@@ -15,7 +15,7 @@ ALLOWLIST_PATH = PROJECT_ROOT / "config" / "source_allowlist.tsv"
 def main() -> int:
     settings = Settings.from_environment()
     parser = argparse.ArgumentParser(
-        description="Verify every explicitly allowed source PDF without scanning the workspace."
+        description="Verify every explicitly allowed source file without scanning the workspace."
     )
     parser.add_argument("--source-root", type=Path, default=settings.source_root)
     parser.add_argument("--ocr-derived-root", type=Path, default=settings.ocr_derived_root)

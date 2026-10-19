@@ -1,102 +1,72 @@
-# 核电汽轮机安调智能体 v2
+# 汽轮机安调知识问答 Demo
 
-本仓库用于建设面向核电汽轮机本机及辅机安装、调试、检查、验收和问题处置场景的 CLI 技术分析与建议工具。
+本项目把书籍、规范中的安装调试知识整理为 Evidence 和 Statement，写入 Neo4j；问答时结合本体关系与全文检索召回依据，由 LangGraph 编排回答。默认输出「建议」和「依据来源」。当前试点范围由 `config/processing_scopes.json` 指定，本体设计见 `ontology/ontology_design.md`。
 
-## 当前状态
+仓库保存代码、配置、本体定义、测试与来源审核记录。原 PDF、OCR 文件、Neo4j 数据卷、模型缓存和 `.env` 是本机资料，不随 Git 仓库提供。`data/` 中的审核记录和样本可能含来源摘录；使用或公开时需遵守原资料的授权范围。仅克隆仓库不会得到已入库的知识图谱。
 
-项目当前状态唯一以 [`data/project_state.json`](data/project_state.json) 为准；阶段退出审计是各阶段的证据记录，不再复制维护项目总状态。本文件不重复维护具体阶段状态。
+## 数据流程
 
-阶段产物、构建顺序和使用边界见 [`data/README.md`](data/README.md) 及各阶段目录的 README。原始材料始终是证据来源；OCR 派生件可用于 Document IR、文字适配、候选发现和坐标辅助，但不替代原始材料作为 Evidence 真值。
+1. `documents` 解析来源版本、条款、分项、表格和跨页续文；`evidence` 组装可独立理解、精确定位的原文 Evidence，保存完整正文 `text` 及其成员定位 `members`。
+2. 模型按 `config/ontology_registry.json` 提取最简 Statement：完整断言、知识类型、对象或活动及其角色、所依据的 Evidence 成员。断言保留条件、数值和单位的原文含义，当前不单独抽取可计算量值或条件表达式。程序检查结构、本体类型、来源成员与覆盖；失败组最多重试两次。试点数据按页人工核对，不调用第二个模型专门审核抽取。
+3. Neo4j 保存资料、Evidence、Statement、已审定本体类代理及有证据的连接。文档节点和资料来源使用稳定标识；Evidence、Statement 和资料结构节点使用 `logical_key` 做增量匹配，内容变化由 `content_hash` 判断。通用书籍名称映射类；没有明确身份时不创建现场设备实例。未映射的名称留在 Statement 和 Evidence 中。
+4. 问题分析读取本体类定义与别名，用户问题和现场数值只保存在会话内存，问答过程只读 Neo4j。查询同时使用类及关系导航和 Neo4j Evidence 全文索引。回答模型接收完整 Evidence、出处及 Statement 提供的精简对象角色信息，不重复发送 Statement 全文，不回读原 PDF。
+5. LangGraph 编排检索、补查和回答。生成后由独立模型请求检查建议的依据、适用性和影响本题建议的关键遗漏，不要求覆盖所有召回内容。程序检查任务绑定、Evidence 成员、引用、数值单位和图片读取状态，允许已确认的等值单位换算。当前采用单轮问答，不追问。Skill 配置为空，后续只有形成稳定的案例流程后才决定是否启用。
 
-阶段 5 已完成五份资料的 775 个现存物理页文字适配；阶段 0–5 已复核并清理遗留引用。阶段 6 的 36 页样本退出审计记录 28 页形成 398 条 Evidence、8 页按负向门禁排除，但后续独立原页核查发现 DL5190.3 物理第 25、113 页的图中文字遗漏，按当前用户要求暂缓修复。阶段 7 已按现行输入重建 18,628 条候选并通过退出检查；阶段 8 已对 16 项当前候选完成三方独立原页审核与来源重绑，5 项候选映射接受、11 项暂缓，未发布正式词汇或本体新类。阶段 9 已将旧研发样本的 3 组 4 条引文核对并绑定现行来源，OWL/SHACL 与投影前门禁通过；阶段 10 当前运行缓存与版本影响范围审计通过。阶段 11 的 46 条开发 Gold 已绑定现行 Evidence，退出审计通过；阶段 12 的 Development 正按当前 Evidence 和中文提示词重建，独立 Reserve 仅准备预冻结。原件缺页只记录缺口，不补造内容。五份资料的全文 Evidence 属于阶段 15。
+`Evidence` 是完整可引用的来源单元；一条 Evidence 含多项要求时可对应多条 Statement。程序的抽取完成状态不代表语义一定正确，试点按页对照原文核查。条件或量值信息不明确时保留原文并说明判断边界，不能补造现场事实。
 
-## 项目边界
+Evidence 的完整原文统一存为 `text`，抽取和问答都能读取；`search_tokens` 从该正文生成，供全文索引使用。`members` 保留原文成员及定位，引用分项时由程序补齐必要的引导句和续行，不新增 `items`，不再另外保存 `search_text`。数值问题先使用程序解析的限值；无法明确对应时，模型只从已读图谱原文中定位对象、条件和限值，程序核对来源后执行比较，临时限值不写回知识图谱。
 
-- 项目代码、配置和运行资产只放在本仓库。
-- 原始资料位于本地项目根目录的 `Original materials`，通过 `SOURCE_ROOT` 只读访问。
-- OCR 派生产物写入 `OCR_DERIVED_ROOT`（默认 `var/derived/ocr`），不写入只读的 `SOURCE_ROOT`；Registry 以稳定逻辑路径、`source_root_id` 和 `asset_kind` 追溯其原件或派生件身份。
-- 可处理资料由 `config/source_allowlist.tsv` 显式列出。
-- 资料 Profile 由 `config/source_profiles/registry.json` 声明并纳入 Registry 记录；代码不得根据目录名称推断资料语义角色。
-- 逻辑文档身份由 `config/document_identity.tsv` 受控分配；新增路径、派生件或 Revision 前先补齐映射，不由指纹自动产生新身份。
-- OCR 派生件与其原件的精确对应关系由 `config/derived_asset_links.tsv` 声明；同一逻辑文档下，Revision 与具体文件资产分开标识。
-- 构建链路只读取白名单中的文件，不递归扫描整个父工作区。
-- 原始资料、数据库目录、密钥、缓存、模型运行记录和大体积发布产物不进入 Git。
-- 磁盘上的 Registry、Evidence、Engineering Statement、审核记录和 Release 产物是可重建的数据权威；Neo4j 仅作为运行投影。
+问答模型的提示词集中在 `src/turbine_kg/agent/prompts.py`。普通问答不启用 Skill。全文检索按完整对象名称和审定别名召回，活动、现象等词组用于排序；不使用词向量。检索返回相关候选，模型根据实际问题筛选。建议可包含必要准备和检查，具体修复工艺必须有资料支持。独立核验未完成时保留有依据的部分建议并说明限制。
 
-总体建设计划见 `总计划.md`，该文件只记录各阶段目标、任务、交付物和验收要求。
+## 本机准备与问答（CMD）
 
-阶段 5 正式文件、哈希和验收范围见 [`data/stage5/stage5_sample_manifest.json`](data/stage5/stage5_sample_manifest.json)、[`data/registry/ocr_validation_report.json`](data/registry/ocr_validation_report.json) 和 [`data/stage5/stage5_exit_audit.json`](data/stage5/stage5_exit_audit.json)。阶段 6 当前样本结果见 [`data/stage6/stage6_exit_audit.json`](data/stage6/stage6_exit_audit.json) 和 [`data/stage6/stage6_semantic_coverage_audit.json`](data/stage6/stage6_semantic_coverage_audit.json)，须连同上述已知原页缺口理解；阶段 7–11 当前结果见 [`data/stage7/stage7_exit_audit.json`](data/stage7/stage7_exit_audit.json)、[`data/stage8/stage8_exit_audit.json`](data/stage8/stage8_exit_audit.json)、[`data/stage9/stage9_exit_audit.json`](data/stage9/stage9_exit_audit.json)、[`data/stage10/stage10_audit.json`](data/stage10/stage10_audit.json) 和 [`data/stage11/stage11_exit_audit.json`](data/stage11/stage11_exit_audit.json)。阶段 12 以当前中文提示词重建的输出及退出审计为准；旧结果不能充当当前验收。
-
-## 本地配置
-
-复制 `.env.example` 为 `.env` 后填写本机参数。程序启动时从项目根目录 `.env` 读取配置，已有环境变量优先；模块中不写死本机绝对路径。
-
-`SOURCE_ROOT` 只放原始资料，`OCR_DERIVED_ROOT` 只放本地 OCR 派生产物；二者不可配置为同一目录。
-
-项目唯一运行环境为：`D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env`。项目代码、OCR、PDF、图像处理、Neo4j 客户端和测试必须使用该环境；Codex 通用 Python 不属于项目依赖环境。
-
-Neo4j 使用 `compose.yaml` 描述，但容器由项目负责人手动创建和启动。数据库只是磁盘权威产物的运行投影，正式知识不得直接在 Neo4j Browser 中修改。
-
-- Neo4j Browser：`http://localhost:7475`
-- Neo4j Bolt：`neo4j://localhost:7688`
-
-本地阶段 3 试点命令：先进入 `新版demo` 目录并设置源码路径，按当前终端选择一种写法。`import` 和 `status` 在需要时运行，日常直接执行提问命令即可。
+需要 Python 3.12、Neo4j 5 和已获授权的资料。首次在新电脑使用时，在仓库目录打开 `cmd`：
 
 ```cmd
-cd /d "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
-set "PYTHONPATH=%CD%\src"
-"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli import
-"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli status
-"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" -m turbine_kg.stage3.trial_cli "密封瓦座水平结合面用塞尺检查要求是什么？"
+py -3.12 -m venv .venv
+call .venv\Scripts\activate.bat
+python -m pip install -e .
+copy .env.example .env
 ```
 
-如果终端是 PowerShell：
+按 `.env.example` 填写本机 Neo4j、模型与资料路径。仓库根目录的 `compose.yaml` 可启动本地 Neo4j：`docker compose up -d`。原始资料和 OCR 文件须放在 `.env` 指向的位置，并与 `config/source_allowlist.tsv`、`config/document_identity.tsv`、`config/derived_asset_links.tsv` 的登记相符。已有项目虚拟环境时可直接激活，不必重新安装。
 
-```powershell
-cd "D:\本体\汽轮机安调项目\项目初期demo\新版demo"
-$env:PYTHONPATH="src"
-$projectPython = "D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe"
-& $projectPython -m turbine_kg.stage3.trial_cli import
-& $projectPython -m turbine_kg.stage3.trial_cli status
-& $projectPython -m turbine_kg.stage3.trial_cli "密封瓦座水平结合面用塞尺检查要求是什么？"
-```
-
-提问命令读取项目 `.env` 的模型连接配置，支持直接传入问题、`ask "问题"` 或 `--question "问题"`；省略问题时进入交互输入。默认输出中文回答、适用性提示和依据，`--json` 输出机器可读结果，`--no-evidence-send` 只检索、不调用模型。依据显示物理页及已确认的逻辑页；仅向模型发送 Neo4j 命中的最小证据片段。模型调用失败时返回检索证据和失败原因，Neo4j 未启动时返回连接提示。
-
-## 当前检查
-
-资料处理前可运行以下只读检查，确认白名单路径、文件大小和 SHA-256 均与当前资料一致：
+在已激活环境的同一 `cmd` 窗口运行：
 
 ```cmd
-"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" scripts/check_source_allowlist.py
+turbine "你要问的安调问题"
 ```
 
-工程测试：
+不传问题时进入连续提问模式；输入 `/退出` 结束。每个新窗口只需重新激活环境一次。`turbine` 是 `pyproject.toml` 注册的命令，不需要每次设置 `PYTHONPATH`。
 
-```powershell
-New-Item -ItemType Directory -Force -Path "var/tmp" | Out-Null
-& $projectPython -m pytest -p no:cacheprovider --basetemp "var/tmp/tests-$([guid]::NewGuid().ToString('N'))"
-```
+`--trace` 显示内部检索与程序校验诊断，`--json` 返回完整结构化结果。查询直接读取 Neo4j 当前资料，不使用候选代或激活切换。
 
-构建或更新 Source Registry（只读取白名单 PDF，不写入 Neo4j）：
+需要审查对象是否仍为 Mention 时，可只读运行：
 
 ```cmd
-"D:\本体\汽轮机安调项目\项目初期demo\runtime-python\turbine-kg-env\Scripts\python.exe" scripts/build_source_registry.py
+python -B scripts\inspect_graph.py --mapping-report
 ```
 
-Registry 产物位于 `data/registry`。其中 `source_manual_findings.jsonl` 只记录已经完成的封面、页眉、页数和派生关系人工核验；未确认事项仍保留在 `source_review_queue.jsonl`。`stage2_source_selection.json` 记录进入阶段 3 研发试点的候选来源，不替代阶段 15 的正式准入门。`source_duplicate_groups.jsonl` 保存已物化的分组，`source_duplicate_relations.jsonl` 保存组内或候选关系。
+报告按标签统计未绑定本体类的实体，不会修改 Neo4j。只有同一类含义稳定、且能由来源确认的重复标签，才应补入注册表别名或类；不能把一次性复合描述直接登记成类。
 
-阶段 6 的构建顺序和权威产物见 [`data/stage6/README.md`](data/stage6/README.md)。最终退出检查执行 `scripts/audit_stage6_exit.py`；退出记录状态通过且无阻塞项后，`stage6_evidence_bundle.jsonl` 才可作为阶段 7 的样本 Evidence 输入。阶段 7 的输入清单和候选构建分别执行 `scripts/build_stage7_input_manifest.py`、`scripts/build_stage7_terminology.py`，最终退出检查执行 `scripts/audit_stage7_exit.py`。
+## 导入与验证
 
-阶段 8、9、10 的顺序检查分别执行 `scripts/audit_stage8_exit.py`、`scripts/audit_stage9_exit.py --current-source-bindings data/stage9/stage9_current_source_bindings.json`、`scripts/audit_stage10_exit.py`。阶段 10 的实际运行模式为：
+先配置并核对来源，再在已激活环境中运行：
 
-```powershell
-& $projectPython scripts/build_stage7_terminology.py --runtime
-& $projectPython scripts/build_stage7_terminology.py --runtime --force
+```cmd
+python -B scripts\check_source_allowlist.py
+turbine-ingest --planned --prepare-only
+turbine-ingest --planned --work-pages 37 --workers 2
+turbine-ingest --planned --work-pages 37,38 --retry-semantics --workers 2
+python -B -m pytest tests/current -q -p no:cacheprovider
 ```
 
-运行结果写入本地受控缓存，使用范围、输入门禁及生命周期字段见 [`data/stage10/README.md`](data/stage10/README.md)；运行合同见 [`config/runtime_contract.json`](config/runtime_contract.json)。
+这里的 37、38 是当前试点的物理页示例；导入其他资料时须先修改 `config/processing_scopes.json` 并核对来源登记，不能直接沿用这些页码。导入会更新 Neo4j，首次使用需先启动数据库。
 
-阶段 11 包含 Engineering Statement 合同、唯一 Evaluation Sample Registry、语义标注和裁决。36 页开发/回归 Golden 与 15 页 Statement 留出分开登记；留出只由评价入口读取，盲测不读取。原用户裁决和隔离决定保留。原有 17 条旧 Evidence 来源均已迁移；辅机第 360 页低真空答文拆成 6 条、高真空答文拆成 5 条，当前共有 46 条开发 Gold。现行来源与三方语义复核另记哈希，入口和退出均为 `complete`。阶段 12 仍须独立重验。阶段 11 产物说明见 [`data/stage11/README.md`](data/stage11/README.md)。
+当前资料的问答验收题可用 `python -B scripts\compare_answer_modes.py --list` 查看，去掉 `--list` 后执行。未配置 Skill 时只运行通用问答；其他资料题放在 `--phase generality`，需要先导入对应资料。
 
-阶段 15 的目标是按 Registry 身份对五份资料 775 个唯一物理页完成全文 Evidence、Engineering Statement 和 candidate 图谱处理。开发页、试点页及阶段 14 candidate 都要迁移对账后只处理一次；OCR 仅为派生资产，视觉页、隔离页和非内容页均需有明确处置，正式 candidate 还需通过覆盖、审核、重复加载和隔离 Neo4j 对账门禁。
+先检查一页 Evidence 和 Statement，再扩到两页，确认跨页、条件、量值和来源均正确后才扩大处理范围。资料更新时按稳定逻辑标识增量写入当前图谱：变化记录用 `MERGE/SET` 更新，失效记录和关系按资料标识删除，不复制候选代。
+
+运行配置见 `config/README.md`。资料更新采用 Neo4j 官方增量写入思路：稳定键匹配后使用 `MERGE`/`SET` 更新，按本次新资料结果删除已失效的资料节点和受管理关系。解析和本体校验应在写入前完成，不能把未完成结果直接写入正式图谱。模型外发由 `.env` 的 `LLM_ALLOW_EVIDENCE_SEND` 控制；项目不会把密钥写入图谱或文档。原件、OCR、人工标注和历史本体合同应保留，以便核对来源。
+
+代码中的 `KnowledgeStore.sync_document()` 提供单版本增量同步接口：输入一本文档的完整节点与受管理关系集合，节点按 `logical_key` 匹配，内容按 `content_hash` 判断，关系按稳定关系键合并。只允许同步文档自有节点；`OntologyClass` 等共享本体节点不能作为文档删除范围。

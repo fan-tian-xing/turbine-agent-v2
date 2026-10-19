@@ -1,0 +1,2472 @@
+{
+  "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813": {
+    "reviewed_page_body_bounds": [
+      {
+        "physical_page": 14,
+        "y_min": 56.0,
+        "y_max": 785.0
+      },
+      {
+        "physical_page": 25,
+        "y_min": 56.0,
+        "y_max": 785.0
+      },
+      {
+        "physical_page": 42,
+        "y_min": 56.0,
+        "y_max": 785.0
+      },
+      {
+        "physical_page": 86,
+        "y_min": 56.0,
+        "y_max": 785.0
+      },
+      {
+        "physical_page": 113,
+        "y_min": 56.0,
+        "y_max": 785.0
+      }
+    ],
+    "reviewed_context_evidence": [
+      {
+        "physical_page": 113,
+        "source_text_sha256": "772a4ced85e9fd56dc2c6bdd5b9a539c26e5f2f17a1154cac14ab71b36333844",
+        "status": "context_only",
+        "reason": "Continuation of the preceding page's clause; its opening condition is absent from this page."
+      },
+      {
+        "physical_page": 113,
+        "source_text_sha256": "5db04a72d2635aff830ecbd4fbca0dca2ed243bf1f6306fde97d0c4c6969be6c",
+        "status": "context_only",
+        "reason": "Printed figure caption is visual context and is separately bound to the figure rectangle."
+      }
+    ],
+    "pictures": [
+      {
+        "physical_page": 25,
+        "logical_page": "14",
+        "figure_label": "图4.5.8-1",
+        "figure_bbox_pdf_pt": [
+          155,
+          120,
+          445,
+          277
+        ],
+        "caption": {
+          "physical_page": 25,
+          "logical_page": "14",
+          "bbox_pdf_pt": [
+            229.8,
+            283.3,
+            367.8,
+            293.4
+          ],
+          "text": "图4.5.8-1 推力轴承调整机构详图"
+        }
+      },
+      {
+        "physical_page": 25,
+        "logical_page": "14",
+        "figure_label": "图4.5.8-2",
+        "figure_bbox_pdf_pt": [
+          205,
+          344,
+          405,
+          500
+        ],
+        "caption": {
+          "physical_page": 25,
+          "logical_page": "14",
+          "bbox_pdf_pt": [
+            238.8,
+            504.7,
+            358.8,
+            514.8
+          ],
+          "text": "图4.5.8-2 金斯伯里推力轴承"
+        }
+      },
+      {
+        "physical_page": 25,
+        "logical_page": "14",
+        "figure_label": "图4.5.8-3",
+        "figure_bbox_pdf_pt": [
+          177,
+          555,
+          435,
+          773
+        ],
+        "caption": {
+          "physical_page": 26,
+          "logical_page": "15",
+          "bbox_pdf_pt": [
+            211.8,
+            61.8,
+            385.9,
+            72
+          ],
+          "text": "图4.5.8-3 双楔面、小岛型球座式推力轴承"
+        }
+      },
+      {
+        "physical_page": 86,
+        "logical_page": "75",
+        "figure_label": "图9.6.2",
+        "figure_bbox_pdf_pt": [
+          185,
+          382,
+          410,
+          442
+        ],
+        "caption": {
+          "physical_page": 86,
+          "logical_page": "75",
+          "bbox_pdf_pt": [
+            211,
+            442.8,
+            386.5,
+            452.9
+          ],
+          "text": "图9.6.2 密封瓦在瓦座内的轴向间隙示意图"
+        }
+      },
+      {
+        "physical_page": 113,
+        "logical_page": "102",
+        "figure_label": "图12.2.1",
+        "figure_bbox_pdf_pt": [
+          104.4,
+          511.92,
+          289.44,
+          679.38
+        ],
+        "caption": {
+          "physical_page": 113,
+          "logical_page": "102",
+          "bbox_pdf_pt": [
+            189.6,
+            685.6,
+            408.0,
+            695.8
+          ],
+          "text": "图12.2.1 车轮轮缘内侧与工字钢轨道下翼缘边缘的间隙"
+        }
+      }
+    ],
+    "table_structure_reviews": [
+      {
+        "physical_page": 113,
+        "bbox": {
+          "x0": 152.0,
+          "x1": 443.0,
+          "y0": 126.0,
+          "y1": 181.0
+        },
+        "logical_page": "102",
+        "header_hierarchy": [
+          "表12.1.15 起重机静态刚性要求",
+          "左列：起重机的静态刚性（引用GB/T 14405-2011通用桥式起重机）",
+          "右列：低/中/高定位精度要求"
+        ],
+        "leaf_headers": [
+          "起重机的静态刚性",
+          "定位精度要求"
+        ],
+        "inherited_header_text": [],
+        "continuation_from_physical_page": null,
+        "continuation_to_physical_page": null,
+        "source_text": "表12.1.15 起重机静态刚性要求\n起重机的静态刚性（引用GB/T 14405-2011通用桥式起重机）\n低定位精度要求f≤S/500\n中定位精度要求f≤S/750\n高定位精度要求f≤S/1000",
+        "text_origin": "native_text"
+      }
+    ],
+    "reviewed_text_splits": [
+      {
+        "physical_page": 14,
+        "source_text_sha256": "5d7f84fd82012cfc18d84d97dbb70d5909fe9d376850640e0f989f17caf7b29f",
+        "segments": [
+          {
+            "segment_id": "p14-complete-3.2.4-3.2.5",
+            "bbox_pdf_pt": [
+              56.6,
+              638.9,
+              539,
+              760
+            ],
+            "text_sha256": "7b45b5f6fb065f9bac2b0c261b44d18bbf55893ba68e9b7ae5e9e860959ea555",
+            "disposition": "structured",
+            "extractability": "source_text"
+          },
+          {
+            "segment_id": "p14-incomplete-3.2.6",
+            "bbox_pdf_pt": [
+              56.6,
+              763.7,
+              539,
+              775.6
+            ],
+            "text_sha256": "abea7ac10431a82cea2c83e8ec0dd41a3ed0bda0d410245ad2626c277583afdf",
+            "disposition": "region_scoped",
+            "extractability": "context_only"
+          }
+        ]
+      },
+      {
+        "physical_page": 42,
+        "source_text_sha256": "f8bca02353bdc4c0544c9c1b59fc79dbf328a6137e9262822080796cc1cf43bf",
+        "segments": [
+          {
+            "segment_id": "p42-continuation-5.4.6",
+            "bbox_pdf_pt": [
+              77.7,
+              59.5,
+              438.1,
+              87
+            ],
+            "text_sha256": "fc6dc2b66e5a51e6d0b0e9f6f38aea61a18adc3b1f44489fb5d52d81d145ecfc",
+            "disposition": "region_scoped",
+            "extractability": "context_only"
+          },
+          {
+            "segment_id": "p42-complete-5.4.7-5.4.11",
+            "bbox_pdf_pt": [
+              56.6,
+              90.7,
+              544,
+              491.9
+            ],
+            "text_sha256": "ff99e23c26e1e79c4ca37d07b493993838c73b385795538866b4fc182fe3c9f1",
+            "disposition": "structured",
+            "extractability": "source_text"
+          }
+        ]
+      },
+      {
+        "physical_page": 113,
+        "source_text_sha256": "22f4cecc8adad8559243bdf80053f85a854516d6b05ce1f6b67f45c13d8a0c0f",
+        "segments": [
+          {
+            "segment_id": "p113-figure-legend",
+            "bbox_pdf_pt": [
+              116.6,
+              699.9,
+              276.3,
+              711.8
+            ],
+            "text_sha256": "1d574a1d9aedfae0342fb399d7351fdb02a80c20ec67e3b5498a697163eb90c8",
+            "disposition": "visual_only",
+            "extractability": "context_only"
+          },
+          {
+            "segment_id": "p113-complete-12.2.2-12.2.3-1",
+            "bbox_pdf_pt": [
+              56.6,
+              715.5,
+              422,
+              758.6
+            ],
+            "text_sha256": "66c189e1014eda6149249034f5279a3f9cf16ccb4ecd3bc83e1daad70155d1f9",
+            "disposition": "structured",
+            "extractability": "source_text"
+          },
+          {
+            "segment_id": "p113-tail-12.2.3-2",
+            "bbox_pdf_pt": [
+              77.7,
+              762.3,
+              296,
+              774.1
+            ],
+            "text_sha256": "c0245955c8694efaa19c2c46041edda913d68b2a7e374eb0a8471150f957251c",
+            "disposition": "region_scoped",
+            "extractability": "context_only"
+          }
+        ]
+      }
+    ],
+    "cross_page_units": [
+      {
+        "group": "cross-page-review-4ffc6f5bae4684a3fb4f6444",
+        "kind": "clause",
+        "source_total_items": 5,
+        "complete_pages": [
+          112,
+          113
+        ],
+        "fragments": [
+          {
+            "physical_page": 112,
+            "logical_page": "101",
+            "source_boxes": [
+              {
+                "text": "12.1.15 桥式起重机静负荷试验应符合下列规定：",
+                "group_order": 0,
+                "bbox_pdf_pt": [
+                  56.7003,
+                  557.944,
+                  290.3851,
+                  569.5674
+                ],
+                "source_text_sha256": "2d15474436339882fc44cd893b7ec57973e4d803d1efd06f01d977ebead5937a"
+              },
+              {
+                "text": "2 静负荷试验应符合下列规定：",
+                "group_order": 1,
+                "bbox_pdf_pt": [
+                  77.9397,
+                  604.7435,
+                  232.8451,
+                  616.367
+                ],
+                "source_text_sha256": "edd0081918e63e8a2ebf4a75a03dd2f2f2dd1f0f36e73fc531b7fce2af678657"
+              },
+              {
+                "text": "5） 检查起重机的静态刚性时，应将小车开至桥架跨中处，起升额定起重量的负荷，离地面约",
+                "group_order": 2,
+                "bbox_pdf_pt": [
+                  94.3848,
+                  760.7421,
+                  538.7482,
+                  772.3655
+                ],
+                "source_text_sha256": "a8a45fc504f78685e8556c5d9eb378c1efa2306d44470accfdf4b08af6f4f08a"
+              }
+            ],
+            "text_origin": "native_text"
+          },
+          {
+            "physical_page": 113,
+            "logical_page": "102",
+            "source_boxes": [
+              {
+                "text": "200mm，待起重机及负荷静止后测量桥架垂直静挠度值，此值与起重机跨度的比值即为起重",
+                "group_order": 3,
+                "bbox_pdf_pt": [
+                  114.24,
+                  60.6039,
+                  538.7296,
+                  72.2273
+                ],
+                "source_text_sha256": "f3fcfce2c2dcff82beb5d20d1c0c8e6ec3b9c1d39785f09d91f6dace58be5800"
+              },
+              {
+                "text": "机的静态刚性。起重机的静态刚性应符合制造厂技术要求，无要求时，应符合表12.1.15 的规",
+                "group_order": 4,
+                "bbox_pdf_pt": [
+                  114.24,
+                  76.2037,
+                  538.6196,
+                  87.8272
+                ],
+                "source_text_sha256": "2b0cbfff1001cd4fcb2c836253cd69f364d9a05a20d4ddbd475c556cda76d4c2"
+              },
+              {
+                "text": "定；",
+                "group_order": 5,
+                "bbox_pdf_pt": [
+                  114.24,
+                  91.8036,
+                  137.865,
+                  103.4271
+                ],
+                "source_text_sha256": "191e70cc9e87b171ef8c9e2aa7cc7700becd4b95e26c0b8dfd47ae926bc8ade9"
+              }
+            ],
+            "text_origin": "native_text"
+          }
+        ]
+      }
+    ],
+    "reviewed_context_groups": [
+      {
+        "group": "reviewed-context-group-6489d3ba608e59b73f8032f9",
+        "kind": "requirement_list",
+        "physical_pages": [
+          14
+        ],
+        "source_title": "3.1.2 基础施工期间，安装专业应做下列配合工作：",
+        "source_total_items": 4,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "1",
+            "source_quote": "1 施工准备时，应校核预留孔洞、预埋件、汽轮发电机组基座及主要附属设备基础等标高、中心线、\n地脚螺栓孔位置等重要几何尺寸；"
+          },
+          {
+            "source_order": 2,
+            "source_label": "2",
+            "source_quote": "2 参加基座浇灌前的中间核查；"
+          },
+          {
+            "source_order": 3,
+            "source_label": "3",
+            "source_quote": "3 起吊设施基础、锚固点及为起吊设备对建筑结构进行的加固方案，土建施工前应由建设、监理、\n设计和土建施工等单位共同确定；"
+          },
+          {
+            "source_order": 4,
+            "source_label": "4",
+            "source_quote": "4  因吊装大型设备而预留的钢结构、基础或墙体，应在土建施工前由设计单位、监理单位和土建施\n工单位等有关单位确认。"
+          }
+        ]
+      }
+    ],
+    "formula_reviews": [
+      {
+        "original_hash": "36d1156e1cce17a3302f65912a7aadff5572451203dc03b320c875aa79c58813",
+        "physical_page": 38,
+        "bbox_pdf_pt": [
+          258.4173889160156,
+          552.3782043457031,
+          335.7467346191406,
+          562.3677978515625
+        ],
+        "raw_text_sha256": "cc04722bcbca26257273d54e9c59925f59cd2d8aea499230f5ff22d8388931a5",
+        "verified_text": "Dₐ = D₁ − 2t(1 − a)",
+        "formula": {
+          "calculation_status": "not_calculated",
+          "conditions": null,
+          "expression": "Dₐ = D₁ − 2t(1 − a)",
+          "expression_status": "confirmed",
+          "read_certainty": "confirmed",
+          "units": {
+            "D₁": "mm",
+            "Dₐ": "mm",
+            "a": "1",
+            "t": "mm"
+          },
+          "variables": [
+            {
+              "meaning": "胀管后的内径",
+              "symbol": "Dₐ"
+            },
+            {
+              "meaning": "管板孔直径",
+              "symbol": "D₁"
+            },
+            {
+              "meaning": "冷却管壁厚",
+              "symbol": "t"
+            },
+            {
+              "meaning": "扩胀系数",
+              "range": {
+                "lower": 0.04,
+                "unit": "1",
+                "upper": 0.06
+              },
+              "symbol": "a"
+            }
+          ]
+        },
+        "user_confirmation": {
+          "actor": "user",
+          "confirmed": true,
+          "note": "确认以上内容正确：Dₐ = D₁ − 2t(1 − a)，D₁为管板孔直径，t为冷却管壁厚，Dₐ为胀管后的内径，三者单位mm；a为扩胀系数4%～6%，代入0.04～0.06。"
+        }
+      }
+    ]
+  },
+  "00344d074b5fdcb636dfd3ba443aaf4c1ad6d8c4df430a3f0c64078cef8ff2d9": {
+    "extractability_decisions": [
+      {
+        "physical_page": 38,
+        "match": "all",
+        "status": "pending_review",
+        "reason": "Diagram OCR contains unverified labels and spatial relations."
+      },
+      {
+        "physical_page": 50,
+        "match": "text_prefix",
+        "value": "证明书目录\n",
+        "status": "context_only",
+        "reason": "Record-directory column provides source context for table item 8; it is not an independent engineering requirement."
+      }
+    ],
+    "reviewed_table_text_regions": [
+      {
+        "physical_page": 50,
+        "reason": "Original PDF visual review confirms independent table items 7–9 and the separate record-directory column. Table item 6 g–i is source-bound together with physical page 49 in the reviewed cross-page unit.",
+        "regions": [
+          {
+            "region_id": "item-7-bearing-upper",
+            "expected_text_sha256": "d5c72a8d744bcfc39d25e60f52587a58ad3b8cbe46de5845ce8b90127862f4fa",
+            "rectangles": [
+              {
+                "x0": 68,
+                "y0": 352,
+                "x1": 360,
+                "y1": 383
+              }
+            ],
+            "bound_source_text_sha256": "1596315b86bb0888490bd573c55779a9a0e0e2846a594f5fa5bc7fc1ce0e3a18"
+          },
+          {
+            "region_id": "item-8-bearing-box-upper",
+            "expected_text_sha256": "8a9cea68ba7bf011bd9c972f8883cd5817350a4d98f857ffa55a9f1f5c6148ef",
+            "rectangles": [
+              {
+                "x0": 68,
+                "y0": 382,
+                "x1": 360,
+                "y1": 565
+              }
+            ],
+            "bound_source_text_sha256": "d956af40e2f9bfc23a156233ac51582a1ada83071bd10844922d4864aea52e53"
+          },
+          {
+            "region_id": "item-8-record-directory",
+            "expected_text_sha256": "c0de1f5c3bc39aa56e04ea4975e63010472b759e9ec3e8dc0bf16aa75e8d34b2",
+            "rectangles": [
+              {
+                "x0": 420,
+                "y0": 150,
+                "x1": 540,
+                "y1": 173
+              },
+              {
+                "x0": 420,
+                "y0": 425,
+                "x1": 540,
+                "y1": 550
+              }
+            ],
+            "bound_source_text_sha256": "7918688f7bb648f088fd14b4e97e2a9253fad33385cae60ed80158ad54e12d07"
+          },
+          {
+            "region_id": "item-9-diaphragm-upper",
+            "expected_text_sha256": "1d04d6e255ba8737cf2d2a5da126baf062f813184c6036f5df1b818e00267694",
+            "rectangles": [
+              {
+                "x0": 68,
+                "y0": 565,
+                "x1": 360,
+                "y1": 641
+              }
+            ],
+            "bound_source_text_sha256": "2c3ad6b27786f4e0ea7cf9e9f4161f7b08b87cebc3e1b5849c55a8ae454d599a"
+          }
+        ],
+        "coordinate_system": "original_display_top_left_pdf_points",
+        "table_bbox_pdf_pt": [
+          62.5,
+          152.0,
+          541.0,
+          642.0
+        ]
+      }
+    ],
+    "ocr_box_exclusions": [
+      {
+        "physical_page": 38,
+        "x0": 559.0,
+        "y0": 693.0,
+        "expected_text": "对接间厚",
+        "reason": "Original diagram label is visually unreadable at supplied resolution; OCR output cannot be verified.",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 38,
+        "x0": 766.0,
+        "y0": 1003.0,
+        "expected_text": "Te99999999R",
+        "reason": "OCR interpreted drawing strokes as characters; no such source text exists.",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      }
+    ],
+    "reviewed_page_body_bounds": [
+      {
+        "physical_page": 38,
+        "y_min": 130.0,
+        "y_max": 700.0
+      },
+      {
+        "physical_page": 73,
+        "y_min": 130.0,
+        "y_max": 700.0
+      }
+    ],
+    "reviewed_context_evidence": [
+      {
+        "physical_page": 73,
+        "source_text_sha256": "990d8236fad2012f14a9c471ccacc34733c71ffbc4ff7b08b3d2c19de5c08c7d",
+        "status": "context_only",
+        "reason": "Section heading supplies context but is not an independent installation requirement."
+      }
+    ],
+    "pictures": [
+      {
+        "physical_page": 38,
+        "logical_page": "2-104",
+        "figure_label": "图2-10-1",
+        "figure_bbox_pdf_pt": [
+          145,
+          165,
+          451,
+          310
+        ],
+        "caption": {
+          "physical_page": 38,
+          "logical_page": "2-104",
+          "bbox_pdf_pt": [
+            273.2,
+            362.7,
+            353.1,
+            376.6
+          ],
+          "text": "图2-10-1"
+        }
+      },
+      {
+        "physical_page": 38,
+        "logical_page": "2-104",
+        "figure_label": "图2-10-2",
+        "figure_bbox_pdf_pt": [
+          209,
+          390,
+          405,
+          667
+        ],
+        "caption": {
+          "physical_page": 38,
+          "logical_page": "2-104",
+          "bbox_pdf_pt": [
+            279.2,
+            681.4,
+            359.6,
+            695.3
+          ],
+          "text": "图2-10-2"
+        }
+      }
+    ],
+    "table_structure_reviews": [
+      {
+        "physical_page": 50,
+        "bbox": {
+          "x0": 62.5,
+          "x1": 541.0,
+          "y0": 152.0,
+          "y1": 642.0
+        },
+        "logical_page": "2-14-3",
+        "header_hierarchy": [
+          "续表2-14-1",
+          "项号",
+          "工作内容",
+          "附图号",
+          "证明书目录"
+        ],
+        "leaf_headers": [
+          "项号",
+          "工作内容",
+          "附图号",
+          "证明书目录"
+        ],
+        "inherited_header_text": [
+          "项号",
+          "工作内容",
+          "附图号",
+          "证明书目录"
+        ],
+        "continuation_from_physical_page": 49,
+        "continuation_to_physical_page": 51,
+        "source_text": "续表2-14-1\n项号\n工作内容\n附图号\n证明书目录",
+        "text_origin": "ocr_text"
+      }
+    ],
+    "cross_page_units": [
+      {
+        "group": "cross-page-review-80a9ca1ce09f180e1f7ad729",
+        "kind": "ordered_table_procedure",
+        "complete_pages": [
+          49,
+          50
+        ],
+        "fragments": [
+          {
+            "physical_page": 49,
+            "logical_page": "2-14-2",
+            "source_boxes": [
+              {
+                "text": "6",
+                "bbox_pdf_pt": [
+                  72.42,
+                  387.53,
+                  77.51,
+                  393.88
+                ],
+                "source_text_sha256": "e7f6c011776e8db7cd330b54174fd76f7d0216b612387a5ffcfb81e6f0919683"
+              },
+              {
+                "text": "转子装配：",
+                "bbox_pdf_pt": [
+                  89.79,
+                  383.29,
+                  141.88,
+                  396.42
+                ],
+                "source_text_sha256": "b6fb6beb7330738663ef30cbdc23351338b49cb0ca7a13798b1ada40c553d7cb"
+              },
+              {
+                "text": "a)清洗，检查动叶。",
+                "bbox_pdf_pt": [
+                  88.52,
+                  397.69,
+                  196.0,
+                  412.94
+                ],
+                "source_text_sha256": "829ec437e83b74e155b3d07d89d77631cf460c156363a694bbe0f3447c615806"
+              },
+              {
+                "text": "b)检查围带。",
+                "bbox_pdf_pt": [
+                  88.94,
+                  413.36,
+                  164.0,
+                  427.34
+                ],
+                "source_text_sha256": "92cda8478b2702a21dbe03df0eff43db97375b9eab851bdb5fc933c2e7bcf5c0"
+              },
+              {
+                "text": "c)清洗、检查联轴器表面和轴颈表面。",
+                "bbox_pdf_pt": [
+                  89.36,
+                  429.46,
+                  287.0,
+                  442.59
+                ],
+                "source_text_sha256": "1c7a716e6218ad54d25e34725dfb4f88ac3d0bb16b49b1983ec28e7e4a438d2a"
+              },
+              {
+                "text": "d)利用汽缸移动工具将高中压外缸向机头侧移动15mm,",
+                "bbox_pdf_pt": [
+                  89.79,
+                  444.71,
+                  405.0,
+                  457.84
+                ],
+                "source_text_sha256": "410310e2809e6e408ba365b93ca4a77602f3e2d8c4c9195428a3605cb0b1ea3e"
+              },
+              {
+                "text": "此时，高中压外缸与中低压轴承箱的距离为S2+15mm。",
+                "bbox_pdf_pt": [
+                  90.64,
+                  459.53,
+                  382.0,
+                  472.66
+                ],
+                "source_text_sha256": "5ad2eef4522e605556e9e6c9f5ab45f832db725c4627681bdcccc71edb6a5c8c"
+              },
+              {
+                "text": "e)高中压转子、低压转子复装就位，按照转子的静挠",
+                "bbox_pdf_pt": [
+                  89.79,
+                  474.78,
+                  351.95,
+                  488.33
+                ],
+                "source_text_sha256": "5f26a673db36a7a167866e1660a73cecac8e3513384720027eb56b17c71452bc"
+              },
+              {
+                "text": "度曲线检查转子的标高和挠度，复查联轴器、止口中心",
+                "bbox_pdf_pt": [
+                  91.06,
+                  490.87,
+                  362.54,
+                  501.88
+                ],
+                "source_text_sha256": "057cc1b23fdc8b5c7e806855232e3b65389c19b3d6aa431e89f069e70a7b85e4"
+              },
+              {
+                "text": "和端面平行度,然后用随机提供的高-低间联轴器用临时",
+                "bbox_pdf_pt": [
+                  89.79,
+                  505.27,
+                  359.15,
+                  517.98
+                ],
+                "source_text_sha256": "71544e41a8b41c3f8a56bc8f7c86b1921d80155064947f6fec0cd5afcc3af065"
+              },
+              {
+                "text": "螺栓和中心销进行转子靠背轮的对接,此时利用汽缸移",
+                "bbox_pdf_pt": [
+                  91.06,
+                  520.94,
+                  357.46,
+                  531.95
+                ],
+                "source_text_sha256": "7aade58cadc39547762bcf76f72777ac2dde8f9f3ebee3dab4153c1df6bf2410"
+              },
+              {
+                "text": "动工具将高中压缸向电机侧拉回。靠背轮的对接应和汽",
+                "bbox_pdf_pt": [
+                  91.06,
+                  536.61,
+                  363.39,
+                  547.62
+                ],
+                "source_text_sha256": "57ba1bcd73e7ee53c8067d55bd37e90c1089e1f66d4e32b64b7576892cb9fd25"
+              },
+              {
+                "text": "缸的移动同步协调进行。当靠背轮对接好后取出临时螺",
+                "bbox_pdf_pt": [
+                  90.64,
+                  551.86,
+                  362.96,
+                  562.87
+                ],
+                "source_text_sha256": "e86b68bf0e6ce9123438b541de347ad5be9b182108316f375c397b66c6abb1c7"
+              },
+              {
+                "text": "栓和中心销，对在制造厂已铰孔的靠背轮，可直接进行",
+                "bbox_pdf_pt": [
+                  90.21,
+                  565.84,
+                  362.96,
+                  578.54
+                ],
+                "source_text_sha256": "15ffe0ca08784ca7b1c9fe98d8e9b1339ac5ea2bd538207a558380c911129465"
+              },
+              {
+                "text": "联轴器螺栓的连接紧固。对未铰孔的靠背轮，先进行铰",
+                "bbox_pdf_pt": [
+                  90.21,
+                  581.08,
+                  363.39,
+                  593.79
+                ],
+                "source_text_sha256": "502d3529f355879f91d634cd86c68406637672b6cc500b1c4d8659ba83951d0f"
+              },
+              {
+                "text": "孔，再紧固螺栓。祥见2-16节。",
+                "bbox_pdf_pt": [
+                  90.64,
+                  597.18,
+                  246.07,
+                  609.46
+                ],
+                "source_text_sha256": "a47d31aa125e61000ff50718e270fe9a279cd780ed5f91e7a67bc0e95f91878c"
+              },
+              {
+                "text": "f)联轴器连接紧固好后，高中压缸移动到位，保证高中",
+                "bbox_pdf_pt": [
+                  90.21,
+                  612.0,
+                  358.73,
+                  624.71
+                ],
+                "source_text_sha256": "fad116f17c07ec3829ab80d023bfae52f3393b8277fd9c40bf222334075b7168"
+              },
+              {
+                "text": "压通流基准和低压通流基准不变，此时配准高压外缸后",
+                "bbox_pdf_pt": [
+                  91.48,
+                  628.09,
+                  362.54,
+                  639.11
+                ],
+                "source_text_sha256": "ed771ebf1dddd9b4a6d69ca19141c3b7a060fe4d989169f4690ad11cd94c22bd"
+              },
+              {
+                "text": "猫爪与中箱横键间的垫片。",
+                "bbox_pdf_pt": [
+                  90.64,
+                  642.92,
+                  219.39,
+                  654.35
+                ],
+                "source_text_sha256": "b386af13318e73d144c96d6bde6e93edffa2be492966375cbd52d28477b7bba4"
+              }
+            ],
+            "text_origin": "verified_ocr_text"
+          },
+          {
+            "physical_page": 50,
+            "logical_page": "2-14-3",
+            "source_boxes": [
+              {
+                "text": "g)推力轴承安装调整:",
+                "bbox_pdf_pt": [
+                  94.87,
+                  185.93,
+                  220.0,
+                  199.48
+                ],
+                "source_text_sha256": "5813a50f3a4f8d2a7f75ab0d844c63b83a985ee200c677c9c829d562e3efa222"
+              },
+              {
+                "text": "检查正、反向推力瓦厚度并记录。",
+                "bbox_pdf_pt": [
+                  95.29,
+                  201.6,
+                  259.2,
+                  213.88
+                ],
+                "source_text_sha256": "650d052ca3f522ff6386b324bc7b646d01dfa5efdbb9a8d4a24e5f789e5f6556"
+              },
+              {
+                "text": "安装正向推力瓦和正向垫环，将转子向电机侧推，使",
+                "bbox_pdf_pt": [
+                  95.72,
+                  217.27,
+                  356.61,
+                  228.28
+                ],
+                "source_text_sha256": "4f53cf2595bc6029376ebc36c9d60ab94bed757694787eac8cbed0854590e344"
+              },
+              {
+                "text": "推力盘与正向推力瓦靠紧。安装反向推力瓦和反向垫",
+                "bbox_pdf_pt": [
+                  95.72,
+                  232.52,
+                  356.61,
+                  243.53
+                ],
+                "source_text_sha256": "73c29d8c5f348c5a4a6e9b66827358014294b39fe36f9c96ef8e6ce7ca3721ec"
+              },
+              {
+                "text": "环，测量推力瓦与推力盘的总间隙值。",
+                "bbox_pdf_pt": [
+                  95.29,
+                  247.76,
+                  281.65,
+                  259.2
+                ],
+                "source_text_sha256": "60b65a7513a257080bfa5c882a1cafd25f8c5728cf673e09b0d0903f26cff8cd"
+              },
+              {
+                "text": "h)对所有轴承提供润滑油，盘动转子，复查所有通流",
+                "bbox_pdf_pt": [
+                  94.87,
+                  262.59,
+                  355.34,
+                  275.29
+                ],
+                "source_text_sha256": "09993f203100a794e592327cc39672b6bc35d8c761af5be447a88347fc2ecf38"
+              },
+              {
+                "text": "间隙，复查支持轴承和推力轴承与转子配合间隙。",
+                "bbox_pdf_pt": [
+                  95.29,
+                  277.84,
+                  338.4,
+                  290.12
+                ],
+                "source_text_sha256": "3db4ecac6ea286cee6e3df3538465b612f813af7ffa071bc5947734a773dd17a"
+              },
+              {
+                "text": "i)通流间隙最终记录。",
+                "bbox_pdf_pt": [
+                  95.72,
+                  293.08,
+                  205.0,
+                  304.52
+                ],
+                "source_text_sha256": "dca584c449a2ff77b45a8d52b00fe4ef85f15ea56351073679d15d797ea7bd3d"
+              },
+              {
+                "text": "在每个轴瓦上分别装桥规，测量桥规与轴颈顶部间隙。",
+                "bbox_pdf_pt": [
+                  95.29,
+                  307.48,
+                  354.49,
+                  320.61
+                ],
+                "source_text_sha256": "02987687bc89cab5b3bb24fc23d8cbb7a19f719b9249296c468a83ed28792fff"
+              },
+              {
+                "text": "并将此值打在相应桥规上面，作为今后轴瓦磨损比较",
+                "bbox_pdf_pt": [
+                  95.72,
+                  323.15,
+                  356.61,
+                  335.01
+                ],
+                "source_text_sha256": "122a95e6b5c98bb9c410739d92a8f7942c719220a7c28ca7870a2a55e685152e"
+              },
+              {
+                "text": "的判据。",
+                "bbox_pdf_pt": [
+                  94.02,
+                  337.13,
+                  134.68,
+                  351.53
+                ],
+                "source_text_sha256": "4a0e0778885ac62556371c2180dfb25b623874d67cba93e1ce72d66663028e20"
+              }
+            ],
+            "text_origin": "verified_ocr_text"
+          }
+        ]
+      }
+    ],
+    "scope_sources": [
+      {
+        "physical_page": 5,
+        "bbox_pdf_pt": [
+          93.53600311279297,
+          160.11351013183594,
+          315.140869140625,
+          169.5435028076172
+        ],
+        "text": "本说明书仅适用于D300N汽轮机本体安装及维护工作。",
+        "text_origin": "verified_ocr_text",
+        "applies_to": "document",
+        "review_basis": "existing_ocr_exact_page_pixel_match_and_explicit_scope_sentence"
+      }
+    ],
+    "layout_review_states": [
+      {
+        "physical_page": 32,
+        "status": "pending_review",
+        "previous_source_text_sha256": "274e641f05b5a61413da3bf51e2a05e194d5586a372b7ae42e9ae7955ef409dd",
+        "reason": "原候选的表格/列阅读顺序不能逐句回查；须对新区域/行组核验后才解除隔离。"
+      }
+    ],
+    "reviewed_context_groups": [
+      {
+        "group": "reviewed-context-group-1e623effbe9bfb9c048926d0",
+        "kind": "procedure",
+        "physical_pages": [
+          73
+        ],
+        "source_title": "前箱滑动面的润滑和清洗",
+        "source_total_items": 6,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": null,
+            "source_quote": "向上微微抬起高中压外缸前猫爪"
+          },
+          {
+            "source_order": 2,
+            "source_label": null,
+            "source_quote": "再将前箱微微抬起0.1～0.15mm"
+          },
+          {
+            "source_order": 3,
+            "source_label": null,
+            "source_quote": "抽出基架上滑块"
+          },
+          {
+            "source_order": 4,
+            "source_label": null,
+            "source_quote": "清洗干净"
+          },
+          {
+            "source_order": 5,
+            "source_label": null,
+            "source_quote": "清理好滑块槽"
+          },
+          {
+            "source_order": 6,
+            "source_label": null,
+            "source_quote": "将滑块复位"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-121f4bd1d1a4d7ec3bfda470",
+        "kind": "procedure",
+        "physical_pages": [
+          49,
+          50
+        ],
+        "source_title": "续表2-14-1",
+        "source_total_items": 4,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "6.g-i",
+            "source_quote": "g)推力轴承安装调整:\n检查正、反向推力瓦厚度并记录。\n安装正向推力瓦和正向垫环，将转子向电机侧推，使\n推力盘与正向推力瓦靠紧。安装反向推力瓦和反向垫\n环，测量推力瓦与推力盘的总间隙值。\nh)对所有轴承提供润滑油，盘动转子，复查所有通流\n间隙，复查支持轴承和推力轴承与转子配合间隙。\ni)通流间隙最终记录。\n在每个轴瓦上分别装桥规，测量桥规与轴颈顶部间隙。\n并将此值打在相应桥规上面，作为今后轴瓦磨损比较\n的判据。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "7",
+            "source_quote": "轴承上半的装配：\n装配支持轴承和推力轴承上半，复查支持轴承顶隙。"
+          },
+          {
+            "source_order": 3,
+            "source_label": "8",
+            "source_quote": "轴承箱上半装配：\na)检查挡油环齿是否倒伏。\nb)认真清洗轴承箱下半和上半内表面。\nc)测量并调整挡油环与转子上、下和左、右的间隙，\n特别是底部间隙必须认真测量。\nd) 检查并测量低压轴承箱中转子联轴器罩与转子间\n轴向、径向间隙并记录。\ne)配准1#、2#轴承压盖与轴承垫块过盈量，按说明\n书要求的冷紧力矩值拧紧3#、4#轴承压盖螺栓。\nf)临时装配轴承箱盖，检查中分面间隙。"
+          },
+          {
+            "source_order": 4,
+            "source_label": "9",
+            "source_quote": "隔板上半安装：\na)清洗每级隔板。\nb)检查汽封齿是否倒伏。\n装配隔板上半中分面定位销，隔板上半安装时应对螺\n纹部位提供润滑剂，把紧中分面螺栓。"
+          }
+        ]
+      }
+    ]
+  },
+  "45ddc6c9b7dc9e6c64394b18ef0f679a05d9f3defcfce1e504af0d6716779b8d": {
+    "ocr_box_edits": [
+      {
+        "physical_page": 12,
+        "x0": 223.0,
+        "y0": 1039.0,
+        "expected_text": "具备本职业（工种）.基础知识培训的教室和教学设备。",
+        "replacement_text": "具备本职业（工种）基础知识培训的教室和教学设备。",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 32,
+        "x0": 196.0,
+        "y0": 1187.0,
+        "expected_text": "La5A1006-个标准大气压相当于（C）mmHg。",
+        "replacement_text": "La5A1006一个标准大气压相当于（C）mmHg。",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 120,
+        "x0": 203.0,
+        "y0": 1000.0,
+        "expected_text": "Jf4A1630于斤顶在使用时应放平整，并在上下端垫以",
+        "replacement_text": "Jf4A1630千斤顶在使用时应放平整，并在上下端垫以",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 360,
+        "x0": 156.0,
+        "y0": 587.0,
+        "expected_text": "值，用字母n表示。",
+        "replacement_text": "值，用字母η表示。",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      }
+    ],
+    "ocr_margin_exclusions": [
+      {
+        "physical_page": 64,
+        "x0_min": 850,
+        "y0_max": 270,
+        "expected_count": 7,
+        "expected_text_sha256": "f3568baa3365a9ece3b5e9a54ad0926f48fdfc48d4b2fe1c9947e95e05f9ed37",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 120,
+        "x0_min": 850,
+        "y0_max": 320,
+        "expected_count": 7,
+        "expected_text_sha256": "c0de44b035d2c9b447639d593849aade2ff45d62b68039934a119ce80f23092c",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 180,
+        "x0_min": 850,
+        "y0_max": 320,
+        "expected_count": 7,
+        "expected_text_sha256": "6142706a3ac09b528847eb1caea1b409670f626a8aba5fac73c03d222b64f9bc",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 244,
+        "x0_min": 850,
+        "y0_max": 320,
+        "expected_count": 7,
+        "expected_text_sha256": "2fd425e6c8c9caa9e645211fb9968d8d3ea1cfe3b7cefbd730d5c4c38da2f5b5",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 360,
+        "x0_min": 850,
+        "y0_max": 320,
+        "expected_count": 5,
+        "expected_text_sha256": "2ff7275934a61e79078c4fcefeda4a4e894c8ed0fa6cea24dff8c58074b3f08e",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      }
+    ],
+    "extractability_decisions": [
+      {
+        "physical_page": 300,
+        "match": "all",
+        "status": "context_only",
+        "reason": "Only six formula lines and the printed 图 D-12 caption/legend are bound to original-page regions; diagram geometry remains visual-only and cannot support extracted engineering claims."
+      },
+      {
+        "physical_page": 468,
+        "match": "all",
+        "status": "context_only",
+        "reason": "Sample exam questions have no printed answer marks; the final question continues on the next page."
+      }
+    ],
+    "pictures": [
+      {
+        "physical_page": 300,
+        "logical_page": "291",
+        "figure_label": "图 D-12",
+        "figure_bbox_pdf_pt": [
+          136.0,
+          355.0,
+          274.0,
+          505.0
+        ],
+        "caption": {
+          "physical_page": 300,
+          "logical_page": "291",
+          "bbox_pdf_pt": [
+            187.5,
+            509.8,
+            214.2,
+            518.0
+          ],
+          "text": "图 D-12"
+        }
+      }
+    ],
+    "table_structure_reviews": [
+      {
+        "physical_page": 480,
+        "bbox": {
+          "x0": 60.5,
+          "x1": 347.0,
+          "y0": 219.5,
+          "y1": 363.0
+        },
+        "logical_page": "471",
+        "header_hierarchy": [
+          "题型",
+          "鉴定工程等级：初级、中级/高级工、技师",
+          "配分：初级、中级/高级工、技师"
+        ],
+        "leaf_headers": [
+          "题型",
+          "鉴定工程等级-初级、中级",
+          "鉴定工程等级-高级工、技师",
+          "配分-初级、中级",
+          "配分-高级工、技师"
+        ],
+        "inherited_header_text": [],
+        "continuation_from_physical_page": null,
+        "continuation_to_physical_page": null,
+        "source_text": "试卷的题型与题量分配（组卷方案）表\n题型\n鉴定工程等级\n初级、中级\n高级工、技师\n配分\n初级、中级\n高级工、技师",
+        "text_origin": "ocr_text"
+      }
+    ],
+    "layout_review_states": [
+      {
+        "physical_page": 429,
+        "status": "pending_review",
+        "previous_source_text_sha256": "6d01cf9f4546606ec73fa33d880f96c0772df5003cae04c8522e7357c989da5e",
+        "reason": "原题库表格候选的题干、操作、质量要求与扣分阅读顺序未核验；新区域/行组须复核。"
+      }
+    ],
+    "reviewed_context_groups": [
+      {
+        "group": "reviewed-context-group-aa96597ca92bfd9fbeae05e2",
+        "kind": "question_options",
+        "physical_pages": [
+          32
+        ],
+        "source_title": "La5A1001",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "La5A1001机械制图中长度尺寸未标识时单位是（A）。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) mm; (B) cm; (C) m; (D) km。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-3b298aa674d22c8402c934d1",
+        "kind": "question_options",
+        "physical_pages": [
+          32
+        ],
+        "source_title": "La5A1002",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "La5A1002力是具有大小和方向的量，所以是（A）。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "（A）矢量；（B）向量；（C）标量；（D）代数量。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-efd0a27badb34c5d8daee233",
+        "kind": "question_options",
+        "physical_pages": [
+          32
+        ],
+        "source_title": "La5A1003",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "La5A1003\n两个大小相等、方向相反不在一条直线上的\n（B）组成的力系，称为力偶。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "（A）力；（B）平行力；（C）力矩；（D）作用力。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-c13f9c77140231b0ed5ccb87",
+        "kind": "question_options",
+        "physical_pages": [
+          32
+        ],
+        "source_title": "La5A1004",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "La5A1004摄氏温标与绝对温标的关系为（B）。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A)T=t-273.15; (B)T=t+273.15; (C)T=t; (D)t=273.15×T。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-95c08f63b18c86377bd21e10",
+        "kind": "question_options",
+        "physical_pages": [
+          32
+        ],
+        "source_title": "La5A1005",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "La5A1005\n螺纹旋向有（C）。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "（A）左旋；（B）右旋；（C）左旋和右旋；（D）无左右\n之分。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-e253ce6e623f537fe670aa4f",
+        "kind": "question_options",
+        "physical_pages": [
+          32
+        ],
+        "source_title": "La5A1006",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "La5A1006一个标准大气压相当于（C）mmHg。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) 1000; (B) 13.6; (C) 760; (D) 1。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-4139c2e3f2774ef5b81a4257",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf5A2624",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf5A2624 三脚架在使用时，备板的支点与地面夹角应不\n小于 (D)。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) 45°; (B) 30°; (C) 50°;(D) 60°。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-1ddd9cceb5a669c7446359f7",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf5A2625",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf5A2625螺旋千斤顶在使用时，每次顶升量不得超过螺\n杆牙距的（C）。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) 1/2; (B) 1/3; (C) 3/4; (D) 2/3。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-3d5b2a0b179ba1a458b4602e",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf5A3626",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf5A3626在检修施工过程中，按照质量保证体系的不同\n要求而确定的质量控制点分为（）点和（）点两类。（B）"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) M、H; (B) W、H; (C) V、H; (D) K、H。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-d5deec68b89fe08b3349fed6",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf5A4627",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf5A4627通常，钎焊时的焊缝应选择为（B）mm。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) 0~0.05; (B) 0.05~0.20; (C) 0.50~0.80; (D) 0.80~\n1.10。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-7e714e008704819b9ebb623b",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf4A1628",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf4A1628滚运设备在下坡时，应（A）防止滑坡。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "（A）设置拖拉绳；（B）用撬杠撬；（C）用人力顶；（D）以上\n均可以。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-c776861ec3bee1a12e383e9f",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf4A1629",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf4A1629\n钢丝绳作吊挂和捆绑用安全系数应不小于（C）。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "(A) 4; (B) 5; (C) 6; (D) 7。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-0eaa322caf80fc03387c2ec8",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf4A1630",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf4A1630千斤顶在使用时应放平整，并在上下端垫以\n（A）以防止千斤顶在受力时打滑。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "（A）坚韧的木板；（B）铁板；（C）涂油的铁板；（D）纸板。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-6e64fad61363b146e53cab39",
+        "kind": "question_options",
+        "physical_pages": [
+          120
+        ],
+        "source_title": "Jf4A2631",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem",
+            "source_quote": "Jf4A2631汽缸法兰螺栓的预紧力（C），这也是形成高、\n中压外缸法兰结合漏汽的主要原因之一。"
+          },
+          {
+            "source_order": 2,
+            "source_label": "options",
+            "source_quote": "（A）充足；（B）过盈；（C）不足；（D）增加。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-637ea02facb3a7207ca50e2e",
+        "kind": "question_answer",
+        "physical_pages": [
+          360
+        ],
+        "source_title": "La1F2010",
+        "source_total_items": 3,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "question",
+            "source_quote": "La1F2010汽轮机冲转条件中，为什么规定要有一定数值\n的真空？"
+          },
+          {
+            "source_order": 2,
+            "source_label": "answer_low_vacuum",
+            "source_quote": "答：汽轮机冲转前必须有一定的真空，一般为60kPa左右，\n若真空过低，转子转动就需要较多的新蒸汽，而过多的乏汽突\n然排至凝汽器，凝汽器汽侧压力瞬间升高过多，可能使凝汽器\n汽侧形成正压，造成排大气安全薄膜损坏，同时也会给汽缸和\n转子造成较大的热冲击。"
+          },
+          {
+            "source_order": 3,
+            "source_label": "answer_high_vacuum",
+            "source_quote": "冲动转子时，真空也不能太高，真空过高不仅要延长建立\n真空的时间，也因为通过汽轮机的蒸汽量较少，放热系数小，\n使得汽轮机加热缓慢，转速也不稳定，从而延长启动时间。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-cfa9ddbed14c040cfb1d15c4",
+        "kind": "question_options",
+        "physical_pages": [
+          64
+        ],
+        "source_title": "Lb4A4236",
+        "source_total_items": 1,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "stem_and_options",
+            "source_quote": "Lb4A4236两块斜垫铁错开的面积，不应超过该垫铁面积\n的(C)。\n(A) 20%; (B) 15%; (C) 25%; (D) 30%。"
+          }
+        ]
+      }
+    ]
+  },
+  "f70d8165dea9b6ba705ef9631fd5abee94f464cd6a393519e592ab4337e55fdb": {
+    "ocr_box_edits": [
+      {
+        "physical_page": 14,
+        "x0": 195.0,
+        "y0": 484.0,
+        "expected_text": "）",
+        "replacement_text": "c)",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      },
+      {
+        "physical_page": 14,
+        "x0": 193.0,
+        "y0": 810.0,
+        "expected_text": "(P",
+        "replacement_text": "d)",
+        "coordinate_system": "original_display_ocr_pixels",
+        "ocr_dpi": 170
+      }
+    ],
+    "source_fragment_exclusions": [
+      {
+        "physical_page": 14,
+        "expected_text_sha256": "fc068caba1d888c56f5a0ae70960f51ac52a8ebe2bc1f47c0e006bf74d55ca1a",
+        "reason": "Printed standard header, verified against original physical page 14",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 14,
+        "expected_text_sha256": "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5",
+        "reason": "Printed page number, verified against original physical page 14",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 15,
+        "expected_text_sha256": "fc068caba1d888c56f5a0ae70960f51ac52a8ebe2bc1f47c0e006bf74d55ca1a",
+        "reason": "Printed standard header, verified against original physical page 15",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 15,
+        "expected_text_sha256": "4fc82b26aecb47d2868c4efbe3581732a3e7cbcc6c2efb32062c08170a05eeb8",
+        "reason": "Printed page number, verified against original physical page 15",
+        "kind": "navigation_only"
+      }
+    ],
+    "table_structure_reviews": [
+      {
+        "physical_page": 27,
+        "bbox": {
+          "x0": 52.5,
+          "x1": 523.5,
+          "y0": 217.0,
+          "y1": 768.0
+        },
+        "logical_page": "38",
+        "header_hierarchy": [
+          "表D.1 机组额定负荷主要运行参数记录表",
+          "锅炉主要运行指标：项目/单位/设计值/数值",
+          "汽轮机主要运行指标：项目/单位/设计值/数值",
+          "发电机主要运行指标：项目/单位/设计值/数值"
+        ],
+        "leaf_headers": [
+          "锅炉-项目",
+          "锅炉-单位",
+          "锅炉-设计值",
+          "锅炉-数值",
+          "汽轮机-项目",
+          "汽轮机-单位",
+          "汽轮机-设计值",
+          "汽轮机-数值",
+          "发电机-项目",
+          "发电机-单位",
+          "发电机-设计值",
+          "发电机-数值"
+        ],
+        "inherited_header_text": [],
+        "continuation_from_physical_page": null,
+        "continuation_to_physical_page": 28,
+        "source_text": "表D.1 机组额定负荷主要运行参数记录表\n锅炉主要运行指标\n汽轮机主要运行指标\n发电机主要运行指标\n项目\n单位\n设计值\n数值",
+        "text_origin": "ocr_text"
+      },
+      {
+        "physical_page": 28,
+        "bbox": {
+          "x0": 66.5,
+          "x1": 536.5,
+          "y0": 119.5,
+          "y1": 246.5
+        },
+        "logical_page": "39",
+        "header_hierarchy": [
+          "表D.1（续）",
+          "继承第27页三组四列：锅炉/汽轮机/发电机，各含项目/单位/设计值/数值"
+        ],
+        "leaf_headers": [
+          "锅炉-项目",
+          "锅炉-单位",
+          "锅炉-设计值",
+          "锅炉-数值",
+          "汽轮机-项目",
+          "汽轮机-单位",
+          "汽轮机-设计值",
+          "汽轮机-数值",
+          "发电机-项目",
+          "发电机-单位",
+          "发电机-设计值",
+          "发电机-数值"
+        ],
+        "inherited_header_text": [
+          "锅炉主要运行指标：项目/单位/设计值/数值",
+          "汽轮机主要运行指标：项目/单位/设计值/数值",
+          "发电机主要运行指标：项目/单位/设计值/数值"
+        ],
+        "continuation_from_physical_page": 27,
+        "continuation_to_physical_page": null,
+        "source_text": "表D.1（续）\n项目\n单位\n设计值\n数值\n调试单位（签字）\n生产单位（签字）\n监理单位（签字）",
+        "text_origin": "ocr_text"
+      },
+      {
+        "physical_page": 28,
+        "bbox": {
+          "x0": 66.0,
+          "x1": 537.0,
+          "y0": 290.5,
+          "y1": 741.0
+        },
+        "logical_page": "39",
+        "header_hierarchy": [
+          "表D.2 机组整套试运汽轮发电机组轴振记录表",
+          "日期",
+          "运行状态：工况/数值",
+          "位置",
+          "轴振动值μm：1号至9号"
+        ],
+        "leaf_headers": [
+          "日期",
+          "运行状态-工况",
+          "运行状态-数值",
+          "位置",
+          "轴振-1号",
+          "轴振-2号",
+          "轴振-3号",
+          "轴振-4号",
+          "轴振-5号",
+          "轴振-6号",
+          "轴振-7号",
+          "轴振-8号",
+          "轴振-9号"
+        ],
+        "inherited_header_text": [],
+        "continuation_from_physical_page": null,
+        "continuation_to_physical_page": null,
+        "source_text": "表D.2 机组整套试运汽轮发电机组轴振记录表\n日期\n运行状态\n位置\n轴振动值μm\n1号 2号 3号 4号 5号 6号 7号 8号 9号",
+        "text_origin": "ocr_text"
+      }
+    ],
+    "reviewed_context_groups": [
+      {
+        "group": "reviewed-context-group-0cbd1741dec5be8554a60531",
+        "kind": "activity_list",
+        "physical_pages": [
+          14
+        ],
+        "source_title": "发电机内冷水系统调试项目和内容如下：",
+        "source_total_items": 7,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "a)",
+            "source_quote": "a）\n确认发电机内冷水系统管道水冲洗合格；"
+          },
+          {
+            "source_order": 2,
+            "source_label": "b)",
+            "source_quote": "b）\n发电机内冷水系统冷却水泵试运；"
+          },
+          {
+            "source_order": 3,
+            "source_label": "c)",
+            "source_quote": "c)\n发电机内冷水系统热交换器投运；"
+          },
+          {
+            "source_order": 4,
+            "source_label": "d)",
+            "source_quote": "d)\n配合进行离子交换器投运；"
+          },
+          {
+            "source_order": 5,
+            "source_label": "e)",
+            "source_quote": "e）\n内冷水系统流量、压力调整；"
+          },
+          {
+            "source_order": 6,
+            "source_label": "f)",
+            "source_quote": "f）\n内冷水流量与发电机进出水压差测试，确定断水保护定值；"
+          },
+          {
+            "source_order": 7,
+            "source_label": "g)",
+            "source_quote": "g)内冷水泵联锁保护实校，记录内冷水泵联锁启动时间与最低流量。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-e389d2e68e0b2f6ff4a0c12a",
+        "kind": "procedure",
+        "physical_pages": [
+          14
+        ],
+        "source_title": "密封油系统调整（双流环）",
+        "source_total_items": 7,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "1)",
+            "source_quote": "1）\n调整空侧密封油泵出口压力和密封油差压调节阀至设计值；"
+          },
+          {
+            "source_order": 2,
+            "source_label": "2)",
+            "source_quote": "2)\n调整氢侧密封油泵出口压力和平衡阀至设计值，使氢侧与空侧密封油压差符合要求；"
+          },
+          {
+            "source_order": 3,
+            "source_label": "3)",
+            "source_quote": "3)\n高压备用油路调整；"
+          },
+          {
+            "source_order": 4,
+            "source_label": "4)",
+            "source_quote": "4）\n氢侧油箱油位调整；"
+          },
+          {
+            "source_order": 5,
+            "source_label": "5)",
+            "source_quote": "5)\n浮动油量调整；"
+          },
+          {
+            "source_order": 6,
+            "source_label": "6)",
+            "source_quote": "6）\n空侧、氢侧冷油器投运；"
+          },
+          {
+            "source_order": 7,
+            "source_label": "7)",
+            "source_quote": "7）消泡箱液位及发电机漏液开关实校。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-b1ed72310aba52a65e15e4fb",
+        "kind": "procedure",
+        "physical_pages": [
+          14,
+          15
+        ],
+        "source_title": "密封油系统调整（单流环）",
+        "source_total_items": 6,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "1)",
+            "source_quote": "1）油泵出口压力调整；"
+          },
+          {
+            "source_order": 2,
+            "source_label": "2)",
+            "source_quote": "2）\n油氢压差、浮动油流量调整，数值应满足设备供货商要求；"
+          },
+          {
+            "source_order": 3,
+            "source_label": "3)",
+            "source_quote": "3）\n冷油器投运；"
+          },
+          {
+            "source_order": 4,
+            "source_label": "4)",
+            "source_quote": "4）\n真空油箱真空泵试转；"
+          },
+          {
+            "source_order": 5,
+            "source_label": "5)",
+            "source_quote": "5）\n真空油箱油位、真空调整；"
+          },
+          {
+            "source_order": 6,
+            "source_label": "6)",
+            "source_quote": "6）消泡箱液位及发电机漏液开关实校。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-469a612b9b85c250ec9fbd28",
+        "kind": "procedure",
+        "physical_pages": [
+          15
+        ],
+        "source_title": "发电机充氢置换",
+        "source_total_items": 3,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "1)",
+            "source_quote": "1）二氧化碳置换空气，二氧化碳浓度应达到95%以上；"
+          },
+          {
+            "source_order": 2,
+            "source_label": "2)",
+            "source_quote": "2）氢气置换二氧化碳，氢气浓度达到96%以上；"
+          },
+          {
+            "source_order": 3,
+            "source_label": "3)",
+            "source_quote": "3）发电机氢气压力调整。"
+          }
+        ]
+      },
+      {
+        "group": "reviewed-context-group-a464dcddb71f9946ce143293",
+        "kind": "procedure",
+        "physical_pages": [
+          15
+        ],
+        "source_title": "发电机排氢置换",
+        "source_total_items": 2,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "1)",
+            "source_quote": "1）二氧化碳置换氢气，二氧化碳浓度达到96%以上；"
+          },
+          {
+            "source_order": 2,
+            "source_label": "2)",
+            "source_quote": "2）空气置换二氧化碳。"
+          }
+        ]
+      }
+    ]
+  },
+  "a2a7f0ab39d7973dd5119d0079a7eff1ddd08ad11a1172c72ae12c0a15f3f0a1": {
+    "supplemental_prose_regions": [
+      {
+        "physical_page": 29,
+        "y_ranges": [
+          [
+            198,
+            305
+          ],
+          [
+            453,
+            502
+          ],
+          [
+            513,
+            591
+          ],
+          [
+            602,
+            650
+          ],
+          [
+            660,
+            739
+          ]
+        ],
+        "reason": "Original-page prose outside the reviewed table; final group is a cross-page fragment."
+      }
+    ],
+    "source_fragment_exclusions": [
+      {
+        "physical_page": 1,
+        "expected_text_sha256": "68c3686eb1269bbc384729318d3b71e58c623671382110cb0df36f7c81ee20c8",
+        "reason": "Cross-page 2.1.2 clause continues on page 2",
+        "kind": "excluded_incomplete_source"
+      },
+      {
+        "physical_page": 1,
+        "expected_text_sha256": "fe51d0051a648924b2efa2ef8bd94525b8847e7e93f614f8a63d741720e3078f",
+        "reason": "Printed page footer",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 11,
+        "expected_text_sha256": "8847ce097d0d6ec75860db0f369929999a9905102f05a72c3985d1de15fa8487",
+        "reason": "Opening clause continues from page 10",
+        "kind": "excluded_incomplete_source"
+      },
+      {
+        "physical_page": 11,
+        "expected_text_sha256": "4f3a851dda156186f672ef4f0e81e0a3d032ef019c66d80b3ad23ba94544967b",
+        "reason": "Printed page footer",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 12,
+        "expected_text_sha256": "5abfa79c307a8ffeeea8ae9a688f141055e02fadd1f72b1f513eec050da9924b",
+        "reason": "Printed page footer",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 16,
+        "expected_text_sha256": "457f51989c7e97c3302a99b45f009f11843fbf83b88914f0e0aa221c482a1971",
+        "reason": "Opening clause continues from page 15",
+        "kind": "excluded_incomplete_source"
+      },
+      {
+        "physical_page": 16,
+        "expected_text_sha256": "22bf54f6f15bd972e278c1553b852c9c3301a1339e9174d31cf187f9bbbaf165",
+        "reason": "Printed page footer",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 29,
+        "expected_text_sha256": "5c03be6c816c847414503b4e09f4b8ad2e988f969ee1075c5e6b8c26b743cf9b",
+        "reason": "Definition continues on page 30",
+        "kind": "excluded_incomplete_source"
+      },
+      {
+        "physical_page": 29,
+        "expected_text_sha256": "6260bcca816a66be364bda20a2b0c6a1e7e0f4ef13d4cd77ad9c4d55bf5c3867",
+        "reason": "Printed page footer",
+        "kind": "navigation_only"
+      },
+      {
+        "physical_page": 32,
+        "expected_text_sha256": "43443af27333542831797626068ce26013e053601a2fff796f3d2290ea51fc0d",
+        "reason": "Opening definition continues from page 31",
+        "kind": "excluded_incomplete_source"
+      },
+      {
+        "physical_page": 32,
+        "expected_text_sha256": "6d0bed4548858f3dc90fd747cc934da982d84dcadd17ad66bc83d7b26a99b66c",
+        "reason": "Printed page footer",
+        "kind": "navigation_only"
+      }
+    ],
+    "table_structure_reviews": [
+      {
+        "physical_page": 29,
+        "bbox": {
+          "x0": 74.5,
+          "x1": 520.5,
+          "y0": 344.0,
+          "y1": 442.0
+        },
+        "logical_page": "31",
+        "header_hierarchy": [
+          "运行状态：正常运行/预计运行事件",
+          "事故工况：设计基准事故/设计扩展工况",
+          "设计扩展工况：没有造成堆芯明显损伤/堆芯熔化（严重事故）"
+        ],
+        "leaf_headers": [
+          "正常运行",
+          "预计运行事件",
+          "设计基准事故",
+          "设计扩展工况-没有造成堆芯明显损伤",
+          "设计扩展工况-堆芯熔化（严重事故）"
+        ],
+        "inherited_header_text": [],
+        "continuation_from_physical_page": null,
+        "continuation_to_physical_page": null,
+        "source_text": "设计中考虑的核动力厂状态\n运行状态\n正常运行\n预计运行事件\n事故工况\n设计基准事故\n设计扩展工况\n没有造成堆芯明显损伤\n堆芯熔化（严重事故）",
+        "text_origin": "ocr_text"
+      }
+    ],
+    "cross_page_units": [
+      {
+        "group": "cross-page-review-ae33a51def238ca3b6e72ef0",
+        "kind": "clause",
+        "complete_pages": [
+          1,
+          2
+        ],
+        "fragments": [
+          {
+            "physical_page": 1,
+            "logical_page": "3",
+            "source_boxes": [
+              {
+                "text": "2.1.2 控股核动力厂的企业集团应当按照相关规定的要求，在",
+                "bbox_pdf_pt": [
+                  106.56,
+                  693.6,
+                  518.64,
+                  708.6
+                ],
+                "source_text_sha256": "10d3cbdc1a51dd51c9080e00a76da815f58cc09a61cdd035d55306c7df4d13fa"
+              },
+              {
+                "text": "核动力厂营运单位人员配置、核安全管理和财务保障等方面，建立",
+                "bbox_pdf_pt": [
+                  76.56,
+                  723.12,
+                  518.75,
+                  738.12
+                ],
+                "source_text_sha256": "fb8e1060dcc7f6ba218dc1cf7962dfabd59369c1d5910cb0fb8f1f327a6cb92a"
+              }
+            ],
+            "text_origin": "native_text"
+          },
+          {
+            "physical_page": 2,
+            "logical_page": "4",
+            "source_boxes": [
+              {
+                "text": "和实施有效的监督和考核制度，确保营运单位能够履行核安全的全",
+                "bbox_pdf_pt": [
+                  76.56,
+                  95.76,
+                  518.75,
+                  110.76
+                ],
+                "source_text_sha256": "3cf1a8b37054a7f2a779144ec2677a5a43e831b3bcd940724cc6b37aece3ce37"
+              },
+              {
+                "text": "面责任。",
+                "bbox_pdf_pt": [
+                  76.56,
+                  125.4,
+                  136.56,
+                  140.4
+                ],
+                "source_text_sha256": "925cf7df6d193b7ccaa5dee74f7f5edc69433234fe92156225d034440a355ad1"
+              }
+            ],
+            "text_origin": "native_text"
+          }
+        ]
+      },
+      {
+        "group": "cross-page-review-9e8d71015e0e21b33e39d446",
+        "kind": "clause",
+        "complete_pages": [
+          10,
+          11
+        ],
+        "fragments": [
+          {
+            "physical_page": 10,
+            "logical_page": "12",
+            "source_boxes": [
+              {
+                "text": "4.1.3 调试大纲应当规定调试组织机构及其在调试过程中的职",
+                "bbox_pdf_pt": [
+                  106.56,
+                  717.0,
+                  518.63,
+                  732.0
+                ],
+                "source_text_sha256": "38ac4adfbbbe79cb38fe203d7fc2c8e85f4eb7e3876696d4aeada1ffe189749a"
+              }
+            ],
+            "text_origin": "native_text"
+          },
+          {
+            "physical_page": 11,
+            "logical_page": "13",
+            "source_boxes": [
+              {
+                "text": "责，应当规定在调试中涉及的各组织之间的接口关系，应当规定构",
+                "bbox_pdf_pt": [
+                  76.56,
+                  95.76,
+                  518.75,
+                  110.76
+                ],
+                "source_text_sha256": "365eba98d1034b1c4e407a8b51abbf01f0311fa73ad2232ad65fab866322a357"
+              },
+              {
+                "text": "筑物、系统、设备从建造单位向调试部门的调试移交和从调试部门",
+                "bbox_pdf_pt": [
+                  76.56,
+                  125.4,
+                  518.75,
+                  140.4
+                ],
+                "source_text_sha256": "1f900b86c972ff2ea37b27736e6103ed59e77ec3e31df31fdee343da51565fca"
+              },
+              {
+                "text": "向生产部门的生产移交的管理制度。",
+                "bbox_pdf_pt": [
+                  76.56,
+                  154.92,
+                  316.56,
+                  169.92
+                ],
+                "source_text_sha256": "acaf08d5de51d0883725a448ba73e404de899fe66f06197f2fb3039f0ed8ccc7"
+              }
+            ],
+            "text_origin": "native_text"
+          }
+        ]
+      },
+      {
+        "group": "cross-page-review-4b588a2c9cadbd0643a69d7c",
+        "kind": "clause",
+        "complete_pages": [
+          15,
+          16
+        ],
+        "fragments": [
+          {
+            "physical_page": 15,
+            "logical_page": "17",
+            "source_boxes": [
+              {
+                "text": "5.5.2 营运单位应当制定燃料及堆芯部件的采购、装载、使用、",
+                "bbox_pdf_pt": [
+                  106.56,
+                  598.68,
+                  526.2,
+                  613.68
+                ],
+                "source_text_sha256": "147cd67bb8a0804af402796ab899ff9db58eee974930aabe1abda3fd2336152d"
+              },
+              {
+                "text": "卸料和试验的技术条件和程序，应当根据设计要求制定装换料大纲。",
+                "bbox_pdf_pt": [
+                  76.56,
+                  628.32,
+                  526.2,
+                  643.32
+                ],
+                "source_text_sha256": "351af2ee68bdd656e60c5201fa325c17825b3b0074c6d0fdee3d64663cb894b0"
+              },
+              {
+                "text": "在装换料后，反应堆启动前和启动时都应当进行试验以确认堆芯性",
+                "bbox_pdf_pt": [
+                  76.56,
+                  657.96,
+                  518.75,
+                  672.96
+                ],
+                "source_text_sha256": "1c9949d407a54f3023b3417a2b6bf7da299faf736349974ec5cec09b2b7b74e0"
+              },
+              {
+                "text": "能满足设计要求。营运单位应当监测堆芯状况，及时复查和修订装",
+                "bbox_pdf_pt": [
+                  76.56,
+                  687.48,
+                  518.75,
+                  702.48
+                ],
+                "source_text_sha256": "9ab09963a56f337e6418273c99a1d74b8b7209a0d1eab532876a06e268bc5043"
+              },
+              {
+                "text": "换料大纲。应当制定确定冷却剂比活度异常变化的适当分析方法，",
+                "bbox_pdf_pt": [
+                  76.56,
+                  717.0,
+                  518.75,
+                  732.0
+                ],
+                "source_text_sha256": "e7a8954c522fae9b0ce56470ebff60f5d78ba618219c1cd0d6fec00c004c213c"
+              }
+            ],
+            "text_origin": "native_text"
+          },
+          {
+            "physical_page": 16,
+            "logical_page": "18",
+            "source_boxes": [
+              {
+                "text": "以便开展燃料缺陷分析，确定这种缺陷的性质和严重程度、位置、",
+                "bbox_pdf_pt": [
+                  76.56,
+                  95.76,
+                  518.75,
+                  110.76
+                ],
+                "source_text_sha256": "fdf74334ff67e2af49e6ffb45c4562a3ae22347b6bf892bbdd8c5d7fc48538d1"
+              },
+              {
+                "text": "原因和纠正行动。",
+                "bbox_pdf_pt": [
+                  76.56,
+                  125.4,
+                  196.56,
+                  140.4
+                ],
+                "source_text_sha256": "f88db2a3525cd299ce7215c76f0cee8188f648066ae18d48dd26c1901ef8eb18"
+              }
+            ],
+            "text_origin": "native_text"
+          }
+        ]
+      },
+      {
+        "group": "cross-page-review-be61f9230d8b5b494a8cf2d5",
+        "kind": "definition",
+        "complete_pages": [
+          29,
+          30
+        ],
+        "fragments": [
+          {
+            "physical_page": 29,
+            "logical_page": "31",
+            "source_boxes": [
+              {
+                "text": "预计运行事件",
+                "bbox_pdf_pt": [
+                  106.56,
+                  662.76,
+                  196.8,
+                  677.76
+                ],
+                "source_text_sha256": "0c0637c0cb1ff9e9ac127a1790dc3fc1f6203cbd2889ea0b33dbce5da6fafe66"
+              },
+              {
+                "text": "在核动力厂运行寿期内预计至少发生一次的偏离正常运行的各",
+                "bbox_pdf_pt": [
+                  106.56,
+                  692.28,
+                  518.75,
+                  707.28
+                ],
+                "source_text_sha256": "b2f5e87073ede1da0702adfc48ba5d20d88fbb321e9596675cc68a7e5da0269a"
+              },
+              {
+                "text": "种运行过程；由于设计中已采取相应措施，这类事件不至于引起安",
+                "bbox_pdf_pt": [
+                  76.56,
+                  721.8,
+                  518.75,
+                  736.8
+                ],
+                "source_text_sha256": "abc819b40ae2d243c7f2d9e6c37a9297be4871325c242b568a437de117a76767"
+              }
+            ],
+            "text_origin": "native_text"
+          },
+          {
+            "physical_page": 30,
+            "logical_page": "32",
+            "source_boxes": [
+              {
+                "text": "全重要物项的严重损坏，也不至于导致事故工况。",
+                "bbox_pdf_pt": [
+                  76.56,
+                  95.76,
+                  406.56,
+                  110.76
+                ],
+                "source_text_sha256": "56ca8ab0f5d57ace89ea57a6cfc73f77d192ea2e5ba884f9649cbe77ee772545"
+              }
+            ],
+            "text_origin": "native_text"
+          }
+        ]
+      },
+      {
+        "group": "cross-page-review-1afd190b6216adc4830850ed",
+        "kind": "definition",
+        "complete_pages": [
+          31,
+          32
+        ],
+        "fragments": [
+          {
+            "physical_page": 31,
+            "logical_page": "33",
+            "source_boxes": [
+              {
+                "text": "维修有效性",
+                "bbox_pdf_pt": [
+                  106.56,
+                  687.48,
+                  181.8,
+                  702.48
+                ],
+                "source_text_sha256": "ec94d05f65b0be92150e0f34e9a59f37bf0626f1f16e0bcc33343b3fe3791dd7"
+              },
+              {
+                "text": "对特定的构筑物、系统和设备，按照其设计基准、运行经验设",
+                "bbox_pdf_pt": [
+                  106.56,
+                  717.0,
+                  518.75,
+                  732.0
+                ],
+                "source_text_sha256": "0194145ec2e04c5ea30d520b604ce74bc0c2b0d27ccbdf6eba720eba5bba76d4"
+              }
+            ],
+            "text_origin": "native_text"
+          },
+          {
+            "physical_page": 32,
+            "logical_page": "34",
+            "source_boxes": [
+              {
+                "text": "定能反映维修有效性的指标。通过比较上述指标与该构筑物、系统",
+                "bbox_pdf_pt": [
+                  76.56,
+                  95.76,
+                  518.75,
+                  110.76
+                ],
+                "source_text_sha256": "2dab7e1c0970e2e074f81eef4efd59c714155ea2dbedfff5fbe73cfbe1dd76e2"
+              },
+              {
+                "text": "和设备在运行、维修、试验中所表现的实际性能，来判断维修是否",
+                "bbox_pdf_pt": [
+                  76.56,
+                  125.4,
+                  518.75,
+                  140.4
+                ],
+                "source_text_sha256": "b4a2b40933572b8d73ee075cb28142015d0e88537c2d65444ad3e8b23b48d63e"
+              },
+              {
+                "text": "有效。",
+                "bbox_pdf_pt": [
+                  76.56,
+                  154.92,
+                  121.56,
+                  169.92
+                ],
+                "source_text_sha256": "79d9c5290b9fbd89c93a7517b74c6c7d12431c592941e7f87f515869c0a00b80"
+              }
+            ],
+            "text_origin": "native_text"
+          }
+        ]
+      }
+    ],
+    "reviewed_context_groups": [
+      {
+        "group": "reviewed-context-group-1284ea59def808da2bb323f4",
+        "kind": "classification_list",
+        "physical_pages": [
+          12
+        ],
+        "source_title": "5.1.3 运行限值和条件可以分为以下五类",
+        "source_total_items": 5,
+        "items": [
+          {
+            "source_order": 1,
+            "source_label": "（1）",
+            "source_quote": "安全限值"
+          },
+          {
+            "source_order": 2,
+            "source_label": "（2）",
+            "source_quote": "安全系统整定值"
+          },
+          {
+            "source_order": 3,
+            "source_label": "（3）",
+            "source_quote": "正常运行的限值和条件"
+          },
+          {
+            "source_order": 4,
+            "source_label": "（4）",
+            "source_quote": "监督要求"
+          },
+          {
+            "source_order": 5,
+            "source_label": "（5）",
+            "source_quote": "偏离上述运行限值和条件时的行动"
+          }
+        ]
+      }
+    ]
+  }
+}

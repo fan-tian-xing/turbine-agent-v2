@@ -163,8 +163,7 @@ def task_subject_match(statement, task, registry):
 
     entities = [entity for entity in statement.get('entities', [])
                 if isinstance(entity, dict)]
-    primary = [entity for entity in entities
-               if entity.get('role') in ('subject', 'quantity_target')]
+    primary = [entity for entity in entities if entity.get('role') == 'subject']
     if not primary:
         primary = [entity for entity in entities if entity.get('role') == 'object']
     if not primary:
@@ -271,7 +270,7 @@ def filter_independent_source_claims(claims, tasks, reads, statements, registry,
                     role=entity.get('role')
                     class_id=_entity_class_id(entity)
                     if role=='related' and class_id==target_id:related=True
-                    if role not in ('subject','quantity_target','object'):continue
+                    if role not in ('subject','object'):continue
                     if (isinstance(class_id,str) and class_id!='Mention' and
                             (registry.domain_is_a(class_id,target_id) or
                              registry.domain_is_a(target_id,class_id))):
@@ -677,8 +676,8 @@ def candidate_priority(item,result,tasks,question,registry):
         if isinstance(value,dict):return [s for part in value.values() for s in strings(part)]
         return []
     original_body=unicodedata.normalize('NFKC',str(item.get('text',''))).casefold()
-    body=original_body+'\n'+unicodedata.normalize('NFKC',json_text(item.get('conditions',[]))).casefold()
-    condition_terms={s.casefold() for s in strings(item.get('conditions',[])) if len(s.strip())>=2 and s.casefold() in question.casefold()}
+    body=original_body
+    condition_terms=set()
     priorities=[]
     for task in tasks:
         if task['id'] not in result.get('task_ids',[]):continue
@@ -695,7 +694,7 @@ def candidate_priority(item,result,tasks,question,registry):
         object_match=any(term and term in original_body for term in exact_names)
         specific=set(relevance_terms(task.get('query_terms',[]),broad))
         hits=sum(term in body for term in specific)
-        phase_hits=sum(term in body for term in condition_terms-specific)
+        phase_hits=0
         explicit_numbers=set(re.findall(r'(?<![\d.])\d+(?:\.\d+){2,}(?![\d.])',unicodedata.normalize('NFKC','\n'.join([question,task.get('subquestion',''),*task.get('query_terms',[])]))))
         source_numbers='\n'.join(str((item.get('context') or {}).get(key,'')) for key in ('clause_number','table_number'))
         direct_reference=any(re.search(r'(?<![\d.])'+re.escape(number)+r'(?![\d.])',original_body+'\n'+source_numbers) for number in explicit_numbers)
@@ -705,8 +704,7 @@ def candidate_priority(item,result,tasks,question,registry):
                    -1 if path_kinds=={'related_context'} else 1 if path_kinds else 0)
         kind=item.get('type');wanted=set(task.get('knowledge_items') or [task.get('knowledge_item')])
         direct=kind in wanted or kind=='step' and 'procedure' in wanted or (
-            'parameter' in wanted and (bool(item.get('quantities')) or
-            kind=='requirement' and bool(re.search(r'\d|％|%|不小于|不大于|超过|低于|高于|偏差',item.get('text','')))))
+            'parameter' in wanted and kind=='requirement' and bool(re.search(r'\d|％|%|不小于|不大于|超过|低于|高于|偏差',item.get('text',''))))
         if item.get('retrieval_method')=='evidence_fulltext':
             hits=max(hits,item.get('exact_hits',0))
             object_match=object_match or hits>0
@@ -773,10 +771,10 @@ def model_grounding_context(statements,reads):
 
 
 def statement_applicability(statement,facts,registry):
-    """Intersect local conditions with the linked source scopes using AND."""
+    """Evaluate registered source scopes; local conditions remain in text."""
     if statement.get('retrieval_role')=='related_context':
         return 'unknown',[],[]
-    expressions=[condition.get('expression') if isinstance(condition,dict) else None for condition in statement.get('conditions',[])]
+    expressions=[]
     scopes={row.get('scope_id'):row for row in statement.get('scope_constraints',[]) if isinstance(row,dict) and row.get('scope_id')}
     scope_ids=list(dict.fromkeys([*statement.get('scope_ids',[]),*scopes]))
     unresolved=[]
@@ -793,7 +791,6 @@ def statement_applicability(statement,facts,registry):
 
 def task_quantity_checks(tasks,statements,reads,facts,registry):
     """Compare explicit user measurements only after reading their sources."""
-    from turbine_kg.knowledge.quantities import compare_quantity
     from turbine_kg.knowledge.evidence_limits import compare_read_evidence
     checks=[]
     for task in tasks:
@@ -805,15 +802,9 @@ def task_quantity_checks(tasks,statements,reads,facts,registry):
             supports=statement.get('supports',[])
             if not supports or any(support.get('evidence_id') not in reads for support in supports):continue
             applicability,_,_=statement_applicability(statement,own,registry)
-            if (statement.get('retrieval_role')!='related_context' and not statement.get('conditions')
+            if (statement.get('retrieval_role')!='related_context'
                     and not statement.get('scope_ids') and not statement.get('scope_constraints')):
                 applicability='applicable'
-            for index,quantity in enumerate(statement.get('quantities',[])):
-                result=compare_quantity(quantity,own,object_label=task['object'],
-                                        registry=registry,applicability=applicability)
-                result.update(id=identity('numeric-check',task['id'],statement['id'],index),
-                              statement_id=statement['id'],task_id=task['id'],supports=supports)
-                task['numeric_comparisons'].append(result);checks.append(result)
         if not task['numeric_comparisons']:
             for index,result in enumerate(compare_read_evidence(task,reads,facts,registry)):
                 result.update(id=identity('numeric-check',task['id'],'evidence',index),task_id=task['id'])
@@ -970,8 +961,8 @@ class Agent:
                 relevant=[s for s in statements.values() if s.get('_object')==task['object'] and (
                     s.get('type') in (task.get('knowledge_items') or [task['knowledge_item']]) or
                     (s.get('type')=='step' and 'procedure' in (task.get('knowledge_items') or [task['knowledge_item']])) or
-                    ('parameter' in (task.get('knowledge_items') or [task['knowledge_item']]) and (s.get('quantities') or
-                     s.get('type')=='requirement' and re.search(r'\d|％|%|不小于|不大于|超过|低于|高于|偏差',s.get('text','')))))]
+                    ('parameter' in (task.get('knowledge_items') or [task['knowledge_item']]) and
+                     s.get('type')=='requirement' and re.search(r'\d|％|%|不小于|不大于|超过|低于|高于|偏差',s.get('text',''))))]
                 ids={support['evidence_id'] for statement in relevant for support in statement.get('supports',[]) if support.get('evidence_id')}
                 for result in state['results']:
                     if task['id'] not in result.get('task_ids',[]):continue

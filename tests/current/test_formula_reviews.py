@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from turbine_kg.knowledge.extract import _complete_values, _statement_identity, extract
+from turbine_kg.knowledge.extract import _statement_identity, extract
 from turbine_kg.knowledge.reviews import (
     confirm_formula_source, confirm_statement_formula, formula_source_binding,
     verified_formula_representation, apply_formula_reviews,
@@ -33,8 +33,7 @@ def reviewed_source(**overrides):
 
 def statement():
     return {'id':'same-existing-statement','document_id':'doc','revision_id':'rev','type':'fact','entities':[],
-            'supports':[{'evidence_id':'evidence','member_keys':['native-member']}],
-            'formulas':[{'expression':None,'variables':None,'units':None,'conditions':None}]}
+            'supports':[{'evidence_id':'evidence','member_keys':['native-member']}]}
 
 
 def evidence():
@@ -42,18 +41,12 @@ def evidence():
             'members':[{'member_key':'native-member','source_id':'source-formula','locator':source()['locator']}]}
 
 
-def test_confirmed_expression_display_is_independent_of_completeness_and_calculation():
+def test_statement_does_not_store_embedded_formula_reviews():
     corrected=reviewed_source()
     assert corrected['text']==source()['text']
     assert corrected['attributes']['human_verified_representation']['raw_text']==source()['text']
-    result=confirm_statement_formula(statement(),corrected,evidence(),formula_index=0,registry=OntologyRegistry())
-    saved=result['formulas'][0]
-    assert result['id']==statement()['id'] and len(result['formulas'])==1
-    assert saved['expression_status']==saved['read_certainty']==saved['display_status']=='confirmed'
-    assert saved['completeness']=='incomplete' and saved['missing_fields']==['conditions']
-    assert saved['calculation_status']=='not_calculated' and 'result' not in saved
-    assert saved['units']['r']=='1' and saved['variables'][-1]['range']=={'lower':0.01,'upper':0.03}
-    assert statement()['formulas'][0]['expression'] is None
+    with pytest.raises(ValueError, match='不再保存'):
+        confirm_statement_formula(statement(),corrected,evidence(),formula_index=0,registry=OntologyRegistry())
 
 
 @pytest.mark.parametrize('field', ['id','document_id','revision_id','text'])
@@ -76,15 +69,6 @@ def test_review_requires_explicit_user_confirmation_and_raw_content_binding():
     with pytest.raises(ValueError,match='字符串'):reviewed_source(formula=invalid)
 
 
-def test_missing_units_are_not_assumed_dimensionless_and_uncertain_expression_is_not_confirmed():
-    item=statement();candidate=formula();candidate['units']['r']=None
-    candidate.update(expression_status='confirmed',read_certainty='uncertain')
-    item['formulas']=[candidate];_complete_values(item,OntologyRegistry())
-    saved=item['formulas'][0]
-    assert saved['units']['r'] is None and 'units' in saved['missing_fields']
-    assert saved['expression_status']=='uncertain' and saved['display_status']=='needs_confirmation'
-
-
 def test_review_cannot_update_unrelated_partial_member_or_other_document():
     corrected=reviewed_source()
     for change in ('source','partial','document','bbox'):
@@ -97,9 +81,8 @@ def test_review_cannot_update_unrelated_partial_member_or_other_document():
 
 
 def test_formula_review_metadata_does_not_create_a_new_fact_identity():
-    registry=OntologyRegistry();first=statement();first['text']='formula method';first['formulas']=[formula()]
-    second=deepcopy(first);second['formulas'][0].update(expression_status='confirmed',read_certainty='confirmed',
-        display_status='confirmed',source_review={'status':'confirmed_user','binding':formula_source_binding(source())})
+    registry=OntologyRegistry();first=statement();first['text']='formula method'
+    second=deepcopy(first);second['text']='formula method'
     assert _statement_identity(first,'doc',registry)==_statement_identity(second,'doc',registry)
 
 

@@ -116,7 +116,6 @@ class Tools:
                 'WHERE c.id IN $objects AND coalesce(r.document_id,s.document_id)=s.document_id '
                 'AND r.relation_id IN $relations AND coalesce(r.role,\'\') <> \'related\' '
                 'RETURN e.id AS evidence_id,collect(DISTINCT s.text) AS statements,'
-                'collect(DISTINCT s.data_json) AS statement_data,'
                 'collect(DISTINCT c.id) AS matched_object_ids',
                 {'ids':[item['id'] for item in matches],
                  'documents':list(self.snapshot.document_ids),
@@ -135,11 +134,7 @@ class Tools:
         for row in rows:
             if not isinstance(row,dict) or not row.get('evidence_id'):continue
             statements=[value for value in row.get('statements',[]) if isinstance(value,str)]
-            structured=[]
-            for raw in row.get('statement_data',[]):
-                try:structured.append(json.loads(raw) if isinstance(raw,str) else raw)
-                except (TypeError,ValueError):continue
-            body='\n'.join(statements+[json_text(value.get('conditions',[])) for value in structured if isinstance(value,dict)]).casefold()
+            body='\n'.join(statements).casefold()
             ranked[row['evidence_id']]={'score':max((weight.get(object_paths[oid]['kind'],0)
                 for oid in row.get('matched_object_ids',[]) if oid in object_paths),default=0),
                 'condition_hits':sum(term in body for term in terms),

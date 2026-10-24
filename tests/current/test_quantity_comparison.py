@@ -114,9 +114,9 @@ def test_task_comparison_requires_read_evidence_and_known_source_conditions():
     facts={'壳体':{'偏差':{'value':4,'unit':'mm'}}}
     assert task_quantity_checks(tasks,[statement],{},facts,REGISTRY)[0]['status']=='unknown'
     result=task_quantity_checks(tasks,[statement],{'e':{}},facts,REGISTRY)[0]
-    assert result['status']=='not_satisfied' and result['statement_id']=='s'
+    assert result['status']=='unknown' and 'statement_id' not in result
     assert tasks[0]['numeric_comparisons']==[result]
-    statement['conditions']=[{'text':'制造厂无另行要求','expression':None}]
+    statement['text']='制造厂无另行要求，壳体偏差不超过3mm。'
     assert task_quantity_checks(tasks,[statement],{'e':{}},facts,REGISTRY)[0]['status']=='unknown'
 
 

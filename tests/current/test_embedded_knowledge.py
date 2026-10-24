@@ -22,14 +22,13 @@ def statement(evidence='e',**extra):
 
 def test_repeated_fact_merges_wrappers_and_separate_batches_without_duplicate_fields():
     store=Store();registry=OntologyRegistry()
-    first=statement(conditions=[{'text':'Cold state','expression':None}], quantities=[{'target':'Object','value':1}])
-    second=statement('another-wrapper',conditions=deepcopy(first['conditions']),quantities=deepcopy(first['quantities']))
+    first=statement()
+    second=statement('another-wrapper')
     assert persist(store,[first,second],'d',registry)==1
     assert set(store.nodes)=={'Statement'}
     saved=next(iter(store.nodes['Statement'].values()))
-    assert len(saved['supports'])==2 and len(saved['quantities'])==1
-    assert len(saved['quantities'][0]['source_supports'])==2
-    persist(store,[statement('third-wrapper',conditions=deepcopy(first['conditions']),quantities=deepcopy(first['quantities']))],'d',registry)
+    assert len(saved['supports'])==2 and 'conditions' not in saved and 'quantities' not in saved
+    persist(store,[statement('third-wrapper')],'d',registry)
     assert len(store.nodes['Statement'])==1 and len(next(iter(store.nodes['Statement'].values()))['supports'])==3
     assert len(store.links['SUPPORTS'])==3
     assert len(first['supports'])==1
@@ -37,8 +36,8 @@ def test_repeated_fact_merges_wrappers_and_separate_batches_without_duplicate_fi
 
 def test_distinct_stage_or_source_occurrence_is_preserved():
     registry=OntologyRegistry();store=Store()
-    first=statement(conditions=[{'text':'Before run','expression':None}])
-    second=statement(conditions=[{'text':'During run','expression':None}])
+    first=statement(text='Before run, Object inspection is required.')
+    second=statement(text='During run, Object inspection is required.')
     third=statement(supports=[{'evidence_id':'different','member_keys':['different-source'],'quotes':[{'member_key':'different-source','text':first['text']}]}])
     assert persist(store,[first,second,third],'d',registry)==3
 
@@ -86,15 +85,14 @@ def test_procedure_step_relation_rejects_wrong_statement_kind_before_writes():
 
 def test_embedded_values_project_only_statement_type_and_keep_exact_source():
     registry=OntologyRegistry();store=Store()
-    persist(store,[statement(conditions=[{'text':'Cold state','expression':None}],formulas=[{'expression':'x/y'}])],'d',registry)
+    persist(store,[statement()],'d',registry)
     saved=next(iter(store.nodes['Statement'].values()))
     projected=registry.statement_projection([saved])
     assert registry.validate_graph(projected)[0]
     ns=Namespace(registry.data['namespace'])
     assert set(projected)=={(ns[saved['id']],RDF.type,ns['Statement'])}
     assert set(store.nodes)=={'Statement'}
-    for field in ('conditions','formulas'):
-        assert saved[field][0]['source_supports']==[{'evidence_id':ref['evidence_id'],'member_keys':ref['member_keys']} for ref in saved['supports']]
+    assert not {'conditions','quantities','formulas'} & set(saved)
 
 
 @pytest.mark.parametrize('field', ['conditions','quantities','formulas'])
@@ -102,10 +100,9 @@ def test_embedded_values_project_only_statement_type_and_keep_exact_source():
 def test_malformed_embedded_fields_are_rejected_before_writes(field,value):
     registry=OntologyRegistry();store=Store()
     item=statement(**{field:value})
-    with pytest.raises(ValueError): persist(store,[item],'d',registry)
+    with pytest.raises(ValueError,match='不再保存'): persist(store,[item],'d',registry)
     assert store.nodes=={} and store.links=={}
-    with pytest.raises(ValueError,match='对象数组'):
-        registry.statement_projection([{**item,'id':'s'}])
+    assert not set(registry.extraction_schema()['properties']) & {'conditions','quantities','formulas'}
 
 
 def test_stable_approved_class_alias_identity_and_punctuation_fragment_rejection():

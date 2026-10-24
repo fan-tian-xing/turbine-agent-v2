@@ -36,9 +36,9 @@ def test_statement_contract_accepts_source_sentence_without_separate_modality():
     registry = OntologyRegistry()
     item = {"type": "requirement", "text": "穿管受阻时不得强行穿入。",
             "entities": [{"class": "Mention", "role": "subject", "label": "凝汽器冷却管"}],
-            "supports": [{"evidence_id": "e1", "member_keys": ["m1"]}],
-            "conditions": [{"text": "穿管受阻", "expression": None}]}
+            "supports": [{"evidence_id": "e1", "member_keys": ["m1"]}]}
     validate(item, registry.extraction_schema())
+    assert not {"conditions", "quantities", "formulas"} & set(registry.extraction_schema()["properties"])
     assert registry.data["storage_policy"]["standalone_modality_fields"] is False
     assert registry.data["storage_policy"]["unreviewed_terms"] == "statement_only"
     with pytest.raises(ValidationError):

@@ -401,17 +401,27 @@ class OntologyRegistry:
         """Validate the minimum source-backed statement and ontology references."""
         text = {"type": ["string", "null"]}
         occurrence = {"type": ["object", "null"], "properties": {key: text for key in ("identifier", "object", "location", "time")}}
-        quantity = {"type": "object", "properties": {
-            **{key: text for key in ("target", "parameter", "unit", "location")},
-            "value": {"type": ["string", "number", "null"]},
-            "operator": {"enum": ["eq", "ne", "lt", "le", "gt", "ge", "range", None]}}}
-        formula = {"type": "object", "properties": {
-            "expression": text,
-            "variables": {"anyOf": [{"type":"null"}, {"type":"object"}, {"type":"array", "items":{"type":"object", "properties":{"symbol":text, "meaning":text}}}]},
-            "units": {"type":["object", "null"], "additionalProperties":text},
-            "conditions": {"type":["array", "null"], "items":{"type":["string", "object"]}}}}
         support={"type":"object", "required":["evidence_id","member_keys"], "properties":{
             "evidence_id":{"type":"string","minLength":1},"member_keys":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}}}}
+        core_entity={"type":"object", "required":["label","class","role"], "properties":{
+            "label":{"type":"string","minLength":1},
+            "class":{"type":"string"},
+            "role":{"type":"string"},
+            "occurrence":{"type":["object","null"]}}}
+        statement_core={"type":"object", "required":["text","type","entities","supports"], "properties":{
+            "text":{"type":"string","minLength":1},
+            "type":{"type":"string","enum":self.statement_types},
+            "entities":{"type":"array","items":core_entity},
+            "supports":{"type":"array","items":support}}}
+        ontology_mapping={"type":"object", "required":["entity_index","surface_label","status"], "properties":{
+            "entity_index":{"type":"integer","minimum":0},
+            "surface_label":{"type":"string","minLength":1},
+            "class_id":{"type":["string","null"]},
+            "status":{"type":"string","enum":["mapped","unmapped","ambiguous"]},
+            "method":{"type":"string"},
+            "source_members":{"type":"array","items":{"type":"object"}},
+            "ontology_version":{"type":"string"},
+            "reason":{"type":"string"}}}
         endpoint={"type":"object", "properties":{"statement_id":{"type":"string","minLength":1},
             "entity_index":{"type":"integer","minimum":0}}, "required":["statement_id"], "additionalProperties":False}
         relation={"type":"object","required":["relation_id"],"properties":{
@@ -426,17 +436,14 @@ class OntologyRegistry:
             "type": {"type": "string", "enum": self.statement_types},
             "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
             "supports": {"type": "array", "minItems": 1, "items": support},
-            "conditions": {"type": "array", "items": {"type": "object", "properties": {
-                "text": {"type": "string", "minLength": 1},
-                "expression": {"type": ["object", "string", "null"]}}}},
-            "quantities": {"type":"array", "items":quantity},
-            "formulas": {"type":"array", "items":formula},
             "entities": {"type": "array", "items": {"type": "object", "required": ["label", "class", "role"], "properties": {
                 "label": {"type": "string", "minLength": 1},
                 "occurrence": occurrence,
                 "ontology_class_id": {"enum": [*self.business_classes, *self.domain_classes, None]},
                 "class": {"type": "string", "enum": [key for key, row in self.classes.items() if row.get("extractable")]},
                 "role": {"type": "string", "enum": list(self.roles)}}}},
+            "statement_core": statement_core,
+            "ontology_mapping": {"type":"array", "items": ontology_mapping},
             "semantic_relations": {"type": "array", "items": relation}
             }, "required": ["type", "text", "entities", "supports"]}
 
@@ -446,9 +453,7 @@ class OntologyRegistry:
                 "domain_classes": list(self.domain_classes.values()), "roles": list(self.roles.values()),
                 "storage_policy":self.data.get('storage_policy',{}),
                 "relations": list(self.relations.values()), "statement_schema": self.extraction_schema(),
-                "completeness": {"quantity_required":["target", "target_binding", "parameter", "value", "unit", "operator", "location", "source_supports"],
-                                 "formula_required":["expression", "variables", "units", "conditions", "source_supports"],
-                                 "unknown":"保留null和missing_fields，completeness=incomplete，公式不得计算；真实实例身份绑定来源和明确对象/地点/时间，不使用陈述角色"},
+                "completeness": {"unknown":"Statement 不拆分条件、数值和公式字段；原文内容必须完整保留在 text 和 Evidence 中。真实实例身份绑定来源和明确对象/地点/时间，不使用陈述角色"},
                 "rules": self.data["extraction_rules"], "navigation_policy": self.data["navigation_policy"]}
 
     @staticmethod
@@ -533,10 +538,6 @@ class OntologyRegistry:
         graph = Graph()
         for statement in statements:
             graph.add((ns[statement["id"]], RDF.type, ns["Statement"]))
-            for field in ("conditions", "quantities", "formulas"):
-                values = statement.get(field, [])
-                if not isinstance(values, list) or any(not isinstance(value, dict) for value in values):
-                    raise ValueError("内嵌信息字段必须为对象数组")
         return graph
 
     def validate_graph(self, data: Graph) -> tuple[bool, Graph, str]:

@@ -22,21 +22,6 @@ def _known(value):
     return isinstance(value, str) and bool(value.strip()) and value.strip().lower() not in ('unknown', 'null', 'none', '未知', '未确认')
 
 
-def _check_condition_scope(item):
-    """Reject a local condition promoted to an earlier independent obligation."""
-    statement=re.sub(r'\s+', '', normalize('NFKC', item.get('text','')))
-    for condition in item.get('conditions',[]):
-        phrase=condition.get('text')
-        if not _known(phrase):continue
-        phrase=re.sub(r'\s+', '', normalize('NFKC', phrase))
-        offset=statement.find(phrase)
-        if offset<0:continue
-        prefix=statement[:offset]
-        boundary=max(prefix.rfind('；'),prefix.rfind(';'))
-        if boundary>=0 and re.search(r'应|宜|不得|必须|禁止',prefix[:boundary]):
-            raise ValueError('局部条件被提升为整条条件，错误限定前面独立义务；请拆分Statement')
-
-
 def _stage_model(model,stage):
     route=getattr(model,'for_stage',None)
     return route(stage) if callable(route) else model
@@ -536,66 +521,6 @@ def stored_statement_mentions(store,document_id,statement_ids):
         {'document':document_id,'ids':list(statement_ids)})]
 
 
-def _complete_values(item, registry):
-    """Mark gaps on both extraction and persistence; never synthesize a missing fact."""
-    refs = _support_refs(item)
-    for condition in item.get('conditions',[]):
-        if not isinstance(condition,dict): raise ValueError('条件必须为结构化对象')
-        condition['source_supports']=deepcopy(refs)
-    for key in ('quantities', 'formulas'):
-        values = item.get(key, [])
-        if not isinstance(values, list) or any(not isinstance(value, dict) for value in values):
-            raise ValueError('量值或公式必须为对象数组')
-        for value in values:
-            value['source_supports'] = deepcopy(refs)
-            required = ('target', 'parameter', 'value', 'unit', 'operator', 'location') if key == 'quantities' else ('expression', 'variables', 'units', 'conditions')
-            for field in required: value.setdefault(field, None)
-            missing = []
-            if key == 'quantities':
-                for field in ('target', 'parameter', 'unit'):
-                    if not _known(value[field]): missing.append(field)
-                if value['operator'] not in ('eq', 'ne', 'lt', 'le', 'gt', 'ge', 'range'): missing.append('operator')
-                raw = value['value']
-                if not isinstance(raw, (str, int, float)) or isinstance(raw, bool) or (isinstance(raw, (int, float)) and not math.isfinite(raw)) or (isinstance(raw, str) and not _known(raw)):
-                    missing.append('value')
-                try:
-                    numeric = not isinstance(raw, bool) and math.isfinite(float(raw))
-                except (TypeError, ValueError): numeric = False
-                value['value_kind'] = 'numeric' if numeric else 'symbolic' if _known(raw) else 'unknown'
-                targets = [entity for entity in item.get('entities', []) if entity.get('role') == 'quantity_target']
-                if _known(value['target']) and not any(normalized(value['target']) == normalized(entity['label']) for entity in targets):
-                    missing.append('target_binding')
-            else:
-                if not _known(value['expression']): missing.append('expression')
-                certainty=value.get('read_certainty','unknown')
-                if certainty not in ('confirmed','uncertain','unknown'):certainty='unknown'
-                expression_status=value.get('expression_status','unverified')
-                if expression_status not in ('confirmed','uncertain','unverified'):expression_status='unverified'
-                if not _known(value['expression']):expression_status='missing'
-                elif certainty=='uncertain':expression_status='uncertain'
-                # Readability, structural completeness and execution are independent.
-                # Confirmed expressions remain displayable even when definitions are
-                # incomplete or no calculation has been requested/performed.
-                value['read_certainty']=certainty
-                value['expression_status']=expression_status
-                value['display_status']='confirmed' if expression_status=='confirmed' and certainty=='confirmed' else 'missing' if expression_status=='missing' else 'needs_confirmation'
-                variables = value['variables']
-                if isinstance(variables, dict):
-                    variables = [{'symbol':symbol, **(definition if isinstance(definition, dict) else {'meaning':definition})} for symbol, definition in variables.items()]
-                if not isinstance(variables, list) or not variables or any(not isinstance(var, dict) or not _known(var.get('symbol')) or not _known(var.get('meaning')) for var in variables):
-                    missing.append('variables')
-                else: value['variables'] = variables
-                units = value['units']  # Explicit string "1" is dimensionless; null is unknown.
-                if not isinstance(units, dict) or not units or not isinstance(variables, list) or any(not isinstance(var, dict) or not _known(units.get(var.get('symbol'))) for var in variables):
-                    missing.append('units')
-                # An empty array is a declared absence of additional conditions, not an inferred one.
-                if not isinstance(value['conditions'], list) or any(not _known(condition if isinstance(condition, str) else condition.get('text') if isinstance(condition, dict) else None) for condition in value['conditions']): missing.append('conditions')
-                value['calculation_status'] = 'not_calculated'
-            if not refs or any(not support['member_keys'] for support in refs): missing.append('source_supports')
-            value['missing_fields'] = list(dict.fromkeys(missing))
-            value['completeness'] = 'incomplete' if missing else 'complete'
-
-
 def _occurrences(item, registry, supplied=None):
     """Source provenance bounds real instances; roles never contribute to their identity."""
     supplied = supplied or {}
@@ -652,6 +577,40 @@ def _entity_node(entity, registry, document_id):
     label=registry.canonical_label(entity['label'])
     return {'id':identity('occurrence',entity['class'],normalized(label),source or document_id,explicit),
             'label':label,'class':entity['class'],'occurrence':deepcopy(occurrence)}
+
+
+def _statement_core(item):
+    """Return source semantics without ontology mapping metadata."""
+    return {
+        'text': item['text'],
+        'type': item['type'],
+        'entities': [{key: deepcopy(entity[key]) for key in ('label','class','role','occurrence')
+                      if key in entity} for entity in item.get('entities', [])],
+        'supports': deepcopy(item['supports']),
+    }
+
+
+def _ontology_mapping(item, registry):
+    """Project source mention mappings separately from Statement Core."""
+    result=[]
+    for index, entity in enumerate(item.get('entities', [])):
+        binding=entity.get('ontology_binding') or {}
+        review=entity.get('ontology_mapping_review') or {}
+        class_id=entity.get('ontology_class_id') or binding.get('class_id')
+        if not class_id and not review:
+            continue
+        row={'entity_index':index,'surface_label':entity['label'],
+             'status':'mapped' if class_id else ('ambiguous' if review.get('status')=='ambiguous' else 'unmapped'),
+             'ontology_version':registry.version}
+        if class_id: row['class_id']=class_id
+        if binding:
+            for key in ('method','source_members','context_class_id','context_label'):
+                if key in binding: row[key]=deepcopy(binding[key])
+        if review:
+            if review.get('requested_class_id'): row['class_id']=review['requested_class_id']
+            if review.get('reason'): row['reason']=review['reason']
+        result.append(row)
+    return result
 
 
 def _bound_scope_text(text, selected):
@@ -781,10 +740,15 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
     for offset,item in enumerate(result.get('statements',[])):
         try:
             item.setdefault('extraction_id',f's{offset}')
-            if any(item.get(field) for field in ('conditions','quantities','formulas')):
-                raise ValueError('最简知识记录不得附加条件、量值或公式字段；必须在text保留完整原意')
-            for field in ('conditions','quantities','formulas'):
-                item.pop(field,None)
+            # Some models use ``scope`` for a source-backed applicability
+            # sentence even though scope declarations are stored separately.
+            # Keep the sentence as a retrievable fact instead of dropping the
+            # Evidence solely for this harmless type spelling variation.
+            if item.get('type') == 'scope':
+                item['type'] = 'fact'
+            forbidden = [field for field in ('conditions','quantities','formulas') if field in item]
+            if forbidden:
+                raise ValueError('Statement 不再保存 conditions、quantities、formulas；请将原文完整保留在 text')
             for entity in item.get('entities',[]):
                 if not isinstance(entity,dict):continue
                 # An optional kind proposal cannot invalidate a supported fact.
@@ -829,9 +793,12 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
                 raise ValueError('引用要求与目标事实必须分别抽取，不能合并为引用者的新陈述')
             for entity in item.get('entities',[]):
                 if hasattr(registry,'validate_entity'): registry.validate_entity(entity)
-                elif entity.get('class') not in registry.classes or entity.get('role') not in ('subject','object','related','quantity_target'): raise ValueError('实体角色无效')
-            _complete_values(item, registry)
+                elif entity.get('class') not in registry.classes or entity.get('role') not in ('subject','object','related'): raise ValueError('实体角色无效')
             _occurrences(item, registry, supplied)
+            # Capture the source-semantic contract before ontology binding is
+            # enriched for graph projection.  Core remains reusable when the
+            # ontology is revised; mapping is recomputed separately below.
+            item['statement_core']=_statement_core(item)
             for entity in item['entities']:
                 # Only the local source binder may produce this provenance.
                 entity.pop('ontology_binding',None)
@@ -861,6 +828,7 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
                         entity['ontology_binding'] = reviewed
                         entity['ontology_class_id'] = reviewed['class_id']
                         entity.pop('ontology_mapping_review', None)
+            item['ontology_mapping']=_ontology_mapping(item, registry)
             for legacy_field in ('modality','negation','possibility'):
                 item.pop(legacy_field,None)
             if hasattr(registry,'validate_semantic_relation'):
@@ -1070,12 +1038,13 @@ def _semantic_value(value):
 
 
 def _statement_identity(item,document_id,registry):
-    semantic={key:item.get(key, [] if key in ('entities','conditions','quantities','formulas') else None)
-              for key in ('text','type','entities','conditions','quantities','formulas')}
+    core=item.get('statement_core') or item
+    semantic={key:core.get(key, [] if key == 'entities' else None)
+              for key in ('text','type','entities')}
     semantic['entities']=[{**entity,'label':registry.canonical_label(entity['label'])} for entity in semantic['entities']]
     anchors=item.get('source_anchors') or [{'source_id':key} for s in item['supports'] for key in s['member_keys']]
     anchors=sorted({json_text(a):a for a in anchors}.values(),key=json_text)
-    return identity('statement',document_id,registry.version,_semantic_value(semantic),anchors)
+    return identity('statement',document_id,_semantic_value(semantic),anchors)
 
 
 def persist(store, statements, document_id, registry):
@@ -1101,13 +1070,15 @@ def persist(store, statements, document_id, registry):
                 pending.append(parent)
     for offset,original in enumerate(statements):
         item=deepcopy(original)
+        forbidden = [field for field in ('conditions','quantities','formulas') if field in item]
+        if forbidden:
+            raise ValueError('Statement 不再保存 conditions、quantities、formulas；请先完成迁移')
         if next(schema.iter_errors(item),None) is not None:raise ValueError('持久化陈述不符合本体抽取schema')
         item['supports']=_merge_supports(item.get('supports',[]))
         extraction_id=item.get('extraction_id',f's{offset}')
         if extraction_id in indexed:raise ValueError('批次陈述临时标识重复')
         for entity in item.get('entities',[]):registry.validate_entity(entity)
-        _check_condition_scope(item)
-        _complete_values(item,registry);_occurrences(item,registry)
+        _occurrences(item,registry)
         sid=_statement_identity(item,document_id,registry)
         entity_nodes=[]
         for entity in item['entities']:
@@ -1184,7 +1155,6 @@ def persist(store, statements, document_id, registry):
             previous=node.pop('_previous_scope_ids')
             scope_ids=sorted(set(scope_ids) & set(previous if isinstance(previous,list) else []))
         node['scope_ids']=scope_ids
-        _complete_values(node,registry)
         for support in node['supports']:
             if not support.get('member_keys'):raise ValueError('陈述支持成员为空')
             edges.append({'source':node['id'],'target':support['evidence_id'],'key':identity('support',node['id'],support['evidence_id']),
@@ -1218,7 +1188,7 @@ def persist(store, statements, document_id, registry):
                         'data':{'relation_id':relation['relation_id'],'statement_id':sid,
                                 'ontology_version':registry.version,
                                 'supports':supports,'support_evidence_ids':list(dict.fromkeys(s['evidence_id'] for s in supports)),
-                                'conditions':deepcopy(item.get('conditions',[])),'inherit_values':False}})
+                                'inherit_values':False}})
         node=nodes[sid]
         node.setdefault('_durable_relations',[]).extend(persisted_relations)
     for node in nodes.values():

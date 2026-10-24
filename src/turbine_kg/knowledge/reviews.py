@@ -70,26 +70,5 @@ def apply_formula_reviews(source, annotations):
 
 
 def confirm_statement_formula(statement, source, evidence, *, formula_index, registry):
-    """Update an existing embedded formula only through its exact supported source member."""
-    review=verified_formula_representation(source)
-    if review is None:raise ValueError('来源公式尚无有效用户确认')
-    binding=review['binding']
-    if any(evidence.get(key)!=binding[key] or statement.get(key,binding[key])!=binding[key]
-           for key in ('document_id','revision_id')):
-        raise ValueError('人工确认不能跨文档版本更新陈述')
-    keys={key for support in statement.get('supports',[]) if support['evidence_id']==evidence['id'] for key in support['member_keys']}
-    selected=[member for member in evidence.get('members',[]) if member.get('member_key') in keys and member.get('source_id')==source['id']]
-    # A whole-source correction cannot silently overwrite a different partial
-    # member of that source. Partial text requires its own reviewed source unit.
-    if not selected or any(member.get('locator',{}).get('char_range') not in (None,[0,len(source['text'])]) for member in selected):
-        raise ValueError('公式人工确认未绑定陈述的原生来源成员')
-    if any(any(member.get('locator',{}).get(key)!=binding[key] for key in ('original_hash','physical_page','bbox')) for member in selected):
-        raise ValueError('公式来源成员原件定位与人工确认不一致')
-    formulas=statement.get('formulas',[])
-    if type(formula_index) is not int or not 0<=formula_index<len(formulas):raise ValueError('只能更新现有 embedded formula')
-    result=deepcopy(statement)
-    result['formulas'][formula_index]={**review['formula'],'source_review':{
-        'status':review['status'],'binding':deepcopy(binding),'user_confirmation':deepcopy(review['user_confirmation'])}}
-    from turbine_kg.knowledge.extract import _complete_values
-    _complete_values(result,registry)
-    return result
+    """Formula confirmation belongs to Evidence, not to a Statement field."""
+    raise ValueError('Statement 不再保存 embedded formula；请直接使用已绑定的 Evidence 原文')

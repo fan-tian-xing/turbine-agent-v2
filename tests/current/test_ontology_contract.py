@@ -22,13 +22,13 @@ def facts(source_class, relation, target_class):
 
 def test_hole_requirement_does_not_become_mating_pin_requirement():
     registry = OntologyRegistry()
-    registry.validate_relation('has_requirement', 'Mention', 'Statement', role='quantity_target', statement_type='parameter')
+    registry.validate_relation('has_requirement', 'Mention', 'Statement', role='subject', statement_type='parameter')
     with pytest.raises(ValueError, match='角色'):
         registry.validate_relation('has_requirement', 'Mention', 'Statement', role='object', statement_type='parameter')
     with pytest.raises(ValueError, match='类型'):
         registry.validate_relation('has_requirement', 'Mention', 'Statement', role='subject', statement_type='cause')
     assert registry.navigation(['parameter'], roles=['object']) == []
-    assert registry.navigation(['parameter'], roles=['quantity_target']) == ['has_requirement']
+    assert registry.navigation(['parameter'], roles=['subject']) == ['has_requirement']
 
 
 def test_procedure_and_steps_are_supported_statement_records():
@@ -164,7 +164,7 @@ def test_hierarchy_can_expand_recall_but_has_no_value_inheritance_axiom():
     assert not list(core.triples((None,OWL.propertyChainAxiom,None)))
     assert registry.navigation(['measure'])==['has_measure']
     assert registry.data['navigation_policy']['inherit_measures'] is False
-    assert registry.data['navigation_policy']['inherit_quantities'] is False
+    assert 'inherit_quantities' not in registry.data['navigation_policy']
 
 
 def test_checked_in_owl_and_shapes_match_current_registry():
@@ -200,7 +200,7 @@ def test_persisted_navigation_keeps_quantity_owner_and_statement_support():
     from turbine_kg.knowledge.extract import persist
     registry=OntologyRegistry();store=MemoryStore()
     item={"type":"parameter","text":"壳体尺寸按来源要求。", "entities":[
-        {"label":"壳体","class":"Mention","role":"quantity_target"},
+        {"label":"壳体","class":"Mention","role":"subject"},
         {"label":"管板","class":"Mention","role":"object"},
         {"label":"凝汽器","class":"Mention","role":"related"}],
         "supports":[{"evidence_id":"e","member_keys":["m"]}]}
@@ -242,32 +242,24 @@ def supported_item(**extra):
             'possibility':'confirmed', 'supports':[{'evidence_id':'e', 'member_keys':['m'], 'quotes':[{'member_key':'m', 'text':'来源事实'}]}], **extra}
 
 
-def test_formula_and_quantity_incompleteness_is_rechecked_before_persistence():
+def test_structured_values_are_rejected_before_persistence():
     from turbine_kg.knowledge.extract import persist
     registry=OntologyRegistry(); store=MemoryStore()
-    item=supported_item(entities=[{'label':'部件','class':'Mention','role':'quantity_target'}],
-                        quantities=[{'target':'部件','value':.1,'unit':'mm','location':'测量点','completeness':'complete'}],
-                        formulas=[{'expression':'f=S/500','variables':[{'symbol':'f','meaning':'挠度'},{'symbol':'S','meaning':'跨度'}],
-                                   'units':{'f':'mm'},'completeness':'complete'}])
-    persist(store,[item],'g',registry)
-    quantity=store.nodes['Statement'][0]['quantities'][0]; formula=store.nodes['Statement'][0]['formulas'][0]
-    assert quantity['completeness']=='incomplete' and set(quantity['missing_fields'])=={'parameter','operator'}
-    assert formula['completeness']=='incomplete' and set(formula['missing_fields'])=={'units','conditions'}
-    assert formula['conditions'] is None and formula['calculation_status']=='not_calculated'
-    assert quantity['source_supports']==formula['source_supports']==[{'evidence_id':'e','member_keys':['m']}]
-    assert item['formulas'][0]['completeness']=='complete'  # Caller data is not overwritten.
+    item=supported_item(entities=[{'label':'部件','class':'Mention','role':'subject'}],
+                        quantities=[{'target':'部件','value':.1,'unit':'mm'}],
+                        formulas=[{'expression':'f=S/500'}])
+    with pytest.raises(ValueError, match='不再保存'):
+        persist(store,[item],'g',registry)
+    assert store.nodes=={}
 
 
-def test_complete_source_formula_keeps_variables_units_and_conditions_without_computing():
+def test_source_formula_stays_in_statement_text():
     from turbine_kg.knowledge.extract import persist
     store=MemoryStore()
-    formula={'expression':'f=S/500', 'variables':{'f':'挠度','S':'跨度'}, 'units':{'f':'mm','S':'mm'}, 'conditions':['冷态']}
-    persist(store,[supported_item(formulas=[formula])],'g',OntologyRegistry())
-    result=store.nodes['Statement'][0]['formulas'][0]
-    assert result['completeness']=='complete' and result['missing_fields']==[]
-    assert result['variables']==[{'symbol':'f','meaning':'挠度'},{'symbol':'S','meaning':'跨度'}]
-    assert result['conditions']==['冷态'] and result['calculation_status']=='not_calculated'
-    assert 'result' not in result
+    persist(store,[supported_item(text='来源公式 f=S/500，适用于冷态。')],'g',OntologyRegistry())
+    result=store.nodes['Statement'][0]
+    assert result['text']=='来源公式 f=S/500，适用于冷态。'
+    assert not {'conditions','quantities','formulas'} & set(result)
 
 
 def test_real_occurrence_identity_uses_source_and_time_without_roles():
@@ -391,19 +383,11 @@ def test_scope_source_text_mismatch_blocks_inheritance():
     assert coverage['source_scopes']==[] and coverage['rejected']
 
 
-def test_complete_quantity_requires_explicit_target_binding_and_schema_metadata_types():
+def test_statement_schema_does_not_define_structured_quantity_or_formula_fields():
     from turbine_kg.knowledge.extract import persist
     registry=OntologyRegistry();store=MemoryStore()
-    quantity={'target':'设备','parameter':'间隙','value':.1,'unit':'mm','operator':'le','location':'位置'}
-    persist(store,[supported_item(entities=[{'label':'设备','class':'Mention','role':'quantity_target'}], quantities=[quantity])],'g',registry)
-    assert store.nodes['Statement'][0]['quantities'][0]['completeness']=='complete'
-    persist(store,[supported_item(entities=[{'label':'设备','class':'Mention','role':'object'}], quantities=[quantity])],'g',registry)
-    assert store.nodes['Statement'][1]['quantities'][0]['completeness']=='incomplete' and store.nodes['Statement'][1]['quantities'][0]['missing_fields']==['target_binding']
-    with pytest.raises(ValidationError):
-        validate(supported_item(quantities=[{**quantity,'operator':'invented'}]),registry.extraction_schema())
-    with pytest.raises(ValidationError):
-        validate(supported_item(formulas=[{'expression':'f=S','units':['mm']}]),registry.extraction_schema())
+    assert not {'conditions','quantities','formulas'} & set(registry.extraction_schema()['properties'])
     invalid_store=MemoryStore()
-    with pytest.raises(ValueError,match='持久化陈述'):
-        persist(invalid_store,[supported_item(quantities=[{**quantity,'value':{'fabricated':.1}}])],'g',registry)
+    with pytest.raises(ValueError,match='不再保存'):
+        persist(invalid_store,[supported_item(quantities=[{'target':'设备','value':.1,'unit':'mm'}])],'g',registry)
     assert invalid_store.nodes=={} and invalid_store.links=={}

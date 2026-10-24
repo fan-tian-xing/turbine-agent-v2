@@ -9,7 +9,7 @@ from rdflib import Namespace, RDF, RDFS, OWL, SKOS, Literal, URIRef
 from turbine_kg.knowledge.store import KnowledgeStore
 from turbine_kg.ontology.registry import OntologyRegistry
 from turbine_kg.retrieval.tools import Tools
-from turbine_kg.runtime import Budget, Snapshot
+from turbine_kg.runtime import Budget
 
 
 def test_domain_class_identity_is_stable_across_alias_and_version_changes():
@@ -99,19 +99,10 @@ def test_engineering_definitions_notes_and_sources_have_distinct_rdf_annotations
     assert all('第五章' not in row['definition'] for row in registry.domain_classes.values())
 
 
-def test_archived_registry_keeps_old_active_snapshot_readable():
+def test_only_current_registry_snapshot_is_available():
     old_version = "2af4d5480a10397f7610b978c43bc10d3857a40b8b56a566da991855ce4ede04"
-    old = OntologyRegistry.for_version(old_version)
-    assert old.version == old_version
-    assert old.classes and old.relations
-
-    class ActiveStore:
-        def query(self, *_args, **_kwargs):
-            return [{"id": "old-active", "ontology": old_version}]
-
-    snapshot = KnowledgeStore.snapshot(ActiveStore(), OntologyRegistry().version, (), Budget())
-    assert snapshot.document_ids == ("old-active",)
-    assert snapshot.ontology_version == old_version
+    with pytest.raises(ValueError):
+        OntologyRegistry.for_version(old_version)
 
 
 def test_mixed_active_versions_need_separate_contracts():

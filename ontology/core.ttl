@@ -364,7 +364,7 @@ tk:has_requirement a owl:ObjectProperty ;
             owl:unionOf ( tk:Mention tk:OntologyClass tk:PhysicalObject tk:Activity ) ] ;
     rdfs:range tk:Statement ;
     skos:definition "连接对象、程序或步骤与其工程要求或参数陈述。"@zh-CN ;
-    skos:scopeNote "量值要求关联量值实际所属的对象，配合对象不自动承接要求。"@zh-CN .
+    skos:scopeNote "要求关联直接承担该陈述的主对象，配合对象不自动承接主对象的要求。"@zh-CN .
 
 tk:has_step a owl:ObjectProperty ;
     rdfs:label "包含步骤定义"@zh-CN ;
@@ -381,7 +381,7 @@ tk:has_verification a owl:ObjectProperty ;
     skos:definition "连接对象或措施陈述与评价其状态或效果的验证陈述。"@zh-CN .
 
 tk:ontology a owl:Ontology ;
-    owl:versionIRI <https://turbine.local/ontology#version/6cdb3d15328edb5a8dd9c716c17acb6e9d8fbd27b72fa5a10fcfc15d3b76bbe4> ;
+    owl:versionIRI <https://turbine.local/ontology#version/4a00ec4ce9413a83ac1eec7aaa6390256720aa9945bb02bd681493efb33a273f> ;
     owl:versionInfo "11" .
 
 tk:part_of a owl:ObjectProperty ;

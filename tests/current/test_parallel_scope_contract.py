@@ -36,4 +36,4 @@ def test_structured_quantity_is_rejected_under_minimal_protocol():
                 'supports':[{'evidence_id':'e0','member_keys':['e0m0']}]}]}
     statements,coverage=extract([view],Model(),OntologyRegistry())
     assert not statements and coverage['evidence']['e']['status']=='incomplete'
-    assert '最简知识记录' in coverage['rejected'][0]
+    assert '不再保存' in coverage['rejected'][0]

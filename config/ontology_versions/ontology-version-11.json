@@ -740,10 +740,9 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ],
-      "scope_note": "量值要求关联量值实际所属的对象，配合对象不自动承接要求。"
+      "scope_note": "要求关联直接承担该陈述的主对象，配合对象不自动承接主对象的要求。"
     },
     {
       "id": "has_procedure",
@@ -769,8 +768,7 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ]
     },
     {
@@ -797,8 +795,7 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ]
     },
     {
@@ -825,8 +822,7 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ]
     },
     {
@@ -853,8 +849,7 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ],
       "scope_note": "原因的确定性或可能性由陈述表达，关联本身不等同于确证原因。"
     },
@@ -882,8 +877,7 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ]
     },
     {
@@ -910,8 +904,7 @@
       "requires_statement_support": true,
       "inherit_values": false,
       "statement_roles": [
-        "subject",
-        "quantity_target"
+        "subject"
       ]
     },
     {
@@ -999,11 +992,6 @@
       "id": "related",
       "zh": "相关对象",
       "definition": "来源明确关联的对象；关联不等同于确证原因。"
-    },
-    {
-      "id": "quantity_target",
-      "zh": "量值对象",
-      "definition": "参数或量值实际属于的对象，角色变化不改变实体身份。"
     }
   ],
   "statement_types": [
@@ -1023,8 +1011,6 @@
   "navigation_policy": {
     "hierarchy": "recall_expansion_only",
     "business_hop_limit": 2,
-    "follow_statement_conditions": true,
-    "inherit_quantities": false,
     "inherit_measures": false,
     "requires_supported_statement": true,
     "source_and_condition_edges_count_as_business_hops": false,
@@ -1038,8 +1024,6 @@
     "semantic_relations可用当前实体的source_entity/target_entity索引；跨记录用source_ref/target_ref:{statement_id,entity_index}，省略entity_index表示该Statement，并提供关系独立supports。",
     "类层次由本体审定；组成、步骤归属和步骤先后必须有原文支持，不由同节出现或编号顺序推断。",
     "text忠实保留应、宜、不得及否定原意，不另抽modality、negation、possibility。",
-    "conditions/quantities/formulas是Statement字段，不为条件、数字、公式创建附属图节点。",
-    "quantities明确实际对象、参数、比较符、数值、单位和必要测量位置；未知填null，不从相邻要求补值。",
     "未映射名称保留在Statement和Evidence中，不创建临时术语节点。",
     "既有别名只用于对应同一已审定类，不把更具体对象直接当作宽泛类的同义词。",
     "每条可回答Evidence须至少一条Statement，多项独立要求分别表示；标题和上下文附于Evidence。",
@@ -1050,12 +1034,9 @@
     "mention_storage": "embedded_statement_only",
     "standalone_modality_fields": false,
     "class_hierarchy_root": "Thing",
-    "statement_embedded_fields": [
-      "conditions",
-      "quantities",
-      "formulas"
-    ],
     "statement_identity": "document_semantics_and_original_source_anchors",
-    "retrieval_projection": "embedded_in_evidence"
+    "retrieval_projection": "embedded_in_evidence",
+    "statement_core_mapping": "statement_core保存原始语义与Mention；ontology_mapping单独保存当前本体映射，映射可重算",
+    "statement_text_policy": "条件、数值和公式只保留在Statement.text与Evidence原文中，不拆分为独立字段。"
   }
 }

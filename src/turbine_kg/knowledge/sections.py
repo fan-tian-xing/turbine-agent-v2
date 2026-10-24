@@ -537,7 +537,10 @@ def process_section(path:Path,store,model,registry,scope:dict,*,work_pages=None,
     """Parallel model extraction, followed by serialized persistence."""
     result=prepare_section(path,store,registry,scope,model=model)
     document_id=result['document_id'];pages=result['requested_pages']
-    work=list(scope.get('sample_pages') or pages) if work_pages is None else list(work_pages)
+    # A configured section is processed as a whole by default.  A page list
+    # is reserved for an explicit, bounded recheck (for example after an OCR
+    # repair); configuration must not silently downgrade a chapter to samples.
+    work=list(pages) if work_pages is None else list(work_pages)
     if not work or any(type(p) is not int or p not in pages for p in work):raise ValueError('处理页面必须属于当前章节范围')
     evidence=_rows(store,'Evidence',document_id);indexed={item['id']:item for item in evidence}
     requested_ids=set(evidence_ids or ())

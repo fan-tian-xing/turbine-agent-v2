@@ -32,6 +32,8 @@ def test_minimal_statement_needs_no_modal_flags():
     items,coverage=extract(source(),Model(),OntologyRegistry(),repair=True)
     assert len(items)==1 and coverage['evidence']['source']['status']=='complete'
     assert not {'modality','negation','possibility'} & items[0].keys()
+    assert items[0]['statement_core']['entities'][0]['label']=='部件'
+    assert items[0]['ontology_mapping'][0]['class_id']=='Component'
     assert coverage['attempt_count']==1
 
 
@@ -45,6 +47,16 @@ def test_model_without_profile_uses_the_same_minimal_protocol():
             return generated(row)
     items,coverage=extract(source(),Model(),OntologyRegistry(),repair=True)
     assert len(items)==1 and coverage['evidence']['source']['status']=='complete'
+
+
+def test_scope_spelling_is_kept_as_a_source_backed_fact():
+    class Model:
+        def call(self,system,payload,budget):
+            row=statement();row.pop('quantities');row['type']='scope'
+            return generated(row)
+    items,coverage=extract(source(),Model(),OntologyRegistry(),repair=True,max_retries=0)
+    assert len(items)==1 and items[0]['type']=='fact'
+    assert coverage['evidence']['source']['status']=='complete'
 
 
 def test_second_retry_is_source_bound_and_only_success_is_accepted():
@@ -84,4 +96,4 @@ def test_model_without_profile_cannot_add_structured_numeric_projection():
             return generated(statement())
     items,coverage=extract(source(),Model(),OntologyRegistry(),repair=True,max_retries=0)
     assert not items and coverage['evidence']['source']['status']=='incomplete'
-    assert '最简知识记录不得附加条件、量值或公式字段' in coverage['rejected'][0]
+    assert 'Statement 不再保存' in coverage['rejected'][0]

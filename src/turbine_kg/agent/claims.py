@@ -3,6 +3,7 @@ import re
 from decimal import Decimal
 from copy import deepcopy
 from turbine_kg.runtime import identity
+from turbine_kg.knowledge.quantities import NUMBER_PATTERN, UNIT_PATTERN
 
 
 _REFERENCE_NUMBER = r'(?:\d+(?:\s*[.\-]\s*\d+)*|[A-Z](?:\s*\.\s*\d+)*)'
@@ -49,13 +50,13 @@ def _without_identifiers(text):
     return text
 
 
-_NUMBER = r'[-+]?(?:\d+(?:\.\d+)?|\.\d+)'
-_UNIT = r'(?:mm/m|cm/m|m/m|MPa|kPa|Pa|mm|cm|m|kN|N|kg|t|°C|℃|%|r/min|rpm|Hz|s|min|h)'
+_NUMBER = NUMBER_PATTERN
+_UNIT = UNIT_PATTERN
 
 
 def _quantities(text):
-    from unicodedata import normalize
-    return {(float(value),unit) for value,unit in re.findall('('+_NUMBER+r')\s*('+_UNIT+r')(?![A-Za-z/])',normalize('NFKC',text))}
+    from turbine_kg.knowledge.quantities import extract_quantities
+    return extract_quantities(text)
 
 
 def _normalized_quantities(quantities):
@@ -398,6 +399,20 @@ def binding_error(claim,reads,visuals,*,user_facts=None,task=None):
         reference_sources=cited+'\n'+normalize('NFKC',_structural_context_text(claim,reads))+'\n'+'\n'.join(row['title'] for row in citations_for(claim,reads))
         if _missing_references(_references(displayed),_references(reference_sources)): return '回答的表图或条款编号没有来源支持'
         if not _document_codes(displayed).issubset(_document_codes(reference_sources)): return '回答的资料标识或版本没有来源支持'
+    return None
+
+
+def numeric_warning(claim, reads, *, user_facts=None, task=None):
+    """Literal-number differences are review hints, never deletion decisions.
+
+    Site values and arithmetic results need not occur in a quoted standard.
+    The existing semantic review evaluates their engineering use in context.
+    """
+    if claim.get('basis') in ('source','inference'):
+        from turbine_kg.knowledge.quantities import normalize_quantity_text
+        cited=normalize_quantity_text('\n'.join(row['quote'] for row in citations_for(claim,reads)))
+        displayed=normalize_quantity_text('\n'.join([claim['text'],*[str(value) for field in ('conditions','verification','assumptions') for value in (claim.get(field) or [])]]))
+        reference_sources=cited+'\n'+_structural_context_text(claim,reads)
         # Verified structural identifiers are not engineering quantities. Keep
         # checking every remaining value against the explicitly bound members.
         values=lambda text:{float(value) for value in re.findall(r'(?<![A-Za-z\d.])('+_NUMBER+r')(?![\d.])',_without_identifiers(text))}
@@ -463,8 +478,8 @@ def validate(claims,tools,*,facts,tasks=None):
     """Run deterministic answer checks and return source-bound claims.
 
     This function does not send claims back to a second model: source
-    membership, task binding, provenance, numeric units and image transport
-    are checked by code. Other answer stages may call the model separately.
+    membership, task binding, provenance and image transport are checked by
+    code. Numeric differences are advisory; semantic review checks meaning.
     """
     pending=[];rejected=[]
     for index,claim in enumerate(claims):
@@ -476,7 +491,12 @@ def validate(claims,tools,*,facts,tasks=None):
             rejected.append({'claim':claim,'reason':'陈述未绑定有效对象子问题任务'});continue
         error=binding_error(claim,tools.reads,tools.visuals,user_facts=facts,task=task)
         if error: rejected.append({'claim':claim,'reason':error})
-        else: pending.append(claim)
+        else:
+            pending.append(claim)
+            warning=numeric_warning(claim,tools.reads,user_facts=facts,task=task)
+            if warning and hasattr(tools,'diagnostics'):
+                tools.diagnostics.append({'kind':'numeric_review_hint','claim_id':claim['id'],
+                    'reason':warning,'blocking':False,'text':claim['text']})
     if not pending: return [],rejected
     image_candidates=[{'claim':claim} for claim in pending if claim.get('basis')=='image']
     if image_candidates:

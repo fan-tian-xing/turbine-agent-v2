@@ -1,0 +1,1061 @@
+{
+  "version": "11",
+  "namespace": "https://turbine.local/ontology#",
+  "classes": [
+    {
+      "id": "PhysicalObject",
+      "zh": "物理对象",
+      "parent": "Thing",
+      "definition": "具有物质组成、可作为安装或检查对象的实体。",
+      "aliases": [],
+      "extractable": true
+    },
+    {
+      "id": "Equipment",
+      "zh": "设备",
+      "parent": "PhysicalObject",
+      "definition": "为实现工程功能而设计的物理对象。",
+      "aliases": [],
+      "extractable": true
+    },
+    {
+      "id": "Component",
+      "zh": "部件",
+      "parent": "PhysicalObject",
+      "definition": "构成设备或系统的结构或功能单元；具体所属整体由组成关系表达。",
+      "aliases": [],
+      "extractable": true
+    },
+    {
+      "id": "System",
+      "zh": "工程系统",
+      "parent": "PhysicalObject",
+      "definition": "由相互作用的物理对象组成、共同实现工程功能的整体。",
+      "aliases": [],
+      "extractable": true
+    },
+    {
+      "id": "Tool",
+      "zh": "工具",
+      "parent": "PhysicalObject",
+      "definition": "用于辅助安装、检查或操作的物理对象。",
+      "aliases": [],
+      "extractable": true
+    },
+    {
+      "id": "Activity",
+      "zh": "活动",
+      "parent": "Thing",
+      "definition": "由参与对象在一定时间内进行的操作或过程。",
+      "aliases": [],
+      "extractable": true
+    }
+  ],
+  "record_types": [
+    {
+      "id": "Mention",
+      "zh": "来源提及",
+      "definition": "原文对对象或活动的名称提及；只内嵌保存于知识记录，不代表实际实例或独立检索节点。",
+      "aliases": [],
+      "extractable": true
+    },
+    {
+      "id": "OntologyClass",
+      "zh": "类存储代理",
+      "definition": "对应已审定本体类的图存储表示；不是领域业务类或现场实例。",
+      "aliases": [],
+      "extractable": false
+    },
+    {
+      "id": "Statement",
+      "zh": "知识记录",
+      "definition": "表达一项有来源的要求、作业、检查、状态、原因或措施的记录。",
+      "aliases": [],
+      "extractable": false
+    },
+    {
+      "id": "Evidence",
+      "zh": "来源证据",
+      "definition": "按可独立理解与引用的上下文组装的资料原文及其来源定位。",
+      "aliases": [],
+      "extractable": false
+    },
+    {
+      "id": "TechnicalDocument",
+      "zh": "资料记录",
+      "definition": "书籍或规范的版本及来源标识记录。",
+      "aliases": [],
+      "extractable": false
+    }
+  ],
+  "domain_classes": [
+    {
+      "id": "HeatExchanger",
+      "label": "热交换器",
+      "parent": "Equipment",
+      "definition": "在不同温度的介质之间传递热量的设备。",
+      "aliases": [],
+      "scope_note": "包含通过壁面传热或介质直接接触传热的设备。",
+      "definition_sources": [
+        "https://www.gevernova.com/gas-power/products/heat-exchangers"
+      ]
+    },
+    {
+      "id": "SurfaceHeatExchanger",
+      "label": "表面式热交换器",
+      "parent": "HeatExchanger",
+      "definition": "通过固体传热壁面在相互隔离的介质之间传递热量的热交换器。",
+      "aliases": []
+    },
+    {
+      "id": "Condenser",
+      "label": "凝汽器",
+      "parent": "HeatExchanger",
+      "definition": "通过移除汽轮机排汽的热量，使蒸汽凝结为液态水的热交换设备。",
+      "aliases": [],
+      "definition_sources": [
+        "https://www.gevernova.com/gas-power/products/heat-exchangers"
+      ]
+    },
+    {
+      "id": "Heater",
+      "label": "加热器",
+      "parent": "Equipment",
+      "definition": "向介质或对象提供热量以提高其温度的设备。",
+      "aliases": [],
+      "scope_note": "本类采用广义加热设备含义，不限定热源或加热原理。"
+    },
+    {
+      "id": "HighPressureHeater",
+      "label": "高压加热器",
+      "parent": "Heater",
+      "definition": "布置于回热系统高压给水段、利用蒸汽加热给水的加热器。",
+      "aliases": [],
+      "definition_sources": [
+        "https://www.gevernova.com/content/dam/gepower-steam/global/en_US/documents/Steam-Product-Catalog.pdf"
+      ],
+      "additional_parents": [
+        "HeatExchanger"
+      ]
+    },
+    {
+      "id": "LowPressureHeater",
+      "label": "低压加热器",
+      "parent": "Heater",
+      "definition": "布置于回热系统低压凝结水段、利用蒸汽加热凝结水的加热器。",
+      "aliases": [],
+      "definition_sources": [
+        "https://www.gevernova.com/content/dam/gepower-steam/global/en_US/documents/Steam-Product-Catalog.pdf"
+      ],
+      "additional_parents": [
+        "HeatExchanger"
+      ]
+    },
+    {
+      "id": "Deaerator",
+      "label": "除氧器",
+      "parent": "Equipment",
+      "definition": "用于去除水中溶解氧及其他溶解气体的设备。",
+      "aliases": [],
+      "definition_sources": [
+        "https://www.spiraxsarco.com/learn-about-steam/the-boiler-house/pressurised-deaerators"
+      ]
+    },
+    {
+      "id": "Ejector",
+      "label": "抽气器",
+      "parent": "Equipment",
+      "definition": "利用工作流体射流卷吸并排出气体或蒸汽的抽气设备。",
+      "aliases": []
+    },
+    {
+      "id": "SteamJetEjector",
+      "label": "射汽抽气器",
+      "parent": "Ejector",
+      "definition": "以蒸汽为工作介质，利用高速蒸汽射流卷吸并排出气体或蒸汽的抽气器。",
+      "aliases": [],
+      "definition_sources": [
+        "https://www.s-k.com/steam-jet-vacuum/single-stage-steam-jet-ejectors/"
+      ]
+    },
+    {
+      "id": "WaterJetEjector",
+      "label": "射水抽气器",
+      "parent": "Ejector",
+      "definition": "以压力水为工作介质，利用高速水射流卷吸并排出气体或蒸汽的抽气器。",
+      "aliases": [],
+      "definition_sources": [
+        "https://www.s-k.com/exhausters-compressors/single-nozzle-water-jet-exhausters/"
+      ]
+    },
+    {
+      "id": "WaterJetPump",
+      "label": "射水泵",
+      "parent": "Equipment",
+      "definition": "向射水抽气器供给有压工作水的泵。",
+      "aliases": [],
+      "scope_note": "名称指射水抽气系统的供水泵，与利用水射流抽气的射水抽气器区分。"
+    },
+    {
+      "id": "Tank",
+      "label": "箱罐",
+      "parent": "Equipment",
+      "definition": "用于容纳、储存或缓冲介质的箱形或罐形设备。",
+      "aliases": []
+    },
+    {
+      "id": "WaterTank",
+      "label": "水箱",
+      "parent": "Tank",
+      "definition": "用于容纳水的箱罐。",
+      "aliases": []
+    },
+    {
+      "id": "PressureVessel",
+      "label": "压力容器",
+      "parent": "Equipment",
+      "definition": "用于容纳承压介质的封闭容器。",
+      "aliases": []
+    },
+    {
+      "id": "DesuperheatingPressureReducingDevice",
+      "label": "减温减压装置",
+      "parent": "Equipment",
+      "definition": "将蒸汽温度和压力降低至所需工况的设备。",
+      "aliases": [
+        "减温减压器"
+      ]
+    },
+    {
+      "id": "AirCoolingDevice",
+      "label": "空冷装置",
+      "parent": "System",
+      "definition": "以空气为最终冷却介质，通过换热设备及辅助设施排出热量的工程系统。",
+      "aliases": []
+    },
+    {
+      "id": "VacuumSystem",
+      "label": "真空系统",
+      "parent": "System",
+      "definition": "由抽气设备、连接管路及辅助对象组成，用于建立或维持低于大气压力工况的工程系统。",
+      "aliases": []
+    },
+    {
+      "id": "Nozzle",
+      "label": "喷嘴",
+      "parent": "Component",
+      "definition": "用于形成、加速或定向输送流体射流的流道部件。",
+      "aliases": [],
+      "scope_note": "此处指形成流体射流的喷嘴，不将工艺设备的接管接口自动视为同义词。"
+    },
+    {
+      "id": "Diffuser",
+      "label": "扩散管",
+      "parent": "Component",
+      "definition": "通过流道扩展使流体减速并回收静压的部件。",
+      "aliases": []
+    },
+    {
+      "id": "PipeCompensator",
+      "label": "管道补偿器",
+      "parent": "Component",
+      "definition": "装入管路、用于补偿管道位移或变形的部件。",
+      "aliases": []
+    },
+    {
+      "id": "Installation",
+      "label": "安装",
+      "parent": "Activity",
+      "definition": "将设备或部件就位、连接并形成预定装配状态的活动。",
+      "aliases": []
+    },
+    {
+      "id": "Inspection",
+      "label": "检查",
+      "parent": "Activity",
+      "definition": "通过观察、测量或核查评价对象状态及符合性的活动。",
+      "aliases": []
+    },
+    {
+      "id": "TestActivity",
+      "label": "试验",
+      "parent": "Activity",
+      "definition": "在规定条件下施加作用或开展测量，以确定对象性能、状态或符合性的活动。",
+      "aliases": []
+    },
+    {
+      "id": "HydrostaticTest",
+      "label": "水压试验",
+      "parent": "TestActivity",
+      "definition": "以水为试验介质施加压力，检验对象性能或状态的试验。",
+      "aliases": []
+    },
+    {
+      "id": "HydrostaticTightnessTest",
+      "label": "严密性水压试验",
+      "parent": "HydrostaticTest",
+      "definition": "以水为试验介质施加压力，检验对象严密性的试验。",
+      "aliases": [],
+      "additional_parents": [
+        "TightnessTest"
+      ]
+    },
+    {
+      "id": "TrialOperation",
+      "label": "试运行",
+      "parent": "Activity",
+      "definition": "在正式运行前通过运行设备或系统检查其功能和运行状态的活动。",
+      "aliases": []
+    },
+    {
+      "id": "Shell",
+      "label": "壳体",
+      "parent": "Component",
+      "definition": "构成设备外部边界、容纳或支承内部结构的部件。",
+      "aliases": []
+    },
+    {
+      "id": "CoolingTube",
+      "label": "冷却管",
+      "parent": "Component",
+      "definition": "供冷却介质流动并参与换热的管状部件。",
+      "aliases": []
+    },
+    {
+      "id": "TubeSheet",
+      "label": "管板",
+      "parent": "Component",
+      "definition": "开设管孔并用于定位或连接换热管的板状部件。",
+      "aliases": []
+    },
+    {
+      "id": "SupportSpring",
+      "label": "支持弹簧",
+      "parent": "Component",
+      "definition": "用于支承载荷并允许弹性位移的弹簧部件。",
+      "aliases": [
+        "支撑弹簧"
+      ]
+    },
+    {
+      "id": "TubeBundle",
+      "label": "管束",
+      "parent": "Component",
+      "definition": "由多根管按规定布局组成的部件组合。",
+      "aliases": []
+    },
+    {
+      "id": "Assembly",
+      "label": "组装",
+      "parent": "Activity",
+      "definition": "将部件按规定位置组合并连接为整体的活动。",
+      "aliases": [
+        "装配"
+      ]
+    },
+    {
+      "id": "TubeInsertion",
+      "label": "穿管",
+      "parent": "Activity",
+      "definition": "将管材穿入相应孔或支承结构的作业。",
+      "aliases": [
+        "穿装"
+      ]
+    },
+    {
+      "id": "TubeExpansion",
+      "label": "胀接",
+      "parent": "Activity",
+      "definition": "通过管端塑性扩张形成连接的作业。",
+      "aliases": []
+    },
+    {
+      "id": "Welding",
+      "label": "焊接",
+      "parent": "Activity",
+      "definition": "通过焊接方法使材料形成连接或堆敷的作业。",
+      "aliases": []
+    },
+    {
+      "id": "Cylinder",
+      "label": "汽轮机汽缸",
+      "parent": "Component",
+      "definition": "汽轮机中容纳通流部分并形成蒸汽流动空间的汽缸部件。",
+      "aliases": [
+        "汽缸"
+      ],
+      "scope_note": "压力等级、内外缸及排汽部位由具体来源限定。 来源：DL/T 5190.3—2019，5.2.14、5.2.13、5.2.12、5.11.2、5.2.3。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.2.14",
+        "urn:standard:DLT5190.3:2019:clause:5.2.13",
+        "urn:standard:DLT5190.3:2019:clause:5.2.12",
+        "urn:standard:DLT5190.3:2019:clause:5.11.2",
+        "urn:standard:DLT5190.3:2019:clause:5.2.3"
+      ]
+    },
+    {
+      "id": "Shim",
+      "label": "垫铁",
+      "parent": "Component",
+      "definition": "在设备安装中用于支承载荷和调整位置的垫块。",
+      "aliases": [],
+      "scope_note": "梯形、永久、埋置式等形状或使用状态分别保留，不与基础或底座合并。 来源：DL/T 5190.3—2019，5.1.6、5.3.4、5.1.4、5.2.9、5.3.9、5.2.12。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.1.6",
+        "urn:standard:DLT5190.3:2019:clause:5.3.4",
+        "urn:standard:DLT5190.3:2019:clause:5.1.4",
+        "urn:standard:DLT5190.3:2019:clause:5.2.9",
+        "urn:standard:DLT5190.3:2019:clause:5.3.9",
+        "urn:standard:DLT5190.3:2019:clause:5.2.12"
+      ]
+    },
+    {
+      "id": "Pipe",
+      "label": "管道",
+      "parent": "Component",
+      "definition": "用于输送介质或连通流体设备的管道部件。",
+      "aliases": [],
+      "scope_note": "用途、介质、端点、所属系统及临时状态由具体来源限定；换热冷却管仍按冷却管类表达。 来源：DL/T 5190.3—2019，5.8.2、5.2.2、5.7.4、5.3.14、5.9.2、5.9.5、5.2.12、5.7.8、5.7.7、5.2.18、5.6.9、5.9.1、5.6.5、5.9.3、5.8.4、5.2.3、5.2.19、5.10.5、5.4.16、5.10.3、5.8.5、5.3.13、5.3.10、5.2.17。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.8.2",
+        "urn:standard:DLT5190.3:2019:clause:5.2.2",
+        "urn:standard:DLT5190.3:2019:clause:5.7.4",
+        "urn:standard:DLT5190.3:2019:clause:5.3.14",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.2.12",
+        "urn:standard:DLT5190.3:2019:clause:5.7.8",
+        "urn:standard:DLT5190.3:2019:clause:5.7.7",
+        "urn:standard:DLT5190.3:2019:clause:5.2.18",
+        "urn:standard:DLT5190.3:2019:clause:5.6.9",
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.6.5",
+        "urn:standard:DLT5190.3:2019:clause:5.9.3",
+        "urn:standard:DLT5190.3:2019:clause:5.8.4",
+        "urn:standard:DLT5190.3:2019:clause:5.2.3",
+        "urn:standard:DLT5190.3:2019:clause:5.2.19",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5",
+        "urn:standard:DLT5190.3:2019:clause:5.4.16",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3",
+        "urn:standard:DLT5190.3:2019:clause:5.8.5",
+        "urn:standard:DLT5190.3:2019:clause:5.3.13",
+        "urn:standard:DLT5190.3:2019:clause:5.3.10",
+        "urn:standard:DLT5190.3:2019:clause:5.2.17"
+      ]
+    },
+    {
+      "id": "ExhaustPipe",
+      "label": "排汽管道",
+      "parent": "Pipe",
+      "definition": "用于输送设备排出蒸汽的管道。",
+      "aliases": [
+        "排汽管"
+      ],
+      "scope_note": "所属系统与排汽对象由具体来源限定，不将泛称排气管自动归入本类。 来源：DL/T 5190.3—2019，5.9.1、5.9.2、5.9.4、5.9.5、5.7.4、5.3.12。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.4",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.7.4",
+        "urn:standard:DLT5190.3:2019:clause:5.3.12"
+      ]
+    },
+    {
+      "id": "Valve",
+      "label": "阀门",
+      "parent": "Component",
+      "definition": "用于启闭流路或控制流体流动的阀类部件。",
+      "aliases": [],
+      "scope_note": "调节、截止、止回和收球等具体用途保留为来源限定，不将各类阀件视为同一实例。 来源：DL/T 5190.3—2019，5.9.5、5.9.2、5.7.2、5.10.3、5.7.3、5.10.4、5.8.5、5.2.19、5.8.3、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.7.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3",
+        "urn:standard:DLT5190.3:2019:clause:5.7.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.4",
+        "urn:standard:DLT5190.3:2019:clause:5.8.5",
+        "urn:standard:DLT5190.3:2019:clause:5.2.19",
+        "urn:standard:DLT5190.3:2019:clause:5.8.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "SafetyValve",
+      "label": "安全阀",
+      "parent": "Valve",
+      "definition": "用于超压保护、在规定压力条件下开启泄放介质的阀门。",
+      "aliases": [],
+      "scope_note": "脉冲式、全启式等型式及整定要求按具体来源保留。 来源：DL/T 5190.3—2019，5.5.5、5.10.3、5.9.2、5.10.2、5.7.6、5.6.5、5.11.3、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.5.5",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.2",
+        "urn:standard:DLT5190.3:2019:clause:5.7.6",
+        "urn:standard:DLT5190.3:2019:clause:5.6.5",
+        "urn:standard:DLT5190.3:2019:clause:5.11.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "SteamTrap",
+      "label": "疏水器",
+      "parent": "Component",
+      "definition": "用于蒸汽设备或管路疏水的装置。",
+      "aliases": [],
+      "scope_note": "二级疏水等所在回路按来源保留；本轮不另建立蒸汽疏水阀的细分类。 来源：DL/T 5190.3—2019，5.8.2、5.9.5、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.8.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "Radiator",
+      "label": "空冷散热器",
+      "parent": "HeatExchanger",
+      "definition": "在空冷装置中向空气散热的换热设备。",
+      "aliases": [],
+      "scope_note": "与管束、散热翅片、散热器框架及构造尚待确认的散热片区分；泛称散热器仅在空冷上下文中映射。 来源：DL/T 5190.3—2019，5.9.1、5.4.7、5.4.9、5.9.5、5.9.4。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.4.7",
+        "urn:standard:DLT5190.3:2019:clause:5.4.9",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.9.4"
+      ]
+    },
+    {
+      "id": "HeatTransferFin",
+      "label": "散热翅片",
+      "parent": "Component",
+      "definition": "附于换热管等部件、用于扩展换热表面的翅片。",
+      "aliases": [],
+      "scope_note": "保存所属管束或换热部件；不将含义未确定的散热片直接作为本类别名。 来源：DL/T 5190.3—2019，5.3.8、5.4.7、5.3.10。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.3.8",
+        "urn:standard:DLT5190.3:2019:clause:5.4.7",
+        "urn:standard:DLT5190.3:2019:clause:5.3.10"
+      ]
+    },
+    {
+      "id": "LevelGauge",
+      "label": "水位计",
+      "parent": "Component",
+      "definition": "用于指示或显示水位的仪表。",
+      "aliases": [],
+      "scope_note": "就地、远方、玻璃型及临时高位用途分别保存为型式或场景。 来源：DL/T 5190.3—2019，5.2.18、5.6.1、5.9.2、5.9.5、5.5.1、5.9.3、5.10.2、5.10.3。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.2.18",
+        "urn:standard:DLT5190.3:2019:clause:5.6.1",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.5.1",
+        "urn:standard:DLT5190.3:2019:clause:5.9.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3"
+      ]
+    },
+    {
+      "id": "LevelController",
+      "label": "水位调节装置",
+      "parent": "Component",
+      "definition": "用于调节设备或容器水位的装置。",
+      "aliases": [
+        "水位调整器"
+      ],
+      "scope_note": "水位调整器与水位调节装置共用功能类别，不据此判为同一实例。 来源：DL/T 5190.3—2019，5.5.4、5.10.2、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.5.4",
+        "urn:standard:DLT5190.3:2019:clause:5.10.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "LevelAlarmDevice",
+      "label": "水位报警装置",
+      "parent": "Component",
+      "definition": "在水位满足规定报警条件时发出报警的装置。",
+      "aliases": [],
+      "scope_note": "高低水位报警信号属于状态或输出，不能直接映射为物理装置。 来源：DL/T 5190.3—2019，5.6.1、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.6.1",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "OverfillProtectionSystem",
+      "label": "高压加热器满水保护系统",
+      "parent": "System",
+      "definition": "用于高压加热器满水保护、由相关阀件和控制保护部件组成的系统。",
+      "aliases": [],
+      "scope_note": "满水保护装置仅在明确高压加热器上下文中映射，参与部件分别保留。 来源：DL/T 5190.3—2019，5.5.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.5.5"
+      ]
+    },
+    {
+      "id": "BallCleaningSystem",
+      "label": "凝汽器胶球清洗装置",
+      "parent": "System",
+      "definition": "利用胶球及相关输送、分路和回收部件清洗凝汽器换热管的装置系统。",
+      "aliases": [],
+      "scope_note": "胶球泵、胶球分路装置、胶球回收网及相关管道保持不同对象身份。 来源：DL/T 5190.3—2019，5.2.19。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.2.19"
+      ]
+    },
+    {
+      "id": "DirectAirCoolingSystem",
+      "label": "直接空冷装置",
+      "parent": "AirCoolingDevice",
+      "definition": "利用空气直接冷却并凝结汽轮机排汽的空冷装置。",
+      "aliases": [],
+      "scope_note": "不将整个直接空冷机组、排汽装置或散热器当作本类别名。 来源：DL/T 5190.3—2019，5.9.4。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.4"
+      ]
+    },
+    {
+      "id": "IndirectAirCoolingSystem",
+      "label": "间接空冷装置",
+      "parent": "AirCoolingDevice",
+      "definition": "通过中间冷却介质向空气传递热量的空冷装置。",
+      "aliases": [],
+      "scope_note": "间接冷却装置仅在空冷系统上下文中映射。 来源：DL/T 5190.3—2019，5.11.2、5.4.15。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.11.2",
+        "urn:standard:DLT5190.3:2019:clause:5.4.15"
+      ]
+    },
+    {
+      "id": "TightnessTest",
+      "label": "严密性试验",
+      "parent": "TestActivity",
+      "definition": "以检查泄漏和严密性为目的的试验。",
+      "aliases": [],
+      "scope_note": "水压、灌水和风压方式按原文区分，试验参数不从上位类继承。 来源：DL/T 5190.3—2019，5.9.4、5.11.2。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.4",
+        "urn:standard:DLT5190.3:2019:clause:5.11.2"
+      ]
+    },
+    {
+      "id": "FillingLeakTest",
+      "label": "灌水查漏试验",
+      "parent": "TightnessTest",
+      "definition": "通过向对象灌水检查是否泄漏的严密性试验。",
+      "aliases": [
+        "灌水查漏"
+      ],
+      "scope_note": "灌水试验需按来源确认查漏目的；不默认等同于施加规定压力的严密性水压试验。 来源：DL/T 5190.3—2019，5.9.1、5.11.2。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.11.2"
+      ]
+    },
+    {
+      "id": "AirPressureLeakTest",
+      "label": "风压查漏试验",
+      "parent": "TightnessTest",
+      "definition": "通过施加空气压力检查泄漏的严密性试验。",
+      "aliases": [
+        "风压查漏"
+      ],
+      "scope_note": "试验压力、压降及检查方式由相应条款提供。 来源：DL/T 5190.3—2019，5.9.1。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1"
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "id": "part_of",
+      "zh": "组成于",
+      "domain": [
+        "PhysicalObject",
+        "OntologyClass",
+        "Mention"
+      ],
+      "range": [
+        "PhysicalObject",
+        "OntologyClass",
+        "Mention"
+      ],
+      "navigation": true,
+      "definition": "来源明确的部分与整体关系；类代理之间描述种类层面的组成，不能据此断言某个实际设备的归属。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "endpoint_pairs": [
+        [
+          "PhysicalObject",
+          "PhysicalObject"
+        ],
+        [
+          "OntologyClass",
+          "OntologyClass"
+        ],
+        [
+          "Mention",
+          "Mention"
+        ],
+        [
+          "Mention",
+          "OntologyClass"
+        ],
+        [
+          "OntologyClass",
+          "Mention"
+        ]
+      ],
+      "scope_note": "种类之间的组成关联与实际对象之间的组成事实分别表示，不跨层混接。"
+    },
+    {
+      "id": "has_requirement",
+      "zh": "要求",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "requirement",
+        "parameter"
+      ],
+      "definition": "连接对象、程序或步骤与其工程要求或参数陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ],
+      "scope_note": "量值要求关联量值实际所属的对象，配合对象不自动承接要求。"
+    },
+    {
+      "id": "has_procedure",
+      "zh": "程序",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "procedure",
+        "step"
+      ],
+      "definition": "连接对象与针对该对象的作业程序陈述或程序定义。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_anomaly",
+      "zh": "异常",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "anomaly",
+        "observation"
+      ],
+      "definition": "连接对象与描述其异常或观察结果的陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_inspection",
+      "zh": "检查",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "inspection"
+      ],
+      "definition": "连接对象、程序、步骤或陈述与相应的检查陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_cause",
+      "zh": "有依据的可能原因",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "cause"
+      ],
+      "definition": "连接对象或异常陈述与解释其原因的陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ],
+      "scope_note": "原因的确定性或可能性由陈述表达，关联本身不等同于确证原因。"
+    },
+    {
+      "id": "has_measure",
+      "zh": "措施",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "measure"
+      ],
+      "definition": "连接对象或异常陈述与针对它的处置措施陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_verification",
+      "zh": "验证",
+      "domain": [
+        "Mention",
+        "OntologyClass",
+        "PhysicalObject",
+        "Activity",
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "statement_types": [
+        "verification"
+      ],
+      "definition": "连接对象或措施陈述与评价其状态或效果的验证陈述。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [
+        "subject",
+        "quantity_target"
+      ]
+    },
+    {
+      "id": "has_step",
+      "zh": "包含步骤定义",
+      "domain": [
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "definition": "来源明确的程序记录与步骤记录归属。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "scope_note": "表示程序规定的步骤组织，不表示现场已经执行。",
+      "source_statement_types": [
+        "procedure"
+      ],
+      "target_statement_types": [
+        "step"
+      ]
+    },
+    {
+      "id": "step_precedes",
+      "zh": "步骤定义先于",
+      "domain": [
+        "Statement"
+      ],
+      "range": [
+        "Statement"
+      ],
+      "navigation": true,
+      "definition": "来源明确规定的步骤记录执行先后；条款编号不自动表示顺序。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": true,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "scope_note": "规定顺序与实际活动顺序分别表示。",
+      "source_statement_types": [
+        "step"
+      ],
+      "target_statement_types": [
+        "step"
+      ]
+    },
+    {
+      "id": "supported_by",
+      "zh": "证据支持",
+      "domain": [
+        "Statement"
+      ],
+      "range": [
+        "Evidence"
+      ],
+      "navigation": false,
+      "definition": "连接陈述与支持该陈述的来源证据。",
+      "direction": "source_to_target",
+      "aliases": [],
+      "extractable": false,
+      "requires_statement_support": true,
+      "inherit_values": false,
+      "statement_roles": [],
+      "scope_note": "支持关系定位到证据中的具体成员，可以多对多。"
+    }
+  ],
+  "statement_roles": [
+    {
+      "id": "subject",
+      "zh": "主对象",
+      "definition": "陈述直接提出要求、活动或状态的对象。"
+    },
+    {
+      "id": "object",
+      "zh": "作用或配合对象",
+      "definition": "参与活动或配合关系的对象，不自动承接主对象的要求或量值。"
+    },
+    {
+      "id": "related",
+      "zh": "相关对象",
+      "definition": "来源明确关联的对象；关联不等同于确证原因。"
+    },
+    {
+      "id": "quantity_target",
+      "zh": "量值对象",
+      "definition": "参数或量值实际属于的对象，角色变化不改变实体身份。"
+    }
+  ],
+  "statement_types": [
+    "requirement",
+    "parameter",
+    "procedure",
+    "step",
+    "anomaly",
+    "observation",
+    "inspection",
+    "cause",
+    "measure",
+    "verification",
+    "fact",
+    "limitation"
+  ],
+  "navigation_policy": {
+    "hierarchy": "recall_expansion_only",
+    "business_hop_limit": 2,
+    "follow_statement_conditions": true,
+    "inherit_quantities": false,
+    "inherit_measures": false,
+    "requires_supported_statement": true,
+    "source_and_condition_edges_count_as_business_hops": false,
+    "evidence_fulltext_recall": true
+  },
+  "extraction_rules": [
+    "实体角色表示本条知识中对象的作用，不用于生成实体身份。",
+    "书籍中的通用对象和活动名称使用Mention，能确定种类时提供ontology_class_id；只保存来源提及，绝不据此创建现场设备或实际活动。",
+    "真实物理对象或已发生活动使用相应业务类，必须有来源明确的occurrence身份。",
+    "对象、活动分开表示。以设备名称、具体位置或当前工况修饰的活动不另建组合类；适用对象与活动通过同一Statement表达。",
+    "semantic_relations可用当前实体的source_entity/target_entity索引；跨记录用source_ref/target_ref:{statement_id,entity_index}，省略entity_index表示该Statement，并提供关系独立supports。",
+    "类层次由本体审定；组成、步骤归属和步骤先后必须有原文支持，不由同节出现或编号顺序推断。",
+    "text忠实保留应、宜、不得及否定原意，不另抽modality、negation、possibility。",
+    "conditions/quantities/formulas是Statement字段，不为条件、数字、公式创建附属图节点。",
+    "quantities明确实际对象、参数、比较符、数值、单位和必要测量位置；未知填null，不从相邻要求补值。",
+    "未映射名称保留在Statement和Evidence中，不创建临时术语节点。",
+    "既有别名只用于对应同一已审定类，不把更具体对象直接当作宽泛类的同义词。",
+    "每条可回答Evidence须至少一条Statement，多项独立要求分别表示；标题和上下文附于Evidence。",
+    "资料版本、页码、条款及引用文字由Evidence提供；章节处理范围由导入配置管理，不限制本体类的业务适用范围。"
+  ],
+  "storage_policy": {
+    "unreviewed_terms": "statement_only",
+    "mention_storage": "embedded_statement_only",
+    "standalone_modality_fields": false,
+    "class_hierarchy_root": "Thing",
+    "statement_embedded_fields": [
+      "conditions",
+      "quantities",
+      "formulas"
+    ],
+    "statement_identity": "document_semantics_and_original_source_anchors",
+    "retrieval_projection": "embedded_in_evidence"
+  }
+}

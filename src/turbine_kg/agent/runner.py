@@ -386,12 +386,17 @@ def plan_tasks(plan,session,registry,catalog,*,use_skills=True,question='',stric
             value=stored_value.get('value') if isinstance(stored_value,dict) else stored_value
             if strict_facts:
                 from turbine_kg.ontology.registry import normalized
-                try: present=float(value) in {float(n) for n in re.findall(r'[-+]?\d+(?:\.\d+)?',unicodedata.normalize('NFKC',quote))}
-                except (TypeError,ValueError): present=normalized(str(value)) in normalized(quote)
-                if not present: continue
+                from turbine_kg.knowledge.quantities import normalize_quantity_text, canonical_unit
                 if isinstance(stored_value,dict) and stored_value.get('unit'):
                     from turbine_kg.knowledge.quantities import quantity_in_text
                     if not quantity_in_text(value,str(stored_value['unit']),quote):continue
+                    stored_value['unit']=canonical_unit(stored_value['unit'])
+                    if isinstance(value,str):stored_value['value']=normalize_quantity_text(value)
+                else:
+                    from turbine_kg.knowledge.quantities import NUMBER_PATTERN
+                    try: present=float(normalize_quantity_text(value)) in {float(n) for n in re.findall(NUMBER_PATTERN,normalize_quantity_text(quote))}
+                    except (TypeError,ValueError): present=normalized(str(value)) in normalized(quote)
+                    if not present: continue
             bucket=session.facts.setdefault(obj,{})
             provenance=session.fact_provenance.setdefault(obj,{})
             for key in bucket: provenance.setdefault(key,{'parameter_id':identity('parameter',registry.canonical_label(key)),'origin':'user','source_text':None})

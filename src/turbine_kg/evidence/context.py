@@ -547,7 +547,8 @@ class ContextAssembler:
         by_id = {item["id"]: item for item in sources}
         if any(item["source_id"] not in by_id for item in members): raise ValueError("Evidence来源成员缺失")
         key = fingerprint((snapshot.key, [(item, by_id[item["source_id"]]) for item in members]))
-        cache_key = fingerprint((key,evidence.get('kind'),evidence.get('context',{})))
+        cache_key = fingerprint((key,evidence.get('kind'),evidence.get('context',{}),
+                                 evidence.get('entity_mapping_reviews', [])))
         if cache_key in self.cache: return deepcopy(self.cache[cache_key])
         assembled = []
         for item in sorted(members, key=lambda row: row["order"]):
@@ -587,6 +588,10 @@ class ContextAssembler:
                                         [item['role'] for item in assembled],
                                         [item['source_kind'] for item in assembled],
                                         kind=evidence['kind'])}
+        # Reviewed mappings belong to this source version, never to the global
+        # alias table. The extraction binder rechecks their member fingerprints.
+        if evidence.get('entity_mapping_reviews'):
+            result['entity_mapping_reviews'] = deepcopy(evidence['entity_mapping_reviews'])
         self.cache[cache_key] = deepcopy(result)
         return result
 

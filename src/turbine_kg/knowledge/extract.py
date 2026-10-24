@@ -15,7 +15,7 @@ Evidence.text是组装后的完整正文；members用于定位出处，解析成
 优先沿用原文表达。分项、并列句和后句指代依赖前文时，保留必要语境；若拆分后无法唯一确定参数或动作所属对象，就保留连贯原句为一条记录，不为原子化而猜测归属，也不主动用同义词替换原文术语。
 逐项检查引导句是否含有须遵守其他条款、标准或程序的独立义务；这种义务须完整抽取，不能因后面还有分项或已保留来源引用而省略。
 每条Statement给extraction_id、text、type、entities、supports。text是一条可独立理解的完整要求或事实：准确保留对象、活动、适用阶段、材料、前提、例外、否定、应宜不得、比较词、数值和单位。编号或列表分项继承其明确引导内容给出的对象、活动、阶段和规范强度，这属于该分项的原文语境。只为能独立表达事实或义务的内容建Statement；仅用于限定后续条目的引导内容并入相关Statement，不单独建条。引导内容若同时包含独立义务，该义务仍须保留。不同前提的义务分别成条；同一义务不得输出省略前提的短版和完整长版。可按原文重述，但不能猜测操作步骤、因果或适用范围。conditions、quantities、formulas全部省略，不把阈值拆为机器可计算字段；这些信息只在text中原样保留。
-entities仅记录本条直接涉及的对象或活动及其角色；实体label必须使用原文中的完整名称。先按注册表中的类名或已审定别名确定ontology_class_id；若完整名称是唯一可解释的“对象+种类”组合，也可映射到该种类。只有无法由本条来源和注册表唯一证明类别时才使用Mention，不要为了减少Mention猜测类别。每个实体必须同时提供非空label、class和role；不确定实体时返回空数组，不要返回缺字段对象。没有来源明确的设备编号、位置或时间时，不要把对象或活动当作现场实例，也不要虚构occurrence。entities.class只能选注册表classes中的id；不能因同节共现推断类别或虚构现场实例。输入后附的候选类清单是程序按本批Evidence预筛选的范围，不是全量本体；只能从候选类中选择。候选清单未覆盖或无法唯一确认时使用Mention，不得因类名相近、同节共现或工程常识补类。Mention只保留在Statement中，不创建脱离来源的独立实体。supports必须是对象数组，每个对象严格包含evidence_id和member_keys；不要把成员别名字符串直接放在supports数组中。使用输入Evidence及全部必要member_keys，包含承载引导、分项、条件、数值和例外的成员。可选semantic_relations只有原文明示且有独立支持时填写。
+entities仅记录本条直接涉及的对象或活动及其角色；实体label必须使用原文中的完整名称。复合表达中对象与活动分别以原文连续出现的名称提取，不把整个“对象+活动”名称当作对象的全局别名；并列对象可分别记录，但不得补写共享后缀、制造原文未连续出现的实体名称。不能确定类别的剩余对象保留Mention，不因部分已分类而丢失。部位、参数、材料及输出信号不能仅凭所属对象或名称中包含设备词就映射成该设备类；否定、临时用途和适用阶段必须完整保留在text，不因提取了参与对象而改成肯定或无条件要求。先按注册表中的类名或已审定别名确定ontology_class_id；若完整名称是唯一可解释的“对象+种类”组合，也可映射到该种类。只有无法由本条来源和注册表唯一证明类别时才使用Mention，不要为了减少Mention猜测类别。每个实体必须同时提供非空label、class和role；不确定实体时返回空数组，不要返回缺字段对象。没有来源明确的设备编号、位置或时间时，不要把对象或活动当作现场实例，也不要虚构occurrence。entities.class只能选注册表classes中的id；不能因同节共现推断类别或虚构现场实例。输入后附的候选类清单是程序按本批Evidence预筛选的范围，不是全量本体；只能从候选类中选择。候选清单未覆盖或无法唯一确认时使用Mention，不得因类名相近、同节共现或工程常识补类。Mention只保留在Statement中，不创建脱离来源的独立实体。supports必须是对象数组，每个对象严格包含evidence_id和member_keys；不要把成员别名字符串直接放在supports数组中。使用输入Evidence及全部必要member_keys，包含承载引导、分项、条件、数值和例外的成员。可选semantic_relations只有原文明示且有独立支持时填写。
 scope_declarations只记录本Evidence原生正文尚未登记的文件或章节适用范围，字段为evidence_id、member_keys、scope、heading_source_id、condition_text；“本章”绑定输入中真实的章标题。已登记范围不要重复申报，局部分项条件不是章节范围。evidence_status逐条标complete、context_only或incomplete并说明理由；正文有要求时，只有所有独立义务都由有效Statement覆盖才可complete。只返回JSON。'''
 
 def _known(value):
@@ -854,6 +854,13 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
                         entity.pop('ontology_class_id',None)
                         entity['ontology_mapping_review']={'status':'unresolved',
                             'requested_class_id':requested,'reason':str(error)}
+                if entity['class'] == 'Mention' and not entity.get('ontology_binding'):
+                    from turbine_kg.knowledge.repair import restored_entity_binding
+                    reviewed = restored_entity_binding(entity['label'], item['supports'], supplied, registry)
+                    if reviewed is not None:
+                        entity['ontology_binding'] = reviewed
+                        entity['ontology_class_id'] = reviewed['class_id']
+                        entity.pop('ontology_mapping_review', None)
             for legacy_field in ('modality','negation','possibility'):
                 item.pop(legacy_field,None)
             if hasattr(registry,'validate_semantic_relation'):

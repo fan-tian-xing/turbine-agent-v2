@@ -1,5 +1,5 @@
 {
-  "version": "10",
+  "version": "11",
   "namespace": "https://turbine.local/ontology#",
   "classes": [
     {
@@ -295,7 +295,10 @@
       "label": "严密性水压试验",
       "parent": "HydrostaticTest",
       "definition": "以水为试验介质施加压力，检验对象严密性的试验。",
-      "aliases": []
+      "aliases": [],
+      "additional_parents": [
+        "TightnessTest"
+      ]
     },
     {
       "id": "TrialOperation",
@@ -372,6 +375,299 @@
       "parent": "Activity",
       "definition": "通过焊接方法使材料形成连接或堆敷的作业。",
       "aliases": []
+    },
+    {
+      "id": "Cylinder",
+      "label": "汽轮机汽缸",
+      "parent": "Component",
+      "definition": "汽轮机中容纳通流部分并形成蒸汽流动空间的汽缸部件。",
+      "aliases": [
+        "汽缸"
+      ],
+      "scope_note": "压力等级、内外缸及排汽部位由具体来源限定。 来源：DL/T 5190.3—2019，5.2.14、5.2.13、5.2.12、5.11.2、5.2.3。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.2.14",
+        "urn:standard:DLT5190.3:2019:clause:5.2.13",
+        "urn:standard:DLT5190.3:2019:clause:5.2.12",
+        "urn:standard:DLT5190.3:2019:clause:5.11.2",
+        "urn:standard:DLT5190.3:2019:clause:5.2.3"
+      ]
+    },
+    {
+      "id": "Shim",
+      "label": "垫铁",
+      "parent": "Component",
+      "definition": "在设备安装中用于支承载荷和调整位置的垫块。",
+      "aliases": [],
+      "scope_note": "梯形、永久、埋置式等形状或使用状态分别保留，不与基础或底座合并。 来源：DL/T 5190.3—2019，5.1.6、5.3.4、5.1.4、5.2.9、5.3.9、5.2.12。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.1.6",
+        "urn:standard:DLT5190.3:2019:clause:5.3.4",
+        "urn:standard:DLT5190.3:2019:clause:5.1.4",
+        "urn:standard:DLT5190.3:2019:clause:5.2.9",
+        "urn:standard:DLT5190.3:2019:clause:5.3.9",
+        "urn:standard:DLT5190.3:2019:clause:5.2.12"
+      ]
+    },
+    {
+      "id": "Pipe",
+      "label": "管道",
+      "parent": "Component",
+      "definition": "用于输送介质或连通流体设备的管道部件。",
+      "aliases": [],
+      "scope_note": "用途、介质、端点、所属系统及临时状态由具体来源限定；换热冷却管仍按冷却管类表达。 来源：DL/T 5190.3—2019，5.8.2、5.2.2、5.7.4、5.3.14、5.9.2、5.9.5、5.2.12、5.7.8、5.7.7、5.2.18、5.6.9、5.9.1、5.6.5、5.9.3、5.8.4、5.2.3、5.2.19、5.10.5、5.4.16、5.10.3、5.8.5、5.3.13、5.3.10、5.2.17。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.8.2",
+        "urn:standard:DLT5190.3:2019:clause:5.2.2",
+        "urn:standard:DLT5190.3:2019:clause:5.7.4",
+        "urn:standard:DLT5190.3:2019:clause:5.3.14",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.2.12",
+        "urn:standard:DLT5190.3:2019:clause:5.7.8",
+        "urn:standard:DLT5190.3:2019:clause:5.7.7",
+        "urn:standard:DLT5190.3:2019:clause:5.2.18",
+        "urn:standard:DLT5190.3:2019:clause:5.6.9",
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.6.5",
+        "urn:standard:DLT5190.3:2019:clause:5.9.3",
+        "urn:standard:DLT5190.3:2019:clause:5.8.4",
+        "urn:standard:DLT5190.3:2019:clause:5.2.3",
+        "urn:standard:DLT5190.3:2019:clause:5.2.19",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5",
+        "urn:standard:DLT5190.3:2019:clause:5.4.16",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3",
+        "urn:standard:DLT5190.3:2019:clause:5.8.5",
+        "urn:standard:DLT5190.3:2019:clause:5.3.13",
+        "urn:standard:DLT5190.3:2019:clause:5.3.10",
+        "urn:standard:DLT5190.3:2019:clause:5.2.17"
+      ]
+    },
+    {
+      "id": "ExhaustPipe",
+      "label": "排汽管道",
+      "parent": "Pipe",
+      "definition": "用于输送设备排出蒸汽的管道。",
+      "aliases": [
+        "排汽管"
+      ],
+      "scope_note": "所属系统与排汽对象由具体来源限定，不将泛称排气管自动归入本类。 来源：DL/T 5190.3—2019，5.9.1、5.9.2、5.9.4、5.9.5、5.7.4、5.3.12。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.4",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.7.4",
+        "urn:standard:DLT5190.3:2019:clause:5.3.12"
+      ]
+    },
+    {
+      "id": "Valve",
+      "label": "阀门",
+      "parent": "Component",
+      "definition": "用于启闭流路或控制流体流动的阀类部件。",
+      "aliases": [],
+      "scope_note": "调节、截止、止回和收球等具体用途保留为来源限定，不将各类阀件视为同一实例。 来源：DL/T 5190.3—2019，5.9.5、5.9.2、5.7.2、5.10.3、5.7.3、5.10.4、5.8.5、5.2.19、5.8.3、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.7.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3",
+        "urn:standard:DLT5190.3:2019:clause:5.7.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.4",
+        "urn:standard:DLT5190.3:2019:clause:5.8.5",
+        "urn:standard:DLT5190.3:2019:clause:5.2.19",
+        "urn:standard:DLT5190.3:2019:clause:5.8.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "SafetyValve",
+      "label": "安全阀",
+      "parent": "Valve",
+      "definition": "用于超压保护、在规定压力条件下开启泄放介质的阀门。",
+      "aliases": [],
+      "scope_note": "脉冲式、全启式等型式及整定要求按具体来源保留。 来源：DL/T 5190.3—2019，5.5.5、5.10.3、5.9.2、5.10.2、5.7.6、5.6.5、5.11.3、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.5.5",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.2",
+        "urn:standard:DLT5190.3:2019:clause:5.7.6",
+        "urn:standard:DLT5190.3:2019:clause:5.6.5",
+        "urn:standard:DLT5190.3:2019:clause:5.11.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "SteamTrap",
+      "label": "疏水器",
+      "parent": "Component",
+      "definition": "用于蒸汽设备或管路疏水的装置。",
+      "aliases": [],
+      "scope_note": "二级疏水等所在回路按来源保留；本轮不另建立蒸汽疏水阀的细分类。 来源：DL/T 5190.3—2019，5.8.2、5.9.5、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.8.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "Radiator",
+      "label": "空冷散热器",
+      "parent": "HeatExchanger",
+      "definition": "在空冷装置中向空气散热的换热设备。",
+      "aliases": [],
+      "scope_note": "与管束、散热翅片、散热器框架及构造尚待确认的散热片区分；泛称散热器仅在空冷上下文中映射。 来源：DL/T 5190.3—2019，5.9.1、5.4.7、5.4.9、5.9.5、5.9.4。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.4.7",
+        "urn:standard:DLT5190.3:2019:clause:5.4.9",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.9.4"
+      ]
+    },
+    {
+      "id": "HeatTransferFin",
+      "label": "散热翅片",
+      "parent": "Component",
+      "definition": "附于换热管等部件、用于扩展换热表面的翅片。",
+      "aliases": [],
+      "scope_note": "保存所属管束或换热部件；不将含义未确定的散热片直接作为本类别名。 来源：DL/T 5190.3—2019，5.3.8、5.4.7、5.3.10。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.3.8",
+        "urn:standard:DLT5190.3:2019:clause:5.4.7",
+        "urn:standard:DLT5190.3:2019:clause:5.3.10"
+      ]
+    },
+    {
+      "id": "LevelGauge",
+      "label": "水位计",
+      "parent": "Component",
+      "definition": "用于指示或显示水位的仪表。",
+      "aliases": [],
+      "scope_note": "就地、远方、玻璃型及临时高位用途分别保存为型式或场景。 来源：DL/T 5190.3—2019，5.2.18、5.6.1、5.9.2、5.9.5、5.5.1、5.9.3、5.10.2、5.10.3。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.2.18",
+        "urn:standard:DLT5190.3:2019:clause:5.6.1",
+        "urn:standard:DLT5190.3:2019:clause:5.9.2",
+        "urn:standard:DLT5190.3:2019:clause:5.9.5",
+        "urn:standard:DLT5190.3:2019:clause:5.5.1",
+        "urn:standard:DLT5190.3:2019:clause:5.9.3",
+        "urn:standard:DLT5190.3:2019:clause:5.10.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.3"
+      ]
+    },
+    {
+      "id": "LevelController",
+      "label": "水位调节装置",
+      "parent": "Component",
+      "definition": "用于调节设备或容器水位的装置。",
+      "aliases": [
+        "水位调整器"
+      ],
+      "scope_note": "水位调整器与水位调节装置共用功能类别，不据此判为同一实例。 来源：DL/T 5190.3—2019，5.5.4、5.10.2、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.5.4",
+        "urn:standard:DLT5190.3:2019:clause:5.10.2",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "LevelAlarmDevice",
+      "label": "水位报警装置",
+      "parent": "Component",
+      "definition": "在水位满足规定报警条件时发出报警的装置。",
+      "aliases": [],
+      "scope_note": "高低水位报警信号属于状态或输出，不能直接映射为物理装置。 来源：DL/T 5190.3—2019，5.6.1、5.10.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.6.1",
+        "urn:standard:DLT5190.3:2019:clause:5.10.5"
+      ]
+    },
+    {
+      "id": "OverfillProtectionSystem",
+      "label": "高压加热器满水保护系统",
+      "parent": "System",
+      "definition": "用于高压加热器满水保护、由相关阀件和控制保护部件组成的系统。",
+      "aliases": [],
+      "scope_note": "满水保护装置仅在明确高压加热器上下文中映射，参与部件分别保留。 来源：DL/T 5190.3—2019，5.5.5。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.5.5"
+      ]
+    },
+    {
+      "id": "BallCleaningSystem",
+      "label": "凝汽器胶球清洗装置",
+      "parent": "System",
+      "definition": "利用胶球及相关输送、分路和回收部件清洗凝汽器换热管的装置系统。",
+      "aliases": [],
+      "scope_note": "胶球泵、胶球分路装置、胶球回收网及相关管道保持不同对象身份。 来源：DL/T 5190.3—2019，5.2.19。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.2.19"
+      ]
+    },
+    {
+      "id": "DirectAirCoolingSystem",
+      "label": "直接空冷装置",
+      "parent": "AirCoolingDevice",
+      "definition": "利用空气直接冷却并凝结汽轮机排汽的空冷装置。",
+      "aliases": [],
+      "scope_note": "不将整个直接空冷机组、排汽装置或散热器当作本类别名。 来源：DL/T 5190.3—2019，5.9.4。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.4"
+      ]
+    },
+    {
+      "id": "IndirectAirCoolingSystem",
+      "label": "间接空冷装置",
+      "parent": "AirCoolingDevice",
+      "definition": "通过中间冷却介质向空气传递热量的空冷装置。",
+      "aliases": [],
+      "scope_note": "间接冷却装置仅在空冷系统上下文中映射。 来源：DL/T 5190.3—2019，5.11.2、5.4.15。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.11.2",
+        "urn:standard:DLT5190.3:2019:clause:5.4.15"
+      ]
+    },
+    {
+      "id": "TightnessTest",
+      "label": "严密性试验",
+      "parent": "TestActivity",
+      "definition": "以检查泄漏和严密性为目的的试验。",
+      "aliases": [],
+      "scope_note": "水压、灌水和风压方式按原文区分，试验参数不从上位类继承。 来源：DL/T 5190.3—2019，5.9.4、5.11.2。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.4",
+        "urn:standard:DLT5190.3:2019:clause:5.11.2"
+      ]
+    },
+    {
+      "id": "FillingLeakTest",
+      "label": "灌水查漏试验",
+      "parent": "TightnessTest",
+      "definition": "通过向对象灌水检查是否泄漏的严密性试验。",
+      "aliases": [
+        "灌水查漏"
+      ],
+      "scope_note": "灌水试验需按来源确认查漏目的；不默认等同于施加规定压力的严密性水压试验。 来源：DL/T 5190.3—2019，5.9.1、5.11.2。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1",
+        "urn:standard:DLT5190.3:2019:clause:5.11.2"
+      ]
+    },
+    {
+      "id": "AirPressureLeakTest",
+      "label": "风压查漏试验",
+      "parent": "TightnessTest",
+      "definition": "通过施加空气压力检查泄漏的严密性试验。",
+      "aliases": [
+        "风压查漏"
+      ],
+      "scope_note": "试验压力、压降及检查方式由相应条款提供。 来源：DL/T 5190.3—2019，5.9.1。",
+      "definition_sources": [
+        "urn:standard:DLT5190.3:2019:clause:5.9.1"
+      ]
     }
   ],
   "relations": [

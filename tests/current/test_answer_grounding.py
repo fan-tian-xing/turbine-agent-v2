@@ -310,9 +310,12 @@ def test_inference_can_state_its_premise_in_text_without_an_extra_field():
     assert len(accepted)==1 and not rejected
 
 
-def test_inference_cannot_bypass_numeric_or_reference_grounding():
-    from turbine_kg.agent.claims import binding_error
-    for text in ('建议将间隙调整到100mm。','建议按第9.9.9条执行。',
+def test_numeric_hints_do_not_block_but_invalid_references_still_do():
+    from turbine_kg.agent.claims import binding_error,numeric_warning
+    numeric={**claim(),'basis':'inference','text':'建议将间隙调整到100mm。'}
+    assert binding_error(numeric,sources(),{}) is None
+    assert numeric_warning(numeric,sources())
+    for text in ('建议按第9.9.9条执行。',
                  '建议改为DL/T 9876—2030中的工艺。'):
         invented={**claim(),'basis':'inference','text':text}
         assert binding_error(invented,sources(),{}) is not None
@@ -326,17 +329,17 @@ def test_inference_can_restate_user_values_without_a_matching_source_value():
 
 
 def test_completed_program_quantities_are_available_only_with_their_source_binding():
-    from turbine_kg.agent.claims import binding_error
+    from turbine_kg.agent.claims import numeric_warning
     inference={**claim(),'basis':'inference','text':'程序比较采用的数值为4mm。'}
     check={'status':'satisfied','normalized_actual':'4','comparison_unit':'mm',
            'supports':[{'evidence_id':'e','member_keys':['a']}]}
     task={'id':'t','numeric_comparisons':[check]}
-    assert binding_error(inference,sources(),{},task=task) is None
-    assert binding_error(inference,sources(),{},task={**task,'id':'other'}) is not None
+    assert numeric_warning(inference,sources(),task=task) is None
+    assert numeric_warning(inference,sources(),task={**task,'id':'other'}) is not None
     check['status']='unknown'
-    assert binding_error(inference,sources(),{},task=task) is not None
+    assert numeric_warning(inference,sources(),task=task) is not None
     check.update(status='satisfied',supports=[{'evidence_id':'e','member_keys':['b']}])
-    assert binding_error(inference,sources(),{},task=task) is not None
+    assert numeric_warning(inference,sources(),task=task) is not None
 
 
 def test_review_can_resolve_only_model_gaps_for_the_same_task():
@@ -419,12 +422,15 @@ def test_shared_grounding_context_is_used_by_independent_review():
     review_answer_completeness('设备安装',[{'id':'t'}],[claim()],tools(),Model(),Budget(),facts={},source_context=context)
 
 
-def test_equivalent_units_pass_but_wrong_dimensions_and_bare_numbers_do_not():
-    from turbine_kg.agent.claims import binding_error
+def test_equivalent_units_pass_and_numeric_differences_remain_review_hints():
+    from turbine_kg.agent.claims import binding_error,numeric_warning
     reads=sources();reads['e']['members'][0]['quote']='偏差应不大于10mm。'
     assert binding_error({**claim(),'text':'偏差不大于1cm。'},reads,{}) is None
-    assert binding_error({**claim(),'text':'偏差不大于10m。'},reads,{}) is not None
-    assert binding_error({**claim(),'text':'还应检查11个点。'},reads,{}) is not None
+    assert numeric_warning({**claim(),'text':'偏差不大于1cm。'},reads) is None
+    for text in ('偏差不大于10m。','还应检查11个点。'):
+        advice={**claim(),'text':text}
+        assert binding_error(advice,reads,{}) is None
+        assert numeric_warning(advice,reads)
 
 
 def test_completeness_comes_from_actual_verdicts_omissions_and_dependencies():

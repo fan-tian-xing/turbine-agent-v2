@@ -17,7 +17,48 @@ UNITS = {
     '1':('ratio','1'), '倍':('ratio','1'), '%':('ratio','0.01'),
     'mm/m':('length_ratio','0.001'), 'm/m':('length_ratio','1'),
     '°c':('temperature','1'), '℃':('temperature','1'),
+    'cm/m':('length_ratio','0.01'),
+    'kpa/h':('pressure_rate','1000'), 'mpa/h':('pressure_rate','1000000'),
+    'pa/h':('pressure_rate','1'),
 }
+
+
+# One vocabulary shared by question facts, numeric comparison and claim checks.
+UNIT_ALIASES = {
+    '毫米/米':'mm/m', '厘米/米':'cm/m', '米/米':'m/m',
+    '千帕/小时':'kPa/h', '兆帕/小时':'MPa/h', '帕/小时':'Pa/h',
+    '毫米':'mm', '厘米':'cm', '米':'m',
+    '兆帕':'MPa', '千帕':'kPa', '帕斯卡':'Pa', '帕':'Pa',
+    '分钟':'min', '小时':'h', '秒钟':'s', '秒':'s',
+    '摄氏度':'°C', '摄氏':'°C', '℃':'°C',
+    '千牛':'kN', '牛顿':'N', '千克':'kg', '公斤':'kg', '吨':'t',
+    '百分比':'%',
+}
+NUMBER_PATTERN = r'[-+]?(?:\d+(?:\.\d+)?|\.\d+)'
+UNIT_PATTERN = r'(?:MPa/h|kPa/h|Pa/h|mm/m|cm/m|m/m|r/min|MPa|kPa|Pa|mm|cm|min|kN|kg|rpm|Hz|°C|%|m|N|t|s|h)'
+
+
+def normalize_quantity_text(value):
+    """Normalize common units/signs in a working copy, preserving source quotes."""
+    text = unicodedata.normalize('NFKC', str('' if value is None else value)).replace('−', '-').replace('﹣', '-')
+    text = re.sub(r'零下\s*(?=\d)', '-', text)
+    text = re.sub(r'百分之\s*(' + NUMBER_PATTERN + r')', r'\1%', text)
+    aliases = '|'.join(re.escape(key) for key in sorted(UNIT_ALIASES, key=len, reverse=True))
+    return re.sub(r'(?<![A-Za-z\u3400-\u9fff])(?:' + aliases + ')',
+                  lambda match: UNIT_ALIASES[match.group()], text)
+
+
+def canonical_unit(value):
+    """Keep unsupported units verbatim; do not invent a conversion."""
+    text = re.sub(r'\s+', '', normalize_quantity_text(value))
+    symbols = {'mpa':'MPa', 'kpa':'kPa', 'pa':'Pa', '°c':'°C', 'kn':'kN', 'n':'N'}
+    return symbols.get(text.casefold(), text)
+
+
+def extract_quantities(text):
+    return {(float(value), unit) for value, unit in re.findall(
+        '(' + NUMBER_PATTERN + r')\s*(' + UNIT_PATTERN + r')(?![A-Za-z/])',
+        normalize_quantity_text(text))}
 
 
 def _text(value):
@@ -33,13 +74,13 @@ def _name(value,registry):
 
 def _number(value):
     if isinstance(value,bool) or value is None:raise ValueError('missing numeric value')
-    value=Decimal(str(value))
+    value=Decimal(normalize_quantity_text(value))
     if not value.is_finite():raise ValueError('nonfinite numeric value')
     return value
 
 
 def _unit(value):
-    name = _text(value)
+    name = _text(canonical_unit(value))
     known = UNITS.get(name)
     if known:
         return known
@@ -57,7 +98,13 @@ def quantity_in_text(value, unit, text):
     except (ValueError, TypeError, InvalidOperation):
         return False
     if not isinstance(unit,str) or not unit.strip():return False
-    source=_text(text);name=_text(unit)
+    source=_text(normalize_quantity_text(text));name=_text(canonical_unit(unit))
+    expected_unit = _unit(unit)
+    if expected_unit:
+        for actual, actual_unit in extract_quantities(text):
+            known = _unit(actual_unit)
+            if known and known[0] == expected_unit[0] and Decimal(str(actual))*Decimal(known[1]) == expected*Decimal(expected_unit[1]):
+                return True
     number=r'([-+]?(?:\d+(?:\.\d+)?|\.\d+))'
     patterns=[r'(?<![\d.])'+number+re.escape(name)+r'(?![A-Za-z/])']
     if name.startswith('倍') and len(name)>1:

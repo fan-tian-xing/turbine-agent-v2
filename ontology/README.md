@@ -8,6 +8,6 @@
 - `relations`：允许的方向、端点类型、知识类型和角色。
 - `storage_policy`：提及只内嵌保存；现行抽取把条件、量值和公式保留在完整断言文字中，不要求另拆计算字段。既有结构化字段的兼容约束不代表现行抽取必填。
 
-`core.ttl` 与 `shapes.ttl` 由 `OntologyRegistry.authority()` 生成。类层次一直连接到 `owl:Thing`；存储代理的结构约束独立声明。`ontology_design.md` 介绍初版设计、验收问题和实际核对的公开定义代码。
+`core.ttl` 与 `shapes.ttl` 由 `OntologyRegistry.authority()` 生成。类层次一直连接到 `owl:Thing`；存储代理的结构约束独立声明。`ontology_design.md` 介绍当前 v11 的类层次、Mention 处理边界、合同版本与初始验收问题。当前为6个基础业务类、54个领域类；基础等暂不建类的名称保留为内嵌 Mention。
 
 模型获得可抽取类型、业务类定义和关系合同。程序校验抽取格式与来源绑定；回答依据来自 Evidence。既有本体合同文件用于读取已绑定的记录，本体调整时按受影响范围更新映射。

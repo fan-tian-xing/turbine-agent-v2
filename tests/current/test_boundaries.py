@@ -93,8 +93,11 @@ def test_structural_references_are_verified_separately_from_engineering_values()
     assert binding_error(claim,reads,{}) is None
     assert binding_error({**claim,'text':claim['text'].replace('7.8.9','7.8.10')},reads,{})=='回答的表图或条款编号没有来源支持'
     assert binding_error({**claim,'text':claim['text'].replace('2024','2025')},reads,{})=='回答的资料标识或版本没有来源支持'
-    assert binding_error({**claim,'text':claim['text'].replace('/640','/641')},reads,{})=='回答包含引用成员没有的数值'
-    assert binding_error({**claim,'text':claim['text'].replace('0.10 mm','0.10 m')},reads,{})=='回答数量与引用的数值单位组合不一致'
+    from turbine_kg.agent.claims import numeric_warning
+    for text in (claim['text'].replace('/640','/641'),claim['text'].replace('0.10 mm','0.10 m')):
+        changed={**claim,'text':text}
+        assert binding_error(changed,reads,{}) is None
+        assert numeric_warning(changed,reads)
 
 
 def test_role_independent_entity_and_ontology_direction():

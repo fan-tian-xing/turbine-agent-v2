@@ -94,7 +94,24 @@ class OntologyRegistry:
                 qualifier = self.domain_class(name[:-len(kind)])
                 if qualifier and self.domain_is_a(qualifier["class_id"], "PhysicalObject"):
                     matches.add(class_id)
+        matches = self._most_specific_class_ids(matches)
         return self.domain_class_by_id(next(iter(matches))) if len(matches) == 1 else None
+
+    def _most_specific_class_ids(self, class_ids: set[str]) -> set[str]:
+        """Discard ancestors only; unrelated matching kinds remain ambiguous."""
+        return {class_id for class_id in class_ids
+                if not any(other != class_id and self.domain_is_a(other, class_id)
+                           for other in class_ids)}
+
+    def _source_suffix_class_ids(self, surface: str) -> set[str]:
+        surface_key = normalized(surface)
+        matches = set()
+        for row in [*self.business_classes.values(), *self.domain_classes.values()]:
+            names = [row.get('label', row.get('zh')), *row.get('aliases', [])]
+            if any(len(normalized(name)) >= 2 and surface_key.endswith(normalized(name))
+                   and surface_key != normalized(name) for name in names):
+                matches.add(row['id'])
+        return self._most_specific_class_ids(matches)
 
     def resolve_entity_class(self, surface: str, *, upper_class: str | None = None) -> dict | None:
         """Resolve a source label to one reviewed class without guessing.
@@ -111,15 +128,8 @@ class OntologyRegistry:
         qualified = self.qualified_class(surface)
         candidates = {row['class_id']: row for row in (exact, qualified) if row is not None}
         if not candidates:
-            suffixes = {}
-            surface_key = normalized(surface)
-            for row in [*self.business_classes.values(), *self.domain_classes.values()]:
-                class_id = row['id']
-                names = [row.get('label', row.get('zh')), *row.get('aliases', [])]
-                for name in names:
-                    name_key = normalized(name)
-                    if len(name_key) >= 2 and surface_key.endswith(name_key) and surface_key != name_key:
-                        suffixes[class_id] = self.domain_class_by_id(class_id)
+            suffixes = {class_id: self.domain_class_by_id(class_id)
+                        for class_id in self._source_suffix_class_ids(surface)}
             if len(suffixes) == 1:
                 candidates = suffixes
         if len(candidates) != 1:
@@ -204,12 +214,7 @@ class OntologyRegistry:
                     "context_label": self.domain_class_by_id(context_id)["label"]}
         exact_class = self.domain_class(label)
         if exact_class is None or exact_class['class_id'] == class_id:
-            suffix_ids = set()
-            for candidate_id, row in [*self.business_classes.items(), *self.domain_classes.items()]:
-                names_for_candidate = [row.get('label', row.get('zh')), *row.get('aliases', [])]
-                if any(normalized(name) and surface.endswith(normalized(name)) and surface != normalized(name)
-                       for name in names_for_candidate):
-                    suffix_ids.add(candidate_id)
+            suffix_ids = self._source_suffix_class_ids(label)
             if suffix_ids == {class_id}:
                 return {'method': 'suffix_source_name', 'class_id': class_id,
                         'surface_label': label, 'source_members': mentions}

@@ -68,7 +68,7 @@ def test_user_ratio_with_baseline_before_number_remains_a_session_fact():
 
 
 def test_user_value_need_not_occur_in_cited_knowledge():
-    from turbine_kg.agent.claims import binding_error
+    from turbine_kg.agent.claims import binding_error,numeric_warning
     view={'evidence_id':'e','title':'资料','document_id':'d','revision_id':'r',
           'kind':'text','context':{},'members':[{'member_key':'m','source_id':'src',
           'quote':'试验压力应不小于工作压力的1.25倍。','role':'content',
@@ -78,7 +78,8 @@ def test_user_value_need_not_occur_in_cited_knowledge():
            'basis':'source','task_id':'t','supports':[{'evidence_id':'e','member_keys':['m']}]}
     facts={'压力容器':{'试验压力':{'value':'1.20','unit':'倍工作压力'}}}
     assert binding_error(claim,{'e':view},{},user_facts=facts,task=task) is None
-    assert binding_error(claim,{'e':view},{},user_facts={},task=task)
+    assert binding_error(claim,{'e':view},{},user_facts={},task=task) is None
+    assert numeric_warning(claim,{'e':view},user_facts={},task=task)
 
 
 @pytest.mark.parametrize('kwargs',[

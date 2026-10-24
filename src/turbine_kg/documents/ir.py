@@ -186,6 +186,9 @@ def parse_references(text):
             label = match.groupdict().get('label', '条').lower()
             kind = 'table' if label in ('表', 'table') else 'figure' if label in ('图', 'figure') else 'clause'
             value = normalized_number(match.group('number'))
+            # "按1.25倍" and "低于0.10mm" describe quantities, not clauses.
+            if style == 'cue' and re.match(r'\s*(?:倍|毫米|厘米|米|分钟|小时|秒|摄氏度|MPa|kPa|Pa|mm|cm|min|h|s|°C|℃|％|%)', text[match.end('number'):]):
+                continue
             if style == 'cue' and re.search(r'[A-Z]{1,8}\s*/\s*T?\s*$', match.group()[:match.start('number')-match.start()]):
                 continue
             if kind == 'clause' and '.' not in value:

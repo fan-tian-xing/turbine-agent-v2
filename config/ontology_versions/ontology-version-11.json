@@ -1018,7 +1018,7 @@
   },
   "extraction_rules": [
     "实体角色表示本条知识中对象的作用，不用于生成实体身份。",
-    "书籍中的通用对象和活动名称使用Mention，能确定种类时提供ontology_class_id；只保存来源提及，绝不据此创建现场设备或实际活动。",
+    "书籍中的通用对象和活动名称保留原始label及role，class由程序初始化为Mention；ontology_class_id与来源绑定由程序生成。",
     "真实物理对象或已发生活动使用相应业务类，必须有来源明确的occurrence身份。",
     "对象、活动分开表示。以设备名称、具体位置或当前工况修饰的活动不另建组合类；适用对象与活动通过同一Statement表达。",
     "semantic_relations可用当前实体的source_entity/target_entity索引；跨记录用source_ref/target_ref:{statement_id,entity_index}，省略entity_index表示该Statement，并提供关系独立supports。",
@@ -1034,9 +1034,8 @@
     "mention_storage": "embedded_statement_only",
     "standalone_modality_fields": false,
     "class_hierarchy_root": "Thing",
-    "statement_identity": "document_semantics_and_original_source_anchors",
+    "statement_identity": "original_semantics_and_source_anchors_independent_of_ontology_mapping",
     "retrieval_projection": "embedded_in_evidence",
-    "statement_core_mapping": "statement_core保存原始语义与Mention；ontology_mapping单独保存当前本体映射，映射可重算",
     "statement_text_policy": "条件、数值和公式只保留在Statement.text与Evidence原文中，不拆分为独立字段。"
   }
 }

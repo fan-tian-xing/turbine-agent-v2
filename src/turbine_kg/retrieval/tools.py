@@ -47,6 +47,31 @@ class Tools:
         if domain is None:
             qualified=getattr(self.registry,'qualified_class',None)
             domain=qualified(object_label) if callable(qualified) else None
+        if domain is None:
+            # Source-specific mappings are not global ontology aliases. They
+            # can nevertheless identify a class when the current documents
+            # agree on this exact raw mention and its bound source members.
+            from turbine_kg.ontology.registry import normalized
+            rows=self.store.query('MATCH (s:TK:Statement) WHERE s.document_id IN $documents '
+                'AND s.ontology_version=$version AND s.data_json CONTAINS $label '
+                'RETURN properties(s) AS node',
+                {'documents':list(self.snapshot.document_ids),'version':self.snapshot.ontology_version,
+                 'label':object_label},self.budget)
+            classes=set()
+            for row in rows:
+                if not row.get('node'):continue
+                statement=unpack(row['node'])
+                supported={(support['evidence_id'],key) for support in statement.get('supports',[])
+                           for key in support['member_keys']}
+                for entity in statement.get('entities',[]):
+                    if normalized(entity.get('surface_label') or entity.get('label',''))!=normalized(object_label):continue
+                    binding=entity.get('ontology_binding') or {}
+                    members=binding.get('source_members',[])
+                    if (members and entity.get('ontology_class_id')==binding.get('class_id') and
+                        all((member.get('evidence_id'),member.get('member_key')) in supported for member in members)):
+                        classes.add(binding['class_id'])
+            if len(classes)==1:
+                domain=self.registry.domain_class_by_id(next(iter(classes)))
         if domain is None:return objects
         class_id=domain.get('class_id',domain.get('id'))
         if not class_id:return objects

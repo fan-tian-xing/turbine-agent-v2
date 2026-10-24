@@ -19,7 +19,7 @@ from turbine_kg.knowledge.ingest import _table_context_sources, _support_closure
 from turbine_kg.knowledge.scopes import register_scopes, restore_scopes, attach_evidence_scopes, refresh_scope_locations
 from turbine_kg.knowledge.alignment import plan_alignment, remap_ids, refresh_bound_locations, reuse_scope_member_keys
 from turbine_kg.knowledge.store import unpack
-from turbine_kg.knowledge.incremental import evidence_logical_key
+from turbine_kg.knowledge.incremental import evidence_logical_key, content_fingerprint
 from turbine_kg.runtime import Snapshot, file_hash, fingerprint, identity, json_text
 from turbine_kg.settings import PROJECT_ROOT
 
@@ -45,6 +45,33 @@ def _restrict_source(source,pages):
 
 def _rows(store,label,document_id):
     return [unpack(row['node']) for row in store.query(f'MATCH (n:TK:{label} {{document_id:$id}}) RETURN properties(n) AS node',{'id':document_id})]
+
+
+def refresh_document_pages(store, document_id):
+    """Summarize actual source and semantic completion without parsing again."""
+    records=store.get([document_id])
+    if not records:raise ValueError('资料节点不存在')
+    document=records[0]
+    requested=sorted(set(document.get('requested_pages', [])))
+    pages={row['physical_page']:row for row in _rows(store,'Page',document_id)}
+    evidence=_rows(store,'Evidence',document_id)
+    processed=[]; semantic=[]; finished=set()
+    for number in requested:
+        page=pages.get(number, {})
+        if page.get('status') not in ('parsed','blank') or page.get('mapping',{}).get('layout_status')=='fallback_unverified':
+            continue
+        processed.append(number)
+        items=[row for row in evidence if row.get('physical_page')==number]
+        if page.get('status')=='blank' and not items:
+            finished.add(number)
+        elif items and all(row.get('semantic_coverage',{}).get('status') in ('complete','context_only') for row in items):
+            semantic.append(number);finished.add(number)
+    document.update(processed_pages=processed,semantic_pages=semantic,
+                    unprocessed_pages=sorted(set(requested)-finished),
+                    status='ready' if requested and set(requested)<=finished else 'processing')
+    document['content_hash']=content_fingerprint(document)
+    store.put('Document',[document])
+    return {key:document[key] for key in ('requested_pages','processed_pages','semantic_pages','unprocessed_pages','status')}
 
 
 def _inputs(path,store,registry,scope,model):
@@ -326,7 +353,8 @@ def prepare_section(path:Path,store,registry,scope:dict,*,model=None):
     previous_pages=set(document.get('requested_pages') or [])
     if (document.get('source_prepared') and document.get('preparation_fingerprint')==signature
             and set(requested)<=previous_pages):
-        return {'document_id':doc,'revision_id':revision,'status':'ready','requested_pages':requested,'prepared':True}
+        state=refresh_document_pages(store,doc)
+        return {'document_id':doc,'revision_id':revision,**state,'requested_pages':requested,'prepared':True}
     # Previously prepared chapters remain part of the current book. Reparse
     # sources locally to resolve cross-page groups; only changed facts are later
     # extracted, and unchanged nodes are skipped by the document diff.
@@ -464,7 +492,8 @@ def prepare_section(path:Path,store,registry,scope:dict,*,model=None):
                 'source_prepared':True,'evidence_ids':[item['id'] for item in evidence],'requested_pages':pages,
                 'status':'ready' if evidence and all(item['kind']=='image' or item.get('semantic_coverage',{}).get('status') in ('complete','context_only') for item in evidence) else 'processing',
                 'evidence_count':len(evidence),'table_count':len(tables),'picture_count':len(pictures)}],replace=True)
-        return {'document_id':doc,'revision_id':revision,'status':'ready','requested_pages':requested,'prepared':True,
+        state=refresh_document_pages(store,doc)
+        return {'document_id':doc,'revision_id':revision,**state,'requested_pages':requested,'prepared':True,
                 'evidence':len(evidence),'tables':len(tables),'pictures':len(pictures)}
     finally:parser.close()
 
@@ -628,8 +657,8 @@ def process_section(path:Path,store,model,registry,scope:dict,*,work_pages=None,
             if not error and not _verified_batch(batch,outcome,error) and item['semantic_coverage'].get('status') in ('complete','context_only'):
                 item['semantic_coverage']={'status':'incomplete','reason':'抽取结构或来源覆盖未通过，保留旧事实'}
             coverage=outcome[1] if outcome else {}
-            item['extraction_attempts']=coverage.get('attempt_history',[])
-            item['extraction_attempt_count']=coverage.get('attempt_count',0)
+            item.pop('extraction_attempts',None)
+            item.pop('extraction_attempt_count',None)
             per_evidence=coverage.get('rejected_by_evidence') if not error else None
             item['semantic_issues']=[error] if error else per_evidence.get(eid,[]) if isinstance(per_evidence,dict) else coverage.get('rejected',[])
             if not error and not _verified_batch(batch,outcome,error) and not item['semantic_issues']:
@@ -638,7 +667,7 @@ def process_section(path:Path,store,model,registry,scope:dict,*,work_pages=None,
             issues.extend(item['semantic_issues'])
     # A selected-page run must not write its stale snapshot of other pages.
     # Different pages can finish model work concurrently in the same document.
-    store.put('Evidence',[indexed[key] for key in sorted(selected_ids | changed)])
+    store.put('Evidence',[indexed[key] for key in sorted(selected_ids | changed)],replace=True)
     evidence=_rows(store,'Evidence',document_id)
     page_index={row['physical_page']:row for row in _rows(store,'Page',document_id)}
     for number in pages:
@@ -655,6 +684,7 @@ def process_section(path:Path,store,model,registry,scope:dict,*,work_pages=None,
     store.put('Document',[{**document_records[0],'status':'ready' if ready else 'processing',
         'processed_evidence':sum(item.get('semantic_coverage',{}).get('status') in ('complete','context_only') for item in evidence),
         'incomplete_evidence':sum(item.get('semantic_coverage',{}).get('status')=='incomplete' for item in evidence)}])
-    return {**result,'status':'ready' if ready else 'processing','work_pages':sorted(set(work)),'extracted_evidence':len(selected),
+    state=refresh_document_pages(store,document_id)
+    return {**result,**state,'work_pages':sorted(set(work)),'extracted_evidence':len(selected),
             'batches':len(batches),'statements_written':total,'source_scopes':len(discovered),'issues':list(dict.fromkeys(issues)),
             'remaining_evidence':sum(item.get('semantic_coverage',{}).get('status') not in ('complete','context_only') for item in evidence if item['kind']!='image')}

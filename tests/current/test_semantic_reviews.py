@@ -17,7 +17,7 @@ def sources():
 
 def confirmed():
     record,view=sources()
-    updated=confirm_semantic_interpretation(record,view,member_keys=['m'],field='conditions',
+    updated=confirm_semantic_interpretation(record,view,member_keys=['m'],field='entities.roles',
         interpretation='原文环境前提限定检查行为。',
         user_confirmation={'confirmed':True,'actor':'user','note':'确认该环境前提限定检查行为。'})
     return updated,view
@@ -87,14 +87,14 @@ def test_confirmed_interpretation_is_bound_but_does_not_prove_semantic_completen
     items,coverage=extract(semantic_review_views([view],{'e':record}),Model(),OntologyRegistry(),repair=True,max_retries=0)
     assert len(items)==1 and coverage['evidence']['e']['status']=='incomplete'
     assert any('原生来源成员未被有效Statement支持' in reason for reason in coverage['rejected'])
-    assert items[0]['confirmed_interpretations'][0]['field']=='conditions'
+    assert items[0]['confirmed_interpretations'][0]['field']=='entities.roles'
 
 
 def test_quantity_confirmation_requires_specific_selector_and_concrete_property():
     record,view=sources();proof={'confirmed':True,'actor':'user','note':'确认属性。'}
-    with pytest.raises(ValueError,match='限定明确对象'):
+    with pytest.raises(ValueError,match='合法字段'):
         confirm_semantic_interpretation(record,view,member_keys=['m'],field='quantities.unit',
             interpretation='单位解释',user_confirmation=proof,confirmed_value='mm')
-    with pytest.raises(ValueError,match='限定该条量值'):
+    with pytest.raises(ValueError,match='合法字段'):
         confirm_semantic_interpretation(record,view,member_keys=['m'],field='quantities.operator',
             interpretation='边界解释',user_confirmation=proof,quantity_selector={'target':'对象','parameter':'参数'},confirmed_value='ge')

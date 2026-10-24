@@ -381,7 +381,7 @@ tk:has_verification a owl:ObjectProperty ;
     skos:definition "连接对象或措施陈述与评价其状态或效果的验证陈述。"@zh-CN .
 
 tk:ontology a owl:Ontology ;
-    owl:versionIRI <https://turbine.local/ontology#version/4a00ec4ce9413a83ac1eec7aaa6390256720aa9945bb02bd681493efb33a273f> ;
+    owl:versionIRI <https://turbine.local/ontology#version/7eb007f91fe0e044c747efdbd6129cdbe944744528d629f086b203ed80e291a7> ;
     owl:versionInfo "11" .
 
 tk:part_of a owl:ObjectProperty ;
@@ -526,4 +526,3 @@ tk:Component a owl:Class ;
 
 [] a owl:AllDisjointClasses ;
     owl:members ( tk:PhysicalObject tk:Activity ) .
-

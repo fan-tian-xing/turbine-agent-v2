@@ -6,7 +6,7 @@
 - `skills.json`：当前为空；形成经验证的案例流程后才登记 Skill。
 - `ontology_registry.json`：唯一机器注册表，驱动抽取 schema、端点/角色验证、导航及 OWL/SHACL。
 - `source_annotations.json`：绑定原始 SHA-256 的已核验文字、区域、表格、跨页及隔离规则。
-- `processing_scopes.json`：计划处理的全文及完整章节范围。范围放在配置，核心代码不按书名或页码分支。
+- `processing_scopes.json`：默认处理的完整章节范围；页范围参数只用于测试或定向修复。范围放在配置，核心代码不按书名或页码分支。
 - `source_allowlist.tsv`：允许处理的来源路径、大小、SHA-256。
 - `document_identity.tsv`：稳定文档身份。
 - `derived_asset_links.tsv`：现有 OCR 派生件与原件精确路径对应。

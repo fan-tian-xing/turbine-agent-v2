@@ -21,7 +21,7 @@ def main():
             for row in rows:
                 statement = unpack({'data_json': row['data']})
                 for entity in statement.get('entities', []):
-                    if entity.get('class') != 'Mention':
+                    if entity.get('class') != 'Mention' or entity.get('ontology_class_id'):
                         continue
                     label = entity.get('label', '').strip()
                     if not label:

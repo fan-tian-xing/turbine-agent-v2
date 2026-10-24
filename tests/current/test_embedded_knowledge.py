@@ -58,7 +58,7 @@ def test_statement_relation_and_procedure_step_use_precise_supports():
     assert set(store.nodes)=={'Statement'}
     saved=store.nodes['Statement'][relationship['source']]
     assert 'extraction_id' not in saved
-    assert all('source_id' in row and 'source_ref' not in row for row in saved['semantic_relations'])
+    assert all('source_id' in row and 'source_ref' in row for row in saved['semantic_relations'])
 
 
 def test_invalid_statement_endpoint_or_missing_relation_support_blocks_writes():

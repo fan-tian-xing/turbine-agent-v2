@@ -34,8 +34,11 @@ def main():
     parser.add_argument('--evidence-ids',help='逗号分隔的Evidence ID；只对这些证据定向重抽，须同时指定--work-pages')
     parser.add_argument('--section',help='匹配processing_scopes中的章节编号；未指定时须唯一匹配')
     parser.add_argument('--prepare-only',action='store_true',help='仅准备章节完整原文及证据，不调用LLM')
+    parser.add_argument('--remap',action='store_true',help='按当前本体重新映射资料中已有Statement；不OCR、不调用LLM、不重抽原文')
     parser.add_argument('--workers',type=int,help='章节并行抽取数量，持久化仍串行')
     args=parser.parse_args();settings=Settings.from_environment()
+    if args.remap and (args.prepare_only or args.retry_semantics or args.work_pages or args.evidence_ids or args.workers):
+        parser.error('--remap只更新已有知识的本体映射，不与抽取或准备选项并用')
     if args.workers is not None and not 1<=args.workers<=8:parser.error('--workers必须为1至8')
     if args.prepare_only and (args.retry_semantics or args.work_pages or args.workers):parser.error('--prepare-only只准备完整配置章节，不与抽取或复验选项同时使用')
     if args.evidence_ids and (not args.work_pages or args.prepare_only or args.planned):parser.error('--evidence-ids须用于单个章节的--work-pages复验')
@@ -75,7 +78,14 @@ def main():
     with KnowledgeStore(settings) as store:
         for path,scope in jobs:
             print(scope.get('description') or '配置章节 '+str(scope.get('section')),flush=True)
-            if args.prepare_only:result=prepare_section(path,store,OntologyRegistry(),scope,model=ModelClient(settings))
+            if args.remap:
+                from turbine_kg.knowledge.mapping import remap_document
+                from turbine_kg.knowledge.sections import refresh_document_pages
+                registry=OntologyRegistry()
+                result=remap_document(store,scope['document_id'],registry)
+                store.sync_ontology(registry)
+                result.update(refresh_document_pages(store,scope['document_id']))
+            elif args.prepare_only:result=prepare_section(path,store,OntologyRegistry(),scope,model=ModelClient(settings))
             else:result=process_section(path,store,ModelClient(settings),OntologyRegistry(),scope,work_pages=work_pages,
                 evidence_ids=evidence_ids,retry_semantics=args.retry_semantics,workers=args.workers)
             print(json.dumps(result,ensure_ascii=False,indent=2),flush=True)

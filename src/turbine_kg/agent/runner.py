@@ -699,6 +699,9 @@ def candidate_priority(item,result,tasks,question,registry):
         source_numbers='\n'.join(str((item.get('context') or {}).get(key,'')) for key in ('clause_number','table_number'))
         direct_reference=any(re.search(r'(?<![\d.])'+re.escape(number)+r'(?![\d.])',original_body+'\n'+source_numbers) for number in explicit_numbers)
         path_kinds={row.get('kind') for row in item.get('ontology_paths',[]) if isinstance(row,dict)}
+        # A source-bound direct class match already establishes the object.
+        # Do not prefer a repeated full name over the same class's short name.
+        object_match=object_match or bool(path_kinds & {'direct_class','direct'})
         path_rank=(4 if 'direct_class' in path_kinds or 'direct' in path_kinds else
                    3 if 'ancestor' in path_kinds else 2 if 'descendant' in path_kinds else
                    -1 if path_kinds=={'related_context'} else 1 if path_kinds else 0)

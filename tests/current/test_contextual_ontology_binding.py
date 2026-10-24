@@ -103,7 +103,7 @@ def test_generic_part_and_device_context_survive_persistence_separately():
     persist(store,[{"type":"requirement","text":"凝汽器的冷却管应检查。",
                     "entities":entities,"supports":support()}],"g",registry)
     saved=store.nodes["Statement"][0]
-    assert {(item["class_id"],item["role"]) for item in saved["entities"]} == {
+    assert {(item["ontology_class_id"],item["role"]) for item in saved["entities"]} == {
         ("CoolingTube","subject"),("Condenser","related")}
     assert "Mention" not in store.nodes
     assert any(item["class_id"]=="Thing" for item in store.nodes["OntologyClass"])
@@ -137,8 +137,11 @@ def test_invalid_optional_mapping_preserves_supported_statement(label,upper,prop
     statements,coverage=extract([view],Model(),OntologyRegistry(),seconds=15)
     assert len(statements)==1 and coverage["evidence"]["e"]["status"]=="complete"
     entity=statements[0]["entities"][0]
-    assert "ontology_class_id" not in entity
-    assert reason in entity["ontology_mapping_review"]["reason"]
+    if label == "新管件":
+        assert "ontology_class_id" not in entity
+        assert entity["ontology_mapping_review"]["status"] == "unmapped"
+    else:
+        assert entity["ontology_class_id"] == "Condenser"
     store=Store();persist(store,statements,"g",OntologyRegistry())
     assert "Mention" not in store.nodes
     assert store.nodes["Statement"][0]["text"]==body

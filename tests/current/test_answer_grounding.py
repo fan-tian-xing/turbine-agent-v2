@@ -229,6 +229,20 @@ def test_reading_generic_preparation_does_not_hide_direct_object_source():
     assert competing_unread_sources(task,[result],{'prep-source':{}},'除氧器安装时变形怎么办',registry)
 
 
+def test_direct_class_short_name_can_outrank_an_unrelated_full_name():
+    registry=OntologyRegistry()
+    task={'id':'t','object':'凝汽器冷却管','knowledge_item':'requirement','query_terms':['检查']}
+    shared={'type':'requirement','entities':[],
+            'ontology_paths':[{'kind':'direct_class','class_id':'CoolingTube'}]}
+    transport={**shared,'text':'凝汽器冷却管运输时不得踩踏。',
+               'supports':[{'evidence_id':'transport','member_keys':['a']}]}
+    inspection={**shared,'text':'冷却管穿胀前应检查。',
+                'supports':[{'evidence_id':'inspection','member_keys':['b']}]}
+    result={'tool':'navigate','task_ids':['t'],'result':{'items':[transport,inspection]}}
+    assert candidate_priority(inspection,result,[task],'冷却管检查要求',registry)>candidate_priority(transport,result,[task],'冷却管检查要求',registry)
+    assert competing_unread_sources(task,[result],{'transport':{}},'冷却管检查要求',registry)
+
+
 def test_semantically_inapplicable_claim_is_explicitly_returned_for_repair():
     class Model:
         def call(self,system,user,budget):

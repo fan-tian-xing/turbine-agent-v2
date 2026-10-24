@@ -403,25 +403,6 @@ class OntologyRegistry:
         occurrence = {"type": ["object", "null"], "properties": {key: text for key in ("identifier", "object", "location", "time")}}
         support={"type":"object", "required":["evidence_id","member_keys"], "properties":{
             "evidence_id":{"type":"string","minLength":1},"member_keys":{"type":"array","minItems":1,"items":{"type":"string","minLength":1}}}}
-        core_entity={"type":"object", "required":["label","class","role"], "properties":{
-            "label":{"type":"string","minLength":1},
-            "class":{"type":"string"},
-            "role":{"type":"string"},
-            "occurrence":{"type":["object","null"]}}}
-        statement_core={"type":"object", "required":["text","type","entities","supports"], "properties":{
-            "text":{"type":"string","minLength":1},
-            "type":{"type":"string","enum":self.statement_types},
-            "entities":{"type":"array","items":core_entity},
-            "supports":{"type":"array","items":support}}}
-        ontology_mapping={"type":"object", "required":["entity_index","surface_label","status"], "properties":{
-            "entity_index":{"type":"integer","minimum":0},
-            "surface_label":{"type":"string","minLength":1},
-            "class_id":{"type":["string","null"]},
-            "status":{"type":"string","enum":["mapped","unmapped","ambiguous"]},
-            "method":{"type":"string"},
-            "source_members":{"type":"array","items":{"type":"object"}},
-            "ontology_version":{"type":"string"},
-            "reason":{"type":"string"}}}
         endpoint={"type":"object", "properties":{"statement_id":{"type":"string","minLength":1},
             "entity_index":{"type":"integer","minimum":0}}, "required":["statement_id"], "additionalProperties":False}
         relation={"type":"object","required":["relation_id"],"properties":{
@@ -442,8 +423,6 @@ class OntologyRegistry:
                 "ontology_class_id": {"enum": [*self.business_classes, *self.domain_classes, None]},
                 "class": {"type": "string", "enum": [key for key, row in self.classes.items() if row.get("extractable")]},
                 "role": {"type": "string", "enum": list(self.roles)}}}},
-            "statement_core": statement_core,
-            "ontology_mapping": {"type":"array", "items": ontology_mapping},
             "semantic_relations": {"type": "array", "items": relation}
             }, "required": ["type", "text", "entities", "supports"]}
 

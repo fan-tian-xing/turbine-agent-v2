@@ -32,8 +32,6 @@ def test_minimal_statement_needs_no_modal_flags():
     items,coverage=extract(source(),Model(),OntologyRegistry(),repair=True)
     assert len(items)==1 and coverage['evidence']['source']['status']=='complete'
     assert not {'modality','negation','possibility'} & items[0].keys()
-    assert items[0]['statement_core']['entities'][0]['label']=='部件'
-    assert items[0]['ontology_mapping'][0]['class_id']=='Component'
     assert coverage['attempt_count']==1
 
 

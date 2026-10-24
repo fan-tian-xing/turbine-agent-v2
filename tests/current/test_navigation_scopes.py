@@ -91,7 +91,7 @@ def test_scope_read_cache_is_shared_between_navigation_calls():
 def test_navigation_uses_registered_edge_types():
     tools=tools_for([scope()])
     tools.navigate('汽轮机',['has_requirement','has_inspection'],hops=2)
-    query,params=tools.store.queries[0]
+    query,params=next((q,p) for q,p in tools.store.queries if '[:HAS_REQUIREMENT|HAS_INSPECTION' in q)
     assert '[:HAS_REQUIREMENT|HAS_INSPECTION*1..2]' in query
     assert 'RELATES' not in query
     assert "type(r)=toUpper(r.relation_id)" in query
@@ -117,11 +117,12 @@ def test_navigation_excludes_related_only_paths_for_typed_edges():
     paths=[
         ('related-typed','HAS_REQUIREMENT','related'),
         ('owned-subject','HAS_REQUIREMENT','subject'),
-        ('owned-quantity','HAS_REQUIREMENT','quantity_target'),
+        ('owned-subject-2','HAS_REQUIREMENT','subject'),
     ]
 
     class Store:
         def query(self,cypher,parameters,budget):
+            if 's.data_json CONTAINS $label' in cypher:return []
             assert "all(r IN relationships(path) WHERE" in cypher
             assert "coalesce(r.role,'') <> 'related'" in cypher
             matched=[(key,kind,role) for key,kind,role in paths
@@ -134,7 +135,7 @@ def test_navigation_excludes_related_only_paths_for_typed_edges():
     tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'version',()),Budget())
     result=tools.navigate('汽轮机',['has_requirement'])
     assert result['coverage']['matched']==2
-    assert [item['id'] for item in result['items']]==['owned-subject','owned-quantity']
+    assert [item['id'] for item in result['items']]==['owned-subject','owned-subject-2']
 
 
 def test_domain_class_navigation_reaches_versioned_parent_before_statement():
@@ -210,7 +211,7 @@ def test_registry_parent_axiom_recalls_parent_when_child_class_is_not_materializ
 def test_unknown_words_do_not_create_concept_navigation_nodes():
     tools=tools_for([])
     tools.navigate('尚未审定的新词',['has_requirement'])
-    queries=tools.store.queries
+    queries=[(q,p) for q,p in tools.store.queries if 's.data_json CONTAINS $label' not in q]
     assert all('BROADER_CONCEPT' not in query for query,_ in queries)
     assert all(params['ids']==[] for _,params in queries)
     assert all(params['object_labels']==['尚未审定的新词'] for _,params in queries)

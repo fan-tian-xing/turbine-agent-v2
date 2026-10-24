@@ -155,7 +155,7 @@ class KnowledgeStore:
                 from turbine_kg.retrieval.search import SEARCH_VERSION, search_tokens
                 row = {**row, 'search_tokens':' '.join(search_tokens(row['text'])),
                        'search_projection_version':SEARCH_VERSION}
-            simple = {k: row[k] for k in ("id", "document_id", "revision_id", "text", "kind", "physical_page", "status", "ontology_version", "class_id", "parent_class_id", "row_index", "column_index", "table_id", "table_number", "evidence_id", "label", "name", "logical_key", "content_hash") if k in row}
+            simple = {k: row[k] for k in ("id", "document_id", "revision_id", "text", "type", "kind", "physical_page", "status", "ontology_version", "class_id", "parent_class_id", "row_index", "column_index", "table_id", "table_number", "evidence_id", "label", "name", "aliases", "logical_key", "content_hash") if k in row}
             if label == 'Evidence':
                 simple.update({key:row[key] for key in ('search_tokens','search_projection_version') if key in row})
             if label in ('OntologyClass','PhysicalObject','Equipment','Component','System','Tool','Activity','Statement'):

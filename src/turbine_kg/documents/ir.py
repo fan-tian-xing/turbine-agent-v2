@@ -171,6 +171,7 @@ def parse_references(text):
     Offsets and quotes refer to the original text, including full-width symbols.
     Range expansion belongs to the index and only selects actual source entries.
     """
+    from turbine_kg.knowledge.quantities import UNIT_PATTERN, normalize_quantity_text
     number = '(?:' + _NUMBER + ')'
     suffix = rf'(?:\s*(?:条款|条|节)?\s*(?:至|到|～|~|—|–|－|-)\s*第?\s*(?P<endpoint>{number}))?'
     patterns = [
@@ -187,7 +188,8 @@ def parse_references(text):
             kind = 'table' if label in ('表', 'table') else 'figure' if label in ('图', 'figure') else 'clause'
             value = normalized_number(match.group('number'))
             # "按1.25倍" and "低于0.10mm" describe quantities, not clauses.
-            if style == 'cue' and re.match(r'\s*(?:倍|毫米|厘米|米|分钟|小时|秒|摄氏度|MPa|kPa|Pa|mm|cm|min|h|s|°C|℃|％|%)', text[match.end('number'):]):
+            if style == 'cue' and re.match(r'\s*(?:倍|' + UNIT_PATTERN + r')(?![A-Za-z/])',
+                                          normalize_quantity_text(text[match.end('number'):])):
                 continue
             if style == 'cue' and re.search(r'[A-Z]{1,8}\s*/\s*T?\s*$', match.group()[:match.start('number')-match.start()]):
                 continue

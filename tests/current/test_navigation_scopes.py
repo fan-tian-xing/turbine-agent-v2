@@ -215,3 +215,37 @@ def test_unknown_words_do_not_create_concept_navigation_nodes():
     assert all('BROADER_CONCEPT' not in query for query,_ in queries)
     assert all(params['ids']==[] for _,params in queries)
     assert all(params['object_labels']==['尚未审定的新词'] for _,params in queries)
+
+
+@pytest.mark.parametrize('quote,bound_owner,expected',[
+    ('水箱排液管安装应检查。',True,True),
+    ('水箱与排液管应检查。',True,False),
+    ('水箱排液管安装应检查。',False,False),
+])
+def test_source_bound_compound_uses_existing_classes_and_source_scope(quote,bound_owner,expected):
+    registry=OntologyRegistry();seen=[]
+    def entity(label,class_id):
+        return {'label':label,'class':'Mention','ontology_class_id':class_id,
+                'ontology_binding':{'class_id':class_id,'source_members':[{'evidence_id':'e','member_key':'m'}]}}
+    owner=entity('水箱','WaterTank')
+    if not bound_owner:owner['ontology_binding']['source_members']=[{'evidence_id':'other','member_key':'m'}]
+    row={'id':'s','text':quote,'entities':[owner,entity('排液管','Pipe')],
+         'supports':[{'evidence_id':'e','member_keys':['m'],'quotes':[{'member_key':'m','text':quote}]}]}
+    class Store:
+        def query(self,cypher,parameters,budget):
+            seen.append((cypher,parameters))
+            if 's.data_json CONTAINS $label' in cypher:return [{'node':row}]
+            if 'RETURN count(s)' in cypher:return [{'total':0}]
+            return []
+    tools=Tools(Store(),registry,Snapshot(('d',),registry.version,()),Budget())
+    tools.navigate('水箱排液管',['has_requirement'])
+    query,params=next((q,p) for q,p in seen if 'RETURN count(s)' in q)
+    if expected:
+        assert registry.domain_class('管道')['id'] in params['ids']
+        assert registry.domain_class('水箱')['id'] in params['ids']
+        assert params['context_evidence_ids']==['e']
+        assert 'e.id IN $context_evidence_ids' in query
+        assert 'MENTIONS' in query and 's.type IN $statement_types' in query
+    else:
+        assert params['ids']==[] and params['context_evidence_ids']==[]
+    assert registry.domain_class('水箱排液管') is None

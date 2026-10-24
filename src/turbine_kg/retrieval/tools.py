@@ -35,13 +35,13 @@ class Tools:
         return cursor['offset']
 
     def _ontology_objects(self,object_label):
-        """Resolve an exact domain name and gather bounded, versioned paths.
+        """Resolve registered or source-bound names into versioned class paths.
 
         A related class or component is a recall candidate, never an inherited
         obligation. The returned path stays available to the answer verifier.
         """
         if object_label in self.ontology_paths:return self.ontology_paths[object_label]
-        objects={}
+        objects={};compound_scope=None
         resolver=getattr(self.registry,'domain_class',None)
         domain=resolver(object_label) if callable(resolver) else None
         if domain is None:
@@ -50,33 +50,60 @@ class Tools:
         if domain is None:
             # Source-specific mappings are not global ontology aliases. They
             # can nevertheless identify a class when the current documents
-            # agree on this exact raw mention and its bound source members.
+            # agree on a raw mention or a literal compound with bound members.
             from turbine_kg.ontology.registry import normalized
             rows=self.store.query('MATCH (s:TK:Statement) WHERE s.document_id IN $documents '
-                'AND s.ontology_version=$version AND s.data_json CONTAINS $label '
+                'AND s.ontology_version=$version AND (s.text CONTAINS $label OR s.data_json CONTAINS $label) '
                 'RETURN properties(s) AS node',
                 {'documents':list(self.snapshot.document_ids),'version':self.snapshot.ontology_version,
                  'label':object_label},self.budget)
-            classes=set()
+            classes=set();compounds={};query_name=normalized(object_label)
             for row in rows:
                 if not row.get('node'):continue
                 statement=unpack(row['node'])
                 supported={(support['evidence_id'],key) for support in statement.get('supports',[])
                            for key in support['member_keys']}
+                bound=[]
                 for entity in statement.get('entities',[]):
-                    if normalized(entity.get('surface_label') or entity.get('label',''))!=normalized(object_label):continue
                     binding=entity.get('ontology_binding') or {}
                     members=binding.get('source_members',[])
                     if (members and entity.get('ontology_class_id')==binding.get('class_id') and
                         all((member.get('evidence_id'),member.get('member_key')) in supported for member in members)):
-                        classes.add(binding['class_id'])
+                        bound.append(entity)
+                for entity in bound:
+                    name=normalized(entity.get('surface_label') or entity.get('label',''))
+                    class_id=entity['ontology_class_id']
+                    if name==query_name:
+                        classes.add(class_id);continue
+                    if not name or not query_name.endswith(name) or len(query_name)<=len(name):continue
+                    qualifier=self.registry.domain_class(query_name[:-len(name)])
+                    if not qualifier or not self.registry.domain_is_a(qualifier['class_id'],'PhysicalObject'):continue
+                    head_members={(m['evidence_id'],m['member_key']) for m in entity['ontology_binding']['source_members']}
+                    owner_members={(m['evidence_id'],m['member_key']) for owner in bound
+                        if owner['ontology_class_id']==qualifier['class_id']
+                        for m in owner['ontology_binding']['source_members']}
+                    # Both parts must bind the same literal compound in the
+                    # supported source, not merely co-occur in a paragraph.
+                    evidence={support['evidence_id'] for support in statement.get('supports',[])
+                        for quote in support.get('quotes',[])
+                        if (support['evidence_id'],quote.get('member_key')) in head_members & owner_members
+                        and query_name in normalized(quote.get('text',''))}
+                    if evidence:compounds.setdefault((class_id,qualifier['class_id']),set()).update(evidence)
             if len(classes)==1:
                 domain=self.registry.domain_class_by_id(next(iter(classes)))
+            elif not classes and len(compounds)==1:
+                (class_id,qualifier_id),evidence=next(iter(compounds.items()))
+                domain=self.registry.domain_class_by_id(class_id)
+                compound_scope={'qualifier_id':qualifier_id,'evidence_ids':sorted(evidence)}
         if domain is None:return objects
         class_id=domain.get('class_id',domain.get('id'))
         if not class_id:return objects
         root_id=identity('ontology-class',class_id)
         objects[root_id]={'kind':'direct_class','path':[],'class_id':class_id}
+        if compound_scope:
+            objects[root_id]['context_evidence_ids']=compound_scope['evidence_ids']
+            qualifier_id=compound_scope['qualifier_id']
+            objects[identity('ontology-class',qualifier_id)]={'kind':'qualified_context','path':[],'class_id':qualifier_id}
         params={'id':root_id,'documents':list(self.snapshot.document_ids),
                 'ontology_version':self.snapshot.ontology_version,'limit':max(16,self.budget.statement_page*2)}
         depth=min(self.budget.business_hops,3)
@@ -198,6 +225,7 @@ class Tools:
                     for kind in self.registry.relations[relation].get('statement_types',[]))),
                 'rank_5':ranks[5],'rank_4':ranks[4],'rank_2':ranks[2],'rank_1':ranks[1],
                 'query_terms':query_terms,'offset':offset,'limit':self.budget.statement_page}
+        params['context_evidence_ids']=sorted({eid for path in ontology_objects.values() for eid in path.get('context_evidence_ids',[])})
         # Approved classes and actual occurrences are entries to pinned
         # Statement paths; unknown words do not become generic graph nodes.
         edge_types=[self.registry.relationship_type(relation) for relation in relation_ids]
@@ -216,6 +244,8 @@ class Tools:
             "RETURN s,c,0 AS owned_match,-1 AS path_rank } "
             "WITH s,collect(DISTINCT properties(c)) AS matched_objects,"
             "max(path_rank) AS path_rank,max(owned_match) AS owned_match ")
+        if params['context_evidence_ids']:
+            query+="WHERE EXISTS { MATCH (s)-[:SUPPORTS]->(e:TK:Evidence) WHERE e.id IN $context_evidence_ids AND e.document_id=s.document_id } "
         total=self.store.query(query+'RETURN count(s) AS total',params,self.budget)[0]['total']
         rows=self.store.query(query+'RETURN properties(s) AS node,matched_objects,owned_match '
             'ORDER BY path_rank DESC,size([term IN $query_terms WHERE toLower(coalesce(s.text,\'\')) CONTAINS term]) DESC,s.id '

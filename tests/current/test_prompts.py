@@ -40,3 +40,11 @@ def test_advice_uses_engineering_limits_without_internal_status_or_scope_expansi
     assert "一般的处理建议请求不等于要求具体返修工艺" in review
     assert "missing_items只能列已有资料明确提供" in review
     assert "哪条当前建议不成立或无法执行" in review
+
+
+def test_overview_requires_relevant_branches_without_expanding_specific_problems():
+    for prompt in (answer_prompt(),answer_review_prompt()):
+        assert '总括询问' in prompt and '条件分支' in prompt
+        assert '具体故障、现场数值或单一指标' in prompt
+    assert '缺少其中一项即属于漏答' in answer_review_prompt()
+    assert '不要求它使已有正确建议失效' in answer_review_prompt()

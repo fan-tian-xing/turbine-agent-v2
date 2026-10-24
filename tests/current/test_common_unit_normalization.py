@@ -72,3 +72,24 @@ def test_field_values_and_arithmetic_are_not_mechanically_discarded(text):
 def test_multiplier_is_not_a_clause_reference():
     assert not _references('按1.25倍计算的试验压力为2.5 MPa')
     assert ('clause', '5.9.4') in _references('按照5.9.4的规定执行')
+
+
+@pytest.mark.parametrize('unit', ['m', 'mm', 'MPa', 'kPa/h', 'kg', 'kN', '°C', '%', '米', '千克', '倍'])
+@pytest.mark.parametrize('space', ['', ' ', '\u3000'])
+def test_cued_engineering_values_are_not_structural_references(unit, space):
+    from turbine_kg.documents.ir import parse_references
+    text = f'高度应符合设计要求且不宜低于3.5{space}{unit}；按5.8.2条执行。'
+    assert [(ref['kind'], ref['number']) for ref in parse_references(text)] == [('clause', '5.8.2')]
+    assert _references(text) == {('clause', '5.8.2')}
+
+
+def test_spaced_unit_does_not_discard_a_source_bound_claim():
+    from turbine_kg.agent.claims import binding_error
+    reads = {'e': {'evidence_id': 'e', 'document_id': 'd', 'revision_id': 'r', 'title': '规范',
+                   'context': {'clause_number': '5.8.2'}, 'members': [
+                       {'member_key': 'm', 'quote': 'U形管高度应符合设计要求且不宜低于3.5m。',
+                        'role': 'content', 'text_origin': 'native_text', 'locator': {}}]}}
+    claim = {'basis': 'source', 'text': 'U形管高度应符合设计要求且不宜低于3.5 m。',
+             'supports': [{'evidence_id': 'e', 'member_keys': ['m']}]}
+    assert binding_error(claim, reads, {}) is None
+    assert binding_error({**claim, 'text': claim['text'] + '按5.8.9条执行。'}, reads, {}) == '回答的表图或条款编号没有来源支持'

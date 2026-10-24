@@ -46,6 +46,17 @@ def test_content_fingerprint_ignores_storage_metadata():
     assert content_fingerprint(row) == content_fingerprint(changed)
 
 
+def test_cypher_type_and_alias_properties_match_unpacked_records():
+    from turbine_kg.knowledge.store import unpack
+    graph=MemoryGraph()
+    row={**statement('e','对象应检查。'),'id':'s'}
+    graph.put('Statement',[row])
+    assert graph.nodes['Statement']['s']['type']=='requirement'
+    assert unpack(graph.nodes['Statement']['s'])['type']==row['type']
+    graph.put('OntologyClass',[{'id':'c','class_id':'Equipment','label':'设备','aliases':['装备']}])
+    assert graph.nodes['OntologyClass']['c']['aliases']==['装备']
+
+
 
 class MemoryGraph:
     from turbine_kg.knowledge.store import KnowledgeStore

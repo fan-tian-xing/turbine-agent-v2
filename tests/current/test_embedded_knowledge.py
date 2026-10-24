@@ -3,7 +3,7 @@ from copy import deepcopy
 import pytest
 from rdflib import Namespace, RDF
 
-from turbine_kg.knowledge.extract import persist, extract
+from turbine_kg.knowledge.statement_extraction import persist, extract
 from turbine_kg.ontology.registry import OntologyRegistry
 
 
@@ -268,7 +268,7 @@ def test_same_evidence_mother_and_child_supports_union_preserves_mother_referenc
 
 
 def test_model_transport_drops_layout_runtime_fields_but_keeps_parent_chain_and_all_children():
-    from turbine_kg.knowledge.extract import _model_view
+    from turbine_kg.knowledge.statement_extraction import _model_view
     import json
     view={'evidence_id':'e','kind':'text','context':{},'members':[
         {'member_key':'parent','source_id':'parent-source','role':'content','quote':'应符合下列规定。',
@@ -289,7 +289,7 @@ def test_model_transport_drops_layout_runtime_fields_but_keeps_parent_chain_and_
 
 
 def test_related_class_edges_coalesce_source_member_subsets_and_keep_all_supported_members():
-    from turbine_kg.knowledge.extract import merge_statement_mentions
+    from turbine_kg.knowledge.statement_extraction import merge_statement_mentions
     node={'id':'s','supports':[{'evidence_id':'e','member_keys':['m1','m2']}]}
     m1={'evidence_id':'e','member_key':'m1','source_id':'a'}
     m2={'evidence_id':'e','member_key':'m2','source_id':'b'}

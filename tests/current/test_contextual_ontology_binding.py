@@ -2,7 +2,7 @@
 import json
 import pytest
 
-from turbine_kg.knowledge.extract import extract, persist
+from turbine_kg.knowledge.statement_extraction import extract, persist
 from turbine_kg.ontology.registry import OntologyRegistry
 
 

@@ -197,7 +197,7 @@ def test_malformed_or_incomplete_numeric_conditions_remain_unknown():
 
 
 def test_persisted_navigation_keeps_quantity_owner_and_statement_support():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry();store=MemoryStore()
     item={"type":"parameter","text":"壳体尺寸按来源要求。", "entities":[
         {"label":"壳体","class":"Mention","role":"subject"},
@@ -214,7 +214,7 @@ def test_persisted_navigation_keeps_quantity_owner_and_statement_support():
 
 
 def test_object_procedure_step_path_keeps_each_record_source():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry();store=MemoryStore()
     procedure=supported_item(extraction_id="p",type="procedure",text="壳体安装程序。",
         entities=[{"label":"壳体","class":"Mention","role":"subject"}],
@@ -243,7 +243,7 @@ def supported_item(**extra):
 
 
 def test_structured_values_are_rejected_before_persistence():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry(); store=MemoryStore()
     item=supported_item(entities=[{'label':'部件','class':'Mention','role':'subject'}],
                         quantities=[{'target':'部件','value':.1,'unit':'mm'}],
@@ -254,7 +254,7 @@ def test_structured_values_are_rejected_before_persistence():
 
 
 def test_source_formula_stays_in_statement_text():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     store=MemoryStore()
     persist(store,[supported_item(text='来源公式 f=S/500，适用于冷态。')],'g',OntologyRegistry())
     result=store.nodes['Statement'][0]
@@ -263,7 +263,7 @@ def test_source_formula_stays_in_statement_text():
 
 
 def test_real_occurrence_identity_uses_source_and_time_without_roles():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry();store=MemoryStore()
     entities=[{"label":"设备1","class":"Equipment","role":"subject","occurrence":{"identifier":"1"}},
               {"label":"设备1","class":"Equipment","role":"object","occurrence":{"identifier":"1"}},
@@ -280,7 +280,7 @@ def test_real_occurrence_identity_uses_source_and_time_without_roles():
     {'identifier':None,'object':None,'location':None,'time':None,
      'source_context':[{'revision_id':'r'}],'source_anchors':[{'source_id':'source-1'}]}])
 def test_source_provenance_does_not_create_an_unidentified_real_instance(entity_class,occurrence):
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry();store=MemoryStore()
     entity={'label':'来源通用名称','class':entity_class,'role':'related'}
     if occurrence is not None:entity['occurrence']=occurrence
@@ -290,7 +290,7 @@ def test_source_provenance_does_not_create_an_unidentified_real_instance(entity_
 
 
 def test_report_with_explicit_equipment_component_tool_and_activity_identity_is_retained():
-    from turbine_kg.knowledge.extract import extract,persist
+    from turbine_kg.knowledge.statement_extraction import extract,persist
     text='检修记录：08:30在A区使用扳手W2检查1号油泵的叶轮。'
     entities=[{'label':'油泵','class':'Equipment','role':'subject',
                'occurrence':{'identifier':'1号','object':'油泵','location':'A区'}},
@@ -320,7 +320,7 @@ def test_report_with_explicit_equipment_component_tool_and_activity_identity_is_
 
 
 def test_same_real_instance_final_id_self_loop_is_rejected():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry(); store=MemoryStore()
     entities=[{'label':'设备1','class':'Equipment','role':'subject','occurrence':{'identifier':'1','source_context':[{'revision_id':'r'}],'source_anchors':[{'source_id':'s-one'}]}},
               {'label':'设备1','class':'Equipment','role':'related','occurrence':{'identifier':'1','source_context':[{'revision_id':'r'}],'source_anchors':[{'source_id':'s-two'}]}}]
@@ -336,7 +336,7 @@ def source_view():
 
 
 def test_this_chapter_scope_cannot_bind_a_child_section_heading():
-    from turbine_kg.knowledge.extract import _scope_declaration
+    from turbine_kg.knowledge.statement_extraction import _scope_declaration
     view=source_view()
     view['members'].append({'member_key':'child','source_id':'child-heading','role':'section',
         'source_kind':'heading','quote':'5.1 一般规定','locator':{'physical_page':1}})
@@ -356,7 +356,7 @@ class ScopeModel:
 
 
 def test_scope_aliases_and_exact_source_locator_survive_single_pass():
-    from turbine_kg.knowledge.extract import extract
+    from turbine_kg.knowledge.statement_extraction import extract
     view=source_view()
     model=ScopeModel({'evidence_id':'e0','member_keys':['e0m1'],'scope':'section','heading_source_id':'e0m0','condition_text':'本章适用于冷态检查。'})
     statements,coverage=extract([view],model,OntologyRegistry())
@@ -369,7 +369,7 @@ def test_scope_aliases_and_exact_source_locator_survive_single_pass():
 
 @pytest.mark.parametrize('replacement',[{'member_keys':['e0m0'],'condition_text':'范围'}, {'heading_source_id':'invented'}, {'condition_text':'适用于所有工况'}])
 def test_scope_cannot_be_inferred_from_title_unknown_heading_or_retyped_conditions(replacement):
-    from turbine_kg.knowledge.extract import extract
+    from turbine_kg.knowledge.statement_extraction import extract
     row={'evidence_id':'e0','member_keys':['e0m1'],'scope':'section','heading_source_id':'e0m0','condition_text':'本章适用于冷态检查。',**replacement}
     model=ScopeModel(row)
     _,coverage=extract([source_view()],model,OntologyRegistry())
@@ -377,14 +377,14 @@ def test_scope_cannot_be_inferred_from_title_unknown_heading_or_retyped_conditio
 
 
 def test_scope_source_text_mismatch_blocks_inheritance():
-    from turbine_kg.knowledge.extract import extract
+    from turbine_kg.knowledge.statement_extraction import extract
     model=ScopeModel({'evidence_id':'e0','member_keys':['e0m1'],'scope':'section','heading_source_id':'heading-source','condition_text':'本章适用于全部工况。'})
     _,coverage=extract([source_view()],model,OntologyRegistry())
     assert coverage['source_scopes']==[] and coverage['rejected']
 
 
 def test_statement_schema_does_not_define_structured_quantity_or_formula_fields():
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     registry=OntologyRegistry();store=MemoryStore()
     assert not {'conditions','quantities','formulas'} & set(registry.extraction_schema()['properties'])
     invalid_store=MemoryStore()

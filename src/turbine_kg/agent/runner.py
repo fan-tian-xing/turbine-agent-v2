@@ -670,14 +670,8 @@ def unresolved_answer_gaps(gaps,tasks,claims):
 
 def candidate_priority(item,result,tasks,question,registry):
     """Rank graph Statements by the task and the original question."""
-    def strings(value):
-        if isinstance(value,str):return [value]
-        if isinstance(value,list):return [s for part in value for s in strings(part)]
-        if isinstance(value,dict):return [s for part in value.values() for s in strings(part)]
-        return []
     original_body=unicodedata.normalize('NFKC',str(item.get('text',''))).casefold()
     body=original_body
-    condition_terms=set()
     priorities=[]
     for task in tasks:
         if task['id'] not in result.get('task_ids',[]):continue
@@ -694,7 +688,6 @@ def candidate_priority(item,result,tasks,question,registry):
         object_match=any(term and term in original_body for term in exact_names)
         specific=set(relevance_terms(task.get('query_terms',[]),broad))
         hits=sum(term in body for term in specific)
-        phase_hits=0
         explicit_numbers=set(re.findall(r'(?<![\d.])\d+(?:\.\d+){2,}(?![\d.])',unicodedata.normalize('NFKC','\n'.join([question,task.get('subquestion',''),*task.get('query_terms',[])]))))
         source_numbers='\n'.join(str((item.get('context') or {}).get(key,'')) for key in ('clause_number','table_number'))
         direct_reference=any(re.search(r'(?<![\d.])'+re.escape(number)+r'(?![\d.])',original_body+'\n'+source_numbers) for number in explicit_numbers)
@@ -713,7 +706,7 @@ def candidate_priority(item,result,tasks,question,registry):
             object_match=object_match or hits>0
         activity_match=task_statement_applicability(item,task,registry)
         activity_rank={'applicable':2,'unknown':0,'not_applicable':-2}[activity_match]
-        priorities.append((int(direct_reference),int(object_match),path_rank,hits+phase_hits,activity_rank,int(direct)))
+        priorities.append((int(direct_reference),int(object_match),path_rank,hits,activity_rank,int(direct)))
     return max(priorities,default=(0,0,0,0,0,0))
 
 
@@ -826,34 +819,11 @@ class Agent:
 
     def answer(self,question:str,session:Session|None=None,*,use_skills=False,budget:Budget|None=None,validation_snapshot=None):
         session=session or Session();budget=budget or Budget.configured()
-        # The current document set keeps the ontology contract with which it
-        # was built.  The code may already carry a newer registry.
-        if (validation_snapshot is not None and validation_snapshot.ontology_version != self.registry.version
-                and re.fullmatch(r'[0-9a-f]{64}',validation_snapshot.ontology_version)):
-            pinned=OntologyRegistry.for_version(validation_snapshot.ontology_version)
-            return Agent(self.store,model=self.model,registry=pinned).answer(
-                question,session,use_skills=use_skills,budget=budget,validation_snapshot=validation_snapshot)
         versions=self.skill_catalog.versions() if use_skills else ()
-        if validation_snapshot is not None:
-            snapshot=validation_snapshot
-        else:
-            try:
-                snapshot=self.store.snapshot(self.registry.version,versions,budget)
-            except ValueError as error:
-                if '有效知识与当前本体版本不一致' not in str(error):raise
-                active=self.store.query(
-                    "MATCH (d:TK:Document) RETURN DISTINCT d.ontology_version AS ontology",
-                    budget=budget)
-                versions_in_use={row.get('ontology') for row in active}
-                if len(versions_in_use)!=1 or None in versions_in_use:raise
-                pinned=OntologyRegistry.for_version(next(iter(versions_in_use)))
-                return Agent(self.store,model=self.model,registry=pinned).answer(
-                    question,session,use_skills=use_skills,budget=budget)
+        snapshot=validation_snapshot if validation_snapshot is not None else self.store.snapshot(self.registry.version,versions,budget)
         if (snapshot.ontology_version != self.registry.version
                 and re.fullmatch(r'[0-9a-f]{64}',snapshot.ontology_version)):
-            pinned=OntologyRegistry.for_version(snapshot.ontology_version)
-            return Agent(self.store,model=self.model,registry=pinned).answer(
-                question,session,use_skills=use_skills,budget=budget,validation_snapshot=snapshot)
+            raise ValueError('资料本体版本与当前注册表不一致，请先运行 --remap 更新映射')
         tools=Tools(self.store,self.registry,snapshot,budget)
         seen=set();queue=[];statements={};answer_review_cache={};last_failed=None;repair_attempted=False;planning_failures=0;planning_error=None
         saved={'question':question,'results':[],'errors':[],'tasks':[],'skills':[],'facts':{},'claims':[],'gaps':[],'round':0}

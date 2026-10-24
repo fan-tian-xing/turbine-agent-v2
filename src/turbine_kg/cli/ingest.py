@@ -8,7 +8,7 @@ from turbine_kg.ontology.registry import OntologyRegistry
 from turbine_kg.settings import Settings
 from turbine_kg.settings import PROJECT_ROOT
 from turbine_kg.documents.catalog import rows,document_id
-from turbine_kg.knowledge.sections import process_section, prepare_section
+from turbine_kg.knowledge.chapter_processing import process_section, prepare_section
 
 
 def parse_pages(value):
@@ -70,7 +70,7 @@ def main():
         matches=[scope for scope in scopes if scope['document_id']==doc and (args.section is None or str(scope.get('section'))==args.section)]
         if len(matches)!=1:parser.error('来源须唯一匹配一个已配置章节；有多个章节时指定--section')
         jobs.append((path,matches[0]))
-    from turbine_kg.knowledge.sections import scope_pages
+    from turbine_kg.knowledge.chapter_processing import scope_pages
     for _,scope in jobs:
         try:allowed=scope_pages(scope)
         except ValueError as error:parser.error(str(error))
@@ -79,8 +79,8 @@ def main():
         for path,scope in jobs:
             print(scope.get('description') or '配置章节 '+str(scope.get('section')),flush=True)
             if args.remap:
-                from turbine_kg.knowledge.mapping import remap_document
-                from turbine_kg.knowledge.sections import refresh_document_pages
+                from turbine_kg.knowledge.ontology_mapping import remap_document
+                from turbine_kg.knowledge.chapter_processing import refresh_document_pages
                 registry=OntologyRegistry()
                 result=remap_document(store,scope['document_id'],registry)
                 store.sync_ontology(registry)

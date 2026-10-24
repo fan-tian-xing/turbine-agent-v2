@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from turbine_kg.knowledge.extract import confirm_semantic_interpretation,semantic_review_views,rebind_semantic_interpretation,extract
+from turbine_kg.knowledge.statement_extraction import confirm_semantic_interpretation,semantic_review_views,rebind_semantic_interpretation,extract
 from turbine_kg.ontology.registry import OntologyRegistry
 
 
@@ -90,11 +90,11 @@ def test_confirmed_interpretation_is_bound_but_does_not_prove_semantic_completen
     assert items[0]['confirmed_interpretations'][0]['field']=='entities.roles'
 
 
-def test_quantity_confirmation_requires_specific_selector_and_concrete_property():
+def test_removed_quantity_fields_cannot_be_confirmed():
     record,view=sources();proof={'confirmed':True,'actor':'user','note':'确认属性。'}
     with pytest.raises(ValueError,match='合法字段'):
         confirm_semantic_interpretation(record,view,member_keys=['m'],field='quantities.unit',
-            interpretation='单位解释',user_confirmation=proof,confirmed_value='mm')
+            interpretation='单位解释',user_confirmation=proof)
     with pytest.raises(ValueError,match='合法字段'):
         confirm_semantic_interpretation(record,view,member_keys=['m'],field='quantities.operator',
-            interpretation='边界解释',user_confirmation=proof,quantity_selector={'target':'对象','parameter':'参数'},confirmed_value='ge')
+            interpretation='边界解释',user_confirmation=proof)

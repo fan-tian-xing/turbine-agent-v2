@@ -33,18 +33,14 @@ def _discard_statements(store, document_id, evidence_ids):
     from turbine_kg.ontology.registry import OntologyRegistry
     registry=OntologyRegistry()
     business_types=[registry.relationship_type(key) for key,row in registry.relations.items() if row.get('extractable')]
-    owned=store.query('MATCH (s:TK:Statement)-[r]->(n:TK) WHERE type(r) IN $types AND s.id IN $ids AND s.document_id=$document AND n.document_id=$document AND (n:Condition OR n:Quantity OR n:Formula) RETURN DISTINCT n.id AS id',
-                      {'ids':ids,'document':document_id,'types':business_types})
     # Statement-owned entity edges store their binding in JSON, including
     # INSTANCE_OF whose endpoints both survive a Statement replacement.
     bindings=[json_text({'statement_id':sid})[1:-1] for sid in ids]
     store.query('MATCH (:TK)-[r]->(:TK) WHERE type(r) IN $types AND r.document_id=$document AND any(binding IN $bindings WHERE r.data_json CONTAINS binding) DELETE r',
                 {'document':document_id,'bindings':bindings,'types':[*business_types,'INSTANCE_OF']})
-    store.query('MATCH (n:TK) WHERE n.id IN $ids AND n.document_id=$document AND (n:Condition OR n:Quantity OR n:Formula) DETACH DELETE n',
-                {'ids':[row['id'] for row in owned],'document':document_id})
     store.query('MATCH (s:TK:Statement) WHERE s.id IN $ids AND s.document_id=$document DETACH DELETE s',{'ids':ids,'document':document_id})
     if entity_ids:
-        store.query('MATCH (n:TK) WHERE n.id IN $ids AND (n:Concept OR n:ProcedureDefinition OR n:StepDefinition OR n:PhysicalObject OR n:Equipment OR n:Component OR n:Tool OR n:ActualActivity) AND NOT (n)--() AND NOT EXISTS { MATCH (other:TK) WHERE other.id<>n.id AND other.data_json CONTAINS n.id } DELETE n',
+        store.query('MATCH (n:TK) WHERE n.id IN $ids AND (n:PhysicalObject OR n:Equipment OR n:Component OR n:System OR n:Tool OR n:Activity) AND NOT (n)--() AND NOT EXISTS { MATCH (other:TK) WHERE other.id<>n.id AND other.data_json CONTAINS n.id } DELETE n',
                     {'ids':entity_ids})
 
 
@@ -89,7 +85,7 @@ def _replace_statements_atomically(store, document_id, evidence_ids, statements,
     merges their supports. Both operations therefore run inside one write
     transaction; an exception rolls back the removal and every partial write.
     """
-    from turbine_kg.knowledge.extract import persist
+    from turbine_kg.knowledge.statement_extraction import persist
     with _write_transaction(store) as tx_store:
         _discard_statements(tx_store, document_id, evidence_ids)
         return persist(tx_store, statements, document_id, registry)

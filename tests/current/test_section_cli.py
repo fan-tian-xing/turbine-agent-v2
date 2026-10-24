@@ -81,10 +81,9 @@ def test_non_section_configuration_cannot_enable_planned_full_book(entry):
     assert calls==[]
 
 
-def test_retired_module_exposes_only_three_shared_helpers():
-    from turbine_kg.knowledge import ingest
-    assert not hasattr(ingest,'ingest') and not hasattr(ingest,'_finalize_reconcile')
-    assert all(callable(getattr(ingest,key)) for key in ('_table_context_sources','_support_closure','_discard_statements'))
+def test_statement_sync_exposes_shared_helpers():
+    from turbine_kg.knowledge import statement_sync
+    assert all(callable(getattr(statement_sync,key)) for key in ('_table_context_sources','_support_closure','_discard_statements'))
 
 
 def test_result_printing_preserves_json_in_a_gbk_terminal(entry,monkeypatch):

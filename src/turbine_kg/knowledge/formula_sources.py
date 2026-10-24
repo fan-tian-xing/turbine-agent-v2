@@ -1,4 +1,4 @@
-"""Pure updates of existing records after an explicit, source-bound user review."""
+"""Correct formula source text while retaining the original OCR and location."""
 from copy import deepcopy
 from hashlib import sha256
 
@@ -28,8 +28,7 @@ def confirm_formula_source(source, *, binding, raw_text, verified_text, formula,
         raise ValueError('公式更正需要用户明确确认内容')
     if not isinstance(verified_text,str) or not verified_text.strip() or not isinstance(formula,dict) or not isinstance(formula.get('expression'),str) or not formula['expression'].strip():
         raise ValueError('人工确认需要明确更正正文及公式表达式')
-    # Keep the existing extraction schema's unit representation: strings, with
-    # explicit "1" for dimensionless symbols. Missing units remain missing.
+    # Source formula variables use string units; "1" means dimensionless.
     units=formula.get('units')
     if units is not None and (not isinstance(units,dict) or any(value is not None and not isinstance(value,str) for value in units.values())):
         raise ValueError('变量单位必须为字符串或 null；显式无量纲使用字符串 1')
@@ -67,8 +66,3 @@ def apply_formula_reviews(source, annotations):
     rule=matches[0]
     return confirm_formula_source(source,binding=formula_source_binding(source),raw_text=raw_text,
         verified_text=rule['verified_text'],formula=rule['formula'],user_confirmation=rule['user_confirmation'])
-
-
-def confirm_statement_formula(statement, source, evidence, *, formula_index, registry):
-    """Formula confirmation belongs to Evidence, not to a Statement field."""
-    raise ValueError('Statement 不再保存 embedded formula；请直接使用已绑定的 Evidence 原文')

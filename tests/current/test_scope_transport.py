@@ -10,7 +10,7 @@ import pytest
 
 @pytest.mark.parametrize('complete',[True,False])
 def test_table_context_reads_title_and_only_complete_verified_cross_page_sources(complete):
-    from turbine_kg.knowledge.ingest import _table_context_sources
+    from turbine_kg.knowledge.statement_sync import _table_context_sources
     from turbine_kg.evidence.context import table_evidence
     first={'id':'first','kind':'paragraph','text':'在冷态下测量，','document_id':'d','quality':'verified','locator':{'physical_page':1},'attributes':{'cross_page_group':'reviewed-group','cross_page_complete_pages':[1,2]}}
     second={**first,'id':'second','text':'无厂家要求时采用表7.8。','locator':{'physical_page':2}}
@@ -36,7 +36,7 @@ def test_table_context_reads_title_and_only_complete_verified_cross_page_sources
 
 @pytest.mark.parametrize('field',['title_source_ids','related_body_source_ids','inherited_header_source_ids'])
 def test_missing_explicit_table_source_cannot_be_verified_complete(field):
-    from turbine_kg.knowledge.ingest import _table_context_sources
+    from turbine_kg.knowledge.statement_sync import _table_context_sources
     table=SimpleNamespace(locator={field:['absent']},cells=[])
     store=SimpleNamespace(get=lambda *args:[])
     assert _table_context_sources(table,store,'g',[1,2])==[]

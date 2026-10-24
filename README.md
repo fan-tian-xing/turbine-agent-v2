@@ -2,7 +2,11 @@
 
 本项目把书籍、规范中的安装调试知识整理为 Evidence 和 Statement，写入 Neo4j；问答时结合本体关系与全文检索召回依据，由 LangGraph 编排回答。默认输出「建议」和「依据来源」。当前试点范围由 `config/processing_scopes.json` 指定，本体设计见 `ontology/ontology_design.md`。
 
-仓库保存代码、配置、本体定义、测试与来源审核记录。原 PDF、OCR 文件、Neo4j 数据卷、模型缓存和 `.env` 是本机资料，不随 Git 仓库提供。`data/` 中的审核记录和样本可能含来源摘录；使用或公开时需遵守原资料的授权范围。仅克隆仓库不会得到已入库的知识图谱。
+项目架构见 [architecture.md](architecture.md)。
+
+仓库保存代码、配置、本体定义与测试。原 PDF、OCR 文件、Neo4j 数据卷、模型缓存和 `.env` 是本机资料，不随 Git 仓库提供。生效的来源纠正规则保存在 `config/source_annotations.json`。仅克隆仓库不会得到已入库的知识图谱。
+
+主要模块按职责命名：`documents/page_mapping.py` 负责原件与 OCR 页映射，`documents/text_parser.py` 解析文本与 Markdown，`knowledge/chapter_processing.py` 编排整章处理，`knowledge/statement_extraction.py` 抽取与持久化 Statement，`knowledge/statement_sync.py` 负责事务替换与来源支持，`knowledge/ontology_mapping.py` 计算及更新本体映射。原文实体绑定和公式纠正分别放在 `entity_bindings.py`、`formula_sources.py`。
 
 ## 数据流程
 

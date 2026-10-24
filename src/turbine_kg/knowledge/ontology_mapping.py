@@ -21,7 +21,7 @@ def source_entity(entity):
 
 def map_statement(statement, registry, views, *, retain_binding=False):
     """Rebind current source mentions without changing text, roles, or order."""
-    from turbine_kg.knowledge.repair import restored_entity_binding
+    from turbine_kg.knowledge.entity_bindings import restored_entity_binding
     result = deepcopy(statement)
     result['entities'] = [source_entity(entity) for entity in result.get('entities', [])]
     for entity in result['entities']:
@@ -68,8 +68,8 @@ def map_statement(statement, registry, views, *, retain_binding=False):
 def remap_document(store, document_id, registry):
     """Rebuild current projections in one transaction without re-extraction."""
     from turbine_kg.evidence.context import ContextAssembler
-    from turbine_kg.knowledge.extract import persist
-    from turbine_kg.knowledge.ingest import _write_transaction
+    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import _write_transaction
     from turbine_kg.knowledge.store import unpack
     from turbine_kg.knowledge.incremental import content_fingerprint
     from turbine_kg.runtime import Snapshot, identity, json_text

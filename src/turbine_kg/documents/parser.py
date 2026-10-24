@@ -10,7 +10,7 @@ from statistics import median
 import pymupdf as fitz
 
 from turbine_kg.documents.ir import ParsedPage, SourceUnit, TableData, Picture, bind_list_parents, clause_number, recognize_table_headers
-from turbine_kg.documents.mapping import PageMapper
+from turbine_kg.documents.page_mapping import PageMapper
 from turbine_kg.runtime import identity, file_hash
 from turbine_kg.settings import PROJECT_ROOT
 
@@ -181,20 +181,6 @@ class DocumentParser:
         cache[number] = result
         return result
 
-    def unmapped_ocr_sources(self):
-        """Keep readable derivative text without inventing an original-page link."""
-        if not self.derived: return []
-        derivative_hash = file_hash(Path(self.derived.name))
-        units = []
-        verified_pages = {record['derived_page'] for record in self.mapper.mapping.values() if record.get('status') == 'verified_pixel_match'}
-        for page in self.derived:
-            if page.number + 1 in verified_pages: continue
-            for block in page.get_text('blocks'):
-                if block[6] != 0 or not block[4].strip(): continue
-                loc = {'derived_physical_page':page.number + 1,'derived_path':str(Path(self.derived.name)),'derived_hash':derivative_hash,'bbox':list(fitz.Rect(block[:4]) * page.rotation_matrix),'coordinate_system':'derived_display_top_left_pdf_points','mapping_status':'unknown','original_physical_page':None}
-                units.append(SourceUnit(identity('paragraph',self.document_id,loc,block[4]),'paragraph',block[4].strip(),loc,'ocr_text',len(units),'','unverified_mapping',{'semantic_status':'pending_review'}))
-        return units
-
     def _convert(self, page_number, processing):
         if self.converter is None:
             configuration=json.loads((PROJECT_ROOT/'config/agent.json').read_text(encoding='utf-8')).get('parser',{})
@@ -314,7 +300,7 @@ class DocumentParser:
                               {'content_status':'excluded_navigation'}, status='excluded_navigation')
         if not self.original:
             if number!=1:raise ValueError('文本资料仅有一个逻辑页面，定位使用源文件行范围')
-            from turbine_kg.documents.text import parse_text
+            from turbine_kg.documents.text_parser import parse_text
             text = self.path.read_text(encoding='utf-8')
             parsed=parse_text(text,self.path,self.document_id,self.original_hash,scope_sources=self._applicable_scope_sources(1,[]))
             self.heading_index=[unit for unit in parsed.sources if unit.kind=='heading']

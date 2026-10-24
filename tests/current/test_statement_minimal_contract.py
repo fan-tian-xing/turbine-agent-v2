@@ -1,7 +1,7 @@
 """Source-bound extraction must fail closed without adding unused semantic flags."""
 import json
 
-from turbine_kg.knowledge.extract import extract
+from turbine_kg.knowledge.statement_extraction import extract
 from turbine_kg.ontology.registry import OntologyRegistry
 
 

@@ -118,7 +118,7 @@ def _bound_comparison_quantities(claim, task):
 
 def reviewed_formula_numbers(claim,reads):
     """Only exact bound, independently source-verified review values are eligible."""
-    from turbine_kg.knowledge.reviews import verified_formula_representation
+    from turbine_kg.knowledge.formula_sources import verified_formula_representation
     values=set();quantities=set();expressions=[]
     for support in claim['supports']:
         view=reads[support['evidence_id']]

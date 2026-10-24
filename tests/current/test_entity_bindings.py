@@ -2,8 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from turbine_kg.knowledge.repair import (
-    apply_entity_patches,
+from turbine_kg.knowledge.entity_bindings import (
     restored_entity_binding,
     reviewed_entity_binding,
 )
@@ -32,21 +31,10 @@ def source_view(evidence_id='e-1', quote='排汽管道应检查严密性。'):
 def statement(evidence_id='e-1'):
     return {
         'id': 'statement-1', 'text': '排汽管道应检查严密性。',
-        'knowledge_type': 'requirement',
+        'type': 'requirement',
         'supports': [{'evidence_id': evidence_id, 'member_keys': ['m-1']}],
-        'entities': [{'class': 'Mention', 'id': None,
-                      'label': '排汽管道', 'surface_label': '排汽管道',
-                      'role': 'object', 'storage_status': 'statement_only'}],
-        'conditions': [], 'quantities': [], 'semantic_relations': [],
-    }
-
-
-def patch(*, preserve=False, surface='排汽管道'):
-    return {
-        'statement_id': 'statement-1', 'entity_index': 0,
-        'original_label': '排汽管道', 'preserve_mention': preserve,
-        'targets': [{'class_id': 'ExhaustPipe', 'surface_label': surface}],
-        'reason': '原文明确排汽管道对象，经逐项审定。',
+        'entities': [{'class': 'Mention', 'label': '排汽管道', 'role': 'object'}],
+        'semantic_relations': [],
     }
 
 
@@ -60,42 +48,11 @@ def reviewed_view(registry):
     return view
 
 
-def test_entity_replacement_retains_statement_identity_and_original_source(registry):
-    original = statement()
-    before = deepcopy(original)
-    result = apply_entity_patches(original, [patch()], [source_view()],
-                                  registry, 'review-1')
-
-    assert original == before
-    assert {key: value for key, value in result.items() if key != 'entities'} == {
-        key: value for key, value in before.items() if key != 'entities'
-    }
-    assert len(result['entities']) == 1
-    entity = result['entities'][0]
-    assert entity['class'] == 'OntologyClass'
-    assert entity['class_id'] == 'ExhaustPipe'
-    assert entity['surface_label'] == '排汽管道'
-    assert entity['ontology_binding']['source_members'] == [
-        {'evidence_id': 'e-1', 'member_key': 'm-1'}
-    ]
-
-
-def test_preserve_mention_appends_class_without_changing_original_entity(registry):
-    original = statement()
-    result = apply_entity_patches(original, [patch(preserve=True)],
-                                  [source_view()], registry, 'review-1')
-
-    assert len(result['entities']) == 2
-    assert result['entities'][0] == original['entities'][0]
-    assert result['entities'][1]['class_id'] == 'ExhaustPipe'
-    assert result['supports'] == original['supports']
-
-
 def test_review_rejects_surface_not_continuously_present_in_source(registry):
     with pytest.raises(ValueError, match='连续出现'):
-        apply_entity_patches(statement(), [patch()],
-                             [source_view(quote='排汽的管道应检查严密性。')],
-                             registry, 'review-1')
+        reviewed_entity_binding('排汽管道', 'ExhaustPipe', statement()['supports'],
+                                [source_view(quote='排汽的管道应检查严密性。')],
+                                registry, '原文名称核对', 'review-1')
 
 
 def test_restoration_rejects_changed_quote_even_when_surface_still_matches(registry):

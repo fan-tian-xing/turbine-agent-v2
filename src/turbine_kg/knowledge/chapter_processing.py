@@ -13,9 +13,9 @@ from turbine_kg.documents.catalog import document_id, derivative, verified_sourc
 from turbine_kg.documents.ir import SourceIndex, SourceUnit, parse_references
 from turbine_kg.documents.parser import DocumentParser
 from turbine_kg.evidence.context import ContextAssembler, make_evidence, table_evidence, text_evidence
-from turbine_kg.knowledge.extract import (extract, semantic_review_views, _statement_references,
-    statement_reference_edges, stored_statement_mentions, merge_statement_mentions)
-from turbine_kg.knowledge.ingest import _table_context_sources, _support_closure, _replace_statements_atomically, _write_transaction, _discard_statements
+from turbine_kg.knowledge.statement_extraction import (extract, semantic_review_views, _statement_references,
+    statement_reference_edges)
+from turbine_kg.knowledge.statement_sync import _table_context_sources, _support_closure, _replace_statements_atomically, _write_transaction, _discard_statements
 from turbine_kg.knowledge.scopes import register_scopes, restore_scopes, attach_evidence_scopes, refresh_scope_locations
 from turbine_kg.knowledge.alignment import plan_alignment, remap_ids, refresh_bound_locations, reuse_scope_member_keys
 from turbine_kg.knowledge.store import unpack
@@ -81,8 +81,8 @@ def _inputs(path,store,registry,scope,model):
     if scope.get('document_id') and scope['document_id']!=doc:raise ValueError('章节配置与实际文档身份不一致')
     ocr=derivative(path,settings)
     implementation={name:file_hash(PROJECT_ROOT/'src/turbine_kg'/name) for name in (
-        'documents/parser.py','documents/catalog.py','documents/mapping.py','documents/ir.py','documents/text.py',
-        'evidence/context.py','knowledge/extract.py','knowledge/reviews.py','knowledge/store.py','knowledge/sections.py','knowledge/ingest.py','knowledge/scopes.py','ontology/registry.py')}
+        'documents/parser.py','documents/catalog.py','documents/page_mapping.py','documents/ir.py','documents/text_parser.py',
+        'evidence/context.py','knowledge/statement_extraction.py','knowledge/formula_sources.py','knowledge/store.py','knowledge/chapter_processing.py','knowledge/statement_sync.py','knowledge/scopes.py','ontology/registry.py')}
     configuration=json.loads((PROJECT_ROOT/'config/agent.json').read_text(encoding='utf-8'))
     if configuration['parser'].get('do_ocr') is True or configuration['parser'].get('ocr') is True:raise ValueError('章节处理禁止重复OCR')
     inputs={'original_hash':digest,'ocr_hash':file_hash(ocr) if ocr else None,'annotations_hash':file_hash(PROJECT_ROOT/'config/source_annotations.json'),
@@ -233,23 +233,6 @@ def refresh_statement_references(store,document_id,evidence_ids=None):
         return _refresh_statement_references(transaction,document_id,evidence_ids)
 
 
-def refresh_statement_mentions(store,document_id,registry,statement_ids=None):
-    """Coalesce parallel class cues without changing their supported facts."""
-    with _write_transaction(store) as transaction:
-        statements=[unpack(row['node']) for row in transaction.query(
-            'MATCH (s:TK:Statement {document_id:$document}) WHERE $all OR s.id IN $ids RETURN properties(s) AS node',
-            {'document':document_id,'all':statement_ids is None,'ids':list(statement_ids or [])})]
-        ids=[row['id'] for row in statements]
-        edges=merge_statement_mentions(stored_statement_mentions(transaction,document_id,ids),
-                                       statements,document_id,registry.version)
-        if edges:transaction.edges('MENTIONS',edges)
-        transaction.query('MATCH (c:TK:OntologyClass)-[r:MENTIONS]->(s:TK:Statement) '
-            'WHERE s.document_id=$document AND s.id IN $ids '
-            'AND NOT any(row IN $keep WHERE c.id=row.source AND s.id=row.target AND coalesce(r.key,"")=row.key) DELETE r',
-            {'document':document_id,'ids':ids,'keep':edges})
-    return {'statements':len(ids),'mention_edges':len(edges)}
-
-
 def _reference_sources(sources,tables,pictures):
     result={source['id']:source for source in [*sources,*pictures]}
     for table in tables:
@@ -261,8 +244,8 @@ def _reference_sources(sources,tables,pictures):
 def _preparation_fingerprint(inputs):
     # Source parsing depends on source/layout inputs, not model choice or the
     # extraction prompt. Changing the latter must not invalidate good Evidence.
-    source_files=('documents/parser.py','documents/catalog.py','documents/mapping.py',
-                  'documents/ir.py','documents/text.py','evidence/context.py','knowledge/sections.py')
+    source_files=('documents/parser.py','documents/catalog.py','documents/page_mapping.py',
+                  'documents/ir.py','documents/text_parser.py','evidence/context.py','knowledge/chapter_processing.py')
     return fingerprint({key:inputs.get(key) for key in ('original_hash','ocr_hash','annotations_hash','parser_config')} |
                        {'implementation':{key:inputs.get('implementation',{}).get(key) for key in source_files}})
 

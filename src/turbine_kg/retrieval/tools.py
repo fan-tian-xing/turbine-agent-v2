@@ -3,7 +3,7 @@ import json
 import re
 from turbine_kg.evidence.context import ContextAssembler
 from turbine_kg.knowledge.store import unpack
-from turbine_kg.runtime import fingerprint,BudgetExceeded,json_text,identity
+from turbine_kg.runtime import fingerprint,BudgetExceeded,identity
 
 
 class Tools:
@@ -622,7 +622,7 @@ class Tools:
                                      {'id':evidence_id,'documents':list(self.snapshot.document_ids)},self.budget)
             if not records: raise ValueError('Evidence状态不属于本次固定版本')
             evidence=unpack(records[0]['evidence'])
-            from turbine_kg.knowledge.extract import semantic_review_views
+            from turbine_kg.knowledge.statement_extraction import semantic_review_views
             context['confirmed_semantic_reviews']=semantic_review_views([view],{evidence_id:evidence})[0]['context']['confirmed_semantic_reviews']
             page_status=records[0].get('page_semantic_status')
             view['page_semantic_status']=page_status

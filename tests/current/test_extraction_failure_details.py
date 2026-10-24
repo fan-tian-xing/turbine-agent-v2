@@ -3,7 +3,7 @@ import json
 import pytest
 
 from turbine_kg.agent.model import ModelError
-from turbine_kg.knowledge.extract import _safe_model_error, extract
+from turbine_kg.knowledge.statement_extraction import _safe_model_error, extract
 from turbine_kg.ontology.registry import OntologyRegistry
 from turbine_kg.runtime import BudgetExceeded
 

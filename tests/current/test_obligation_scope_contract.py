@@ -1,6 +1,6 @@
 """Minimal Statements keep each requirement's scope in its own text."""
 
-from turbine_kg.knowledge.extract import extract
+from turbine_kg.knowledge.statement_extraction import extract
 from turbine_kg.ontology.registry import OntologyRegistry
 
 

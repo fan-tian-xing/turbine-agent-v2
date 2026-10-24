@@ -5,7 +5,7 @@ import pytest
 import pymupdf as fitz
 
 from turbine_kg.documents.ir import ParsedPage, SourceUnit, TableData
-from turbine_kg.documents.mapping import PageMapper
+from turbine_kg.documents.page_mapping import PageMapper
 from turbine_kg.documents.parser import DocumentParser
 
 
@@ -230,7 +230,7 @@ def test_empty_white_source_page_records_verified_blank_status():
 
 
 def test_markdown_preserves_structure_and_distinguishes_blank_missing_cells():
-    from turbine_kg.documents.text import parse_text
+    from turbine_kg.documents.text_parser import parse_text
     content='# Assembly\n\nIntro $d<20$ applies here.\n\n## Checks\n\n- Inspect\n  - Record\n\n| Name | Value | Unit |\n| --- | --- | --- |\n| A\\|B | 20[^n] | mm |\n| C | |\n\n[^n]: At room temperature.\n\n$$\nf=S/500\n$$\n'
     page=parse_text(content,Path('manual.md'),'g','h')
     assert [unit.attributes['heading_level'] for unit in page.sources if unit.kind=='heading']==[1,2]
@@ -248,14 +248,14 @@ def test_markdown_preserves_structure_and_distinguishes_blank_missing_cells():
 
 
 def test_text_repeated_paragraph_locations_are_distinct():
-    from turbine_kg.documents.text import parse_text
+    from turbine_kg.documents.text_parser import parse_text
     page=parse_text('Same\n\nSame\n',Path('source.txt'),'g','h')
     assert [unit.locator['line_range'] for unit in page.sources]==[[1,1],[3,3]]
     assert page.sources[0].id!=page.sources[1].id
 
 
 def test_unresolved_markdown_images_keep_the_reference_without_network_reads():
-    from turbine_kg.documents.text import parse_text
+    from turbine_kg.documents.text_parser import parse_text
     page=parse_text('![Diagram](https://example.invalid/diagram.png)\n\n![Missing][figure]\n',Path('manual.md'),'g','h')
     assert not page.pictures
     assert len(page.warnings)==2
@@ -263,7 +263,7 @@ def test_unresolved_markdown_images_keep_the_reference_without_network_reads():
 
 
 def test_markdown_reference_image_links_both_text_and_definition(monkeypatch):
-    from turbine_kg.documents import text as module
+    from turbine_kg.documents import text_parser as module
     class Asset:
         size=(32,24)
         def __enter__(self):return self
@@ -291,7 +291,7 @@ def test_registered_scope_applies_only_to_its_explicit_section():
 
 
 def test_markdown_table_picture_keeps_its_cell_source_and_literal_heading(monkeypatch):
-    from turbine_kg.documents import text as module
+    from turbine_kg.documents import text_parser as module
     class Asset:
         size=(32,24)
         def __enter__(self):return self

@@ -35,28 +35,13 @@ class OntologyRegistry:
 
     @classmethod
     def for_version(cls, version: str) -> "OntologyRegistry":
-        """Load the exact ontology contract pinned by the document record."""
+        """Require the current contract; older data must be remapped first."""
         current = cls()
         if version == current.version:
             return current
         if not re.fullmatch(r"[0-9a-f]{64}", version):
             raise ValueError("本体版本标识无效")
-        archive_root = PROJECT_ROOT / "config" / "ontology_versions"
-        index_path = archive_root / "index.json"
-        try:
-            archive_index = json.loads(index_path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as error:
-            raise ValueError("本体历史合同索引不可用") from error
-        filename = archive_index.get(version)
-        if not isinstance(filename, str) or Path(filename).name != filename or Path(filename).suffix != ".json":
-            raise ValueError("本体历史合同索引缺少版本：" + version)
-        archived = archive_root / filename
-        if not archived.is_file():
-            raise ValueError("缺少资料记录对应的本体合同：" + version)
-        registry = cls(archived)
-        if registry.version != version:
-            raise ValueError("本体历史合同内容与版本不符")
-        return registry
+        raise ValueError("资料本体版本与当前注册表不一致，请先运行 --remap 更新映射")
 
     def domain_class_by_id(self, class_id: str) -> dict | None:
         if class_id == "Thing":

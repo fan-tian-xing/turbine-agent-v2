@@ -99,9 +99,11 @@ def test_engineering_definitions_notes_and_sources_have_distinct_rdf_annotations
     assert all('第五章' not in row['definition'] for row in registry.domain_classes.values())
 
 
-def test_only_current_registry_snapshot_is_available():
+def test_only_current_registry_version_is_available():
+    current=OntologyRegistry()
+    assert OntologyRegistry.for_version(current.version).version==current.version
     old_version = "2af4d5480a10397f7610b978c43bc10d3857a40b8b56a566da991855ce4ede04"
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError,match='--remap'):
         OntologyRegistry.for_version(old_version)
 
 

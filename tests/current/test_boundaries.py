@@ -110,7 +110,7 @@ def test_role_independent_entity_and_ontology_direction():
 
 def test_rotation_is_applied_once_and_pixel_crop_uses_display_coordinates():
     import pymupdf as fitz
-    from turbine_kg.documents.mapping import PageMapper
+    from turbine_kg.documents.page_mapping import PageMapper
     doc=fitz.open();page=doc.new_page(width=200,height=100);page.set_rotation(90)
     mapper=PageMapper.__new__(PageMapper);mapper.original=doc;mapper.mapping={}
     box=mapper.display_box([10,20,40,30],0)

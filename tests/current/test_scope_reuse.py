@@ -1,7 +1,7 @@
 from copy import deepcopy
 import pytest
 
-from turbine_kg.knowledge.extract import extract, _scope_declaration
+from turbine_kg.knowledge.statement_extraction import extract, _scope_declaration
 from turbine_kg.ontology.registry import OntologyRegistry
 
 

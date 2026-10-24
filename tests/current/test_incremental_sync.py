@@ -1,5 +1,4 @@
 from turbine_kg.knowledge.incremental import (
-    build_delta,
     content_fingerprint,
     evidence_logical_key,
     statement_logical_key,
@@ -39,16 +38,6 @@ def test_statement_key_distinguishes_multiple_assertions_from_same_source():
     assert statement_logical_key(first, keys) != statement_logical_key(second, keys)
     second['text']=first['text']
     assert statement_logical_key(first, keys) == statement_logical_key(second, keys)
-
-
-def test_build_delta_separates_added_changed_removed_and_unchanged():
-    before = [evidence(37), evidence(38), evidence(39)]
-    after = [evidence(37), evidence(38, '修订'), evidence(40)]
-    delta = build_delta(before, after, label='Evidence')
-    assert [row['physical_page'] for row in delta['added']] == [40]
-    assert [row['physical_page'] for row in delta['changed']] == [38]
-    assert [row['physical_page'] for row in delta['removed']] == [39]
-    assert [row['physical_page'] for row in delta['unchanged']] == [37]
 
 
 def test_content_fingerprint_ignores_storage_metadata():
@@ -167,7 +156,7 @@ def test_document_sync_validation_failure_rolls_back_all_prior_writes():
 
 def test_prepare_adds_a_chapter_with_same_ocr_and_preserves_existing_extraction(monkeypatch):
     from pathlib import Path
-    from turbine_kg.knowledge import sections, scopes
+    from turbine_kg.knowledge import chapter_processing as sections, scopes
     from turbine_kg.knowledge.store import KnowledgeStore, unpack
     from turbine_kg.documents.ir import ParsedPage, SourceUnit
     from turbine_kg.ontology.registry import OntologyRegistry
@@ -229,7 +218,7 @@ def test_query_timing_counts_completed_and_failed_database_calls():
 
 def test_reference_refresh_replaces_stale_statement_targets_without_changing_source_facts():
     from copy import deepcopy
-    from turbine_kg.knowledge.sections import refresh_statement_references
+    from turbine_kg.knowledge.chapter_processing import refresh_statement_references
     from turbine_kg.knowledge.store import unpack
     ref={'kind':'clause','number':'2.1.1','end_number':'2.1.3','status':'resolved',
          'source_member_keys':['m1'],'target_evidence_ids':['a','b','c']}
@@ -261,7 +250,7 @@ def test_reference_refresh_replaces_stale_statement_targets_without_changing_sou
 def test_prepare_keeps_unchanged_facts_with_real_attached_scope_when_adding_pages(monkeypatch):
     from dataclasses import asdict
     from pathlib import Path
-    from turbine_kg.knowledge import sections
+    from turbine_kg.knowledge import chapter_processing as sections
     from turbine_kg.knowledge.store import KnowledgeStore, unpack
     from turbine_kg.documents.ir import ParsedPage, SourceUnit
     from turbine_kg.ontology.registry import OntologyRegistry

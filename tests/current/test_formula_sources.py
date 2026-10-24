@@ -2,9 +2,9 @@ from copy import deepcopy
 
 import pytest
 
-from turbine_kg.knowledge.extract import _statement_identity, extract
-from turbine_kg.knowledge.reviews import (
-    confirm_formula_source, confirm_statement_formula, formula_source_binding,
+from turbine_kg.knowledge.statement_extraction import _statement_identity, extract
+from turbine_kg.knowledge.formula_sources import (
+    confirm_formula_source, formula_source_binding,
     verified_formula_representation, apply_formula_reviews,
 )
 from turbine_kg.ontology.registry import OntologyRegistry
@@ -36,19 +36,6 @@ def statement():
             'supports':[{'evidence_id':'evidence','member_keys':['native-member']}]}
 
 
-def evidence():
-    return {'id':'evidence','document_id':'doc','revision_id':'rev',
-            'members':[{'member_key':'native-member','source_id':'source-formula','locator':source()['locator']}]}
-
-
-def test_statement_does_not_store_embedded_formula_reviews():
-    corrected=reviewed_source()
-    assert corrected['text']==source()['text']
-    assert corrected['attributes']['human_verified_representation']['raw_text']==source()['text']
-    with pytest.raises(ValueError, match='不再保存'):
-        confirm_statement_formula(statement(),corrected,evidence(),formula_index=0,registry=OntologyRegistry())
-
-
 @pytest.mark.parametrize('field', ['id','document_id','revision_id','text'])
 def test_stale_source_review_is_not_usable_after_record_or_raw_content_changes(field):
     corrected=reviewed_source();corrected[field]='changed'
@@ -67,17 +54,6 @@ def test_review_requires_explicit_user_confirmation_and_raw_content_binding():
     with pytest.raises(ValueError,match='原始文本'):reviewed_source(raw_text='other OCR')
     invalid=formula();invalid['units']['r']=1
     with pytest.raises(ValueError,match='字符串'):reviewed_source(formula=invalid)
-
-
-def test_review_cannot_update_unrelated_partial_member_or_other_document():
-    corrected=reviewed_source()
-    for change in ('source','partial','document','bbox'):
-        other=evidence()
-        if change=='source':other['members'][0]['source_id']='other-source'
-        if change=='partial':other['members'][0]['locator']['char_range']=[1,10]
-        if change=='document':other['document_id']='other-doc'
-        if change=='bbox':other['members'][0]['locator']['bbox']=[0,0,10,10]
-        with pytest.raises(ValueError):confirm_statement_formula(statement(),corrected,other,formula_index=0,registry=OntologyRegistry())
 
 
 def test_formula_review_metadata_does_not_create_a_new_fact_identity():
@@ -112,7 +88,7 @@ def test_portable_review_rebinds_new_source_and_document_only_with_exact_raw_ocr
 def test_save_page_applies_review_after_binding_persisted_source_versions(monkeypatch):
     from turbine_kg.documents.ir import ParsedPage, SourceUnit
     from turbine_kg.knowledge.store import KnowledgeStore
-    import turbine_kg.knowledge.reviews as reviews
+    import turbine_kg.knowledge.formula_sources as reviews
     original=source();captured=[]
     actual=reviews.apply_formula_reviews
     def apply(row,annotations):

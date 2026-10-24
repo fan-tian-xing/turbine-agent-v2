@@ -1,6 +1,6 @@
 """The minimal extraction contract keeps negation in Statement text."""
 
-from turbine_kg.knowledge.extract import extract
+from turbine_kg.knowledge.statement_extraction import extract
 from turbine_kg.ontology.registry import OntologyRegistry
 
 

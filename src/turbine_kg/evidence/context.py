@@ -7,7 +7,7 @@ from dataclasses import asdict
 
 from turbine_kg.runtime import fingerprint, identity, Budget, Snapshot
 from turbine_kg.documents.ir import clause_number, clause_ranges, parse_references, recognize_table_headers
-from turbine_kg.knowledge.reviews import verified_formula_representation
+from turbine_kg.knowledge.formula_sources import verified_formula_representation
 
 
 def member(source: dict, role: str, order: int, *, locator: dict | None = None) -> dict:

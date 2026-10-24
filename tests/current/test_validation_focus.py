@@ -1,6 +1,6 @@
 """Minimal extraction retains source wording and rejects unsupported structure."""
 
-from turbine_kg.knowledge.extract import extract
+from turbine_kg.knowledge.statement_extraction import extract
 from turbine_kg.ontology.registry import OntologyRegistry
 
 

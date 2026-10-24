@@ -5,7 +5,7 @@ import pytest
 
 from turbine_kg.documents.ir import SourceUnit
 from turbine_kg.documents.parser import DocumentParser
-from turbine_kg.knowledge.extract import _bound_scope_text
+from turbine_kg.knowledge.statement_extraction import _bound_scope_text
 
 
 def item(text, box, label='text'):

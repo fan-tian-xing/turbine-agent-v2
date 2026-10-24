@@ -2,7 +2,7 @@
 import pytest
 from turbine_kg.documents.ir import SourceIndex, parse_references
 from turbine_kg.evidence.context import ContextAssembler, make_evidence, text_evidence, table_evidence
-from turbine_kg.knowledge.reviews import confirm_formula_source, formula_source_binding
+from turbine_kg.knowledge.formula_sources import confirm_formula_source, formula_source_binding
 from turbine_kg.runtime import Snapshot
 
 
@@ -197,7 +197,7 @@ def test_table_context_preserves_headers_notes_and_display_number():
 
 
 def test_reference_range_with_repeated_clause_label_expands_all_members():
-    from turbine_kg.knowledge.sections import _expand_references
+    from turbine_kg.knowledge.chapter_processing import _expand_references
     rows=[source('origin','2.2.1 应符合第2.1.1 条～第2.1.3 条的规定。')]
     rows += [source(str(i),f'2.1.{i} 检查要求。',order=i) for i in range(1,4)]
     refs=parse_references(rows[0]['text'])
@@ -211,7 +211,7 @@ def test_reference_range_with_repeated_clause_label_expands_all_members():
 
 
 def test_reference_range_keeps_clause_whose_printed_number_is_detached_from_body():
-    from turbine_kg.knowledge.sections import _expand_references
+    from turbine_kg.knowledge.chapter_processing import _expand_references
     rows=[source('a','2.1.1 设备应清洁。'),source('marker','2.1.2',order=1),
           source('b','设备应接地。',order=2),source('c','2.1.3 管路应畅通。',order=3),
           source('origin','2.2.1 应符合第2.1.1条～第2.1.3条的规定。',order=4)]
@@ -228,7 +228,7 @@ def test_reference_range_keeps_clause_whose_printed_number_is_detached_from_body
 
 def test_assembled_clause_reference_respects_document_and_real_ambiguity():
     from copy import deepcopy
-    from turbine_kg.knowledge.sections import _expand_references
+    from turbine_kg.knowledge.chapter_processing import _expand_references
     rows=[{**source('target','2.1.1 设备应检查。'),'document_id':'d'},
           {**source('origin','2.2.1 应符合2.1.1条的规定。',order=1),'document_id':'d'}]
     evidence=text_evidence(rows,'d')
@@ -245,7 +245,7 @@ def test_assembled_clause_reference_respects_document_and_real_ambiguity():
 
 
 def test_reference_range_does_not_report_complete_when_middle_clause_is_absent():
-    from turbine_kg.knowledge.sections import _expand_references
+    from turbine_kg.knowledge.chapter_processing import _expand_references
     rows=[source('a','2.1.1 设备应检查。'),source('c','2.1.3 管路应畅通。',order=1),
           source('origin','2.2.1 应符合第2.1.1条～第2.1.3条的规定。',order=2)]
     evidence=text_evidence(rows,'d')

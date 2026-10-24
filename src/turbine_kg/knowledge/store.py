@@ -80,7 +80,7 @@ class KnowledgeStore:
         otherwise an axiom present only in an older persisted batch is lost.
         No Statement, Evidence, or source binding is changed.
         """
-        from turbine_kg.knowledge.ingest import _write_transaction
+        from turbine_kg.knowledge.statement_sync import _write_transaction
         classes=[registry.domain_class_by_id(key) for key in
                  ['Thing',*registry.business_classes,*registry.domain_classes]]
         if any(row is None for row in classes):raise ValueError('本体类定义不完整')
@@ -138,29 +138,6 @@ class KnowledgeStore:
         self.initialize_evidence_search()
         return {'document_id':document_id,'updated':count,'search_version':SEARCH_VERSION}
 
-    def backfill_document_relationships(self, document_id: str) -> dict:
-        """Repair ownership metadata without re-extracting any business fact."""
-        if not self.query('MATCH (d:TK:Document {id:$id}) RETURN d.id AS id',{'id':document_id}):
-            raise ValueError('资料不存在')
-        statements={row['id'] for row in self.query(
-            'MATCH (s:TK:Statement {document_id:$document}) RETURN s.id AS id',{'document':document_id})}
-        rows=self.query('MATCH (a:TK)-[r]->(b:TK) WHERE type(r)<>"SUBCLASS_OF" '
-                        'RETURN elementId(r) AS id,a.document_id AS source_document,b.document_id AS target_document,properties(r) AS data')
-        repairs=[]
-        for row in rows:
-            properties=row['data'];data=json.loads(properties.get('data_json') or '{}')
-            owners={value for value in (row['source_document'],row['target_document'],
-                                       properties.get('document_id'),data.get('document_id')) if value}
-            if data.get('statement_id') in statements:owners.add(document_id)
-            if document_id not in owners:continue
-            if owners!={document_id}:raise ValueError('关系两端资料归属冲突，不能自动修复')
-            if properties.get('document_id')==document_id and data.get('document_id')==document_id:continue
-            repairs.append({'id':row['id'],'data':json_text({**data,'document_id':document_id})})
-        if repairs:
-            self.query('UNWIND $rows AS row MATCH ()-[r]->() WHERE elementId(r)=row.id '
-                       'SET r.document_id=$document,r.data_json=row.data',{'document':document_id,'rows':repairs})
-        return {'document_id':document_id,'relationships_updated':len(repairs)}
-
     def put(self, label: str, rows: list[dict], *, replace: bool = False):
         allowed = {"Document", "Revision", "Page", "SourceText", "Table", "Row", "Column", "Cell", "TableNote", "Picture", "Evidence", "Statement", "OntologyClass", "PhysicalObject", "Equipment", "Component", "System", "Tool", "Activity", "Registry", "ScopeDeclaration"}
         if label not in allowed:
@@ -199,7 +176,7 @@ class KnowledgeStore:
         For a few explicit node edits use delete_missing=False. Shared ontology
         nodes and their subclass definitions are outside this operation.
         """
-        from turbine_kg.knowledge.ingest import _write_transaction
+        from turbine_kg.knowledge.statement_sync import _write_transaction
         with _write_transaction(self) as store:
             return store._sync_document(document_id, nodes, relationships,
                                         delete_missing=delete_missing)
@@ -372,14 +349,11 @@ class KnowledgeStore:
             OntologyRegistry.for_version(pinned_version)
         return Snapshot(tuple(sorted(row["id"] for row in rows)), pinned_version, skill_versions)
 
-    def document_pages(self, document_id: str) -> dict[int, str]:
-        return {row["page"]: row["status"] for row in self.query("MATCH (p:TK:Page {document_id:$id}) RETURN p.physical_page AS page,p.status AS status", {"id": document_id})}
-
     def save_page(self, page, document_id: str, revision_id: str, *, compact_tables=False):
         if page.status == 'excluded_navigation':
             return
         common = {"document_id": document_id, "revision_id": revision_id}
-        from turbine_kg.knowledge.reviews import apply_formula_reviews
+        from turbine_kg.knowledge.formula_sources import apply_formula_reviews
         from turbine_kg.settings import PROJECT_ROOT
         annotations_path=PROJECT_ROOT/'config/source_annotations.json'
         annotations=json.loads(annotations_path.read_text(encoding='utf-8')) if annotations_path.is_file() else {}

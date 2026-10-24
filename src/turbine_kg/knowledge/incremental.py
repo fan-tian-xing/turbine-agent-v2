@@ -7,8 +7,6 @@ current extraction run identifier.
 """
 from __future__ import annotations
 
-from copy import deepcopy
-
 from turbine_kg.runtime import fingerprint, json_text
 
 
@@ -83,30 +81,3 @@ def content_fingerprint(row: dict) -> str:
     ignored = {"id", "logical_key", "content_hash", "updated_at",
                "search_tokens", "search_projection_version"}
     return fingerprint({key: value for key, value in row.items() if key not in ignored})
-
-
-def build_delta(existing: list[dict], incoming: list[dict], *, label: str,
-                evidence_keys: dict[str, str] | None = None) -> dict:
-    """Compare one managed node label without touching a database."""
-    def keyed(rows):
-        result = {}
-        for row in rows:
-            key = node_logical_key(label, row, evidence_keys)
-            if key in result:
-                raise ValueError(f"{label} 出现重复稳定标识：{key}")
-            result[key] = {**deepcopy(row), "logical_key": key}
-        return result
-
-    before, after = keyed(existing), keyed(incoming)
-    added = sorted(set(after) - set(before))
-    removed = sorted(set(before) - set(after))
-    changed = sorted(key for key in set(before) & set(after)
-                     if content_fingerprint(before[key]) != content_fingerprint(after[key]))
-    unchanged = sorted(set(before) & set(after) - set(changed))
-    return {
-        "label": label,
-        "added": [after[key] for key in added],
-        "changed": [after[key] for key in changed],
-        "removed": [before[key] for key in removed],
-        "unchanged": [before[key] for key in unchanged],
-    }

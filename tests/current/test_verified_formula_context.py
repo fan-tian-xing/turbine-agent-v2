@@ -3,7 +3,7 @@ from copy import deepcopy
 import pytest
 
 from turbine_kg.evidence.context import ContextAssembler, make_evidence
-from turbine_kg.knowledge.reviews import confirm_formula_source, formula_source_binding
+from turbine_kg.knowledge.formula_sources import confirm_formula_source, formula_source_binding
 from turbine_kg.runtime import Snapshot
 
 

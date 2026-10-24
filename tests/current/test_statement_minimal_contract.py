@@ -57,6 +57,18 @@ def test_scope_spelling_is_kept_as_a_source_backed_fact():
     assert coverage['evidence']['source']['status']=='complete'
 
 
+def test_unknown_model_class_does_not_discard_source_mention_or_core():
+    class Model:
+        def call(self,system,payload,budget):
+            row=statement();row.pop('quantities')
+            row['entities'][0]['class']='AClassNotInTheCurrentOntology'
+            return generated(row)
+    items,coverage=extract(source(),Model(),OntologyRegistry(),repair=True,max_retries=0)
+    assert len(items)==1 and coverage['evidence']['source']['status']=='complete'
+    assert items[0]['entities'][0]['label']=='部件'
+    assert items[0]['entities'][0]['class']=='Mention'
+
+
 def test_second_retry_is_source_bound_and_only_success_is_accepted():
     class Model:
         attempts=0

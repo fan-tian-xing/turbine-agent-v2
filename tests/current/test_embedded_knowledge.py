@@ -146,6 +146,46 @@ def test_relation_is_removed_when_referenced_statement_fails_source_binding():
     assert any('未通过核验' in reason for reason in coverage['rejected'])
 
 
+@pytest.mark.parametrize('relations', [
+    'not an array', [None],
+    [{'relation_id':'unknown','source_entity':0,'target_entity':0}],
+    [{'relation_id':'part_of','source_entity':0,'target_entity':9}],
+])
+def test_optional_relation_error_keeps_valid_core_and_does_not_block_ingest(relations):
+    from turbine_kg.knowledge.chapter_processing import _verified_batch
+    view={'evidence_id':'real','kind':'text','context':{},'members':[
+        {'member_key':'m','source_id':'m','role':'content','quote':'Object inspection is required.'}]}
+    class Model:
+        def call(self,system,payload,budget):
+            return {'statements':[statement(supports=[{'evidence_id':'e0','member_keys':['e0m0']}],
+                                          semantic_relations=deepcopy(relations))]}
+    outcome=extract([view],Model(),OntologyRegistry(),repair=True,max_retries=0)
+    items,coverage=outcome
+    assert len(items)==1 and items[0]['semantic_relations']==[]
+    assert coverage['rejected'] and not coverage['rejected_details']
+    assert coverage['evidence']['real']['status']=='complete'
+    assert _verified_batch([view],outcome,None)
+    store=Store();persist(store,items,'d',OntologyRegistry())
+    assert len(store.nodes['Statement'])==1
+
+
+def test_ambiguous_optional_relation_ids_do_not_discard_core_records():
+    view={'evidence_id':'real','kind':'text','context':{},'members':[
+        {'member_key':'m','source_id':'m','role':'content','quote':'Object inspection is required.'}]}
+    class Model:
+        def call(self,system,payload,budget):
+            refs=[{'evidence_id':'e0','member_keys':['e0m0']}]
+            return {'statements':[
+                statement(extraction_id='same',type='procedure',supports=deepcopy(refs),semantic_relations=[
+                    {'relation_id':'has_step','source_ref':{'statement_id':'same'},
+                     'target_ref':{'statement_id':'same'},'supports':deepcopy(refs)}]),
+                statement(extraction_id='same',type='step',text='Inspect the object.',supports=deepcopy(refs))]}
+    items,coverage=extract([view],Model(),OntologyRegistry(),repair=True,max_retries=0)
+    assert len(items)==2 and len({item['extraction_id'] for item in items})==2
+    assert all(not item['semantic_relations'] for item in items)
+    assert coverage['evidence']['real']['status']=='complete'
+
+
 def test_model_payload_shares_lossless_quotes_without_geometry_or_repeated_views():
     import json
     views=[{'evidence_id':'real','kind':'table','context':{'table_number':'7.2.1','table_title':'Test values'},'members':[

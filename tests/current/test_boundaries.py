@@ -92,7 +92,8 @@ def test_structural_references_are_verified_separately_from_engineering_values()
     claim={'basis':'source','text':'表7.8.9中，冷态间隙应不大于0.10 mm，挠度f≤S/640（引用XY/Z 1357—2024）。','supports':[{'evidence_id':'e','member_keys':['m']}]}
     assert binding_error(claim,reads,{}) is None
     assert binding_error({**claim,'text':claim['text'].replace('7.8.9','7.8.10')},reads,{})=='回答的表图或条款编号没有来源支持'
-    assert binding_error({**claim,'text':claim['text'].replace('2024','2025')},reads,{})=='回答的资料标识或版本没有来源支持'
+    # Standard identity/version meaning is checked by the independent source review.
+    assert binding_error({**claim,'text':claim['text'].replace('2024','2025')},reads,{}) is None
     from turbine_kg.agent.claims import numeric_warning
     for text in (claim['text'].replace('/640','/641'),claim['text'].replace('0.10 mm','0.10 m')):
         changed={**claim,'text':text}

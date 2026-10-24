@@ -213,88 +213,6 @@ def task_statement_applicability(statement, task, registry):
     return 'applicable' if 'applicable' in (subject, activity, phase) else 'unknown'
 
 
-def filter_independent_source_claims(claims, tasks, reads, statements, registry, reference_links=(), question=None):
-    """Reject advice supported only by a separately scoped source operation.
-
-    A related mention of the queried equipment does not make the source
-    clause's own subject an obligation of that equipment. Keep clauses whose
-    lead names the queried object, broader requirements, explicitly requested
-    component work, and requirements reached through an explicit reference.
-    Unclear cases remain for the independent semantic review.
-    """
-    by_task={task['id']:task for task in tasks}
-    user_question=normalized(question) if isinstance(question,str) else None
-    by_evidence={}
-    for statement in statements:
-        for support in statement.get('supports',[]):
-            by_evidence.setdefault(support.get('evidence_id'),[]).append(statement)
-    def clause_lead(evidence_id):
-        return next((member.get('quote','') for member in
-                     reads.get(evidence_id,{}).get('members',[])
-                     if member.get('role')=='content'),'')
-    def explicit_reference(link):
-        number=link.get('reference_number')
-        if not isinstance(number,str) or not number.strip():return False
-        pattern=r'(?<![\d.])'+re.escape(normalized(number))+r'(?![\d.])'
-        return any(re.search(pattern,normalized(member.get('quote','')))
-                   for member in reads.get(link.get('origin_evidence_id'),{}).get('members',[])
-                   if member.get('role')=='content')
-    kept=[];rejected=[]
-    for claim in claims:
-        task=by_task.get(claim.get('task_id'))
-        target=(registry.domain_class(task['object']) or registry.qualified_class(task['object'])) if task else None
-        if not target:
-            kept.append(claim);continue
-        target_id=target['class_id']
-        task_question=normalized(task.get('subquestion',''))
-        asked=user_question if user_question is not None else task_question
-        target_names=[target.get('label'),*target.get('aliases',[])]
-        if user_question is not None and not any(name and normalized(name) in asked for name in target_names):
-            rejected.append({'claim':claim,'reason':'任务对象未出现在用户问题中，不能由模型扩展为独立作业'})
-            continue
-        referenced={link.get('evidence_id') for link in reference_links
-                    if link.get('reference_number')==reads.get(link.get('evidence_id'),{}).get('context',{}).get('clause_number')
-                    and explicit_reference(link)
-                    and any(name and normalized(name) in normalized(clause_lead(
-                        link.get('origin_evidence_id'))) for name in target_names)}
-        mismatch=False
-        for support in claim.get('supports',[]):
-            evidence_id=support.get('evidence_id')
-            view=reads.get(evidence_id,{})
-            if not view or evidence_id in referenced:continue
-            source_statements=by_evidence.get(evidence_id,[])
-            related=False;direct=False;other_owner=False;explicit_subject=False
-            for statement in source_statements:
-                for entity in statement.get('entities',[]):
-                    if not isinstance(entity,dict):continue
-                    role=entity.get('role')
-                    class_id=_entity_class_id(entity)
-                    if role=='related' and class_id==target_id:related=True
-                    if role not in ('subject','object'):continue
-                    if (isinstance(class_id,str) and class_id!='Mention' and
-                            (registry.domain_is_a(class_id,target_id) or
-                             registry.domain_is_a(target_id,class_id))):
-                        direct=True
-                    elif (isinstance(class_id,str) and
-                          registry.domain_is_a(class_id,'PhysicalObject')):
-                        other_owner=True
-                    label=entity.get('surface_label') or entity.get('label')
-                    if (isinstance(label,str) and len(normalized(label))>=2 and
-                            normalized(label) in asked and
-                            not (isinstance(class_id,str) and registry.domain_is_a(class_id,'Activity'))):
-                        explicit_subject=True
-            lead=clause_lead(evidence_id)
-            if any(name and normalized(name) in normalized(lead) for name in target_names):
-                continue
-            if (related or other_owner) and not direct and not explicit_subject:
-                mismatch=True;break
-        if mismatch:
-            rejected.append({'claim':claim,'reason':'来源条款的主要作业与问题不同；查询对象仅在该条款中被提及'})
-        else:
-            kept.append(claim)
-    return kept,rejected
-
-
 def explicit_activity_from_text(text, registry):
     """Resolve an activity only when one registered activity is explicit."""
     if not isinstance(text, str) or not text.strip():
@@ -1178,10 +1096,6 @@ class Agent:
                         response['gaps']=[gap for gap in response['gaps'] if gap.get('kind')!='source_missing']
                 phase='claim_binding'
                 kept,rejected=validate(proposed,tools,facts=state['facts'],tasks=state['tasks'])
-                kept,scope_rejected=filter_independent_source_claims(
-                    kept,state['tasks'],tools.reads,statements.values(),self.registry,
-                    tools.reference_target_links,question=question)
-                rejected.extend(scope_rejected)
                 tools.diagnostics.extend({'kind':'claim_binding_result','stage':phase,'claim_id':row.get('claim',{}).get('id'),'reason':row['reason'],**binding_diagnostics(row.get('claim',{}),tools.reads)} for row in rejected)
                 state['claims']=kept;saved.update(state)
                 phase='completeness_review'
@@ -1206,12 +1120,9 @@ class Agent:
                         fixes=[bind_source_context(c,tools.reads,origin_bindings=repair_context.get(c.get('task_id'),{})) for c in repaired.get('claims',[]) if isinstance(c,dict) and c.get('task_id') in taskids]
                         phase='repair_binding'
                         fixed,failed=validate(fixes,tools,facts=state['facts'],tasks=state['tasks'])
-                        fixed,scope_failed=filter_independent_source_claims(
-                            fixed,state['tasks'],tools.reads,statements.values(),self.registry,
-                            tools.reference_target_links,question=question)
-                        failed.extend(scope_failed);kept.extend(fixed);rejected=failed
+                        kept.extend(fixed);rejected=failed
                         tools.diagnostics.extend({'kind':'claim_binding_result','stage':phase,'claim_id':row.get('claim',{}).get('id'),'reason':row['reason'],**binding_diagnostics(row.get('claim',{}),tools.reads)} for row in failed)
-                        kept=list({fingerprint((c['text'],c['supports'])):c for c in kept}.values())
+                        kept=list({fingerprint((c['task_id'],c['text'],c['supports'])):c for c in kept}.values())
                         phase='repair_completeness_review'
                         final_coverage,coverage_error=review_answer_completeness(question,state['tasks'],kept,tools,self.model,budget,facts=state['facts'],gaps=response['gaps'],retrieval_state=remaining,skills=state['skills'],review_cache=answer_review_cache,source_context=source_context)
                     except Exception as error:
@@ -1265,7 +1176,7 @@ class Agent:
             tools.diagnostics.extend({'kind':'discarded_claim','stage':'claim_binding','reason':row['reason'],**binding_diagnostics(row.get('claim',{}),tools.reads)} for row in rejected)
             if not kept:
                     state['gaps'].append({'kind':'system_incomplete','stage':'claim_binding' if rejected or proposed else 'generation','reason':'本次尚无通过程序校验的答案；来源候选保留','rejections':[row['reason'] for row in rejected]})
-            state['claims']=list({fingerprint((c['text'],c['supports'])):c for c in kept}.values())
+            state['claims']=list({fingerprint((c['task_id'],c['text'],c['supports'])):c for c in kept}.values())
             saved.update(state)
             return {'claims':state['claims'],'gaps':state['gaps'],'tasks':state['tasks'],'errors':state['errors']}
 

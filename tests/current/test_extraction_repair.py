@@ -130,7 +130,7 @@ def test_table_completeness_covers_native_row_without_reextracting_attached_body
     assert coverage['evidence']['table']['status']=='complete'
 
 
-def test_missing_generation_coverage_status_cannot_pass_completeness_gate():
+def test_missing_model_coverage_flag_does_not_override_complete_source_coverage():
     class Model:
         calls=0
         def call(self,system,payload,budget):
@@ -138,10 +138,9 @@ def test_missing_generation_coverage_status_cannot_pass_completeness_gate():
             assert not system.startswith('独立核验')
             return {'statements':[fact('e0','e0m0','a requirement.')]}
     model=Model();items,coverage=extract(views()[:1],model,OntologyRegistry(),repair=True,max_retries=1,seconds=20)
-    assert len(items)==1 and coverage['evidence']['a']['status']=='incomplete'
-    assert any('原生来源成员未被有效Statement支持' in reason
-               for reason in coverage['rejected_by_evidence']['a'])
-    assert coverage['repair_attempted'] and model.calls==2
+    assert len(items)==1 and coverage['evidence']['a']['status']=='complete'
+    assert not coverage['rejected_by_evidence']['a']
+    assert not coverage['repair_attempted'] and model.calls==1
 
 
 def test_missing_native_child_requires_source_bound_repair():

@@ -6,7 +6,6 @@ from turbine_kg.agent.claims import (_quantities, model_source_views, validate,
 from turbine_kg.agent.runner import (candidate_priority, competing_unread_sources,
                                      review_answer_completeness, task_activity_match,
                                      task_statement_applicability, task_subject_match,
-                                     filter_independent_source_claims,
                                      model_task_contracts,model_grounding_context,plan_tasks,Session,AnswerResult,Agent)
 from turbine_kg.ontology.registry import OntologyRegistry
 from turbine_kg.runtime import Budget,Snapshot
@@ -75,83 +74,24 @@ def test_component_and_other_activity_remain_candidates_for_semantic_review():
     assert task_statement_applicability({'entities':[component,activity]},task,registry)=='unknown'
 
 
-def test_answer_scope_rejects_an_unasked_independent_component_operation():
-    registry=OntologyRegistry()
-    related={'class_id':'Deaerator','label':'除氧器','role':'related'}
-    subject={'class':'Mention','label':'安全阀','role':'subject'}
-    statement={'supports':[{'evidence_id':'e','member_keys':['lead','item']}],
-               'entities':[related,subject]}
-    source={'evidence_id':'e','context':{'clause_number':'5.6.5'},'members':[
-        {'member_key':'lead','role':'content','quote':'承压容器安全阀安装应符合下列规定：'},
-        {'member_key':'item','role':'content','quote':'高压除氧器的安全阀应为全启式。'}]}
-    proposal={'id':'c','task_id':'t','supports':[{'evidence_id':'e','member_keys':['lead','item']}],
-              'text':'高压除氧器的安全阀应为全启式。'}
-    task={'id':'t','object':'除氧器','subquestion':'除氧器安装应符合什么规定'}
-    accepted,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':source},[statement],registry)
-    assert not accepted and rejected[0]['claim']['id']=='c'
-    origin={'evidence_id':'origin','members':[{'member_key':'o','role':'content',
-             'quote':'除氧器安装应符合5.6.1至5.6.8的规定。'}]}
-    accepted,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':source,'origin':origin},[statement],registry,
-        [{'evidence_id':'e','origin_evidence_id':'origin','reference_number':'5.6.1'}])
-    assert not accepted and rejected
-    accepted,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':source,'origin':origin},[statement],registry,
-        [{'evidence_id':'e','origin_evidence_id':'origin','reference_number':'5.6.5'}])
-    assert not accepted and rejected
-    origin['members'][0]['quote']='除氧器安装的安全阀检查应符合5.6.5的规定。'
-    accepted,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':source,'origin':origin},[statement],registry,
-        [{'evidence_id':'e','origin_evidence_id':'origin','reference_number':'5.6.5'}])
-    assert accepted==[proposal] and not rejected
-    # The same source is in scope when the user names the component operation.
-    task['subquestion']='除氧器安全阀安装应符合什么规定'
-    accepted,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':source},[statement],registry)
-    assert accepted==[proposal] and not rejected
-    # A component item under a clause that directly governs the requested
-    # equipment remains in scope even if its own sentence omits the equipment.
-    task['subquestion']='除氧器安装应符合什么规定'
-    source['members'][0]['quote']='除氧器安装应符合下列规定：'
-    accepted,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':source},[statement],registry)
-    assert accepted==[proposal] and not rejected
-
-
-def test_an_unasked_different_object_class_does_not_supply_the_answer():
-    registry=OntologyRegistry()
-    statement={'supports':[{'evidence_id':'e','member_keys':['a']}],
-               'entities':[{'class_id':'PressureVessel','label':'压力容器','role':'subject'}]}
-    view={'evidence_id':'e','members':[{'member_key':'a','role':'content',
-          'quote':'压力容器的严密性水压试验应符合要求。'}]}
-    proposal={'id':'c','task_id':'t','text':'压力容器应试验。',
-              'supports':[{'evidence_id':'e','member_keys':['a']}]}
-    task={'id':'t','object':'除氧器','subquestion':'除氧器安装应符合什么规定'}
-    kept,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':view},[statement],registry)
-    assert not kept and rejected
-    task['subquestion']='除氧器作为压力容器进行水压试验应符合什么规定'
-    kept,rejected=filter_independent_source_claims(
-        [proposal],[task],{'e':view},[statement],registry)
-    assert kept==[proposal] and not rejected
-
-
-def test_model_subquestion_cannot_expand_the_user_question_scope():
-    registry=OntologyRegistry()
-    source={'evidence_id':'e','members':[{'member_key':'a','role':'content',
-            'quote':'压力容器的严密性水压试验应符合要求。'}]}
-    statement={'supports':[{'evidence_id':'e','member_keys':['a']}],
-               'entities':[{'class_id':'PressureVessel','label':'压力容器','role':'subject'}]}
-    claim={'id':'c','task_id':'t','text':'压力容器应试验。',
-           'supports':[{'evidence_id':'e','member_keys':['a']}]}
-    task={'id':'t','object':'压力容器','subquestion':'除氧器作为压力容器应如何试验'}
-    kept,rejected=filter_independent_source_claims(
-        [claim],[task],{'e':source},[statement],registry,question='除氧器安装应符合什么规定')
-    assert not kept and rejected
-    kept,rejected=filter_independent_source_claims(
-        [claim],[task],{'e':source},[statement],registry,question='压力容器水压试验应符合什么规定')
-    assert kept==[claim] and not rejected
+def test_object_applicability_uses_semantic_review_instead_of_literal_name_checks():
+    import json
+    question='波纹补偿器可以拉伸对口吗，设计预拉伸是不是例外？'
+    task={'id':'t','object':'管道补偿器','required':True}
+    row={**claim(),'text':'除设计要求的预拉伸外，不得用波纹管变形调整安装偏差。'}
+    read=tools();read.reads['e']['members'][0]['quote']=row['text']
+    class Model:
+        def call(self,system,user,budget):
+            payload=json.loads(user)
+            assert payload['question']==question
+            assert '规范名称未逐字出现在问题中' in system
+            return {'tasks':[{'task_id':'t','claim_verdicts':[
+                {'claim_id':'c','supported':True,'applicable':True,'conditions_preserved':True}],
+                'missing_items':[]}]}
+    accepted,rejected=validate([row],read,facts={},tasks=[task])
+    assert accepted and not rejected
+    verdict,error=review_answer_completeness(question,[task],accepted,read,Model(),Budget(),facts={})
+    assert not error and verdict['t']['complete']
 
 
 def test_claim_must_bind_an_existing_member_before_semantic_review():
@@ -329,10 +269,12 @@ def test_numeric_hints_do_not_block_but_invalid_references_still_do():
     numeric={**claim(),'basis':'inference','text':'建议将间隙调整到100mm。'}
     assert binding_error(numeric,sources(),{}) is None
     assert numeric_warning(numeric,sources())
-    for text in ('建议按第9.9.9条执行。',
-                 '建议改为DL/T 9876—2030中的工艺。'):
-        invented={**claim(),'basis':'inference','text':text}
-        assert binding_error(invented,sources(),{}) is not None
+    invented={**claim(),'basis':'inference','text':'建议按第9.9.9条执行。'}
+    assert binding_error(invented,sources(),{}) is not None
+    # File titles are not authoritative standard IDs; their meaning belongs
+    # to the full-source semantic review, along with engineering correctness.
+    identifier={**claim(),'basis':'inference','text':'建议改为DL/T 9876—2030中的工艺。'}
+    assert binding_error(identifier,sources(),{}) is None
 
 
 def test_inference_can_restate_user_values_without_a_matching_source_value():

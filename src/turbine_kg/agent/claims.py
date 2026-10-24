@@ -6,26 +6,21 @@ from turbine_kg.runtime import identity
 from turbine_kg.knowledge.quantities import NUMBER_PATTERN, UNIT_PATTERN
 
 
-_REFERENCE_NUMBER = r'(?:\d+(?:\s*[.\-]\s*\d+)*|[A-Z](?:\s*\.\s*\d+)*)'
-_REFERENCE = re.compile(r'(?P<kind>条款|章节|表|图|章|节|Table|Figure|Fig\.?|Clause|Section)\s*(?P<number>'+_REFERENCE_NUMBER+r')(?![\d.A-Za-z])', re.IGNORECASE)
-_POST_REFERENCE = re.compile(r'(?<![\d.A-Za-z])(?:第\s*)?(?P<number>'+_REFERENCE_NUMBER+r')\s*(?P<kind>条款|条|章|节|表|图)(?![A-Za-z])')
 _LEADING_CLAUSE = re.compile(r'(?m)^\s*(?P<number>\d+(?:\.\d+){2,})(?![\d.A-Za-z])(?=\s|[\u4e00-\u9fff])')
-_REFERENCE_KINDS = {'表':'table','table':'table','图':'figure','figure':'figure','fig':'figure','条款':'clause','条':'clause','clause':'clause','章节':'section','章':'section','节':'section','section':'section'}
 _DOCUMENT_CODE = re.compile(r'(?<![A-Za-z])(?P<prefix>[A-Za-z]{1,10}(?:\s*/\s*[A-Za-z]{1,5})?)\s*(?P<number>\d+(?:\.\d+)*)\s*[-—–−:]\s*(?P<year>\d{4})(?!\d)')
 _STANDARD_IDENTIFIER = re.compile(r'(?<![A-Za-z])(?P<prefix>[A-Z]{1,8}(?:\s*/\s*[A-Z]{1,5})?)\s*(?P<number>\d{3,}(?:\.\d+)*)(?:\s*[-—–−:]\s*\d{4})?(?![\d.])',re.IGNORECASE)
 
 
 def _references(text):
     from turbine_kg.documents.ir import parse_references
-    result={(_REFERENCE_KINDS[match['kind'].casefold().rstrip('.')],re.sub(r'\s+','',match['number'])) for pattern in (_REFERENCE,_POST_REFERENCE) for match in pattern.finditer(text)}
+    result=set()
     for ref in parse_references(text):
         if ref.get('end_number'):
             start=ref['number'].split('.');end=ref['end_number'].split('.')
             if len(start)!=len(end) or start[:-1]!=end[:-1] or not start[-1].isdigit() or not end[-1].isdigit() or int(start[-1])>=int(end[-1]):continue
-            result.discard((ref['kind'],ref['number']+'-'+ref['end_number']))
         result.add((ref['kind'],ref['number']))
         if ref.get('end_number'):result.add((ref['kind'],ref['end_number']))
-    return result|{('clause',match['number']) for match in _LEADING_CLAUSE.finditer(text)}
+    return result
 
 
 def _missing_references(expected,available):
@@ -46,7 +41,7 @@ def _without_identifiers(text):
     from turbine_kg.documents.ir import parse_references
     for ref in reversed(parse_references(text)):
         if ref['kind'] in ('table','figure') or ref['number'].count('.')>=2:text=text[:ref['start']]+text[ref['end']:]
-    for pattern in (_DOCUMENT_CODE,_REFERENCE,_POST_REFERENCE,_LEADING_CLAUSE):text=pattern.sub('',text)
+    for pattern in (_DOCUMENT_CODE,_LEADING_CLAUSE):text=pattern.sub('',text)
     return text
 
 
@@ -181,10 +176,6 @@ def _table_quantities(claim,reads):
                 values=re.findall(r'(?<![A-Za-z\d.])('+_NUMBER+r')(?![\d.])',_without_identifiers(normalize('NFKC',cell.get('quote',''))))
                 result.update((float(value),next(iter(units))) for value in values)
     return result
-
-
-def _document_codes(text):
-    return {(re.sub(r'\s','',match['prefix']).upper(),match['number'],match['year']) for match in _DOCUMENT_CODE.finditer(text)}
 
 
 def _outside_supported_standard_identifiers(text,source_context):
@@ -398,7 +389,6 @@ def binding_error(claim,reads,visuals,*,user_facts=None,task=None):
         displayed=normalize('NFKC',displayed);cited=normalize('NFKC',cited)
         reference_sources=cited+'\n'+normalize('NFKC',_structural_context_text(claim,reads))+'\n'+'\n'.join(row['title'] for row in citations_for(claim,reads))
         if _missing_references(_references(displayed),_references(reference_sources)): return '回答的表图或条款编号没有来源支持'
-        if not _document_codes(displayed).issubset(_document_codes(reference_sources)): return '回答的资料标识或版本没有来源支持'
     return None
 
 
@@ -446,34 +436,6 @@ def binding_diagnostics(claim,reads):
     return result
 
 
-def _validation_images(payload,tools):
-    """Reject image claims when graph records contain only a local-file pointer.
-
-    Query-time validation never reopens source assets. The current graph image
-    contract stores metadata rather than transferable pixels, so prior visual
-    descriptions cannot establish a fresh independent image verification.
-    """
-    candidates={};failures={}
-    for entry in payload:
-        claim=entry['claim']
-        if claim['basis']!='image':continue
-        for support in claim['supports']:
-            eid=support['evidence_id'];selected=set(support['member_keys'])
-            for member in tools.reads[eid]['members']:
-                if member['member_key'] not in selected or member.get('source_kind')!='picture':continue
-                key=(eid,member['member_key'])
-                candidate=candidates.setdefault(key,{'evidence_id':eid,'member_key':member['member_key'],'claim_ids':[]})
-                if claim['id'] not in candidate['claim_ids']:candidate['claim_ids'].append(claim['id'])
-    states=[]
-    for candidate in candidates.values():
-        state={key:candidate[key] for key in ('evidence_id','member_key','claim_ids')}
-        state.update(resource_read=False,pixels_sent=False,response_received=False,status='unread',
-                     reason='Neo4j 未提供可独立核验的图片像素；查询阶段禁止读取本地原始资料')
-        for cid in candidate['claim_ids']:failures[cid]='图片独立像素校验不可用：'+state['reason']
-        states.append(state)
-    return states,failures
-
-
 def validate(claims,tools,*,facts,tasks=None):
     """Run deterministic answer checks and return source-bound claims.
 
@@ -497,14 +459,6 @@ def validate(claims,tools,*,facts,tasks=None):
             if warning and hasattr(tools,'diagnostics'):
                 tools.diagnostics.append({'kind':'numeric_review_hint','claim_id':claim['id'],
                     'reason':warning,'blocking':False,'text':claim['text']})
-    if not pending: return [],rejected
-    image_candidates=[{'claim':claim} for claim in pending if claim.get('basis')=='image']
-    if image_candidates:
-        image_states,image_failures=_validation_images(image_candidates,tools)
-        rejected.extend({'claim':claim,'reason':image_failures[claim['id']]} for claim in pending if claim.get('id') in image_failures)
-        pending=[claim for claim in pending if claim.get('id') not in image_failures]
-        if hasattr(tools,'summary') and image_states:
-            tools.summary.append({'tool':'validate_images','results':image_states})
     return pending,rejected
 
 def coverage_reference_context(tools):

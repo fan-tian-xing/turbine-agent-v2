@@ -74,7 +74,7 @@ def test_multiplier_is_not_a_clause_reference():
     assert ('clause', '5.9.4') in _references('按照5.9.4的规定执行')
 
 
-@pytest.mark.parametrize('unit', ['m', 'mm', 'MPa', 'kPa/h', 'kg', 'kN', '°C', '%', '米', '千克', '倍'])
+@pytest.mark.parametrize('unit', ['m', 'mm', 'MPa', 'kPa/h', 'kg', 'kN', '°C', '%', '米', '千克', '倍', 'bar', 'V', 'μm', 'rad', 'L/min'])
 @pytest.mark.parametrize('space', ['', ' ', '\u3000'])
 def test_cued_engineering_values_are_not_structural_references(unit, space):
     from turbine_kg.documents.ir import parse_references
@@ -93,3 +93,35 @@ def test_spaced_unit_does_not_discard_a_source_bound_claim():
              'supports': [{'evidence_id': 'e', 'member_keys': ['m']}]}
     assert binding_error(claim, reads, {}) is None
     assert binding_error({**claim, 'text': claim['text'] + '按5.8.9条执行。'}, reads, {}) == '回答的表图或条款编号没有来源支持'
+
+
+@pytest.mark.parametrize('text', ['这1条冷却管不得强行穿入。', '这2节短管应清理干净。', '第1条冷却管应清洁。', '这1条规定应遵守。'])
+def test_count_classifiers_are_not_clause_or_section_ids(text):
+    from turbine_kg.documents.ir import parse_references
+    assert not _references(text)
+    assert not parse_references(text)
+
+
+def test_explicit_single_number_references_remain_distinct_from_counts():
+    assert _references('按第1条规定执行，参照第2节的要求。')=={('clause','1'),('section','2')}
+
+
+def test_document_filename_is_not_an_authoritative_identifier_gate():
+    from turbine_kg.agent.claims import binding_error
+    reads={'e':{'evidence_id':'e','title':'DL5190.3—2019规范', 'document_id':'d','revision_id':'r',
+                'context':{},'members':[{'member_key':'m','quote':'冷却管不得延伸长度。',
+                'role':'content','text_origin':'native_text','locator':{}}]}}
+    claim={'text':'依据DL/T5190.3—2019，冷却管不得延伸长度。','basis':'source',
+           'supports':[{'evidence_id':'e','member_keys':['m']}]}
+    assert binding_error(claim,reads,{}) is None
+
+
+def test_successfully_read_pixels_are_not_unconditionally_rejected_again():
+    tools=SimpleNamespace(reads={'e':{'members':[{'member_key':'m','source_kind':'picture'}]}},
+        visuals={'e':[{'member_key':'m','status':'read','resource_read':True,'pixels_sent':True,'response_received':True}]},
+        summary=[],diagnostics=[])
+    claim={'text':'图中标注孔径。','basis':'image','task_id':'t','supports':[{'evidence_id':'e','member_keys':['m']}]}
+    accepted,rejected=validate([claim],tools,facts={},tasks=[{'id':'t'}])
+    assert accepted and not rejected
+    tools.visuals={}
+    assert validate([claim],tools,facts={},tasks=[{'id':'t'}])[1]

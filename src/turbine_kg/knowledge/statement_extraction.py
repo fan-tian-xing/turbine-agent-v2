@@ -4,6 +4,7 @@ import re
 from copy import deepcopy
 from unicodedata import normalize
 from jsonschema import Draft202012Validator
+from jsonschema.exceptions import ValidationError
 from turbine_kg.runtime import Budget, identity, json_text, fingerprint
 from turbine_kg.ontology.registry import normalized
 from turbine_kg.knowledge.incremental import evidence_logical_key, statement_logical_key, content_fingerprint
@@ -640,8 +641,11 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
         rejection_details.append({'stage':stage,'reason':str(reason),'evidence_ids':ids,
             'supports':deepcopy(refs),'extraction_id':item.get('extraction_id') if isinstance(item,dict) else None})
     schema = Draft202012Validator(registry.extraction_schema()) if hasattr(registry,'extraction_schema') else None
+    relation_schema = Draft202012Validator(registry.extraction_schema()['properties']['semantic_relations']['items']) if schema else None
+    pending_relations={}
     for offset,item in enumerate(result.get('statements',[])):
         try:
+            if not isinstance(item,dict):raise ValueError('陈述必须为对象')
             item.setdefault('extraction_id',f's{offset}')
             # Some models use ``scope`` for a source-backed applicability
             # sentence even though scope declarations are stored separately.
@@ -655,8 +659,13 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
             for entity in item.get('entities', []):
                 if isinstance(entity, dict):
                     entity.setdefault('class', 'Mention')
+                    if not isinstance(entity['class'],str) or not registry.classes.get(entity['class'],{}).get('extractable'):
+                        entity['class']='Mention'
                     for field in ('ontology_class_id', 'ontology_binding', 'ontology_mapping_review'):
                         entity.pop(field, None)
+            # Optional relationship mistakes cannot invalidate source-backed
+            # text. Validate and bind them after the Core records are accepted.
+            raw_relations=item.pop('semantic_relations',[])
             schema_error=next(schema.iter_errors(item),None) if schema else None
             if schema_error is not None:
                 path='.'.join(map(str,schema_error.absolute_path)) or '$'
@@ -688,10 +697,7 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
             item = map_statement(item, registry, supplied)
             for legacy_field in ('modality','negation','possibility'):
                 item.pop(legacy_field,None)
-            if hasattr(registry,'validate_semantic_relation'):
-                for relation in item.get('semantic_relations',[]):
-                    if relation.get('supports'):relation['supports']=_bind_supports(relation['supports'],supplied,evidence_aliases,member_aliases)
-                    if 'source_ref' not in relation:registry.validate_semantic_relation(relation,item.get('entities',[]))
+            pending_relations[id(item)]=raw_relations
             statements.append(item)
         except (KeyError,TypeError,ValueError) as error: reject(error,item)
     for row in result.get('scope_declarations', []):
@@ -711,28 +717,26 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
     indexed={item['extraction_id']:item for item in statements}
     if len(indexed)!=len(statements):
         duplicates={key for key in indexed if sum(item['extraction_id']==key for item in statements)>1}
-        referenced={ref.get('statement_id') for item in statements for relation in item.get('semantic_relations',[])
-                    for ref in (relation.get('source_ref',{}),relation.get('target_ref',{}))}
         used=set(indexed)
-        retained=[]
         for index,item in enumerate(statements):
             key=item['extraction_id']
-            if key in duplicates and key in referenced:
-                reject('跨记录关系引用了重复的临时标识',item)
-                continue
             if key in duplicates:
                 replacement=f'{key}__{index}'
                 while replacement in used:replacement+='_'
                 item['extraction_id']=replacement
                 used.add(replacement)
-            retained.append(item)
-        statements=retained;indexed={item['extraction_id']:item for item in statements}
+        indexed={item['extraction_id']:item for item in statements}
     for item in statements:
         valid=[]
-        for relation in item.get('semantic_relations',[]):
+        relations=pending_relations.get(id(item),[])
+        if not isinstance(relations,list):
+            rejected.append('可选语义关系须为数组，已保留Statement正文');relations=[]
+        for relation in relations:
             try:
+                if relation_schema:relation_schema.validate(relation)
+                if relation.get('supports'):relation['supports']=_bind_supports(relation['supports'],supplied,evidence_aliases,member_aliases)
                 registry.validate_semantic_relation(relation,item['entities'],indexed,item['extraction_id']);valid.append(relation)
-            except (KeyError,TypeError,ValueError) as error: reject(error,item,'relation')
+            except (KeyError,TypeError,ValueError,ValidationError) as error: rejected.append(str(error))
         item['semantic_relations']=valid
     # Source-member, schema, ontology and relation checks above are deterministic.
     # Completeness below is a structural check; human page review checks meaning.
@@ -740,6 +744,7 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
     for row in result.get('evidence_status',[]):
         eid=evidence_aliases.get(row.get('evidence_id'),row.get('evidence_id'))
         if eid in supplied:statuses[eid]={**row,'evidence_id':eid}
+    reported=set(statuses)
     for eid in supplied:
         if eid not in statuses: statuses[eid]={'evidence_id':eid,'status':'incomplete','reason':'模型未给出覆盖状态'}
     by_evidence={eid:[] for eid in supplied}
@@ -753,7 +758,7 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
             required=set(_native_coverage_members(view,maps))
             supported={key for item in statements for support in item['supports']
                        if support['evidence_id']==eid for key in support['member_keys']}
-            if required and required<=supported and statuses[eid].get('status')=='complete':
+            if required and required<=supported and (eid not in reported or statuses[eid].get('status')!='incomplete'):
                 statuses[eid]={'evidence_id':eid,'status':'complete',
                                'reason':'程序结构与来源成员检查通过'}
             elif not required and any(scope['evidence_id']==eid for scope in reused_scopes) \
@@ -764,7 +769,7 @@ def _extract_once(views: list[dict], model, registry, budget, *, require_coverag
                 statuses[eid]={'evidence_id':eid,'status':'context_only',
                                'reason':'无原生知识内容的上下文'}
             else:
-                reason='原生来源成员未被有效Statement支持，或抽取未报告完整'
+                reason='原生来源成员未被有效Statement支持，或模型明确报告抽取未完成'
                 statuses[eid]={'evidence_id':eid,'status':'incomplete','reason':reason}
                 rejected.append(reason);by_evidence[eid].append(reason)
                 rejection_details.append({'stage':'coverage','reason':reason,'evidence_ids':[eid],

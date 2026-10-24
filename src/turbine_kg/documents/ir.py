@@ -171,12 +171,11 @@ def parse_references(text):
     Offsets and quotes refer to the original text, including full-width symbols.
     Range expansion belongs to the index and only selects actual source entries.
     """
-    from turbine_kg.knowledge.quantities import UNIT_PATTERN, normalize_quantity_text
     number = '(?:' + _NUMBER + ')'
     suffix = rf'(?:\s*(?:条款|条|节)?\s*(?:至|到|～|~|—|–|－|-)\s*第?\s*(?P<endpoint>{number}))?'
     patterns = [
-        (re.compile(rf'(?P<label>条款|章节|条|表|图|table|figure|clause)\s*(?P<number>{number}){suffix}(?![\d.．])', re.I), 'prefix'),
-        (re.compile(rf'(?<![\d.．])(?P<number>{number}){suffix}\s*(?P<label>条款|条|表|图)(?!号)', re.I), 'suffix'),
+        (re.compile(rf'(?P<label>条款|章节|章|节|表|图|table|figure|fig\.?|clause|section)\s*(?P<number>{number}){suffix}(?![\d.．A-Za-z])', re.I), 'prefix'),
+        (re.compile(rf'(?<![\d.．A-Za-z])(?:第\s*)?(?P<number>{number}){suffix}\s*(?P<label>条款|条|章|节|表|图)(?!号)', re.I), 'suffix'),
         (re.compile(rf'(?:符合|按照?|参照|依据|参见|见)[^\d\n。；]{{0,18}}?(?P<number>\d+(?:\s*[.．]\s*\d+)+){suffix}(?![\d.．A-Za-z%℃])'), 'cue'),
     ]
     found = []
@@ -185,15 +184,20 @@ def parse_references(text):
             if any(match.start() < row['end'] and match.end() > row['start'] for row in found):
                 continue
             label = match.groupdict().get('label', '条').lower()
-            kind = 'table' if label in ('表', 'table') else 'figure' if label in ('图', 'figure') else 'clause'
+            kind = ('table' if label in ('表', 'table') else 'figure' if label in ('图', 'figure', 'fig', 'fig.')
+                    else 'section' if label in ('章节', '章', '节', 'section') else 'clause')
             value = normalized_number(match.group('number'))
-            # "按1.25倍" and "低于0.10mm" describe quantities, not clauses.
-            if style == 'cue' and re.match(r'\s*(?:倍|' + UNIT_PATTERN + r')(?![A-Za-z/])',
-                                          normalize_quantity_text(text[match.end('number'):])):
+            tail=text[match.end():]
+            # Recognize reference wording, rather than guessing from a finite
+            # unit list. A measurement followed by any unit is not a citation.
+            reference_tail=r'\s*(?:(?:的\s*)?(?:有关|相关)?\s*(?:规定|要求|内容|执行)|[，,。；;、）)\n]|$)'
+            if style == 'cue' and not re.match(reference_tail,tail):
                 continue
             if style == 'cue' and re.search(r'[A-Z]{1,8}\s*/\s*T?\s*$', match.group()[:match.start('number')-match.start()]):
                 continue
-            if kind == 'clause' and '.' not in value:
+            # "1条管道" and "2节短管" use classifiers, not clause IDs.
+            if style == 'suffix' and kind in ('clause','section') and '.' not in value and (
+                    not match.group().lstrip().startswith('第') or not re.match(reference_tail,tail)):
                 continue
             endpoint = normalized_number(match.group('endpoint')) if match.group('endpoint') else None
             sentence_start = max(text.rfind('。', 0, match.start()), text.rfind('；', 0, match.start()), text.rfind('\n', 0, match.start())) + 1

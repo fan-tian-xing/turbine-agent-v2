@@ -193,18 +193,22 @@ class Tools:
                 'statements':statements[:3]}
         return ranked
 
-    def navigate(self,object_label:str,relation_ids:list[str],cursor=None,hops=1):
+    def navigate(self,object_label:str,relation_ids:list[str],cursor=None,hops=1,expand=False):
+        """Start at the object class; expand includes related class paths."""
         self._take()
         if not isinstance(object_label,str) or not object_label.strip():raise ValueError('查询对象须为非空名称')
         if not isinstance(relation_ids,list) or not relation_ids or any(not isinstance(key,str) for key in relation_ids):
             raise ValueError('必须明确至少一个本体关系标识')
         if type(hops) is not int or hops<1 or hops>self.budget.business_hops: raise ValueError('业务跳数超出预算')
+        if type(expand) is not bool:raise ValueError('本体扩展开关须为布尔值')
         if any(key not in self.registry.relations for key in relation_ids): raise ValueError('未知本体关系标识')
         if any(not self.registry.relations[key].get('navigation',True) for key in relation_ids): raise ValueError('条件或来源关系不计入业务导航')
         canonical=self.registry.canonical_label(object_label)
         cid=identity('query-object',canonical)
-        ontology_objects=self._ontology_objects(object_label)
-        self.ontology_paths[object_label]=ontology_objects
+        all_objects=self._ontology_objects(object_label)
+        self.ontology_paths[object_label]=all_objects
+        ontology_objects=all_objects if expand else {key:path for key,path in all_objects.items()
+            if path['kind'] in ('direct','direct_class','qualified_context')}
         domain=self.registry.domain_class(object_label) or self.registry.qualified_class(object_label)
         labels=list(dict.fromkeys([object_label,canonical,*domain.get('aliases',[])] if domain else [object_label]))
         source_classes=[kind for kind in self.registry.classes if any(
@@ -243,11 +247,12 @@ class Tools:
             "AND s.document_id IN $documents AND r.ontology_version=$ontology_version AND s.type IN $statement_types "
             "RETURN s,c,0 AS owned_match,-1 AS path_rank } "
             "WITH s,collect(DISTINCT properties(c)) AS matched_objects,"
+            "collect(DISTINCT CASE WHEN owned_match=1 THEN c.id ELSE null END) AS owning_object_ids,"
             "max(path_rank) AS path_rank,max(owned_match) AS owned_match ")
         if params['context_evidence_ids']:
             query+="WHERE EXISTS { MATCH (s)-[:SUPPORTS]->(e:TK:Evidence) WHERE e.id IN $context_evidence_ids AND e.document_id=s.document_id } "
         total=self.store.query(query+'RETURN count(s) AS total',params,self.budget)[0]['total']
-        rows=self.store.query(query+'RETURN properties(s) AS node,matched_objects,owned_match '
+        rows=self.store.query(query+'RETURN properties(s) AS node,matched_objects,owning_object_ids,owned_match '
             'ORDER BY path_rank DESC,size([term IN $query_terms WHERE toLower(coalesce(s.text,\'\')) CONTAINS term]) DESC,s.id '
             'SKIP $offset LIMIT $limit',params,self.budget)
         items=[]
@@ -255,20 +260,22 @@ class Tools:
             item=unpack(row['node'])
             item['matched_objects']=[{key:source[key] for key in ('id','label','class','class_id','occurrence') if key in source}
                                      for properties in row.get('matched_objects',[]) for source in [unpack(properties)]]
-            item['ontology_paths']=[{'object_id':source['id'],**ontology_objects[source['id']]}
-                                    for source in item['matched_objects'] if source.get('id') in ontology_objects]
+            owners=set(row.get('owning_object_ids',[]))
+            item['ontology_paths']=[{'object_id':source['id'],**ontology_objects[source['id']],
+                **({'class_path_kind':ontology_objects[source['id']]['kind'],'kind':'related_context'}
+                   if source['id'] not in owners else {})}
+                for source in item['matched_objects'] if source.get('id') in ontology_objects]
             if row.get('owned_match') == 0:
                 item['retrieval_role']='related_context'
-                item['retrieval_warning']='仅表示陈述提及该类别，不证明要求适用于查询对象；须阅读原文核对主体与条件'
-                item['ontology_paths']=[{**path,'class_path_kind':path['kind'],'kind':'related_context'}
-                                        for path in item['ontology_paths']]
+                item['retrieval_warning']='仅表示原文提及或来源上下文关联该类别，不证明要求适用于查询对象；须阅读原文核对主体与条件'
             items.append(item)
         scope_rows=self._attach_scope_constraints(items)
         origins={source['id']:source for item in items for source in item['matched_objects']}
         instances=[source for source in origins.values() if self.registry.is_a(source.get('class'),['PhysicalObject','Activity'])]
         warnings=['命中多个同名真实实例；保留各自来源身份，适用对象与工况须分别核对'] if len(instances)>1 else []
-        result={'items':items,'scopes':scope_rows,'completed_range':[offset,offset+len(items)],'coverage':{'matched':total,'scope':'registered_statement_navigation'},'cursor':{'key':key,'offset':offset+len(items)} if offset+len(items)<total else None,'warnings':warnings}
-        self.summary.append({'tool':'navigate','object':object_label,'relation_ids':relation_ids,'matches':total,'returned':len(items),'has_more':bool(result['cursor'])})
+        result={'items':items,'scopes':scope_rows,'completed_range':[offset,offset+len(items)],'coverage':{'matched':total,'scope':'registered_statement_navigation'},'cursor':{'key':key,'offset':offset+len(items)} if offset+len(items)<total else None,'warnings':warnings,
+                'expansion_available':len(all_objects)>len(ontology_objects)}
+        self.summary.append({'tool':'navigate','object':object_label,'relation_ids':relation_ids,'expand':expand,'matches':total,'returned':len(items),'has_more':bool(result['cursor'])})
         return result
 
     def _search_anchor_terms(self, query, terms):
@@ -316,6 +323,7 @@ class Tools:
         Snapshot filtering precedes paging.
         """
         from turbine_kg.retrieval.search import SEARCH_INDEX, SEARCH_VERSION, query_projection
+        from turbine_kg.ontology.registry import normalized
         self._take()
         _,terms=query_projection(query,query_terms)
         anchors=self._search_anchor_terms(query,terms)
@@ -329,6 +337,23 @@ class Tools:
               'AND e.search_projection_version=$search_version ')
         try:
             total=self.store.query(base+'RETURN count(e) AS total',params,self.budget)[0]['total']
+            if not total and anchors:
+                # A canonical class name need not occur literally in the book.
+                # Fall back locally to the user's supplied whole object term,
+                # without registering it as a global class alias.
+                raw_anchors=[term for term in terms if len(normalized(term))>=2
+                    and normalized(term) in normalized(query)
+                    and any(normalized(term)!=normalized(anchor) and normalized(term) in normalized(anchor) for anchor in anchors)]
+                for anchor in anchors:
+                    # Preserve an original object name even if the planner
+                    # supplied only the canonical name in query_terms.
+                    suffix=next((anchor[start:] for start in range(1,len(anchor)-1)
+                        if normalized(anchor[start:]) in normalized(query)),None)
+                    if suffix and suffix not in raw_anchors:raw_anchors.append(suffix)
+                if raw_anchors:
+                    lucene,_=query_projection(query,raw_anchors,match='any')
+                    params['query']=lucene;match_mode='original_term_fallback'
+                    total=self.store.query(base+'RETURN count(e) AS total',params,self.budget)[0]['total']
             if not total and not anchors and len(terms)>1:
                 # Unknown objects have no reviewed anchor. Relax whole phrases
                 # only after the conjunction failed, and expose that decision.
@@ -377,6 +402,11 @@ class Tools:
             statements.extend(linked)
             items.append({'evidence_id':evidence['id'],'score':row['score'],
                           'retrieval_method':'evidence_fulltext','exact_hits':row.get('exact_hits',0),
+                          'matched_phases':list(dict.fromkeys(task['phase'] for task in self.focus_tasks
+                              if task.get('phase') and normalized(task['phase']) in normalized(evidence.get('text','')))),
+                          'matched_object_labels':list(dict.fromkeys(task['object'] for task in self.focus_tasks
+                              if any(normalized(name) in normalized(evidence.get('text',''))
+                                     for name in [task['object'],*getattr(self.registry,'expand',lambda _:[])(task['object'])] if name))),
                           'document_id':evidence.get('document_id'),'revision_id':evidence.get('revision_id'),
                           'physical_page':evidence.get('physical_page'),
                           'kind':evidence.get('kind'),'context':evidence.get('context',{}),
@@ -385,6 +415,7 @@ class Tools:
         scopes=self._attach_scope_constraints(statements)
         warnings=['部分Evidence尚未建立当前检索投影，全文召回覆盖不完整'] if missing else []
         if match_mode=='relaxed_phrases':warnings.append('未识别到本体对象且组合查询无结果；已放宽为完整词组匹配，候选须进一步核对相关性')
+        if match_mode=='original_term_fallback':warnings.append('规范类名未命中，已按原问题中的完整称谓补查；候选须进一步核对对象及适用范围')
         result={'items':items,'scopes':scopes,'completed_range':[offset,offset+len(items)],
                 'coverage':{'matched':total,'scope':'evidence_fulltext','unindexed':missing,
                             'match_mode':match_mode,'object_terms':anchors},
@@ -623,6 +654,11 @@ class Tools:
         if evidence_id not in self.reads and self.text_used+length>self.budget.text_limit: raise BudgetExceeded('完整来源成员超出剩余文本预算；未截断表头、单位或条件')
         if evidence_id not in self.reads: self.text_used+=length
         self.reads[evidence_id]=view
+        view['statements']=[unpack(row['node']) for row in self.store.query(
+            'MATCH (s:TK:Statement)-[:SUPPORTS]->(e:TK:Evidence {id:$id}) '
+            'WHERE s.document_id=e.document_id AND s.document_id IN $documents '
+            'AND s.ontology_version=$version RETURN properties(s) AS node ORDER BY s.id',
+            {'id':evidence_id,'documents':list(self.snapshot.document_ids),'version':self.snapshot.ontology_version},self.budget)]
         self.pending_reference_ids.discard(evidence_id)
         self.required_reference_ids.discard(evidence_id)
         remaining_gaps=[]

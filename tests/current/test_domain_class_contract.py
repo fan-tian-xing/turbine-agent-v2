@@ -113,4 +113,4 @@ def test_mixed_active_versions_need_separate_contracts():
             return [{"id": "old", "ontology": "old"}, {"id": "new", "ontology": "new"}]
 
     with pytest.raises(ValueError, match="多个本体版本"):
-        KnowledgeStore.snapshot(ActiveStore(), OntologyRegistry().version, (), Budget())
+        KnowledgeStore.snapshot(ActiveStore(), OntologyRegistry().version, Budget())

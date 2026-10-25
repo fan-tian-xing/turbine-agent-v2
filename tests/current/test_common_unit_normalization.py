@@ -3,7 +3,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from turbine_kg.agent.claims import _quantities, _references, validate
+from turbine_kg.knowledge.quantities import extract_quantities as _quantities
+from turbine_kg.agent.claims import _references, validate
 from turbine_kg.agent.runner import Session, plan_tasks
 from turbine_kg.knowledge.quantities import canonical_unit, quantity_in_text, _unit
 from turbine_kg.ontology.registry import OntologyRegistry
@@ -39,11 +40,22 @@ def test_fact_registration_preserves_negative_value_and_original_quote():
         {'object': '凝汽器', 'key': '环境温度', 'source_text': quote,
          'value': {'value': -25, 'unit': '摄氏度', 'target': '凝汽器'}}]}
     session = Session()
-    _, _, facts = plan_tasks(plan, session, OntologyRegistry(), [], use_skills=False,
+    _, facts = plan_tasks(plan, session, OntologyRegistry(),
                              question=quote, strict_facts=True)
     assert facts['凝汽器']['环境温度']['value'] == -25
     assert facts['凝汽器']['环境温度']['unit'] == '°C'
     assert session.fact_provenance['凝汽器']['环境温度']['source_text'] == quote
+
+
+@pytest.mark.parametrize('value',['5mΩ',{'value':5,'unit':'mΩ'}])
+def test_unknown_unit_is_preserved_as_a_user_fact_for_model_reading(value):
+    quote='装置电阻实测5mΩ'
+    plan={'objects':['装置'],'knowledge_items':['requirement'],'fact_updates':[
+        {'object':'装置','key':'电阻','source_text':quote,'value':value}]}
+    _,facts=plan_tasks(plan,Session(),OntologyRegistry(),
+                        question=quote,strict_facts=True)
+    assert float(facts['装置']['电阻']['value'])==5
+    assert facts['装置']['电阻']['unit']=='mΩ'
 
 
 @pytest.mark.parametrize('text', [
@@ -61,12 +73,12 @@ def test_field_values_and_arithmetic_are_not_mechanically_discarded(text):
     tools = SimpleNamespace(reads={'e': view}, visuals={}, summary=[], diagnostics=[])
     claim = {'text': text, 'basis': 'inference', 'task_id': 't',
              'supports': [{'evidence_id': 'e', 'member_keys': ['m']}]}
-    accepted, rejected = validate([claim], tools, facts={}, tasks=[{'id': 't'}])
+    accepted, rejected = validate([claim], tools,  tasks=[{'id': 't'}])
     assert len(accepted) == 1 and not rejected
-    assert tools.diagnostics and all(row['blocking'] is False for row in tools.diagnostics)
+    assert tools.diagnostics==[]
     # Structural references remain enforced even in the relaxed numeric policy.
     bad = {**claim, 'supports': [{'evidence_id': 'e', 'member_keys': ['missing']}]}
-    assert validate([bad], tools, facts={}, tasks=[{'id': 't'}])[1]
+    assert validate([bad], tools,  tasks=[{'id': 't'}])[1]
 
 
 def test_multiplier_is_not_a_clause_reference():
@@ -121,7 +133,35 @@ def test_successfully_read_pixels_are_not_unconditionally_rejected_again():
         visuals={'e':[{'member_key':'m','status':'read','resource_read':True,'pixels_sent':True,'response_received':True}]},
         summary=[],diagnostics=[])
     claim={'text':'图中标注孔径。','basis':'image','task_id':'t','supports':[{'evidence_id':'e','member_keys':['m']}]}
-    accepted,rejected=validate([claim],tools,facts={},tasks=[{'id':'t'}])
+    accepted,rejected=validate([claim],tools,tasks=[{'id':'t'}])
     assert accepted and not rejected
     tools.visuals={}
-    assert validate([claim],tools,facts={},tasks=[{'id':'t'}])[1]
+    assert validate([claim],tools,tasks=[{'id':'t'}])[1]
+
+
+@pytest.mark.parametrize('suffix',['m²','m³','m2','m3','m^2','m/s','m·s','m-2','mm²','mm³','MPa2','mΩ','mμs','m_foo'])
+def test_unsupported_unit_suffix_cannot_be_truncated_to_a_known_unit(suffix):
+    from turbine_kg.knowledge.quantities import extract_quantities
+    assert not extract_quantities('限值为5'+suffix)
+    assert not quantity_in_text(5,'m','限值为5'+suffix)
+    assert not quantity_in_text(5,'mm','限值为5'+suffix)
+
+
+def test_known_units_and_exact_unknown_units_remain_source_readable():
+    from turbine_kg.knowledge.quantities import extract_quantities
+    assert extract_quantities('5m高、10mm厚，压力0.5MPa；5mm/m。')=={
+        (5.,'m'),(10.,'mm'),(.5,'MPa'),(5.,'mm/m')}
+    assert quantity_in_text(5,'m²','面积为5m²')
+    assert not quantity_in_text(5,'m²','面积为5m³')
+
+
+def test_numeric_limit_alignment_does_not_compare_area_as_length():
+    from turbine_kg.knowledge.evidence_limits import compare_read_evidence,_source_limit_supported
+    registry=OntologyRegistry()
+    for suffix in ('m²','m³','m^2','m/s'):
+        text='设备长度不大于5'+suffix+'。'
+        view={'kind':'text','members':[{'member_key':'m','role':'content','quote':text}]}
+        checks=compare_read_evidence({'object':'设备','subquestion':'设备长度是否合格'},
+            {'e':view},{'设备':{'长度':{'value':4,'unit':'m','target':'设备'}}},registry)
+        assert all(row['status']=='unknown' for row in checks)
+        assert not _source_limit_supported({'limit_quote':text,'value':5,'unit':'m','operator':'le'},text)

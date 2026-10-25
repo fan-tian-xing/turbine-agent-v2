@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+from contextlib import contextmanager
 import queue
 import re
 import threading
@@ -80,7 +81,6 @@ class KnowledgeStore:
         otherwise an axiom present only in an older persisted batch is lost.
         No Statement, Evidence, or source binding is changed.
         """
-        from turbine_kg.knowledge.statement_sync import _write_transaction
         classes=[registry.domain_class_by_id(key) for key in
                  ['Thing',*registry.business_classes,*registry.domain_classes]]
         if any(row is None for row in classes):raise ValueError('本体类定义不完整')
@@ -94,12 +94,18 @@ class KnowledgeStore:
                     'key':identity('subclass',row['id'],parent['id']),
                     'data':{'relation_id':'subclass_of','ontology_version':registry.version,
                             'definition_sources':row.get('definition_sources',[]),'inherit_values':False}})
-        with _write_transaction(self) as store:
+        with write_transaction(self) as store:
             store.put('OntologyClass',[{**row,'class':'OntologyClass'} for row in classes],replace=True)
             store.edges('SUBCLASS_OF',edges)
             store.query('MATCH (a:TK:OntologyClass)-[r:SUBCLASS_OF]->(b:TK:OntologyClass) '
                         'WHERE NOT any(row IN $keep WHERE a.id=row.source AND b.id=row.target AND coalesce(r.key,"")=row.key) DELETE r',
                         {'keep':[{'source':row['source'],'target':row['target'],'key':row['key']} for row in edges]})
+            # Retire only unused class projections. Facts and embedded bindings
+            # can still refer to an old class, so their endpoints must survive.
+            store.query('MATCH (n:TK:OntologyClass) WHERE NOT n.id IN $ids '
+                        'AND NOT (n)--() AND NOT EXISTS { MATCH (s:TK:Statement) '
+                        'WHERE s.data_json CONTAINS n.id } DELETE n',
+                        {'ids':[row['id'] for row in classes]})
         return {'classes':len(classes),'subclass_edges':len(edges)}
 
     def rebuild_evidence_text(self, document_id: str, evidence_ids: list[str] | None = None) -> dict:
@@ -116,7 +122,7 @@ class KnowledgeStore:
         documents = self.query('MATCH (d:TK:Document {id:$id}) RETURN properties(d) AS node', {'id':document_id})
         if not documents:
             raise ValueError('资料不存在')
-        snapshot = Snapshot((document_id,), unpack(documents[0]['node']).get('ontology_version', ''), ())
+        snapshot = Snapshot((document_id,), unpack(documents[0]['node']).get('ontology_version', ''))
         assembler = ContextAssembler(self)
         if evidence_ids is not None and (not evidence_ids or len(set(evidence_ids)) != len(evidence_ids)):
             raise ValueError('定向刷新须提供非空且不重复的Evidence ID')
@@ -176,8 +182,7 @@ class KnowledgeStore:
         For a few explicit node edits use delete_missing=False. Shared ontology
         nodes and their subclass definitions are outside this operation.
         """
-        from turbine_kg.knowledge.statement_sync import _write_transaction
-        with _write_transaction(self) as store:
+        with write_transaction(self) as store:
             return store._sync_document(document_id, nodes, relationships,
                                         delete_missing=delete_missing)
 
@@ -338,7 +343,7 @@ class KnowledgeStore:
                         indexed[member['id']] = member
         return [indexed[key] for key in ids if key in indexed]
 
-    def snapshot(self, ontology_version: str, skill_versions: tuple[str, ...], budget: Budget) -> Snapshot:
+    def snapshot(self, ontology_version: str, budget: Budget) -> Snapshot:
         rows = self.query("MATCH (d:TK:Document) RETURN d.id AS id,coalesce(d.ontology_version, $fallback) AS ontology", {'fallback': ontology_version}, budget)
         versions = {row["ontology"] for row in rows}
         if len(versions) > 1:
@@ -347,7 +352,7 @@ class KnowledgeStore:
         if pinned_version != ontology_version:
             from turbine_kg.ontology.registry import OntologyRegistry
             OntologyRegistry.for_version(pinned_version)
-        return Snapshot(tuple(sorted(row["id"] for row in rows)), pinned_version, skill_versions)
+        return Snapshot(tuple(sorted(row["id"] for row in rows)), pinned_version)
 
     def save_page(self, page, document_id: str, revision_id: str, *, compact_tables=False):
         if page.status == 'excluded_navigation':
@@ -404,3 +409,34 @@ class KnowledgeStore:
         """Sources of this pinned scope, including its not-yet-extracted clauses."""
         rows = self.query("MATCH (n:TK:SourceText) WHERE n.document_id IN $documents RETURN properties(n) AS node ORDER BY n.physical_page,n.id", {"documents":list(documents)}, budget)
         return [unpack(row['node']) for row in rows]
+
+
+class _TransactionStore(KnowledgeStore):
+    """Use storage methods on an already-open backend transaction."""
+    def __init__(self, tx, settings):
+        self.tx = tx
+        self.settings = settings
+
+    def query(self, text, parameters=None, budget=None):
+        if budget:
+            budget.remaining()
+        return self.tx.run(text, parameters or {}).data()
+
+    @contextmanager
+    def transaction(self):
+        yield self
+
+
+@contextmanager
+def write_transaction(store):
+    """One atomic write group, including when helpers share an open transaction."""
+    if callable(getattr(store, 'transaction', None)):
+        with store.transaction() as transaction:
+            yield transaction
+        return
+    if not hasattr(store, 'driver') or not hasattr(store, 'settings'):
+        raise RuntimeError('存储端不支持事务，不能进行成组图谱写入')
+    with store.driver.session(database=store.settings.neo4j_database) as session:
+        with session.begin_transaction() as transaction:
+            yield _TransactionStore(transaction, store.settings)
+            transaction.commit()

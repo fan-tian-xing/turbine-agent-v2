@@ -119,20 +119,12 @@ def test_extraction_schema_and_entity_validation_share_registry_vocabulary():
     assert json.loads(json.dumps(registry.extraction_contract(),ensure_ascii=False))['ontology_version']==registry.version
 
 
-def test_skill_required_items_have_real_registered_navigation():
-    registry = OntologyRegistry()
-    from turbine_kg.agent.skills import load_catalog
-    skills = load_catalog(PROJECT_ROOT/'skills',registry=registry)
-    for skill in skills:
-        registry.validate_skill(skill)
-        for item in skill['required_items']:
-            navigation = set(registry.navigation([item]))
-            if navigation:
-                assert navigation & set(skill['relation_ids'])
-            else:
-                assert registry.data['navigation_policy']['evidence_fulltext_recall']
-    with pytest.raises(ValueError): registry.validate_skill({'relation_ids':['invented'],'required_items':['cause']})
-    with pytest.raises(ValueError): registry.validate_skill({'relation_ids':['has_requirement'],'required_items':['cause']})
+def test_statement_types_have_registered_navigation_or_fulltext_recall():
+    registry=OntologyRegistry()
+    for kind in registry.statement_types:
+        relations=registry.navigation([kind])
+        assert all(kind in registry.relations[key]['statement_types'] for key in relations)
+        assert relations or registry.data['navigation_policy']['evidence_fulltext_recall']
 
 
 def test_business_edge_write_uses_registered_type_and_rejects_mismatches():
@@ -197,7 +189,7 @@ def test_malformed_or_incomplete_numeric_conditions_remain_unknown():
 
 
 def test_persisted_navigation_keeps_quantity_owner_and_statement_support():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry();store=MemoryStore()
     item={"type":"parameter","text":"壳体尺寸按来源要求。", "entities":[
         {"label":"壳体","class":"Mention","role":"subject"},
@@ -214,7 +206,7 @@ def test_persisted_navigation_keeps_quantity_owner_and_statement_support():
 
 
 def test_object_procedure_step_path_keeps_each_record_source():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry();store=MemoryStore()
     procedure=supported_item(extraction_id="p",type="procedure",text="壳体安装程序。",
         entities=[{"label":"壳体","class":"Mention","role":"subject"}],
@@ -243,7 +235,7 @@ def supported_item(**extra):
 
 
 def test_structured_values_are_rejected_before_persistence():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry(); store=MemoryStore()
     item=supported_item(entities=[{'label':'部件','class':'Mention','role':'subject'}],
                         quantities=[{'target':'部件','value':.1,'unit':'mm'}],
@@ -254,7 +246,7 @@ def test_structured_values_are_rejected_before_persistence():
 
 
 def test_source_formula_stays_in_statement_text():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     store=MemoryStore()
     persist(store,[supported_item(text='来源公式 f=S/500，适用于冷态。')],'g',OntologyRegistry())
     result=store.nodes['Statement'][0]
@@ -263,7 +255,7 @@ def test_source_formula_stays_in_statement_text():
 
 
 def test_real_occurrence_identity_uses_source_and_time_without_roles():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry();store=MemoryStore()
     entities=[{"label":"设备1","class":"Equipment","role":"subject","occurrence":{"identifier":"1"}},
               {"label":"设备1","class":"Equipment","role":"object","occurrence":{"identifier":"1"}},
@@ -280,7 +272,7 @@ def test_real_occurrence_identity_uses_source_and_time_without_roles():
     {'identifier':None,'object':None,'location':None,'time':None,
      'source_context':[{'revision_id':'r'}],'source_anchors':[{'source_id':'source-1'}]}])
 def test_source_provenance_does_not_create_an_unidentified_real_instance(entity_class,occurrence):
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry();store=MemoryStore()
     entity={'label':'来源通用名称','class':entity_class,'role':'related'}
     if occurrence is not None:entity['occurrence']=occurrence
@@ -290,7 +282,8 @@ def test_source_provenance_does_not_create_an_unidentified_real_instance(entity_
 
 
 def test_report_with_explicit_equipment_component_tool_and_activity_identity_is_retained():
-    from turbine_kg.knowledge.statement_extraction import extract,persist
+    from turbine_kg.knowledge.statement_extraction import extract
+    from turbine_kg.knowledge.statement_sync import persist
     text='检修记录：08:30在A区使用扳手W2检查1号油泵的叶轮。'
     entities=[{'label':'油泵','class':'Equipment','role':'subject',
                'occurrence':{'identifier':'1号','object':'油泵','location':'A区'}},
@@ -320,7 +313,7 @@ def test_report_with_explicit_equipment_component_tool_and_activity_identity_is_
 
 
 def test_same_real_instance_final_id_self_loop_is_rejected():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry(); store=MemoryStore()
     entities=[{'label':'设备1','class':'Equipment','role':'subject','occurrence':{'identifier':'1','source_context':[{'revision_id':'r'}],'source_anchors':[{'source_id':'s-one'}]}},
               {'label':'设备1','class':'Equipment','role':'related','occurrence':{'identifier':'1','source_context':[{'revision_id':'r'}],'source_anchors':[{'source_id':'s-two'}]}}]
@@ -384,7 +377,7 @@ def test_scope_source_text_mismatch_blocks_inheritance():
 
 
 def test_statement_schema_does_not_define_structured_quantity_or_formula_fields():
-    from turbine_kg.knowledge.statement_extraction import persist
+    from turbine_kg.knowledge.statement_sync import persist
     registry=OntologyRegistry();store=MemoryStore()
     assert not {'conditions','quantities','formulas'} & set(registry.extraction_schema()['properties'])
     invalid_store=MemoryStore()

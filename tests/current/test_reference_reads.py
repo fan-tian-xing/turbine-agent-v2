@@ -24,7 +24,7 @@ def tools_for(sources, records):
         def get(self, ids, documents, budget):
             assert documents == ('d',)
             return [row for row in sources if row['id'] in ids]
-    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'v',()),Budget())
+    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'v'),Budget())
     tools._scope_records=records
     def read(key):
         tools._take()
@@ -206,9 +206,10 @@ def test_native_cycle_queues_each_existing_evidence_without_recursive_read():
         views[key]=row
     class Store:
         def query(self,cypher,parameters,budget):
+            if 'RETURN properties(s) AS node' in cypher:return []
             if 'r:REFERENCES' in cypher:return []
             return [{'evidence':{'id':parameters['id'],'semantic_coverage':{'status':'complete'}},'page_semantic_status':'complete'}]
-    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'v',()),Budget())
+    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'v'),Budget())
     tools._scope_records=records
     tools.assembler=SimpleNamespace(read=lambda key,*args:views[key])
     result=tools.read_evidence('a')

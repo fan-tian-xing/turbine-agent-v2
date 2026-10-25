@@ -70,7 +70,7 @@ def test_reassembled_projection_keeps_full_source_but_indexes_only_local_members
             return [nodes[key] for key in ids if key in nodes and
                     (documents is None or nodes[key].get('document_id') in documents)]
     assembler=ContextAssembler(Store())
-    snapshot=Snapshot(('d',),'o',())
+    snapshot=Snapshot(('d',),'o')
     view=assembler.read(evidence['id'],snapshot)
     assert len(view['members'])==4
     assert '本章适用于' in view['members'][-1]['quote']
@@ -116,7 +116,7 @@ class SearchStore:
 
 def test_direct_recall_returns_statement_and_still_finds_unextracted_evidence():
     store=SearchStore(missing=1)
-    tools=Tools(store,None,Snapshot(('book',),'ontology',()),Budget())
+    tools=Tools(store,None,Snapshot(('book',),'ontology'),Budget())
     result=tools.search_evidence('凝汽器壳体怎么办',['凝汽器','壳体'])
     assert [item['evidence_id'] for item in result['items']]==['with-statement','without-statement']
     assert result['items'][0]['statements'][0]['text']=='一项要求'
@@ -132,15 +132,31 @@ def test_direct_recall_returns_statement_and_still_finds_unextracted_evidence():
 
 
 def test_fulltext_cursor_is_bound_to_query_and_snapshot():
-    tools=Tools(SearchStore(),None,Snapshot(('book',),'o',()),Budget())
+    tools=Tools(SearchStore(),None,Snapshot(('book',),'o'),Budget())
     with pytest.raises(ValueError,match='分页游标'):
         tools.search_evidence('凝汽器',cursor={'key':'other-query','offset':1})
+
+
+def test_phase_match_uses_raw_evidence_even_without_statements():
+    class Store(SearchStore):
+        def query(self,query,params,budget=None):
+            rows=super().query(query,params,budget)
+            for row in rows:
+                if row.get('evidence',{}).get('id')=='without-statement':
+                    row['evidence']['text']='设备试运前应检查。'
+            return rows
+    tools=Tools(Store(),None,Snapshot(('book',),'o'),Budget())
+    tools.focus_tasks=[{'object':'设备','phase':'试运前'}]
+    result=tools.search_evidence('设备试运前要求',['设备','试运前'])
+    assert result['items'][1]['matched_phases']==['试运前']
+    assert result['items'][1]['matched_object_labels']==['设备']
+    assert not tools.reads and 'text' not in result['items'][1]
 
 
 def test_object_anchor_does_not_require_activity_or_turn_component_into_alternative():
     from turbine_kg.ontology.registry import OntologyRegistry
     store=SearchStore()
-    tools=Tools(store,OntologyRegistry(),Snapshot(('book',),'o',()),Budget())
+    tools=Tools(store,OntologyRegistry(),Snapshot(('book',),'o'),Budget())
     tools.focus_tasks=[{'object':'凝汽器','query_terms':['凝汽器','壳体','安装']}]
     result=tools.search_evidence('凝汽器壳体安装问题',['凝汽器','壳体','安装'])
     params=store.queries[0][1]
@@ -159,7 +175,7 @@ def test_unknown_object_relaxes_complete_phrases_only_after_empty_conjunction():
                 return [{'total':0}]
             return super().query(query,dict(params),budget)
     store=Store()
-    tools=Tools(store,OntologyRegistry(),Snapshot(('book',),'o',()),Budget())
+    tools=Tools(store,OntologyRegistry(),Snapshot(('book',),'o'),Budget())
     tools.focus_tasks=[{'object':'新型设备'}]
     result=tools.search_evidence('新型设备发生异常',['新型设备','连接松动'])
     assert result['coverage']['match_mode']=='relaxed_phrases' and result['warnings']
@@ -169,13 +185,30 @@ def test_unknown_object_relaxes_complete_phrases_only_after_empty_conjunction():
 
 def test_multitask_shared_question_uses_the_current_task_explicit_object():
     from turbine_kg.ontology.registry import OntologyRegistry
-    tools=Tools(SearchStore(),OntologyRegistry(),Snapshot(('book',),'o',()),Budget())
+    tools=Tools(SearchStore(),OntologyRegistry(),Snapshot(('book',),'o'),Budget())
     tools.focus_tasks=[{'object':'除氧器'},{'object':'凝汽器'}]
     question='除氧器和凝汽器安装前应准备什么'
     first=tools.search_evidence(question,['除氧器','安装前准备'])
     second=tools.search_evidence(question,['凝汽器','安装前准备'])
     assert first['coverage']['object_terms']==['除氧器']
     assert second['coverage']['object_terms']==['凝汽器']
+
+
+@pytest.mark.parametrize('include_original',[True,False])
+def test_canonical_name_without_hits_falls_back_to_user_whole_object_term(include_original):
+    from turbine_kg.ontology.registry import OntologyRegistry
+    expected=query_projection('散热器',['散热器'],match='any')[0]
+    class Store(SearchStore):
+        def query(self,query,params,budget=None):
+            if 'count(e) AS total' in query and params['query']!=expected:
+                self.queries.append((query,dict(params)));return [{'total':0}]
+            return super().query(query,dict(params),budget)
+    store=Store();tools=Tools(store,OntologyRegistry(),Snapshot(('book',),'o'),Budget())
+    tools.focus_tasks=[{'object':'空冷散热器'}]
+    result=tools.search_evidence('散热器严密性试验',['空冷散热器',*(['散热器'] if include_original else []),'严密性试验'])
+    assert result['coverage']['match_mode']=='original_term_fallback'
+    assert store.queries[1][1]['query']==expected
+    assert not tools.reads
 
 
 def test_evidence_projection_is_indexed_separately_from_source_data():
@@ -196,7 +229,7 @@ def test_evidence_projection_is_indexed_separately_from_source_data():
 
 
 def test_visual_read_never_opens_a_source_file(monkeypatch):
-    tools=Tools(SearchStore(),None,Snapshot(('book',),'o',()),Budget())
+    tools=Tools(SearchStore(),None,Snapshot(('book',),'o'),Budget())
     tools.reads['e']={'members':[{'member_key':'p','source_kind':'picture',
                                'image':{'path':'should-not-be-read.png'}}]}
     monkeypatch.setattr('pathlib.Path.open',lambda *a,**k:pytest.fail('filesystem read'))

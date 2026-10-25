@@ -2,6 +2,7 @@
 import csv
 from pathlib import Path
 from turbine_kg.settings import PROJECT_ROOT
+from turbine_kg.documents.source_inputs import resolve_allowlisted_path
 
 
 def rows(name: str) -> list[dict]:
@@ -20,7 +21,7 @@ def derivative(path: Path, settings) -> Path | None:
     relative = path.resolve().relative_to(settings.source_root).as_posix()
     for row in rows('derived_asset_links.tsv'):
         if row['source_relative_path'] == relative:
-            candidate = settings.ocr_derived_root / Path(row['derived_relative_path']).name
+            candidate = resolve_allowlisted_path(row['derived_relative_path'],settings.source_root,settings.ocr_derived_root)
             if candidate.is_file(): return candidate
     return None
 

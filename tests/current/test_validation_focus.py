@@ -41,5 +41,5 @@ def test_answer_claim_binding_is_deterministic_and_does_not_call_a_second_model(
     view={'evidence_id':'e','title':'source','document_id':'d','revision_id':'r','members':[
         {'member_key':'m','quote':'间隙应不大于0.10 mm。','locator':{},'text_origin':'native_text','role':'content'}]}
     claim={'basis':'source','text':'间隙应不大于0.10 mm。','supports':[{'evidence_id':'e','member_keys':['m']}]}
-    kept,rejected=validate([claim],SimpleNamespace(reads={'e':view},visuals={},summary=[]),facts={})
+    kept,rejected=validate([claim],SimpleNamespace(reads={'e':view},visuals={},summary=[]))
     assert len(kept)==1 and not rejected

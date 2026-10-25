@@ -156,7 +156,7 @@ def test_cached_sibling_parent_cannot_import_other_items_conditions():
     records.update({first['id']:first,'doc':{'id':'doc','title':'Test'}})
     class Store:
         def get(self,ids,*args):return [records[key] for key in ids if key in records]
-    view=ContextAssembler(Store()).read(first['id'],Snapshot(('g',),'v',()))
+    view=ContextAssembler(Store()).read(first['id'],Snapshot(('g',),'v'))
     members={m['source_id']:m for m in view['members']}
     assert members['steel']['attributes']['structural_parent_source_ids']==['sampling']
     assert members['steel-test']['attributes']['structural_parent_source_ids']==['steel']
@@ -271,7 +271,7 @@ def test_created_and_reassembled_evidence_use_the_same_source_bound_formula_text
                      'doc':{'id':'doc','title':'source document'}}
             return [nodes[key] for key in ids if key in nodes]
 
-    view = ContextAssembler(Store()).read(evidence['id'], Snapshot(('doc',),'ontology',()))
+    view = ContextAssembler(Store()).read(evidence['id'], Snapshot(('doc',),'ontology'))
     assert evidence['text'] == view['text'] == 'z = x(1-r)'
     assert view['members'][0]['quote'] == 'z = x(1-r)'
     assert view['members'][0]['raw_quote'] == 'uncertain OCR'

@@ -96,3 +96,45 @@ def test_result_printing_preserves_json_in_a_gbk_terminal(entry,monkeypatch):
     stream.flush()
     text=output.getvalue().decode('gbk')
     assert json.loads(text[text.index('{'):])=={'issues':['−20℃']}
+
+
+def test_normal_answer_shows_source_boundary_once_without_trace(capsys):
+    from types import SimpleNamespace
+    from turbine_kg.cli.main import display
+    result=SimpleNamespace(answer='安全阀应冷态整定合格。',claims=[{'id':'c'}],citations=[],
+        citation_groups=[],search_summary={'private':'not displayed'},gaps=[
+            {'kind':'source_missing','reason':'还需符合3.3.2条，其正文尚未提供。'},
+            {'kind':'reference_deferred','reference_kind':'clause','reference_number':'3.3.2'},
+            {'kind':'reference_deferred','reference_kind':'clause','reference_number':'4.5.6'}])
+    display(result)
+    text=capsys.readouterr().out
+    assert '资料边界与未完成项：' in text and text.count('3.3.2')==1 and text.count('4.5.6')==1
+    assert '安全阀应冷态整定合格' in text and 'private' not in text
+
+
+def test_normal_answer_exposes_incomplete_coverage_without_trace(capsys):
+    from types import SimpleNamespace
+    from turbine_kg.cli.main import display
+    result=SimpleNamespace(answer='已确认的一项要求。',claims=[],citations=[],citation_groups=[],
+        search_summary={},gaps=[{'kind':kind,'reason':reason} for kind,reason in (
+            ('answer_incomplete','有一项前提尚未回答。'),
+            ('known_omission','有一项禁令尚未回答。'),
+            ('answer_coverage','列表尚未覆盖完整。'))])
+    display(result)
+    text=capsys.readouterr().out
+    assert all(reason in text for reason in ('有一项前提尚未回答。','有一项禁令尚未回答。','列表尚未覆盖完整。'))
+
+
+
+def test_planned_remap_deduplicates_chapters_and_updates_existing_documents(entry,monkeypatch):
+    from turbine_kg.knowledge import ontology_mapping,chapter_processing
+    scopes,calls,invoke=entry
+    scopes.append({**scopes[0],'section':'8'})
+    def synchronize(store,registry,*,force_document_ids):
+        assert force_document_ids=={'doc'}
+        calls.append(('remap',))
+        return {'doc':{'statements':4}}
+    monkeypatch.setattr(ontology_mapping,'sync_ontology_mappings',synchronize)
+    monkeypatch.setattr(chapter_processing,'refresh_document_pages',lambda *args:{'status':'ready'})
+    assert invoke(['--planned','--remap'])==0
+    assert [row[0] for row in calls]==['store','remap']

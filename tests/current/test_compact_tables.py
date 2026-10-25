@@ -37,7 +37,7 @@ def test_embedded_table_is_readable_after_reload_without_cell_nodes_or_files():
     saved=store.get(['table'],('doc',))[0]
     evidence=table_evidence(saved,store.table_sources('table',('doc',)),'doc')[0]
     store.put('Evidence',[{**evidence,'document_id':'doc'}])
-    view=ContextAssembler(store).read(evidence['id'],Snapshot(('doc',),'ontology',()))
+    view=ContextAssembler(store).read(evidence['id'],Snapshot(('doc',),'ontology'))
     assert {member['quote'] for member in view['members']}=={'允许偏差/mm','平面位置','±10','仅用于冷态。'}
     header=next(member for member in view['members'] if member['role']=='header')
     assert header['attributes']['column_span']==2

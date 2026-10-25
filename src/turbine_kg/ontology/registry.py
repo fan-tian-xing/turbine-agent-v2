@@ -319,6 +319,12 @@ class OntologyRegistry:
             if upper != "Mention" and not self.domain_is_a(class_id, upper):
                 raise ValueError("实体本体类别与物理或活动上层类别不符")
 
+    def resolve_relation_id(self, key: str) -> str | None:
+        """Resolve only explicitly declared relation renames."""
+        if key in self.relations:return key
+        matches=[name for name,row in self.relations.items() if key in row.get('aliases',[])]
+        return matches[0] if len(matches)==1 else None
+
     def validate_relation(self, key: str, source_class: str, target_class: str,
                           *, role: str | None = None, statement_type: str | None = None) -> None:
         row = self.relations.get(key)
@@ -369,18 +375,6 @@ class OntologyRegistry:
         if same_name and not distinct_occurrences:
             raise ValueError("语义关系不允许自环")
         return {"relation_id": row["id"], "source": source, "target": target}
-
-    def validate_skill(self, skill: dict) -> None:
-        unknown = set(skill["relation_ids"]) - self.relations.keys()
-        if unknown: raise ValueError("Skill 使用未注册关系：" + ",".join(sorted(unknown)))
-        required = set(skill["required_items"])
-        if required - set(self.statement_types):
-            raise ValueError("Skill 使用未注册陈述类型")
-        covered = {kind for key in skill["relation_ids"] for kind in self.relations[key].get("statement_types", [])}
-        navigable = {kind for row in self.relations.values() if row.get("navigation")
-                     for kind in row.get("statement_types", [])}
-        # Kinds without graph navigation remain available through Evidence text.
-        if not required & navigable <= covered: raise ValueError("Skill 必查项缺少本体导航关系")
 
     def extraction_schema(self) -> dict:
         """Validate the minimum source-backed statement and ontology references."""

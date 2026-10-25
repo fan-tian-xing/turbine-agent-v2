@@ -26,7 +26,7 @@ def fixture():
 
 def test_read_uses_confirmed_text_with_raw_provenance_and_invalidates_cache():
     store, evidence = fixture(); assembler = ContextAssembler(store)
-    snap = Snapshot(('doc',), 'ontology', ())
+    snap = Snapshot(('doc',), 'ontology')
     view = assembler.read(evidence['id'], snap)
     item = view['members'][0]
     assert item['quote'] == 'z = x(1-r)' and item['raw_quote'] == 'uncertain OCR'
@@ -44,7 +44,7 @@ def test_read_uses_confirmed_text_with_raw_provenance_and_invalidates_cache():
 def test_partial_or_different_evidence_locator_cannot_apply_whole_source_confirmation(locator_change):
     store, evidence = fixture()
     evidence['members'][0]['locator'].update(locator_change)
-    item = ContextAssembler(store).read(evidence['id'],Snapshot(('doc',),'ontology',()))['members'][0]
+    item = ContextAssembler(store).read(evidence['id'],Snapshot(('doc',),'ontology'))['members'][0]
     assert item['quote'] == ('unc' if 'char_range' in locator_change else 'uncertain OCR')
     assert 'human_verified_representation' not in item['attributes']
     assert item['attributes']['human_review_status'] == 'stale_or_partial_binding'

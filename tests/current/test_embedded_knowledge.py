@@ -3,7 +3,8 @@ from copy import deepcopy
 import pytest
 from rdflib import Namespace, RDF
 
-from turbine_kg.knowledge.statement_extraction import persist, extract
+from turbine_kg.knowledge.statement_extraction import extract
+from turbine_kg.knowledge.statement_sync import persist
 from turbine_kg.ontology.registry import OntologyRegistry
 
 
@@ -329,7 +330,7 @@ def test_model_transport_drops_layout_runtime_fields_but_keeps_parent_chain_and_
 
 
 def test_related_class_edges_coalesce_source_member_subsets_and_keep_all_supported_members():
-    from turbine_kg.knowledge.statement_extraction import merge_statement_mentions
+    from turbine_kg.knowledge.statement_sync import merge_statement_mentions
     node={'id':'s','supports':[{'evidence_id':'e','member_keys':['m1','m2']}]}
     m1={'evidence_id':'e','member_key':'m1','source_id':'a'}
     m2={'evidence_id':'e','member_key':'m2','source_id':'b'}

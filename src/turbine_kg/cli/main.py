@@ -33,6 +33,19 @@ def display(result,json_mode=False,trace=False):
     if json_mode:
         print(json.dumps(asdict(result),ensure_ascii=False,indent=2));return
     print('建议：\n'+result.answer)
+    limits=[]
+    for gap in getattr(result,'gaps',[]):
+        if gap.get('kind') not in ('source_missing','answer_incomplete','known_omission','answer_coverage') and gap.get('category')!='source_missing':continue
+        if gap.get('kind')=='reference_deferred':continue
+        reason=gap.get('reason')
+        if reason and reason not in limits:limits.append(reason)
+    for gap in getattr(result,'gaps',[]):
+        if gap.get('kind')!='reference_deferred':continue
+        number=gap.get('reference_number')
+        if number and not any(str(number) in reason for reason in limits):
+            kind={'table':'表','figure':'图'}.get(gap.get('reference_kind'),'条款')
+            limits.append(f'引用的{kind}{number}正文尚未提供，相关要求未展开。')
+    if limits:print('\n资料边界与未完成项：\n'+'\n'.join(limits))
     groups=getattr(result,'citation_groups',None)
     confirmed=bool(getattr(result,'claims',[]))
     print('\n依据来源：')

@@ -2,7 +2,8 @@
 import json
 import pytest
 
-from turbine_kg.knowledge.statement_extraction import extract, persist
+from turbine_kg.knowledge.statement_extraction import extract
+from turbine_kg.knowledge.statement_sync import persist
 from turbine_kg.ontology.registry import OntologyRegistry
 
 
@@ -115,6 +116,84 @@ def test_generic_part_and_device_context_survive_persistence_separately():
     assert mention["target"]==saved["id"]
     assert mention["data"]["role"]=="related"
     assert mention["data"]["source_members"]==[{"evidence_id":"e","member_key":"body"}]
+
+
+def test_source_headings_add_context_without_turning_it_into_an_entity_or_obligation():
+    from copy import deepcopy
+    from turbine_kg.knowledge.entity_bindings import context_class_members
+    registry=OntologyRegistry()
+    views={'e':{'context':{'clause_source_id':'intro'},'members':[
+        {'member_key':'h','role':'section','source_kind':'heading','quote':'7.4 间接空冷装置'},
+        {'member_key':'lead','source_id':'intro','role':'content','source_kind':'list_item','quote':'系统水冲洗应符合下列规定：'},
+        {'member_key':'m','role':'content','source_kind':'list_item','quote':'临时排水管截面积应符合要求。'},
+        {'member_key':'scope','role':'section_context','source_kind':'paragraph','quote':'本章适用于凝汽器和除氧器。'}]}}
+    fact={'text':'临时排水管截面积应符合要求。','type':'requirement',
+          'entities':[{'label':'临时排水管','class':'Mention','role':'subject'}],
+          'supports':[{'evidence_id':'e','member_keys':['lead','m']}]}
+    original=deepcopy(fact)
+    contexts=context_class_members(fact,views,registry)
+    assert set(contexts)=={'IndirectAirCoolingSystem'}
+    store=Store();persist(store,[fact],'d',registry,source_views=views)
+    assert fact==original
+    assert [{k:e[k] for k in ('label','class','role')} for e in store.nodes['Statement'][0]['entities']]==fact['entities']
+    assert 'HAS_REQUIREMENT' not in store.links
+    cue=store.links['MENTIONS'][0]
+    assert cue['source']==registry.domain_class_by_id('IndirectAirCoolingSystem')['id']
+    assert cue['data']['context_members']==[{'evidence_id':'e','member_key':'h','context_kind':'section'}]
+    assert cue['data']['source_members']==[] and cue['data']['inherit_values'] is False
+
+
+def test_unselected_clause_and_unverified_section_string_do_not_create_context_edges():
+    from turbine_kg.knowledge.entity_bindings import context_class_members
+    registry=OntologyRegistry()
+    fact={'entities':[],'supports':[{'evidence_id':'e','member_keys':['body']}]}
+    views={'e':{'context':{'section':'凝汽器','clause_source_id':'intro'},'members':[
+        {'member_key':'lead','source_id':'intro','role':'content','quote':'除氧器应清扫。'},
+        {'member_key':'body','role':'content','quote':'零部件应完好。'}]}}
+    assert context_class_members(fact,views,registry)=={}
+    fact['supports'][0]['member_keys'].append('lead')
+    assert set(context_class_members(fact,views,registry))=={'Deaerator'}
+
+
+def test_qualified_name_projects_owner_as_context_without_changing_subject():
+    registry=OntologyRegistry();views=source_view('安装','凝汽器壳体应垫平。')
+    entity={'label':'凝汽器壳体','class':'Mention','role':'subject','ontology_class_id':'Shell',
+            'ontology_binding':registry.ontology_binding('凝汽器壳体','Shell',support(),views)}
+    store=Store();persist(store,[{'text':'凝汽器壳体应垫平。','type':'requirement',
+        'entities':[entity],'supports':support()}],'d',registry,source_views=views)
+    assert {r['source'] for r in store.links['HAS_REQUIREMENT']}=={registry.domain_class_by_id('Shell')['id']}
+    assert {r['source'] for r in store.links['MENTIONS']}=={registry.domain_class_by_id('Condenser')['id']}
+
+
+@pytest.mark.parametrize('label,expected',[('凝汽器','Condenser'),('新支架',None)])
+def test_persistence_rebinds_invalid_mapping_without_discarding_source_core(label,expected):
+    registry=OntologyRegistry()
+    quote=label+'应检查。'
+    views={'e':{'members':[{'member_key':'m','role':'content','quote':quote}]}}
+    fact={'id':'keep','text':quote,'type':'requirement','supports':[{'evidence_id':'e','member_keys':['m'],'quotes':[]}],
+          'entities':[{'label':label,'class':'Mention','role':'subject','ontology_class_id':'Deaerator',
+                       'ontology_binding':{'method':'exact_source_name','class_id':'Deaerator',
+                                           'source_members':[{'evidence_id':'e','member_key':'m'}]}}]}
+    store=Store();persist(store,[fact],'d',registry,preserve_ids=True,source_views=views)
+    saved=store.nodes['Statement'][0]
+    assert saved['id']=='keep' and saved['text']==quote and saved['supports']==fact['supports']
+    assert saved['entities'][0].get('ontology_class_id')==expected
+    assert not any(row['source']==registry.domain_class_by_id('Deaerator')['id'] for row in store.links.get('HAS_REQUIREMENT',[]))
+
+
+@pytest.mark.parametrize('role,kind',[('object','requirement'),('subject','limitation')])
+def test_mapped_entity_without_owner_navigation_retains_its_role_and_gets_recall_cue(role,kind):
+    registry=OntologyRegistry()
+    views={'e':{'members':[{'member_key':'m','role':'content','quote':'凝汽器应检查。'}]}}
+    refs=[{'evidence_id':'e','member_keys':['m']}]
+    entity={'label':'凝汽器','class':'Mention','role':role,'ontology_class_id':'Condenser',
+            'ontology_binding':registry.ontology_binding('凝汽器','Condenser',refs,views)}
+    store=Store();persist(store,[{'text':'凝汽器应检查。','type':kind,'entities':[entity],'supports':refs}],
+                          'd',registry,source_views=views)
+    assert not store.links.get('HAS_REQUIREMENT')
+    assert store.nodes['Statement'][0]['entities'][0]['role']==role
+    cue=store.links['MENTIONS'][0]
+    assert cue['data']['entity_roles']==[role] and cue['data']['role']=='related'
 
 
 @pytest.mark.parametrize("label,upper,proposed,reason", [

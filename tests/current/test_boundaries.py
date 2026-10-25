@@ -42,7 +42,7 @@ def test_multiple_ranges_of_same_source_keep_independent_quotes_and_cache_refres
     evidence.update(document_id='d',revision_id='r')
     evidence['members'][0]['locator']['char_range']=[0,4]
     evidence['members'][1]['locator']['char_range']=[4,8]
-    store=Store(source,evidence);assembler=ContextAssembler(store);snapshot=Snapshot(('d',),'o',())
+    store=Store(source,evidence);assembler=ContextAssembler(store);snapshot=Snapshot(('d',),'o')
     first=assembler.read(evidence['id'],snapshot)
     assert [m['quote'] for m in first['members']]==['甲条件。','乙要求。']
     assert first['members'][0]['member_key']!=first['members'][1]['member_key']
@@ -50,7 +50,7 @@ def test_multiple_ranges_of_same_source_keep_independent_quotes_and_cache_refres
     second=assembler.read(evidence['id'],snapshot)
     assert second['members'][0]['quote']=='丙条件。'
     assert second['member_fingerprint']!=first['member_fingerprint']
-    with pytest.raises(ValueError): assembler.read(evidence['id'],Snapshot(('other',),'o',()))
+    with pytest.raises(ValueError): assembler.read(evidence['id'],Snapshot(('other',),'o'))
 
 
 def test_conditions_do_not_exclude_on_missing_or_unrecognized_user_data():
@@ -94,11 +94,9 @@ def test_structural_references_are_verified_separately_from_engineering_values()
     assert binding_error({**claim,'text':claim['text'].replace('7.8.9','7.8.10')},reads,{})=='回答的表图或条款编号没有来源支持'
     # Standard identity/version meaning is checked by the independent source review.
     assert binding_error({**claim,'text':claim['text'].replace('2024','2025')},reads,{}) is None
-    from turbine_kg.agent.claims import numeric_warning
     for text in (claim['text'].replace('/640','/641'),claim['text'].replace('0.10 mm','0.10 m')):
         changed={**claim,'text':text}
         assert binding_error(changed,reads,{}) is None
-        assert numeric_warning(changed,reads)
 
 
 def test_role_independent_entity_and_ontology_direction():
@@ -136,3 +134,14 @@ def test_db_deadline_bounds_stalled_query_and_drops_late_result():
     start=time.monotonic()
     with pytest.raises(BudgetExceeded):store.query('RETURN 1',budget=Budget(seconds=.02))
     assert time.monotonic()-start<.15
+
+
+@pytest.mark.parametrize('actual,value,unit',[
+    ({'value':30,'unit':'分钟'},0.5,'h'),
+    ({'value':500,'unit':'千帕'},0.5,'MPa'),
+    ({'value':50,'unit':'%'},0.5,'1'),
+    ({'value':10,'unit':'cm/m'},100,'mm/m'),
+])
+def test_scope_conditions_share_common_unit_conversion(actual,value,unit):
+    expression={'op':'eq','parameter':'测量值','value':value,'unit':unit,'location':'测点'}
+    assert evaluate(expression,{'测量值':{**actual,'location':'测点'}},OntologyRegistry())=='applicable'

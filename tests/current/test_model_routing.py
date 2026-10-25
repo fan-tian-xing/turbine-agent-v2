@@ -147,15 +147,12 @@ def test_unconfigured_stage_model_fails_before_requests(monkeypatch):
         client(monkeypatch, ['llm'], {'generation': {'llm': 'llm_fallback'}}, missing_model='llm_fallback')
 
 
-def test_stage_factory_keeps_legacy_transport_double(monkeypatch):
-    model = transport.ModelClient.__new__(transport.ModelClient)
-    model.providers = [['https://legacy.test', 'legacy-model', 'fake-key', 10]]
-    model.settings = SimpleNamespace(llm_allow_evidence_send=True)
-    model.last_summary = {}
-    view = model.for_stage('extraction')
+def test_stage_factory_without_overrides_keeps_enabled_provider_policy(monkeypatch):
+    model=client(monkeypatch,['llm'])
+    view=model.for_stage('extraction')
     assert view.providers is model.providers
-    assert view._routed_providers() == model.providers
-    with pytest.raises(ValueError, match='非空'):
+    assert view._routed_providers()==[model.providers[0]]
+    with pytest.raises(ValueError,match='非空'):
         model.for_stage('')
 
 
@@ -173,3 +170,29 @@ def test_routing_gateway_error_retries_before_returning_success(monkeypatch):
     model._request = request
     assert model.call('system', 'input', Budget()) == {'ok': True}
     assert calls == ['https://provider-0.test/chat/completions'] * 2
+
+
+@pytest.mark.parametrize('eventual_success',[True,False])
+def test_malformed_completion_retries_with_existing_provider_and_attempt_limit(monkeypatch,eventual_success):
+    model=client(monkeypatch,['llm']);calls=[]
+    def request(http_request,timeout):
+        calls.append(http_request.full_url)
+        if len(calls)==2 and eventual_success:return success()
+        return {'choices':[{'message':{'content':'{"claims":['}}]}
+    model._request=request
+    if eventual_success:assert model.call('system','input',Budget())=={'ok':True}
+    else:
+        with pytest.raises(transport.ModelError,match='JSONDecodeError'):model.call('system','input',Budget())
+    assert calls==['https://provider-0.test/chat/completions']*2
+
+
+@pytest.mark.parametrize('failure',[TimeoutError,ConnectionError])
+def test_temporary_timeout_or_disconnect_retries_same_enabled_provider(monkeypatch,failure):
+    model=client(monkeypatch,['llm']);calls=[]
+    def request(http_request,timeout):
+        calls.append(http_request.full_url)
+        if len(calls)==1:raise failure('temporary')
+        return success()
+    model._request=request
+    assert model.call('system','input',Budget())=={'ok':True}
+    assert calls==['https://provider-0.test/chat/completions']*2

@@ -54,8 +54,6 @@ def json_object(text: str) -> dict:
 
 class ModelClient:
     PROVIDER_PREFIXES = ('llm', 'llm_fallback', 'llm_fallback_2')
-    # Offline knowledge extraction keeps the exact requirement in text.
-    # Optional numeric and condition projections can be added after source review.
 
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -96,9 +94,6 @@ class ModelClient:
         self.last_summary: dict = {}
 
     def _routed_providers(self):
-        # Older transport doubles provide their complete request list directly.
-        if not hasattr(self, 'enabled_provider_prefixes'):
-            return self.providers
         overrides = getattr(self, 'stage_model_overrides', {})
         return [[endpoint, overrides.get(prefix, model), credential, timeout]
                 for prefix, (endpoint, model, credential, timeout) in zip(self.provider_prefixes, self.providers)
@@ -147,7 +142,7 @@ class ModelClient:
         choices=response.get('choices')
         if not isinstance(choices,list) or not choices or not isinstance(choices[0],dict): raise ModelError('模型API响应缺少choices')
         message=choices[0].get('message')
-        if not isinstance(message,dict) or not isinstance(message.get('content'),str): raise ModelError('模型API响应缺少文字content')
+        if not isinstance(message,dict) or not isinstance(message.get('content'),str): raise ModelTransientError('模型API响应缺少文字content')
         return message['content']
 
     @staticmethod
@@ -219,7 +214,13 @@ class ModelClient:
                     errors.append('URLError')
                 except ModelError as error:
                     errors.append(str(error));break
-                except (ValueError, KeyError, IndexError, TimeoutError, OSError) as error:
+                except json.JSONDecodeError:
+                    # Retry a malformed completion/response on the same enabled
+                    # provider within the existing attempt and deadline limits.
+                    errors.append('JSONDecodeError')
+                except (TimeoutError,ConnectionError) as error:
+                    errors.append(type(error).__name__)
+                except (ValueError, KeyError, IndexError, OSError) as error:
                     errors.append(type(error).__name__)
                     break
                 delay = min(self.policy['max_backoff_seconds'], self.policy['backoff_seconds'] * 2 ** attempt)

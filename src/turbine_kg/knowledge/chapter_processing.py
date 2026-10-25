@@ -13,12 +13,12 @@ from turbine_kg.documents.catalog import document_id, derivative, verified_sourc
 from turbine_kg.documents.ir import SourceIndex, SourceUnit, parse_references
 from turbine_kg.documents.parser import DocumentParser
 from turbine_kg.evidence.context import ContextAssembler, make_evidence, table_evidence, text_evidence
-from turbine_kg.knowledge.statement_extraction import (extract, semantic_review_views, _statement_references,
-    statement_reference_edges)
-from turbine_kg.knowledge.statement_sync import _table_context_sources, _support_closure, _replace_statements_atomically, _write_transaction, _discard_statements
+from turbine_kg.knowledge.statement_extraction import extract, semantic_review_views
+from turbine_kg.knowledge.statement_sync import _statement_references, statement_reference_edges
+from turbine_kg.knowledge.statement_sync import _table_context_sources, _support_closure, _replace_statements_atomically, _discard_statements
 from turbine_kg.knowledge.scopes import register_scopes, restore_scopes, attach_evidence_scopes, refresh_scope_locations
 from turbine_kg.knowledge.alignment import plan_alignment, remap_ids, refresh_bound_locations, reuse_scope_member_keys
-from turbine_kg.knowledge.store import unpack
+from turbine_kg.knowledge.store import unpack, write_transaction
 from turbine_kg.knowledge.incremental import evidence_logical_key, content_fingerprint
 from turbine_kg.runtime import Snapshot, file_hash, fingerprint, identity, json_text
 from turbine_kg.settings import PROJECT_ROOT
@@ -229,7 +229,7 @@ def _refresh_statement_references(store,document_id,evidence_ids=None):
 
 def refresh_statement_references(store,document_id,evidence_ids=None):
     """Refresh derived references only; preserve text, supports, and entities."""
-    with _write_transaction(store) as transaction:
+    with write_transaction(store) as transaction:
         return _refresh_statement_references(transaction,document_id,evidence_ids)
 
 
@@ -331,6 +331,8 @@ class _PreparedSources:
 def prepare_section(path:Path,store,registry,scope:dict,*,model=None):
     """Refresh the prepared source set; unchanged facts do not need extraction."""
     requested=scope_pages(scope);doc,revision,ocr,inputs=_inputs(path,store,registry,scope,model)
+    from turbine_kg.knowledge.ontology_mapping import sync_ontology_mappings
+    sync_ontology_mappings(store,registry)
     current=store.get([doc]);document=current[0] if current else {}
     signature=_preparation_fingerprint(inputs)
     previous_pages=set(document.get('requested_pages') or [])
@@ -361,7 +363,7 @@ def prepare_section(path:Path,store,registry,scope:dict,*,model=None):
             parsed.append(page);sources.extend(asdict(unit) for unit in page.sources)
             tables.extend(asdict(table) for table in page.tables);pictures.extend(asdict(picture) for picture in page.pictures)
         before={item['id']:item for item in _rows(store,'Evidence',doc)}
-        snapshot=Snapshot((doc,),registry.version,())
+        snapshot=Snapshot((doc,),registry.version)
         previous_assembler=ContextAssembler(store)
         # Capture the old original quotes before any SourceText is overwritten.
         # The persisted fingerprint may include derived section_context members.
@@ -378,7 +380,7 @@ def prepare_section(path:Path,store,registry,scope:dict,*,model=None):
         tables=[asdict(table) for page in parsed for table in page.tables]
         pictures=[asdict(picture) for page in parsed for picture in page.pictures]
         evidence=text_evidence(sources,doc)
-        with _write_transaction(store) as transaction:
+        with write_transaction(store) as transaction:
             transaction.put('Document',[{**document,'id':doc,'title':path.stem,'kind':'document','ontology_version':registry.version}])
             staged=_PreparedSources(transaction)
             staged.put('Revision',[{'id':revision,'document_id':doc,'original_hash':inputs['original_hash'],'version':inputs['original_hash'][:12]}])
@@ -420,7 +422,7 @@ def prepare_section(path:Path,store,registry,scope:dict,*,model=None):
                 for item in evidence:
                     if item['id'] in affected:item['semantic_coverage']={'status':'pending','reason':'来源内容变更，等待抽取'}
             from turbine_kg.knowledge.scopes import native_scope_declarations
-            refresh_scope_locations(previous_scopes,parser,staged,doc,staged.nodes.get('SourceText',{}).values())
+            refresh_scope_locations(previous_scopes,parser,staged,staged.nodes.get('SourceText',{}).values())
             views=[assembler.read(item['id'],snapshot) for item in evidence]
             register_scopes(native_scope_declarations(views),parser,staged,doc)
             source_ids=set(staged.nodes.get('SourceText',{}))
@@ -567,7 +569,7 @@ def process_section(path:Path,store,model,registry,scope:dict,*,work_pages=None,
     # Validate the exact replacement closure before making any provider calls.
     closure=_support_closure(store,document_id,selected_ids) if selected_ids else set()
     if closure-selected_ids:raise ValueError('复验会影响共用陈述的其他证据，请明确选择完整支持组件；本次未扩大抽取范围')
-    assembler=ContextAssembler(store);snapshot=Snapshot((document_id,),registry.version,())
+    assembler=ContextAssembler(store);snapshot=Snapshot((document_id,),registry.version)
     views=_registered_scope_views([assembler.read(item['id'],snapshot) for item in selected],restore_scopes(store,document_id),document_id)
     views=semantic_review_views(views,indexed)
     batches=_batches(views)

@@ -3,7 +3,6 @@
 本目录保存声明式运行合同，无密钥、批次缓存或阶段审计。
 
 - `agent.json`：问答预算、模型重试、文档解析参数。
-- `skills.json`：当前为空；形成经验证的案例流程后才登记 Skill。
 - `ontology_registry.json`：唯一机器注册表，驱动抽取 schema、端点/角色验证、导航及 OWL/SHACL。
 - `source_annotations.json`：绑定原始 SHA-256 的已核验文字、区域、表格、跨页及隔离规则。
 - `processing_scopes.json`：默认处理的完整章节范围；页范围参数只用于测试或定向修复。范围放在配置，核心代码不按书名或页码分支。

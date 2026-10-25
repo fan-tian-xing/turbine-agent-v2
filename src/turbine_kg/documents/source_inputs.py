@@ -3,21 +3,13 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import re
 from pathlib import Path, PurePosixPath
+from turbine_kg.runtime import file_hash
 
 
 DERIVED_OCR_PREFIX = "OCR/"
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
-
-
-def sha256_file(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
 
 
 def load_allowlist(path: Path) -> tuple[dict[str, str], list[dict[str, str]]]:
@@ -105,6 +97,6 @@ def validate_source_allowlist(
         if candidate.stat().st_size != expected_size:
             errors.append(f"{label}: size mismatch, expected {expected_size}, got {candidate.stat().st_size}")
             continue
-        if sha256_file(candidate) != entry["sha256"]:
+        if file_hash(candidate) != entry["sha256"]:
             errors.append(f"{label}: SHA-256 mismatch")
     return errors

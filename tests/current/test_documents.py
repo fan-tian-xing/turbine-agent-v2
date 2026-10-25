@@ -9,6 +9,21 @@ from turbine_kg.documents.page_mapping import PageMapper
 from turbine_kg.documents.parser import DocumentParser
 
 
+def test_derivative_resolves_the_registered_nested_path_without_basename_collision(monkeypatch):
+    from types import SimpleNamespace
+    from turbine_kg.documents import catalog
+    settings=SimpleNamespace(source_root=Path('sources').resolve(),ocr_derived_root=Path('ocr').resolve())
+    monkeypatch.setattr(catalog,'rows',lambda _: [{'source_relative_path':'book.pdf',
+        'derived_relative_path':'OCR/edition-b/chapter.pdf'}])
+    expected=(settings.ocr_derived_root/'edition-b'/'chapter.pdf').resolve()
+    monkeypatch.setattr(Path,'is_file',lambda self:self==expected)
+    assert catalog.derivative(settings.source_root/'book.pdf',settings)==expected
+    monkeypatch.setattr(catalog,'rows',lambda _: [{'source_relative_path':'book.pdf',
+        'derived_relative_path':'OCR/../outside.pdf'}])
+    with pytest.raises(ValueError,match='escapes'):
+        catalog.derivative(settings.source_root/'book.pdf',settings)
+
+
 def test_layout_failure_marks_unverified_text_and_excludes_repeated_margin_sources():
     from turbine_kg.evidence.context import text_evidence
     from dataclasses import asdict
@@ -279,15 +294,15 @@ def test_markdown_reference_image_links_both_text_and_definition(monkeypatch):
     assert picture.locator['line_range']==[1,1]
 
 
-def test_registered_scope_applies_only_to_its_explicit_section():
-    parser=DocumentParser.__new__(DocumentParser);parser.scope_sources=[]
-    condition=SourceUnit('condition','paragraph','Only for equipment X.',{'physical_page':2,'bbox':[0,0,20,20]},'native_text',0)
-    parser.register_scope_sources([condition],applies_to='section',section_source_ids=['h1'])
+def test_configured_scope_applies_only_to_its_explicit_section():
+    parser=DocumentParser.__new__(DocumentParser)
+    condition=SourceUnit('condition','paragraph','Only for equipment X.',{'physical_page':2,'bbox':[0,0,20,20]},'native_text',0,
+                         attributes={'applies_to':'section','section_source_ids':['h1']})
+    parser.scope_sources=[condition]
     first=SourceUnit('h1','heading','Chapter one',{'physical_page':1},'native_text',0)
     second=SourceUnit('h2','heading','Chapter two',{'physical_page':3},'native_text',0)
     assert parser._applicable_scope_sources(2,[first])[0]['id']=='condition'
     assert not parser._applicable_scope_sources(3,[second])
-    with pytest.raises(ValueError):parser.register_scope_sources([condition],applies_to='section')
 
 
 def test_markdown_table_picture_keeps_its_cell_source_and_literal_heading(monkeypatch):

@@ -76,17 +76,20 @@ def main():
         except ValueError as error:parser.error(str(error))
         if work_pages and not set(work_pages).issubset(allowed):parser.error('--work-pages必须属于配置章节范围')
     with KnowledgeStore(settings) as store:
+        registry=OntologyRegistry()
+        if args.remap:
+            from turbine_kg.knowledge.ontology_mapping import sync_ontology_mappings
+            from turbine_kg.knowledge.chapter_processing import refresh_document_pages
+            results=sync_ontology_mappings(store,registry,
+                force_document_ids={scope['document_id'] for _,scope in jobs})
+            for document,result in results.items():
+                result.update(refresh_document_pages(store,document))
+                print(json.dumps({'document_id':document,**result},ensure_ascii=False,indent=2),flush=True)
+            return 0
         for path,scope in jobs:
             print(scope.get('description') or '配置章节 '+str(scope.get('section')),flush=True)
-            if args.remap:
-                from turbine_kg.knowledge.ontology_mapping import remap_document
-                from turbine_kg.knowledge.chapter_processing import refresh_document_pages
-                registry=OntologyRegistry()
-                result=remap_document(store,scope['document_id'],registry)
-                store.sync_ontology(registry)
-                result.update(refresh_document_pages(store,scope['document_id']))
-            elif args.prepare_only:result=prepare_section(path,store,OntologyRegistry(),scope,model=ModelClient(settings))
-            else:result=process_section(path,store,ModelClient(settings),OntologyRegistry(),scope,work_pages=work_pages,
+            if args.prepare_only:result=prepare_section(path,store,registry,scope,model=ModelClient(settings))
+            else:result=process_section(path,store,ModelClient(settings),registry,scope,work_pages=work_pages,
                 evidence_ids=evidence_ids,retry_semantics=args.retry_semantics,workers=args.workers)
             print(json.dumps(result,ensure_ascii=False,indent=2),flush=True)
     return 0

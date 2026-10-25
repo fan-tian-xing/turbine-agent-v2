@@ -52,13 +52,11 @@ def test_statement_contract_accepts_source_sentence_without_separate_modality():
         validate({**item, "text": "  \n "}, registry.extraction_schema())
 
 
-def test_skill_can_retrieve_non_navigable_types_from_evidence():
-    registry = OntologyRegistry()
-    registry.validate_skill({"relation_ids": [], "required_items": ["fact", "limitation"]})
-    with pytest.raises(ValueError, match="导航关系"):
-        registry.validate_skill({"relation_ids": [], "required_items": ["requirement"]})
-    with pytest.raises(ValueError, match="未注册陈述类型"):
-        registry.validate_skill({"relation_ids": [], "required_items": ["invented"]})
+def test_non_navigable_types_remain_available_through_evidence():
+    registry=OntologyRegistry()
+    assert not registry.navigation(['fact','limitation'])
+    assert registry.navigation(['requirement'])
+    assert registry.data['navigation_policy']['evidence_fulltext_recall']
 
 
 def test_runtime_ontology_is_not_restricted_to_a_book_or_chapter():

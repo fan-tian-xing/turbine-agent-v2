@@ -570,7 +570,7 @@ class ContextAssembler:
                 quote = review['verified_text']
             elif attributes.pop('human_verified_representation', None) is not None:
                 attributes['human_review_status'] = 'stale_or_partial_binding'
-            assembled.append({**item, "quote": quote, **correction, "quality": source.get("quality", "unknown"), "source_kind": source["kind"], "attributes": attributes, **({"image": {field: source.get(field) for field in ("path", "content_hash", "width", "height", "details", "links")}} if source["kind"] == "picture" else {})})
+            assembled.append({**item, "quote": quote, **correction, "source_order":source.get('order',item['order']), "quality": source.get("quality", "unknown"), "source_kind": source["kind"], "attributes": attributes, **({"image": {field: source.get(field) for field in ("path", "content_hash", "width", "height", "details", "links")}} if source["kind"] == "picture" else {})})
         documents = self.store.get([sources[0]["document_id"]], None, budget)
         # Older current-document nodes may not have a title after the
         # lifecycle-field migration.  Evidence assembly must remain usable

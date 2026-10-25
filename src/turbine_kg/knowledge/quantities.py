@@ -36,6 +36,9 @@ UNIT_ALIASES = {
 }
 NUMBER_PATTERN = r'[-+]?(?:\d+(?:\.\d+)?|\.\d+)'
 UNIT_PATTERN = r'(?:MPa/h|kPa/h|Pa/h|mm/m|cm/m|m/m|r/min|MPa|kPa|Pa|mm|cm|min|kN|kg|rpm|Hz|°C|%|m|N|t|s|h)'
+# NFKC turns m²/m³ into m2/m3. Never accept a known unit prefix of an
+# unsupported power, compound or longer symbol; leave it to semantic reading.
+UNIT_END_PATTERN = r'(?![^\W\u3400-\u9fff]|[/⁄^·⋅*²³]|[-+−]\d)'
 
 
 def normalize_quantity_text(value):
@@ -57,7 +60,7 @@ def canonical_unit(value):
 
 def extract_quantities(text):
     return {(float(value), unit) for value, unit in re.findall(
-        '(' + NUMBER_PATTERN + r')\s*(' + UNIT_PATTERN + r')(?![A-Za-z/])',
+        '(' + NUMBER_PATTERN + r')\s*(' + UNIT_PATTERN + ')' + UNIT_END_PATTERN,
         normalize_quantity_text(text))}
 
 
@@ -91,6 +94,17 @@ def _unit(value):
     return None
 
 
+def convert_quantity(value, unit, target_unit):
+    """Convert a finite number using the shared unit vocabulary."""
+    source, target = _unit(unit), _unit(target_unit)
+    if source is None or target is None or source[0] != target[0]:
+        raise ValueError('单位未知或量纲不一致')
+    try:
+        return _number(value) * Decimal(source[1]) / Decimal(target[1])
+    except (InvalidOperation, TypeError) as error:
+        raise ValueError('数值不是可比较的有限标量') from error
+
+
 def quantity_in_text(value, unit, text):
     """Bind a quantity to source wording, including a named ratio baseline."""
     try:
@@ -106,7 +120,7 @@ def quantity_in_text(value, unit, text):
             if known and known[0] == expected_unit[0] and Decimal(str(actual))*Decimal(known[1]) == expected*Decimal(expected_unit[1]):
                 return True
     number=r'([-+]?(?:\d+(?:\.\d+)?|\.\d+))'
-    patterns=[r'(?<![\d.])'+number+re.escape(name)+r'(?![A-Za-z/])']
+    patterns=[r'(?<![\d.])'+number+re.escape(name)+UNIT_END_PATTERN]
     if name.startswith('倍') and len(name)>1:
         baseline=re.escape(name[1:])
         patterns.append(baseline+r'的?'+number+r'倍')
@@ -139,11 +153,6 @@ def compare_quantity(quantity, facts, *, object_label, registry, applicability):
         return unknown('现场数值与要求的测量对象不一致')
     if quantity.get('location') and _text(actual.get('location'))!=_text(quantity['location']):
         return unknown('现场测量位置缺失或与要求不一致')
-    if quantity.get('completeness')=='incomplete':
-        # Null location alone does not prevent a comparison when the source
-        # applies to the whole object. All substantive unknowns remain blocked.
-        missing=set(quantity.get('missing_fields',[]))-{'location'}
-        if missing:return unknown('来源量值缺少必要字段：'+','.join(sorted(missing)))
     if not actual.get('unit') or not quantity.get('unit'):
         return unknown('现场数值或要求缺少明确单位')
     left_unit=_unit(actual['unit']);right_unit=_unit(quantity['unit'])
@@ -154,8 +163,9 @@ def compare_quantity(quantity, facts, *, object_label, registry, applicability):
         return unknown('未提供可执行的比较符')
     try:
         actual_value=_number(actual['value'])
-        left=actual_value*Decimal(left_unit[1]);right=_number(quantity['value'])*Decimal(right_unit[1])
+        left=convert_quantity(actual_value,actual['unit'],quantity['unit'])
+        right=convert_quantity(quantity['value'],quantity['unit'],quantity['unit'])
     except (KeyError,ValueError,InvalidOperation):return unknown('数值不是可比较的有限标量')
     passed={'lt':left<right,'le':left<=right,'gt':left>right,'ge':left>=right,'eq':left==right,'ne':left!=right}[operator]
     return {**result,'status':'satisfied' if passed else 'not_satisfied','reason':'已按同一量纲执行比较',
-            'normalized_actual':str(left/Decimal(right_unit[1])), 'comparison_unit':quantity['unit']}
+            'normalized_actual':str(left), 'comparison_unit':quantity['unit']}

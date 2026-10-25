@@ -1,14 +1,86 @@
 """Only validated claims are rendered; source quotes remain independent members."""
-import re
-from decimal import Decimal
 from copy import deepcopy
 from turbine_kg.runtime import identity
-from turbine_kg.knowledge.quantities import NUMBER_PATTERN, UNIT_PATTERN
 
 
-_LEADING_CLAUSE = re.compile(r'(?m)^\s*(?P<number>\d+(?:\.\d+){2,})(?![\d.A-Za-z])(?=\s|[\u4e00-\u9fff])')
-_DOCUMENT_CODE = re.compile(r'(?<![A-Za-z])(?P<prefix>[A-Za-z]{1,10}(?:\s*/\s*[A-Za-z]{1,5})?)\s*(?P<number>\d+(?:\.\d+)*)\s*[-—–−:]\s*(?P<year>\d{4})(?!\d)')
-_STANDARD_IDENTIFIER = re.compile(r'(?<![A-Za-z])(?P<prefix>[A-Z]{1,8}(?:\s*/\s*[A-Z]{1,5})?)\s*(?P<number>\d{3,}(?:\.\d+)*)(?:\s*[-—–−:]\s*\d{4})?(?![\d.])',re.IGNORECASE)
+class AnswerReferences:
+    """Question-local S/E handles; durable IDs and member selection stay in code."""
+    def __init__(self):
+        self.aliases={}
+
+    def context(self, statements, reads, *, include_evidence=False):
+        def alias(kind,key):
+            token=(kind,key)
+            if token not in self.aliases:
+                self.aliases[token]=kind+str(1+sum(k[0]==kind for k in self.aliases))
+            return self.aliases[token]
+        index={};facts={};covered=set()
+        for statement in statements:
+            supports=statement.get('supports',[])
+            if not statement.get('id') or not supports or any(
+                sup.get('evidence_id') not in reads or not sup.get('member_keys') or
+                not set(sup['member_keys'])<={m['member_key'] for m in reads[sup['evidence_id']]['members']}
+                for sup in supports):continue
+            ref=alias('S',statement['id'])
+            index[ref]={'statement_id':statement['id'],'supports':deepcopy(supports)}
+            covered.update(s['evidence_id'] for s in supports)
+            row=facts.setdefault(ref,{'id':ref,'text':statement['text'],'type':statement['type'],
+                'entities':[{'label':e['label'],'role':e['role']} for e in statement.get('entities',[])],
+                'evidence_refs':[alias('E',s['evidence_id']) for s in supports],'query_contexts':[]})
+            context={k:statement[k] for k in ('_object','retrieval_role','retrieval_warning') if k in statement}
+            paths=[{'class_id':p.get('class_id'),'kind':p['kind']} for p in statement.get('ontology_paths',[])]
+            if paths:context['ontology_paths']=paths
+            if context and context not in row['query_contexts']:row['query_contexts'].append(context)
+        evidence=[];fallbacks=[]
+        for eid,view in reads.items():
+            ref=alias('E',eid)
+            context=view.get('context',{})
+            location={k:deepcopy(context[k]) for k in ('section','clause_number','table_title','figure_title') if context.get(k)}
+            refs=[{k:deepcopy(r[k]) for k in ('kind','number','end_number','status') if k in r}
+                  for r in context.get('reference_resolution',[])]
+            if refs:location['references']=refs
+            row={'id':ref,'title':view.get('title'),'context':location}
+            evidence.append(row)
+            if include_evidence or eid not in covered or view.get('source_status',{}).get('semantic_extraction')=='incomplete':
+                fallbacks.append({**row,'text':view.get('text') or '\n'.join(m.get('quote','') for m in view['members'])})
+                index[ref]={'supports':[{'evidence_id':eid,'member_keys':[m['member_key'] for m in view['members']]}]}
+        return {'statements':list(facts.values()),'evidence_catalog':evidence,'evidence_fallbacks':fallbacks},index
+
+
+def resolve_answer_references(response,index):
+    """Expand only exact, available handles. Never repair a guessed long ID."""
+    result=deepcopy(response)
+    def bind(row):
+        if not isinstance(row,dict):return
+        row.pop('_reference_error',None)
+        refs=row.get('references')
+        row.pop('supports',None)
+        row['supports']=[]
+        if not isinstance(refs,list) or not refs or any(not isinstance(r,str) or r not in index for r in refs):
+            row['_reference_error']='回答未引用有效的 Statement 或备用 Evidence 短编号'
+            return
+        members={}
+        for ref in dict.fromkeys(refs):
+            for support in index[ref]['supports']:
+                members.setdefault(support['evidence_id'],[]).extend(support['member_keys'])
+        row['supports']=[{'evidence_id':eid,'member_keys':list(dict.fromkeys(keys))} for eid,keys in members.items()]
+    for row in result.get('claims',[]):bind(row)
+    for operation in result.get('operations',[]):
+        if isinstance(operation,dict):bind(operation.get('claim'))
+    for row in result.get('gaps',[]):
+        if isinstance(row,dict):
+            row.pop('supports',None)
+            if row.get('references'):bind(row)
+    for task in result.get('tasks',[]):
+        if isinstance(task,dict):
+            for row in task.get('missing_items',[]):bind(row)
+    return result
+
+
+def model_answer_rows(rows):
+    """Model-facing advice carries short handles, not backend member bindings."""
+    return [{k:deepcopy(v) for k,v in row.items() if k not in ('supports','_reference_error')}
+            for row in rows]
 
 
 def _references(text):
@@ -37,156 +109,6 @@ def _missing_references(expected,available):
     return {reference for reference in expected if key(reference) not in supported}
 
 
-def _without_identifiers(text):
-    from turbine_kg.documents.ir import parse_references
-    for ref in reversed(parse_references(text)):
-        if ref['kind'] in ('table','figure') or ref['number'].count('.')>=2:text=text[:ref['start']]+text[ref['end']:]
-    for pattern in (_DOCUMENT_CODE,_LEADING_CLAUSE):text=pattern.sub('',text)
-    return text
-
-
-_NUMBER = NUMBER_PATTERN
-_UNIT = UNIT_PATTERN
-
-
-def _quantities(text):
-    from turbine_kg.knowledge.quantities import extract_quantities
-    return extract_quantities(text)
-
-
-def _normalized_quantities(quantities):
-    """Compare equivalent values through the existing unit registry."""
-    from turbine_kg.knowledge.quantities import _unit
-    result=set()
-    for value,unit in quantities:
-        known=_unit(unit)
-        result.add((known[0],Decimal(str(value))*Decimal(known[1])) if known
-                   else (unit,Decimal(str(value))))
-    return result
-
-
-def _bound_user_quantities(claim, task, user_facts):
-    """User measurements can be restated without declaring a source threshold.
-
-    Facts passed here have already been bound to the user's actual question by
-    plan_tasks. Whether advice misuses them as limits is a semantic review task;
-    a successful numeric comparison is not a prerequisite to acknowledge a value.
-    """
-    values=set();quantities=set()
-    if not isinstance(task,dict) or claim.get('task_id')!=task.get('id') or not isinstance(user_facts,dict):
-        return values,quantities
-    facts=user_facts.get(task.get('object'),{})
-    if not isinstance(facts,dict):return values,quantities
-    for fact in facts.values():
-        if not isinstance(fact,dict) or 'value' not in fact or not fact.get('unit'):continue
-        try:value=float(fact['value'])
-        except (ValueError,TypeError):continue
-        import math
-        if not math.isfinite(value):continue
-        values.add(value);quantities.update(_quantities(f"{fact['value']} {fact['unit']}"))
-    return values,quantities
-
-
-def _bound_comparison_quantities(claim, task):
-    """Admit only completed program comparisons bound to the cited members."""
-    values=set();quantities=set()
-    if not isinstance(task,dict) or claim.get('task_id')!=task.get('id'):
-        return values,quantities
-    cited={(support['evidence_id'],key) for support in claim['supports'] for key in support['member_keys']}
-    for check in task.get('numeric_comparisons',[]):
-        if not isinstance(check,dict) or check.get('status') not in ('satisfied','not_satisfied'):continue
-        supports=check.get('supports',[])
-        bound={(support.get('evidence_id'),key) for support in supports if isinstance(support,dict) for key in support.get('member_keys',[])}
-        if not bound or not bound.issubset(cited):continue
-        pairs=[(check.get('limit'),check.get('unit')),
-               (check.get('normalized_actual'),check.get('comparison_unit'))]
-        actual=check.get('actual',{})
-        if isinstance(actual,dict):pairs.append((actual.get('value'),actual.get('unit')))
-        for value,unit in pairs:
-            if value is None or not isinstance(unit,str) or not unit:continue
-            try:number=Decimal(str(value))
-            except (ValueError,ArithmeticError):continue
-            if not number.is_finite():continue
-            values.add(float(number));quantities.update(_quantities(f'{number} {unit}'))
-    return values,quantities
-
-
-def reviewed_formula_numbers(claim,reads):
-    """Only exact bound, independently source-verified review values are eligible."""
-    from turbine_kg.knowledge.formula_sources import verified_formula_representation
-    values=set();quantities=set();expressions=[]
-    for support in claim['supports']:
-        view=reads[support['evidence_id']]
-        for member in view['members']:
-            if member['member_key'] not in support['member_keys'] or member.get('text_origin')!='verified_correction' or 'raw_quote' not in member:continue
-            source={'id':member.get('source_id'),'text':member['raw_quote'],'locator':member.get('locator',{}),'attributes':member.get('attributes',{}),**{field:view.get(field) for field in ('document_id','revision_id')}}
-            review=verified_formula_representation(source)
-            if not review or review['verified_text']!=member.get('quote'):continue
-            formula=review['formula'];expressions.append(formula['expression'])
-            for variable in formula.get('variables') or []:
-                if not isinstance(variable,dict):continue
-                bounds=variable.get('range')
-                if not isinstance(bounds,dict):continue
-                unit=bounds.get('unit') or (formula.get('units') or {}).get(variable.get('symbol'))
-                for field in ('lower','upper'):
-                    value=bounds.get(field)
-                    if type(value) not in (int,float):continue
-                    values.add(float(value))
-                    if unit=='1':
-                        quantities.add((float(value),'1'));quantities.add((float(value)*100,'%'));values.add(float(value)*100)
-                    elif isinstance(unit,str):quantities.add((float(value),unit))
-    return values,quantities,expressions
-
-
-def _outside_reviewed_formulas(text,expressions):
-    if not expressions:return text
-    from unicodedata import normalize
-    def compact(value):
-        value=normalize('NFKC',value).replace('−','-').replace('–','-').replace('×','*')
-        return re.sub(r'(?<=[A-Za-z])_(?=[A-Za-z0-9])','',re.sub(r'\s+','',value))
-    value=compact(text)
-    for expression in expressions:value=value.replace(compact(expression),'')
-    return value
-
-
-def _table_quantities(claim,reads):
-    """Only bound cells inherit a unique unit from bound headers in their columns."""
-    from unicodedata import normalize
-    result=set()
-    for support in claim['supports']:
-        view=reads[support['evidence_id']]
-        selected=set(support['member_keys'])
-        members=[m for m in view['members'] if m['member_key'] in selected]
-        headers=[m for m in members if m.get('role') in ('header','inherited_header') or m.get('attributes',{}).get('column_header')]
-        for cell in members:
-            if cell.get('source_kind')!='cell' or cell in headers:continue
-            attrs=cell.get('attributes',{});column=attrs.get('column_index')
-            if not isinstance(column,int):continue
-            columns=set(range(column,column+attrs.get('column_span',1)))
-            units=set()
-            for header in headers:
-                ha=header.get('attributes',{});hc=ha.get('column_index')
-                if ha.get('table_id')!=attrs.get('table_id'):continue
-                if not isinstance(hc,int):continue
-                if not columns.issubset(set(range(hc,hc+ha.get('column_span',1)))):continue
-                if isinstance(ha.get('row_index'),int) and isinstance(attrs.get('row_index'),int) and ha['row_index']>attrs['row_index']:continue
-                units.update(re.findall(r'(?<![A-Za-z])('+_UNIT+r')(?![A-Za-z/])',normalize('NFKC',header.get('quote',''))))
-            # Conflicting/ambiguous header units are left to a new complete read.
-            if len(units)==1:
-                values=re.findall(r'(?<![A-Za-z\d.])('+_NUMBER+r')(?![\d.])',_without_identifiers(normalize('NFKC',cell.get('quote',''))))
-                result.update((float(value),next(iter(units))) for value in values)
-    return result
-
-
-def _outside_supported_standard_identifiers(text,source_context):
-    """Do not count a cited standard ID as an engineering measurement."""
-    supported={(match.group('prefix').split('/')[0].strip().upper(),match.group('number')) for match in _STANDARD_IDENTIFIER.finditer(source_context)}
-    for match in reversed(list(_STANDARD_IDENTIFIER.finditer(text))):
-        if (match.group('prefix').split('/')[0].strip().upper(),match.group('number')) in supported:
-            text=text[:match.start()]+text[match.end():]
-    return text
-
-
 def model_source_views(views):
     """One complete source text, with only citation and engineering context."""
     result=[]
@@ -197,7 +119,7 @@ def model_source_views(views):
         row={'evidence_id':view['evidence_id'],'title':view.get('title',''),'text':view.get('text',''),
              'kind':view.get('kind','text'),'physical_pages':pages}
         source_context={key:deepcopy(context[key]) for key in
-                        ('clause_number','clause_title','table_title','figure_title') if context.get(key)}
+                        ('section','clause_number','clause_title','table_title','figure_title') if context.get(key)}
         references=[{key:deepcopy(value) for key,value in ref.items() if value not in (None,[],{})
                      and key in ('kind','number','end_number','status','target_evidence_ids','source_member_keys')}
                     for ref in context.get('reference_resolution',[])]
@@ -331,7 +253,16 @@ def citations_for(claim,reads):
 
 def group_citations(citations,reads):
     """A display view only: exact member citations remain the validation contract."""
-    groups={}
+    groups={};positions={};documents={}
+    def source_order(cite):
+        members=reads.get(cite['evidence_id'],{}).get('members',[])
+        index=next((i for i,m in enumerate(members) if m['member_key']==cite['member_key']),0)
+        member=members[index] if members else {}
+        loc=cite.get('locator',{});page=loc.get('physical_page')
+        order=member.get('source_order',member.get('order',index))
+        bounds=loc.get('char_range') or [0]
+        return (page if isinstance(page,int) else float('inf'),
+                order if isinstance(order,(int,float)) else index,bounds[0])
     for cite in citations:
         view=reads.get(cite['evidence_id'],{});context=view.get('context',{});kind=view.get('kind','text')
         table_id=cite.get('attributes',{}).get('table_id')
@@ -345,15 +276,19 @@ def group_citations(citations,reads):
         resource=resource or cite['evidence_id']
         kind={'image':'figure','picture':'figure'}.get(kind,kind)
         key=(cite.get('document_id') or view.get('document_id') or cite['title'],cite['revision'],kind,resource)
+        documents.setdefault(key[:2],len(documents))
         label=context.get('table_title') if kind=='table' else context.get('figure_title') if kind=='figure' else context.get('clause_title') or context.get('clause_number') or context.get('section')
         row=groups.setdefault(key,{'id':identity('citation-group',key),'kind':kind,'resource_id':resource,'document_id':key[0],'title':cite['title'],'revision':cite['revision'],'resource_title':label or ('未编号表格' if kind=='table' else '未编号图片' if kind=='figure' else '原文条款'),'physical_pages':[],'logical_pages':[],'citation_ids':[],'evidence_ids':[],'member_keys':[],'quotes':[],'images':[]})
         for field,value in (('citation_ids',cite['id']),('evidence_ids',cite['evidence_id']),('member_keys',cite['member_key']),('quotes',cite.get('quote')),('images',cite.get('image')),('physical_pages',cite.get('locator',{}).get('physical_page')),('logical_pages',cite.get('locator',{}).get('logical_page'))):
             if value is not None and value!='' and value not in row[field]:row[field].append(value)
     for row in groups.values():
+        chosen=sorted({cite['id']:cite for cite in citations if cite['id'] in row['citation_ids']}.values(),key=source_order)
+        positions[row['id']]=source_order(chosen[0]) if chosen else (float('inf'),0,0)
+        for field,key in (('citation_ids','id'),('evidence_ids','evidence_id'),('member_keys','member_key')):
+            row[field]=list(dict.fromkeys(cite[key] for cite in chosen))
         for field in ('physical_pages','logical_pages'):row[field].sort(key=lambda value:(not isinstance(value,int),value if isinstance(value,int) else str(value)))
         if row['kind'] == 'text':
             from turbine_kg.evidence.context import evidence_text
-            chosen=[cite for cite in citations if cite['id'] in row['citation_ids']]
             if chosen:
                 context={**reads[chosen[0]['evidence_id']].get('context',{}),
                          'source_ids':[cite.get('source_id') for cite in chosen]}
@@ -361,11 +296,12 @@ def group_citations(citations,reads):
                     [cite.get('role','content') for cite in chosen],
                     [cite.get('source_kind') for cite in chosen])
                 if text:row['quotes']=[text]
-    return list(groups.values())
+    return sorted(groups.values(),key=lambda row:(documents[(row['document_id'],row['revision'])],positions[row['id']]))
 
 
-def binding_error(claim,reads,visuals,*,user_facts=None,task=None):
+def binding_error(claim,reads,visuals):
     if not isinstance(claim,dict): return '陈述合同无效'
+    if claim.get('_reference_error'):return claim['_reference_error']
     if claim.get('basis') not in ('source','inference','image') or not claim.get('text') or not claim.get('supports'): return '缺少依据类别、内容或支持绑定'
     if not isinstance(claim['text'],str) or not isinstance(claim['supports'],list): return '陈述合同无效'
     image_read=False
@@ -392,36 +328,6 @@ def binding_error(claim,reads,visuals,*,user_facts=None,task=None):
     return None
 
 
-def numeric_warning(claim, reads, *, user_facts=None, task=None):
-    """Literal-number differences are review hints, never deletion decisions.
-
-    Site values and arithmetic results need not occur in a quoted standard.
-    The existing semantic review evaluates their engineering use in context.
-    """
-    if claim.get('basis') in ('source','inference'):
-        from turbine_kg.knowledge.quantities import normalize_quantity_text
-        cited=normalize_quantity_text('\n'.join(row['quote'] for row in citations_for(claim,reads)))
-        displayed=normalize_quantity_text('\n'.join([claim['text'],*[str(value) for field in ('conditions','verification','assumptions') for value in (claim.get(field) or [])]]))
-        reference_sources=cited+'\n'+_structural_context_text(claim,reads)
-        # Verified structural identifiers are not engineering quantities. Keep
-        # checking every remaining value against the explicitly bound members.
-        values=lambda text:{float(value) for value in re.findall(r'(?<![A-Za-z\d.])('+_NUMBER+r')(?![\d.])',_without_identifiers(text))}
-        reviewed_values,reviewed_quantities,reviewed_expressions=reviewed_formula_numbers(claim,reads)
-        user_values,user_quantities=_bound_user_quantities(claim,task,user_facts)
-        comparison_values,comparison_quantities=_bound_comparison_quantities(claim,task)
-        percent_values={value/100 for value,unit in _quantities(cited) if unit=='%'}
-        engineering_text=_outside_supported_standard_identifiers(displayed,reference_sources)
-        # Pair a value with its unit; 0.10 mm cannot support a claim of 0.10 m.
-        displayed_quantities=_quantities(_outside_reviewed_formulas(displayed,reviewed_expressions))
-        supported_quantities=_quantities(_outside_reviewed_formulas(cited,reviewed_expressions))|_table_quantities(claim,reads)|reviewed_quantities|user_quantities|comparison_quantities
-        if not _normalized_quantities(displayed_quantities).issubset(_normalized_quantities(supported_quantities)): return '回答数量与引用的数值单位组合不一致'
-        # Unit-bearing spans have already passed their dimensional check. Bare
-        # numbers still need direct support; no new arithmetic is inferred.
-        bare=re.sub('('+_NUMBER+r')\s*('+_UNIT+r')(?![A-Za-z/])','',engineering_text)
-        if not values(bare).issubset(values(cited)|reviewed_values|percent_values|user_values|comparison_values): return '回答包含引用成员没有的数值'
-    return None
-
-
 def binding_diagnostics(claim,reads):
     """Inspect exact bound source and structural IDs without changing the verdict."""
     from unicodedata import normalize
@@ -436,12 +342,12 @@ def binding_diagnostics(claim,reads):
     return result
 
 
-def validate(claims,tools,*,facts,tasks=None):
+def validate(claims,tools,*,tasks=None):
     """Run deterministic answer checks and return source-bound claims.
 
     This function does not send claims back to a second model: source
     membership, task binding, provenance and image transport are checked by
-    code. Numeric differences are advisory; semantic review checks meaning.
+    code. Semantic review checks engineering values and meaning.
     """
     pending=[];rejected=[]
     for index,claim in enumerate(claims):
@@ -451,15 +357,65 @@ def validate(claims,tools,*,facts,tasks=None):
         task=next((t for t in tasks or [] if t.get('id')==claim.get('task_id')),None)
         if tasks is not None and task is None:
             rejected.append({'claim':claim,'reason':'陈述未绑定有效对象子问题任务'});continue
-        error=binding_error(claim,tools.reads,tools.visuals,user_facts=facts,task=task)
+        error=binding_error(claim,tools.reads,tools.visuals)
         if error: rejected.append({'claim':claim,'reason':error})
         else:
             pending.append(claim)
-            warning=numeric_warning(claim,tools.reads,user_facts=facts,task=task)
-            if warning and hasattr(tools,'diagnostics'):
-                tools.diagnostics.append({'kind':'numeric_review_hint','claim_id':claim['id'],
-                    'reason':warning,'blocking':False,'text':claim['text']})
     return pending,rejected
+
+
+def apply_answer_operations(claims, response, tools, *, tasks, missing_items, rejected=()):
+    """Apply explicit additions/replacements only after checking their sources.
+
+    Replacement IDs refer to the current answer, never to knowledge graph nodes.
+    An invalid replacement leaves its previously accepted claim intact.
+    """
+    current={claim['id']:claim for claim in claims}
+    targets={row['claim']['id']:row['claim'] for row in rejected
+             if isinstance(row.get('claim'),dict) and row['claim'].get('id')}
+    targets.update(current)
+    gaps={row['id']:row for row in missing_items}
+    taskids={task['id'] for task in tasks}
+    operations=response.get('operations')
+    if not isinstance(operations,list):
+        return list(claims),[{'claim':{},'reason':'补答必须返回operations，不能追加整份claims'}]
+    pending=[];failed=[];actions={};replaced=set()
+    for index,operation in enumerate(operations):
+        claim=operation.get('claim') if isinstance(operation,dict) else None
+        if not isinstance(claim,dict):
+            failed.append({'claim':{},'reason':'补答操作缺少有效陈述'});continue
+        kind=operation.get('op');target=operation.get('claim_id');gap=operation.get('missing_item_id')
+        taskid=claim.get('task_id')
+        if taskid not in taskids:
+            failed.append({'claim':claim,'reason':'补答未绑定本次任务'});continue
+        if kind=='replace':
+            if (not isinstance(target,str) or target not in targets or target in replaced
+                    or targets[target].get('task_id')!=taskid):
+                failed.append({'claim':claim,'reason':'替换目标不存在、重复或不属于当前任务'});continue
+            replaced.add(target);cid=target
+        elif kind=='add':
+            if not isinstance(gap,str) or gap not in gaps or gaps[gap].get('task_id')!=taskid:
+                failed.append({'claim':claim,'reason':'新增建议未对应本次明确缺口'});continue
+            cid=identity('answer-add',gap,index,claim)
+        else:
+            failed.append({'claim':claim,'reason':'补答只允许add或replace'});continue
+        pending.append({**claim,'id':cid});actions[cid]=(kind,target)
+    bindings=proposed_source_bindings([*claims,*pending],tools.reads)
+    pending=[bind_source_context(claim,tools.reads,origin_bindings=bindings.get(claim['task_id'],{})) for claim in pending]
+    accepted,invalid=validate(pending,tools,tasks=tasks)
+    failed.extend(invalid)
+    corrected={claim['id'] for claim in accepted}
+    failed.extend(row for row in rejected if row.get('claim',{}).get('id') not in corrected)
+    for claim in accepted:
+        kind,target=actions[claim['id']]
+        if kind=='replace':current[target]=claim
+        else:
+            # Exact wording already present needs no new slot even if a model
+            # changed the citation set. Semantic equivalence is reviewed by LLM.
+            if any(row['task_id']==claim['task_id'] and row['basis']==claim['basis']
+                   and ''.join(row['text'].split())==''.join(claim['text'].split()) for row in current.values()):continue
+            current[claim['id']]=claim
+    return list(current.values()),failed
 
 def coverage_reference_context(tools):
     """Expose pinned source scope and resolved reference states, never inferred gaps."""

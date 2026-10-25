@@ -76,8 +76,7 @@ class Budget:
 class Snapshot:
     document_ids: tuple[str, ...]
     ontology_version: str
-    skill_versions: tuple[str, ...]
 
     @property
     def key(self) -> str:
-        return fingerprint((self.document_ids, self.ontology_version, self.skill_versions))
+        return fingerprint((self.document_ids, self.ontology_version))

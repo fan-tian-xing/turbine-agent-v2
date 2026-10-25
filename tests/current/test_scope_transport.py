@@ -1,8 +1,10 @@
 from dataclasses import asdict
 from types import SimpleNamespace
+import json
+import turbine_kg.agent.model as transport
 from urllib.error import HTTPError
 from turbine_kg.documents.ir import SourceUnit,ParsedPage
-from turbine_kg.knowledge.scopes import register_scopes,attach_scopes,restore_scopes
+from turbine_kg.knowledge.scopes import register_scopes,attach_evidence_scopes,restore_scopes
 from turbine_kg.agent.model import ModelClient,ModelAuthenticationError,ModelError
 from turbine_kg.runtime import Budget
 import pytest
@@ -70,24 +72,43 @@ def test_verified_section_scope_follows_parent_heading_and_survives_restart():
     store=ScopeStore(asdict(source));parser=SimpleNamespace(heading_index=[parent,child,peer],page_count=8)
     scopes=register_scopes([{'scope':'section','heading_source_id':'h','condition_text':source.text,'source_members':[{'source_id':'s','locator':source.locator,'quote':source.text}]}],parser,store,'g')
     assert restore_scopes(store,'g')==scopes
-    page=ParsedPage(4,None,1,1,{})
-    page.sources=[SourceUnit('p','paragraph','应检查。',{'physical_page':4},'native_text',1,attributes={'section_sources':[asdict(parent),asdict(child)]})]
-    attach_scopes(page,scopes)
-    inherited=page.sources[0].attributes['section_sources'][-1]
-    assert inherited['id']=='s' and inherited['locator']['physical_page']==2 and inherited['attributes']['scope_source']
-    peer_page=ParsedPage(5,None,1,1,{})
-    peer_page.sources=[SourceUnit('q','paragraph','应复核。',{'physical_page':5},'native_text',1,attributes={'section_sources':[asdict(peer)]})]
-    attach_scopes(peer_page,scopes)
-    assert [s['id'] for s in peer_page.sources[0].attributes['section_sources']]==['h-peer']
+    from turbine_kg.evidence.context import make_evidence
+    content=asdict(SourceUnit('p','paragraph','应检查。',{'physical_page':4},'native_text',1))
+    next_content=asdict(SourceUnit('q','paragraph','应复核。',{'physical_page':5},'native_text',1))
+    records=[asdict(parent),asdict(child),asdict(peer),content,next_content]
+    store.nodes.update({row['id']:row for row in records})
+    item=make_evidence('text',[(asdict(parent),'section_context'),(asdict(child),'section_context'),(content,'content')],'g')
+    item['document_id']='g'
+    assert attach_evidence_scopes([item],store,scopes,'g')=={item['id']}
+    assert item['context']['scope_ids']==[scopes[0]['id']]
+    assert next(m for m in item['members'] if m['source_id']=='s')['locator']['physical_page']==2
+    assert next(m for m in item['members'] if m['source_id']=='s')['role']=='section_context'
+    peer_item=make_evidence('text',[(asdict(peer),'section_context'),(next_content,'content')],'g')
+    peer_item['document_id']='g'
+    attach_evidence_scopes([peer_item],store,scopes,'g')
+    assert peer_item['context'].get('scope_ids',[])==[]
+    assert all(m['source_id']!='s' for m in peer_item['members'])
     assert not register_scopes([{'scope':'section','heading_source_id':'unknown','condition_text':source.text,'source_members':[{'source_id':'s','locator':source.locator}]}],parser,store,'g')
 
 
-def test_visual_failure_cache_is_scoped_to_endpoint_and_model():
-    model=ModelClient.__new__(ModelClient)
-    model.settings=SimpleNamespace(llm_allow_evidence_send=True)
-    model.policy={'transient_attempts':1,'backoff_seconds':0,'max_backoff_seconds':0}
-    model.providers=[['https://first.test','same-model','secret',10],['https://second.test','same-model','secret',10]]
-    model.vision_capability={};model.last_summary={};calls=[]
+def transport_client(monkeypatch,providers):
+    config={'transport':{'transient_attempts':1,'backoff_seconds':0,'max_backoff_seconds':0},
+            'model_routing':{'enabled_provider_prefixes':list(ModelClient.PROVIDER_PREFIXES)}}
+    class ConfigPath:
+        def __truediv__(self,_):return self
+        def read_text(self,**_):return json.dumps(config)
+    monkeypatch.setattr(transport,'PROJECT_ROOT',ConfigPath())
+    settings=SimpleNamespace(llm_allow_evidence_send=True)
+    for index,prefix in enumerate(ModelClient.PROVIDER_PREFIXES):
+        values=providers[index] if index<len(providers) else ['', '', '', 10]
+        for suffix,value in zip(('_base_url','_model','_api_key','_timeout_seconds'),values):
+            setattr(settings,prefix+suffix,value)
+    return ModelClient(settings)
+
+
+def test_visual_failure_cache_is_scoped_to_endpoint_and_model(monkeypatch):
+    model=transport_client(monkeypatch,[['https://first.test','same-model','secret',10],['https://second.test','same-model','secret',10]])
+    calls=[]
     def request(request,timeout):
         calls.append(request.full_url)
         if 'first.test' in request.full_url:raise HTTPError(request.full_url,415,'unsupported',{},None)
@@ -101,11 +122,9 @@ def test_visual_failure_cache_is_scoped_to_endpoint_and_model():
 
 
 
-def test_auth_error_in_http_success_body_never_falls_back():
-    model=ModelClient.__new__(ModelClient);model.settings=SimpleNamespace(llm_allow_evidence_send=True)
-    model.policy={'transient_attempts':1,'backoff_seconds':0,'max_backoff_seconds':0}
-    model.providers=[['https://first.test','m','secret',10],['https://second.test','m','secret',10]]
-    model.vision_capability={};model.last_summary={};calls=[]
+def test_auth_error_in_http_success_body_never_falls_back(monkeypatch):
+    model=transport_client(monkeypatch,[['https://first.test','m','secret',10],['https://second.test','m','secret',10]])
+    calls=[]
     def request(request,timeout):
         calls.append(request.full_url)
         return {'error':{'code':'invalid_api_key','message':'untrusted private response'}}

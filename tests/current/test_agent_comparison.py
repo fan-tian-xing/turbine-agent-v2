@@ -1,4 +1,4 @@
-"""Comparison fairness and source checks without any external model requests."""
+"""Acceptance coverage and source checks without any external model requests."""
 from types import SimpleNamespace
 import json
 from pathlib import Path
@@ -6,7 +6,7 @@ import pytest
 from turbine_kg.agent.runner import AnswerResult,Session,plan_tasks,task_statement_applicability
 from turbine_kg.ontology.registry import OntologyRegistry
 from turbine_kg.runtime import Snapshot
-import compare_answer_modes as comparison
+import check_answers as comparison
 
 
 def test_acceptance_cases_cover_real_corpus_and_requested_behaviors():
@@ -23,14 +23,33 @@ def test_acceptance_cases_cover_real_corpus_and_requested_behaviors():
     assert {'quantity','anomaly','citation_selection','activity_scope'} <= {tag for case in initial for tag in case['tags']}
 
 
-def test_generic_can_plan_requirements_and_checks_without_skill_rules():
+def test_generic_can_plan_requirements_and_checks():
     registry=OntologyRegistry()
-    tasks,skills,facts=plan_tasks({'objects':['卸扣'],'knowledge_items':['requirement','parameter','inspection'],'skill_ids':['anomalies']},Session(),registry,[],use_skills=False)
+    tasks,facts=plan_tasks({'objects':['卸扣'],'knowledge_items':['requirement','parameter','inspection']},Session(),registry)
     assert len(tasks)==1
     assert tasks[0]['knowledge_items']==['requirement','parameter','inspection']
     assert all(t['required'] for t in tasks)
-    assert not skills and 'has_requirement' in tasks[0]['relation_ids']
+    assert 'has_requirement' in tasks[0]['relation_ids']
     assert 'has_anomaly' not in tasks[0]['relation_ids']
+
+
+@pytest.mark.parametrize('objects',[
+    ['凝汽器','热交换器','除氧器'],['对象甲','对象乙','对象丙'],
+])
+def test_comparison_objects_get_independent_tasks_without_changing_intent(objects):
+    registry=OntologyRegistry();question='比较这些对象的要求'
+    spec={'object':'、'.join(objects),'subquestion':question,'knowledge_items':['requirement']}
+    tasks,_=plan_tasks({'objects':objects,'object_tasks':[spec]},Session(),registry,question=question)
+    assert [t['object'] for t in tasks]==objects
+    assert all(t['subquestion']==question and t['relation_ids']==registry.navigation(['requirement']) for t in tasks)
+
+
+def test_compound_object_is_not_split_and_diagnostic_relation_selection_is_preserved():
+    registry=OntologyRegistry()
+    tasks,_=plan_tasks({'objects':['水箱','排液管'],'object_tasks':[{
+        'object':'水箱排液管','knowledge_items':['cause','anomaly']}]},Session(),registry)
+    assert len(tasks)==1 and tasks[0]['object']=='水箱排液管'
+    assert 'has_requirement' not in tasks[0]['relation_ids']
 
 
 def test_mentioned_equipment_does_not_change_statement_primary_object():
@@ -61,19 +80,19 @@ class Assembler:
 
 def test_metrics_share_denominator_and_verify_actual_original_quote():
     case={'knowledge_items':['requirement','parameter'],'reference_locations':[{'title_contains':'DL5190.3','physical_pages':[112,113]}],'required_source_kinds':['table'],'require_pixels':True}
-    answer=result();metrics=comparison.metrics(case,answer,Assembler(),Snapshot(('g',),'o',()),Session())
+    answer=result();metrics=comparison.metrics(case,answer,Assembler(),Snapshot(('g',),'o'),Session())
     assert metrics['citation_integrity_rate']==1 and metrics['coverage_ratio']==.5
     assert metrics['reference_location_hit'] and not metrics['all_reference_pages_hit']
     assert metrics['expected_source_kind_hit'] and not metrics['required_pixels_met']
     answer.citations[0]['quote']='拼接或改写条文'
-    assert comparison.metrics(case,answer,Assembler(),Snapshot(('g',),'o',()),Session())['citation_integrity_rate']==0
+    assert comparison.metrics(case,answer,Assembler(),Snapshot(('g',),'o'),Session())['citation_integrity_rate']==0
 
 
 def test_generic_combined_task_preserves_configured_item_coverage():
     answer=result()
     answer.search_summary['task_coverage']=[{'object':'起重机','knowledge_item':'requirement',
         'knowledge_items':['requirement','inspection'],'coverage':'evidence_found'}]
-    measured=comparison.metrics({'knowledge_items':['requirement','inspection']},answer,Assembler(),Snapshot(('g',),'o',()),Session())
+    measured=comparison.metrics({'knowledge_items':['requirement','inspection']},answer,Assembler(),Snapshot(('g',),'o'),Session())
     assert measured['coverage_satisfied']==measured['coverage_targets']==2
     assert measured['coverage_ratio']==1
     assert measured['question_complete'] is None
@@ -113,8 +132,7 @@ def test_explicit_case_cannot_bypass_selected_phase(monkeypatch,capsys):
     assert [row['id'] for row in json.loads(capsys.readouterr().out)['cases']]==['body-installation-sequence']
 
 
-@pytest.mark.parametrize('skill_catalog,expected_arms',[([],['ontology_generic']),([{'id':'configured'}],list(comparison.ARMS))])
-def test_available_arms_pin_snapshot_question_and_individual_turn_budget(monkeypatch,capsys,skill_catalog,expected_arms):
+def test_acceptance_pins_snapshot_question_and_individual_turn_budget(monkeypatch,capsys):
     calls=[];reviews=[]
     class Model:
         providers=[['ignored','same_model','ignored',1]]
@@ -124,34 +142,20 @@ def test_available_arms_pin_snapshot_question_and_individual_turn_budget(monkeyp
     class Agent:
         def __init__(self,store,registry,model):self.model=model
         def answer(self,question,session,**kwargs):
-            calls.append((question,id(session),kwargs['validation_snapshot'],kwargs['budget'],kwargs['use_skills']))
+            calls.append((question,id(session),kwargs['validation_snapshot'],kwargs['budget']))
             answer=result();answer.claims[0]['supports']=[{'evidence_id':'e','member_keys':['m']}]
             return answer
     monkeypatch.setattr(comparison,'Agent',Agent)
     monkeypatch.setattr(comparison,'fixed_model',lambda *a:Model())
     monkeypatch.setattr(comparison,'ContextAssembler',lambda *a:Assembler())
-    monkeypatch.setattr(comparison,'load_catalog',lambda **kwargs:skill_catalog)
-    snapshot=Snapshot(('g',),'o',());case={'id':'case','turns':['第一问','第二问'],'knowledge_items':['requirement']}
+    snapshot=Snapshot(('g',),'o');case={'id':'case','turns':['第一问','第二问'],'knowledge_items':['requirement']}
     records=comparison.run(SimpleNamespace(settings=None),OntologyRegistry(),[case],snapshot)
-    assert len(records)==len(calls)==len(expected_arms)*2
+    assert len(records)==len(calls)==2
     assert {c[0] for c in calls}=={'第一问','第二问'} and all(c[2] is snapshot for c in calls)
     assert len({id(c[3]) for c in calls})==len(calls)
-    assert {c[4] for c in calls}=={comparison.ARMS[arm]['use_skills'] for arm in expected_arms}
     assert len(reviews)==len(calls) and all(review==(call[0],call[3]) for review,call in zip(reviews,calls))
     assert all(row['metrics']['question_complete'] is None for row in records)
     assert 'same_model' in capsys.readouterr().out
-
-
-def test_disabled_skill_comparison_is_rejected_before_external_calls(monkeypatch,capsys):
-    def forbidden(*args,**kwargs):raise AssertionError('must reject before model or database access')
-    monkeypatch.setattr(comparison,'KnowledgeStore',forbidden)
-    monkeypatch.setattr(comparison,'ModelClient',forbidden)
-    monkeypatch.setattr(comparison,'load_catalog',lambda **kwargs:[])
-    with pytest.raises(SystemExit) as error:
-        comparison.main(['--arm','ontology_skills'])
-    assert error.value.code==2 and '未配置 Skill' in capsys.readouterr().err
-    with pytest.raises(ValueError,match='未配置 Skill'):
-        comparison.run(SimpleNamespace(settings=None),OntologyRegistry(),[],Snapshot(('g',),'o',()),arms=['ontology_skills'])
 
 
 def test_semantic_scoring_counts_errors_and_preserves_unknown_dimensions():
@@ -175,7 +179,7 @@ def test_comparison_deadline_does_not_erase_valid_partial_answer():
     from turbine_kg.runtime import Budget,BudgetExceeded
     class ExpiredAssembler:
         def read(self,*args):raise BudgetExceeded('shared deadline reached')
-    measured=comparison.metrics({'knowledge_items':['requirement']},result(),ExpiredAssembler(),Snapshot(('g',),'o',()),Session(),budget=Budget())
+    measured=comparison.metrics({'knowledge_items':['requirement']},result(),ExpiredAssembler(),Snapshot(('g',),'o'),Session(),budget=Budget())
     assert measured['status']=='partial' and measured['claims_kept']==1
     assert measured['citations_valid']==0 and len(measured['citations_unchecked'])==1
     assert not measured['invalid_citations'] and measured['citation_integrity_rate'] is None
@@ -203,7 +207,7 @@ def test_common_item_hit_does_not_count_unanswered_subquestion_as_complete():
                     'question_completeness':{'complete':False,'subquestions':[
                         {'question_quote':'静态刚性要求是什么','answered':True,'claim_indices':[0]},
                         {'question_quote':'厂家要求缺失时如何选表','answered':False,'claim_indices':[],'missing_information':'未解释制造厂要求优先及默认条件'}]}}
-    measured=comparison.metrics({'knowledge_items':['requirement']},answer,SourceAssembler(),Snapshot(('g',),'o',()),Session(),model=Model(),budget=budget,question=question)
+    measured=comparison.metrics({'knowledge_items':['requirement']},answer,SourceAssembler(),Snapshot(('g',),'o'),Session(),model=Model(),budget=budget,question=question)
     assert calls==[budget] and measured['semantic_review_status']=='complete'
     assert measured['coverage_ratio']==measured['common_knowledge_item_coverage_ratio']==1
     assert measured['question_complete'] is False and measured['question_completeness_status']=='incomplete'
@@ -296,7 +300,7 @@ def test_image_review_deduplicates_missing_graph_pixels_without_using_budget(mon
     payload=[{'index':0,'claim':{'basis':'image'},'original_members':members},
              {'index':1,'claim':{'basis':'image'},'original_members':[members[0]]}]
     budget=Budget(images=1)
-    images,states,visual_claims=comparison.review_images(payload,budget)
+    images,states,visual_claims=comparison.review_images(payload)
     assert images==[] and len(states)==5 and budget.images==1 and budget.calls==0
     assert states[0]['claim_indices']==[0,1] and visual_claims=={0,1}
     assert all('graph_pixels_unavailable' in state['reason'] for state in states)

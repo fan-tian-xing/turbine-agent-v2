@@ -98,7 +98,7 @@ def section_bounds(heading,heading_index,page_count):
     return [first,last]
 
 
-def refresh_scope_locations(declarations,parser,store,document_id,current_sources):
+def refresh_scope_locations(declarations,parser,store,current_sources):
     """Keep a verified unchanged declaration while refreshing edition locators."""
     indexed={row['id']:row for row in current_sources};result=[]
     for original in declarations:
@@ -171,20 +171,6 @@ def register_scopes(declarations, parser, store, document_id):
         store.put('ScopeDeclaration',[scope])
         result.append(scope)
     return result
-
-
-def attach_scopes(page, scopes):
-    units=page.sources+[cell for table in page.tables for cell in table.cells]+[note for table in page.tables for note in table.notes]
-    for unit in units:
-        contexts=unit.attributes.setdefault('section_sources',[])
-        heading_ids={source['id'] for source in contexts if source.get('kind')=='heading'}
-        for scope in scopes:
-            first,last=scope['physical_page_range']
-            if not first<=page.physical_page<=last: continue
-            if scope['scope']=='section' and scope['heading_source_id'] not in heading_ids: continue
-            for source in scope['sources']:
-                if source['id']==unit.id or any(item['id']==source['id'] for item in contexts): continue
-                contexts.append(deepcopy(source))
 
 
 def attach_evidence_scopes(evidence, store, scopes, document_id):

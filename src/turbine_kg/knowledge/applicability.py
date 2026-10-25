@@ -1,9 +1,8 @@
 """Three-valued conditions; incomplete comparisons never exclude evidence."""
 from __future__ import annotations
-import math
+from decimal import Decimal
 from turbine_kg.ontology.registry import normalized
-
-UNITS = {'mm':('length',.001),'cm':('length',.01),'m':('length',1),'kPa':('pressure',1000),'MPa':('pressure',1e6),'Pa':('pressure',1),'N':('force',1),'kN':('force',1000),'kg':('mass',1),'t':('mass',1000),'℃':('temperature',1),'°C':('temperature',1)}
+from turbine_kg.knowledge.quantities import convert_quantity
 
 
 def evaluate(expression: dict | None, facts: dict, registry) -> str:
@@ -41,11 +40,9 @@ def evaluate(expression: dict | None, facts: dict, registry) -> str:
     if not isinstance(actual,dict) or not isinstance(location,str) or not location.strip(): return 'unknown'
     if actual.get('location') != location: return 'unknown'
     try:
-        au,eu = UNITS[actual['unit']],UNITS[expression['unit']]
-        if au[0]!=eu[0]: return 'unknown'
-        left,right=float(actual['value'])*au[1],float(expected)*eu[1]
-        if isinstance(actual['value'],bool) or isinstance(expected,bool) or not math.isfinite(left) or not math.isfinite(right): return 'unknown'
-        same=math.isclose(left,right,rel_tol=1e-12,abs_tol=0)
+        left=convert_quantity(actual['value'],actual['unit'],expression['unit'])
+        right=convert_quantity(expected,expression['unit'],expression['unit'])
+        same=abs(left-right)<=max(abs(left),abs(right))*Decimal('1e-12')
         result={'lt':left<right and not same,'le':left<right or same,'gt':left>right and not same,'ge':left>right or same,'eq':same,'ne':not same}.get(operator)
         return 'unknown' if result is None else 'applicable' if result else 'not_applicable'
     except (KeyError,ValueError,TypeError): return 'unknown'

@@ -31,7 +31,6 @@
   },
   "parser": {
     "version": "document-parser-2",
-    "image_scale": 2.0,
     "model_cache": "../runtime-python/model-cache/hub"
   }
 }

@@ -29,7 +29,7 @@ def tools_for(scopes,statements=None,error=None):
             self.read_calls.append((ids,documents))
             if error:raise error
             return [row for row in scopes if row['id'] in ids]
-    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'version',()),Budget())
+    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'version'),Budget())
     return tools
 
 
@@ -104,13 +104,26 @@ def test_navigation_ranks_ontology_paths_before_paging():
     tools=tools_for([scope()])
     tools.registry=registry
     tools.focus_tasks=[{'object':'水箱','query_terms':['安装','试验']}]
-    tools.navigate('水箱',['has_requirement'])
+    tools.navigate('水箱',['has_requirement'],expand=True)
     query,params=next((query,params) for query,params in tools.store.queries
                       if 'ORDER BY path_rank DESC' in query)
     assert 'SKIP $offset LIMIT $limit' in query
     assert registry.domain_class('水箱')['id'] in params['rank_5']
     assert registry.domain_class('箱罐')['id'] in params['rank_4']
     assert params['query_terms']==['安装','试验']
+
+
+def test_navigation_defaults_to_the_object_class_and_expands_on_request():
+    registry=OntologyRegistry();tools=tools_for([]);tools.registry=registry
+    child=registry.domain_class('水箱');parent=registry.domain_class('箱罐')
+    result=tools.navigate('水箱',['has_requirement'])
+    initial=next(p for q,p in tools.store.queries if 'RETURN count(s)' in q)
+    assert child['id'] in initial['ids'] and parent['id'] not in initial['ids']
+    assert result['expansion_available']
+    tools.store.queries.clear()
+    tools.navigate('水箱',['has_requirement'],expand=True)
+    expanded=next(p for q,p in tools.store.queries if 'RETURN count(s)' in q)
+    assert child['id'] in expanded['ids'] and parent['id'] in expanded['ids']
 
 
 def test_navigation_excludes_related_only_paths_for_typed_edges():
@@ -132,7 +145,7 @@ def test_navigation_excludes_related_only_paths_for_typed_edges():
             return [{'node':{'id':key,'document_id':'d','type':'requirement','scope_ids':[]},
                      'matched_objects':[]} for key,_,_ in matched]
 
-    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'version',()),Budget())
+    tools=Tools(Store(),OntologyRegistry(),Snapshot(('d',),'version'),Budget())
     result=tools.navigate('汽轮机',['has_requirement'])
     assert result['coverage']['matched']==2
     assert [item['id'] for item in result['items']]==['owned-subject','owned-subject-2']
@@ -160,12 +173,13 @@ def test_domain_class_navigation_reaches_versioned_parent_before_statement():
             if 'RETURN count(s)' in cypher:return [{'total':1}]
             assert child['id'] in parameters['ids'] and parent['id'] in parameters['ids']
             return [{'node':{'id':'general','document_id':'d','type':'requirement','scope_ids':[]},
-                     'matched_objects':[{'id':parent['id'],'label':'箱罐','class_id':'Tank'}]}]
+                     'matched_objects':[{'id':parent['id'],'label':'箱罐','class_id':'Tank'}],
+                     'owning_object_ids':[parent['id']],'owned_match':1}]
 
         def get(self,*args):return []
 
-    tools=Tools(Store(),registry,Snapshot(('d',),registry.version,()),Budget())
-    item=tools.navigate('水箱',['has_requirement'])['items'][0]
+    tools=Tools(Store(),registry,Snapshot(('d',),registry.version),Budget())
+    item=tools.navigate('水箱',['has_requirement'],expand=True)['items'][0]
     assert item['ontology_paths'][0]['kind']=='ancestor'
     assert item['ontology_paths'][0]['object_id']==parent['id']
     assert all('Evidence' not in query for query,_ in seen)
@@ -197,12 +211,13 @@ def test_registry_parent_axiom_recalls_parent_when_child_class_is_not_materializ
                 assert parent['id'] in parameters['ids']
                 return [{'total':1}]
             return [{'node':{'id':'parent-rule','document_id':'d','type':'requirement','scope_ids':[]},
-                     'matched_objects':[{'id':parent['id'],'label':parent_label,'class_id':parent['class_id']}]}]
+                     'matched_objects':[{'id':parent['id'],'label':parent_label,'class_id':parent['class_id']}],
+                     'owning_object_ids':[parent['id']],'owned_match':1}]
 
         def get(self,*args):return []
 
-    tools=Tools(Store(),registry,Snapshot(('d',),registry.version,()),Budget())
-    row=tools.navigate(child_label,['has_requirement'])['items'][0]
+    tools=Tools(Store(),registry,Snapshot(('d',),registry.version),Budget())
+    row=tools.navigate(child_label,['has_requirement'],expand=True)['items'][0]
     assert row['ontology_paths'][0]['kind']=='ancestor'
     assert row['ontology_paths'][0]['path'][0]['basis']=='registry_axiom'
     assert row['ontology_paths'][0]['path'][0]['source_class_id']==child['class_id']
@@ -237,7 +252,7 @@ def test_source_bound_compound_uses_existing_classes_and_source_scope(quote,boun
             if 's.data_json CONTAINS $label' in cypher:return [{'node':row}]
             if 'RETURN count(s)' in cypher:return [{'total':0}]
             return []
-    tools=Tools(Store(),registry,Snapshot(('d',),registry.version,()),Budget())
+    tools=Tools(Store(),registry,Snapshot(('d',),registry.version),Budget())
     tools.navigate('水箱排液管',['has_requirement'])
     query,params=next((q,p) for q,p in seen if 'RETURN count(s)' in q)
     if expected:
@@ -249,3 +264,23 @@ def test_source_bound_compound_uses_existing_classes_and_source_scope(quote,boun
     else:
         assert params['ids']==[] and params['context_evidence_ids']==[]
     assert registry.domain_class('水箱排液管') is None
+
+
+def test_mixed_owned_and_context_hits_keep_each_paths_original_status():
+    registry=OntologyRegistry();root=registry.domain_class('箱罐');child=registry.domain_class('水箱')
+    class Store:
+        def query(self,cypher,parameters,budget):
+            if 'MATCH path=(related:TK:OntologyClass)' in cypher:
+                return [{'id':child['id'],'class_id':child['class_id'],'semantic_edges':[]}]
+            if 'RETURN count(s)' in cypher:return [{'total':1}]
+            if 'RETURN properties(s) AS node' in cypher:
+                assert 'owning_object_ids' in cypher
+                return [{'node':{'id':'s','type':'requirement','text':'水箱应检查。'},
+                         'matched_objects':[root,child],'owning_object_ids':[child['id']],'owned_match':1}]
+            return []
+    tools=Tools(Store(),registry,Snapshot(('d',),registry.version),Budget())
+    item=tools.navigate('箱罐',['has_requirement'],expand=True)['items'][0]
+    paths={path['class_id']:path for path in item['ontology_paths']}
+    assert paths['Tank']['kind']=='related_context'
+    assert paths['Tank']['class_path_kind']=='direct_class'
+    assert paths['WaterTank']['kind']=='descendant'

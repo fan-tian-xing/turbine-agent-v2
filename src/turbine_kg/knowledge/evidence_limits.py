@@ -8,7 +8,7 @@ import unicodedata
 
 from turbine_kg.agent.model import call_model
 from turbine_kg.agent.prompts import numeric_alignment_prompt
-from turbine_kg.knowledge.quantities import compare_quantity, quantity_in_text
+from turbine_kg.knowledge.quantities import compare_quantity, quantity_in_text, UNIT_END_PATTERN
 from turbine_kg.runtime import json_text
 
 
@@ -17,7 +17,7 @@ _LIMIT = re.compile(
     r'不应小于|不得小于|不小于|不低于|应大于|大于|高于|'
     r'应等于|等于)\s*'
     r'(?P<value>\d+(?:\.\d+)?)\s*'
-    r'(?P<unit>mm/m|m/m|mm|cm|m|MPa|kPa|Pa|℃|°C|%|min|h|s|倍工作压力|倍额定压力|倍)',
+    r'(?P<unit>mm/m|m/m|mm|cm|m|MPa|kPa|Pa|℃|°C|%|min|h|s|倍工作压力|倍额定压力|倍)' + UNIT_END_PATTERN,
     re.I,
 )
 _OPERATORS = {
@@ -27,7 +27,7 @@ _OPERATORS = {
     '应大于':'gt','大于':'gt','高于':'gt','应等于':'eq','等于':'eq',
 }
 _CONDITION = re.compile(r'如果|若|当|只有|除非|在[^，。；]{1,16}时|无[^，。；]{1,16}时')
-_QUALIFIER = re.compile(r'安装前|安装后|试运前|试运后|运行时|试验时|期间|阶段|工况')
+_QUALIFIER = re.compile(r'[\u4e00-\u9fffA-Za-z]{1,24}(?:前|后|时)|期间|阶段|工况')
 _LOCATION = re.compile(r'表面|侧面|端面|底部|顶部|内壁|外壁|轴端|入口|出口|中心|边缘')
 
 

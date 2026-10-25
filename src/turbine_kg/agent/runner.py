@@ -8,11 +8,10 @@ import time
 import unicodedata
 from typing import TypedDict
 from langgraph.graph import StateGraph,START,END
-from turbine_kg.agent.claims import validate,citations_for,group_citations,support_dependencies,bind_source_context,binding_diagnostics,proposed_source_bindings,model_source_views,_references
+from turbine_kg.agent.claims import validate,citations_for,group_citations,support_dependencies,bind_source_context,binding_error,binding_diagnostics,proposed_source_bindings,model_source_views,_references,apply_answer_operations,AnswerReferences,resolve_answer_references,model_answer_rows
 from turbine_kg.agent.model import ModelClient,ModelError,call_model
-from turbine_kg.agent.skills import load_catalog,task_skill_context
-from turbine_kg.agent.prompts import (answer_prompt,answer_review_prompt,invalid_skill_repair_prompt,
-                                       repair_prompt,retrieval_prompt,understanding_prompt)
+from turbine_kg.agent.prompts import (answer_prompt,answer_review_prompt,
+                                       repair_prompt,retrieval_prompt,understanding_prompt,ANSWER_OPERATIONS_RULES)
 from turbine_kg.knowledge.applicability import evaluate
 from turbine_kg.ontology.registry import OntologyRegistry,normalized
 from turbine_kg.retrieval.tools import Tools
@@ -48,7 +47,6 @@ class Session:
 class State(TypedDict,total=False):
     question: str
     tasks: list
-    skills: list
     facts: dict
     results: list
     errors: list
@@ -59,6 +57,15 @@ class State(TypedDict,total=False):
     visual_required: bool
     figure_ids: list
     stop_reason: str
+    retrieval_requests: list
+    feedback_round: int
+    selection_checked: bool
+    answer_gaps: list
+    answer_review: dict
+    rejected: list
+    missing_items: list
+    repair_round: int
+    next_step: str
 
 
 def ranking_terms(value):
@@ -192,8 +199,8 @@ def task_phase_match(statement, task):
     requested = task.get('phase')
     if not isinstance(requested, str) or not requested.strip():
         return 'unknown'
-    text = unicodedata.normalize('NFKC', str(statement.get('text', '')))
-    requested = unicodedata.normalize('NFKC', requested.strip())
+    text = normalized(str(statement.get('text', '')))
+    requested = normalized(requested.strip())
     if requested and requested in text:
         return 'applicable'
     # A phase qualifier that is explicitly present in the source but differs
@@ -232,61 +239,58 @@ def explicit_activity_from_text(text, registry):
     return best[0]['label'] if len(best)==1 else None
 
 
-def plan_tasks(plan,session,registry,catalog,*,use_skills=True,question='',strict_facts=False):
+def plan_tasks(plan,session,registry,*,question='',strict_facts=False):
     """Canonical objects merge aliases; user facts stay in their own object bucket."""
     objects=list(dict.fromkeys(registry.canonical_label(str(x)) for x in plan.get('objects',[]) if isinstance(x,str) and x.strip()))
     objects=objects or session.last_objects or [question]
-    specifications=plan.get('object_tasks') or [{'object':obj,'subquestion':question,'skill_ids':plan.get('skill_ids',[]),'knowledge_items':plan.get('knowledge_items',[])} for obj in objects]
-    skills=[];tasks=[]
+    specifications=plan.get('object_tasks') or [{'object':obj,'subquestion':question,'knowledge_items':plan.get('knowledge_items',[])} for obj in objects]
+    independent=[]
+    for spec in specifications:
+        if not isinstance(spec,dict) or not isinstance(spec.get('object'),str):continue
+        name=registry.canonical_label(spec['object'])
+        # Only expand an explicit list of already identified objects. A known
+        # class or qualified compound is a single object, even if names overlap.
+        known=registry.domain_class(name) or registry.qualified_class(name)
+        remaining=normalized(name);members=[]
+        if not known and name not in objects:
+            for obj in sorted(objects,key=lambda value:len(normalized(value)),reverse=True):
+                token=normalized(obj)
+                if token and token in remaining:
+                    members.append(obj);remaining=remaining.replace(token,'')
+        listed=len(members)>1 and bool(re.search(r'[、,，;；与和及]',remaining)) and not re.sub(r'[、,，;；与和及\s]','',remaining)
+        if listed:independent.extend({**spec,'object':obj} for obj in objects if obj in members)
+        else:independent.append(spec)
+    specifications=independent
+    tasks=[]
     for spec in specifications:
         if not isinstance(spec,dict) or not isinstance(spec.get('object'),str): continue
         obj=registry.canonical_label(spec['object'])
         if obj not in objects: objects.append(obj)
-        selected_ids=([s['id'] for s in catalog] if len(catalog)==1 else [s['id'] for s in catalog if s['id'] in spec.get('skill_ids',plan.get('skill_ids',[]))]) if use_skills else []
-        chosen=catalog.load_selected(selected_ids) if selected_ids and hasattr(catalog,'load_selected') else [s for s in catalog if s['id'] in selected_ids]
-        if not use_skills or not chosen:
-            items=[item for item in spec.get('knowledge_items',plan.get('knowledge_items',[])) if item in registry.statement_types]
-            items=list(dict.fromkeys(items)) or ['requirement']
-            chosen=[{'id':'general','version':'1','required_items':items,'relation_ids':registry.navigation(items),'instructions':''}]
+        items=list(dict.fromkeys(item for item in spec.get('knowledge_items',plan.get('knowledge_items',[]))
+                                 if item in registry.statement_types)) or ['requirement']
         subquestion=spec.get('subquestion') or question
-        requested=[item for item in spec.get('knowledge_items',plan.get('knowledge_items',[])) if item in registry.statement_types]
-        available=list(dict.fromkeys(item for skill in chosen for item in skill['required_items']))
-        # A model may choose a broadly relevant Skill but name a narrower
-        # knowledge item owned by another Skill. Preserve the explicit item
-        # instead of silently expanding it to every item in the first Skill.
-        if use_skills and requested:
-            for kind in requested:
-                if kind in available:continue
-                owner=next((skill for skill in catalog if kind in skill['required_items']),None)
-                if owner:
-                    loaded=catalog.load_selected([owner['id']]) if hasattr(catalog,'load_selected') else [owner]
-                    chosen.extend(loaded)
-                    available.extend(item for skill in loaded for item in skill['required_items'] if item not in available)
-        items=[item for item in requested if item in available] or (['requirement'] if 'requirement' in available else available[:1])
-        if use_skills:skills.extend(chosen)
-        for kind in (items if use_skills else items[:1]):
-            covering=[skill for skill in chosen if kind in skill['required_items']]
-            relation_ids=(list(dict.fromkeys(r for skill in covering for r in skill['relation_ids'] if r in registry.navigation([kind]) and registry.relations[r].get('navigation',True))) if use_skills else registry.navigation(items))
-            activity=spec.get('activity')
-            if isinstance(activity,str) and activity.strip():
-                activity_row=(registry.domain_class_by_id(activity)
-                              if activity in getattr(registry,'domain_classes',{})
-                              else registry.domain_class(activity))
-                activity=activity_row['label'] if activity_row else activity.strip()
-            else:
-                activity=explicit_activity_from_text(subquestion,registry)
-            phase=spec.get('phase')
-            phase=phase.strip() if isinstance(phase,str) and phase.strip() else None
-            raw_phase_terms=spec.get('phase_terms',[])
-            raw_phase_terms=raw_phase_terms if isinstance(raw_phase_terms,list) else []
-            phase_terms=[term.strip() for term in raw_phase_terms if isinstance(term,str) and term.strip()]
-            query_terms=ranking_terms(spec.get('query_terms',[]))
-            query_terms=list(dict.fromkeys([*query_terms,*([activity] if activity else []),*(phase_terms or ([phase] if phase else []))]))
-            tasks.append({'id':identity('task',obj,subquestion,activity,phase,kind if use_skills else None),'object':obj,'subquestion':subquestion,
-                          'activity':activity,'phase':phase,'phase_terms':phase_terms,
-                          'intent':spec.get('intent') if isinstance(spec.get('intent'),str) else None,
-                          'query_terms':query_terms,'knowledge_item':kind,'knowledge_items':[kind] if use_skills else items,'skill_ids':[s['id'] for s in covering] if use_skills else [],'relation_ids':relation_ids,'required':True,'lookup_attempted':False,'graph_lookup_attempted':False,'text_lookup_attempted':False,'coverage':'graph_not_found','applicability':'unknown','statement_ids':[],'evidence_ids':[],'missing_parameters':[]})
-            tasks[-1].update(requires_site_inputs=spec.get('requires_site_inputs') is True,calculation_required=spec.get('calculation_required') is True)
+        kind=items[0]
+        relation_ids=registry.navigation(items)
+        activity=spec.get('activity')
+        if isinstance(activity,str) and activity.strip():
+            activity_row=(registry.domain_class_by_id(activity)
+                          if activity in getattr(registry,'domain_classes',{})
+                          else registry.domain_class(activity))
+            activity=activity_row['label'] if activity_row else activity.strip()
+        else:
+            activity=explicit_activity_from_text(subquestion,registry)
+        phase=spec.get('phase')
+        phase=phase.strip() if isinstance(phase,str) and phase.strip() else None
+        raw_phase_terms=spec.get('phase_terms',[])
+        raw_phase_terms=raw_phase_terms if isinstance(raw_phase_terms,list) else []
+        phase_terms=[term.strip() for term in raw_phase_terms if isinstance(term,str) and term.strip()]
+        query_terms=ranking_terms(spec.get('query_terms',[]))
+        query_terms=list(dict.fromkeys([*query_terms,*([activity] if activity else []),*(phase_terms or ([phase] if phase else []))]))
+        tasks.append({'id':identity('task',obj,subquestion,activity,phase,None),'object':obj,'subquestion':subquestion,
+                      'activity':activity,'phase':phase,'phase_terms':phase_terms,
+                      'intent':spec.get('intent') if isinstance(spec.get('intent'),str) else None,
+                      'query_terms':query_terms,'knowledge_item':kind,'knowledge_items':items,'relation_ids':relation_ids,'required':True,'lookup_attempted':False,'graph_lookup_attempted':False,'text_lookup_attempted':False,'coverage':'graph_not_found','applicability':'unknown','statement_ids':[],'evidence_ids':[],'missing_parameters':[]})
+        tasks[-1].update(requires_site_inputs=spec.get('requires_site_inputs') is True,calculation_required=spec.get('calculation_required') is True)
     for update in plan.get('fact_updates',[]):
         if not isinstance(update,dict) or not isinstance(update.get('object'),str): continue
         obj=registry.canonical_label(update['object'])
@@ -295,14 +299,12 @@ def plan_tasks(plan,session,registry,catalog,*,use_skills=True,question='',stric
             if strict_facts and (not isinstance(quote,str) or not quote or quote not in question): continue
             stored_value=deepcopy(update['value'])
             if isinstance(stored_value,str):
-                from turbine_kg.knowledge.quantities import _unit
                 match=re.fullmatch(r'\s*([-+]?(?:\d+(?:\.\d+)?|\.\d+))\s*(\S.*?)\s*',
                                    unicodedata.normalize('NFKC',stored_value))
-                if match and _unit(match.group(2)):
+                if match:
                     stored_value={'value':match.group(1),'unit':match.group(2)}
             value=stored_value.get('value') if isinstance(stored_value,dict) else stored_value
             if strict_facts:
-                from turbine_kg.ontology.registry import normalized
                 from turbine_kg.knowledge.quantities import normalize_quantity_text, canonical_unit
                 if isinstance(stored_value,dict) and stored_value.get('unit'):
                     from turbine_kg.knowledge.quantities import quantity_in_text
@@ -330,7 +332,6 @@ def plan_tasks(plan,session,registry,catalog,*,use_skills=True,question='',stric
                         stored_value.pop(field,None)
             bucket[key]=stored_value
             provenance[key]={'parameter_id':provenance.get(key,{}).get('parameter_id') or identity('parameter',registry.canonical_label(key)),'origin':'user','source_text':quote,'question':question}
-    skills=list({fingerprint(s):s for s in skills}.values())
     merged={}
     for task in tasks:
         existing=merged.setdefault(task['id'],task)
@@ -339,7 +340,7 @@ def plan_tasks(plan,session,registry,catalog,*,use_skills=True,question='',stric
                 existing[field]=list(dict.fromkeys([*existing.get(field,[]),*task.get(field,[])]))
     tasks=list(merged.values())
     session.last_objects=objects
-    return tasks,skills,{obj:session.facts.get(obj,{}) for obj in objects}
+    return tasks,{obj:session.facts.get(obj,{}) for obj in objects}
 
 
 def missing_parameters(expression,facts):
@@ -368,7 +369,7 @@ def planning_summary(result):
             body=[m for m in item['members'] if m.get('role') not in ('context','caption')]
             items.append({'evidence_id':item['evidence_id'],'kind':item.get('kind'),'title':item.get('title'),'context':item.get('context',{}),'member_keys':[m['member_key'] for m in item['members']],'read_preview':'\n'.join(m.get('quote','')[:200] for m in body[:3])})
         else:
-            compact={key:item[key] for key in ('id','evidence_id','type','kind','text','context','status','member_key','retrieval_role','retrieval_warning') if key in item}
+            compact={key:item[key] for key in ('id','evidence_id','type','kind','text','context','status','member_key','retrieval_role','retrieval_warning','matched_phases') if key in item}
             if 'supports' in item: compact['supports']=[{'evidence_id':s['evidence_id'],'member_keys':s.get('member_keys',[])} for s in item['supports']]
             if item.get('ontology_paths'):
                 compact['ontology_paths']=[{'object_id':path['object_id'],'kind':path['kind'],
@@ -396,20 +397,38 @@ def model_task_contracts(tasks):
     return result
 
 
-def review_answer_completeness(question,tasks,claims,tools,model,budget,*,facts,reserve_seconds=0,gaps=None,retrieval_state=None,skills=None,review_cache=None,source_context=None):
+def review_answer_completeness(question,tasks,claims,tools,model,budget,*,facts,reserve_seconds=0,gaps=None,retrieval_state=None,review_cache=None,source_context=None,rejected=(),reference_index=None):
     """Independently review advice against complete, already-read source units."""
     requested=[task for task in tasks if task.get('required') or any(c.get('task_id')==task['id'] for c in claims)]
     if not requested:return {},None
     payload={'question':question,'tasks':model_task_contracts(requested),'claims':claims,'gaps':gaps or [],
              'facts':facts,'retrieval_state':retrieval_state or {},
              **(source_context if source_context is not None else {'sources':model_source_views(tools.reads.values()),'grounding_context':[]})}
-    key=fingerprint(payload)
+    binding_rejections=[{'reason':row.get('reason'),**{key:row['claim'].get(key)
+                        for key in ('id','task_id','text','supports')}} for row in rejected
+                        if isinstance(row.get('claim'),dict) and row['claim'].get('task_id') in {t['id'] for t in requested}
+                        and binding_error(row['claim'],tools.reads,tools.visuals)]
+    if binding_rejections:payload['binding_rejections']=binding_rejections
+    # Reuse approvals only while the question, task, facts and complete source
+    # context stay unchanged. Adding another advice item cannot invalidate one.
+    approvals={}
+    for task in requested:
+        for claim in claims:
+            if claim.get('task_id')!=task['id']:continue
+            approval_key=('approved',fingerprint((question,model_task_contracts([task]),facts,
+                payload['sources'],payload.get('grounding_context'),claim)))
+            approvals[claim['id']]=approval_key
+    verified={cid:review_cache[key] for cid,key in approvals.items()
+              if review_cache is not None and key in review_cache}
+    if verified:payload['verified_claim_ids']=list(verified)
+    key=fingerprint({k:v for k,v in payload.items() if k!='verified_claim_ids'})
     started=time.monotonic();cached=False
     try:
         if review_cache is not None and key in review_cache:
             response=review_cache[key];cached=True
         else:
-            response=call_model(model,answer_review_prompt(use_skills=bool(skills)),json_text(payload),budget,reserve_seconds=reserve_seconds)
+            response=call_model(model,answer_review_prompt(),json_text(payload),budget,reserve_seconds=reserve_seconds)
+            if reference_index is not None:response=resolve_answer_references(response,reference_index)
             if review_cache is not None:review_cache[key]=response
     except Exception as error:
         return {task['id']:{'complete':False,'claim_ids':[], 'rejected_claims':[],
@@ -429,30 +448,51 @@ def review_answer_completeness(question,tasks,claims,tools,model,budget,*,facts,
         verdicts={verdict['claim_id']:verdict for verdict in row.get('claim_verdicts',[]) if isinstance(verdict,dict) and verdict.get('claim_id') in {claim['id'] for claim in own}}
         accepted=[];rejected=[];unverified=[]
         for claim in own:
-            verdict=verdicts.get(claim['id'])
+            verdict=verified.get(claim['id'],verdicts.get(claim['id']))
             if not verdict:
                 unverified.append(claim['id']);continue
             checks=[verdict.get(field) for field in ('supported','applicable','conditions_preserved')]
-            if all(value is True for value in checks):accepted.append(claim['id'])
+            if verdict.get('supported') is True and not any(value is False for value in checks):
+                accepted.append(claim['id'])
+                if review_cache is not None:review_cache[approvals[claim['id']]]=verdict
             elif any(value is False for value in checks):
-                rejected.append({'claim_id':claim['id'],'reason':verdict.get('reason') or '独立核验发现来源支持或适用性不成立'})
+                rejected.append({'claim_id':claim['id'],'reason':verdict.get('reason') or '来源明确不支持当前事实、对象、阶段或关键条件'})
             else:unverified.append(claim['id'])
-        missing=[]
+        missing=[];unbound_missing=False
         for item in row.get('missing_items',[]):
             if not isinstance(item,dict) or not isinstance(item.get('reason'),str):continue
             supports=item.get('supports')
             if isinstance(supports,list) and supports and all(isinstance(sup,dict) and sup.get('evidence_id') in tools.reads and sup.get('member_keys') and set(sup['member_keys'])<={member['member_key'] for member in tools.reads[sup['evidence_id']]['members']} for sup in supports):
                 missing.append({'reason':item['reason'],'supports':supports})
+            else:unbound_missing=True
+        request=row.get('retrieval_request')
+        request=({'reason':request['reason'].strip(),
+                  'query_terms':ranking_terms(request.get('query_terms',[]))}
+                 if isinstance(request,dict) and isinstance(request.get('reason'),str)
+                 and request['reason'].strip() else None)
+        if 'retrieval_request' not in row and task.get('phase') and any(v.get('applicable') is False for v in verdicts.values()):
+            request={'reason':'核验发现建议不适用于用户明确阶段，需要补查对应阶段依据','query_terms':[]}
         supports=[support for claim in own if claim['id'] in accepted for support in claim.get('supports',[])]
         deferred,blocked=support_dependencies(supports,tools)
-        complete=bool(own) and len(accepted)==len(own) and not missing and not blocked
+        if request and deferred and not rejected and not missing and not unverified:
+            targets=_references('\n'.join([request['reason'],*request['query_terms']]))
+            read_numbers={('clause',str(view.get('context',{}).get('clause_number')))
+                          for view in tools.reads.values() if view.get('context',{}).get('clause_number')}
+            unavailable={(ref.get('kind',ref.get('reference_kind','clause')),str(ref.get('number',ref.get('reference_number')))) for ref in deferred}
+            targets-=read_numbers
+            if targets and targets<=unavailable:request['outside_scope']=True
+        # Rejected drafts are not mandatory answer items. Review the actual
+        # answer for omissions instead of requiring every discarded draft back.
+        pending_binding=unbound_missing
+        complete=bool(own) and len(accepted)==len(own) and not missing and not blocked and not request and not pending_binding
         resolvable={gap.get('id') for gap in gaps or [] if gap.get('task_id')==task['id']
                     and gap.get('provenance')=='model' and gap.get('kind') in ('source_missing','answer_incomplete','known_omission','user_info_needed')}
         result[task['id']]={'complete':complete,'claim_ids':accepted,'rejected_claims':rejected,
             'resolved_gap_ids':[gid for gid in row.get('resolved_gap_ids',[]) if gid in resolvable] if accepted and not rejected and not unverified else [],
-            'missing_items':missing,'external_dependency_pending':bool(deferred),
+            'missing_items':missing,'retrieval_request':request,'external_dependency_pending':bool(deferred),
             'internal_dependency_pending':bool(blocked),'redundant_claims':row.get('redundant_claims',[]),
-            'review_failure':({'kind':'review_incomplete','reason':'部分建议尚未完成独立核验'} if unverified or not row else
+            'review_failure':({'kind':'binding_incomplete','reason':'核验指出的遗漏尚未绑定有效来源，回答可能缺项'} if pending_binding else
+                              {'kind':'review_incomplete','reason':'部分建议尚未完成独立核验'} if unverified or not row else
                               {'kind':'internal_dependency_pending','reason':'建议依赖的内部引用尚未读取'} if blocked else None)}
     return result,None
 
@@ -496,11 +536,13 @@ def answer_source_ids(tasks,claims):
     relevant={support['evidence_id'] for claim in claims for support in claim.get('supports',[])}
     for task in tasks:
         if task.get('required') and task.get('answer_coverage')!='complete':
-            checked=[*task.get('coverage_supports',[]),*[s for item in task.get('answer_missing_items',[]) for s in item.get('supports',[])]]
+            has_answer=any(claim.get('task_id')==task['id'] for claim in claims)
+            checked=[s for item in task.get('answer_missing_items',[]) for s in item.get('supports',[])]
+            if not has_answer:checked.extend(task.get('coverage_supports',[]))
             relevant.update(support['evidence_id'] for support in checked)
             # A structural candidate is only a fallback until an independent
             # task check has named actual supporting or missing source members.
-            if not checked:relevant.update(task.get('candidate_evidence_ids',[]))
+            if not checked and not has_answer:relevant.update(task.get('candidate_evidence_ids',[]))
     return relevant
 
 
@@ -588,7 +630,8 @@ def unresolved_answer_gaps(gaps,tasks,claims):
 
 def candidate_priority(item,result,tasks,question,registry):
     """Rank graph Statements by the task and the original question."""
-    original_body=unicodedata.normalize('NFKC',str(item.get('text',''))).casefold()
+    original_body=unicodedata.normalize('NFKC',str(item.get('text') or
+        '\n'.join(s.get('text','') for s in item.get('statements',[])))).casefold()
     body=original_body
     priorities=[]
     for task in tasks:
@@ -604,6 +647,7 @@ def candidate_priority(item,result,tasks,question,registry):
         # Document/section Scope may mention many other equipment types. Only
         # this candidate's actual paragraph/Statement body establishes its object.
         object_match=any(term and term in original_body for term in exact_names)
+        object_match=object_match or task['object'] in item.get('matched_object_labels',[])
         specific=set(relevance_terms(task.get('query_terms',[]),broad))
         hits=sum(term in body for term in specific)
         explicit_numbers=set(re.findall(r'(?<![\d.])\d+(?:\.\d+){2,}(?![\d.])',unicodedata.normalize('NFKC','\n'.join([question,task.get('subquestion',''),*task.get('query_terms',[])]))))
@@ -621,11 +665,14 @@ def candidate_priority(item,result,tasks,question,registry):
             'parameter' in wanted and kind=='requirement' and bool(re.search(r'\d|％|%|不小于|不大于|超过|低于|高于|偏差',item.get('text',''))))
         if item.get('retrieval_method')=='evidence_fulltext':
             hits=max(hits,item.get('exact_hits',0))
-            object_match=object_match or hits>0
         activity_match=task_statement_applicability(item,task,registry)
         activity_rank={'applicable':2,'unknown':0,'not_applicable':-2}[activity_match]
-        priorities.append((int(direct_reference),int(object_match),path_rank,hits,activity_rank,int(direct)))
-    return max(priorities,default=(0,0,0,0,0,0))
+        # The user's explicit stage outranks structural proximity. A component
+        # requirement may name the requested equipment only as a related entity.
+        phase_rank=int(task_phase_match(item,task)=='applicable' or bool(task.get('phase'))
+                       and normalized(task['phase']) in {normalized(phase) for phase in item.get('matched_phases',[])})
+        priorities.append((int(direct_reference),phase_rank,int(object_match),hits,path_rank,activity_rank,int(direct)))
+    return max(priorities,default=(0,0,0,0,0,0,0))
 
 
 def pending_internal_references(tools):
@@ -653,12 +700,16 @@ def competing_unread_sources(task,results,reads,question,registry):
         for item in result['result'].get('items',[]):
             priority=candidate_priority(item,result,[task],question,registry)
             ids=([item['evidence_id']] if item.get('evidence_id') else [])+[s['evidence_id'] for s in item.get('supports',[]) if s.get('evidence_id')]
-            for eid in ids:priorities[eid]=max(priorities.get(eid,(0,0,0,0,0,0)),priority)
+            for eid in ids:priorities[eid]=max(priorities.get(eid,(0,0,0,0,0,0,0)),priority)
+    # Read every strongly relevant explicit-stage clause, even when an already
+    # read source has a stronger direct-reference or graph-path score.
+    if any(eid not in reads and priority[1] and (priority[2] or priority[4])
+           for eid,priority in priorities.items()):return True
     read_priorities=[priority for eid,priority in priorities.items() if eid in reads]
     if not read_priorities:return False
     best=max(read_priorities)
-    return any(eid not in reads and (priority[0] or priority[2]>=4 or priority[1] and priority[3]>0)
-               and priority>=best for eid,priority in priorities.items())
+    return any(eid not in reads and (priority[0] or priority[2] and priority[3]>0 and priority[4]>=0
+               or priority[4]>=4) and priority>=best for eid,priority in priorities.items())
 
 
 def model_grounding_context(statements,reads):
@@ -703,7 +754,7 @@ def statement_applicability(statement,facts,registry):
     return status,missing,unresolved
 
 
-def task_quantity_checks(tasks,statements,reads,facts,registry):
+def task_quantity_checks(tasks,reads,facts,registry):
     """Compare explicit user measurements only after reading their sources."""
     from turbine_kg.knowledge.evidence_limits import compare_read_evidence
     checks=[]
@@ -711,14 +762,6 @@ def task_quantity_checks(tasks,statements,reads,facts,registry):
         own=facts.get(task['object'],{})
         task['numeric_comparisons']=[]
         if not any(isinstance(value,dict) and 'value' in value for value in own.values()):continue
-        for statement in statements:
-            if statement.get('_object')!=task['object']:continue
-            supports=statement.get('supports',[])
-            if not supports or any(support.get('evidence_id') not in reads for support in supports):continue
-            applicability,_,_=statement_applicability(statement,own,registry)
-            if (statement.get('retrieval_role')!='related_context'
-                    and not statement.get('scope_ids') and not statement.get('scope_constraints')):
-                applicability='applicable'
         if not task['numeric_comparisons']:
             for index,result in enumerate(compare_read_evidence(task,reads,facts,registry)):
                 result.update(id=identity('numeric-check',task['id'],'evidence',index),task_id=task['id'])
@@ -733,39 +776,30 @@ def task_quantity_checks(tasks,statements,reads,facts,registry):
 class Agent:
     def __init__(self,store,*,model=None,registry=None):
         self.store=store;self.registry=registry or OntologyRegistry();self.model=model or ModelClient(store.settings)
-        self.skill_catalog=load_catalog(registry=self.registry if hasattr(self.registry,'validate_skill') else None)
 
-    def answer(self,question:str,session:Session|None=None,*,use_skills=False,budget:Budget|None=None,validation_snapshot=None):
+    def answer(self,question:str,session:Session|None=None,*,budget:Budget|None=None,validation_snapshot=None):
         session=session or Session();budget=budget or Budget.configured()
-        versions=self.skill_catalog.versions() if use_skills else ()
-        snapshot=validation_snapshot if validation_snapshot is not None else self.store.snapshot(self.registry.version,versions,budget)
+        snapshot=validation_snapshot if validation_snapshot is not None else self.store.snapshot(self.registry.version,budget)
         if (snapshot.ontology_version != self.registry.version
                 and re.fullmatch(r'[0-9a-f]{64}',snapshot.ontology_version)):
             raise ValueError('资料本体版本与当前注册表不一致，请先运行 --remap 更新映射')
         tools=Tools(self.store,self.registry,snapshot,budget)
+        answer_references=AnswerReferences()
         seen=set();queue=[];statements={};answer_review_cache={};last_failed=None;repair_attempted=False;planning_failures=0;planning_error=None
-        saved={'question':question,'results':[],'errors':[],'tasks':[],'skills':[],'facts':{},'claims':[],'gaps':[],'round':0}
+        saved={'question':question,'results':[],'errors':[],'tasks':[],'facts':{},'claims':[],'gaps':[],'round':0}
         answer_reserve=min(150,budget.seconds*.625)
 
         def understand(state):
             try:
-                instruction=understanding_prompt(use_skills=use_skills)
-                payload={'question':question,'previous_objects':session.last_objects,'previous_user_facts':session.facts,'previous_fact_provenance':session.fact_provenance,'knowledge_types':self.registry.statement_types,'ontology_classes':[{'class_id':row['id'],'name':row.get('label',row.get('zh')),'definition':row.get('definition'),'parent':row.get('parent'),'aliases':row.get('aliases',[])} for row in [*getattr(self.registry,'business_classes',{}).values(),*getattr(self.registry,'domain_classes',{}).values()]],'skills':[{key:s[key] for key in ('id','description','required_items','relation_ids')} for s in self.skill_catalog] if use_skills else []}
-                if not use_skills:payload.pop('skills')
+                instruction=understanding_prompt()
+                payload={'question':question,'previous_objects':session.last_objects,'previous_user_facts':session.facts,'previous_fact_provenance':session.fact_provenance,'knowledge_types':self.registry.statement_types,'ontology_classes':[{'class_id':row['id'],'name':row.get('label',row.get('zh')),'definition':row.get('definition'),'parent':row.get('parent'),'aliases':row.get('aliases',[])} for row in [*getattr(self.registry,'business_classes',{}).values(),*getattr(self.registry,'domain_classes',{}).values()]]}
                 plan=call_model(self.model,instruction,json_text(payload),budget,reserve_seconds=answer_reserve)
-                def selection_valid(value):
-                    ids=[key for spec in value.get('object_tasks',[]) for key in spec.get('skill_ids',value.get('skill_ids',[]))] or value.get('skill_ids',[])
-                    return bool(ids) and all(key in {s['id'] for s in self.skill_catalog} for key in ids)
-                if use_skills and len(self.skill_catalog)>1 and not selection_valid(plan):
-                    plan=call_model(self.model,instruction+invalid_skill_repair_prompt(),json_text({**payload,'invalid_plan':plan}),budget,reserve_seconds=answer_reserve)
-                    if not selection_valid(plan):raise ValueError('Skill选择修复后仍无效，转原文任务')
             except BudgetExceeded: raise
             except Exception as error:
                 state['errors'].append('问题理解模型：'+safe_model_error(error))
                 terms=self.registry.expand(question)
-                plan={'objects':list(dict.fromkeys(self.registry.canonical_label(t) for t in terms)) or session.last_objects or [question],'skill_ids':[],'knowledge_items':['requirement']}
-            tasks,skills,facts=plan_tasks(plan,session,self.registry,self.skill_catalog,use_skills=use_skills,question=question,strict_facts=True)
-            # Skill required_items are the same contract used for task creation and coverage.
+                plan={'objects':list(dict.fromkeys(self.registry.canonical_label(t) for t in terms)) or session.last_objects or [question],'knowledge_items':['requirement']}
+            tasks,facts=plan_tasks(plan,session,self.registry,question=question,strict_facts=True)
             # A usable source kind is not a demand to interpret its pixels.
             required=plan.get('visual_required') is True
             figures=figure_ids(question)
@@ -813,15 +847,18 @@ class Agent:
                 if key in distinct: distinct[key]['task_ids']=list(dict.fromkeys(distinct[key].get('task_ids',[])+call.get('task_ids',[])))
                 else: distinct[key]=call
             queue[:]=distinct.values()
-            update={'tasks':tasks,'skills':skills,'facts':facts,'visual_required':required,'figure_ids':figures,'gaps':[],'round':0}
+            update={'tasks':tasks,'facts':facts,'visual_required':required,'figure_ids':figures,'gaps':[],'round':0}
             state.update(update);saved.update(state)
             return update
 
         def candidates(state):
             priorities={};per_task={}
+            requested={row['task_id'] for row in state.get('retrieval_requests',[])}
+            own=[task for task in state['tasks'] if not requested or task['id'] in requested]
             for result in state['results']:
+                if requested and not requested.intersection(result.get('task_ids',[])):continue
                 for item in result['result'].get('items',[]):
-                    priority=candidate_priority(item,result,state['tasks'],question,self.registry)
+                    priority=candidate_priority(item,result,own,question,self.registry)
                     # Preserve the text retriever's ordering without presenting
                     # search projections as source quotations.
                     priority=(*priority,item.get('exact_hits',0),item.get('score',0))
@@ -838,13 +875,17 @@ class Agent:
             ranked=list(dict.fromkeys(references+sorted(priorities,key=lambda eid:priorities[eid],reverse=True)))
             unread=[eid for eid in ranked if eid not in tools.reads and fingerprint({'tool':'read_evidence','parameters':{'evidence_id':eid}}) not in seen]
             fair=[];groups={}
-            for task in state['tasks']:
-                if task.get('coverage')!='evidence_found': groups.setdefault((task['object'],task['subquestion']),set()).update(per_task.get(task['id'],set()))
+            for task in own:
+                groups.setdefault((task['object'],task['subquestion']),set()).update(per_task.get(task['id'],set()))
+            uncovered=[]
             for ids in sorted(groups.values(),key=lambda ids:sum(eid in tools.reads for eid in ids)):
                 eid=next((eid for eid in unread if eid in ids and eid not in fair),None)
-                if eid: fair.append(eid)
+                if eid:
+                    fair.append(eid)
+                    if not ids.intersection(tools.reads):uncovered.append(eid)
             required=[eid for eid in unread if eid in pending_references]
-            return required+[eid for eid in fair if eid not in pending_references]+[eid for eid in unread if eid not in fair and eid not in pending_references]
+            first=uncovered if len(groups)>1 else []
+            return list(dict.fromkeys(first+required+fair+unread))
 
         def coverage(state):
             """Track read candidates; semantic applicability is checked after generation."""
@@ -876,6 +917,24 @@ class Agent:
                 task['missing_parameters']=list(dict.fromkeys(missing))
             saved.update(state)
 
+        def planning_candidates(state):
+            """Expose candidate semantics for tool selection, never as read proof."""
+            grouped={}
+            wanted={row['task_id'] for row in state.get('retrieval_requests',[])}
+            for result in state['results']:
+                if wanted and not wanted.intersection(result.get('task_ids',[])):continue
+                for item in result['result'].get('items',[]):
+                    items=[item] if item.get('supports') else item.get('statements',[])
+                    ids=([item['evidence_id']] if item.get('evidence_id') else [])+[s['evidence_id'] for s in item.get('supports',[])]
+                    for eid in ids:
+                        context=tools.reads.get(eid,{}).get('context',item.get('context',{}))
+                        row=grouped.setdefault(eid,{'evidence_id':eid,'read':eid in tools.reads,
+                            'clause_number':context.get('clause_number'),'section':context.get('section'),'statement_previews':[]})
+                        for statement in items:
+                            if any(s.get('evidence_id')==eid for s in statement.get('supports',[])) and statement.get('text') not in row['statement_previews']:
+                                row['statement_previews'].append(statement['text'])
+            return list(grouped.values())
+
         def pending_visuals(state):
             if not state.get('visual_required'): return []
             pending=[]
@@ -886,28 +945,27 @@ class Agent:
                 if fingerprint({'tool':'read_visual','parameters':{'evidence_id':eid}}) not in seen: pending.append(eid)
             return pending
 
-        def sources_sufficient(state):
+        def source_readiness(state):
+            """One stopping decision for graph coverage and raw-source fallback."""
+            if state.get('retrieval_requests') and not state.get('selection_checked'):return None
             needed=[task for task in state['tasks'] if task.get('required')] or state['tasks']
-            if not needed or not all(t.get('coverage')=='evidence_found' and t.get('lookup_attempted') for t in needed) or pending_visuals(state):return False
-            if pending_navigation_pages(needed):return False
-            if any(competing_unread_sources(task,state['results'],tools.reads,question,self.registry) for task in needed):return False
-            origins={support['evidence_id'] for task in needed for support in task.get('coverage_supports',[])}
-            pending=pending_internal_references(tools);known=set()
-            for gap in tools.reference_gaps:
-                targets=set(gap.get('target_evidence_ids',[]));known.update(targets)
-                if gap.get('kind')=='reference_unread' and (gap.get('origin_evidence_id') is None or gap.get('origin_evidence_id') in origins) and (not targets or pending.intersection(targets)):return False
-            return not (pending-known)
-
-        def sources_ready_for_answer(state):
-            """Generate from relevant complete raw views; final review decides completeness."""
-            if pending_visuals(state) or pending_internal_references(tools):return False
+            if not needed or not all(task.get('lookup_attempted') for task in needed):return None
+            if pending_visuals(state) or pending_initial_queries(needed):return None
+            if any(competing_unread_sources(task,state['results'],tools.reads,question,self.registry)
+                   for task in needed):return None
+            pending=pending_internal_references(tools)
+            if all(task.get('coverage')=='evidence_found' for task in needed):
+                origins={support['evidence_id'] for task in needed for support in task.get('coverage_supports',[])}
+                known=set();blocked=False
+                for gap in tools.reference_gaps:
+                    targets=set(gap.get('target_evidence_ids',[]));known.update(targets)
+                    if gap.get('kind')=='reference_unread' and (gap.get('origin_evidence_id') is None or gap.get('origin_evidence_id') in origins) and (not targets or pending.intersection(targets)):
+                        blocked=True
+                if not blocked and not (pending-known):return 'sources_sufficient'
+            if pending:return None
             if (state.get('round',0)<2 and
-                    any(eid not in tools.reads for eid in getattr(tools,'reference_targets',{}))):return False
-            needed=[task for task in state['tasks'] if task.get('required')] or state['tasks']
-            if pending_navigation_pages(needed):return False
+                    any(eid not in tools.reads for eid in getattr(tools,'reference_targets',{}))):return None
             for task in needed:
-                if not task.get('lookup_attempted'):return False
-                if competing_unread_sources(task,state['results'],tools.reads,question,self.registry):return False
                 if task.get('coverage')=='evidence_found':continue
                 aliases=[term.casefold() for term in [task['object'],*self.registry.expand(task['object'])] if term]
                 specific=relevance_terms(task.get('query_terms',[]),aliases)
@@ -916,15 +974,18 @@ class Agent:
                     if any(w.get('state') in ('unreadable','context_incomplete') for w in view.get('source_warnings',[])):continue
                     body='\n'.join(m.get('quote','') for m in view.get('members',[]) if m.get('role') in ('content','value','row_label','note')).casefold()
                     if any(term in body for term in aliases) and (not specific or any(term in body for term in specific)):related=True;break
-                if not related:return False
-            return bool(needed)
+                if not related:return None
+            return 'answer_sources_ready'
 
         def retrieval_time_available():
-            return budget.remaining()>answer_reserve
+            reserve=min(60,budget.seconds*.25) if saved.get('retrieval_requests') else answer_reserve
+            return budget.remaining()>reserve
 
-        def pending_navigation_pages(tasks):
+        def pending_initial_queries(tasks):
             task_ids={task['id'] for task in tasks}
-            return any((call.get('tool')=='navigate' or call.get('tool')=='search_evidence' and not call.get('parameters',{}).get('cursor'))
+            return any(call.get('tool') in ('navigate','search_evidence')
+                       and not call.get('parameters',{}).get('cursor')
+                       and not call.get('parameters',{}).get('expand')
                        and task_ids.intersection(call.get('task_ids',[]))
                        and fingerprint({'tool':call['tool'],'parameters':call['parameters']}) not in seen
                        for call in queue)
@@ -934,6 +995,23 @@ class Agent:
             return {'stop_reason':state.get('stop_reason'),'unread_evidence_ids':candidates(state),
                     'unread_reference_targets':[eid for eid in getattr(tools,'reference_targets',{}) if eid not in tools.reads],
                     'pending_queries':[{'tool':call['tool'],'parameters':call['parameters'],'task_ids':call.get('task_ids',[])} for call in pending]}
+
+        def return_to_retrieval(state,decisions,kept):
+            """Route source gaps back to the existing retriever on the same budget."""
+            requests=[{'task_id':tid,**row['retrieval_request']} for tid,row in decisions.items()
+                      if row.get('retrieval_request') and not row['retrieval_request'].get('outside_scope')]
+            try:remaining=budget.remaining()
+            except BudgetExceeded:return False
+            if (not requests or state.get('feedback_round',0)>=2
+                    or state['round']>=budget.max_rounds
+                    or budget.calls>=budget.max_rounds*budget.calls_per_round
+                    or remaining<=min(60,budget.seconds*.25)):return False
+            kept,_=apply_review_redundancy(kept,decisions)
+            state.update(retrieval_requests=requests,feedback_round=state.get('feedback_round',0)+1,
+                         selection_checked=False,claims=kept,stop=False)
+            tools.diagnostics.append({'kind':'review_retrieval','round':state['feedback_round'],'requests':requests})
+            saved.update(state)
+            return True
 
         def execute(call,state,results):
             nonlocal last_failed,repair_attempted
@@ -945,10 +1023,19 @@ class Agent:
                     raise ValueError('未知来源工具')
                 result=tools.dispatch(call['tool'],call.get('parameters',{}))
                 task_ids=call.get('task_ids')
-                if task_ids is None: task_ids=[t['id'] for t in state['tasks'] if call['tool']=='search_evidence' or call.get('parameters',{}).get('object_label')==t['object']]
+                if task_ids is None and call['tool']=='read_evidence':
+                    eid=call.get('parameters',{}).get('evidence_id')
+                    origins={eid}
+                    origins.update(link.get('origin_evidence_id') for link in getattr(tools,'reference_target_links',[])
+                                   if link.get('evidence_id')==eid and link.get('origin_evidence_id'))
+                    task_ids=list(dict.fromkeys(tid for prior in state['results']
+                        for item in prior['result'].get('items',[])
+                        if item.get('evidence_id') in origins or any(s.get('evidence_id') in origins for s in item.get('supports',[]))
+                        for tid in prior.get('task_ids',[]))) or None
+                if task_ids is None: task_ids=[t['id'] for t in state['tasks'] if call['tool'] in ('search_evidence','read_evidence') or call.get('parameters',{}).get('object_label')==t['object']]
                 results.append({'tool':call['tool'],'parameters':call.get('parameters',{}),'task_ids':task_ids,'result':result})
                 state['results'].append(results[-1])
-                if call['tool'] in ('navigate','search_evidence'):
+                if call['tool'] in ('navigate','search_evidence','read_evidence'):
                     found=result.get('items',[]) if call['tool']=='navigate' else [stmt for item in result.get('items',[]) for stmt in item.get('statements',[])]
                     for stmt in found:
                         for task in state['tasks']:
@@ -963,6 +1050,8 @@ class Agent:
                                 statements[key]=candidate
                     if result.get('cursor'):
                         queue.append({'tool':call['tool'],'parameters':{**call['parameters'],'cursor':result['cursor']},'task_ids':task_ids})
+                    if call['tool']=='navigate' and result.get('expansion_available') and not call['parameters'].get('expand') and not call['parameters'].get('cursor'):
+                        queue.append({'tool':'navigate','parameters':{**call['parameters'],'cursor':None,'expand':True},'task_ids':task_ids})
                 for task in state['tasks']:
                     parameters=call.get('parameters',{})
                     if task['id'] in task_ids:
@@ -983,10 +1072,11 @@ class Agent:
         def retrieve(state):
             nonlocal repair_attempted,last_failed,planning_failures,planning_error
             round_number=state['round']+1;results=[];start=budget.calls;model_stop=False
+            feedback_planning=bool(state.get('retrieval_requests') and not state.get('selection_checked'))
             tools.round_call_ceiling=min(round_number*budget.calls_per_round,start+budget.calls_per_round)
             try:
-                if sources_sufficient(state) or sources_ready_for_answer(state) or not retrieval_time_available():
-                    state.update(round=state['round'],stop=True,stop_reason='sources_sufficient' if sources_sufficient(state) else 'answer_sources_ready' if sources_ready_for_answer(state) else 'answer_time_reserved')
+                if source_readiness(state) or not retrieval_time_available():
+                    state.update(round=state['round'],stop=True,stop_reason=source_readiness(state) or 'answer_time_reserved')
                     saved.update(state)
                     return {'round':state['round'],'stop':True,'stop_reason':state['stop_reason'],'results':state['results'],'tasks':state['tasks'],'errors':state['errors']}
                 # Required pixel reads are source obligations, independent of a
@@ -996,10 +1086,16 @@ class Agent:
                     execute({'tool':'read_visual','parameters':{'evidence_id':eid}},state,results)
                 # Navigate each requested object before reading its source groups.
                 discovery=0
-                while queue and discovery<2 and budget.calls-start<budget.calls_per_round and retrieval_time_available():
+                queue.sort(key=lambda call:bool(call.get('parameters',{}).get('cursor')) or bool(call.get('parameters',{}).get('expand')))
+                while queue and discovery<max(2,budget.calls_per_round//2) and not feedback_planning and budget.calls-start<budget.calls_per_round and retrieval_time_available() and not source_readiness(state):
+                    if state.get('retrieval_requests') and candidates(state):break
+                    if (queue[0].get('parameters',{}).get('cursor') or queue[0].get('parameters',{}).get('expand')) and candidates(state):break
                     execute(queue.pop(0),state,results);discovery+=1
                 unread=candidates(state)
-                while unread and budget.calls-start<budget.calls_per_round and retrieval_time_available() and not sources_sufficient(state) and not sources_ready_for_answer(state):
+                select_sources=feedback_planning or (not tools.reads and len(unread)>1 and
+                    (any(task.get('intent') in ('diagnosis','comparison','procedure') for task in state['tasks'])
+                     or any(state['facts'].values())))
+                while unread and not select_sources and budget.calls-start<budget.calls_per_round and retrieval_time_available() and not source_readiness(state):
                     execute({'tool':'read_evidence','parameters':{'evidence_id':unread.pop(0)}},state,results)
                     for eid in pending_visuals(state):
                         if budget.calls-start>=budget.calls_per_round or not retrieval_time_available(): break
@@ -1009,24 +1105,26 @@ class Agent:
                 if retrieval_time_available():coverage(state)
                 # A genuine model-directed follow-up chooses graph paths, page cursors,
                 # raw text or pixels based on the remaining per-object knowledge tasks.
-                if round_number>1 and budget.calls-start<budget.calls_per_round and retrieval_time_available() and not candidates(state) and not sources_sufficient(state) and not sources_ready_for_answer(state):
+                if (round_number>1 or select_sources) and budget.calls-start<budget.calls_per_round and retrieval_time_available() and (select_sources or not candidates(state)) and not source_readiness(state):
                     try:
-                        tool_description='search_evidence(query,query_terms,cursor)、read_evidence(evidence_id)、table_rows(table_id,cursor)、read_visual(evidence_id)、navigate(object_label,relation_ids,cursor,hops)'
-                        instruction=retrieval_prompt(tool_description,use_skills=use_skills)
+                        tool_description='search_evidence(query,query_terms,cursor)、read_evidence(evidence_id)、table_rows(table_id,cursor)、read_visual(evidence_id)、navigate(object_label,relation_ids,cursor,hops,expand=false)'
+                        instruction=retrieval_prompt(tool_description)
                         relations={key:{field:value[field] for field in ('zh','domain','range','statement_types') if field in value} for key,value in self.registry.relations.items() if value.get('navigation',True)}
-                        decision=call_model(self.model,instruction,json_text({'question':question,'tasks':model_task_contracts(state['tasks']),'skills':task_skill_context(state['skills'],state['tasks']),'registered_relations':relations,'recent_results':[planning_summary(r) for r in state['results'][-6:]],'unread_candidates':candidates(state)[:8],
+                        decision=call_model(self.model,instruction,json_text({'question':question,'tasks':model_task_contracts(state['tasks']),'registered_relations':relations,'recent_results':[planning_summary(r) for r in state['results'][-6:]],'source_candidates':planning_candidates(state),
                             'unread_reference_targets':[{'evidence_id':eid,**target} for eid,target in getattr(tools,'reference_targets',{}).items() if eid not in tools.reads][:12],
-                            'read_evidence_ids':list(tools.reads),'read_visual_ids':list(tools.visuals),'tool_error_to_repair_once':last_failed,'planning_error_to_repair_once':planning_error,'remaining_calls_this_round':budget.calls_per_round-(budget.calls-start),'remaining_seconds':budget.remaining()}),budget,reserve_seconds=answer_reserve)
+                            'read_evidence_ids':list(tools.reads),'read_visual_ids':list(tools.visuals),'review_feedback':state.get('retrieval_requests',[]),'tool_error_to_repair_once':last_failed,'planning_error_to_repair_once':planning_error,'remaining_calls_this_round':budget.calls_per_round-(budget.calls-start),'remaining_seconds':budget.remaining()}),budget,reserve_seconds=min(60,budget.seconds*.25) if state.get('retrieval_requests') else answer_reserve)
                         planning_failures=0;planning_error=None
+                        state['selection_checked']=True
                         if last_failed: repair_attempted=True
                         model_stop=bool(decision.get('stop'))
                         for call in decision.get('calls',[]):
                             if budget.calls-start>=budget.calls_per_round or not retrieval_time_available(): break
                             if isinstance(call,dict): execute(call,state,results)
+                        if retrieval_time_available():coverage(state)
                         # Newly discovered sources can be read in this same round,
                         # including the last round, within its existing call limit.
                         for eid in candidates(state):
-                            if budget.calls-start>=budget.calls_per_round or not retrieval_time_available() or sources_sufficient(state) or sources_ready_for_answer(state): break
+                            if model_stop or budget.calls-start>=budget.calls_per_round or not retrieval_time_available() or source_readiness(state): break
                             execute({'tool':'read_evidence','parameters':{'evidence_id':eid}},state,results)
                             if retrieval_time_available():coverage(state)
                         if repair_attempted and last_failed:last_failed=None;repair_attempted=False
@@ -1039,25 +1137,31 @@ class Agent:
                     if retrieval_time_available():coverage(state)
                 unread=candidates(state)
                 mandatory_pending=bool(unread) or any(t.get('required') and (not t['lookup_attempted'] or (t['coverage']!='evidence_found' and any(t['id'] in call.get('task_ids',[]) for call in queue))) for t in state['tasks'])
-                stop_reason='sources_sufficient' if sources_sufficient(state) else 'answer_sources_ready' if sources_ready_for_answer(state) else 'answer_time_reserved' if not retrieval_time_available() else 'round_limit' if round_number>=budget.max_rounds else 'model_stop' if model_stop and not pending_visuals(state) and not mandatory_pending else 'no_progress' if not results and not queue and not unread and not pending_visuals(state) else None
+                stop_reason=source_readiness(state) or 'answer_time_reserved' if not retrieval_time_available() else 'round_limit' if round_number>=budget.max_rounds else 'model_stop' if model_stop and not pending_visuals(state) and not mandatory_pending else 'no_progress' if not results and not queue and not unread and not pending_visuals(state) else None
                 state.update(round=round_number,stop=stop_reason is not None,stop_reason=stop_reason)
             except BudgetExceeded as error:
                 state['errors'].append(str(error));state.update(stop=True,round=round_number,stop_reason='budget_limit')
                 coverage(state)
             saved.update(state)
-            return {'round':state['round'],'stop':state['stop'],'stop_reason':state.get('stop_reason'),'results':state['results'],'tasks':state['tasks'],'errors':state['errors']}
+            return {'round':state['round'],'stop':state['stop'],'stop_reason':state.get('stop_reason'),'results':state['results'],'tasks':state['tasks'],'errors':state['errors'],'selection_checked':state.get('selection_checked',False)}
 
         def generate(state):
-            kept=[];rejected=[]
+            kept=list(state.get('claims',[]));rejected=[]
+            previous_rejected=state.get('rejected',[])
+            updating=bool(kept or previous_rejected)
+            state.update(answer_gaps=[],answer_review={},missing_items=[],repair_round=0)
+            feedback=state.get('retrieval_requests',[])
+            state['retrieval_requests']=[]
             remaining=retrieval_state(state)
             if any(t.get('required') and t['coverage']!='evidence_found' for t in state['tasks']) and (remaining['pending_queries'] or remaining['unread_evidence_ids']):
                 state['gaps'].append({'kind':'retrieval_pending','reason':'本轮预算内仍有原文查询或候选未读，不能据此断言资料不存在','stop_reason':remaining['stop_reason'],'unread_evidence_ids':remaining['unread_evidence_ids'],'pending_queries':remaining['pending_queries']})
             if not tools.reads:
                 state['gaps'].append({'kind':'evidence','reason':'当前检索尚未读到可引用来源'})
-                return {'claims':[],'gaps':state['gaps']}
+                state.update(claims=[],rejected=[])
+                return dict(state)
             phase='generation';proposed=[]
             try:
-                task_quantity_checks(state['tasks'],list(statements.values()),
+                task_quantity_checks(state['tasks'],
                                      tools.reads,state['facts'],self.registry)
                 from turbine_kg.knowledge.evidence_limits import compare_read_evidence_semantically
                 for task in state['tasks']:
@@ -1068,12 +1172,14 @@ class Agent:
                     task['numeric_comparisons']=[{**before,**after} for before,after in zip(original,aligned)]
                 numeric_checks=[check for task in state['tasks'] for check in task.get('numeric_comparisons',[])]
                 tools.diagnostics.extend({'kind':'numeric_comparison',**check} for check in numeric_checks)
-                source_context={'sources':model_source_views(tools.reads.values()),
-                                'grounding_context':model_grounding_context(statements.values(),tools.reads)}
-                generation_system=answer_prompt(use_skills=bool(state['skills']))
-                generation_payload=json_text({'question':question,'tasks':model_task_contracts(state['tasks']),'skills':task_skill_context(state['skills'],state['tasks']),'facts':state['facts'],'fact_provenance':{obj:session.fact_provenance.get(obj,{}) for obj in state['facts']},**source_context,'image_reads':tools.visuals,'retrieval_state':remaining})
+                context,reference_index=answer_references.context(statements.values(),tools.reads,include_evidence=updating or bool(feedback))
+                generation_system=answer_prompt()
+                missing_items=[{**item,'id':identity('answer-missing',item)} for item in feedback]
+                if updating:generation_system+=' 补查已结束。'+ANSWER_OPERATIONS_RULES
+                generation_payload=json_text({'question':question,'tasks':model_task_contracts(state['tasks']),'facts':state['facts'],'fact_provenance':{obj:session.fact_provenance.get(obj,{}) for obj in state['facts']},**context,'image_reads':tools.visuals,'retrieval_state':remaining,'accepted_claims':model_answer_rows(kept),'review_feedback':feedback,'missing_items':model_answer_rows(missing_items),'rejected':[{**r,'claim':model_answer_rows([r.get('claim',{})])[0]} for r in previous_rejected]})
                 generation_reserve=min(60,budget.seconds*.25)
                 response=call_model(self.model,generation_system,generation_payload,budget,reserve_seconds=generation_reserve)
+                response=resolve_answer_references(response,reference_index)
                 response['gaps']=[{**gap,'id':gap.get('id') or identity('model-gap',gap),'provenance':'model'} for gap in response.get('gaps',[]) if isinstance(gap,dict)]
                 taskids={task['id'] for task in state['tasks']}
                 proposed_context=proposed_source_bindings(response.get('claims',[]),tools.reads)
@@ -1083,10 +1189,13 @@ class Agent:
                     task.get('required') and task.get('coverage')=='evidence_found'
                     and any(support.get('evidence_id') in tools.reads for support in task.get('coverage_supports',[]))
                     for task in state['tasks'])
-                if not proposed and has_relevant_evidence:
+                if not proposed and not updating and has_relevant_evidence:
                     tools.diagnostics.append({'kind':'empty_generation_retry','stage':'generation','status':'triggered'})
-                    retry_system=generation_system+' 已读来源支持至少一个必需子问题，但上一轮没有生成与任务绑定的陈述。请仅针对已读来源和现有task_id重新生成一次；不能补造事实或跳过精确成员引用。'
+                    retry_system=generation_system+' 上一轮未形成有效建议；本次补充已读 Evidence 正文，只针对所问缺口重新生成，使用 S/E 短编号引用，不猜测真实来源ID。'
+                    fallback,reference_index=answer_references.context(statements.values(),tools.reads,include_evidence=True)
+                    generation_payload=json_text({**json.loads(generation_payload),**fallback})
                     response=call_model(self.model,retry_system,generation_payload,budget,reserve_seconds=generation_reserve)
+                    response=resolve_answer_references(response,reference_index)
                     response['gaps']=[{**gap,'id':gap.get('id') or identity('model-gap',gap),'provenance':'model'} for gap in response.get('gaps',[]) if isinstance(gap,dict)]
                     proposed_context=proposed_source_bindings(response.get('claims',[]),tools.reads)
                     proposed=[bind_source_context(c,tools.reads,origin_bindings=proposed_context.get(c.get('task_id'),{})) for c in response.get('claims',[]) if isinstance(c,dict) and c.get('task_id') in taskids]
@@ -1095,74 +1204,142 @@ class Agent:
                     if not proposed:
                         response['gaps']=[gap for gap in response['gaps'] if gap.get('kind')!='source_missing']
                 phase='claim_binding'
-                kept,rejected=validate(proposed,tools,facts=state['facts'],tasks=state['tasks'])
+                if updating:
+                    kept,rejected=apply_answer_operations(kept,response,tools,
+                        tasks=state['tasks'],missing_items=missing_items,rejected=previous_rejected)
+                else:
+                    kept,rejected=validate(proposed,tools,tasks=state['tasks'])
+                    kept=list({fingerprint((c['task_id'],c['text'],c['supports'])):c for c in kept}.values())
                 tools.diagnostics.extend({'kind':'claim_binding_result','stage':phase,'claim_id':row.get('claim',{}).get('id'),'reason':row['reason'],**binding_diagnostics(row.get('claim',{}),tools.reads)} for row in rejected)
-                state['claims']=kept;saved.update(state)
-                phase='completeness_review'
-                final_coverage,coverage_error=review_answer_completeness(question,state['tasks'],kept,tools,self.model,budget,facts=state['facts'],gaps=response['gaps'],retrieval_state=remaining,skills=state['skills'],review_cache=answer_review_cache,source_context=source_context)
-                semantic_rejections={item['claim_id']:item['reason'] for row in final_coverage.values() for item in row.get('rejected_claims',[])}
-                rejected.extend({'claim':claim,'reason':semantic_rejections[claim['id']]} for claim in kept if claim['id'] in semantic_rejections)
-                kept=[claim for claim in kept if claim['id'] not in semantic_rejections]
-                missing=[{'task_id':tid,**item} for tid,row in final_coverage.items() for item in row['missing_items']]
-                for gap in response.get('gaps',[]):
-                    if not isinstance(gap,dict) or gap.get('kind') not in ('answer_incomplete','known_omission') or gap.get('task_id') not in taskids:continue
-                    supports=gap.get('supports',[])
-                    if supports and all(isinstance(s,dict) and s.get('evidence_id') in tools.reads and s.get('member_keys') and set(s['member_keys'])<={m['member_key'] for m in tools.reads[s['evidence_id']]['members']} for s in supports):missing.append(gap)
-                missing=normalize_answer_gaps(missing,[],tools.reads)
-                if rejected or missing:
-                    try:
-                        budget.remaining()
-                        phase='repair_generation'
-                        repair_ids={row['task_id'] for row in missing}|{row.get('claim',{}).get('task_id') for row in rejected}
-                        repair_tasks=[task for task in state['tasks'] if task['id'] in repair_ids]
-                        repaired=call_model(self.model,repair_prompt(use_skills=bool(state['skills'])),json_text({'original_question':question,'task_contracts':model_task_contracts(repair_tasks),'selected_skills':task_skill_context(state['skills'],repair_tasks),'accepted_claims':kept,'rejected':rejected,'missing_items':missing,**source_context,'image_reads':tools.visuals,'facts':state['facts']}),budget,reserve_seconds=min(30,budget.seconds*.125))
-                        repair_context=proposed_source_bindings([*kept,*repaired.get('claims',[])],tools.reads)
-                        fixes=[bind_source_context(c,tools.reads,origin_bindings=repair_context.get(c.get('task_id'),{})) for c in repaired.get('claims',[]) if isinstance(c,dict) and c.get('task_id') in taskids]
-                        phase='repair_binding'
-                        fixed,failed=validate(fixes,tools,facts=state['facts'],tasks=state['tasks'])
-                        kept.extend(fixed);rejected=failed
-                        tools.diagnostics.extend({'kind':'claim_binding_result','stage':phase,'claim_id':row.get('claim',{}).get('id'),'reason':row['reason'],**binding_diagnostics(row.get('claim',{}),tools.reads)} for row in failed)
-                        kept=list({fingerprint((c['task_id'],c['text'],c['supports'])):c for c in kept}.values())
-                        phase='repair_completeness_review'
-                        final_coverage,coverage_error=review_answer_completeness(question,state['tasks'],kept,tools,self.model,budget,facts=state['facts'],gaps=response['gaps'],retrieval_state=remaining,skills=state['skills'],review_cache=answer_review_cache,source_context=source_context)
-                    except Exception as error:
-                        state['errors'].append('陈述修正：'+safe_model_error(error))
-                        state['gaps'].append({'kind':'system_incomplete','stage':phase,'reason':'已知遗漏的自动补答尚未完成','error':safe_model_error(error)})
-                semantic_rejections={item['claim_id']:item['reason'] for row in final_coverage.values() for item in row.get('rejected_claims',[])}
-                rejected.extend({'claim':claim,'reason':semantic_rejections[claim['id']]} for claim in kept if claim['id'] in semantic_rejections)
-                kept=[claim for claim in kept if claim['id'] not in semantic_rejections]
-                kept,removed=apply_review_redundancy(kept,final_coverage)
-                if removed:tools.diagnostics.append({'kind':'reviewed_redundancy','removed_claims':removed})
-                resolved_gaps={gid for decision in final_coverage.values() for gid in decision.get('resolved_gap_ids',[])}
-                response['gaps']=[gap for gap in response['gaps'] if gap.get('id') not in resolved_gaps]
-                if coverage_error:
-                    state['errors'].append('最终答案覆盖核验：'+coverage_error)
-                    state['gaps'].append({'kind':'system_incomplete','stage':'completeness_review','reason':'最终答案完整性核验尚未完成，已逐条核验内容保留','error':coverage_error})
-                for task in state['tasks']:
-                    decision=final_coverage.get(task['id'])
-                    task['answer_coverage']='complete' if decision and decision['complete'] else 'incomplete' if decision else 'unverified'
-                    task['answer_missing_items']=decision['missing_items'] if decision else []
-                    task['answer_claim_ids']=decision['claim_ids'] if decision else []
-                    task['answer_external_dependency_pending']=decision['external_dependency_pending'] if decision else False
-                    task['answer_review_failure']=decision.get('review_failure') if decision else None
-                    if decision and decision['missing_items']:
-                        state['gaps'].extend({'kind':'answer_incomplete','object':task['object'],'subquestion':task['subquestion'],'task_id':task['id'],**item} for item in decision['missing_items'])
-                    elif task.get('required') and task['answer_coverage']!='complete':
-                        review_failure=decision.get('review_failure') if decision else None
-                        if review_failure:
-                            state['gaps'].append({'kind':'system_incomplete','stage':'completeness_review','object':task['object'],'subquestion':task['subquestion'],'task_id':task['id'],'review_status':review_failure['kind'],'reason':review_failure['reason']})
-                            state['errors'].append('最终答案覆盖核验合同：'+review_failure['reason'])
-                        elif not (decision and (decision.get('external_dependency_pending') or decision.get('internal_dependency_pending'))):
-                            state['gaps'].append({'kind':'answer_coverage','object':task['object'],'subquestion':task['subquestion'],'task_id':task['id'],'reason':'该子问题的最终回答尚未确认完整，已核验部分保留'})
-                for gap in response.get('gaps',[]):
-                    if not isinstance(gap,dict):continue
-                    task=next((task for task in state['tasks'] if task['id']==gap.get('task_id')),None)
-                    if gap.get('kind')=='user_info_needed':
-                        tools.diagnostics.append({**gap,'kind':'unnecessary_site_input'});continue
-                    state['gaps'].append(gap)
+                state['answer_gaps']=response['gaps']
             except Exception as error:
-                state['errors'].append('回答生成或核验：'+safe_model_error(error))
-                state['gaps'].append({'kind':'system_incomplete','stage':phase,'reason':'本次回答处理未完成，已读来源保留','error':safe_model_error(error)})
+                state['errors'].append('回答生成：'+safe_model_error(error))
+                state['gaps'].append({'kind':'system_incomplete','stage':phase,
+                    'reason':'本次回答生成未完成，已有来源支持的建议保留','error':safe_model_error(error)})
+            state.update(claims=kept,rejected=rejected)
+            saved.update(state)
+            return dict(state)
+
+        def source_context():
+            context,_=answer_references.context(statements.values(),tools.reads,include_evidence=True)
+            return {'sources':model_source_views(tools.reads.values()),
+                    'grounding_context':model_grounding_context(statements.values(),tools.reads),
+                    'statements':context['statements'],'evidence_catalog':context['evidence_catalog']}
+
+        def review(state):
+            """Review the current draft and choose repair, retrieval, or output."""
+            decisions,error=review_answer_completeness(question,state['tasks'],state['claims'],tools,
+                self.model,budget,facts=state['facts'],gaps=state['answer_gaps'],
+                retrieval_state=retrieval_state(state),
+                review_cache=answer_review_cache,source_context=source_context(),rejected=state.get('rejected',[]),
+                reference_index=answer_references.context(statements.values(),tools.reads,include_evidence=True)[1])
+            completed={tid for tid,row in decisions.items() if row['complete']}
+            rejected=[row for row in state.get('rejected',[])
+                      if row.get('claim',{}).get('task_id') not in completed]
+            semantic={item['claim_id']:item['reason'] for row in decisions.values()
+                      for item in row.get('rejected_claims',[])}
+            rejected.extend({'claim':claim,'reason':semantic[claim['id']]}
+                            for claim in state['claims'] if claim['id'] in semantic)
+            kept=[claim for claim in state['claims'] if claim['id'] not in semantic]
+            missing=[{'task_id':tid,**item} for tid,row in decisions.items() for item in row['missing_items']]
+            taskids={task['id'] for task in state['tasks']}
+            resolved={gid for row in decisions.values() for gid in row.get('resolved_gap_ids',[])}
+            state['answer_gaps']=[gap for gap in state['answer_gaps'] if gap.get('id') not in resolved]
+            for gap in state['answer_gaps']:
+                if gap.get('kind') not in ('answer_incomplete','known_omission') or gap.get('task_id') not in taskids:continue
+                supports=gap.get('supports',[])
+                if supports and all(isinstance(sup,dict) and sup.get('evidence_id') in tools.reads
+                    and sup.get('member_keys') and set(sup['member_keys'])<=
+                    {m['member_key'] for m in tools.reads[sup['evidence_id']]['members']} for sup in supports):missing.append(gap)
+            missing=normalize_answer_gaps(missing,[],tools.reads)
+            state.update(claims=kept,rejected=rejected,answer_review=decisions,
+                         missing_items=[{**item,'id':identity('answer-missing',item)} for item in missing],next_step='finish')
+            if error:
+                state['errors'].append('最终答案覆盖核验：'+error)
+                state['gaps'].append({'kind':'system_incomplete','stage':'completeness_review',
+                    'reason':'最终答案完整性核验尚未完成，已有来源支持的建议保留','error':error})
+            elif return_to_retrieval(state,decisions,kept):state['next_step']='retrieve'
+            else:
+                # An unavailable reference in one task does not block repairing
+                # another task from its already-read supporting text.
+                repair_ids={row['task_id'] for row in state['missing_items']}|{
+                    tid for tid,row in decisions.items() if row.get('rejected_claims')}
+                repair_ids.update(row.get('claim',{}).get('task_id') for row in rejected
+                    if not any(c.get('task_id')==row.get('claim',{}).get('task_id') for c in kept))
+                repair_ids={tid for tid in repair_ids if not decisions.get(tid,{}).get('retrieval_request')}
+                if repair_ids and state['repair_round']<1:
+                    state['next_step']='repair'
+            saved.update(state)
+            return dict(state)
+
+        def repair(state):
+            """Patch source-bound advice without fetching or inventing evidence."""
+            state['repair_round']+=1
+            phase='repair_generation'
+            try:
+                ids={row['task_id'] for row in state['missing_items']}|{
+                    row.get('claim',{}).get('task_id') for row in state['rejected']}
+                tasks=[task for task in state['tasks'] if task['id'] in ids
+                       and not state['answer_review'].get(task['id'],{}).get('retrieval_request')]
+                context,reference_index=answer_references.context(statements.values(),tools.reads,include_evidence=True)
+                response=call_model(self.model,repair_prompt(),json_text({
+                    'original_question':question,'task_contracts':model_task_contracts(tasks),
+                    'accepted_claims':model_answer_rows(state['claims']),
+                    'rejected':[{**r,'claim':model_answer_rows([r.get('claim',{})])[0]} for r in state['rejected']],
+                    'missing_items':model_answer_rows(state['missing_items']),**context,
+                    'image_reads':tools.visuals,'facts':state['facts']}),budget,
+                    reserve_seconds=min(30,budget.seconds*.125))
+                response=resolve_answer_references(response,reference_index)
+                phase='repair_binding'
+                before=fingerprint(state['claims'])
+                state['claims'],failed=apply_answer_operations(state['claims'],response,tools,
+                    tasks=tasks,missing_items=state['missing_items'],rejected=state['rejected'])
+                state['rejected']=failed
+                tools.diagnostics.extend({'kind':'claim_binding_result','stage':phase,
+                    'claim_id':row.get('claim',{}).get('id'),'reason':row['reason'],
+                    **binding_diagnostics(row.get('claim',{}),tools.reads)} for row in failed)
+                state['next_step']='review' if fingerprint(state['claims'])!=before else 'finish'
+            except Exception as error:
+                state['errors'].append('陈述修正：'+safe_model_error(error))
+                state['gaps'].append({'kind':'system_incomplete','stage':phase,
+                    'reason':'已知遗漏的自动补答尚未完成','error':safe_model_error(error)})
+                state['next_step']='finish'
+            saved.update(state)
+            return dict(state)
+
+        def finish(state):
+            kept=state.get('claims',[]);rejected=state.get('rejected',[])
+            final_coverage=state.get('answer_review',{})
+            response={'gaps':state.get('answer_gaps',[])}
+            kept,removed=apply_review_redundancy(kept,final_coverage)
+            if removed:tools.diagnostics.append({'kind':'reviewed_redundancy','removed_claims':removed})
+            resolved_gaps={gid for decision in final_coverage.values() for gid in decision.get('resolved_gap_ids',[])}
+            response['gaps']=[gap for gap in response['gaps'] if gap.get('id') not in resolved_gaps]
+            for task in state['tasks']:
+                decision=final_coverage.get(task['id'])
+                task['answer_coverage']='complete' if decision and decision['complete'] else 'incomplete' if decision else 'unverified'
+                task['answer_missing_items']=decision['missing_items'] if decision else []
+                task['answer_claim_ids']=decision['claim_ids'] if decision else []
+                task['answer_external_dependency_pending']=decision['external_dependency_pending'] if decision else False
+                task['answer_review_failure']=decision.get('review_failure') if decision else None
+                if decision and decision.get('retrieval_request'):
+                    state['gaps'].append({'kind':'source_missing','task_id':task['id'],
+                        'reason':decision['retrieval_request']['reason']})
+                if decision and decision['missing_items']:
+                    state['gaps'].extend({'kind':'answer_incomplete','object':task['object'],'subquestion':task['subquestion'],'task_id':task['id'],**item} for item in decision['missing_items'])
+                elif task.get('required') and task['answer_coverage']!='complete':
+                    review_failure=decision.get('review_failure') if decision else None
+                    if review_failure:
+                        state['gaps'].append({'kind':'system_incomplete','stage':'completeness_review','object':task['object'],'subquestion':task['subquestion'],'task_id':task['id'],'review_status':review_failure['kind'],'reason':review_failure['reason']})
+                        state['errors'].append('最终答案覆盖核验合同：'+review_failure['reason'])
+                    elif not (decision and (decision.get('external_dependency_pending') or decision.get('internal_dependency_pending'))):
+                        state['gaps'].append({'kind':'answer_coverage','object':task['object'],'subquestion':task['subquestion'],'task_id':task['id'],'reason':'该子问题的最终回答尚未确认完整，已核验部分保留'})
+            for gap in response.get('gaps',[]):
+                if not isinstance(gap,dict):continue
+                task=next((task for task in state['tasks'] if task['id']==gap.get('task_id')),None)
+                if gap.get('kind')=='user_info_needed':
+                    tools.diagnostics.append({**gap,'kind':'unnecessary_site_input'});continue
+                state['gaps'].append(gap)
             for task in state['tasks']:
                 if task.get('answer_coverage')=='complete' and not set(task.get('answer_claim_ids',[])).issubset({c['id'] for c in kept}):task['answer_coverage']='unverified'
             for claim in kept:
@@ -1175,10 +1352,11 @@ class Agent:
                         task.setdefault('validated_claim_ids',[]).append(claim['id'])
             tools.diagnostics.extend({'kind':'discarded_claim','stage':'claim_binding','reason':row['reason'],**binding_diagnostics(row.get('claim',{}),tools.reads)} for row in rejected)
             if not kept:
-                    state['gaps'].append({'kind':'system_incomplete','stage':'claim_binding' if rejected or proposed else 'generation','reason':'本次尚无通过程序校验的答案；来源候选保留','rejections':[row['reason'] for row in rejected]})
+                state['gaps'].append({'kind':'system_incomplete','stage':'claim_binding' if rejected else 'generation','reason':'本次尚无通过程序校验的答案；来源候选保留','rejections':[row['reason'] for row in rejected]})
             state['claims']=list({fingerprint((c['task_id'],c['text'],c['supports'])):c for c in kept}.values())
             saved.update(state)
-            return {'claims':state['claims'],'gaps':state['gaps'],'tasks':state['tasks'],'errors':state['errors']}
+            state['retrieval_requests']=[]
+            return dict(state)
 
         stage_seconds={}
         def timed(name,operation):
@@ -1188,11 +1366,16 @@ class Agent:
                 finally:stage_seconds[name]=stage_seconds.get(name,0)+time.monotonic()-started
             return run
         graph=StateGraph(State)
-        graph.add_node('understand',timed('understand',understand));graph.add_node('retrieve',timed('retrieve',retrieve));graph.add_node('generate',timed('generate_and_review',generate))
+        for name,operation in (('understand',understand),('retrieve',retrieve),('generate',generate),
+                               ('review',review),('repair',repair),('finish',finish)):
+            graph.add_node(name,timed(name,operation))
         graph.add_edge(START,'understand');graph.add_edge('understand','retrieve')
         graph.add_conditional_edges('retrieve',lambda state:'generate' if state.get('stop') else 'retrieve')
-        graph.add_edge('generate',END)
-        try: state=graph.compile().invoke(saved,{'recursion_limit':20})
+        graph.add_conditional_edges('generate',lambda state:'review' if tools.reads else 'finish')
+        graph.add_conditional_edges('review',lambda state:state['next_step'])
+        graph.add_conditional_edges('repair',lambda state:state['next_step'])
+        graph.add_edge('finish',END)
+        try: state=graph.compile().invoke(saved,{'recursion_limit':budget.max_rounds+16})
         except Exception as error:
             state=saved;state['errors'].append(type(error).__name__)
             state['gaps'].append({'kind':'execution','reason':'流程中断，已读依据保留'})

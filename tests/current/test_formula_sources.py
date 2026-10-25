@@ -2,7 +2,8 @@ from copy import deepcopy
 
 import pytest
 
-from turbine_kg.knowledge.statement_extraction import _statement_identity, extract
+from turbine_kg.knowledge.statement_extraction import extract
+from turbine_kg.knowledge.statement_sync import _statement_identity
 from turbine_kg.knowledge.formula_sources import (
     confirm_formula_source, formula_source_binding,
     verified_formula_representation, apply_formula_reviews,
@@ -59,7 +60,7 @@ def test_review_requires_explicit_user_confirmation_and_raw_content_binding():
 def test_formula_review_metadata_does_not_create_a_new_fact_identity():
     registry=OntologyRegistry();first=statement();first['text']='formula method'
     second=deepcopy(first);second['text']='formula method'
-    assert _statement_identity(first,'doc',registry)==_statement_identity(second,'doc',registry)
+    assert _statement_identity(first,'doc')==_statement_identity(second,'doc')
 
 
 def portable_annotations():

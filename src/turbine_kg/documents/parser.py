@@ -31,26 +31,9 @@ class DocumentParser:
         self._page_single_column = {}
         self.heading_index = self._heading_index() if self.original else []
         self.scope_sources = self._scope_sources() if self.original else []
-        self.active_scope_sources = []
-
-    def register_scope_sources(self, sources, *, applies_to, physical_page_range=None, section_source_ids=None):
-        """Register scope meaning established by the caller, with its actual source.
-
-        Titles never create applicability. The caller must explicitly state whether
-        the discovered source applies to a document, page range, or heading scope.
-        """
-        if applies_to not in ('document','page_range','section'):raise ValueError('未知适用范围类型')
-        if applies_to=='page_range' and (not physical_page_range or len(physical_page_range)!=2):raise ValueError('适用范围缺少明确页范围')
-        if applies_to=='section' and not section_source_ids:raise ValueError('章节适用范围缺少实际标题来源ID')
-        if not hasattr(self,'active_scope_sources'):self.active_scope_sources=[]
-        for item in sources:
-            record=asdict(item) if isinstance(item,SourceUnit) else dict(item)
-            if not record.get('id') or not record.get('text') or not record.get('locator'):raise ValueError('适用范围必须绑定实际来源')
-            record['attributes']={**record.get('attributes',{}),'scope_source':True,'semantic_status':'context_only','applies_to':applies_to,'physical_page_range':physical_page_range,'section_source_ids':list(section_source_ids or [])}
-            self.active_scope_sources=[entry for entry in self.active_scope_sources if entry['id']!=record['id']]+[record]
 
     def _applicable_scope_sources(self, number, headings):
-        records=[asdict(entry) for entry in self.scope_sources]+getattr(self,'active_scope_sources',[])
+        records=[asdict(entry) for entry in self.scope_sources]
         heading_ids={entry.id for entry in headings}
         return [record for record in records if record['attributes'].get('applies_to')=='document' or (record['attributes'].get('applies_to')=='page_range' and record['attributes']['physical_page_range'][0]<=number<=record['attributes']['physical_page_range'][1]) or (record['attributes'].get('applies_to')=='section' and heading_ids.intersection(record['attributes'].get('section_source_ids',[])))]
 
